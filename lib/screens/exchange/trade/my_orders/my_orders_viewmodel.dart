@@ -85,6 +85,9 @@ class MyOrdersViewModel extends ReactiveViewModel {
   TextStyle orderCancelledTextStyle;
 
   final abiUtils = AbiUtils();
+  bool isCancelling = false;
+
+  final kanbanUtils = KanbanUtils();
 
   init() async {
     log.i('INIT');
@@ -269,7 +272,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
   // Get Exg address from wallet database
   Future<String> getExgAddress() async {
-    var exgWallet = await walletDataBaseService.getBytickerName('EXG');
+    var exgWallet = await walletDataBaseService.getWalletBytickerName('EXG');
     return exgWallet.address;
   }
 
@@ -344,6 +347,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
                       Check Password
 -------------------------------------------------------------------------------------*/
   checkPass(context, orderHash) async {
+    setBusyForObject(onClickOrderHash, true);
+    isCancelling = true;
     onClickOrderHash = orderHash;
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -355,7 +360,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
       Uint8List seed = walletService.generateSeed(mnemonic);
 
       var txHex = await txHexforCancelOrder(seed, orderHash);
-      var resKanban = await sendKanbanRawTransaction(txHex);
+      var resKanban = await kanbanUtils.sendKanbanRawTransaction(txHex);
       if (resKanban != null && resKanban["transactionHash"] != null) {
         log.w('resKanban=== $resKanban');
 
@@ -378,7 +383,12 @@ class MyOrdersViewModel extends ReactiveViewModel {
               isShowAllOrders
                   ? await getAllMyOrders()
                   : await getMyOrdersByTickerName();
+
               setBusy(false);
+              isCancelling = false;
+              setBusyForObject(onClickOrderHash, false);
+
+              tradeService.setBalanceRefresh(true);
             }
 
             timer.cancel();
@@ -425,6 +435,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
     }
 
     onClickOrderHash = '';
+
     setBusy(false);
   }
 
@@ -433,10 +444,10 @@ class MyOrdersViewModel extends ReactiveViewModel {
   txHexforCancelOrder(seed, orderHash) async {
     String exgAddress = await getExgAddress();
     var abiHex = '7489ec23' + trimHexPrefix(orderHash);
-    var nonce = await getNonce(exgAddress);
+    var nonce = await kanbanUtils.getNonce(exgAddress);
 
     var keyPairKanban = getExgKeyPair(seed);
-    var exchangilyAddress = await getExchangilyAddress();
+    var exchangilyAddress = await kanbanUtils.getExchangilyAddress();
     var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
         HEX.encode(keyPairKanban["privateKey"]),

@@ -17,9 +17,8 @@ import 'dart:typed_data';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
@@ -28,7 +27,6 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
-import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
@@ -78,7 +76,6 @@ class SendViewModel extends BaseViewModel {
   final satoshisPerByteTextController = TextEditingController();
   double transFee = 0.0;
   bool transFeeAdvance = false;
-  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
   String feeUnit = '';
   String tickerName = '';
 
@@ -86,7 +83,10 @@ class SendViewModel extends BaseViewModel {
   final coinUtils = CoinUtils();
   final fabUtils = FabUtils();
   int decimalLimit = 8;
-  double gasAmount = 0.0;
+  // double gasAmount = 0.0;
+  String fabAddress = '';
+  String transFeeErrMsg = '';
+  double unconfirmedBalance = 0.0;
 
   // Init State
   initState() async {
@@ -98,12 +98,12 @@ class SendViewModel extends BaseViewModel {
     tokenType = walletInfo.tokenType;
     String coinName = walletInfo.tickerName;
     await setFee(coinName);
-
-    await getDecimalData();
+    fabAddress = await sharedService.getFABAddressFromWalletDatabase();
     await refreshBalance();
-    decimalLimit = await walletService.getWalletDecimalLimit(coinName);
+    decimalLimit =
+        await walletService.getSingleCoinWalletDecimalLimit(coinName);
     if (decimalLimit == null) decimalLimit = 8;
-    await getGas();
+    //  await getGasBalance();
     setBusy(false);
   }
 
@@ -111,20 +111,20 @@ class SendViewModel extends BaseViewModel {
                       Get gas
 --------------------------------------------------- */
 
-  getGas() async {
-    String address = await sharedService.getExgAddressFromWalletDatabase();
-    await walletService.gasBalance(address).then((data) {
-      gasAmount = data;
-      if (gasAmount == 0) {
-        sharedService.alertDialog(
-          AppLocalizations.of(context).notice,
-          AppLocalizations.of(context).insufficientGasAmount,
-        );
-      }
-    }).catchError((onError) => log.e(onError));
-    log.w('gas amount $gasAmount');
-    return gasAmount;
-  }
+  // getGasBalance() async {
+  //   String address = await sharedService.getExgAddressFromWalletDatabase();
+  //   await walletService.gasBalance(address).then((data) {
+  //     gasAmount = data;
+  //     if (gasAmount == 0) {
+  //       sharedService.alertDialog(
+  //         AppLocalizations.of(context).notice,
+  //         AppLocalizations.of(context).insufficientGasAmount,
+  //       );
+  //     }
+  //   }).catchError((onError) => log.e(onError));
+  //   log.w('gas amount $gasAmount');
+  //   return gasAmount;
+  // }
 
   setFee(String coinName) async {
     if (coinName == 'BTC') {
@@ -170,20 +170,12 @@ class SendViewModel extends BaseViewModel {
     setBusy(true);
     sendAmountTextController.text = NumberUtil()
         .truncateDoubleWithoutRouding(walletInfo.availableBalance,
-            precision: singlePairDecimalConfig.qtyDecimal)
+            precision: decimalLimit)
         .toString();
     log.i(sendAmountTextController.text);
     setBusy(false);
     amount = double.parse(sendAmountTextController.text);
     checkAmount();
-  }
-
-  getDecimalData() async {
-    setBusy(true);
-    singlePairDecimalConfig =
-        await sharedService.getSinglePairDecimalConfig(walletInfo.tickerName);
-    log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
-    setBusy(false);
   }
 
   showDetailsMessageToggle() {
@@ -231,17 +223,6 @@ class SendViewModel extends BaseViewModel {
       String tokenType = walletInfo.tokenType.toUpperCase();
       if (tickerName == 'USDT') {
         tokenType = 'ETH';
-
-        // Check if ETH is available for making USDT transaction
-        // Same for Fab token based coins
-
-        // WalletInfo ethWallet =
-        //     await walletDatabaseService.getBytickerName('ETH');
-        // if (ethWallet.availableBalance < 0.05) {
-        //   sharedService.alertDialog('Send Notice',
-        //       'To send ETH or USDT you need atleast .05 eth balance available in your wallet.',
-        //       isWarning: false);
-        // }
       } else if (tickerName == 'EXG') {
         tokenType = 'FAB';
       }
@@ -423,6 +404,8 @@ class SendViewModel extends BaseViewModel {
     } else {
       setBusy(false);
     }
+    transFee = 0.0;
+    setBusy(false);
   }
 
 /*----------------------------------------------------------------------
@@ -487,7 +470,6 @@ class SendViewModel extends BaseViewModel {
   refreshBalance() async {
     setBusy(true);
 
-    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
     await apiService
         .getSingleWalletBalance(
             fabAddress, walletInfo.tickerName, walletInfo.address)
@@ -496,7 +478,7 @@ class SendViewModel extends BaseViewModel {
         log.w('refreshBalance ${walletBalance[0].toJson()}');
 
         walletInfo.availableBalance = walletBalance[0].balance;
-        walletInfo.unconfirmedBalance = walletBalance[0].unconfirmedBalance;
+        unconfirmedBalance = walletBalance[0].unconfirmedBalance;
       }
     }).catchError((err) {
       log.e(err);
@@ -523,6 +505,7 @@ class SendViewModel extends BaseViewModel {
     }
     amount = double.tryParse(sendAmountTextController.text);
     toAddress = receiverWalletAddressTextController.text;
+
     if (!isTrx()) {
       gasPrice = int.tryParse(gasPriceTextController.text);
       gasLimit = int.tryParse(gasLimitTextController.text);
@@ -543,70 +526,76 @@ class SendViewModel extends BaseViewModel {
           isWarning: false);
       return;
     }
+
+    // ! Check if ETH is available for making USDT transaction
+    // ! Same for Fab token based coins
     // double totalAmount = amount + transFee;
-    if (amount == null ||
-        amount == 0 ||
-        amount.isNegative ||
-        !checkSendAmount ||
-        amount > walletInfo.availableBalance) {
+    // if (tokenType == 'ETH' || tokenType == 'FAB'
+    //     // tickerName == 'ETH' ||
+    //     // tickerName == 'FAB' ||
+    //     // tickerName == 'BTC'
+    //     ) {
+    //   await walletService
+    //       .checkCoinWalletBalance(transFee, tokenType)
+    //       .then((isValidAmount) {
+    //     if (!isValidAmount) {
+    //       log.e('not enough $tokenType balance to make tx');
+    //       var coin =
+    //           tokenType.isEmpty ? walletInfo.tickerName : walletInfo.tokenType;
+    //       showSimpleNotification(
+    //           Center(
+    //             child: Text(
+    //                 '${AppLocalizations.of(context).low} $coin ${AppLocalizations.of(context).balance}'),
+    //           ),
+    //           position: NotificationPosition.top,
+    //           background: sellPrice);
+    //       return;
+    //     }
+    //   });
+    // }
+
+    if (transFee == 0.0 && !isTrx()) {
+      log.e('transfee $transFee not enough $tokenType balance to make tx');
+      var coin =
+          tokenType.isEmpty ? walletInfo.tickerName : walletInfo.tokenType;
+      showSimpleNotification(
+          Center(
+            child: Text(
+                '${AppLocalizations.of(context).low} $coin ${AppLocalizations.of(context).balance}',
+                style: Theme.of(context).textTheme.headline5),
+          ),
+          subtitle: Center(
+            child: Text('${AppLocalizations.of(context).gasFee} 0',
+                style: Theme.of(context).textTheme.headline6),
+          ),
+          position: NotificationPosition.top,
+          background: sellPrice);
+      await updateTransFee();
+
+      return;
+    }
+
+    if (!checkSendAmount || amount == 0.0) {
       print('amount no good');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
+
       return;
     }
 
-    if (gasAmount == 0.0 || gasAmount < transFee) {
-      sharedService.showInfoFlushbar(
-          AppLocalizations.of(context).notice,
-          AppLocalizations.of(context).insufficientGasAmount,
-          Icons.cancel,
-          red,
-          context);
-
-      setBusy(false);
-      return;
-    }
-
-    if (transFee == 0 && !isTrx()) {
-      print('fee issue');
-      showSimpleNotification(
-          Center(
-              child: Column(
-            children: [
-              Text(AppLocalizations.of(context).notice,
-                  style: Theme.of(context).textTheme.bodyText2),
-              Text('${AppLocalizations.of(context).gasFee} 0',
-                  style: Theme.of(context).textTheme.headline6),
-            ],
-          )),
-          position: NotificationPosition.top);
-      await updateTransFee();
-      setBusy(false);
-      return;
-    }
-    if (!isTrx()) amount = NumberUtil().roundDownLastDigit(amount);
-
-    // if (walletInfo.tickerName == 'USDTX') {
-    //   log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
-    //   // bool isCorrectAmount = true;
-    //   // await walletService
-    //   //     .checkCoinWalletBalance(amount, 'TRX')
-    //   //     .then((res) => isCorrectAmount = res);
-
-    //   if (amount >= walletInfo.availableBalance) {
-    //     sharedService.alertDialog(
-    //         '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
-    //         'TRX ${AppLocalizations.of(context).insufficientBalance}',
-    //         isWarning: false);
-    //     setBusy(false);
-    //     return;
-    //   }
+    // if (!isTrx() &&
+    //     walletInfo.tickerName != 'BTC' &&
+    //     walletInfo.tickerName != 'ETH') {
+    //   int decimalLength = NumberUtil.getDecimalLength(amount);
+    //   log.w('decimalLength $decimalLength');
+    //   if (decimalLength == decimalLimit)
+    //     amount = NumberUtil().roundDownLastDigit(amount);
     // }
 
     print('else');
     FocusScope.of(context).requestFocus(FocusNode());
-    if (transFee == 0 && !isTrx()) await updateTransFee();
+
     sendTransaction();
     // await updateBalance(widget.walletInfo.address);
     // widget.walletInfo.availableBalance = model.updatedBal['balance'];
@@ -627,11 +616,13 @@ class SendViewModel extends BaseViewModel {
 
         await updateTransFee();
         double totalAmount = 0.0;
-        if (walletInfo.tickerName == 'FAB')
+        // if token is empty then fee will use native coin so add amount and transfee
+        if (tokenType.isEmpty) {
           totalAmount = amount + transFee;
-        else
+          log.i('total amount $totalAmount');
+        } else
+          // for tokens, fee will be paid in native tokens so just need to check if transfee is not 0
           totalAmount = amount;
-        log.i('total amount $totalAmount');
         log.w('wallet bal ${walletInfo.availableBalance}');
         if (totalAmount <= walletInfo.availableBalance && transFee != 0.0)
           checkSendAmount = true;
@@ -661,7 +652,7 @@ class SendViewModel extends BaseViewModel {
                 background: sellPrice);
         }
       }
-      log.i('check send amount $checkSendAmount');
+      log.i('check send amount $checkSendAmount -- trans fee $transFee');
     }
     setBusy(false);
   }
@@ -670,9 +661,9 @@ class SendViewModel extends BaseViewModel {
     double balance = 0.0;
     String trxWalletAddress = '';
     await walletDatabaseService
-        .getBytickerName('TRX')
+        .getWalletBytickerName('TRX')
         .then((wallet) => trxWalletAddress = wallet.address);
-    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+
     await apiService
         .getSingleWalletBalance(fabAddress, 'TRX', trxWalletAddress)
         .then((walletBalance) {
@@ -745,8 +736,24 @@ class SendViewModel extends BaseViewModel {
             false)
         .then((ret) {
       if (ret != null && ret['transFee'] != null) {
+        log.w('trans fee res $ret');
         transFee = ret['transFee'];
-        log.w('trans fee $ret');
+        // ! check if update fee return err message
+        // * if true then assign the err message to the local var and display it in the
+        if (ret['errMsg'].toString().isNotEmpty) {
+          if (ret['errMsg'].toString().startsWith('not enough')) {
+            var coin = tokenType.isEmpty
+                ? walletInfo.tickerName
+                : walletInfo.tokenType;
+            showSimpleNotification(
+                Center(
+                  child: Text(
+                      '${AppLocalizations.of(context).low} $coin ${AppLocalizations.of(context).balance}'),
+                ),
+                position: NotificationPosition.top,
+                background: sellPrice);
+          }
+        }
       }
       setBusy(false);
     }).catchError((err) {
@@ -773,7 +780,7 @@ class SendViewModel extends BaseViewModel {
       String barcode = '';
 
       var result = await BarcodeScanner.scan();
-      barcode = result;
+      barcode = result.rawContent;
       log.i("Barcode Res: $result ");
 
       receiverWalletAddressTextController.text = barcode;

@@ -1,4 +1,4 @@
-class BindpayHistory {
+class LightningRemitHistoryModel {
   String type;
   int time;
   String coin;
@@ -6,7 +6,7 @@ class BindpayHistory {
   int status;
   String txid;
 
-  BindpayHistory({
+  LightningRemitHistoryModel({
     this.type,
     this.time,
     this.coin,
@@ -15,8 +15,8 @@ class BindpayHistory {
     this.txid,
   });
 
-  factory BindpayHistory.fromJson(Map<String, dynamic> json) {
-    return BindpayHistory(
+  factory LightningRemitHistoryModel.fromJson(Map<String, dynamic> json) {
+    return LightningRemitHistoryModel(
       type: json['type'] as String,
       time: json['time'] as int,
       coin: json['coin'] as String,

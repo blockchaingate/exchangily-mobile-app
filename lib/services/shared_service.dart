@@ -14,6 +14,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/font_style.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -24,6 +25,7 @@ import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -31,6 +33,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:package_info/package_info.dart';
 //import 'package:url_launcher/url_launcher.dart';
 
@@ -49,6 +52,25 @@ class SharedService {
       locator<DecimalConfigDatabaseService>();
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
+
+/*--------------------------------------------------------------------------
+                  Show Simple Notification
+------------------------------------------------------------------------- */
+  sharedSimpleNotification(String content,
+      {String subtitle = '', bool isError = true}) {
+    return showSimpleNotification(
+        Text(firstCharToUppercase(content),
+            textAlign: subtitle.isEmpty ? TextAlign.center : TextAlign.start,
+            style: headText3.copyWith(
+                color: isError ? red : green, fontWeight: FontWeight.w500)),
+        position: NotificationPosition.top,
+        background: white,
+        duration: Duration(seconds: 3),
+        slideDismissDirection: DismissDirection.startToEnd,
+        subtitle: Text(subtitle,
+            style: headText5.copyWith(
+                color: isError ? red : green, fontWeight: FontWeight.w400)));
+  }
 
 /*----------------------------------------------------------------------
                     ShowNotification
@@ -162,7 +184,7 @@ class SharedService {
   Future<String> getExgAddressFromWalletDatabase() async {
     String address = '';
     await walletDataBaseService
-        .getBytickerName('EXG')
+        .getWalletBytickerName('EXG')
         .then((res) => address = res.address);
     return address;
   }
@@ -173,7 +195,7 @@ class SharedService {
   Future<String> getFABAddressFromWalletDatabase() async {
     String address = '';
     await walletDataBaseService
-        .getBytickerName('FAB')
+        .getWalletBytickerName('FAB')
         .then((res) => address = res.address);
     return address;
   }
@@ -234,10 +256,10 @@ class SharedService {
         child: Platform.isIOS
             ? Container(
                 decoration: BoxDecoration(
-                    color: grey.withAlpha(125),
+                    color: white.withAlpha(175),
                     borderRadius: BorderRadius.all(Radius.circular(5))),
-                width: 30,
-                height: 30,
+                width: 25,
+                height: 25,
                 child: CupertinoActivityIndicator())
             : SizedBox(
                 width: 20,
@@ -273,7 +295,7 @@ class SharedService {
   String getCurrentRouteName(BuildContext context) {
     String routeName = '';
     routeName = ModalRoute.of(context).settings.name;
-    print('$routeName in bottom Nav');
+    log.w('$routeName in getCurrentRouteName');
     return routeName;
   }
 

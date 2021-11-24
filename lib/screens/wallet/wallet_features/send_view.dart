@@ -12,7 +12,7 @@
 */
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -181,13 +181,13 @@ class SendWalletView extends StatelessWidget {
                                   children: <Widget>[
                                     model.walletInfo.tickerName == 'FAB'
                                         ? SizedBox(
-                                            width: 5,
+                                            width: 12,
                                             height: 12,
                                             child: IconButton(
                                                 padding: EdgeInsets.zero,
                                                 icon: Icon(
                                                     MdiIcons.informationOutline,
-                                                    size: 14,
+                                                    size: 15,
                                                     color: green),
                                                 onPressed: () {
                                                   showModalBottomSheet<void>(
@@ -246,6 +246,7 @@ class SendWalletView extends StatelessWidget {
                                     model.walletInfo.tickerName == 'FAB'
                                         ? UIHelper.horizontalSpaceSmall
                                         : Container(),
+                                    // UIHelper.horizontalSpaceSmall,
                                     Text(
                                       AppLocalizations.of(context).available +
                                           ' ' +
@@ -275,14 +276,14 @@ class SendWalletView extends StatelessWidget {
                                         Row(
                                           children: <Widget>[
                                             SizedBox(
-                                              width: 5,
+                                              width: 12,
                                               height: 12,
                                               child: IconButton(
                                                   padding: EdgeInsets.zero,
                                                   icon: Icon(
                                                       MdiIcons
                                                           .informationOutline,
-                                                      size: 14,
+                                                      size: 15,
                                                       color: yellow),
                                                   onPressed: () {
                                                     showModalBottomSheet<void>(
@@ -352,7 +353,7 @@ class SendWalletView extends StatelessWidget {
                                             Text(
                                               AppLocalizations.of(context)
                                                       .unConfirmedBalance +
-                                                  '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.unconfirmedBalance, precision: model.decimalLimit)} ',
+                                                  '  ${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance, precision: model.decimalLimit)} ',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline6
@@ -385,7 +386,7 @@ class SendWalletView extends StatelessWidget {
                                               Text(
                                                 AppLocalizations.of(context)
                                                         .totalBalance +
-                                                    '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.getTotalBalance(), precision: model.decimalLimit)} ',
+                                                    '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance + model.unconfirmedBalance, precision: model.decimalLimit)} ',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline6

@@ -1,6 +1,9 @@
+import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/routes.dart';
 import 'package:flutter/cupertino.dart';
 
 class NavigationService {
+  final log = getLogger('NavigationService');
   final GlobalKey<NavigatorState> navigatorKey =
       new GlobalKey<NavigatorState>();
 
@@ -36,5 +39,27 @@ class NavigationService {
 
   bool isFinalRoute() {
     return navigatorKey.currentState.canPop();
+  }
+
+  String currentRoute() {
+    log.i('RouteGenerator.lastRoute = ${RouteGenerator.lastRoute}');
+    return RouteGenerator.lastRoute;
+  }
+
+  void pushNamedIfNotCurrent(String routeName, {Object arguments}) {
+    if (!isCurrent(routeName)) {
+      navigateUsingPushReplacementNamed(routeName, arguments: arguments);
+    }
+  }
+
+  bool isCurrent(String routeName) {
+    bool isCurrent = false;
+    navigatorKey.currentState?.popUntil((route) {
+      if (route.settings.name == routeName) {
+        isCurrent = true;
+      }
+      return true;
+    });
+    return isCurrent;
   }
 }

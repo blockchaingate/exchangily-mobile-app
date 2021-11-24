@@ -14,7 +14,7 @@
 import 'dart:async';
 
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -31,7 +31,6 @@ class WalletDataBaseService {
   final String columnAddress = 'address';
   final String columnLockedBalance = 'lockedBalance';
   final String columnAvailableBalance = 'availableBalance';
-  final String columnUnconfirmedBalance = 'unconfirmedBalance';
   final String columnUsdValue = 'usdValue';
   final String columnInExchange = 'inExchange';
 
@@ -43,10 +42,14 @@ class WalletDataBaseService {
     if (_database != null) return _database;
     var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
-    log.w(path);
+    log.w('initDB $path');
     _database =
         openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
     return _database;
+  }
+
+  openDB() {
+    openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
   }
 
   void _onCreate(Database db, int version) async {
@@ -60,7 +63,6 @@ class WalletDataBaseService {
         $columnAddress TEXT,
         $columnLockedBalance REAL,
         $columnAvailableBalance REAL,
-        $columnUnconfirmedBalance REAL,
         $columnUsdValue REAL,
         $columnInExchange REAL) ''');
   }
@@ -84,6 +86,7 @@ class WalletDataBaseService {
 
 // Insert Data In The Database
   Future insert(WalletInfo walletInfo) async {
+    await initDb();
     final Database db = await _database;
 
     int id = await db.insert(tableName, walletInfo.toJson(),
@@ -105,7 +108,7 @@ class WalletDataBaseService {
   }
 
   // Get Single Wallet By tickerName
-  Future<WalletInfo> getBytickerName(String tickerName) async {
+  Future<WalletInfo> getWalletBytickerName(String tickerName) async {
     final Database db = await _database;
     List<Map> res = await db
         .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);
@@ -143,13 +146,18 @@ class WalletDataBaseService {
   // Update database
   Future<void> update(WalletInfo walletInfo) async {
     final Database db = await _database;
-    await db.update(
+
+    await db
+        .update(
       tableName,
       walletInfo.toJson(),
       where: "id = ?",
       whereArgs: [walletInfo.id],
       conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    )
+        .catchError((err) {
+      log.e('update catch $err');
+    });
   }
 
   // Close Database
@@ -161,11 +169,15 @@ class WalletDataBaseService {
   // Delete Database
   Future deleteDb() async {
     log.i('database path $path');
-    await deleteDatabase(path);
-    var databasePath = await getDatabasesPath();
-    var p = join(databasePath, _databaseName);
-    log.w(p);
-    log.w('database path after delete $p');
-    _database = null;
+    try {
+      await deleteDatabase(path);
+      var databasePath = await getDatabasesPath();
+      var p = join(databasePath, _databaseName);
+
+      log.w('database path after delete: $p');
+      _database = null;
+    } catch (err) {
+      log.e('deleteDb CATCH $err');
+    }
   }
 }

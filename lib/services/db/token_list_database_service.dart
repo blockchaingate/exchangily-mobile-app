@@ -78,6 +78,30 @@ class TokenListDatabaseService {
     return list;
   }
 
+  // Get Single token By Name
+  Future<Token> getByCointype(int coinType) async {
+    await initDb();
+    final Database db = await _database;
+    List<Map> res =
+        await db.query(tableName, where: 'type= ?', whereArgs: [coinType]);
+    log.i('coinType - $coinType - res-- $res');
+
+    if (res.isNotEmpty) return Token.fromJson(res.first);
+    return null;
+  }
+
+  // Get contract address By coinType
+  Future<String> getContractAddressByCoinType(int coinType) async {
+    await initDb();
+    final Database db = await _database;
+    List<Map> res =
+        await db.query(tableName, where: 'type= ?', whereArgs: [coinType]);
+    log.w('coinType - $coinType - res-- $res');
+
+    if (res.isNotEmpty) return Token.fromJson(res.first).contract;
+    return null;
+  }
+
 // Insert Data In The Database
   Future insert(Token passedToken) async {
     await initDb();
@@ -129,10 +153,10 @@ class TokenListDatabaseService {
         whereArgs: [tickerName],
         limit: 1);
     log.w('Name - $tickerName - res-- $res');
-    int tt = Token.fromJson(res.first).tokenType;
+    int tt = Token.fromJson(res.first).coinType;
     log.i('token type $tt');
 
-    if (res.isNotEmpty) return Token.fromJson(res.first).tokenType;
+    if (res.isNotEmpty) return Token.fromJson(res.first).coinType;
 
     return null;
     // return TransactionHistory.fromJson((res.first));

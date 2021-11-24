@@ -314,7 +314,8 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                 Expanded(
                     flex: 1,
                     child: order.isActive
-                        ? model.isBusy &&
+                        ? model.isCancelling &&
+                                //   model.busy(model.onClickOrderHash) &&
                                 orders[index].orderHash ==
                                     model.onClickOrderHash
                             ? CupertinoActivityIndicator()
@@ -342,7 +343,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                               size: 16,
                             ),
                             onPressed: () {
-                              print('closed orders');
+                              print('cancelled orders');
                             }))
               ],
             );

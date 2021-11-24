@@ -21,7 +21,7 @@ class TransactionHistoryView extends StatelessWidget {
         createNewModelOnInsert: true,
         viewModelBuilder: () =>
             TransactionHistoryViewmodel(tickerName: tickerName),
-        onModelReady: (model) async {
+        onModelReady: (TransactionHistoryViewmodel model) async {
           model.context = context;
           model.getWalletFromDb();
         },
@@ -83,7 +83,6 @@ class TransactionHistoryView extends StatelessWidget {
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2),
-                                    UIHelper.horizontalSpaceMedium,
                                     UIHelper.horizontalSpaceSmall,
                                     Expanded(
                                       flex: 1,
@@ -105,12 +104,15 @@ class TransactionHistoryView extends StatelessWidget {
                                     ),
                                     Expanded(
                                       flex: 1,
-                                      child: Text(
-                                          AppLocalizations.of(context).status,
-                                          textAlign: TextAlign.center,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2),
+                                      child: Container(
+                                        margin: EdgeInsets.only(left: 10.0),
+                                        child: Text(
+                                            AppLocalizations.of(context).status,
+                                            textAlign: TextAlign.left,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2),
+                                      ),
                                     ),
                                     Expanded(
                                       flex: 1,

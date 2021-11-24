@@ -11,12 +11,11 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_viewmodel.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:stacked/stacked.dart';
 import '../../../shared/globals.dart' as globals;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +33,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   final log = getLogger('CreatePassword');
   @override
   Widget build(BuildContext context) {
-    return BaseScreen<CreatePasswordScreenState>(
+    return ViewModelBuilder.reactive(
+      viewModelBuilder: () => CreatePasswordViewModel(),
       onModelReady: (model) {
         model.randomMnemonicFromRoute = widget.args['mnemonic'];
         model.context = context;
@@ -94,7 +94,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     UIHelper.verticalSpaceLarge,
                     UIHelper.verticalSpaceLarge,
                     Center(
-                      child: model.state == ViewState.Busy
+                      child: model.isBusy
                           ? Shimmer.fromColors(
                               baseColor: globals.primaryColor,
                               highlightColor: globals.grey,
@@ -132,19 +132,17 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Widget _buildPasswordTextField(model) {
+  Widget _buildPasswordTextField(CreatePasswordViewModel model) {
     return TextField(
         onChanged: (String pass) {
-          setState(() {
-            model.checkPassword(pass);
-          });
+          model.checkPassword(pass);
         },
         keyboardType: TextInputType.visiblePassword,
         focusNode: model.passFocus,
         autofocus: true,
         controller: model.passTextController,
         obscureText: true,
-        maxLength: 16,
+        maxLength: 32,
         style: model.checkPasswordConditions
             ? TextStyle(color: globals.primaryColor, fontSize: 16)
             : TextStyle(color: globals.grey, fontSize: 16),
@@ -169,16 +167,14 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Widget _buildConfirmPasswordTextField(model) {
+  Widget _buildConfirmPasswordTextField(CreatePasswordViewModel model) {
     return TextField(
         onChanged: (String pass) {
-          setState(() {
-            model.checkConfirmPassword(pass);
-          });
+          model.checkConfirmPassword(pass);
         },
         controller: model.confirmPassTextController,
         obscureText: true,
-        maxLength: 16,
+        maxLength: 32,
         style: model.checkConfirmPasswordConditions
             ? TextStyle(color: globals.primaryColor, fontSize: 16)
             : TextStyle(color: globals.grey, fontSize: 16),
@@ -204,7 +200,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   Widget _buildCreateNewWalletButton(
-      CreatePasswordScreenState model, BuildContext context) {
+      CreatePasswordViewModel model, BuildContext context) {
     return ButtonTheme(
       shape:
           RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30)),

@@ -16,7 +16,6 @@ import 'dart:convert';
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
 
 import 'package:convert/convert.dart';
@@ -24,8 +23,10 @@ import "package:hex/hex.dart";
 import 'package:crypto/crypto.dart';
 import 'package:bs58check/bs58check.dart' as bs58check;
 
+import 'custom_http_util.dart';
+
 class BtcUtils {
-  final client = new http.Client();
+  var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
   final log = getLogger('BtcUtils');
   final String btcBaseUrl = environment["endpoints"]["btc"];
 
@@ -83,7 +84,6 @@ class BtcUtils {
   Future getBtcTransactionStatus(String txid) async {
     var response;
     var url = btcBaseUrl + 'gettransactionjson/' + txid;
-    var client = new http.Client();
     try {
       response = await client.get(url);
     } catch (e) {}
@@ -95,7 +95,7 @@ class BtcUtils {
     var url = btcBaseUrl + 'getbalance/' + address;
     var btcBalance = 0.0;
     try {
-      var response = await http.get(url);
+      var response = await client.get(url);
       btcBalance = double.parse(response.body) / 1e8;
     } catch (e) {}
     return {'balance': btcBalance, 'lockbalance': 0.0};

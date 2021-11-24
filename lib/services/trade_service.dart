@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/stoppable_service.dart';
+import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:observable_ish/observable_ish.dart';
 import 'package:stacked/stacked.dart';
 import 'package:web_socket_channel/io.dart';
@@ -29,14 +30,17 @@ import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import "package:hex/hex.dart";
-
-import 'package:http/http.dart' as http;
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
 class TradeService extends StoppableService with ReactiveServiceMixin {
   TradeService() {
-    listenToReactiveValues(
-        [_price, _quantity, _interval, _isTradingChartModelBusy]);
+    listenToReactiveValues([
+      _price,
+      _quantity,
+      _interval,
+      _isTradingChartModelBusy,
+      _isRefreshBalance
+    ]);
   }
 
   final log = getLogger('TradeService');
@@ -44,29 +48,32 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   ConfigService configService = locator<ConfigService>();
 
   LocalStorageService storageService = locator<LocalStorageService>();
-  final client = new http.Client();
+  var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
   //static String basePath = environment['websocket'];
 
   /// To check if orderbook has loaded in orderbook viewmodel
   /// and then use this in buysellview to display price and quantity values
   /// in the textfields
-  RxValue<bool> _isOrderbookLoaded = RxValue<bool>(initial: false);
+  RxValue<bool> _isOrderbookLoaded = RxValue<bool>(false);
   bool get isOrderbookLoaded => _isOrderbookLoaded.value;
 
-  RxValue<double> _price = RxValue<double>(initial: 0.0);
+  RxValue<double> _price = RxValue<double>(0.0);
   double get price => _price.value;
 
-  RxValue<double> _quantity = RxValue<double>(initial: 0.0);
+  RxValue<double> _quantity = RxValue<double>(0.0);
   double get quantity => _quantity.value;
 
-  RxValue<String> _interval = RxValue<String>(initial: '24h');
+  RxValue<String> _interval = RxValue<String>('24h');
   String get interval => _interval.value;
 
-  RxValue<bool> _isTradingChartModelBusy = RxValue<bool>(initial: false);
+  RxValue<bool> _isTradingChartModelBusy = RxValue<bool>(false);
   bool get isTradingChartModelBusy => _isTradingChartModelBusy.value;
 
   Stream tickerStream;
   Stream allPriceStream;
+
+  RxValue<bool> _isRefreshBalance = RxValue<bool>(false);
+  bool get isRefreshBalance => _isRefreshBalance.value;
 
   @override
   void start() {
@@ -94,7 +101,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     storageService.tokenList.forEach((element) {
       var json = jsonDecode(element);
       Token token = Token.fromJson(json);
-      if (token.tokenType == type) {
+      if (token.coinType == type) {
         print(token.tickerName);
         res = token.tickerName;
       }
@@ -104,7 +111,15 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
 /*----------------------------------------------------------------------
-                    set orderbook loaded status
+                    set balance refresh
+----------------------------------------------------------------------*/
+  void setBalanceRefresh(bool v) {
+    _isRefreshBalance.value = v;
+    log.w('setBalanceRefresh $isRefreshBalance');
+  }
+
+/*----------------------------------------------------------------------
+                    set Trading Chart Interval
 ----------------------------------------------------------------------*/
   void setTradingChartInterval(String v, bool isBusy) {
     _isTradingChartModelBusy.value = isBusy;

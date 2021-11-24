@@ -51,12 +51,12 @@ class BottomNavBar extends StatelessWidget {
             label: AppLocalizations.of(context).trade),
         BottomNavigationBarItem(
           icon: Image.asset(
-            'assets/images/bindpay/bindpay.png',
+            'assets/images/lightning-remit/remit.png',
             width: 40,
             height: 30,
             color: grey,
           ),
-          label: AppLocalizations.of(context).bindpay,
+          label: AppLocalizations.of(context).remit,
         ),
         // BottomNavigationBarItem(
         //     icon: Icon(Icons.branding_watermark, size: iconSize),
@@ -88,9 +88,9 @@ class BottomNavBar extends StatelessWidget {
                   arguments: false);
             break;
           case 2:
-            if (currentRouteName != 'BindpayView')
+            if (currentRouteName != 'LightningRemitView')
               navigationService
-                  .navigateUsingPushReplacementNamed(BindpayViewRoute);
+                  .navigateUsingPushReplacementNamed(LightningRemitViewRoute);
             break;
           // case 2:
           // if (currentRouteName != 'OtcScreen')

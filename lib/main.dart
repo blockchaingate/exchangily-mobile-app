@@ -12,8 +12,11 @@
 */
 
 // import 'package:device_preview/device_preview.dart';
+import 'dart:io';
+
 import 'package:exchangilymobileapp/Managers/dialog_manager.dart';
 import 'package:exchangilymobileapp/Managers/life_cycle_manager.dart';
+import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/connectivity_service.dart';
@@ -33,6 +36,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
   // debugRepaintRainbowEnabled = true;
+  // isrgrootx1.pem
   try {
     await serviceLocator();
     Logger.level = Level.nothing;
@@ -59,6 +63,7 @@ class MyApp extends StatelessWidget {
     return StreamProvider(
       create: (BuildContext context) =>
           ConnectivityService().connectionStatusController.stream,
+      initialData: ConnectivityStatus.Cellular,
       child: LifeCycleManager(
         child: OverlaySupport(
           child: MaterialApp(

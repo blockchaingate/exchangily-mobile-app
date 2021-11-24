@@ -14,7 +14,7 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -80,7 +80,22 @@ class WalletFeaturesView extends StatelessWidget {
                                   // Navigator.of(context, rootNavigator: true).pop('dialog');
                                   model.navigationService
                                       .navigateTo('/dashboard');
-                                }))
+                                })),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: SizedBox(
+                            height: 20,
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              icon: model.isFavorite
+                                  ? Icon(Icons.star, color: white, size: 22)
+                                  : Icon(Icons.star_border_outlined,
+                                      color: yellow, size: 22),
+                              onPressed: () => model.updateFavWalletCoinsList(
+                                  model.walletInfo.tickerName),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -312,23 +327,38 @@ class WalletFeaturesView extends StatelessWidget {
                 ),
               ),
               UIHelper.verticalSpaceSmall,
-              // Middle column row containes wallet balance and in exchnage text
+              // Middle column row containes wallet balance and in exchange text
               Container(
                 color: primaryColor.withAlpha(27),
                 padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                        //  '${model.specialTicker} '.toUpperCase() +
-                        AppLocalizations.of(context).walletbalance,
+                    Text(AppLocalizations.of(context).walletbalance,
                         style: Theme.of(context).textTheme.subtitle1),
                     Text(
-                        '${model.walletInfo.availableBalance.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)} ${model.specialTicker}',
+                        '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
                         style: Theme.of(context).textTheme.bodyText1),
                   ],
                 ),
               ),
+              // Middle column row containes unconfirmed wallet balance.
+              model.walletInfo.tickerName == 'FAB'
+                  ? Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(AppLocalizations.of(context).unConfirmedBalance,
+                              style: Theme.of(context).textTheme.bodyText1),
+                          Text(
+                              '${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
+                              style: Theme.of(context).textTheme.bodyText1),
+                        ],
+                      ),
+                    )
+                  : Container(),
               // Last column row contains wallet balance and exchange balance
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
@@ -342,24 +372,9 @@ class WalletFeaturesView extends StatelessWidget {
                           style: Theme.of(context).textTheme.subtitle1),
                     ),
                     Expanded(
-                      flex: 2,
-                      child: SizedBox(
-                        height: 20,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: model.isFavorite
-                              ? Icon(Icons.star, color: primaryColor, size: 20)
-                              : Icon(Icons.star_border_outlined,
-                                  color: white, size: 18),
-                          onPressed: () => model.updateFavWalletCoinsList(
-                              model.walletInfo.tickerName),
-                        ),
-                      ),
-                    ),
-                    Expanded(
                         flex: 4,
                         child: Text(
-                            '${model.walletInfo.inExchange.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)}',
+                            '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, precision: model.decimalLimit).toString()} ${model.specialTicker}',
                             textAlign: TextAlign.right,
                             style: Theme.of(context).textTheme.subtitle1)),
                   ],

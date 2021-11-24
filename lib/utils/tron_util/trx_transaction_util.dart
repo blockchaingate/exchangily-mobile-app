@@ -18,7 +18,8 @@ import 'package:fixnum/fixnum.dart';
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:exchangilymobileapp/protos_gen/any.pb.dart';
 import 'package:exchangilymobileapp/protos_gen/protos/tron.pb.dart' as Tron;
-import 'package:http/http.dart' as http;
+
+import '../custom_http_util.dart';
 
 Future generateTrxTransactionContract(
     {@required Uint8List privateKey,
@@ -270,13 +271,13 @@ _generateTrxRawTransaction(
 ----------------------------------------------------------------------*/
 
 Future broadcastTronTransaction(transactionHex) async {
-  final client = new http.Client();
+  var httpClient = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
   Map<String, dynamic> body = {"transaction": transactionHex};
   // print(
   //    'broadcasrTronTransaction $BroadcasrTronTransactionUrl -- body ${jsonEncode(body)}');
   try {
-    var response =
-        await client.post(BroadcasrTronTransactionUrl, body: jsonEncode(body));
+    var response = await httpClient.post(BroadcasrTronTransactionUrl,
+        body: jsonEncode(body));
     var json = jsonDecode(response.body);
     if (json != null) {
       print('broadcastTronTransaction $json}');

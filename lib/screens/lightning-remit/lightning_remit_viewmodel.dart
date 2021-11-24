@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
+
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
@@ -22,16 +23,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:share/share.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 
-class BindpayViewmodel extends FutureViewModel {
-  final log = getLogger('BindpayViewmodel');
+class LightningRemitViewmodel extends FutureViewModel {
+  final log = getLogger('LightningRemitViewmodel');
 
   final amountController = TextEditingController();
   final addressController = TextEditingController();
@@ -119,19 +120,18 @@ class BindpayViewmodel extends FutureViewModel {
     }
     setBusyForObject(tickerName, false);
     log.e('tickerName $tickerName');
-    // getBindpayTransactionHistory();
   }
 
-  // get all bindpay transactions
+  // get all LightningRemit transactions
 
-  getBindpayTransactionHistory() async {
+  getLightningRemitTransactionHistory() async {
     setBusy(true);
     transactionHistory = [];
-    await apiService.getBindpayHistoryEvents().then((res) {
+    await apiService.getLightningRemitHistoryEvents().then((res) {
       res.forEach((tx) {
         transactionHistory.add(tx);
       });
-      log.w('bindpay txs ${transactionHistory.length}');
+      log.w('LightningRemi txs ${transactionHistory.length}');
       transactionHistory.sort(
           (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)));
     });
@@ -141,7 +141,8 @@ class BindpayViewmodel extends FutureViewModel {
   // launch url
   openExplorer(String txId) async {
     String exchangilyExplorerUrl = ExchangilyExplorerUrl + txId;
-    log.i('bindpay open explorer - explorer url - $exchangilyExplorerUrl');
+    log.i(
+        'LightningRemi open explorer - explorer url - $exchangilyExplorerUrl');
     if (await canLaunch(exchangilyExplorerUrl)) {
       await launch(exchangilyExplorerUrl);
     }
@@ -264,7 +265,7 @@ class BindpayViewmodel extends FutureViewModel {
     try {
       setBusy(true);
       String barcode = '';
-      barcode = await BarcodeScanner.scan();
+      barcode = await BarcodeScanner.scan().then((value) => value.rawContent);
       addressController.text = barcode;
       setBusy(false);
     } on PlatformException catch (e) {
@@ -343,7 +344,7 @@ class BindpayViewmodel extends FutureViewModel {
 
   showBarcode() async {
     setBusy(true);
-    await walletDataBaseService.getBytickerName('FAB').then((coin) {
+    await walletDataBaseService.getWalletBytickerName('FAB').then((coin) {
       String kbAddress = walletService.toKbPaymentAddress(coin.address);
       print('KBADDRESS $kbAddress');
       showDialog(
@@ -430,7 +431,7 @@ class BindpayViewmodel extends FutureViewModel {
                               )),
                               onPressed: () {
                                 String receiveFileName =
-                                    'bindpay-kanban-receive-address.png';
+                                    'Lightning-remit-kanban-receive-address.png';
                                 getApplicationDocumentsDirectory().then((dir) {
                                   String filePath =
                                       "${dir.path}/$receiveFileName";
@@ -443,7 +444,7 @@ class BindpayViewmodel extends FutureViewModel {
                                       file
                                           .writeAsBytes(byteData)
                                           .then((onFile) {
-                                        Share.shareFile(onFile,
+                                        Share.shareFiles([onFile.path],
                                             text: kbAddress);
                                       });
                                     });
@@ -551,7 +552,7 @@ class BindpayViewmodel extends FutureViewModel {
                               style: Theme.of(context).textTheme.headline6),
                           onPressed: () {
                             String receiveFileName =
-                                'bindpay-kanban-receive-address.png';
+                                'Lightning-remit-kanban-receive-address.png';
                             getApplicationDocumentsDirectory().then((dir) {
                               String filePath = "${dir.path}/$receiveFileName";
                               File file = File(filePath);
@@ -562,7 +563,8 @@ class BindpayViewmodel extends FutureViewModel {
                                     .capturePng(globalKey: globalKey)
                                     .then((byteData) {
                                   file.writeAsBytes(byteData).then((onFile) {
-                                    Share.shareFile(onFile, text: kbAddress);
+                                    Share.shareFiles([onFile.path],
+                                        text: kbAddress);
                                   });
                                 });
                               });

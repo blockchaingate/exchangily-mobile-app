@@ -13,6 +13,8 @@
 
 import 'dart:io';
 
+import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
@@ -20,15 +22,17 @@ import 'package:exchangilymobileapp/services/db/transaction_history_database_ser
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/local_auth_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:showcaseview/showcase_widget.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../localizations.dart';
@@ -44,6 +48,7 @@ class SettingsViewmodel extends BaseViewModel {
   final log = getLogger('SettingsState');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
+  final _vaultService = locator<VaultService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
   TokenListDatabaseService tokenListDatabaseService =
@@ -76,11 +81,17 @@ class SettingsViewmodel extends BaseViewModel {
   bool isShowCaseOnce;
   String baseServerUrl;
   ConfigService configService = locator<ConfigService>();
+  final authService = locator<LocalAuthService>();
   bool isHKServer;
   Map<String, String> versionInfo;
   UserSettings userSettings = new UserSettings();
   bool isUserSettingsEmpty = false;
   final coinUtils = CoinUtils();
+  bool _isBiometricAuth = false;
+  get isBiometricAuth => _isBiometricAuth;
+  final t = TextEditingController();
+  bool _lockAppNow = false;
+  get lockAppNow => _lockAppNow;
 
   init() async {
     setBusy(true);
@@ -96,9 +107,49 @@ class SettingsViewmodel extends BaseViewModel {
     setBusy(false);
   }
 
-/*-------------------------------------------------------------------------------------
-                      setLanguageFromDb
--------------------------------------------------------------------------------------*/
+  clickMe() {
+    _vaultService.test('test1234', 'I am plain text');
+  }
+
+  setLockAppNowValue() {
+    setBusyForObject(lockAppNow, true);
+    _lockAppNow = !_lockAppNow;
+    navigationService.navigateUsingPushReplacementNamed(WalletSetupViewRoute);
+    setBusyForObject(lockAppNow, false);
+  }
+
+// Set biometric auth
+
+  setBiometricAuth() async {
+    setBusyForObject(isBiometricAuth, true);
+
+    bool hasAuthorized = await authService.authenticateApp();
+
+    if (hasAuthorized) {
+      storageService.hasInAppBiometricAuthEnabled =
+          !storageService.hasInAppBiometricAuthEnabled;
+      storageService.hasPhoneProtectionEnabled = true;
+    } else if (!hasAuthorized) {
+      if (authService.isLockedOut)
+        sharedService.sharedSimpleNotification(
+            AppLocalizations.of(context).lockedOutTemp);
+      else if (authService.isLockedOutPerm)
+        sharedService.sharedSimpleNotification(
+            AppLocalizations.of(context).lockedOutPerm);
+    }
+
+    if (!storageService.hasPhoneProtectionEnabled) {
+      sharedService.sharedSimpleNotification(
+          AppLocalizations.of(context).pleaseSetupDeviceSecurity);
+      storageService.hasCancelledBiometricAuth = false;
+      storageService.hasInAppBiometricAuthEnabled = false;
+    }
+    _isBiometricAuth = storageService.hasInAppBiometricAuthEnabled;
+    setBusyForObject(isBiometricAuth, false);
+  }
+
+  //                    setLanguageFromDb
+
   setLanguageFromDb() async {
     setBusy(true);
     await userSettingsDatabaseService.getById(1).then((res) {
@@ -238,22 +289,28 @@ class SettingsViewmodel extends BaseViewModel {
         log.w('deleting wallet');
         await walletDatabaseService
             .deleteDb()
-            .whenComplete(() => log.e('wallet database deleted!!'));
+            .whenComplete(() => log.e('wallet database deleted!!'))
+            .catchError((err) => log.e('wallet database CATCH $err'));
 
-        await transactionHistoryDatabaseService.deleteDb().whenComplete(
-            () => log.e('trnasaction history database deleted!!'));
+        await transactionHistoryDatabaseService
+            .deleteDb()
+            .whenComplete(() => log.e('trnasaction history database deleted!!'))
+            .catchError((err) => log.e('tx history database CATCH $err'));
 
-        await walletService
+        await _vaultService
             .deleteEncryptedData()
-            .whenComplete(() => log.e('encrypted data deleted!!'));
+            .whenComplete(() => log.e('encrypted data deleted!!'))
+            .catchError((err) => log.e('delete encrypted CATCH $err'));
 
         await tokenListDatabaseService
             .deleteDb()
-            .whenComplete(() => log.e('Token list database deleted!!'));
+            .whenComplete(() => log.e('Token list database deleted!!'))
+            .catchError((err) => log.e('token list database CATCH $err'));
 
         await userSettingsDatabaseService
             .deleteDb()
-            .whenComplete(() => log.e('User settings database deleted!!'));
+            .whenComplete(() => log.e('User settings database deleted!!'))
+            .catchError((err) => log.e('user setting database CATCH $err'));
 
         storageService.walletBalancesBody = '';
 
@@ -267,8 +324,10 @@ class SettingsViewmodel extends BaseViewModel {
         log.e('before local storage service clear ${prefs.getKeys()}');
 
         log.e('all keys after clearing ${prefs.getKeys()}');
-        await _deleteCacheDir();
-        await _deleteAppDir();
+        await _deleteCacheDir()
+            .catchError((err) => log.e('delete cache failed $err'));
+        await _deleteAppDir()
+            .catchError((err) => log.e('delete app dir failed $err'));
 
         Navigator.pushNamed(context, '/');
       } else if (res.returnedText == 'Closed' && !res.confirmed) {
@@ -394,8 +453,6 @@ class SettingsViewmodel extends BaseViewModel {
 
     setBusy(false);
   }
-
-  // Pin code
 
   // Change password
 

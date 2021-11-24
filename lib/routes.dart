@@ -14,9 +14,9 @@
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/screens/bindpay/bindpay_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
+import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_view.dart';
 import 'package:exchangilymobileapp/screens/otc/otc.dart';
 import 'package:exchangilymobileapp/screens/otc/otc_details.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/campaign_dashboard_screen.dart';
@@ -44,11 +44,11 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_excha
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/receive.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/send_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features_view.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_setup/wallet_setup.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_setup/wallet_setup_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas/add_gas.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_wallet.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_wallet_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/smart_contract.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
@@ -59,14 +59,17 @@ import 'screens/otc_campaign/token_details_screen.dart';
 final log = getLogger('Routes');
 
 class RouteGenerator {
+  static String _lastRoute = '/';
+  static String get lastRoute => _lastRoute;
   static Route<dynamic> generateRoute(RouteSettings settings) {
     log.w(
         'generateRoute | name: ${settings.name} arguments:${settings.arguments}');
     final args = settings.arguments;
+    _lastRoute = settings.name;
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => WalletSetupScreen());
+        return MaterialPageRoute(builder: (_) => WalletSetupView());
 
 /*----------------------------------------------------------------------
                           Wallet Setup
@@ -75,7 +78,7 @@ class RouteGenerator {
       case ChooseWalletLanguageViewRoute:
         return MaterialPageRoute(builder: (_) => ChooseWalletLanguageView());
       case WalletSetupViewRoute:
-        return MaterialPageRoute(builder: (_) => WalletSetupScreen());
+        return MaterialPageRoute(builder: (_) => WalletSetupView());
 
       case ImportWalletViewRoute:
         return MaterialPageRoute(builder: (_) => ImportWalletScreen());
@@ -214,12 +217,12 @@ class RouteGenerator {
       // case '/switchLanguage':
       //   return MaterialPageRoute(builder: (_) => LanguageScreen());
 /*----------------------------------------------------------------------
-                      Bindpay Routes
+                      LightningRemit Routes
 ----------------------------------------------------------------------*/
-      case BindpayViewRoute:
+      case LightningRemitViewRoute:
         return MaterialPageRoute(
-            settings: RouteSettings(name: 'BindpayView'),
-            builder: (_) => BindpayView());
+            settings: RouteSettings(name: 'LightningRemitView'),
+            builder: (_) => LightningRemitView());
 
 /*----------------------------------------------------------------------
                       Navigation Routes

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_trade_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
@@ -372,7 +372,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 -------------------------------------------------------------------------------------*/
 
   Future<String> getExgAddress() async {
-    var exgWallet = await walletDataBaseService.getBytickerName('EXG');
+    var exgWallet = await walletDataBaseService.getWalletBytickerName('EXG');
     return exgWallet.address;
   }
 

@@ -17,16 +17,16 @@ import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
-import 'package:exchangilymobileapp/screens/bindpay/bindpay_history.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
+import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_history_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
+import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
@@ -37,7 +37,10 @@ import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 /// The service responsible for networking requests
 class ApiService {
   final log = getLogger('ApiService');
-  final client = new http.Client();
+
+  final client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
+  //customHttpClient(ISRG_X1);
+
   ConfigService configService = locator<ConfigService>();
   SharedService sharedService = locator<SharedService>();
   LocalStorageService storageService = locator<LocalStorageService>();
@@ -46,6 +49,10 @@ class ApiService {
 
   final blockchaingateUrl = environment['endpoints']['blockchaingate'];
 
+//     ByteData data = await rootBundle.load('assets/cert/isrgrootx1.pem');
+// SecurityContext context1 = SecurityContext.defaultContext;
+// context1.setTrustedCertificatesBytes(data.buffer.asUint8List());
+// client = HttpClient(context: context1);
 /*----------------------------------------------------------------------
                 Get Tron Ts wallet balance
 ----------------------------------------------------------------------*/
@@ -139,7 +146,7 @@ class ApiService {
 
     List<TransactionHistory> transactionHistory = [];
     await walletDatabaseService
-        .getBytickerName('FAB')
+        .getWalletBytickerName('FAB')
         .then((value) => fabAddress = value.address);
 
     String url =
@@ -228,33 +235,34 @@ class ApiService {
   }
 
 /*----------------------------------------------------------------------
-                Get Bindpay History
+                Get LightningRemit History
 ----------------------------------------------------------------------*/
-  Future getBindpayHistoryEvents() async {
+  Future getLightningRemitHistoryEvents() async {
     String fabAddress = '';
 
     List<TransactionHistory> transactionHistory = [];
     await walletDatabaseService
-        .getBytickerName('FAB')
+        .getWalletBytickerName('FAB')
         .then((value) => fabAddress = value.address);
 
-    String url = configService.getKanbanBaseUrl() + BindpayTxHHistoryApiRoute;
+    String url =
+        configService.getKanbanBaseUrl() + LightningRemitTxHHistoryApiRoute;
     Map<String, dynamic> body = {"fabAddress": fabAddress};
 
-    log.i('getBindpayHistoryEvents url $url -- body $body');
+    log.i('getLightningRemitHistoryEvents url $url -- body $body');
 
     try {
       var response = await client.post(url, body: body);
 
       var json = jsonDecode(response.body);
       if (json != null) {
-        log.w('getBindpayHistoryEvents json $json}');
+        log.w('getLightningRemitHistoryEvents json $json}');
         if (json['success']) {
           //   log.e('getTransactionHistoryEvents json ${json['data']}');
           var data = json['data'] as List;
 
           data.forEach((element) {
-            var holder = BindpayHistory.fromJson(element);
+            var holder = LightningRemitHistoryModel.fromJson(element);
             print(holder.toJson());
             var timestamp = holder.time;
 
@@ -642,7 +650,7 @@ class ApiService {
           GetBalanceApiRoute +
           exgAddress;
       log.e('get gas balance url $url');
-      final res = await http.get(url);
+      final res = await client.get(url);
       log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
@@ -954,7 +962,7 @@ class ApiService {
 
   Future getSliderImages() async {
     try {
-      final res = await http.get(
+      final res = await client.get(
           // kanbanBaseUrl + "/kanban/getadvconfig"
           configService.getKanbanBaseUrl() + "kanban/getadvconfig");
       log.w(' get slider images ${jsonDecode(res.body)}');
@@ -976,7 +984,7 @@ class ApiService {
     log.w("Calling api: getAnnouncement " + lang);
     log.i("url: " + url);
     try {
-      final res = await http.get(url);
+      final res = await client.get(url);
       log.w('getAnnouncement ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         var body = jsonDecode(res.body)['body'];
@@ -994,7 +1002,7 @@ class ApiService {
         configService.getKanbanBaseUrl() +
         "kanban/getCampaigns");
     try {
-      final res = await http.get(
+      final res = await client.get(
           // "http://192.168.0.12:4000/kanban/getCampaigns"
           configService.getKanbanBaseUrl() + "kanban/getCampaigns");
       log.w('getEvents ${jsonDecode(res.body)}');
@@ -1015,7 +1023,7 @@ class ApiService {
   Future postEventSingle(id) async {
     print("Calling api: getEventSingle");
     try {
-      final res = await http.post(
+      final res = await client.post(
         // "http://192.168.0.12:4000/kanban/getCampaignSingle",
         configService.getKanbanBaseUrl() + "kanban/getCampaignSingle",
         headers: <String, String>{

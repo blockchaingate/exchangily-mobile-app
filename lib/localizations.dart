@@ -1578,6 +1578,13 @@ class AppLocalizations {
             'bindpay_please_transfer_funds_to_exchange_wallet_to_use_bindpay');
   }
 
+  String get pleaseTransferFundsToExchangeWalletToUseLightningRemit {
+    return Intl.message(
+        "Please transfer funds to exchange wallet to use Lightning Remit",
+        name: 'pleaseTransferFundsToExchangeWalletToUseLightningRemit',
+        desc: 'please_transfer_funds_to_exchange_wallet_to_use_LightningRemit');
+  }
+
   String get important {
     return Intl.message("Important",
         name: 'important', desc: 'backup_mnemonic_important');
@@ -1614,7 +1621,7 @@ class AppLocalizations {
 
   String get walletDashboardInstruction2 {
     return Intl.message(
-        'Transfer funds from wallet to exchange to trade and use bindpay',
+        'Transfer funds from wallet to exchange to trade and use lightning remit',
         name: 'walletDashboardInstruction2',
         desc: 'wallet_dashboard_instruction_2');
   }
@@ -1827,7 +1834,52 @@ class AppLocalizations {
         desc: 'unConfirmed_balance_info_example');
   }
 
-  // Share page pending translation added by Jack
+  String get insufficientGasBalance {
+    return Intl.message('Insufficient gas balance',
+        name: 'insufficientGasBalance', desc: 'Insufficient_gas_balance');
+  }
+
+  String get unlock {
+    return Intl.message('Unlock', name: 'unlock', desc: 'unlock');
+  }
+
+  String get enableBiometricAuthentication {
+    return Intl.message('Enable Biometric Authentication',
+        name: 'enableBiometricAuthentication',
+        desc: 'settings_enable_biometric_authentication');
+  }
+
+  String get pleaseSetupDeviceSecurity {
+    return Intl.message('Please setup device security in the settings',
+        name: 'pleaseSetupDeviceSecurity',
+        desc: 'walletsetup_please_setup_device_security');
+  }
+
+  String get remit {
+    return Intl.message('Remit', name: 'remit', desc: 'bottom_nav_remit');
+  }
+
+  String get withdrawPopupNote {
+    return Intl.message('Please confirm the coin you want to withdraw',
+        name: 'withdrawPopupNote', desc: 'withdraw_popup_note');
+  }
+
+  String get lockedOutTemp {
+    return Intl.message('Too many failed attempts, please try after sometime.',
+        name: 'lockedOutTemp', desc: 'locked_out_temp');
+  }
+
+  String get lockedOutPerm {
+    return Intl.message(
+        'Too many failed attempts, please try to unlock using Pin orPassword',
+        name: 'lockedOutPerm',
+        desc: 'locked_out_perm');
+  }
+
+  String get lockAppNow {
+    return Intl.message('Lock App Now',
+        name: 'lockAppNow', desc: 'lock_app_now');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -52,6 +52,8 @@ class CoinUtils {
   final log = getLogger('coin_util');
   final fabUtils = FabUtils();
   final btcUtils = BtcUtils();
+  final ethUtils = EthUtils();
+  final ltcUtils = LtcUtils();
 /*----------------------------------------------------------------------
                 Sign deposit TRX tx
 --------------r--------------------------------------------------------*/
@@ -689,8 +691,8 @@ getAddressForCoin(root, 'EXG', tokenType: 'FAB');
     } else if (tickerName == 'DOGE') {
       return generateDogeAddress(root);
     } else if ((tickerName == 'ETH') || (tokenType == 'ETH')) {
-      var node = getEthNode(root, index: index);
-      return await getEthAddressForNode(node);
+      var node = ethUtils.getEthNode(root, index: index);
+      return await ethUtils.getEthAddressForNode(node);
     } else if (tickerName == 'FAB') {
       var node = fabUtils.getFabNode(root, index: index);
       return btcUtils.getBtcAddressForNode(node, tickerName: tickerName);
@@ -714,13 +716,13 @@ getAddressForCoin(root, 'EXG', tokenType: 'FAB');
       if (coinName == 'BTC') {
         return await btcUtils.getBtcBalanceByAddress(address);
       } else if (coinName == 'LTC') {
-        return await getLtcBalanceByAddress(address);
+        return await ltcUtils.getLtcBalanceByAddress(address);
       } else if (coinName == 'ETH') {
-        return await getEthBalanceByAddress(address);
+        return await ethUtils.getEthBalanceByAddress(address);
       } else if (coinName == 'FAB') {
         return await fabUtils.getFabBalanceByAddress(address);
       } else if (tokenType == 'ETH') {
-        return await getEthTokenBalanceByAddress(address, coinName);
+        return await ethUtils.getEthTokenBalanceByAddress(address, coinName);
       } else if (tokenType == 'FAB') {
         return await fabUtils.getFabTokenBalanceByAddress(address, coinName);
       }
@@ -738,11 +740,11 @@ getAddressForCoin(root, 'EXG', tokenType: 'FAB');
       if (coinName == 'BTC') {
         return await btcUtils.getBtcBalanceByAddress(address);
       } else if (coinName == 'ETH') {
-        return await getEthBalanceByAddress(address);
+        return await ethUtils.getEthBalanceByAddress(address);
       } else if (coinName == 'FAB') {
         return await fabUtils.getFabBalanceByAddress(address);
       } else if (tokenType == 'ETH') {
-        return await getEthTokenBalanceByAddress(address, coinName);
+        return await ethUtils.getEthTokenBalanceByAddress(address, coinName);
       } else if (tokenType == 'FAB') {
         return await fabUtils.getFabTokenBalanceByAddress(address, coinName);
       }
