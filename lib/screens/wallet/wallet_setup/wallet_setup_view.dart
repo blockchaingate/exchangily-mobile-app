@@ -29,6 +29,7 @@ class WalletSetupView extends StatelessWidget {
     return ViewModelBuilder<WalletSetupViewmodel>.reactive(
       viewModelBuilder: () => WalletSetupViewmodel(),
       onModelReady: (model) async {
+        await model.checkVersion(context);
         model.init();
       },
       builder: (context, model, child) => WillPopScope(

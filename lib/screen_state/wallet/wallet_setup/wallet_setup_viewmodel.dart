@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/version_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -37,6 +38,8 @@ class WalletSetupViewmodel extends BaseViewModel {
   String errorMessage = '';
   get hasAuthenticated => authService.hasAuthorized;
 
+  VersionService versionService = locator<VersionService>();
+
   init() async {
     await walletService.checkLanguage();
     context = context;
@@ -44,6 +47,10 @@ class WalletSetupViewmodel extends BaseViewModel {
     dataBaseService.initDb();
 
     await checkExistingWallet();
+  }
+
+  Future checkVersion(context) async {
+    await versionService.checkVersion(context);
   }
 
   Future checkExistingWallet() async {

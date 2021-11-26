@@ -65,6 +65,8 @@ class VerifyMnemonicWalletView extends StatelessWidget {
         return Container(
             child: TextField(
           inputFormatters: <TextInputFormatter>[
+            LowerCaseTextFormatter(),
+            FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
             // FilteringTextInputFormatter.allow(RegExp(r'([a-z]{0,})$'))
           ],
           style: TextStyle(color: white),
@@ -84,4 +86,15 @@ class VerifyMnemonicWalletView extends StatelessWidget {
           ),
         ));
       });
+}
+
+class LowerCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toLowerCase(),
+      selection: newValue.selection,
+    );
+  }
 }

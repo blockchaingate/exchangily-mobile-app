@@ -37,6 +37,14 @@ Future<void> main() async {
   debugPaintSizeEnabled = false;
   // debugRepaintRainbowEnabled = true;
   // isrgrootx1.pem
+
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //   systemNavigationBarColor: Colors.blue, // navigation bar color
+  //   statusBarColor: Colors.pink, // status bar color
+  // ));
+  // SystemChrome.setSystemUIOverlayStyle(
+  //     SystemUiOverlayStyle(statusBarColor: Colors.white));
+
   try {
     await serviceLocator();
     Logger.level = Level.nothing;
@@ -94,6 +102,9 @@ class MyApp extends StatelessWidget {
             onGenerateRoute: RouteGenerator.generateRoute,
             title: 'Exchangily Wallet',
             theme: ThemeData(
+              appBarTheme: AppBarTheme(
+                systemOverlayStyle: SystemUiOverlayStyle.light,
+              ),
               // added unselectedWidgetColor to update inactive radio button's color
               unselectedWidgetColor: Colors.white,
               disabledColor: globals.grey.withAlpha(100),

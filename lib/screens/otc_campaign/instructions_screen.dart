@@ -98,7 +98,25 @@ class CampaignInstructionScreen extends StatelessWidget {
                         )
                       : model.campaignInfoList.length == 0
                           ? Center(
-                              child: Container(child: Text('....')
+                              child: Container(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.event,
+                                    color: Colors.white,
+                                    size: 35,
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'No Event',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              )
                                   // Text(AppLocalizations.of(context).event),
 
                                   ),

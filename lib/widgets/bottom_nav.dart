@@ -44,17 +44,27 @@ class BottomNavBar extends StatelessWidget {
       showUnselectedLabels: true,
       items: [
         BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.wallet, size: iconSize),
+            icon: Image.asset(
+              'assets/images/icons/wallet.png',
+              width: 40,
+              height: 30,
+              color: _selectedIndex == 0 ? primaryColor : grey,
+            ),
             label: AppLocalizations.of(context).wallet),
         BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.coins, size: iconSize),
+            icon: Image.asset(
+              'assets/images/icons/price-up.png',
+              width: 40,
+              height: 30,
+              color: _selectedIndex == 1 ? primaryColor : grey,
+            ),
             label: AppLocalizations.of(context).trade),
         BottomNavigationBarItem(
           icon: Image.asset(
             'assets/images/lightning-remit/remit.png',
             width: 40,
             height: 30,
-            color: grey,
+            color: _selectedIndex == 2 ? primaryColor : grey,
           ),
           label: AppLocalizations.of(context).remit,
         ),
@@ -64,11 +74,21 @@ class BottomNavBar extends StatelessWidget {
         //         padding: EdgeInsets.only(top: paddingValue),
         //         child: Text('OTC'))),
         BottomNavigationBarItem(
-            icon: Icon(Icons.event, size: iconSize),
+            icon: Image.asset(
+              'assets/images/icons/calendar.png',
+              width: 40,
+              height: 30,
+              color: _selectedIndex == 3 ? primaryColor : grey,
+            ),
             label: AppLocalizations.of(context).event),
 
         BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.cog, size: iconSize),
+            icon: Image.asset(
+              'assets/images/icons/settings-icon.png',
+              width: 40,
+              height: 30,
+              color: _selectedIndex == 4 ? primaryColor : grey,
+            ),
             label: AppLocalizations.of(context).settings),
       ].toList(),
       onTap: (int idx) {

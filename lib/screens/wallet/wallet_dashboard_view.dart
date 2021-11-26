@@ -963,9 +963,15 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
     return Container(
         child: model.favWalletInfoList.isEmpty ||
                 model.favWalletInfoList == null
-            ? Center(child: Icon(Icons.hourglass_empty, color: white)
+            ? Center(
+                child: Image.asset(
+                  'assets/images/icons/wallet_empty.png',
+                  color: Colors.grey,
+                  width: 40,
+                  height: 40,
+                ),
                 //Text('Favorite list empty'),
-                )
+              )
             :
             //Text('test'));
             Container(
