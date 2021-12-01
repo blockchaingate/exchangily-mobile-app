@@ -21,7 +21,6 @@ import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // realtime: https://jsfiddle.net/TradingView/yozeu6k1/
 
@@ -43,9 +42,9 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
       onModelReady: (model) {
         model.init();
       },
-      builder: (context, model, _) => Column(
+      builder: (context, TradingChartViewModel model, _) => Column(
         children: [
-          model.isTradingChartModelBusy
+          model.isTradingChartModelBusy ?? false
               ? Container(
                   color: grey,
                   padding: EdgeInsets.all(0),
@@ -95,8 +94,7 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
     var lang = await userSettingsDatabaseService.getLanguage();
     // var lang = model.storageService.language;
-    if (lang == null)
-    lang='en';
+    if (lang == null) lang = 'en';
     if (lang == 'en') {
       lang = 'en-US';
     } else if (lang == 'zh') {

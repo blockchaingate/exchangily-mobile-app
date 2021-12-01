@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
@@ -14,12 +13,10 @@ import 'package:exchangilymobileapp/services/order_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/shared/globals.dart';
 import 'package:exchangilymobileapp/utils/abi_util.dart';
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -67,7 +64,6 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
   String onClickOrderHash = '';
   PairDecimalConfig decimalConfig = new PairDecimalConfig();
-  //bool get isShowAllOrders => _orderService.isShowAllOrders;
   bool isShowAllOrders = false;
 
   RefreshController _refreshController =
@@ -84,9 +80,9 @@ class MyOrdersViewModel extends ReactiveViewModel {
   String _orderCancelledText;
   TextStyle orderCancelledTextStyle;
 
-  final abiUtils = AbiUtils();
   bool isCancelling = false;
 
+  final abiUtils = AbiUtils();
   final kanbanUtils = KanbanUtils();
 
   init() async {
@@ -107,16 +103,13 @@ class MyOrdersViewModel extends ReactiveViewModel {
 -------------------------------------------------------------------------------------*/
   void swapSources(bool v) async {
     setBusy(true);
-    // log.i('2 swap sources show all pairs $isShowAllOrders');
-    //  _orderService.swapSources();
     isShowAllOrders = v;
-    log.w('5 swap sources show all pairs $isShowAllOrders  before method');
+    log.w('swap sources show all pairs $isShowAllOrders  before method');
     isShowAllOrders ? await getAllMyOrders() : await getMyOrdersByTickerName();
     setBusy(false);
   }
-/*-------------------------------------------------------------------------------------
-                        Pull to refresh
--------------------------------------------------------------------------------------*/
+
+  // Pull to refresh
 
   void onRefresh() async {
     setBusy(true);
@@ -149,9 +142,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusy(false);
   }
 
-/*-------------------------------------------------------------------------------------
-                      Clear order lists
--------------------------------------------------------------------------------------*/
+  // Clear order lists
 
   clearOrderLists() {
     myAllOrders = [];
@@ -161,9 +152,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
     cancelledOrders = [];
   }
 
-/*-------------------------------------------------------------------------------------
-                      Get All Orders
--------------------------------------------------------------------------------------*/
+  //  Get All Orders
+
   getAllMyOrders() async {
     setBusy(true);
     isFutureError = false;
@@ -210,17 +200,14 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusy(false);
   }
 
-/*-------------------------------------------------------------------------------------
-                      Get orders by tickername
--------------------------------------------------------------------------------------*/
+  //  Get orders by tickername
+
   getMyOrdersByTickerName() async {
     setBusy(true);
-
     clearOrderLists();
     isFutureError = false;
     String exgAddress = await getExgAddress();
 
-    //return
     await _orderService
         .getMyOrdersByTickerName(exgAddress, tickerName, skip: skip)
         .then((value) {
@@ -256,13 +243,6 @@ class MyOrdersViewModel extends ReactiveViewModel {
         myCloseOrders,
         cancelledOrders
       ];
-      // }
-      // }).catchError((err) {
-      //   isFutureError = true;
-      //   log.e('getMyOrdersByTickerName $err');
-      // });
-      // .then((value) => onData(value));
-      //return myAllOrders;
       setBusy(false);
     }).catchError((err) {
       log.e('Catch getMyOrdersByTickerName');
@@ -276,25 +256,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
     return exgWallet.address;
   }
 
-  // void swapSources1() async {
-  //   setBusy(true);
-  //   log.i('AAA swap sources show all pairs $isShowAllOrders');
-  //   // _showCurrentPairOrders = !_showCurrentPairOrders;
-  //   // !_showCurrentPairOrders
-  //   _orderService.swapSources();
-  //   log.w('BBB swap sources show all pairs $isShowAllOrders  before method');
-  //   // isShowAllOrders ? await getAllMyOrders() : await getMyOrdersByTickerName();
-  //   isSwitch = isShowAllOrders;
-  //   log.i(
-  //       'CCC swap sources show all pairs $isShowAllOrders  after method -- swtich   $isSwitch');
+  //   On Data
 
-  //   notifyListeners();
-  //   setBusy(false);
-  // }
-
-/*-------------------------------------------------------------------------------------
-                      On Data
--------------------------------------------------------------------------------------*/
   void onData(List<OrderModel> data) {
     setBusy(true);
     if (data != null) {
@@ -331,9 +294,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
     errorMessage = error.toString();
   }
 
-/*-------------------------------------------------------------------------------------
-                      Password mismatch notice
--------------------------------------------------------------------------------------*/
+  //  Password mismatch notice
+
   noticePasswordMismatch(context) {
     return walletService.showInfoFlushbar(
         AppLocalizations.of(context).passwordMismatch,
@@ -343,9 +305,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
         context);
   }
 
-/*-------------------------------------------------------------------------------------
-                      Check Password
--------------------------------------------------------------------------------------*/
+  //   Check Password
+
   checkPass(context, orderHash) async {
     setBusyForObject(onClickOrderHash, true);
     isCancelling = true;
@@ -364,12 +325,6 @@ class MyOrdersViewModel extends ReactiveViewModel {
       if (resKanban != null && resKanban["transactionHash"] != null) {
         log.w('resKanban=== $resKanban');
 
-        // walletService.showInfoFlushbar(
-        //     AppLocalizations.of(context).orderCancelled,
-        //     'txid:' + resKanban["transactionHash"],
-        //     Icons.info,
-        //     colors.green,
-        //     context);
         Timer.periodic(Duration(seconds: 2), (timer) async {
           var res =
               await tradeService.getTxStatus(resKanban["transactionHash"]);
@@ -398,14 +353,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
                       Text(orderCancelledText, style: orderCancelledTextStyle),
                 ),
                 position: NotificationPosition.bottom);
-            // _dialogService.showBasicDialog(
-            //     title: orderCancelledText, description: '', buttonTitle: 'Ok');
           }
         });
-
-        // Future.delayed(new Duration(seconds: 3), () async {
-        //   _orderService.swapSources();
-        // });
       }
     } else if (!res.confirmed && res.returnedText != 'Closed') {
       log.e('wrong password');
@@ -417,25 +366,10 @@ class MyOrdersViewModel extends ReactiveViewModel {
       );
     } else {
       if (res.returnedText == 'Closed') {
-        // Flushbar(
-        //   backgroundColor: colors.secondaryColor.withOpacity(0.75),
-        //   title: AppLocalizations.of(context).passwordMismatch,
-        //   message: AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        //   icon: Icon(
-        //     Icons.cancel,
-        //     size: 24,
-        //     color: colors.primaryColor,
-        //   ),
-        //   leftBarIndicatorColor: colors.red,
-        //   duration: Duration(seconds: 3),
-        // ).show(context);
-
         log.i('dialog closed by user');
       }
     }
-
     onClickOrderHash = '';
-
     setBusy(false);
   }
 

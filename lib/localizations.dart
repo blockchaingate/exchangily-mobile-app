@@ -1880,6 +1880,10 @@ class AppLocalizations {
     return Intl.message('Lock App Now',
         name: 'lockAppNow', desc: 'lock_app_now');
   }
+
+  String get time {
+    return Intl.message('Time', name: 'time', desc: 'time_market_orders');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

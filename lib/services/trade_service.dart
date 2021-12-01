@@ -54,25 +54,25 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   /// To check if orderbook has loaded in orderbook viewmodel
   /// and then use this in buysellview to display price and quantity values
   /// in the textfields
-  RxValue<bool> _isOrderbookLoaded = RxValue<bool>(false);
+  RxValue<bool> _isOrderbookLoaded = RxValue<bool>(initial: false);
   bool get isOrderbookLoaded => _isOrderbookLoaded.value;
 
-  RxValue<double> _price = RxValue<double>(0.0);
+  RxValue<double> _price = RxValue<double>(initial: 0.0);
   double get price => _price.value;
 
-  RxValue<double> _quantity = RxValue<double>(0.0);
+  RxValue<double> _quantity = RxValue<double>(initial: 0.0);
   double get quantity => _quantity.value;
 
-  RxValue<String> _interval = RxValue<String>('24h');
+  RxValue<String> _interval = RxValue<String>(initial: '24h');
   String get interval => _interval.value;
 
-  RxValue<bool> _isTradingChartModelBusy = RxValue<bool>(false);
+  RxValue<bool> _isTradingChartModelBusy = RxValue<bool>(initial: false);
   bool get isTradingChartModelBusy => _isTradingChartModelBusy.value;
 
   Stream tickerStream;
   Stream allPriceStream;
 
-  RxValue<bool> _isRefreshBalance = RxValue<bool>(false);
+  RxValue<bool> _isRefreshBalance = RxValue<bool>(initial: false);
   bool get isRefreshBalance => _isRefreshBalance.value;
 
   @override

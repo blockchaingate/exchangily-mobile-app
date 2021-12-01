@@ -11,9 +11,6 @@
 *----------------------------------------------------------------------
 */
 
-// import 'package:device_preview/device_preview.dart';
-import 'dart:io';
-
 import 'package:exchangilymobileapp/Managers/dialog_manager.dart';
 import 'package:exchangilymobileapp/Managers/life_cycle_manager.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
@@ -47,7 +44,7 @@ Future<void> main() async {
 
   try {
     await serviceLocator();
-    Logger.level = Level.nothing;
+    Logger.level = Level.info;
     SystemChannels.textInput
         .invokeMethod('TextInput.hide'); // Hides keyboard initially
     // Force user to use only portrait mode until the development of other screen size design

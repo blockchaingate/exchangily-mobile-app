@@ -40,7 +40,7 @@ class MarketTradesView extends StatelessWidget {
                     UIHelper.horizontalSpaceSmall,
                     Expanded(
                         flex: 2,
-                        child: Text(AppLocalizations.of(context).date,
+                        child: Text(AppLocalizations.of(context).time,
                             textAlign: TextAlign.right,
                             style: Theme.of(context).textTheme.subtitle2)),
                     UIHelper.horizontalSpaceMedium,
@@ -67,8 +67,11 @@ class MarketTradesView extends StatelessWidget {
                           Expanded(
                               flex: 1,
                               child: Text(
-                                  marketTrades[index].price.toStringAsFixed(
-                                      decimalConfig.priceDecimal),
+                                  NumberUtil()
+                                      .truncateDoubleWithoutRouding(
+                                          marketTrades[index].price,
+                                          precision: decimalConfig.qtyDecimal)
+                                      .toString(),
                                   textAlign: TextAlign.right,
                                   style:
                                       Theme.of(context).textTheme.headline6)),
@@ -76,8 +79,11 @@ class MarketTradesView extends StatelessWidget {
                           Expanded(
                               flex: 2,
                               child: Text(
-                                  marketTrades[index].quantity.toStringAsFixed(
-                                      decimalConfig.qtyDecimal),
+                                  NumberUtil()
+                                      .truncateDoubleWithoutRouding(
+                                          marketTrades[index].quantity,
+                                          precision: decimalConfig.qtyDecimal)
+                                      .toString(),
                                   textAlign: TextAlign.right,
                                   style:
                                       Theme.of(context).textTheme.headline6)),

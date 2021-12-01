@@ -10,7 +10,7 @@ import 'my_orders_viewmodel.dart';
 
 class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
   final List<OrderModel> orders;
-  const MyOrderDetailsView({Key key, this.orders}) : super(key: key);
+  const MyOrderDetailsView({this.orders});
 
   @override
   Widget build(BuildContext context, MyOrdersViewModel model) {
@@ -78,8 +78,4 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
               );
             });
   }
-
-  // @override
-  // MyOrdersViewModel viewModelBuilder(BuildContext context) =>
-  //     MyOrdersViewModel();
 }
