@@ -48,7 +48,7 @@ class CoinService {
                       Get Token data
 ----------------------------------------------------------------------*/
 
-  Future<Token> getSingleTokenData(String tickerName,
+  Future<TokenModel> getSingleTokenData(String tickerName,
       {int coinType = 0}) async {
     var res;
 

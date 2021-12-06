@@ -100,7 +100,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     //  await tokenListDatabaseService.getTickerNameByCoinType(type).then((token) {
     storageService.tokenList.forEach((element) {
       var json = jsonDecode(element);
-      Token token = Token.fromJson(json);
+      TokenModel token = TokenModel.fromJson(json);
       if (token.coinType == type) {
         print(token.tickerName);
         res = token.tickerName;

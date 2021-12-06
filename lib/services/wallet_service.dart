@@ -279,8 +279,8 @@ class WalletService {
 /*----------------------------------------------------------------------
                 Get Random Mnemonic
 ----------------------------------------------------------------------*/
-  Future<List<Token>> getTokenListUpdates() async {
-    List<Token> newTokens = [];
+  Future<List<TokenModel>> getTokenListUpdates() async {
+    List<TokenModel> newTokens = [];
     await apiService.getTokenListUpdates().then((tokenList) {
       if (tokenList != null) {
         log.w(

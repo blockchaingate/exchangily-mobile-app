@@ -70,11 +70,11 @@ class MoveToWalletViewmodel extends BaseViewModel {
   String message = '';
 
   bool isWithdrawChoicePopup = false;
-  Token token = new Token();
+  TokenModel token = new TokenModel();
   int decimalLimit = 6;
   String ercSmartContractAddress = '';
-  Token ercChainToken = new Token();
-  Token mainChainToken = new Token();
+  TokenModel ercChainToken = new TokenModel();
+  TokenModel mainChainToken = new TokenModel();
   bool isSubmittingTx = false;
   var tokenType;
 
@@ -771,7 +771,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    token = new Token();
+    token = new TokenModel();
     int ct = 0;
     await coinService.getCoinTypeByTickerName(ticker).then((value) {
       ct = value;
