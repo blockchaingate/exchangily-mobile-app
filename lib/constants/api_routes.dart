@@ -21,7 +21,9 @@ const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
                         Wallet
 ----------------------------------------------------------------------*/
 
-// FAB //
+// app update post
+const String PostAppUpdateVersionUrl =
+    "http://52.194.202.239:3000/app-update/set-version-info";
 
 const String FabTransactionJsonApiRoute = 'gettransactionjson/';
 
@@ -97,6 +99,20 @@ const String GetUtxosApiRoute = 'getutxos/';
 const String GetNonceApiRoute = 'getnonce/';
 const String PostRawTxApiRoute = 'postrawtransaction';
 const String GetTokenListUpdatesApiRoute = 'tokenListUpdates';
+
+// wallet custom issue token feature url and routes
+
+// get all tokens without logo
+// https://test.blockchaingate.com/v2/issuetoken/withoutLogo
+
+// get single token without logo
+//https://test.blockchaingate.com/v2/issuetoken/ca83824ad8abcc4d03a9d2209bcd8efddff2615c/withoutLogo
+
+// get token's logo
+//https://test.blockchaingate.com/v2/issuetoken/ca83824ad8abcc4d03a9d2209bcd8efddff2615c/logo
+const String GetIsueTokenApiRoute = 'issuetoken';
+const String GetWithoutLogoApiRoute = 'withoutLogo';
+const String GetLogoApiRoute = 'withoutLogo';
 
 /*----------------------------------------------------------------------
                             Exchange

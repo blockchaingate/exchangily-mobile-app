@@ -11,7 +11,7 @@
 *----------------------------------------------------------------------
 */
 
-class Token {
+class TokenModel {
   int _id;
   int _decimal;
   String _coinName;
@@ -22,7 +22,7 @@ class Token {
   String _minWithdraw;
   String _feeWithdraw;
 
-  Token(
+  TokenModel(
       {int id,
       int decimal,
       String coinName,
@@ -43,14 +43,14 @@ class Token {
     this._feeWithdraw = feeWithdraw;
   }
 
-  factory Token.fromJson(Map<String, dynamic> json) {
+  factory TokenModel.fromJson(Map<String, dynamic> json) {
     var mw = json['minWithdraw'];
     String minWithdraw = mw.toString();
 
     var fw = json['feeWithdraw'];
     String feeWithdraw = fw.toString();
 
-    return new Token(
+    return new TokenModel(
         decimal: json['decimal'] as int,
         tickerName: json['tickerName'] as String,
         coinName: json['coinName'] as String,
@@ -145,12 +145,12 @@ class Token {
 }
 
 class TokenList {
-  final List<Token> tokens;
+  final List<TokenModel> tokens;
   TokenList({this.tokens});
 
   factory TokenList.fromJson(List<dynamic> parsedJson) {
-    List<Token> tokens = [];
-    tokens = parsedJson.map((i) => Token.fromJson(i)).toList();
+    List<TokenModel> tokens = [];
+    tokens = parsedJson.map((i) => TokenModel.fromJson(i)).toList();
     return new TokenList(tokens: tokens);
   }
 }

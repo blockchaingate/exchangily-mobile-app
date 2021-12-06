@@ -14,7 +14,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/models/app_update_model.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
+import 'package:exchangilymobileapp/models/wallet/issue_token.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
@@ -48,6 +50,50 @@ class ApiService {
       locator<WalletDataBaseService>();
 
   final blockchaingateUrl = environment['endpoints']['blockchaingate'];
+
+// Post app update
+
+  postAppUpdate() async {
+    String url = PostAppUpdateVersionUrl;
+    log.i('postAppUpdate url $url');
+    var versionInfo = await sharedService.getLocalAppVersion();
+    log.i('getAppVersion $versionInfo');
+    var versionName = versionInfo['name'];
+    var body = AppUpdateModel(
+      version: versionName,
+    );
+
+    try {
+      var response = await client.post(url, body: body);
+      var json = jsonDecode(response.body);
+      var data = json['data'];
+      var parsedTokenList = data as List;
+      log.w('postAppUpdate  $parsedTokenList');
+    } catch (err) {
+      log.e('postAppUpdate CATCH $err');
+      throw Exception(err);
+    }
+  }
+
+// Get issue tokens
+
+  Future<List<IssueTokenModel>> getIssueTokens() async {
+    String url = blockchaingateUrl + GetIsueTokenApiRoute;
+    log.i('getTokenListUpdates url $url');
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      var data = json['data'];
+      var parsedTokenList = data as List;
+      log.w('getTokenListUpdates  $parsedTokenList');
+      IssueTokenModelList isueTokenList =
+          IssueTokenModelList.fromJson(parsedTokenList);
+      return isueTokenList.issueTokens;
+    } catch (err) {
+      log.e('getTokenListUpdates CATCH $err');
+      throw Exception(err);
+    }
+  }
 
 //     ByteData data = await rootBundle.load('assets/cert/isrgrootx1.pem');
 // SecurityContext context1 = SecurityContext.defaultContext;
@@ -398,7 +444,7 @@ class ApiService {
                     Get Token List Updates
 ----------------------------------------------------------------------*/
 
-  Future<List<Token>> getTokenListUpdates() async {
+  Future<List<TokenModel>> getTokenListUpdates() async {
     String url = configService.getKanbanBaseUrl() + GetTokenListUpdatesApiRoute;
     log.i('getTokenListUpdates url $url');
     try {
@@ -419,7 +465,7 @@ class ApiService {
                     Get Token List
 ----------------------------------------------------------------------*/
 
-  Future<List<Token>> getTokenList() async {
+  Future<List<TokenModel>> getTokenList() async {
     String url = configService.getKanbanBaseUrl() + GetTokenListApiRoute;
     log.i('getTokenList url $url');
     try {

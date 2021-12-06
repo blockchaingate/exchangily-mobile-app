@@ -1170,7 +1170,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
 
   buildNewWalletObject(
-      Token newToken, WalletBalance newTokenWalletBalance) async {
+      TokenModel newToken, WalletBalance newTokenWalletBalance) async {
     String newCoinAddress = '';
 
     newCoinAddress = assignNewTokenAddress(newToken);
@@ -1211,7 +1211,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                       Add New Token In Db
 ----------------------------------------------------------------------*/
 
-  insertToken(Token newToken) async {
+  insertToken(TokenModel newToken) async {
     if (newToken.chainName == 'FAB') {
       newToken.contract = '0x' + newToken.contract;
     }
@@ -1221,7 +1221,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 /*----------------------------------------------------------------------
                       Assign New Token Address
 ----------------------------------------------------------------------*/
-  String assignNewTokenAddress(Token newToken) {
+  String assignNewTokenAddress(TokenModel newToken) {
     String newCoinAddress = '';
     walletInfo.firstWhere((wallet) {
       if (wallet.tickerName == newToken.chainName) {
