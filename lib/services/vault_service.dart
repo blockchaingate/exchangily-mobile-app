@@ -11,12 +11,10 @@
 *----------------------------------------------------------------------
 */
 
-import 'dart:convert';
 import 'dart:io';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:path_provider/path_provider.dart';
-import 'package:crypto/crypto.dart' as CryptoHash;
 
 class VaultService {
   final log = getLogger('VaultService');
@@ -48,23 +46,46 @@ class VaultService {
     await saveEncryptedData(encrypted.base64);
   }
 
-  Future test(String pass, String mnemonic) async {
+  // encrypt mnemonic
+
+  Future encryptMnemonic(String pass, String mnemonic) async {
     String userTypedKey = pass;
     int userKeyLength = userTypedKey.length;
     String fixed32CharKey = '';
 
     if (userKeyLength < 32)
       fixed32CharKey = fixed32Chars(userTypedKey, userKeyLength);
-    print('fixed32CharKey $fixed32CharKey');
-    print(fixed32CharKey.length);
-    var bytes = utf8.encode(fixed32CharKey);
-    var digest = CryptoHash.sha256.convert(bytes);
-    final key = encrypt.Key.fromUtf8(digest.toString());
+    final key = encrypt.Key.fromUtf8(
+        fixed32CharKey.isEmpty ? userTypedKey : fixed32CharKey);
 
     final iv = encrypt.IV.fromLength(16);
     final encrypter = encrypt.Encrypter(encrypt.AES(key));
-    // final encrypted = encrypter.encrypt(mnemonic, iv: iv);
-    // await saveEncryptedData(encrypted.base64);
+    final encrypted = encrypter.encrypt(mnemonic, iv: iv);
+    return encrypted.base64;
+  }
+
+// decrypt mnemonic
+
+  Future<String> decryptMnemonic(
+      String userTypedKey, String encryptedBase64Mnemonic) async {
+    try {
+      encrypt.Encrypted encryptedText =
+          encrypt.Encrypted.fromBase64(encryptedBase64Mnemonic);
+
+      int userKeyLength = userTypedKey.length;
+      String fixed32CharKey = '';
+      if (userKeyLength < 32)
+        fixed32CharKey = fixed32Chars(userTypedKey, userKeyLength);
+      final key = encrypt.Key.fromUtf8(
+          fixed32CharKey.isEmpty ? userTypedKey : fixed32CharKey);
+      final iv = encrypt.IV.fromLength(16);
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+      final decrypted = encrypter.decrypt(encryptedText, iv: iv);
+      return decrypted;
+    } catch (e) {
+      log.e("Couldn't read file -$e");
+      return await decryptDataV1(userTypedKey);
+    }
   }
 
   String fixed32Chars(String input, int keyLength) {

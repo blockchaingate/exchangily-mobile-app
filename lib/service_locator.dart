@@ -44,6 +44,7 @@ import 'package:exchangilymobileapp/services/db/decimal_config_database_service.
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
+import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_auth_service.dart';
@@ -73,7 +74,9 @@ Future serviceLocator() async {
 
   // Wallet
   locator.registerLazySingleton(() => WalletService());
+  locator.registerLazySingleton(() => CoreWalletDatabaseService());
   locator.registerLazySingleton(() => WalletDataBaseService());
+
   locator.registerLazySingleton(() => VaultService());
   locator.registerLazySingleton(() => TokenListDatabaseService());
   locator.registerLazySingleton(() => UserSettingsDatabaseService());

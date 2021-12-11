@@ -70,7 +70,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
-  WalletDataBaseService databaseService = locator<WalletDataBaseService>();
+
   NavigationService navigationService = locator<NavigationService>();
 
   BuildContext context;

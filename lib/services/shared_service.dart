@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -50,8 +51,7 @@ class SharedService {
   final tokenListDatabaseService = locator<TokenListDatabaseService>();
   DecimalConfigDatabaseService decimalConfigDatabaseService =
       locator<DecimalConfigDatabaseService>();
-  WalletDataBaseService walletDataBaseService =
-      locator<WalletDataBaseService>();
+  final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
 
 /*--------------------------------------------------------------------------
                   Show Simple Notification
@@ -182,22 +182,14 @@ class SharedService {
 --------------------------------------------------- */
 
   Future<String> getExgAddressFromWalletDatabase() async {
-    String address = '';
-    await walletDataBaseService
-        .getWalletBytickerName('EXG')
-        .then((res) => address = res.address);
-    return address;
+    return await coreWalletDatabaseService.getExgAddress();
   }
 /*---------------------------------------------------
       Get FAB address from wallet database
 --------------------------------------------------- */
 
-  Future<String> getFABAddressFromWalletDatabase() async {
-    String address = '';
-    await walletDataBaseService
-        .getWalletBytickerName('FAB')
-        .then((res) => address = res.address);
-    return address;
+  Future<String> getFabAddressFromCoreWalletDatabase() async {
+    return await coreWalletDatabaseService.getFabAddress();
   }
 
 /*---------------------------------------------------
@@ -445,18 +437,21 @@ class SharedService {
                   //     onPressed: () {
                   //       Clipboard.setData(new ClipboardData(text: message));
                   //     })
-                  RichText(
-                      text: TextSpan(
-                          text: AppLocalizations.of(context).taphereToCopyTxId,
-                          style: TextStyle(
-                              fontSize: 12,
-                              decoration: TextDecoration.underline,
-                              color: globals.primaryColor),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Clipboard.setData(
-                                  new ClipboardData(text: message));
-                            }),
+                  Center(
+                      child: RichText(
+                        text: TextSpan(
+                            text:
+                                AppLocalizations.of(context).taphereToCopyTxId,
+                            style: TextStyle(
+                                fontSize: 12,
+                                decoration: TextDecoration.underline,
+                                color: globals.primaryColor),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Clipboard.setData(
+                                    new ClipboardData(text: message));
+                              }),
+                      ),
                     )
                   : Container(),
               isDismissible

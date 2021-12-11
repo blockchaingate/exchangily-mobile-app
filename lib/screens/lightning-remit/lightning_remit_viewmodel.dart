@@ -10,6 +10,7 @@ import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
+import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -45,8 +46,7 @@ class LightningRemitViewmodel extends FutureViewModel {
   LocalStorageService storageService = locator<LocalStorageService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-  WalletDataBaseService walletDataBaseService =
-      locator<WalletDataBaseService>();
+
   WalletService walletService = locator<WalletService>();
   String tickerName = '';
   BuildContext context;
@@ -62,6 +62,8 @@ class LightningRemitViewmodel extends FutureViewModel {
   List<ExchangeBalanceModel> exchangeBalances = [];
 
   List<TransactionHistory> transactionHistory = [];
+
+  String fabAddress = '';
 
 /*----------------------------------------------------------------------
                     Default Future to Run
@@ -81,8 +83,9 @@ class LightningRemitViewmodel extends FutureViewModel {
                           INIT
 ----------------------------------------------------------------------*/
 
-  init() {
+  init() async {
     sharedService.context = context;
+    fabAddress = await walletService.getAddressFromCoreWalletDatabase('FAB');
   }
 
 /*----------------------------------------------------------------------
@@ -127,7 +130,8 @@ class LightningRemitViewmodel extends FutureViewModel {
   getLightningRemitTransactionHistory() async {
     setBusy(true);
     transactionHistory = [];
-    await apiService.getLightningRemitHistoryEvents().then((res) {
+
+    await apiService.getLightningRemitHistoryEvents(fabAddress).then((res) {
       res.forEach((tx) {
         transactionHistory.add(tx);
       });
@@ -344,250 +348,246 @@ class LightningRemitViewmodel extends FutureViewModel {
 
   showBarcode() async {
     setBusy(true);
-    await walletDataBaseService.getWalletBytickerName('FAB').then((coin) {
-      String kbAddress = walletService.toKbPaymentAddress(coin.address);
-      print('KBADDRESS $kbAddress');
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Platform.isIOS
-              ? CupertinoAlertDialog(
-                  title: Container(
-                    child: Center(
-                        child: Text(
-                            '${AppLocalizations.of(context).receiveAddress}')),
-                  ),
-                  content: Column(
-                    children: [
-                      Row(
-                        children: [
-                          UIHelper.horizontalSpaceSmall,
-                          Expanded(
-                            child: Text(
-                                // add here cupertino widget to check in these small widgets first then the entire app
-                                kbAddress,
-                                textAlign: TextAlign.left,
-                                style: Theme.of(context).textTheme.headline6),
-                          ),
-                          CupertinoButton(
-                              child: Icon(
-                                FontAwesomeIcons.copy,
-                                //  CupertinoIcons.,
-                                color: primaryColor,
-                                size: 16,
-                              ),
-                              onPressed: () {
-                                sharedService.copyAddress(context, kbAddress)();
-                              })
-                        ],
-                      ),
-                      // UIHelper.verticalSpaceLarge,
-                      Container(
-                          margin: EdgeInsets.only(top: 10.0),
-                          width: 250,
-                          height: 250,
-                          child: Center(
-                            child: Container(
-                              child: RepaintBoundary(
-                                key: globalKey,
-                                child: QrImage(
-                                    backgroundColor: white,
-                                    data: kbAddress,
-                                    version: QrVersions.auto,
-                                    size: 300,
-                                    gapless: true,
-                                    errorStateBuilder: (context, err) {
-                                      return Container(
-                                        child: Center(
-                                          child: Text(
-                                              AppLocalizations.of(context)
-                                                  .somethingWentWrong,
-                                              textAlign: TextAlign.center),
-                                        ),
-                                      );
-                                    }),
-                              ),
+
+    String kbAddress = walletService.toKbPaymentAddress(fabAddress);
+    print('KBADDRESS $kbAddress');
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Platform.isIOS
+            ? CupertinoAlertDialog(
+                title: Container(
+                  child: Center(
+                      child: Text(
+                          '${AppLocalizations.of(context).receiveAddress}')),
+                ),
+                content: Column(
+                  children: [
+                    Row(
+                      children: [
+                        UIHelper.horizontalSpaceSmall,
+                        Expanded(
+                          child: Text(
+                              // add here cupertino widget to check in these small widgets first then the entire app
+                              kbAddress,
+                              textAlign: TextAlign.left,
+                              style: Theme.of(context).textTheme.headline6),
+                        ),
+                        CupertinoButton(
+                            child: Icon(
+                              FontAwesomeIcons.copy,
+                              //  CupertinoIcons.,
+                              color: primaryColor,
+                              size: 16,
                             ),
-                          )),
-                    ],
-                  ),
-                  actions: <Widget>[
-                    // QR image share button
+                            onPressed: () {
+                              sharedService.copyAddress(context, kbAddress)();
+                            })
+                      ],
+                    ),
+                    // UIHelper.verticalSpaceLarge,
                     Container(
-                      margin: EdgeInsets.all(5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          CupertinoButton(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4)),
-                              child: Center(
-                                  child: Text(
-                                AppLocalizations.of(context).share,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(color: primaryColor),
-                              )),
-                              onPressed: () {
-                                String receiveFileName =
-                                    'Lightning-remit-kanban-receive-address.png';
-                                getApplicationDocumentsDirectory().then((dir) {
-                                  String filePath =
-                                      "${dir.path}/$receiveFileName";
-                                  File file = File(filePath);
-                                  Future.delayed(new Duration(milliseconds: 30),
-                                      () {
-                                    sharedService
-                                        .capturePng(globalKey: globalKey)
-                                        .then((byteData) {
-                                      file
-                                          .writeAsBytes(byteData)
-                                          .then((onFile) {
-                                        Share.shareFiles([onFile.path],
-                                            text: kbAddress);
-                                      });
+                        margin: EdgeInsets.only(top: 10.0),
+                        width: 250,
+                        height: 250,
+                        child: Center(
+                          child: Container(
+                            child: RepaintBoundary(
+                              key: globalKey,
+                              child: QrImage(
+                                  backgroundColor: white,
+                                  data: kbAddress,
+                                  version: QrVersions.auto,
+                                  size: 300,
+                                  gapless: true,
+                                  errorStateBuilder: (context, err) {
+                                    return Container(
+                                      child: Center(
+                                        child: Text(
+                                            AppLocalizations.of(context)
+                                                .somethingWentWrong,
+                                            textAlign: TextAlign.center),
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ),
+                        )),
+                  ],
+                ),
+                actions: <Widget>[
+                  // QR image share button
+                  Container(
+                    margin: EdgeInsets.all(5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CupertinoButton(
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                            child: Center(
+                                child: Text(
+                              AppLocalizations.of(context).share,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(color: primaryColor),
+                            )),
+                            onPressed: () {
+                              String receiveFileName =
+                                  'Lightning-remit-kanban-receive-address.png';
+                              getApplicationDocumentsDirectory().then((dir) {
+                                String filePath =
+                                    "${dir.path}/$receiveFileName";
+                                File file = File(filePath);
+                                Future.delayed(new Duration(milliseconds: 30),
+                                    () {
+                                  sharedService
+                                      .capturePng(globalKey: globalKey)
+                                      .then((byteData) {
+                                    file.writeAsBytes(byteData).then((onFile) {
+                                      Share.shareFiles([onFile.path],
+                                          text: kbAddress);
                                     });
                                   });
                                 });
-                              }),
-                          CupertinoButton(
-                            padding: EdgeInsets.only(left: 5),
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                              });
+                            }),
+                        CupertinoButton(
+                          padding: EdgeInsets.only(left: 5),
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          child: Text(
+                            AppLocalizations.of(context).close,
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop(false);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            // Android Alert Dialog
+            : AlertDialog(
+                titlePadding: EdgeInsets.zero,
+                contentPadding: EdgeInsets.zero,
+                insetPadding:
+                    EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                elevation: 5,
+                backgroundColor: walletCardColor.withOpacity(0.85),
+                title: Container(
+                  padding: EdgeInsets.all(10.0),
+                  color: secondaryColor.withOpacity(0.5),
+                  child: Center(
+                      child: Text(
+                          '${AppLocalizations.of(context).receiveAddress}')),
+                ),
+                titleTextStyle: Theme.of(context)
+                    .textTheme
+                    .headline4
+                    .copyWith(fontWeight: FontWeight.bold),
+                contentTextStyle: TextStyle(color: grey),
+                content: Column(
+                  children: [
+                    UIHelper.verticalSpaceLarge,
+                    Row(
+                      children: [
+                        UIHelper.horizontalSpaceSmall,
+                        Expanded(
+                          child: Center(
                             child: Text(
-                              AppLocalizations.of(context).close,
-                              style: Theme.of(context).textTheme.headline5,
+                                // add here cupertino widget to check in these small widgets first then the entire app
+                                kbAddress,
+                                style: Theme.of(context).textTheme.headline6),
+                          ),
+                        ),
+                        IconButton(
+                            icon: Icon(
+                              Icons.content_copy,
+                              color: primaryColor,
+                              size: 16,
                             ),
                             onPressed: () {
-                              Navigator.of(context).pop(false);
-                            },
-                          ),
-                        ],
-                      ),
+                              sharedService.copyAddress(context, kbAddress)();
+                            })
+                      ],
                     ),
-                  ],
-                )
-              // Android Alert Dialog
-              : AlertDialog(
-                  titlePadding: EdgeInsets.zero,
-                  contentPadding: EdgeInsets.zero,
-                  insetPadding:
-                      EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-                  elevation: 5,
-                  backgroundColor: walletCardColor.withOpacity(0.85),
-                  title: Container(
-                    padding: EdgeInsets.all(10.0),
-                    color: secondaryColor.withOpacity(0.5),
-                    child: Center(
-                        child: Text(
-                            '${AppLocalizations.of(context).receiveAddress}')),
-                  ),
-                  titleTextStyle: Theme.of(context)
-                      .textTheme
-                      .headline4
-                      .copyWith(fontWeight: FontWeight.bold),
-                  contentTextStyle: TextStyle(color: grey),
-                  content: Column(
-                    children: [
-                      UIHelper.verticalSpaceLarge,
-                      Row(
-                        children: [
-                          UIHelper.horizontalSpaceSmall,
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                  // add here cupertino widget to check in these small widgets first then the entire app
-                                  kbAddress,
-                                  style: Theme.of(context).textTheme.headline6),
+                    // UIHelper.verticalSpaceLarge,
+                    Container(
+                        margin: EdgeInsets.only(top: 10.0),
+                        width: 250,
+                        height: 250,
+                        child: Center(
+                          child: Container(
+                            child: RepaintBoundary(
+                              key: globalKey,
+                              child: QrImage(
+                                  backgroundColor: white,
+                                  data: kbAddress,
+                                  version: QrVersions.auto,
+                                  size: 300,
+                                  gapless: true,
+                                  errorStateBuilder: (context, err) {
+                                    return Container(
+                                      child: Center(
+                                        child: Text(
+                                            AppLocalizations.of(context)
+                                                .somethingWentWrong,
+                                            textAlign: TextAlign.center),
+                                      ),
+                                    );
+                                  }),
                             ),
                           ),
-                          IconButton(
-                              icon: Icon(
-                                Icons.content_copy,
-                                color: primaryColor,
-                                size: 16,
-                              ),
-                              onPressed: () {
-                                sharedService.copyAddress(context, kbAddress)();
-                              })
-                        ],
-                      ),
-                      // UIHelper.verticalSpaceLarge,
-                      Container(
-                          margin: EdgeInsets.only(top: 10.0),
-                          width: 250,
-                          height: 250,
-                          child: Center(
-                            child: Container(
-                              child: RepaintBoundary(
-                                key: globalKey,
-                                child: QrImage(
-                                    backgroundColor: white,
-                                    data: kbAddress,
-                                    version: QrVersions.auto,
-                                    size: 300,
-                                    gapless: true,
-                                    errorStateBuilder: (context, err) {
-                                      return Container(
-                                        child: Center(
-                                          child: Text(
-                                              AppLocalizations.of(context)
-                                                  .somethingWentWrong,
-                                              textAlign: TextAlign.center),
-                                        ),
-                                      );
-                                    }),
-                              ),
-                            ),
-                          )),
-                    ],
-                  ),
-                  actions: <Widget>[
-                    // QR image share button
+                        )),
+                  ],
+                ),
+                actions: <Widget>[
+                  // QR image share button
 
-                    Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: RaisedButton(
-                          child: Text(AppLocalizations.of(context).share,
-                              style: Theme.of(context).textTheme.headline6),
-                          onPressed: () {
-                            String receiveFileName =
-                                'Lightning-remit-kanban-receive-address.png';
-                            getApplicationDocumentsDirectory().then((dir) {
-                              String filePath = "${dir.path}/$receiveFileName";
-                              File file = File(filePath);
+                  Container(
+                    padding: EdgeInsets.all(10.0),
+                    child: RaisedButton(
+                        child: Text(AppLocalizations.of(context).share,
+                            style: Theme.of(context).textTheme.headline6),
+                        onPressed: () {
+                          String receiveFileName =
+                              'Lightning-remit-kanban-receive-address.png';
+                          getApplicationDocumentsDirectory().then((dir) {
+                            String filePath = "${dir.path}/$receiveFileName";
+                            File file = File(filePath);
 
-                              Future.delayed(new Duration(milliseconds: 30),
-                                  () {
-                                sharedService
-                                    .capturePng(globalKey: globalKey)
-                                    .then((byteData) {
-                                  file.writeAsBytes(byteData).then((onFile) {
-                                    Share.shareFiles([onFile.path],
-                                        text: kbAddress);
-                                  });
+                            Future.delayed(new Duration(milliseconds: 30), () {
+                              sharedService
+                                  .capturePng(globalKey: globalKey)
+                                  .then((byteData) {
+                                file.writeAsBytes(byteData).then((onFile) {
+                                  Share.shareFiles([onFile.path],
+                                      text: kbAddress);
                                 });
                               });
                             });
-                          }),
+                          });
+                        }),
+                  ),
+                  OutlineButton(
+                    borderSide: BorderSide(color: primaryColor),
+                    color: primaryColor,
+                    textColor: Colors.white,
+                    child: Text(
+                      AppLocalizations.of(context).close,
+                      style: Theme.of(context).textTheme.headline6,
                     ),
-                    OutlineButton(
-                      borderSide: BorderSide(color: primaryColor),
-                      color: primaryColor,
-                      textColor: Colors.white,
-                      child: Text(
-                        AppLocalizations.of(context).close,
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop(false);
-                      },
-                    ),
-                  ],
-                );
-        },
-      );
-    });
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                  ),
+                ],
+              );
+      },
+    );
+
     setBusy(false);
   }
 

@@ -1,5 +1,4 @@
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -15,8 +14,7 @@ class MainNavState extends BaseState {
   final log = getLogger('LanguageScreenState');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
-  WalletDataBaseService walletDatabaseService =
-      locator<WalletDataBaseService>();
+
   SharedService sharedService = locator<SharedService>();
 
   final NavigationService navigationService = locator<NavigationService>();

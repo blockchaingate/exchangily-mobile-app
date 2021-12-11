@@ -366,7 +366,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       //Selected Wallet Balance row
                                       model.groupValue != '' &&
                                               model.groupValue != 'USD' &&
-                                              model.walletInfo != null
+                                              model.walletBalances != null
                                           ? Container(
                                               child: Row(
                                                   mainAxisAlignment:
@@ -382,8 +382,9 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                             AppLocalizations.of(
                                                                         context)
                                                                     .available +
-                                                                model.walletInfo
-                                                                    .tickerName +
+                                                                model
+                                                                    .walletBalances
+                                                                    .coin +
                                                                 AppLocalizations.of(
                                                                         context)
                                                                     .balance,
@@ -397,7 +398,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                         flex: 5,
                                                         child: Center(
                                                           child: Text(
-                                                            '${model.walletInfo.availableBalance}',
+                                                            '${model.walletBalances.balance}',
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme

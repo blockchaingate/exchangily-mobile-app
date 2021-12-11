@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_request.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -164,10 +165,21 @@ class _DialogManagerState extends State<DialogManager> {
           ),
           DialogButton(
             color: globals.primaryColor,
-            onPressed: () {
+            onPressed: () async {
               if (controller.text != '')
                 FocusScope.of(context).requestFocus(FocusNode());
-              _vaultService.decryptData(controller.text).then((data) {
+              var coreWalletDatabaseService =
+                  locator<CoreWalletDatabaseService>();
+              String encryptedMnemonic =
+                  await coreWalletDatabaseService.getEncryptedMnemonic();
+              if (encryptedMnemonic == null) {
+                var ueMnemonic =
+                    await _vaultService.decryptData(controller.text);
+                _vaultService.encryptMnemonic(controller.text, ueMnemonic);
+              }
+              await _vaultService
+                  .decryptMnemonic(controller.text, encryptedMnemonic)
+                  .then((data) {
                 if (data != '' && data != null) {
                   _dialogService.dialogComplete(
                       DialogResponse(returnedText: data, confirmed: true));

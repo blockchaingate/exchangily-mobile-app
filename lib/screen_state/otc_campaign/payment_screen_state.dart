@@ -7,6 +7,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -40,8 +41,6 @@ class CampaignPaymentScreenState extends BaseState {
       locator<TokenListDatabaseService>();
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
-  WalletDataBaseService walletDataBaseService =
-      locator<WalletDataBaseService>();
   ApiService _apiService = locator<ApiService>();
 
   final sendAmountTextController = TextEditingController();
@@ -57,7 +56,7 @@ class CampaignPaymentScreenState extends BaseState {
   int gasLimit = environment["chains"]["ETH"]["gasLimitToken"];
   int satoshisPerBytes = 50;
   bool checkSendAmount = false;
-  WalletInfo walletInfo;
+  WalletBalance walletBalances = WalletBalance();
   String exgWalletAddress = '';
   CampaignUserData userData;
   CampaignOrder campaignOrder;
@@ -102,6 +101,8 @@ class CampaignPaymentScreenState extends BaseState {
     resetLists();
     await getCampaignOrdeList();
     selectedCurrency = currencies[0];
+    exgWalletAddress =
+        await walletService.getAddressFromCoreWalletDatabase('EXG');
     setBusy(false);
   }
 
@@ -132,7 +133,7 @@ class CampaignPaymentScreenState extends BaseState {
     transportationFee = 0.0;
     _groupValue = value;
     if (value != 'USD') {
-      await getWallet();
+      //await getWallet();
       transportationFee = gasPrice * gasLimit / 1e9;
     }
     FocusScope.of(context).requestFocus(FocusNode());
@@ -256,9 +257,6 @@ class CampaignPaymentScreenState extends BaseState {
 
   createCampaignOrder(String txHash, double quantity) async {
     setBusy(true);
-
-    // get exg address
-    await getExgWalletAddr();
 
     // get login token from local storage to get the userData from local database
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -526,7 +524,7 @@ class CampaignPaymentScreenState extends BaseState {
     } else {
       if (amount == null ||
           !checkSendAmount ||
-          amount > walletInfo.availableBalance ||
+          amount > walletBalances.balance ||
           !isBalanceAvailabeForOrder()) {
         log.e('$usdtUnconfirmedOrderQuantity');
         setErrorMessage(AppLocalizations.of(context).pleaseEnterValidNumber);
@@ -545,26 +543,26 @@ class CampaignPaymentScreenState extends BaseState {
         Get wallet info by using which user is making the payment
 ----------------------------------------------------------------------*/
 
-  getWallet() async {
-    // Get coin details which we are making transaction through like USDT
-    await walletDataBaseService.getWalletBytickerName(_groupValue).then((res) {
-      tickerName = _groupValue;
-      walletInfo = res;
-      log.w('wallet info ${walletInfo.availableBalance}');
-    });
-  }
+  // getWallet() async {
+  //   // Get coin details which we are making transaction through like USDT
+  //   await walletDataBaseService.getWalletBytickerName(_groupValue).then((res) {
+  //     tickerName = _groupValue;
+  //     walletInfo = res;
+  //     log.w('wallet info ${walletInfo.availableBalance}');
+  //   });
+  // }
 
 /*----------------------------------------------------------------------
                     Get exg wallet address
 ----------------------------------------------------------------------*/
 
-  getExgWalletAddr() async {
-    // Get coin details which we are making transaction through like USDT
-    await walletDataBaseService.getWalletBytickerName('EXG').then((res) {
-      exgWalletAddress = res.address;
-      log.w('Exg wallet address $exgWalletAddress');
-    });
-  }
+  // getExgWalletAddr() async {
+  //   // Get coin details which we are making transaction through like USDT
+  //   await walletDataBaseService.getWalletBytickerName('EXG').then((res) {
+  //     exgWalletAddress = res.address;
+  //     log.w('Exg wallet address $exgWalletAddress');
+  //   });
+  // }
 
 /*----------------------------------------------------------------------
                     Check Send Amount
@@ -644,8 +642,8 @@ class CampaignPaymentScreenState extends BaseState {
   bool isBalanceAvailabeForOrder() {
     double amount = usdtUnconfirmedOrderQuantity * price;
     log.e(
-        'usdtUnconfirmedOrderQuantity $usdtUnconfirmedOrderQuantity - price $price - Amount $amount - Wallet bal ${walletInfo.availableBalance}');
-    if (amount > walletInfo.availableBalance) return false;
+        'usdtUnconfirmedOrderQuantity $usdtUnconfirmedOrderQuantity - price $price - Amount $amount - Wallet bal ${walletBalances.balance}');
+    if (amount > walletBalances.balance) return false;
     return true;
   }
 }

@@ -21,8 +21,8 @@ import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -48,8 +48,7 @@ class SendViewModel extends BaseViewModel {
   final apiService = locator<ApiService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
-  WalletDataBaseService walletDatabaseService =
-      locator<WalletDataBaseService>();
+
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
 
@@ -98,7 +97,7 @@ class SendViewModel extends BaseViewModel {
     tokenType = walletInfo.tokenType;
     String coinName = walletInfo.tickerName;
     await setFee(coinName);
-    fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
     await refreshBalance();
     decimalLimit =
         await walletService.getSingleCoinWalletDecimalLimit(coinName);
@@ -659,10 +658,9 @@ class SendViewModel extends BaseViewModel {
 
   Future<double> getTrxBalance() async {
     double balance = 0.0;
-    String trxWalletAddress = '';
-    await walletDatabaseService
-        .getWalletBytickerName('TRX')
-        .then((wallet) => trxWalletAddress = wallet.address);
+
+    String trxWalletAddress =
+        await walletService.getAddressFromCoreWalletDatabase('TRX');
 
     await apiService
         .getSingleWalletBalance(fabAddress, 'TRX', trxWalletAddress)

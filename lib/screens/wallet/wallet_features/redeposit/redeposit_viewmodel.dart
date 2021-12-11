@@ -119,7 +119,8 @@ class RedepositViewModel extends FutureViewModel {
 ----------------------------------------------------------------------*/
 
   getSingleWalletBalance() async {
-    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    String fabAddress =
+        await sharedService.getFabAddressFromCoreWalletDatabase();
     await apiService
         .getSingleWalletBalance(
             fabAddress, walletInfo.tickerName, walletInfo.address)

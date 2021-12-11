@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -49,10 +50,11 @@ class CreatePasswordViewModel extends BaseViewModel {
 
   Future createOfflineWallets() async {
     setBusy(true);
-    await _vaultService.secureMnemonic(
-        passTextController.text, randomMnemonicFromRoute);
+    // await _vaultService.secureMnemonic(
+    //     passTextController.text, randomMnemonicFromRoute);
     await _walletService
-        .createOfflineWallets(randomMnemonicFromRoute)
+        .createOfflineWalletsV1(
+            randomMnemonicFromRoute, passTextController.text)
         .then((data) {
       navigationService
           .navigateUsingPushNamedAndRemoveUntil(DashboardViewRoute);

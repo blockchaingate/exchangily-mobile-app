@@ -12,8 +12,6 @@
 */
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/utils/exaddr.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import './string_util.dart';
@@ -209,7 +207,10 @@ class AbiUtils {
     list..add(transaction.data);
 
     if (signature != null) {
-      list..add(signature.v)..add(signature.r)..add(signature.s);
+      list
+        ..add(signature.v)
+        ..add(signature.r)
+        ..add(signature.s);
     }
 
     return list;

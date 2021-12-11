@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
@@ -23,7 +22,6 @@ class AddGasViewModel extends FutureViewModel {
   BuildContext context;
   final log = getLogger('AddGasVM');
   final walletService = locator<WalletService>();
-  final walletDataBaseService = locator<WalletDataBaseService>();
   final sharedService = locator<SharedService>();
   final apiService = locator<ApiService>();
 
@@ -63,7 +61,7 @@ class AddGasViewModel extends FutureViewModel {
     gasPriceTextController.text = '50';
     bytesPerInput = environment["chains"]["FAB"]["bytesPerInput"];
     feePerInput = bytesPerInput * satoshisPerBytes;
-    fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
     getSliderReady();
     await getFabBalance();
     setBusy(false);

@@ -33,8 +33,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 
   NavigationService navigationService = locator<NavigationService>();
   SharedService sharedService = locator<SharedService>();
-  WalletDataBaseService walletDataBaseService =
-      locator<WalletDataBaseService>();
+
   ApiService apiService = locator<ApiService>();
   TradeService _tradeService = locator<TradeService>();
   WalletService walletService = locator<WalletService>();
@@ -370,11 +369,6 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 /*-------------------------------------------------------------------------------------
                                 Get Exchange Assets
 -------------------------------------------------------------------------------------*/
-
-  Future<String> getExgAddress() async {
-    var exgWallet = await walletDataBaseService.getWalletBytickerName('EXG');
-    return exgWallet.address;
-  }
 
   onBackButtonPressed() {
     navigationService.navigateUsingPushReplacementNamed(MarketsViewRoute,

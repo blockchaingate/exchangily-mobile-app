@@ -37,8 +37,6 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
   final log = getLogger('MyOrdersViewModel');
 
-  WalletDataBaseService walletDataBaseService =
-      locator<WalletDataBaseService>();
   TradeService tradeService = locator<TradeService>();
   OrderService _orderService = locator<OrderService>();
   DialogService _dialogService = locator<DialogService>();
@@ -157,7 +155,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
   getAllMyOrders() async {
     setBusy(true);
     isFutureError = false;
-    String exgAddress = await getExgAddress();
+    String exgAddress =
+        await walletService.getAddressFromCoreWalletDatabase('EXG');
 
     clearOrderLists();
     await _orderService.getMyOrders(exgAddress, skip: skip).then((data) {
@@ -206,7 +205,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusy(true);
     clearOrderLists();
     isFutureError = false;
-    String exgAddress = await getExgAddress();
+    String exgAddress =
+        await walletService.getAddressFromCoreWalletDatabase('EXG');
 
     await _orderService
         .getMyOrdersByTickerName(exgAddress, tickerName, skip: skip)
@@ -248,12 +248,6 @@ class MyOrdersViewModel extends ReactiveViewModel {
       log.e('Catch getMyOrdersByTickerName');
       setBusy(false);
     });
-  }
-
-  // Get Exg address from wallet database
-  Future<String> getExgAddress() async {
-    var exgWallet = await walletDataBaseService.getWalletBytickerName('EXG');
-    return exgWallet.address;
   }
 
   //   On Data
@@ -376,7 +370,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
   // Cancel order
 
   txHexforCancelOrder(seed, orderHash) async {
-    String exgAddress = await getExgAddress();
+    String exgAddress =
+        await walletService.getAddressFromCoreWalletDatabase('EXG');
     var abiHex = '7489ec23' + trimHexPrefix(orderHash);
     var nonce = await kanbanUtils.getNonce(exgAddress);
 

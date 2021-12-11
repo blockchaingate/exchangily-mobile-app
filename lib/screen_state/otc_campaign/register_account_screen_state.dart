@@ -5,9 +5,9 @@ import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
@@ -16,8 +16,7 @@ class CampaignRegisterAccountScreenState extends BaseState {
   CampaignService campaignService = locator<CampaignService>();
   NavigationService navigationService = locator<NavigationService>();
   SharedService sharedService = locator<SharedService>();
-  WalletDataBaseService walletDataBaseService =
-      locator<WalletDataBaseService>();
+
   BuildContext context;
   bool passwordMatch;
   final emailTextController = TextEditingController();
@@ -28,6 +27,7 @@ class CampaignRegisterAccountScreenState extends BaseState {
   User user;
   bool isPasswordTextVisible = false;
   CampaignUserData userData;
+  final walletService = locator<WalletService>();
 
   init() async {
     await getExgWalletAddr();
@@ -35,10 +35,9 @@ class CampaignRegisterAccountScreenState extends BaseState {
 
   // Get exg wallet address
   getExgWalletAddr() async {
-    await walletDataBaseService.getWalletBytickerName('EXG').then((res) {
-      exgWalletAddressTextController.text = res.address;
-      log.w('Exg wallet address ${exgWalletAddressTextController.text}');
-    });
+    exgWalletAddressTextController.text =
+        await walletService.getAddressFromCoreWalletDatabase('EXG');
+    log.w('Exg wallet address ${exgWalletAddressTextController.text}');
   }
 
   Future<CampaignUserData> register(User user) async {

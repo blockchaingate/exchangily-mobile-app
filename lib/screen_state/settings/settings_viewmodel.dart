@@ -13,11 +13,11 @@
 
 import 'dart:io';
 
-import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
+import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -54,11 +54,12 @@ class SettingsViewmodel extends BaseViewModel {
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
 
-  WalletDataBaseService walletDatabaseService =
-      locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
   final storageService = locator<LocalStorageService>();
   final NavigationService navigationService = locator<NavigationService>();
+
+  final walletDatabaseService = locator<WalletDataBaseService>();
+  final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   UserSettingsDatabaseService userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();
 
@@ -105,10 +106,6 @@ class SettingsViewmodel extends BaseViewModel {
     await setLanguageFromDb();
     await selectDefaultWalletLanguage();
     setBusy(false);
-  }
-
-  clickMe() {
-    _vaultService.test('test1234', 'I am plain text');
   }
 
   setLockAppNowValue() {
@@ -301,6 +298,13 @@ class SettingsViewmodel extends BaseViewModel {
             .deleteEncryptedData()
             .whenComplete(() => log.e('encrypted data deleted!!'))
             .catchError((err) => log.e('delete encrypted CATCH $err'));
+
+        await coreWalletDatabaseService
+            .deleteDb()
+            .whenComplete(
+                () => log.e('coreWalletDatabaseService data deleted!!'))
+            .catchError(
+                (err) => log.e('coreWalletDatabaseService  CATCH $err'));
 
         await tokenListDatabaseService
             .deleteDb()

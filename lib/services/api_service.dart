@@ -32,7 +32,6 @@ import 'package:exchangilymobileapp/logger.dart';
 import '../environments/environment.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 
@@ -46,9 +45,6 @@ class ApiService {
   ConfigService configService = locator<ConfigService>();
   SharedService sharedService = locator<SharedService>();
   LocalStorageService storageService = locator<LocalStorageService>();
-  WalletDataBaseService walletDatabaseService =
-      locator<WalletDataBaseService>();
-
   final blockchaingateUrl = environment['endpoints']['blockchaingate'];
 
 // Post app update
@@ -187,13 +183,9 @@ class ApiService {
 /*----------------------------------------------------------------------
                 Get Tx History for withdraw and deposit
 ----------------------------------------------------------------------*/
-  Future<List<TransactionHistory>> getTransactionHistoryEvents() async {
-    String fabAddress = '';
-
+  Future<List<TransactionHistory>> getTransactionHistoryEvents(
+      String fabAddress) async {
     List<TransactionHistory> transactionHistory = [];
-    await walletDatabaseService
-        .getWalletBytickerName('FAB')
-        .then((value) => fabAddress = value.address);
 
     String url =
         configService.getKanbanBaseUrl() + WithDrawDepositTxHistoryApiRoute;
@@ -283,13 +275,8 @@ class ApiService {
 /*----------------------------------------------------------------------
                 Get LightningRemit History
 ----------------------------------------------------------------------*/
-  Future getLightningRemitHistoryEvents() async {
-    String fabAddress = '';
-
+  Future getLightningRemitHistoryEvents(String fabAddress) async {
     List<TransactionHistory> transactionHistory = [];
-    await walletDatabaseService
-        .getWalletBytickerName('FAB')
-        .then((value) => fabAddress = value.address);
 
     String url =
         configService.getKanbanBaseUrl() + LightningRemitTxHHistoryApiRoute;
@@ -506,6 +493,9 @@ class ApiService {
 
   Future getFreeFab(String address) async {
     var ipAddress;
+    if (address == null) {
+      address = '';
+    }
     await NetworkInterface.list(type: InternetAddressType.IPv4)
         .then((networkData) => ipAddress = networkData[0].addresses[0].address);
 

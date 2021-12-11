@@ -520,6 +520,7 @@ class MoveToExchangeScreen extends StatelessWidget {
             ],
           ),
         ),
+        //floatingActionButton: TextButton(child: Text('Click'),onPressed: ()=> model.test(),),
       ),
     );
   }

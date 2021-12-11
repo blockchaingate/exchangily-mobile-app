@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history/transaction_history_card_widget.dart';
@@ -11,8 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class TransactionHistoryView extends StatelessWidget {
-  final String tickerName;
-  TransactionHistoryView({Key key, this.tickerName}) : super(key: key);
+  final WalletInfo walletInfo;
+  TransactionHistoryView({Key key, this.walletInfo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +21,9 @@ class TransactionHistoryView extends StatelessWidget {
     return ViewModelBuilder<TransactionHistoryViewmodel>.reactive(
         createNewModelOnInsert: true,
         viewModelBuilder: () =>
-            TransactionHistoryViewmodel(tickerName: tickerName),
+            TransactionHistoryViewmodel(walletInfo: walletInfo),
         onModelReady: (TransactionHistoryViewmodel model) async {
           model.context = context;
-          model.getWalletFromDb();
         },
         builder: (context, TransactionHistoryViewmodel model, child) =>
             WillPopScope(

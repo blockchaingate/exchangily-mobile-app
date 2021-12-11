@@ -231,7 +231,11 @@ class Redeposit extends StatelessWidget {
                   ),
                 ),
                 model.errorMessage.isNotEmpty
-                    ? Center(child: Text(model.errorMessage))
+                    ? Center(
+                        child: Text(
+                        model.errorMessage,
+                        style: TextStyle(color: red),
+                      ))
                     : Container(),
                 UIHelper.verticalSpaceSmall,
                 MaterialButton(

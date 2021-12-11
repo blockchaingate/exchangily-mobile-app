@@ -32,7 +32,6 @@ class OtcScreenState extends BaseState {
   final log = getLogger('OtcState');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
-  WalletDataBaseService databaseService = locator<WalletDataBaseService>();
 
   final _vaultService = locator<VaultService>();
   List<String> languages = ['English', 'Chinese'];
@@ -64,7 +63,7 @@ class OtcScreenState extends BaseState {
       if (res.confirmed) {
         log.w('deleting wallet');
         await _vaultService.deleteEncryptedData();
-        await databaseService.deleteDb();
+
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.remove('lang');
         prefs.clear();

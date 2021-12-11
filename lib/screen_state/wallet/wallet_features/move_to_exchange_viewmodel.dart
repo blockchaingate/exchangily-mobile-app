@@ -1,14 +1,18 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -29,8 +33,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
   SharedService sharedService = locator<SharedService>();
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
-  WalletDataBaseService walletDatabaseService =
-      locator<WalletDataBaseService>();
+  CoreWalletDatabaseService walletDatabaseService =
+      locator<CoreWalletDatabaseService>();
   WalletInfo walletInfo;
   BuildContext context;
   final gasPriceTextController = TextEditingController();
@@ -84,6 +88,175 @@ class MoveToExchangeViewModel extends BaseViewModel {
         await walletService.getSingleCoinWalletDecimalLimit(coinName);
     if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     setBusy(false);
+  }
+
+  getMnemonic() async {
+    String mnemonic = '';
+    var res = await _dialogService.showDialog(
+        title: AppLocalizations.of(context).enterPassword,
+        description:
+            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+        buttonTitle: AppLocalizations.of(context).confirm);
+    if (res.confirmed) {
+      mnemonic = res.returnedText;
+    }
+    return mnemonic;
+  }
+
+  // create wallet address
+
+  createWalletAddresses(String mnemonic) async {
+    CoreWalletModel walletCoreModel = CoreWalletModel();
+
+    Map<String, dynamic> wbb = {
+      'btcAddress': '',
+      'ethAddress': '',
+      'fabAddress': '',
+      'ltcAddress': '',
+      'dogeAddress': '',
+      'bchAddress': '',
+      'trxAddress': '',
+      "showEXGAssets": "true"
+    };
+
+    List<String> coinTickers = [
+      'BTC',
+      'ETH',
+      'FAB',
+      'LTC',
+      'DOGE',
+      'BCH',
+      'TRX'
+    ];
+
+    var seed = walletService.generateSeed(mnemonic);
+    var root = walletService.generateBip32Root(seed);
+
+    // BCH address
+    String bchAddress = walletService.generateBchAddress(mnemonic);
+    String trxAddress = walletService.generateTrxAddress(mnemonic);
+
+    try {
+      for (int i = 0; i < coinTickers.length; i++) {
+        String tickerName = coinTickers[i];
+        String token = '';
+        String address = '';
+        if (tickerName == 'BCH') {
+          address = bchAddress;
+        } else if (tickerName == 'TRX') {
+          address = trxAddress;
+        } else
+          address = await coinUtils.getAddressForCoin(root, tickerName,
+              tokenType: token);
+        if (tickerName == 'BTC') {
+          wbb['btcAddress'] = address;
+        } else if (tickerName == 'ETH') {
+          wbb['ethAddress'] = address;
+        } else if (tickerName == 'FAB') {
+          wbb['fabAddress'] = address;
+        } else if (tickerName == 'LTC') {
+          wbb['ltcAddress'] = address;
+        } else if (tickerName == 'DOGE') {
+          wbb['dogeAddress'] = address;
+        } else if (tickerName == 'BCH') {
+          wbb['bchAddress'] = address;
+        } else if (tickerName == 'TRX') {
+          wbb['trxAddress'] = address;
+        }
+
+        // convert map to json string
+        var walletBalanceBodyJsonString = jsonEncode(wbb);
+        walletCoreModel = CoreWalletModel(
+            id: null, walletBalancesBody: walletBalanceBodyJsonString);
+
+        log.i("Wallet core model json ${walletCoreModel.toJson()}");
+      }
+      return walletCoreModel;
+    } catch (e) {
+      log.e('Catch createWalletAddresses $e');
+      throw Exception('Catch createWalletAddresses $e');
+    }
+  }
+
+  test() async {
+    var vaultService = locator<VaultService>();
+    String mnemonic = '';
+    // call for password dialog
+    try {
+      mnemonic = await getMnemonic();
+
+      log.i('mnemonic $mnemonic');
+    } catch (err) {
+      log.e('Catch $err');
+      return;
+    }
+    // using mnemonic to generate the majors addresses
+    if (mnemonic.isNotEmpty) {
+      CoreWalletModel walletCoreModel = await createWalletAddresses(mnemonic);
+      log.w('walletCoreModel ${walletCoreModel.toJson()}');
+
+      // encrypt the mnemonic
+
+      var encryptedMnemonic =
+          await vaultService.encryptMnemonic('MySecretPhrase159', mnemonic);
+
+      log.i('encryptedMnemonic $encryptedMnemonic');
+
+      // store those json string address and encrypted mnemonic in the wallet core database
+      walletCoreModel.mnemonic = encryptedMnemonic;
+      log.w('walletCoreModel ${walletCoreModel.toJson()}');
+
+      //  try to get the encrypted mnemonic and decrypt it
+      var deCryptedMnemonic = await vaultService.decryptMnemonic(
+          'MySecretPhrase159', encryptedMnemonic);
+
+      log.i('deCryptedMnemonic $deCryptedMnemonic');
+
+      // store walletcoremodel to wallet core database
+      var coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+      await coreWalletDatabaseService.insert(walletCoreModel);
+
+      await coreWalletDatabaseService.getAll();
+      await coreWalletDatabaseService.getWalletBalancesBody();
+
+      //test getting wallet balance body and use it to call the api
+      refreshBalancesV2();
+      // integrate new wallet core database in the create/import wallet process
+
+      // verify addresses by comparing stored addresses with generated addresses by mnemonic
+      //verifyWalletAddresses(mnemonic);
+
+    }
+  }
+
+  refreshBalancesV2() async {
+    var coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+    // get the walletbalancebody from the DB
+    var walletBalancesBodyFromDB =
+        await coreWalletDatabaseService.getWalletBalancesBody();
+    var walletBalances = await this.apiService.getWalletBalance(
+        jsonDecode(walletBalancesBodyFromDB['walletBalancesBody']));
+    log.w('walletBalances LENGTH ${walletBalances.length}');
+  }
+
+  verifyWalletAddresses(String mnemonic) async {
+    var coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+
+    // create wallet address and assign to walletcoremodel object
+    CoreWalletModel walletCoreModelFromCreate =
+        await createWalletAddresses(mnemonic);
+
+    // get the walletbalancebody from the DB
+    var walletBalancesBodyFromDB =
+        await coreWalletDatabaseService.getWalletBalancesBody();
+
+    // Compare the address if matched then don't notify otherwise raise flag
+    if (walletBalancesBodyFromDB['fabAddress'] ==
+        jsonDecode(walletCoreModelFromCreate.walletBalancesBody)['fabAdress']) {
+      log.w('Verification passed');
+    } else {
+      log.e('Verification FAILED');
+    }
   }
 
   showDetailsMessageToggle() {
@@ -272,7 +445,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       bool isCorrectAmount = true;
       await walletService
-          .checkCoinWalletBalance(15, 'TRX')
+          .checkCoinWalletBalance(15, 'TRX', walletInfo.address)
           .then((res) => isCorrectAmount = res);
       log.w('isCorrectAmount $isCorrectAmount');
       if (!isCorrectAmount) {
@@ -494,7 +667,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
                     Refresh Balance
 ----------------------------------------------------------------------*/
   refreshBalance() async {
-    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    String fabAddress =
+        await sharedService.getFabAddressFromCoreWalletDatabase();
     await apiService
         .getSingleWalletBalance(
             fabAddress, walletInfo.tickerName, walletInfo.address)

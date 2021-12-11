@@ -11,8 +11,8 @@ class AnnouncementListScreenState extends BaseState {
   final log = getLogger('AnnouncementListScreenState');
   // DialogService dialogService = locator<DialogService>();
   // WalletService walletService = locator<WalletService>();
-  // WalletDataBaseService walletDatabaseService =
-  //     locator<WalletDataBaseService>();
+  // CoreWalletDatabaseService walletDatabaseService =
+  //     locator<CoreWalletDatabaseService>();
   // SharedService sharedService = locator<SharedService>();
   BuildContext context;
   SharedPreferences prefs;

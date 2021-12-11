@@ -215,7 +215,7 @@ class WalletFeaturesView extends StatelessWidget {
                         onTap: () {
                           var route = model.features[6].route;
                           Navigator.pushNamed(context, '$route',
-                              arguments: walletInfo.tickerName);
+                              arguments: walletInfo);
                         },
                         child: Container(
                           padding:

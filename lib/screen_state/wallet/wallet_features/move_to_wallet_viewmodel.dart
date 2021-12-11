@@ -34,8 +34,6 @@ class MoveToWalletViewmodel extends BaseViewModel {
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
   final tokenListDatabaseService = locator<TokenListDatabaseService>();
-  WalletDataBaseService walletDataBaseService =
-      locator<WalletDataBaseService>();
   final coinService = locator<CoinService>();
 
   WalletInfo walletInfo;
@@ -852,7 +850,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
     else {
       tickerName = walletInfo.tickerName;
     }
-    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    String fabAddress =
+        await sharedService.getFabAddressFromCoreWalletDatabase();
     await apiService
         .getSingleWalletBalance(fabAddress, tickerName, walletInfo.address)
         .then((res) {
@@ -1187,14 +1186,12 @@ class MoveToWalletViewmodel extends BaseViewModel {
         /// Ticker is FAB but fab chain balance is false then
         /// take coin address as ETH wallet address because coin is an erc20
         else if (coinName == 'FAB' && !isShowFabChainBalance) {
-          await walletDataBaseService
-              .getWalletBytickerName('ETH')
-              .then((wallet) => coinAddress = wallet.address);
+          coinAddress =
+              await walletService.getAddressFromCoreWalletDatabase('ETH');
           log.i('coin address is ETH address');
         } else if (coinName == 'USDT' && isShowTrxTsWalletBalance) {
-          await walletDataBaseService
-              .getWalletBytickerName('TRX')
-              .then((wallet) => coinAddress = wallet.address);
+          coinAddress =
+              await walletService.getAddressFromCoreWalletDatabase('TRX');
           log.i('coin address is TRX address');
         } else {
           coinAddress = walletInfo.address;

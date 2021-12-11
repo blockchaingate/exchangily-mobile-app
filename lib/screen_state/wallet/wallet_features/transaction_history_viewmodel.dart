@@ -5,11 +5,11 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
+import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -30,7 +30,7 @@ import 'package:exchangilymobileapp/services/db/user_settings_database_service.d
 import 'package:overlay_support/overlay_support.dart';
 
 class TransactionHistoryViewmodel extends FutureViewModel {
-  final String tickerName;
+  final WalletInfo walletInfo;
   final String success = 'success';
   final String bindpay = 'bindpay';
   final String send = 'send';
@@ -39,21 +39,20 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   final String deposit = 'deposit';
   final String rejected = 'rejected or failed';
 
-  TransactionHistoryViewmodel({this.tickerName});
+  TransactionHistoryViewmodel({this.walletInfo});
   final log = getLogger('TransactionHistoryViewmodel');
   BuildContext context;
   List<TransactionHistory> transactionHistoryToShowInView = [];
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-  WalletDataBaseService walletDataBaseService =
-      locator<WalletDataBaseService>();
+
   final walletService = locator<WalletService>();
   final apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
   final navigationService = locator<NavigationService>();
   final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
+  final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
 
-  WalletInfo walletInfo = new WalletInfo();
   bool isChinese = false;
   bool isDialogUp = false;
   int decimalLimit = 0;
@@ -61,7 +60,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   @override
   Future futureToRun() async =>
       // tickerName.isEmpty ?
-      await transactionHistoryDatabaseService.getByName(tickerName);
+      await transactionHistoryDatabaseService.getByName(walletInfo.tickerName);
 
 /*----------------------------------------------------------------------
                   After Future Data is ready
@@ -69,11 +68,13 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   @override
   void onData(data) async {
     setBusy(true);
+    String tickerName = walletInfo.tickerName;
     log.i('tx length ${data.length}');
     List<TransactionHistory> txHistoryFromDb = [];
     List<TransactionHistory> txHistoryEvents = [];
     txHistoryFromDb = data;
-    txHistoryEvents = await apiService.getTransactionHistoryEvents();
+    String fabAddress = await coreWalletDatabaseService.getFabAddress();
+    txHistoryEvents = await apiService.getTransactionHistoryEvents(fabAddress);
     if (txHistoryEvents.isNotEmpty)
       txHistoryEvents.forEach((element) {
         if (element.tickerName == tickerName)
@@ -122,12 +123,6 @@ class TransactionHistoryViewmodel extends FutureViewModel {
 
   clearLists() {
     transactionHistoryToShowInView = [];
-  }
-
-  getWalletFromDb() async {
-    await walletDataBaseService.getWalletBytickerName(tickerName).then((res) {
-      walletInfo = res;
-    });
   }
 
 /*----------------------------------------------------------------------

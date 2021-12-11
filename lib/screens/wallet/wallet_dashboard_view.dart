@@ -13,8 +13,10 @@
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screens/announcement/anncounceList.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmodel.dart';
@@ -48,7 +50,7 @@ class WalletDashboardView extends StatelessWidget {
           model.context = context;
           model.globalKeyOne = _one;
           model.globalKeyTwo = _two;
-          await model.retrieveWalletsFromLocalDatabase();
+          //  await model.retrieveWalletsFromLocalDatabase();
           await model.init();
         },
         builder: (context, WalletDashboardViewModel model, child) {
@@ -372,8 +374,7 @@ class WalletDashboardView extends StatelessWidget {
                                             ),
                                             UIHelper.horizontalSpaceSmall,
                                             Text(
-                                                model.walletInfoCopy.length
-                                                    .toString(),
+                                                model.wallets.length.toString(),
                                                 style: TextStyle(
                                                     fontSize: 10, color: grey))
                                           ],
@@ -395,7 +396,7 @@ class WalletDashboardView extends StatelessWidget {
                                                 color: primaryColor, size: 18),
                                             UIHelper.horizontalSpaceSmall,
                                             Text(
-                                                model.favWalletInfoList.length
+                                                model.favWallets.length
                                                     .toString(),
                                                 style: TextStyle(
                                                     fontSize: 10, color: grey))
@@ -413,60 +414,10 @@ class WalletDashboardView extends StatelessWidget {
                                       children: [
                                         // All coins tab
                                         model.isBusy
-                                            ? ListView.builder(
-                                                shrinkWrap: true,
-                                                itemCount:
-                                                    model.walletInfoCopy.length,
-                                                itemBuilder:
-                                                    (BuildContext context,
-                                                        int index) {
-                                                  return _coinDetailsCard(
-                                                      model
-                                                          .walletInfoCopy[index]
-                                                          .tickerName
-                                                          .toLowerCase(),
-                                                      index,
-                                                      model.walletInfoCopy,
-                                                      model.elevation,
-                                                      context,
-                                                      model);
-                                                },
-                                              )
-                                            : SmartRefresher(
-                                                enablePullDown: true,
-                                                header: Theme.of(context)
-                                                            .platform ==
-                                                        TargetPlatform.iOS
-                                                    ? ClassicHeader()
-                                                    : MaterialClassicHeader(),
-                                                controller:
-                                                    model.refreshController,
-                                                onRefresh: model.onRefresh,
-                                                // child: NotificationListener<
-                                                //         ScrollEndNotification>(
-                                                //     onNotification:
-                                                //         (scrollEnd) {
-                                                //       var metrics =
-                                                //           scrollEnd.metrics;
-                                                //       if (metrics.atEdge) {
-                                                //         if (metrics.pixels == 0)
-                                                //           print('At top');
-                                                //         else
-                                                //           print('At bottom');
-                                                //       }
-                                                //       return true;
-                                                //     },
-                                                child: buildListView(model)
-                                                //),
-                                                ),
+                                            ? model.sharedService
+                                                .loadingIndicator()
+                                            : buildListView(model),
 
-                                        // Fav coins tab
-                                        // Text(model.favWalletInfoList.length
-                                        //     .toString())
-                                        // model.anyObjectsBusy
-                                        //     ? model.sharedService
-                                        //         .loadingIndicator()
-                                        //     :
                                         FavTab(),
                                       ],
                                     ),
@@ -474,134 +425,24 @@ class WalletDashboardView extends StatelessWidget {
                                 ]),
                           ),
                         )
-                        // : CupertinoSegmentedControl(
-                        //     selectedColor: primaryColor,
-                        //     children: <int, Widget>{
-                        //       0: // All coins tab
-                        //          Text('allcoins')
-                        //       1: FavTab()
-                        //     },
-                        //     onValueChanged: (tabValue) =>
-                        //         model.updateTabSelection(tabValue),
-                        //     groupValue: model.currentTabSelection),
-                        // Expanded(
-                        //   child: model.isBusy
-                        //       ? model.walletInfoCopy == null
-                        //           ? ShimmerLayout(
-                        //               layoutType: 'walletDashboard',
-                        //             )
-                        //           : Container(
-                        //               // margin: EdgeInsets.symmetric(horizontal: 8.0),
-                        //               child: ListView.builder(
-                        //                 //  itemExtent: 100,
-                        //                 shrinkWrap: true,
-                        //                 itemCount: model.walletInfoCopy.length,
-                        //                 itemBuilder:
-                        //                     (BuildContext context, int index) {
-                        //                   return _coinDetailsCard(
-                        //                       model.walletInfoCopy[index]
-                        //                           .tickerName
-                        //                           .toLowerCase(),
-                        //                       model.walletInfoCopy[index]
-                        //                           .availableBalance,
-                        //                       model.walletInfoCopy[index]
-                        //                           .lockedBalance,
-                        //                       model.walletInfoCopy[index]
-                        //                           .inExchange,
-                        //                       model.walletInfoCopy[index]
-                        //                           .usdValue,
-                        //                       index,
-                        //                       model.walletInfoCopy,
-                        //                       model.elevation,
-                        //                       context,
-                        //                       model);
-                        //                 },
-                        //               ),
-                        //             )
-                        //       : Container(
-                        //           //   margin: EdgeInsets.symmetric(horizontal: 8.0),
-                        //           child: SmartRefresher(
-                        //             enablePullDown: true,
-                        //             header: Theme.of(context).platform ==
-                        //                     TargetPlatform.iOS
-                        //                 ? ClassicHeader()
-                        //                 : MaterialClassicHeader(),
-                        //             controller: model.refreshController,
-                        //             onRefresh: model.onRefresh,
-                        //             child: ListView.builder(
-                        //               controller: model.scrollController,
-                        //               // itemExtent: 95,
-                        //               shrinkWrap: true,
-                        //               itemCount: model.walletInfo.length,
-                        //               itemBuilder:
-                        //                   (BuildContext context, int index) {
-                        //                 var name = model
-                        //                     .walletInfo[index].tickerName
-                        //                     .toLowerCase();
-                        //                 var usdVal =
-                        //                     model.walletInfo[index].usdValue;
-
-                        //                 return Visibility(
-                        //                   // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
-                        //                   visible: usdVal >= 0 &&
-                        //                       !model.isHideSmallAmountAssets,
-                        //                   child: _coinDetailsCard(
-                        //                       '$name',
-                        //                       model.walletInfo[index]
-                        //                           .availableBalance,
-                        //                       model.walletInfo[index]
-                        //                           .lockedBalance,
-                        //                       model
-                        //                           .walletInfo[index].inExchange,
-                        //                       model.walletInfo[index].usdValue,
-                        //                       index,
-                        //                       model.walletInfo,
-                        //                       model.elevation,
-                        //                       context,
-                        //                       model),
-                        //                   // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
-                        //                   replacement: Visibility(
-                        //                       visible: model
-                        //                               .isHideSmallAmountAssets &&
-                        //                           usdVal != 0,
-                        //                       child: _coinDetailsCard(
-                        //                           '$name',
-                        //                           model.walletInfo[index]
-                        //                               .availableBalance,
-                        //                           model.walletInfo[index]
-                        //                               .lockedBalance,
-                        //                           model.walletInfo[index]
-                        //                               .inExchange,
-                        //                           model.walletInfo[index]
-                        //                               .usdValue,
-                        //                           index,
-                        //                           model.walletInfo,
-                        //                           model.elevation,
-                        //                           context,
-                        //                           model)),
-                        //                 );
-                        //               },
-                        //             ),
-                        //           ),
-                        //         ),
-                        // ),
                       ],
                     ),
                   ),
                 ),
               ),
               bottomNavigationBar: BottomNavBar(count: 0),
-              // floatingActionButton: Container(
-              //   color: white,
-              //   child: IconButton(
-              //     icon: model.isTopOfTheList
-              //         ? Icon(Icons.arrow_downward)
-              //         : Icon(Icons.arrow_upward),
-              //     onPressed: () async {
-              //       model.moveDown();
-              //     },
-              //   ),
-              // ),
+              floatingActionButton: Container(
+                color: white,
+                child: IconButton(
+                  icon: model.isTopOfTheList
+                      ? Icon(Icons.arrow_downward)
+                      : Icon(Icons.arrow_upward),
+                  onPressed: () async {
+                    model.routeWithWalletInfoArgs(
+                        WalletBalance(balance: 12, coin: 'cnb'), '');
+                  },
+                ),
+              ),
             ),
           );
         });
@@ -611,20 +452,20 @@ class WalletDashboardView extends StatelessWidget {
     return ListView.builder(
       controller: model.walletsScrollController,
       shrinkWrap: true,
-      itemCount: model.walletInfo.length,
+      itemCount: model.wallets.length,
       itemBuilder: (BuildContext context, int index) {
-        var name = model.walletInfo[index].tickerName.toLowerCase();
-        var usdVal = model.walletInfo[index].usdValue;
+        var name = model.wallets[index].coin.toLowerCase();
+        var usdVal = model.wallets[index].usdValue.usd;
 
         return Visibility(
           // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
           visible: usdVal >= 0 && !model.isHideSmallAmountAssets,
-          child: _coinDetailsCard('$name', index, model.walletInfo,
-              model.elevation, context, model),
+          child: _coinDetailsCard(
+              '$name', index, model.wallets, model.elevation, context, model),
           // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
           replacement: Visibility(
               visible: model.isHideSmallAmountAssets && usdVal != 0,
-              child: _coinDetailsCard('$name', index, model.walletInfo,
+              child: _coinDetailsCard('$name', index, model.wallets,
                   model.elevation, context, model)),
         );
       },
@@ -643,7 +484,7 @@ Widget _coinDetailsCard(
     // double assetsInExchange,
     // double usdValue,
     index,
-    List<WalletInfo> walletInfo,
+    List<WalletBalance> wallets,
     elevation,
     context,
     WalletDashboardViewModel model) {
@@ -687,7 +528,7 @@ Widget _coinDetailsCard(
       splashColor: Colors.blue.withAlpha(30),
       onDoubleTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       onTap: () {
-        model.onSingleCoinCardClick(index);
+        model.routeWithWalletInfoArgs(wallets[index], WalletFeaturesViewRoute);
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 8),
@@ -741,22 +582,17 @@ Widget _coinDetailsCard(
                                 baseColor: globals.red,
                                 highlightColor: globals.white,
                                 child: Text(
-                                  walletInfo[index]
-                                      .availableBalance
-                                      .toStringAsFixed(2),
+                                  wallets[index].balance.toStringAsFixed(2),
                                   style: Theme.of(context).textTheme.headline6,
                                 ),
                               ))
                             : Expanded(
                                 child: Text(
-                                    walletInfo[index]
-                                            .availableBalance
-                                            .isNegative
+                                    wallets[index].balance.isNegative
                                         ? '0.0'
                                         : NumberUtil()
                                             .truncateDoubleWithoutRouding(
-                                                model.walletInfo[index]
-                                                    .availableBalance,
+                                                model.wallets[index].balance,
                                                 precision: 6)
                                             .toString(),
                                     style:
@@ -781,8 +617,7 @@ Widget _coinDetailsCard(
                                 child: Shimmer.fromColors(
                                 baseColor: globals.red,
                                 highlightColor: globals.white,
-                                child: Text(
-                                    '${walletInfo[index].lockedBalance}',
+                                child: Text('${wallets[index].lockBalance}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline6
@@ -790,12 +625,12 @@ Widget _coinDetailsCard(
                               ))
                             : Expanded(
                                 child: Text(
-                                    walletInfo[index].lockedBalance.isNegative
+                                    wallets[index].lockBalance.isNegative
                                         ? '0.0'
                                         : NumberUtil()
                                             .truncateDoubleWithoutRouding(
-                                                model.walletInfo[index]
-                                                    .lockedBalance,
+                                                model
+                                                    .wallets[index].lockBalance,
                                                 precision: 6)
                                             .toString(),
                                     style: Theme.of(context)
@@ -822,8 +657,8 @@ Widget _coinDetailsCard(
                                 baseColor: globals.primaryColor,
                                 highlightColor: globals.white,
                                 child: Text(
-                                  walletInfo[index]
-                                      .inExchange
+                                  wallets[index]
+                                      .unlockedExchangeBalance
                                       .toStringAsFixed(4),
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context).textTheme.headline6,
@@ -831,11 +666,12 @@ Widget _coinDetailsCard(
                               ))
                             : Expanded(
                                 child: Text(
-                                    walletInfo[index].inExchange == 0
+                                    wallets[index].unlockedExchangeBalance == 0
                                         ? '0.0'
                                         : NumberUtil()
                                             .truncateDoubleWithoutRouding(
-                                                walletInfo[index].inExchange,
+                                                wallets[index]
+                                                    .unlockedExchangeBalance,
                                                 precision: 6)
                                             .toString(),
                                     style: Theme.of(context)
@@ -867,7 +703,7 @@ Widget _coinDetailsCard(
                                   baseColor: globals.grey,
                                   highlightColor: globals.white,
                                   child: Text(
-                                    '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfoCopy[index].usdValue, precision: 2).toString()}',
+                                    '${NumberUtil().truncateDoubleWithoutRouding(model.wallets[index].usdValue.usd, precision: 2).toString()}',
                                     style: TextStyle(color: globals.green),
                                   ),
                                 ),
@@ -889,7 +725,7 @@ Widget _coinDetailsCard(
                                     //         highlightColor: globals.white,
                                     //         child:
                                     Text(
-                                  '${NumberUtil().truncateDoubleWithoutRouding(walletInfo[index].usdValue, precision: 2).toString()}',
+                                  '${NumberUtil().truncateDoubleWithoutRouding(wallets[index].usdValue.usd, precision: 2).toString()}',
                                   style: TextStyle(color: globals.green),
                                 ),
                               )
@@ -931,8 +767,8 @@ Widget _coinDetailsCard(
                               ),
                             ),
                             onTap: () {
-                              Navigator.pushNamed(context, '/withdraw',
-                                  arguments: model.walletInfo[index]);
+                              model.routeWithWalletInfoArgs(
+                                  model.wallets[index], WithdrawViewRoute);
                             }),
                       ],
                     ),
@@ -952,503 +788,523 @@ Widget _coinDetailsCard(
 class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
   @override
   void onViewModelReady(WalletDashboardViewModel model) async {
-    await model.buildFavCoinList();
+    await model.buildFavCoinListV1();
   }
 
   @override
   Widget builder(
       BuildContext context, WalletDashboardViewModel model, Widget child) {
     print('fav list length before');
-    print(model.favWalletInfoList.length);
-    return Container(
-        child: model.favWalletInfoList.isEmpty ||
-                model.favWalletInfoList == null
-            ? Center(
-                child: Image.asset(
-                  'assets/images/icons/wallet_empty.png',
-                  color: Colors.grey,
-                  width: 40,
-                  height: 40,
-                ),
-                //Text('Favorite list empty'),
-              )
-            :
-            //Text('test'));
-            Container(
-                child: ListView.builder(
-                    controller: model.walletsScrollController,
-                    // itemExtent: 95,
-                    shrinkWrap: true,
-                    itemCount: model.favWalletInfoList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      var tickerName = model.favWalletInfoList[index].tickerName
-                          .toLowerCase();
+    print(model.favWallets.length);
+    return model.busy(model.favWallets)
+        ? model.sharedService.loadingIndicator()
+        : Container(
+            child: model.favWallets.isEmpty || model.favWallets == null
+                ? Center(
+                    child: Image.asset(
+                      'assets/images/icons/wallet_empty.png',
+                      color: Colors.grey,
+                      width: 40,
+                      height: 40,
+                    ),
+                    //Text('Favorite list empty'),
+                  )
+                :
+                //Text('test'));
+                Container(
+                    child: ListView.builder(
+                        controller: model.walletsScrollController,
+                        // itemExtent: 95,
+                        shrinkWrap: true,
+                        itemCount: model.favWallets.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          var tickerName =
+                              model.favWallets[index].coin.toLowerCase();
 
-                      String logoTicker = '';
-                      if (tickerName.toUpperCase() == 'BSTE') {
-                        tickerName = 'BST(ERC20)';
-                        logoTicker = 'BSTE';
-                      } else if (tickerName.toUpperCase() == 'DSCE') {
-                        tickerName = 'DSC(ERC20)';
-                        logoTicker = 'DSCE';
-                      } else if (tickerName.toUpperCase() == 'EXGE') {
-                        tickerName = 'EXG(ERC20)';
-                        logoTicker = 'EXGE';
-                      } else if (tickerName.toUpperCase() == 'FABE') {
-                        tickerName = 'FAB(ERC20)';
-                        logoTicker = 'FABE';
-                      } else if (tickerName.toUpperCase() == 'USDTX') {
-                        tickerName = 'USDT(TRC20)';
-                        logoTicker = 'USDTX';
-                      } else if (tickerName.toUpperCase() == 'USDT') {
-                        tickerName = 'USDT(ERC20)';
-                        logoTicker = 'USDT';
-                      } else if (tickerName.toUpperCase() == 'USDC') {
-                        tickerName = 'USDC(erc20)';
-                        logoTicker = 'USDC';
-                      } else if (tickerName.toUpperCase() == 'USDCX') {
-                        tickerName = 'USDC(trc20)';
-                        logoTicker = 'USDC';
-                      } else {
-                        logoTicker = tickerName;
-                      }
+                          String logoTicker = '';
+                          if (tickerName.toUpperCase() == 'BSTE') {
+                            tickerName = 'BST(ERC20)';
+                            logoTicker = 'BSTE';
+                          } else if (tickerName.toUpperCase() == 'DSCE') {
+                            tickerName = 'DSC(ERC20)';
+                            logoTicker = 'DSCE';
+                          } else if (tickerName.toUpperCase() == 'EXGE') {
+                            tickerName = 'EXG(ERC20)';
+                            logoTicker = 'EXGE';
+                          } else if (tickerName.toUpperCase() == 'FABE') {
+                            tickerName = 'FAB(ERC20)';
+                            logoTicker = 'FABE';
+                          } else if (tickerName.toUpperCase() == 'USDTX') {
+                            tickerName = 'USDT(TRC20)';
+                            logoTicker = 'USDTX';
+                          } else if (tickerName.toUpperCase() == 'USDT') {
+                            tickerName = 'USDT(ERC20)';
+                            logoTicker = 'USDT';
+                          } else if (tickerName.toUpperCase() == 'USDC') {
+                            tickerName = 'USDC(erc20)';
+                            logoTicker = 'USDC';
+                          } else if (tickerName.toUpperCase() == 'USDCX') {
+                            tickerName = 'USDC(trc20)';
+                            logoTicker = 'USDC';
+                          } else {
+                            logoTicker = tickerName;
+                          }
 
-                      return Card(
-                        color: globals.walletCardColor,
-                        elevation: model.elevation,
-                        child: InkWell(
-                          splashColor: Colors.blue.withAlpha(30),
-                          onTap: () {
-                            model.navigationService.navigateTo(
-                                '/walletFeatures',
-                                arguments: model.favWalletInfoList[index]);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 8),
-                            child: Row(
-                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                UIHelper.horizontalSpaceSmall,
-                                // Card logo container
-                                Container(
-                                    padding: EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                        color: globals.walletCardColor,
-                                        borderRadius: BorderRadius.circular(50),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: globals.fabLogoColor,
-                                              offset: Offset(1.0, 5.0),
-                                              blurRadius: 10.0,
-                                              spreadRadius: 1.0),
-                                        ]),
-                                    child: Image.network(
-                                        '$WalletCoinsLogoUrl${logoTicker.toLowerCase()}.png'),
-                                    //asset('assets/images/wallet-page/$tickerName.png'),
-                                    width: 35,
-                                    height: 35),
-                                UIHelper.horizontalSpaceSmall,
-                                // Tickername available locked and inexchange column
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          '$tickerName'.toUpperCase(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline3,
-                                        ),
-                                        // Available Row
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                          return Card(
+                            color: globals.walletCardColor,
+                            elevation: model.elevation,
+                            child: InkWell(
+                              splashColor: Colors.blue.withAlpha(30),
+                              onTap: () {
+                                model.routeWithWalletInfoArgs(
+                                    model.favWallets[index],
+                                    WalletFeaturesViewRoute);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 8),
+                                child: Row(
+                                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    UIHelper.horizontalSpaceSmall,
+                                    // Card logo container
+                                    Container(
+                                        padding: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                            color: globals.walletCardColor,
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: globals.fabLogoColor,
+                                                  offset: Offset(1.0, 5.0),
+                                                  blurRadius: 10.0,
+                                                  spreadRadius: 1.0),
+                                            ]),
+                                        child: Image.network(
+                                            '$WalletCoinsLogoUrl${logoTicker.toLowerCase()}.png'),
+                                        //asset('assets/images/wallet-page/$tickerName.png'),
+                                        width: 35,
+                                        height: 35),
+                                    UIHelper.horizontalSpaceSmall,
+                                    // Tickername available locked and inexchange column
+                                    Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 5.0),
-                                              child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .available,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6),
+                                            Text(
+                                              '$tickerName'.toUpperCase(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline3,
                                             ),
-                                            model.isBusy
-                                                ? SizedBox(
-                                                    child: Shimmer.fromColors(
-                                                    baseColor: globals.red,
-                                                    highlightColor:
-                                                        globals.white,
-                                                    child: Text(
-                                                      model
-                                                          .favWalletInfoList[
-                                                              index]
-                                                          .availableBalance
-                                                          .toStringAsFixed(2),
+                                            // Available Row
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 5.0),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .available,
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .headline6,
-                                                    ),
-                                                  ))
-                                                : Expanded(
+                                                          .headline6),
+                                                ),
+                                                model.isBusy
+                                                    ? SizedBox(
+                                                        child:
+                                                            Shimmer.fromColors(
+                                                        baseColor: globals.red,
+                                                        highlightColor:
+                                                            globals.white,
+                                                        child: Text(
+                                                          model
+                                                              .favWallets[index]
+                                                              .balance
+                                                              .toStringAsFixed(
+                                                                  2),
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline6,
+                                                        ),
+                                                      ))
+                                                    : Expanded(
+                                                        child: Text(
+                                                            model
+                                                                    .favWallets[
+                                                                        index]
+                                                                    .balance
+                                                                    .isNegative
+                                                                ? '0.0'
+                                                                : NumberUtil()
+                                                                    .truncateDoubleWithoutRouding(
+                                                                        model
+                                                                            .favWallets[
+                                                                                index]
+                                                                            .balance,
+                                                                        precision:
+                                                                            6)
+                                                                    .toString(),
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .headline6),
+                                                      ),
+                                              ],
+                                            ),
+                                            // Locked Row
+                                            Row(
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 2.0,
+                                                          right: 5.0,
+                                                          bottom: 2.0),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .locked,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline6
+                                                          .copyWith(
+                                                              color: red)),
+                                                ),
+                                                model.isBusy
+                                                    ? SizedBox(
+                                                        child:
+                                                            Shimmer.fromColors(
+                                                        baseColor: globals.red,
+                                                        highlightColor:
+                                                            globals.white,
+                                                        child: Text(
+                                                            '${model.favWallets[index].lockBalance}',
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .headline6
+                                                                .copyWith(
+                                                                    color:
+                                                                        red)),
+                                                      ))
+                                                    : Expanded(
+                                                        child: Text(
+                                                            model
+                                                                    .favWallets[
+                                                                        index]
+                                                                    .lockBalance
+                                                                    .isNegative
+                                                                ? '0.0'
+                                                                : NumberUtil()
+                                                                    .truncateDoubleWithoutRouding(
+                                                                        model
+                                                                            .favWallets[
+                                                                                index]
+                                                                            .lockBalance,
+                                                                        precision:
+                                                                            6)
+                                                                    .toString(),
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .headline6
+                                                                .copyWith(
+                                                                    color:
+                                                                        red)),
+                                                      )
+                                              ],
+                                            ),
+                                            // Inexchange Row
+                                            Row(
+                                              children: <Widget>[
+                                                Container(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 5.0),
                                                     child: Text(
-                                                        model
-                                                                .favWalletInfoList[
-                                                                    index]
-                                                                .availableBalance
-                                                                .isNegative
-                                                            ? '0.0'
-                                                            : NumberUtil()
-                                                                .truncateDoubleWithoutRouding(
-                                                                    model
-                                                                        .favWalletInfoList[
-                                                                            index]
-                                                                        .availableBalance,
-                                                                    precision:
-                                                                        6)
-                                                                .toString(),
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .inExchange,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline6),
                                                   ),
-                                          ],
-                                        ),
-                                        // Locked Row
-                                        Row(
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 2.0,
-                                                  right: 5.0,
-                                                  bottom: 2.0),
-                                              child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .locked,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6
-                                                      .copyWith(color: red)),
-                                            ),
-                                            model.isBusy
-                                                ? SizedBox(
-                                                    child: Shimmer.fromColors(
-                                                    baseColor: globals.red,
-                                                    highlightColor:
-                                                        globals.white,
-                                                    child: Text(
-                                                        '${model.favWalletInfoList[index].lockedBalance}',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline6
-                                                            .copyWith(
-                                                                color: red)),
-                                                  ))
-                                                : Expanded(
-                                                    child: Text(
-                                                        model
-                                                                .favWalletInfoList[
-                                                                    index]
-                                                                .lockedBalance
-                                                                .isNegative
-                                                            ? '0.0'
-                                                            : NumberUtil()
-                                                                .truncateDoubleWithoutRouding(
-                                                                    model
-                                                                        .favWalletInfoList[
+                                                ),
+                                                model.isBusy
+                                                    ? SizedBox(
+                                                        child:
+                                                            Shimmer.fromColors(
+                                                        baseColor: globals
+                                                            .primaryColor,
+                                                        highlightColor:
+                                                            globals.white,
+                                                        child: Text(
+                                                          model
+                                                              .favWallets[index]
+                                                              .unlockedExchangeBalance
+                                                              .toStringAsFixed(
+                                                                  4),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline6,
+                                                        ),
+                                                      ))
+                                                    : Expanded(
+                                                        child: Text(
+                                                            model
+                                                                        .favWallets[
                                                                             index]
-                                                                        .lockedBalance,
-                                                                    precision:
-                                                                        6)
-                                                                .toString(),
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline6
-                                                            .copyWith(
-                                                                color: red)),
-                                                  )
-                                          ],
-                                        ),
-                                        // Inexchange Row
-                                        Row(
-                                          children: <Widget>[
-                                            Container(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 5.0),
-                                                child: Text(
-                                                    AppLocalizations.of(context)
-                                                        .inExchange,
-                                                    textAlign: TextAlign.center,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline6),
-                                              ),
+                                                                        .unlockedExchangeBalance ==
+                                                                    0
+                                                                ? '0.0'
+                                                                : NumberUtil()
+                                                                    .truncateDoubleWithoutRouding(
+                                                                        model
+                                                                            .favWallets[
+                                                                                index]
+                                                                            .unlockedExchangeBalance,
+                                                                        precision:
+                                                                            6)
+                                                                    .toString(),
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .headline6
+                                                                .copyWith(
+                                                                    color: globals
+                                                                        .primaryColor)),
+                                                      ),
+                                              ],
                                             ),
-                                            model.isBusy
-                                                ? SizedBox(
-                                                    child: Shimmer.fromColors(
-                                                    baseColor:
-                                                        globals.primaryColor,
-                                                    highlightColor:
-                                                        globals.white,
-                                                    child: Text(
-                                                      model
-                                                          .favWalletInfoList[
-                                                              index]
-                                                          .inExchange
-                                                          .toStringAsFixed(4),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline6,
-                                                    ),
-                                                  ))
-                                                : Expanded(
-                                                    child: Text(
-                                                        model
-                                                                    .favWalletInfoList[
-                                                                        index]
-                                                                    .inExchange ==
-                                                                0
-                                                            ? '0.0'
-                                                            : NumberUtil()
-                                                                .truncateDoubleWithoutRouding(
-                                                                    model
-                                                                        .favWalletInfoList[
-                                                                            index]
-                                                                        .inExchange,
-                                                                    precision:
-                                                                        6)
-                                                                .toString(),
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline6
-                                                            .copyWith(
-                                                                color: globals
-                                                                    .primaryColor)),
-                                                  ),
                                           ],
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
 
-                                // Value USD and deposit - withdraw Container column
-                                Expanded(
-                                  flex: 2,
-                                  child: Container(
-                                    child: Column(
-                                      children: <Widget>[
-                                        model.isBusy
-                                            ? Row(
-                                                children: [
-                                                  Text('\$',
-                                                      style: TextStyle(
-                                                          color:
-                                                              globals.green)),
-                                                  Expanded(
-                                                    child: Shimmer.fromColors(
-                                                      baseColor: globals.grey,
-                                                      highlightColor:
-                                                          globals.white,
-                                                      child: Text(
-                                                        '${NumberUtil().truncateDoubleWithoutRouding(model.favWalletInfoList[index].usdValue, precision: 2).toString()}',
-                                                        style: TextStyle(
-                                                            color:
-                                                                globals.green),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            : Row(
-                                                children: [
-                                                  Text('\$',
-                                                      style: TextStyle(
-                                                          color:
-                                                              globals.green)),
-                                                  Expanded(
-                                                    child: Text(
-                                                        '${NumberUtil().truncateDoubleWithoutRouding(model.favWalletInfoList[index].usdValue, precision: 2).toString()} USD',
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        style: TextStyle(
-                                                            color:
-                                                                globals.green)),
-                                                  ),
-                                                ],
-                                              ),
-
-                                        // Deposit and Withdraw Container Row
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                    // Value USD and deposit - withdraw Container column
+                                    Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        child: Column(
                                           children: <Widget>[
-                                            InkWell(
-                                                child: tickerName
-                                                                .toUpperCase() ==
-                                                            'FAB' &&
-                                                        (model.isShowCaseView ||
-                                                            model.gasAmount <
-                                                                0.01) &&
-                                                        !model.isBusy
-                                                    ? Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                top: 8.0,
-                                                                right: 5.0,
-                                                                left: 2.0),
-                                                        child: Column(
-                                                          children: [
-                                                            Text(
-                                                              AppLocalizations.of(
-                                                                      context)
-                                                                  .deposit,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .subtitle2
-                                                                  .copyWith(
-                                                                      fontSize:
-                                                                          8),
-                                                            ),
-                                                            Icon(
-                                                                Icons
-                                                                    .arrow_downward,
-                                                                color: globals
-                                                                    .green,
-                                                                size: 16),
-                                                          ],
-                                                        ))
-                                                    : Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                top: 8.0,
-                                                                right: 5.0,
-                                                                left: 2.0),
-                                                        child: Column(
-                                                          children: [
-                                                            Text(
-                                                              AppLocalizations.of(
-                                                                      context)
-                                                                  .deposit,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .subtitle2
-                                                                  .copyWith(
-                                                                      fontSize:
-                                                                          8),
-                                                            ),
-                                                            Icon(
-                                                                Icons
-                                                                    .arrow_downward,
-                                                                color: globals
-                                                                    .green,
-                                                                size: 16),
-                                                          ],
-                                                        )),
-                                                onTap: () {
-                                                  model.navigationService
-                                                      .navigateTo('/deposit',
-                                                          arguments: model
-                                                                  .favWalletInfoList[
-                                                              index]);
-                                                }),
-                                            Divider(
-                                              endIndent: 5,
-                                            ),
-                                            InkWell(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 8.0),
-                                                  child: Column(
+                                            model.isBusy
+                                                ? Row(
                                                     children: [
-                                                      Text(
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .withdraw,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .subtitle2
-                                                            .copyWith(
-                                                                fontSize: 8),
+                                                      Text('\$',
+                                                          style: TextStyle(
+                                                              color: globals
+                                                                  .green)),
+                                                      Expanded(
+                                                        child:
+                                                            Shimmer.fromColors(
+                                                          baseColor:
+                                                              globals.grey,
+                                                          highlightColor:
+                                                              globals.white,
+                                                          child: Text(
+                                                            '${NumberUtil().truncateDoubleWithoutRouding(model.favWallets[index].usdValue.usd, precision: 2).toString()}',
+                                                            style: TextStyle(
+                                                                color: globals
+                                                                    .green),
+                                                          ),
+                                                        ),
                                                       ),
-                                                      Icon(
-                                                        Icons.arrow_upward,
-                                                        color: globals.red,
-                                                        size: 16,
+                                                    ],
+                                                  )
+                                                : Row(
+                                                    children: [
+                                                      Text('\$',
+                                                          style: TextStyle(
+                                                              color: globals
+                                                                  .green)),
+                                                      Expanded(
+                                                        child: Text(
+                                                            '${NumberUtil().truncateDoubleWithoutRouding(model.favWallets[index].usdValue.usd, precision: 2).toString()} USD',
+                                                            textAlign:
+                                                                TextAlign.start,
+                                                            style: TextStyle(
+                                                                color: globals
+                                                                    .green)),
                                                       ),
                                                     ],
                                                   ),
+
+                                            // Deposit and Withdraw Container Row
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                InkWell(
+                                                    child: tickerName.toUpperCase() ==
+                                                                'FAB' &&
+                                                            (model.isShowCaseView ||
+                                                                model.gasAmount <
+                                                                    0.01) &&
+                                                            !model.isBusy
+                                                        ? Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 8.0,
+                                                                    right: 5.0,
+                                                                    left: 2.0),
+                                                            child: Column(
+                                                              children: [
+                                                                Text(
+                                                                  AppLocalizations.of(
+                                                                          context)
+                                                                      .deposit,
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .subtitle2
+                                                                      .copyWith(
+                                                                          fontSize:
+                                                                              8),
+                                                                ),
+                                                                Icon(
+                                                                    Icons
+                                                                        .arrow_downward,
+                                                                    color: globals
+                                                                        .green,
+                                                                    size: 16),
+                                                              ],
+                                                            ))
+                                                        : Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 8.0,
+                                                                    right: 5.0,
+                                                                    left: 2.0),
+                                                            child: Column(
+                                                              children: [
+                                                                Text(
+                                                                  AppLocalizations.of(
+                                                                          context)
+                                                                      .deposit,
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .subtitle2
+                                                                      .copyWith(
+                                                                          fontSize:
+                                                                              8),
+                                                                ),
+                                                                Icon(
+                                                                    Icons
+                                                                        .arrow_downward,
+                                                                    color: globals
+                                                                        .green,
+                                                                    size: 16),
+                                                              ],
+                                                            )),
+                                                    onTap: () => model
+                                                        .routeWithWalletInfoArgs(
+                                                            model
+                                                                .favWallets[index],
+                                                            DepositViewRoute)),
+                                                Divider(
+                                                  endIndent: 5,
                                                 ),
-                                                onTap: () {
-                                                  model.navigationService
-                                                      .navigateTo('/withdraw',
-                                                          arguments: model
-                                                                  .favWalletInfoList[
-                                                              index]);
-                                                }),
+                                                InkWell(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 8.0),
+                                                      child: Column(
+                                                        children: [
+                                                          Text(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .withdraw,
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .subtitle2
+                                                                .copyWith(
+                                                                    fontSize:
+                                                                        8),
+                                                          ),
+                                                          Icon(
+                                                            Icons.arrow_upward,
+                                                            color: globals.red,
+                                                            size: 16,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    onTap: () => model
+                                                        .routeWithWalletInfoArgs(
+                                                            model.favWallets[
+                                                                index],
+                                                            WithdrawViewRoute)),
+                                              ],
+                                            ),
                                           ],
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    }
+                          );
+                        }
 
-                    //                   //   Visibility(
-                    //                   //     // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
-                    //                   //     visible: usdVal >= 0 && !model.isHideSmallAmountAssets,
-                    //                   //     child: _coinDetailsCard(
-                    //                   //         '$name',
-                    //                   //         index,
-                    //                   //         model.favWalletInfoList,
-                    //                   //         model.elevation,
-                    //                   //         context,
-                    //                   //         model),
-                    //                   //     //    Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
-                    //                   //     replacement: Visibility(
-                    //                   //         visible:
-                    //                   //             model.isHideSmallAmountAssets && usdVal != 0,
-                    //                   //         child: _coinDetailsCard(
-                    //                   //             '$name',
-                    //                   //             index,
-                    //                   //             model.favWalletInfoList,
-                    //                   //             model.elevation,
-                    //                   //             context,
-                    //                   //             model)),
-                    //                   //   );
-                    //                   // },
-                    //                   ),
-                    //               // SmartRefresher(
-                    //               //   enablePullDown: true,
-                    //               //   // header: Theme.of(context).platform == TargetPlatform.iOS
-                    //               //   //     ? ClassicHeader()
-                    //               //   //     : MaterialClassicHeader(),
-                    //               //   controller: model.refreshController,
-                    //               //   onRefresh: model.onRefresh,
-                    //               //   child:
-                    //               //       //Text(model.favWalletInfoList.length.toString())
+                        //                   //   Visibility(
+                        //                   //     // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
+                        //                   //     visible: usdVal >= 0 && !model.isHideSmallAmountAssets,
+                        //                   //     child: _coinDetailsCard(
+                        //                   //         '$name',
+                        //                   //         index,
+                        //                   //         model.favWallets,
+                        //                   //         model.elevation,
+                        //                   //         context,
+                        //                   //         model),
+                        //                   //     //    Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
+                        //                   //     replacement: Visibility(
+                        //                   //         visible:
+                        //                   //             model.isHideSmallAmountAssets && usdVal != 0,
+                        //                   //         child: _coinDetailsCard(
+                        //                   //             '$name',
+                        //                   //             index,
+                        //                   //             model.favWallets,
+                        //                   //             model.elevation,
+                        //                   //             context,
+                        //                   //             model)),
+                        //                   //   );
+                        //                   // },
+                        //                   ),
+                        //               // SmartRefresher(
+                        //               //   enablePullDown: true,
+                        //               //   // header: Theme.of(context).platform == TargetPlatform.iOS
+                        //               //   //     ? ClassicHeader()
+                        //               //   //     : MaterialClassicHeader(),
+                        //               //   controller: model.refreshController,
+                        //               //   onRefresh: model.onRefresh,
+                        //               //   child:
+                        //               //       //Text(model.favWallets.length.toString())
 
-                    //               // ),
-                    //             ),
-                    )));
+                        //               // ),
+                        //             ),
+                        )));
   }
 
   @override
@@ -1587,7 +1443,7 @@ class TotalBalanceWidget extends StatelessWidget {
                   ),
                   InkWell(
                       onTap: () async {
-                        await model.refreshBalance();
+                        await model.refreshBalancesV2();
                       },
                       child: model.isBusy
                           ? Container(
@@ -1681,10 +1537,8 @@ class DepositWidget extends StatelessWidget {
                 child: buildPaddingDeposit(context),
               )
             : buildPaddingDeposit(context),
-        onTap: () {
-          Navigator.pushNamed(context, '/deposit',
-              arguments: model.walletInfo[index]);
-        });
+        onTap: () => model.routeWithWalletInfoArgs(
+            model.wallets[index], DepositViewRoute));
   }
 
   Padding buildPaddingDeposit(BuildContext context) {

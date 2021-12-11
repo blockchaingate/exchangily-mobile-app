@@ -16,7 +16,6 @@ import 'dart:convert';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -49,7 +48,6 @@ class WalletFeaturesViewModel extends BaseViewModel {
   BuildContext context;
   var errDepositItem;
   String specialTicker = '';
-  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
   List<WalletFeatureName> features = [];
   bool isFavorite = false;
   int decimalLimit = 8;
@@ -115,14 +113,6 @@ class WalletFeaturesViewModel extends BaseViewModel {
     storageService.favWalletCoins = json.encode(favWalletCoins);
   }
 
-  getDecimalData() async {
-    setBusy(true);
-    singlePairDecimalConfig =
-        await sharedService.getSinglePairDecimalConfig(walletInfo.tickerName);
-    log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
-    setBusy(false);
-  }
-
   getWalletFeatures() {
     return features = [
       WalletFeatureName(AppLocalizations.of(context).receive,
@@ -179,7 +169,8 @@ class WalletFeaturesViewModel extends BaseViewModel {
   refreshBalance() async {
     setBusy(true);
 
-    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    String fabAddress =
+        await sharedService.getFabAddressFromCoreWalletDatabase();
     //  await getExchangeBal();
     await apiService
         .getSingleWalletBalance(
