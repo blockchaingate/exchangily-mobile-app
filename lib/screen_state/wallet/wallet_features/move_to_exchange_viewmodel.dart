@@ -336,6 +336,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     // amount = NumberUtil().roundDownLastDigit(amount);
     await refreshBalance();
+
     double finalAmount = 0.0;
     if (!walletService.isTrx(walletInfo.tickerName))
       finalAmount = await amountAfterFee(amount);
@@ -344,27 +345,31 @@ class MoveToExchangeViewModel extends BaseViewModel {
         amount == 0 ||
         amount.isNegative) {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
-      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-          AppLocalizations.of(context).insufficientBalance,
-          isWarning: false);
+      sharedService.sharedSimpleNotification(
+          AppLocalizations.of(context).insufficientBalance);
+
       setBusy(false);
       return;
     }
-    // if (!walletService.isTrx(walletInfo.tickerName) &&
-    //     walletInfo.tickerName != 'BTC' &&
-    //     walletInfo.tickerName != 'ETH') {
-    //   int decimalLength = NumberUtil.getDecimalLength(amount);
-    //   log.w('decimalLength $decimalLength');
-    //   if (decimalLength == decimalLimit)
-    //     amount = NumberUtil().roundDownLastDigit(amount);
-    // }
+    // check chain balance
+    if (tokenType.isNotEmpty) {
+      bool hasSufficientChainBalance = await walletService
+          .checkCoinWalletBalance(transFee, walletInfo.tokenType);
+      if (!hasSufficientChainBalance) {
+        log.e('Chain $tokenType -- insufficient balance');
+        sharedService.sharedSimpleNotification(walletInfo.tokenType,
+            subtitle: AppLocalizations.of(context).insufficientGasBalance);
+        setBusy(false);
+        return;
+      }
+    }
 
 // * checking trx balance required
     if (walletInfo.tickerName == 'USDTX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       bool isCorrectAmount = true;
       await walletService
-          .checkCoinWalletBalance(15, 'TRX', walletInfo.address)
+          .checkCoinWalletBalance(15, 'TRX')
           .then((res) => isCorrectAmount = res);
       log.w('isCorrectAmount $isCorrectAmount');
       if (!isCorrectAmount) {

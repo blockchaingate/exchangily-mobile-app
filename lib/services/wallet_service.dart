@@ -317,12 +317,13 @@ class WalletService {
     return res;
   }
 
-  Future<bool> checkCoinWalletBalance(
-      double amount, String tickerName, String thirdPartyAddress) async {
+  Future<bool> checkCoinWalletBalance(double amount, String tickerName) async {
     bool isCorrectAmount = true;
     String fabAddress =
         await sharedService.getFabAddressFromCoreWalletDatabase();
-
+    String thirdPartyAddress = await coreWalletDatabaseService
+        .getWalletAddressByTickerName(tickerName);
+    log.w('thirdPartyAddress $thirdPartyAddress');
     await apiService
         .getSingleWalletBalance(fabAddress, tickerName, thirdPartyAddress)
         .then((walletBalance) {
