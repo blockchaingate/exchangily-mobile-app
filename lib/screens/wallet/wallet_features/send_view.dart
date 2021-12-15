@@ -797,18 +797,14 @@ class SendWalletView extends StatelessWidget {
                         // alignment: Alignment(0.0, 1.0),
                         child: MaterialButton(
                           padding: EdgeInsets.all(15),
-                          color: primaryColor,
+                          color: !model.isBusy ? primaryColor : grey,
                           textColor: Colors.white,
                           onPressed: () {
-                            model.checkFields(context);
+                            if (!model.isBusy && !model.busy(model.transFee))
+                              model.checkFields(context);
                           },
-                          child: model.isBusy
-                              ? SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: model.sharedService.loadingIndicator())
-                              : Text(AppLocalizations.of(context).confirm,
-                                  style: Theme.of(context).textTheme.headline4),
+                          child: Text(AppLocalizations.of(context).confirm,
+                              style: Theme.of(context).textTheme.headline4),
                         ),
                       ),
                       UIHelper.verticalSpaceMedium

@@ -83,6 +83,34 @@ class WalletService {
   var httpClient = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
   final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   double coinUsdBalance;
+
+  Map<String, String> coinTickerAndNameList = {
+    'BTC': 'Bitcoin',
+    'ETH': 'Ethereum',
+    'FAB': 'Fast Access Blockchain',
+    'USDT': 'USDT',
+    'EXG': 'Exchangily',
+    'DUSD': 'DUSD',
+    'TRX': 'Tron',
+    'BCH': 'Bitcoin Cash',
+    'LTC': 'Litecoin',
+    'DOGE': 'Dogecoin',
+    'INB': 'Insight chain',
+    'DRGN': 'Dragonchain',
+    'HOT': 'Holo',
+    'CEL': 'Celsius',
+    'MATIC': 'Matic Network',
+    'IOST': 'IOST',
+    'MANA': 'Decentraland',
+    'WAX': 'Wax',
+    'ELF': 'aelf',
+    'GNO': 'Gnosis',
+    'POWR': 'Power Ledger',
+    'WINGS': 'Wings',
+    'MTL': 'Metal',
+    'KNC': 'Kyber Network',
+    'GVT': 'Genesis Vision'
+  };
   List<String> coinTickers = [
     'BTC',
     'ETH',
@@ -176,16 +204,13 @@ class WalletService {
   final kanbanUtils = KanbanUtils();
   final ltcUtils = LtcUtils();
 
-  Future<String> getAddressFromCoreWalletDatabase(String tickerName) async {
+  Future<String> getAddressFromCoreWalletDatabaseByTickerName(
+      String tickerName) async {
     String address = '';
-    if (tickerName == 'FAB')
-      address = await coreWalletDatabaseService.getFabAddress();
-    else if (tickerName == 'EXG')
-      address = await coreWalletDatabaseService.getExgAddress();
-    else if (tickerName == 'ETH')
-      address = await coreWalletDatabaseService.getEthAddress();
-    else if (tickerName == 'TRX')
-      address = await coreWalletDatabaseService.getTrxAddress();
+
+    address = await coreWalletDatabaseService
+        .getWalletAddressByTickerName(tickerName);
+
     return address;
   }
 
@@ -379,7 +404,7 @@ class WalletService {
     //lang = storageService.language;
 
     await userSettingsDatabaseService.getAll().then((res) {
-      if (res == null || res == []) {
+      if (res == null || res == [] || res.isEmpty) {
         log.e('language empty- setting english');
         storageService.language = "en";
         AppLocalizations.load(Locale('en', 'EN'));
@@ -683,8 +708,11 @@ class WalletService {
   }
 
   // verify wallet address
-  Future<bool> verifyWalletAddresses(String mnemonic) async {
-    bool isSuccess = false;
+  Future<Map<String, bool>> verifyWalletAddresses(String mnemonic) async {
+    Map<String, bool> res = {
+      "fabAddressCheck": false,
+      "trxAddressCheck": false
+    };
     var coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
 
     // create wallet address and assign to walletcoremodel object
@@ -692,21 +720,37 @@ class WalletService {
         await createOfflineWalletsV1(mnemonic, '', isVerifying: true);
 
     // get the walletbalancebody from the DB
-    var walletBalancesBodyFromDB =
-        await coreWalletDatabaseService.getWalletBalancesBody();
+    var walletBalancesBodyFromStorage;
+    if (storageService.walletBalancesBody.isNotEmpty) {
+      walletBalancesBodyFromStorage =
+          jsonDecode(storageService.walletBalancesBody);
+    }
 
     // Compare the address if matched then don't notify otherwise raise flag
     // TODO also compare the trx addresses
-    if (walletBalancesBodyFromDB['fabAddress'] ==
-        jsonDecode(walletDataFromCreateOfflineWalletV1.walletBalancesBody)[
-            'fabAdress']) {
-      log.w('Verification passed');
-      isSuccess = true;
+
+    String fabAddressFromCreate = jsonDecode(
+        walletDataFromCreateOfflineWalletV1.walletBalancesBody)['fabAddress'];
+    String fabAddressFromStorage = walletBalancesBodyFromStorage['fabAddress'];
+
+    String trxAddressFromCreate = jsonDecode(
+        walletDataFromCreateOfflineWalletV1.walletBalancesBody)['trxAddress'];
+    String trxAddressFromStorage = walletBalancesBodyFromStorage['trxAddress'];
+    log.i(
+        'fabAddressFromCreate $fabAddressFromCreate -- fabAddressFromStorage $fabAddressFromStorage');
+    if (fabAddressFromCreate == fabAddressFromStorage) {
+      res["fabAddressCheck"] = true;
+      log.w('FabVerification passed $res');
+      if (trxAddressFromCreate == trxAddressFromStorage) {
+        res["trxAddressCheck"] = true;
+        log.i('Trx Verification passed $res');
+      } else
+        res["trxAddressCheck"] = false;
     } else {
-      log.e('Verification FAILED');
-      isSuccess = false;
+      res["fabAddressCheck"] = false;
+      log.e('Verification FAILED: did not check TRX $res');
     }
-    return isSuccess;
+    return res;
   }
 
 /*----------------------------------------------------------------------
@@ -777,29 +821,28 @@ class WalletService {
         // convert map to json string
         var walletBalanceBodyJsonString = jsonEncode(wbb);
         walletCoreModel = CoreWalletModel(
-          id: null,
+          id: 1,
           walletBalancesBody: walletBalanceBodyJsonString,
         );
 
         log.i("Wallet core model json ${walletCoreModel.toJson()}");
       }
 
-      if (!isVerifying) {
-        // encrypt the mnemonic
-        var encryptedMnemonic =
-            await vaultService.encryptMnemonic(key, mnemonic);
+      // if (!isVerifying) {
+      // encrypt the mnemonic
+      var encryptedMnemonic = await vaultService.encryptMnemonic(key, mnemonic);
 
-        log.i('encryptedMnemonic $encryptedMnemonic');
+      log.i('encryptedMnemonic $encryptedMnemonic');
 
-        // store those json string address and encrypted mnemonic in the wallet core database
-        walletCoreModel.mnemonic = encryptedMnemonic;
-        log.w('walletCoreModel ${walletCoreModel.toJson()}');
+      // store those json string address and encrypted mnemonic in the wallet core database
+      walletCoreModel.mnemonic = encryptedMnemonic;
+      log.w('walletCoreModel ${walletCoreModel.toJson()}');
 
-        // store in single core database
-        await coreWalletDatabaseService.insert(walletCoreModel);
+      // store in single core database
+      await coreWalletDatabaseService.insert(walletCoreModel);
 
-        await coreWalletDatabaseService.getAll();
-      }
+//      await coreWalletDatabaseService.getAll();
+      // }
       return walletCoreModel;
     } catch (e) {
       log.e('Catch createWalletAddresses $e');
@@ -2513,9 +2556,13 @@ class WalletService {
       var contractInfo = await getFabSmartContract(
           contractAddress, fxnCallHex, gasLimit, gasPrice);
       if (addressList != null && addressList.length > 0) {
-        addressList[0] = fabUtils.exgToFabAddress(addressList[0]);
+        addressList[0] =
+            await getAddressFromCoreWalletDatabaseByTickerName('FAB') !=
+                    addressList[0]
+                ? fabUtils.exgToFabAddress(addressList[0])
+                : addressList[0];
       }
-
+//8f08d6e1b8978fdba995dc44f1f01a3a26fa572a78f6a0450fa9c547239201b7
       var res1 = await getFabTransactionHex(
           seed,
           addressIndexList,

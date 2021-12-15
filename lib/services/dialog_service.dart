@@ -22,6 +22,7 @@ class DialogService {
   Function(DialogRequest) _showDialogListener;
   Function(DialogRequest) _showOrderUpdateDialogListener;
   Function(DialogRequest) _showBasicDialogListener;
+  Function(DialogRequest) _showVerifyDialogListener;
   Completer<DialogResponse> _dialogCompleter;
 
   GlobalKey<NavigatorState> get navigatorKey => _dialogNavigationKey;
@@ -38,6 +39,30 @@ class DialogService {
     _dialogCompleter.complete(response);
     _dialogCompleter = null;
   }
+
+  // verify dialog
+
+  void registerVerifyDialogListener(
+      Function(DialogRequest) showVerifyDialogListener) {
+    _showVerifyDialogListener = showVerifyDialogListener;
+  }
+
+  // Calls the dialog listener and returns a future that will wait for the dialog to complete
+  Future<DialogResponse> showVerifyDialog(
+      {String title,
+      String description,
+      String buttonTitle,
+      String secondaryButton}) {
+    log.w('In show verify dialog');
+    _dialogCompleter = Completer<DialogResponse>();
+    _showVerifyDialogListener(DialogRequest(
+        title: title,
+        description: description,
+        buttonTitle: buttonTitle,
+        secondaryButton: secondaryButton));
+    return _dialogCompleter.future;
+  }
+
 /*----------------------------------------------------------------------
                 Password Dialog
 ----------------------------------------------------------------------*/

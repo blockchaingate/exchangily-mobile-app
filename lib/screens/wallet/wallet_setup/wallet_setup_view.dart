@@ -28,11 +28,12 @@ class WalletSetupView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<WalletSetupViewmodel>.reactive(
       viewModelBuilder: () => WalletSetupViewmodel(),
-      onModelReady: (model) async {
+      onModelReady: (WalletSetupViewmodel model) async {
+        model.context = context;
         await model.checkVersion(context);
         model.init();
       },
-      builder: (context, model, child) => WillPopScope(
+      builder: (context, WalletSetupViewmodel model, child) => WillPopScope(
         onWillPop: () {
           model.sharedService.closeApp();
           return new Future(() => false);
@@ -177,8 +178,7 @@ class WalletSetupView extends StatelessWidget {
                                                           color: globals
                                                               .primaryColor)),
                                               onPressed: () {
-                                                Navigator.of(context).pushNamed(
-                                                    BackupMnemonicViewRoute);
+                                                model.importCreateNav('create');
                                               },
                                             ),
                                           ),
@@ -208,9 +208,7 @@ class WalletSetupView extends StatelessWidget {
                                                   .headline4,
                                             ),
                                             onPressed: () {
-                                              Navigator.of(context).pushNamed(
-                                                  ImportWalletViewRoute,
-                                                  arguments: 'import');
+                                              model.importCreateNav('import');
                                             },
                                           ),
                                         ),

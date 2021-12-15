@@ -94,64 +94,49 @@ class CoreWalletDatabaseService {
   Future<String> getEncryptedMnemonic() async {
     final Database db = await _database;
     List<Map> res = await db.query(tableName, columns: [columnMnemonic]);
-    log.i('Encrypted Mnemonic --- ${res.first}');
+    if (res.length != 0) log.i('Encrypted Mnemonic --- ${res.first}');
 
-    return res.first['mnemonic'];
+    return res.length != 0 ? res.first['mnemonic'] : '';
   }
 
   // Get wallet balance body
   Future<Map<dynamic, dynamic>> getWalletBalancesBody() async {
     final Database db = await _database;
+    var finalRes;
     List<Map> res =
         await db.query(tableName, columns: [columnWalletBalancesBody]);
-    log.i('wallet balances body --- ${res.first}');
+    try {
+      log.i('wallet balances body --- ${res.first}');
+      finalRes = res.first;
+    } catch (err) {
+      res = null;
+    }
 
-    return res.first;
+    return finalRes;
   }
 
-  // Get FAB address
-  Future<String> getFabAddress() async {
+  // getWalletAddressByTickerName
+  Future<String> getWalletAddressByTickerName(String tickerName) async {
     final Database db = await _database;
-    List<Map> res =
-        await db.query(tableName, columns: [columnWalletBalancesBody]);
 
-    log.i(
-        'Fab address --- ${jsonToMap(res.first['walletBalancesBody'], 'fabAddress')}');
-    return jsonToMap(res.first['walletBalancesBody'], 'fabAddress');
-  }
-
-  // Get EXG address
-  Future<String> getExgAddress() async {
     var fabUtils = FabUtils();
-    final Database db = await _database;
+    String address = '';
+    String passedTicker = '';
     List<Map> res =
         await db.query(tableName, columns: [columnWalletBalancesBody]);
+    if (tickerName == 'EXG') {
+      passedTicker = tickerName;
+      tickerName = 'FAB';
+    }
+    ;
 
-    log.i(
-        'exg address --- ${jsonToMap(res.first['walletBalancesBody'], 'exgAddress')}');
-    var fabAddress = jsonToMap(res.first['walletBalancesBody'], 'fabAddress');
-    return fabUtils.fabToExgAddress(fabAddress);
-  }
-
-  // Get ETH address
-  Future<String> getEthAddress() async {
-    final Database db = await _database;
-    List<Map> res =
-        await db.query(tableName, columns: [columnWalletBalancesBody]);
-
-    log.i(
-        'ETH address --- ${jsonToMap(res.first['walletBalancesBody'], 'ethAddress')}');
-    return jsonToMap(res.first['walletBalancesBody'], 'ethAddress');
-  }
-
-  // Get TRX address
-  Future<String> getTrxAddress() async {
-    final Database db = await _database;
-    List<Map> res =
-        await db.query(tableName, columns: [columnWalletBalancesBody]);
-    log.i(
-        'trx address --- ${jsonToMap(res.first['walletBalancesBody'], 'trxAddress')}');
-    return jsonToMap(res.first['walletBalancesBody'], 'trxAddress');
+    address = jsonToMap(
+        res.first['walletBalancesBody'], '${tickerName.toLowerCase()}Address');
+    String finalRes = '';
+    finalRes =
+        passedTicker == 'EXG' ? fabUtils.fabToExgAddress(address) : address;
+    log.i('$tickerName address ---finalRes $finalRes');
+    return finalRes;
   }
 
   jsonToMap(String json, String chainName) {

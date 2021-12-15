@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:async';
+
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
@@ -34,7 +36,6 @@ import '../../../service_locator.dart';
 class WalletSetupViewmodel extends BaseViewModel {
   final log = getLogger('WalletSetupViewmodel');
   SharedService sharedService = locator<SharedService>();
-  final coreDataBaseService = locator<CoreWalletDatabaseService>();
   final walletDatabaseService = locator<WalletDataBaseService>();
   WalletService walletService = locator<WalletService>();
   final NavigationService navigationService = locator<NavigationService>();
@@ -63,9 +64,8 @@ class WalletSetupViewmodel extends BaseViewModel {
 
   init() async {
     await walletService.checkLanguage();
-    context = context;
+
     sharedService.context = context;
-    coreDataBaseService.initDb();
 
     await checkExistingWallet();
   }
@@ -74,8 +74,61 @@ class WalletSetupViewmodel extends BaseViewModel {
     await versionService.checkVersion(context);
   }
 
+  importCreateNav(String actionType) async {
+    // check if there is any pre existing wallet data
+    String coreWalletDbData = '';
+    try {
+      coreWalletDbData = await coreWalletDatabaseService.getEncryptedMnemonic();
+    } catch (err) {
+      log.e('importCreateNav importCreateNav CATCH err $err');
+    }
+    if (storageService.walletBalancesBody.isNotEmpty ||
+        coreWalletDbData.isNotEmpty)
+    // also show the user a dialog that there is pre existing wallet
+    // data, do you want to restore that wallet or not?
+    {
+      await dialogService
+          .showVerifyDialog(
+              title: 'Existing wallet found',
+              secondaryButton: 'Restore',
+              description: 'Do you want to restore existing wallet?',
+              buttonTitle:
+                  'Import') // want to ask whether i should show Delete & Import
+          .then((res) async {
+        if (res.confirmed) {
+          // confirmed means import wallet true
+          // delete the existing wallet data
+          // then import
+
+          // otherwise ask user for wallet password to delete the existing wallet
+          bool hasExistingWalletDeletionCompleted = await deleteWallet();
+          if (hasExistingWalletDeletionCompleted) {
+            // if not then just navigate to the route
+            if (actionType == 'import')
+              navigationService.navigateTo(ImportWalletViewRoute,
+                  arguments: actionType);
+            else if (actionType == 'create')
+              navigationService.navigateTo(BackupMnemonicViewRoute);
+          } else {
+            log.e('Existing wallet deletion could not be completed');
+          }
+        } else if (!res.confirmed && res.returnedText != 'Closed') {
+          // if user wants to restore that then call check existing wallet func
+          await checkExistingWallet();
+        }
+      });
+    } else {
+      if (actionType == 'import')
+        navigationService.navigateTo(ImportWalletViewRoute,
+            arguments: actionType);
+      else if (actionType == 'create')
+        navigationService.navigateTo(BackupMnemonicViewRoute);
+    }
+  }
+
   Future deleteWallet() async {
     errorMessage = '';
+    bool finalRes = false;
     setBusy(true);
     log.i('model busy $busy');
     await dialogService
@@ -125,67 +178,97 @@ class WalletSetupViewmodel extends BaseViewModel {
         storageService.isShowCaseView = true;
 
         storageService.clearStorage();
-
-        Navigator.pushNamed(context, '/');
+        finalRes = true;
+        return finalRes;
       } else if (res.returnedText == 'Closed' && !res.confirmed) {
         log.e('Dialog Closed By User');
         isDeleting = false;
         setBusy(false);
-        return errorMessage = '';
+        finalRes = false;
+        return finalRes;
       } else {
         log.e('Wrong pass');
         setBusy(false);
         isDeleting = false;
-        return errorMessage =
-            AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
+        finalRes = false;
+        return finalRes;
       }
     }).catchError((error) {
       log.e(error);
       isDeleting = false;
       setBusy(false);
+      finalRes = false;
+      return finalRes;
     });
     isDeleting = false;
     setBusy(false);
+
+    return finalRes;
   }
 
   Future checkExistingWallet() async {
     setBusy(true);
-    var coreWalletDbData = await coreDataBaseService.getAll();
+    var coreWalletDbData = await coreWalletDatabaseService.getAll();
 
-    if (coreWalletDbData == null || coreWalletDbData == []) {
+    if (coreWalletDbData.mnemonic == null ||
+        coreWalletDbData.mnemonic.isEmpty) {
       log.w('coreWalletDbData is null or empty');
       var walletDatabase = await walletDatabaseService.getAll();
       if (storageService.walletBalancesBody.isNotEmpty ||
           walletDatabase != null ||
           walletDatabase.isNotEmpty) {
-        await dialogService
-            .showDialog(
-                title: AppLocalizations.of(context).enterPassword,
-                description: AppLocalizations.of(context)
-                    .dialogManagerTypeSamePasswordNote,
-                buttonTitle: AppLocalizations.of(context).confirm)
-            .then((res) async {
-          if (res.confirmed) {
-            isWalletVerifySuccess =
-                await walletService.verifyWalletAddresses(res.returnedText);
-            // if wallet verification is true then fill encrypted mnemonic and
-            // addresses in the new corewalletdatabase
-            if (isWalletVerifySuccess) {
-            } else {
-              // show popup
-              // if wallet verification failed then generate warning
-              // to delete and re-import the wallet
-              // show the warning in the UI and underneath a delete wallet button
-              // which will delete the wallet data and navigate to create/import view
-              await deleteWallet();
-              setBusy(false);
+        // ask user's permission to verify the wallet addresses
+        // show dialog to for this reason
+        var res = await dialogService.showVerifyDialog(
+            title: 'Important Notice: Wallet Update',
+            secondaryButton: 'Cancel',
+            description:
+                'Please provide the wallet password to verify and install the latest update',
+            buttonTitle: AppLocalizations.of(context).confirm);
+        if (!res.confirmed) {
+          setBusy(false);
+          return;
+        } else
+          await dialogService
+              .showDialog(
+                  title: AppLocalizations.of(context).enterPassword,
+                  description: AppLocalizations.of(context)
+                      .dialogManagerTypeSamePasswordNote,
+                  buttonTitle: AppLocalizations.of(context).confirm)
+              .then((res) async {
+            if (res.confirmed) {
+              var walletVerificationRes =
+                  await walletService.verifyWalletAddresses(res.returnedText);
+              isWalletVerifySuccess =
+                  walletVerificationRes['fabAddressCheck'] &&
+                      walletVerificationRes['fabAddressCheck'];
+              // if wallet verification is true then fill encrypted mnemonic and
+              // addresses in the new corewalletdatabase
+              if (isWalletVerifySuccess) {
+                checkExistingWallet();
+              } else {
+                // show popup
+                // if wallet verification failed then generate warning
+                // to delete and re-import the wallet
+                // show the warning in the UI and underneath a delete wallet button
+                // which will delete the wallet data and navigate to create/import view
+                bool res = await sharedService.dialogAcceptOrReject(
+                    'Current wallet is not compatible with the update, please delete the wallet and re-import again',
+                    'Delete wallet',
+                    'Cancel');
+                if (res) await deleteWallet();
+                setBusy(false);
+              }
+            } else if (res.returnedText == 'wrong password') {
+              sharedService.sharedSimpleNotification(
+                  AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
             }
-          }
-        });
+          });
       } else {
         isWallet = false;
       }
-    } else if (coreWalletDbData.mnemonic.isNotEmpty) {
+    } else if (coreWalletDbData.mnemonic != null ||
+        coreWalletDbData.mnemonic.isNotEmpty) {
       isWalletVerifySuccess = true;
       isWallet = true;
 // add here the biometric check

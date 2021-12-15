@@ -134,12 +134,13 @@ class WalletDashboardViewModel extends BaseViewModel {
   bool isTopOfTheList = true;
   final fabUtils = FabUtils();
   List<Map<String, int>> walletDecimalList = [];
+  String totalWalletBalance = '';
+  String totalLockedBalance = '';
+
+  String totalExchangeBalance = '';
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
-  getAddress() {
-    coreWalletDatabaseService.getExgAddress();
-  }
 
   init() async {
     setBusy(true);
@@ -164,7 +165,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 // set route with coin token type and address
 
   routeWithWalletInfoArgs(WalletBalance wallet, String routeName) async {
-    FocusScope.of(context).requestFocus(FocusNode());
+    //FocusScope.of(context).requestFocus(FocusNode());
 
     // take the tickername and then get the coin type
     // either from token or token updates api/local storage
@@ -180,25 +181,38 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     // get wallet address
     if (tickerName == 'ETH' || tokenType == 'ETH')
-      walletAddress = await coreWalletDatabaseService.getEthAddress();
+      walletAddress = await walletService
+          .getAddressFromCoreWalletDatabaseByTickerName('ETH');
     else if (tickerName == 'FAB' || tokenType == 'FAB')
-      walletAddress = await coreWalletDatabaseService.getFabAddress();
+      walletAddress = await walletService
+          .getAddressFromCoreWalletDatabaseByTickerName('FAB');
     else if (tickerName == 'TRX' ||
         tickerName == 'TRON' ||
         tokenType == 'TRON' ||
         tokenType == 'TRX')
-      walletAddress = await coreWalletDatabaseService.getTrxAddress();
+      walletAddress = await walletService
+          .getAddressFromCoreWalletDatabaseByTickerName('TRX');
+    else
+      walletAddress = await coreWalletDatabaseService
+          .getWalletAddressByTickerName(tickerName);
+    String coinName = '';
+    for (var i = 0; i < walletService.coinTickerAndNameList.length; i++) {
+      if (walletService.coinTickerAndNameList.containsKey(wallet.coin))
+        coinName = walletService.coinTickerAndNameList[wallet.coin];
+      break;
+    }
 
     // assign address from local DB to walletinfo object
     var walletInfo = WalletInfo(
         tickerName: wallet.coin,
         availableBalance: wallet.balance,
         tokenType: tokenType,
-        usdValue: wallet.usdValue.usd,
+        usdValue: wallet.balance * wallet.usdValue.usd,
         inExchange: wallet.unlockedExchangeBalance,
-        address: walletAddress);
+        address: walletAddress,
+        name: coinName);
 
-    log.w('walletInfo ${walletInfo.toJson()}');
+    log.w('routeWithWalletInfoArgs walletInfo ${walletInfo.toJson()}');
     searchCoinTextController.clear();
     // navigate accordingly
     navigationService.navigateTo(routeName, arguments: walletInfo);
@@ -457,7 +471,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   checkToUpdateWallet() async {
     setBusy(true);
-    String wallet = await coreWalletDatabaseService.getTrxAddress();
+    String wallet =
+        await walletService.getAddressFromCoreWalletDatabaseByTickerName('TRX');
     if (wallet != null) {
       log.w('${wallet} TRX present');
       isUpdateWallet = false;
@@ -851,7 +866,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
 
   getFreeFab() async {
-    String address = await coreWalletDatabaseService.getExgAddress();
+    String address =
+        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
     await apiService.getFreeFab(address).then((res) {
       if (res != null) {
         if (res['ok']) {
@@ -1091,13 +1107,25 @@ class WalletDashboardViewModel extends BaseViewModel {
 // Calculate Total Usd Balance of Coins
   calcTotalBal() {
     totalUsdBalance = '';
-    double holder = 0.0;
+    totalWalletBalance = '';
+    totalLockedBalance = '';
+    totalExchangeBalance = '';
+    var twb = 0.0;
+    var tlb = 0.0;
+    var teb = 0.0;
     for (var i = 0; i < wallets.length; i++) {
       if (!wallets[i].usdValue.usd.isNegative)
-        holder += wallets[i].usdValue.usd;
+        twb += wallets[i].balance * wallets[i].usdValue.usd;
+      tlb += wallets[i].lockBalance * wallets[i].usdValue.usd;
+      teb += wallets[i].unlockedExchangeBalance * wallets[i].usdValue.usd;
     }
-    totalUsdBalance = NumberUtil.currencyFormat(holder, 2);
-    log.i('Total usd balance $totalUsdBalance');
+    totalWalletBalance = NumberUtil.currencyFormat(twb, 2);
+    totalLockedBalance = NumberUtil.currencyFormat(tlb, 2);
+    totalExchangeBalance = NumberUtil.currencyFormat(teb, 2);
+    var total = twb + tlb;
+    totalUsdBalance = NumberUtil.currencyFormat(total, 2);
+    log.i(
+        'Total usd balance $totalUsdBalance -- totalWalletBalance $totalWalletBalance --totalLockedBalance $totalLockedBalance ');
   }
 
 /*---------------------------------------------------
@@ -1105,7 +1133,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 --------------------------------------------------- */
 
   getGas() async {
-    String address = await coreWalletDatabaseService.getExgAddress();
+    String address =
+        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
     await walletService
         .gasBalance(address)
         .then((data) => gasAmount = data)
@@ -1119,7 +1148,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
 // mpvWdFb91gYN1Q1UBfhMEmGn1Amw3BNthZ
   getConfirmDepositStatus() async {
-    String address = await coreWalletDatabaseService.getExgAddress();
+    String address =
+        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
     await walletService.getErrDeposit(address).then((result) async {
       List<String> pendingDepositCoins = [];
       if (result != null) {
@@ -1272,7 +1302,8 @@ class WalletDashboardViewModel extends BaseViewModel {
     await getGas();
     // check gas and fab balance if 0 then ask for free fab
     if (gasAmount == 0.0 && fabBalance == 0.0) {
-      String address = await coreWalletDatabaseService.getFabAddress();
+      String address = await walletService
+          .getAddressFromCoreWalletDatabaseByTickerName('FAB');
       if (storageService.isShowCaseView != null) {
         if (storageService.isShowCaseView) {
           storageService.isShowCaseView = true;

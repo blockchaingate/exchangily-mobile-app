@@ -48,7 +48,7 @@ class VaultService {
 
   // encrypt mnemonic
 
-  Future encryptMnemonic(String pass, String mnemonic) async {
+  Future<String> encryptMnemonic(String pass, String mnemonic) async {
     String userTypedKey = pass;
     int userKeyLength = userTypedKey.length;
     String fixed32CharKey = '';
@@ -83,7 +83,8 @@ class VaultService {
       final decrypted = encrypter.decrypt(encryptedText, iv: iv);
       return decrypted;
     } catch (e) {
-      log.e("Couldn't read file -$e");
+      log.e(
+          "decryptMnemonic Couldn't read file -$e -- moving to decryptDataV1");
       return await decryptDataV1(userTypedKey);
     }
   }
@@ -120,7 +121,8 @@ class VaultService {
       final decrypted = encrypter.decrypt(encryptedText, iv: iv);
       return Future.value(decrypted);
     } catch (e) {
-      log.e("Couldn't read file -$e");
+      log.e(
+          "decryptData -- Couldn't read file -$e ---- moving to decryptDataV1 ");
       return await decryptDataV1(userTypedKey);
     }
   }
@@ -139,7 +141,8 @@ class VaultService {
       final decrypted = encrypter.decrypt(encryptedText, iv: iv);
       return Future.value(decrypted);
     } catch (e) {
-      log.e("Couldn't read file -$e");
+      log.e(
+          "decryptDataV1 -- Couldn't read file -$e -- -- moving to decryptDataV0");
       return await decryptDataV0(userTypedKey);
     }
   }

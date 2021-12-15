@@ -156,7 +156,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusy(true);
     isFutureError = false;
     String exgAddress =
-        await walletService.getAddressFromCoreWalletDatabase('EXG');
+        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
 
     clearOrderLists();
     await _orderService.getMyOrders(exgAddress, skip: skip).then((data) {
@@ -206,7 +206,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
     clearOrderLists();
     isFutureError = false;
     String exgAddress =
-        await walletService.getAddressFromCoreWalletDatabase('EXG');
+        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
 
     await _orderService
         .getMyOrdersByTickerName(exgAddress, tickerName, skip: skip)
@@ -371,7 +371,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
   txHexforCancelOrder(seed, orderHash) async {
     String exgAddress =
-        await walletService.getAddressFromCoreWalletDatabase('EXG');
+        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
     var abiHex = '7489ec23' + trimHexPrefix(orderHash);
     var nonce = await kanbanUtils.getNonce(exgAddress);
 

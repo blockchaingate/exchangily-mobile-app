@@ -113,9 +113,8 @@ number2Buffer(numVal) {
   print('string_util number2Buffer $buffer');
   return buffer;
 }
-/*----------------------------------------------------------------------
-                    Convert fab to hex
-----------------------------------------------------------------------*/
+
+// Convert fab to hex
 
 String convertFabAddressToHex(String fabAddress) {
   var decoded = Base58.decode(fabAddress);

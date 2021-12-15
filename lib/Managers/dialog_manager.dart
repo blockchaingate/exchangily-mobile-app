@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_request.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
+import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -44,6 +45,7 @@ class _DialogManagerState extends State<DialogManager> {
     super.initState();
     _dialogService.registerDialogListener(_showDialog);
     _dialogService.registerBasicDialogListener(_showBasicDialog);
+    _dialogService.registerVerifyDialogListener(_showVerifyDialog);
     controller.text = '';
   }
 
@@ -58,6 +60,65 @@ class _DialogManagerState extends State<DialogManager> {
           child: Text(request.title,
               style: Theme.of(context).textTheme.headline6)),
     );
+  }
+
+  void _showVerifyDialog(
+    DialogRequest request,
+    // {bool isSecondaryChoice = false}
+  ) {
+    Alert(
+        style: AlertStyle(
+            animationType: AnimationType.grow,
+            isOverlayTapDismiss: false,
+            backgroundColor: globals.walletCardColor,
+            descStyle: Theme.of(context).textTheme.bodyText1,
+            titleStyle: Theme.of(context)
+                .textTheme
+                .headline3
+                .copyWith(fontWeight: FontWeight.bold)),
+        context: context,
+        title: request.title,
+        desc: request.description,
+        closeFunction: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+          _dialogService.dialogComplete(
+              DialogResponse(returnedText: 'Closed', confirmed: false));
+          controller.text = '';
+
+          Navigator.of(context).pop();
+        },
+        // content: Column(
+        //   children: <Widget>[
+        //     Text(request.description)
+
+        //   ],
+        // ),
+        buttons: [
+          DialogButton(
+            color: red,
+            onPressed: () {
+              _dialogService.dialogComplete(DialogResponse(confirmed: false));
+
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              request.secondaryButton,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+          DialogButton(
+            color: primaryColor,
+            onPressed: () {
+              _dialogService.dialogComplete(DialogResponse(confirmed: true));
+
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              request.buttonTitle,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          )
+        ]).show();
   }
 
   void _showBasicDialog(DialogRequest request) {
@@ -78,6 +139,11 @@ class _DialogManagerState extends State<DialogManager> {
           FocusScope.of(context).requestFocus(FocusNode());
           _dialogService.dialogComplete(
               DialogResponse(returnedText: 'Closed', confirmed: false));
+          controller.text = '';
+          print('popping');
+          //if (!Platform.isIOS)
+          Navigator.of(context).pop();
+          print('popped');
         },
         // content: Column(
         //   children: <Widget>[
@@ -151,9 +217,9 @@ class _DialogManagerState extends State<DialogManager> {
             color: grey,
             onPressed: () {
               controller.text = '';
-              Navigator.of(context).pop();
               _dialogService.dialogComplete(
                   DialogResponse(returnedText: 'Closed', confirmed: false));
+              Navigator.of(context).pop();
             },
             child: Text(
               AppLocalizations.of(context).cancel,
@@ -164,34 +230,45 @@ class _DialogManagerState extends State<DialogManager> {
             ),
           ),
           DialogButton(
-            color: globals.primaryColor,
+            color: primaryColor,
             onPressed: () async {
-              if (controller.text != '')
+              if (controller.text != '') {
                 FocusScope.of(context).requestFocus(FocusNode());
-              var coreWalletDatabaseService =
-                  locator<CoreWalletDatabaseService>();
-              String encryptedMnemonic =
-                  await coreWalletDatabaseService.getEncryptedMnemonic();
-              if (encryptedMnemonic == null) {
-                var ueMnemonic =
-                    await _vaultService.decryptData(controller.text);
-                _vaultService.encryptMnemonic(controller.text, ueMnemonic);
-              }
-              await _vaultService
-                  .decryptMnemonic(controller.text, encryptedMnemonic)
-                  .then((data) {
-                if (data != '' && data != null) {
-                  _dialogService.dialogComplete(
-                      DialogResponse(returnedText: data, confirmed: true));
-                  controller.text = '';
-                  Navigator.of(context).pop();
-                } else {
-                  _dialogService
-                      .dialogComplete(DialogResponse(confirmed: false));
-                  controller.text = '';
-                  Navigator.of(context).pop();
+                var coreWalletDatabaseService =
+                    locator<CoreWalletDatabaseService>();
+
+                String encryptedMnemonic = '';
+                var finalRes = '';
+                try {
+                  encryptedMnemonic =
+                      await coreWalletDatabaseService.getEncryptedMnemonic();
+                  if (encryptedMnemonic.isEmpty) {
+                    // if there is no encrypted mnemonic saved in the new core wallet db
+                    // then get the unencrypted mnemonic from the file
+
+                    finalRes = await _vaultService.decryptData(controller.text);
+                  } else if (encryptedMnemonic.isNotEmpty) {
+                    await _vaultService
+                        .decryptMnemonic(controller.text, encryptedMnemonic)
+                        .then((data) {
+                      finalRes = data;
+                    });
+                  }
+                  if (finalRes != '' && finalRes != null) {
+                    _dialogService.dialogComplete(DialogResponse(
+                        returnedText: finalRes, confirmed: true));
+                    controller.text = '';
+                    Navigator.of(context).pop();
+                  } else {
+                    _dialogService.dialogComplete(DialogResponse(
+                        confirmed: false, returnedText: 'wrong password'));
+                    controller.text = '';
+                    Navigator.of(context).pop();
+                  }
+                } catch (err) {
+                  log.e('Getting mnemonic failed');
                 }
-              });
+              }
             },
             child: Text(
               request.buttonTitle,

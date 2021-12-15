@@ -45,12 +45,12 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   void initState() {
     super.initState();
     // log.w(widget.walletInfo.toJson());
-    if (widget.walletInfo.tokenType == 'FAB') {
-      convertedToFabAddress =
-          fabUtils.exgToFabAddress(widget.walletInfo.address);
-      log.w(
-          'convertedToFabAddress from ${widget.walletInfo.address} to $convertedToFabAddress');
-    }
+    // if (widget.walletInfo.tokenType == 'FAB') {
+    //   convertedToFabAddress =
+    //       fabUtils.fabToExgAddress(widget.walletInfo.address);
+    //   log.w(
+    //       'convertedToFabAddress from ${widget.walletInfo.address} to $convertedToFabAddress');
+    // }
   }
 
   final log = getLogger('Receive');

@@ -26,6 +26,7 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/network_status.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
+import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_wallet_dashboard_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -414,8 +415,14 @@ class WalletDashboardView extends StatelessWidget {
                                       children: [
                                         // All coins tab
                                         model.isBusy
-                                            ? model.sharedService
-                                                .loadingIndicator()
+                                            ? ListView.builder(
+                                                itemCount: 8,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        index) {
+                                                  return ShimmerWalletDashboardLayout();
+                                                },
+                                              )
                                             : buildListView(model),
 
                                         FavTab(),
@@ -431,18 +438,18 @@ class WalletDashboardView extends StatelessWidget {
                 ),
               ),
               bottomNavigationBar: BottomNavBar(count: 0),
-              floatingActionButton: Container(
-                color: white,
-                child: IconButton(
-                  icon: model.isTopOfTheList
-                      ? Icon(Icons.arrow_downward)
-                      : Icon(Icons.arrow_upward),
-                  onPressed: () async {
-                    model.routeWithWalletInfoArgs(
-                        WalletBalance(balance: 12, coin: 'cnb'), '');
-                  },
-                ),
-              ),
+              // floatingActionButton: Container(
+              //   color: white,
+              //   child: IconButton(
+              //     icon: model.isTopOfTheList
+              //         ? Icon(Icons.arrow_downward)
+              //         : Icon(Icons.arrow_upward),
+              //     onPressed: () async {
+              //       model.routeWithWalletInfoArgs(
+              //           WalletBalance(balance: 12, coin: 'cnb'), '');
+              //     },
+              //   ),
+              // ),
             ),
           );
         });
@@ -455,16 +462,19 @@ class WalletDashboardView extends StatelessWidget {
       itemCount: model.wallets.length,
       itemBuilder: (BuildContext context, int index) {
         var name = model.wallets[index].coin.toLowerCase();
-        var usdVal = model.wallets[index].usdValue.usd;
+        var usdBalance = model.wallets[index].balance *
+            (model.wallets[index].usdValue.usd.isNegative
+                ? 0.0
+                : model.wallets[index].usdValue.usd);
 
         return Visibility(
           // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
-          visible: usdVal >= 0 && !model.isHideSmallAmountAssets,
+          visible: usdBalance >= 0 && !model.isHideSmallAmountAssets,
           child: _coinDetailsCard(
               '$name', index, model.wallets, model.elevation, context, model),
           // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
           replacement: Visibility(
-              visible: model.isHideSmallAmountAssets && usdVal != 0,
+              visible: model.isHideSmallAmountAssets && usdBalance != 0,
               child: _coinDetailsCard('$name', index, model.wallets,
                   model.elevation, context, model)),
         );
@@ -703,7 +713,7 @@ Widget _coinDetailsCard(
                                   baseColor: globals.grey,
                                   highlightColor: globals.white,
                                   child: Text(
-                                    '${NumberUtil().truncateDoubleWithoutRouding(model.wallets[index].usdValue.usd, precision: 2).toString()}',
+                                    '${NumberUtil().truncateDoubleWithoutRouding(model.wallets[index].balance * model.wallets[index].usdValue.usd, precision: 2).toString()}',
                                     style: TextStyle(color: globals.green),
                                   ),
                                 ),
@@ -725,7 +735,7 @@ Widget _coinDetailsCard(
                                     //         highlightColor: globals.white,
                                     //         child:
                                     Text(
-                                  '${NumberUtil().truncateDoubleWithoutRouding(wallets[index].usdValue.usd, precision: 2).toString()}',
+                                  '${NumberUtil().truncateDoubleWithoutRouding(model.wallets[index].balance * model.wallets[index].usdValue.usd, precision: 2).toString()}',
                                   style: TextStyle(color: globals.green),
                                 ),
                               )
@@ -1118,7 +1128,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                           highlightColor:
                                                               globals.white,
                                                           child: Text(
-                                                            '${NumberUtil().truncateDoubleWithoutRouding(model.favWallets[index].usdValue.usd, precision: 2).toString()}',
+                                                            '${NumberUtil().truncateDoubleWithoutRouding(model.favWallets[index].balance * model.favWallets[index].usdValue.usd, precision: 2).toString()}',
                                                             style: TextStyle(
                                                                 color: globals
                                                                     .green),
@@ -1135,7 +1145,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                                   .green)),
                                                       Expanded(
                                                         child: Text(
-                                                            '${NumberUtil().truncateDoubleWithoutRouding(model.favWallets[index].usdValue.usd, precision: 2).toString()} USD',
+                                                            '${NumberUtil().truncateDoubleWithoutRouding(model.wallets[index].balance * model.wallets[index].usdValue.usd, precision: 2).toString()} USD',
                                                             textAlign:
                                                                 TextAlign.start,
                                                             style: TextStyle(
@@ -1334,7 +1344,7 @@ class TotalBalanceWidget extends StatelessWidget {
                 : globals.red.withAlpha(200),
             child: Container(
               //duration: Duration(milliseconds: 250),
-              width: 270,
+              width: 300,
               //model.totalBalanceContainerWidth,
               padding: EdgeInsets.all(10),
               child: Row(
@@ -1343,8 +1353,8 @@ class TotalBalanceWidget extends StatelessWidget {
                   model.announceList == null || model.announceList.length < 1
                       ? Image.asset(
                           'assets/images/wallet-page/dollar-sign.png',
-                          width: 40,
-                          height: 40,
+                          width: 25,
+                          height: 25,
                           color: globals
                               .iconBackgroundColor, // image background color
                           fit: BoxFit.cover,
@@ -1352,8 +1362,8 @@ class TotalBalanceWidget extends StatelessWidget {
                       : Stack(
                           children: [
                             Container(
-                              width: 60,
-                              height: 60,
+                              width: 50,
+                              height: 50,
                               child: Center(
                                 child: Container(
                                     padding: EdgeInsets.all(8),
@@ -1417,12 +1427,11 @@ class TotalBalanceWidget extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Text(AppLocalizations.of(context).totalBalance,
+                        Text(AppLocalizations.of(context).totalWalletBalance,
                             style: Theme.of(context)
                                 .textTheme
                                 .headline4
                                 .copyWith(fontWeight: FontWeight.w400)),
-                        UIHelper.verticalSpaceSmall,
                         model.isBusy
                             ? Shimmer.fromColors(
                                 baseColor: globals.primaryColor,
@@ -1438,6 +1447,47 @@ class TotalBalanceWidget extends StatelessWidget {
                                     .textTheme
                                     .subtitle1
                                     .copyWith(fontWeight: FontWeight.w400)),
+                        UIHelper.verticalSpaceSmall,
+                        model.isBusy
+                            ? Container()
+                            : Row(
+                                children: [
+                                  // Column(
+                                  //   children: [
+                                  //     Text(AppLocalizations.of(context).walletbalance,
+                                  //         style: Theme.of(context)
+                                  //             .textTheme
+                                  //             .headline6
+                                  //             .copyWith(fontWeight: FontWeight.w400)),
+                                  //     Text(model.totalWalletBalance,
+                                  //         style: Theme.of(context)
+                                  //             .textTheme
+                                  //             .headline6
+                                  //             .copyWith(fontWeight: FontWeight.w400)),
+                                  //   ],
+                                  // ),
+                                  UIHelper.horizontalSpaceSmall,
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 3.0),
+                                    child: Text(
+                                        AppLocalizations.of(context)
+                                            .totalExchangeBalance,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: grey)),
+                                  ),
+                                  Text(model.totalExchangeBalance + ' USD',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: grey)),
+                                ],
+                              ),
                       ],
                     ),
                   ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -26,7 +27,9 @@ class VersionService {
   // String url = "http://52.194.202.239:3000/app-update";
 
   //local test
-  String url = "http://192.168.0.186:3000/app-update";
+  String url = isProduction
+      ? "http://52.194.202.239:3000/app-update"
+      : "http://192.168.0.186:3000/app-update";
 
 /*----------------------------------------------------------------------
                 Get Tron Ts wallet balance

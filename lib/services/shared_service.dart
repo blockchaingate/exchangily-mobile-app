@@ -182,14 +182,14 @@ class SharedService {
 --------------------------------------------------- */
 
   Future<String> getExgAddressFromWalletDatabase() async {
-    return await coreWalletDatabaseService.getExgAddress();
+    return await coreWalletDatabaseService.getWalletAddressByTickerName('EXG');
   }
 /*---------------------------------------------------
       Get FAB address from wallet database
 --------------------------------------------------- */
 
   Future<String> getFabAddressFromCoreWalletDatabase() async {
-    return await coreWalletDatabaseService.getFabAddress();
+    return await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
   }
 
 /*---------------------------------------------------
@@ -300,6 +300,48 @@ class SharedService {
         'back button pressed, is final route ${navigationService.isFinalRoute()} - $route');
 
     navigationService.navigateUsingpopAndPushedNamed(route);
+  }
+
+  Future<bool> dialogAcceptOrReject(
+      String title, String acceptButton, String rejectButton) async {
+    return showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                elevation: 10,
+                backgroundColor: globals.walletCardColor.withOpacity(0.85),
+                titleTextStyle: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(fontWeight: FontWeight.bold),
+                contentTextStyle: TextStyle(color: globals.grey),
+                content: Text(
+                  // add here cupertino widget to check in these small widgets first then the entire app
+                  title,
+                  style: TextStyle(fontSize: 14),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text(
+                      rejectButton.isEmpty ? '' : rejectButton,
+                      style: TextStyle(color: globals.white, fontSize: 12),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                      return false;
+                    },
+                  ),
+                  TextButton(
+                    child: Text(acceptButton,
+                        style: TextStyle(color: globals.white, fontSize: 12)),
+                    onPressed: () {
+                      return true;
+                    },
+                  )
+                ],
+              );
+            }) ??
+        false;
   }
 
   Future<bool> closeApp() async {

@@ -85,7 +85,8 @@ class LightningRemitViewmodel extends FutureViewModel {
 
   init() async {
     sharedService.context = context;
-    fabAddress = await walletService.getAddressFromCoreWalletDatabase('FAB');
+    fabAddress =
+        await walletService.getAddressFromCoreWalletDatabaseByTickerName('FAB');
   }
 
 /*----------------------------------------------------------------------

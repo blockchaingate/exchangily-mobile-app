@@ -97,11 +97,12 @@ class TransactionHistoryView extends StatelessWidget {
                                       flex: 2,
                                       child: Text(
                                           AppLocalizations.of(context).quantity,
-                                          textAlign: TextAlign.center,
+                                          textAlign: TextAlign.right,
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle2),
                                     ),
+                                    UIHelper.horizontalSpaceSmall,
                                     Expanded(
                                       flex: 1,
                                       child: Container(

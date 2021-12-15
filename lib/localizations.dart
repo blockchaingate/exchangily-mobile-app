@@ -1884,6 +1884,21 @@ class AppLocalizations {
   String get time {
     return Intl.message('Time', name: 'time', desc: 'time_market_orders');
   }
+
+  String get totalExchangeBalance {
+    return Intl.message('Exchange Balance',
+        name: 'totalExchangeBalance', desc: 'totalExchangeBalance');
+  }
+
+  String get totalLockedBalance {
+    return Intl.message('Locked Balance',
+        name: 'totalLockedBalance', desc: 'totalLockedBalance');
+  }
+
+  String get totalWalletBalance {
+    return Intl.message('Total Wallet Balance',
+        name: 'totalWalletBalance', desc: 'totalWalletBalance');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -19,10 +19,12 @@ class DialogRequest {
   final String description;
   final String buttonTitle;
   final String cancelButton;
+  final String secondaryButton;
 
   DialogRequest(
       {@required this.title,
       this.description,
       @required this.buttonTitle,
-      this.cancelButton});
+      this.cancelButton,
+      this.secondaryButton});
 }

@@ -73,7 +73,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     List<TransactionHistory> txHistoryFromDb = [];
     List<TransactionHistory> txHistoryEvents = [];
     txHistoryFromDb = data;
-    String fabAddress = await coreWalletDatabaseService.getFabAddress();
+    String fabAddress =
+        await walletService.getAddressFromCoreWalletDatabaseByTickerName('FAB');
     txHistoryEvents = await apiService.getTransactionHistoryEvents(fabAddress);
     if (txHistoryEvents.isNotEmpty)
       txHistoryEvents.forEach((element) {

@@ -102,7 +102,7 @@ class CampaignPaymentScreenState extends BaseState {
     await getCampaignOrdeList();
     selectedCurrency = currencies[0];
     exgWalletAddress =
-        await walletService.getAddressFromCoreWalletDatabase('EXG');
+        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
     setBusy(false);
   }
 

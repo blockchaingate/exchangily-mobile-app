@@ -36,7 +36,7 @@ class CampaignRegisterAccountScreenState extends BaseState {
   // Get exg wallet address
   getExgWalletAddr() async {
     exgWalletAddressTextController.text =
-        await walletService.getAddressFromCoreWalletDatabase('EXG');
+        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
     log.w('Exg wallet address ${exgWalletAddressTextController.text}');
   }
 

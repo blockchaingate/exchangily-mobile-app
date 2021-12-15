@@ -1186,12 +1186,12 @@ class MoveToWalletViewmodel extends BaseViewModel {
         /// Ticker is FAB but fab chain balance is false then
         /// take coin address as ETH wallet address because coin is an erc20
         else if (coinName == 'FAB' && !isShowFabChainBalance) {
-          coinAddress =
-              await walletService.getAddressFromCoreWalletDatabase('ETH');
+          coinAddress = await walletService
+              .getAddressFromCoreWalletDatabaseByTickerName('ETH');
           log.i('coin address is ETH address');
         } else if (coinName == 'USDT' && isShowTrxTsWalletBalance) {
-          coinAddress =
-              await walletService.getAddressFromCoreWalletDatabase('TRX');
+          coinAddress = await walletService
+              .getAddressFromCoreWalletDatabaseByTickerName('TRX');
           log.i('coin address is TRX address');
         } else {
           coinAddress = walletInfo.address;

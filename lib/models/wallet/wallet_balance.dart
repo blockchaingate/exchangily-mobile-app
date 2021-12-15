@@ -166,6 +166,10 @@ class WalletBalance {
     return data;
   }
 
+  double balanceInUsd() {
+    return balance * usdValue.usd;
+  }
+
   String get coin => _coin;
   set coin(String coin) {
     this._coin = coin;
