@@ -78,13 +78,15 @@ class ApiService {
 // Get issue tokens
 
   Future<List<IssueTokenModel>> getIssueTokens() async {
-    String url = blockchaingateUrl + GetIsueTokenApiRoute;
+    String url =
+        blockchaingateUrl + GetIsueTokenApiRoute + '/' + GetWithoutLogoApiRoute;
     log.i('getTokenListUpdates url $url');
     try {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
-      var data = json['data'];
-      var parsedTokenList = data as List;
+
+      log.w('json data $json');
+      var parsedTokenList = json as List;
       log.w('getTokenListUpdates  $parsedTokenList');
       IssueTokenModelList isueTokenList =
           IssueTokenModelList.fromJson(parsedTokenList);

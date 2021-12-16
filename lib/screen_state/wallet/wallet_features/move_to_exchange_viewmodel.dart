@@ -258,14 +258,18 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    // if (!walletService.isTrx(walletInfo.tickerName) &&
-    //     walletInfo.tickerName != 'BTC' &&
-    //     walletInfo.tickerName != 'ETH') {
-    //   int decimalLength = NumberUtil.getDecimalLength(amount);
-    //   log.w('decimalLength $decimalLength');
-    //   if (decimalLength == decimalLimit)
-    //     amount = NumberUtil().roundDownLastDigit(amount);
-    // }
+    // check chain balance
+    if (tokenType.isNotEmpty) {
+      bool hasSufficientChainBalance = await walletService
+          .checkCoinWalletBalance(transFee, walletInfo.tokenType);
+      if (!hasSufficientChainBalance) {
+        log.e('Chain $tokenType -- insufficient balance');
+        sharedService.sharedSimpleNotification(walletInfo.tokenType,
+            subtitle: AppLocalizations.of(context).insufficientBalance);
+        setBusy(false);
+        return;
+      }
+    }
 
 // * checking trx balance required
     if (walletInfo.tickerName == 'USDTX') {

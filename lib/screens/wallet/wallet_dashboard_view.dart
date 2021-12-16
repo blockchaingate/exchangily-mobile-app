@@ -41,10 +41,11 @@ class WalletDashboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     GlobalKey _one = GlobalKey();
     GlobalKey _two = GlobalKey();
-    final key = new GlobalKey<ScaffoldState>();
+    final GlobalKey<ScaffoldState> _scaffoldKey =
+        new GlobalKey<ScaffoldState>();
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => WalletDashboardViewModel(),
-        onModelReady: (model) async {
+        onModelReady: (WalletDashboardViewModel model) async {
           model.context = context;
           model.globalKeyOne = _one;
           model.globalKeyTwo = _two;
@@ -56,13 +57,46 @@ class WalletDashboardView extends StatelessWidget {
           // if (connectionStatus == ConnectivityStatus.Offline)
           //   return NetworkStausView();
           // else
+
           return WillPopScope(
             onWillPop: () {
               model.onBackButtonPressed();
               return new Future(() => false);
             },
             child: Scaffold(
-              key: key,
+              key: _scaffoldKey,
+              endDrawerEnableOpenDragGesture: true,
+              drawer: Drawer(
+                child: ListView(
+                  // Important: Remove any padding from the ListView.
+                  padding: EdgeInsets.zero,
+                  children: [
+                    const DrawerHeader(
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                      ),
+                      child: Text('eXchangily'),
+                    ),
+                    ListTile(
+                      title: Row(children: [
+                        Icon(Icons.add, color: white),
+                        Text('Add Custom Token')
+                      ]),
+                      onTap: () {
+                        model.showCustomTokensBottomSheet();
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('Item 2'),
+                      onTap: () {
+                        // Update the state of the app.
+                        // ...
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
               body: GestureDetector(
                 onTap: () {
                   FocusScope.of(context).requestFocus(FocusNode());
@@ -82,9 +116,8 @@ class WalletDashboardView extends StatelessWidget {
                   builder: Builder(
                     builder: (context) => ListView(
                       children: <Widget>[
-/*-------------------------------------------------------------------------------------
-                              Build Background and Logo Container
--------------------------------------------------------------------------------------*/
+//   Build Background and Logo Container
+
                         Container(
                           // width: double.infinity,
                           height: 130,
@@ -100,18 +133,18 @@ class WalletDashboardView extends StatelessWidget {
                                   child: Stack(
                                     clipBehavior: Clip.none,
                                     children: <Widget>[
-                                      // Positioned(
-                                      //   top: 5,
-                                      //   right: 5,
-                                      //   child: IconButton(
-                                      //     icon: Icon(Icons.menu,
-                                      //         color: globals.white, size: 40),
-                                      //     onPressed: () {
-                                      //       log.i('trying to open the drawer');
-                                      //       key.currentState.openDrawer();
-                                      //     },
-                                      //   ),
-                                      // )
+                                      Positioned(
+                                        top: 5,
+                                        right: 5,
+                                        child: IconButton(
+                                          icon: Icon(Icons.menu,
+                                              color: globals.white, size: 30),
+                                          onPressed: () {
+                                            _scaffoldKey.currentState
+                                                .openDrawer();
+                                          },
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),

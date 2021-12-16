@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/wallet/issue_token.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
@@ -127,6 +128,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   bool isTopOfTheList = true;
   final fabUtils = FabUtils();
   List<Map<String, int>> walletDecimalList = [];
+  List<IssueTokenModel> issueTokens = [];
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -149,6 +151,44 @@ class WalletDashboardViewModel extends BaseViewModel {
     refreshController = new RefreshController();
 
     setBusy(false);
+    issueTokens = await apiService.getIssueTokens();
+  }
+
+  // addCustomToken
+
+  showCustomTokensBottomSheet() async {
+    navigationService.goBack();
+    if (issueTokens.isNotEmpty)
+      showModalBottomSheet(
+          context: context,
+          builder: (context) => Container(
+                height: 500,
+                child: Column(
+                  children: [
+                    // Row(children: [
+                    //   Text('Symbol'),
+                    //   Text('Symbol'),
+                    //   Text('Symbol'),
+                    // ]),
+                    // ListTile(
+                    //   leading: Text('Symbol'),
+                    //   title: Text('Name'),
+                    //   trailing: Text('Total Supply'),
+                    // ),
+                    ListView.builder(
+                        itemCount: issueTokens.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            leading: Text(issueTokens[index].symbol),
+                            title: Text(issueTokens[index].name),
+                            trailing: Text(issueTokens[index].totalSupply),
+                          );
+                        }),
+                  ],
+                ),
+              ));
+    else
+      log.e('Issue token list empty');
   }
 // TODO add decimalLimit property in the wallet info and fill it in the refresh balance from local stored decimal data
 
