@@ -257,17 +257,31 @@ class WalletService {
   }
 
   storeTokenListInDB() async {
+    var existingTokensInTokenDatabase;
+    try {
+      existingTokensInTokenDatabase = await tokenListDatabaseService.getAll();
+    } catch (err) {
+      existingTokensInTokenDatabase = [];
+      log.e('getTokenList tokenListDatabaseService.getAll CATCH err $err');
+    }
     await getTokenListUpdates().then((newTokenListFromTokenUpdateApi) async {
       if (newTokenListFromTokenUpdateApi != null &&
           newTokenListFromTokenUpdateApi.isNotEmpty) {
-        await tokenListDatabaseService.deleteDb().whenComplete(() => log.e(
-            'token list database cleared before inserting updated token data from api'));
+        if (existingTokensInTokenDatabase == null)
+          existingTokensInTokenDatabase = [];
+        if (existingTokensInTokenDatabase.length !=
+            newTokenListFromTokenUpdateApi.length) {
+          await tokenListDatabaseService.deleteDb().whenComplete(() => log.e(
+              'token list database cleared before inserting updated token data from api'));
 
-        /// Fill the token list database with new data from the api
+          /// Fill the token list database with new data from the api
 
-        newTokenListFromTokenUpdateApi.forEach((singleNewToken) async {
-          await tokenListDatabaseService.insert(singleNewToken);
-        });
+          newTokenListFromTokenUpdateApi.forEach((singleNewToken) async {
+            await tokenListDatabaseService.insert(singleNewToken);
+          });
+        } else {
+          log.i('storeTokenListInDB -- local token db same length as api\'s ');
+        }
       }
     });
   }
@@ -714,7 +728,6 @@ class WalletService {
       "fabAddressCheck": false,
       "trxAddressCheck": false
     };
-    var coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
 
     // create wallet address and assign to walletcoremodel object
     CoreWalletModel walletDataFromCreateOfflineWalletV1 =
@@ -837,7 +850,8 @@ class WalletService {
 
       // store those json string address and encrypted mnemonic in the wallet core database
       walletCoreModel.mnemonic = encryptedMnemonic;
-      log.w('walletCoreModel ${walletCoreModel.toJson()}');
+      log.w(
+          'createOfflineWalletsV1 walletCoreModel -- before inserting in the core wallet DB ${walletCoreModel.toJson()}');
 
       // store in single core database
       await coreWalletDatabaseService.insert(walletCoreModel);
@@ -846,8 +860,8 @@ class WalletService {
       // }
       return walletCoreModel;
     } catch (e) {
-      log.e('Catch createWalletAddresses $e');
-      throw Exception('Catch createWalletAddresses $e');
+      log.e('Catch createOfflineWalletsV1 $e');
+      throw Exception('Catch createOfflineWalletsV1 $e');
     }
   }
 
@@ -1171,25 +1185,6 @@ class WalletService {
     }
   }
 
-  /* ---------------------------------------------------
-                Flushbar Notification bar
-    -------------------------------------------------- */
-
-  void showInfoFlushbar(String title, String message, IconData iconData,
-      Color leftBarColor, BuildContext context) {
-    Flushbar(
-      backgroundColor: globals.secondaryColor.withOpacity(0.75),
-      title: title,
-      message: message,
-      icon: Icon(
-        iconData,
-        size: 24,
-        color: colors.primaryColor,
-      ),
-      leftBarIndicatorColor: leftBarColor,
-      duration: Duration(seconds: 3),
-    ).show(context);
-  }
 /*----------------------------------------------------------------------
                 Calculate Only Usd Balance For Individual Coin
 ----------------------------------------------------------------------*/

@@ -64,7 +64,7 @@ class VaultService {
     return encrypted.base64;
   }
 
-// decrypt mnemonic
+// --------- decrypt mnemonic start here
 
   Future<String> decryptMnemonic(
       String userTypedKey, String encryptedBase64Mnemonic) async {
@@ -85,9 +85,44 @@ class VaultService {
     } catch (e) {
       log.e(
           "decryptMnemonic Couldn't read file -$e -- moving to decryptDataV1");
-      return await decryptDataV1(userTypedKey);
+      return await decryptMnemonicV1(userTypedKey, encryptedBase64Mnemonic);
     }
   }
+
+  Future<String> decryptMnemonicV1(
+      String userTypedKey, String encryptedBase64Mnemonic) async {
+    try {
+      encrypt.Encrypted encryptedText =
+          encrypt.Encrypted.fromBase64(encryptedBase64Mnemonic);
+      final key = encrypt.Key.fromLength(32);
+      final iv = encrypt.IV.fromUtf8(userTypedKey);
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+      final decrypted = encrypter.decrypt(encryptedText, iv: iv);
+      return Future.value(decrypted);
+    } catch (e) {
+      log.e(
+          "decryptDataV1 -- Couldn't read file -$e -- -- moving to decryptDataV0");
+      return await decryptMnemonicV0(userTypedKey, encryptedBase64Mnemonic);
+    }
+  }
+
+  Future<String> decryptMnemonicV0(
+      String userTypedKey, String encryptedBase64Mnemonic) async {
+    try {
+      encrypt.Encrypted encryptedText =
+          encrypt.Encrypted.fromBase64(encryptedBase64Mnemonic);
+      final key = encrypt.Key.fromLength(16);
+      final iv = encrypt.IV.fromUtf8(userTypedKey);
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+      final decrypted = encrypter.decrypt(encryptedText, iv: iv);
+      return Future.value(decrypted);
+    } catch (e) {
+      log.e("Couldn't read file -$e");
+      return Future.value('');
+    }
+  }
+
+  // --------decrypt mnemonic functions ended here
 
   String fixed32Chars(String input, int keyLength) {
     if (input.length < 32) {

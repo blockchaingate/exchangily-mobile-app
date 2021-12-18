@@ -81,7 +81,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => WalletSetupView());
 
       case ImportWalletViewRoute:
-        return MaterialPageRoute(builder: (_) => ImportWalletScreen());
+        return MaterialPageRoute(builder: (_) => ImportWalletView());
 
       case BackupMnemonicViewRoute:
         return MaterialPageRoute(builder: (_) => BackupMnemonicWalletScreen());

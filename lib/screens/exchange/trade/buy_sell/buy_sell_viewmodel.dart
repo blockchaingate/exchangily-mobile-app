@@ -630,12 +630,9 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
             }
           });
         } else {
-          walletService.showInfoFlushbar(
+          sharedService.sharedSimpleNotification(
               AppLocalizations.of(context).placeOrderTransactionFailed,
-              resKanban.toString(),
-              Icons.cancel,
-              red,
-              context);
+              subtitle: resKanban.toString());
         }
       } else if (res.returnedText == 'Closed' && !res.confirmed) {
         log.e('Dialog Closed By User');

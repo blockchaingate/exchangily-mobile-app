@@ -26,13 +26,23 @@ class UserSettingsDatabaseService {
   final String columnId = 'id';
   final String columnLanguage = 'language';
   final String columnTheme = 'theme';
-  final String columnWalletBalancesBody = 'walletBalancesBody';
 
-  static final _databaseVersion = 3;
+  static final _databaseVersion = 4;
   static Future<Database> _database;
   String path = '';
 
   Future<Database> initDb() async {
+    // try {
+    //   await _database.then((res) {
+    //     print(res.isOpen);
+    //     print(res);
+    //   });
+    //   return _database;
+    // } catch (err) {
+    //   log.e('initDb - corrupted db - deleting ');
+    //   await deleteDb();
+    // }
+
     if (_database != null) return _database;
     var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
@@ -48,8 +58,7 @@ class UserSettingsDatabaseService {
         (
         $columnId INTEGER PRIMARY KEY,
         $columnLanguage TEXT,    
-        $columnTheme TEXT,
-        $columnWalletBalancesBody TEXT) ''');
+        $columnTheme TEXT) ''');
   }
 
   // Get All Records From The Database
@@ -90,6 +99,7 @@ class UserSettingsDatabaseService {
   // Get Single Wallet By Id
   Future<String> getLanguage() async {
     final Database db = await _database;
+    if (db == null) return "en";
     List<Map> res = await db.query(tableName);
     log.w('res --- $res');
     if (res.length > 0) {

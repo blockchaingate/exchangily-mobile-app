@@ -71,7 +71,7 @@ class WalletDataBaseService {
 
   Future<List<WalletInfo>> getAll() async {
     //await deleteDb();
-    await initDb();
+    // await initDb();
     final Database db = await _database;
     log.w('getall $db');
 

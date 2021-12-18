@@ -30,8 +30,10 @@ class VerifyMnemonicWalletView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.center,
       padding: EdgeInsets.all(10),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Row(
             children: <Widget>[

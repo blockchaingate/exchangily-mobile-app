@@ -41,7 +41,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         model.errorMessage = '';
         model.passwordMatch = false;
       },
-      builder: (context, model, child) => Scaffold(
+      builder: (context, CreatePasswordViewModel model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Text(AppLocalizations.of(context).secureYourWallet,
@@ -122,6 +122,9 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 ),
               ],
             )),
+        // floatingActionButton: TextButton(
+        //     onPressed: () => model.coreWalletDatabaseService.initDb(),
+        //     child: Text('click')),
       ),
     );
   }
@@ -219,7 +222,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           widget.args['isImport']
               ? AppLocalizations.of(context).importWallet
               : AppLocalizations.of(context).createWallet,
-          style: Theme.of(context).textTheme.headline4,
+          style: Theme.of(context)
+              .textTheme
+              .headline4
+              .copyWith(fontWeight: FontWeight.w400),
         ),
       ),
     );

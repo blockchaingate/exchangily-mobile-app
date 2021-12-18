@@ -15,8 +15,9 @@ import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
@@ -25,8 +26,8 @@ import 'package:stacked/stacked.dart';
 
 class CreatePasswordViewModel extends BaseViewModel {
   final WalletService _walletService = locator<WalletService>();
-  final VaultService _vaultService = locator<VaultService>();
   final NavigationService navigationService = locator<NavigationService>();
+  final sharedService = locator<SharedService>();
 
   //List<WalletInfo> _walletInfo;
   final log = getLogger('CreatePasswordViewModel');
@@ -45,6 +46,7 @@ class CreatePasswordViewModel extends BaseViewModel {
   TextEditingController passTextController = TextEditingController();
   TextEditingController confirmPassTextController = TextEditingController();
   WalletService walletService = locator<WalletService>();
+  final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
 
   //                Create Offline Wallets
 
@@ -108,31 +110,26 @@ class CreatePasswordViewModel extends BaseViewModel {
       confirmPassword = '';
       checkPasswordConditions = false;
       checkConfirmPasswordConditions = false;
-      _walletService.showInfoFlushbar(
+      sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).emptyPassword,
-          AppLocalizations.of(context).pleaseFillBothPasswordFields,
-          Icons.cancel,
-          Colors.red,
-          context);
+          subtitle: AppLocalizations.of(context).pleaseFillBothPasswordFields);
+
       setBusy(false);
       return;
     } else {
       if (!regex.hasMatch(pass)) {
-        _walletService.showInfoFlushbar(
-            AppLocalizations.of(context).passwordConditionsMismatch,
-            AppLocalizations.of(context).passwordConditions,
-            Icons.cancel,
-            Colors.red,
-            context);
+        sharedService.sharedSimpleNotification(
+          AppLocalizations.of(context).passwordConditionsMismatch,
+          subtitle: AppLocalizations.of(context).passwordConditions,
+        );
+
         setBusy(false);
         return;
       } else if (pass != confirmPass) {
-        _walletService.showInfoFlushbar(
-            AppLocalizations.of(context).passwordMismatch,
-            AppLocalizations.of(context).passwordRetype,
-            Icons.cancel,
-            Colors.red,
-            context);
+        sharedService.sharedSimpleNotification(
+          AppLocalizations.of(context).passwordMismatch,
+          subtitle: AppLocalizations.of(context).passwordRetype,
+        );
         setBusy(false);
         return;
       } else {

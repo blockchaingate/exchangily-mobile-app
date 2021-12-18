@@ -157,7 +157,8 @@ class WalletDashboardViewModel extends BaseViewModel {
     currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
     // walletsScrollController.addListener(_scrollListener());
     //   await storeWalletDecimalData();
-    refreshController = new RefreshController();
+    //refreshController = new RefreshController();
+    walletService.storeTokenListInDB();
 
     setBusy(false);
   }
@@ -1017,43 +1018,36 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                     setState(() =>
                                                         isFreeFabNotUsed =
                                                             false);
-                                                    walletService
-                                                        .showInfoFlushbar(
+
+                                                    sharedService
+                                                        .sharedSimpleNotification(
                                                             AppLocalizations.of(
                                                                     context)
                                                                 .freeFabUpdate,
-                                                            AppLocalizations.of(
-                                                                    context)
+                                                            subtitle: AppLocalizations
+                                                                    .of(context)
                                                                 .freeFabSuccess,
-                                                            Icons
-                                                                .account_balance,
-                                                            green,
-                                                            context);
+                                                            isError: false);
                                                   } else {
-                                                    walletService
-                                                        .showInfoFlushbar(
+                                                    sharedService
+                                                        .sharedSimpleNotification(
                                                             AppLocalizations.of(
                                                                     context)
                                                                 .freeFabUpdate,
-                                                            AppLocalizations.of(
-                                                                    context)
-                                                                .incorrectAnswer,
-                                                            Icons.cancel,
-                                                            red,
-                                                            context);
+                                                            subtitle: AppLocalizations
+                                                                    .of(context)
+                                                                .incorrectAnswer);
                                                   }
                                                 } else {
-                                                  walletService
-                                                      .showInfoFlushbar(
+                                                  sharedService
+                                                      .sharedSimpleNotification(
                                                           AppLocalizations.of(
                                                                   context)
                                                               .notice,
-                                                          AppLocalizations.of(
-                                                                  context)
-                                                              .genericError,
-                                                          Icons.cancel,
-                                                          red,
-                                                          context);
+                                                          subtitle:
+                                                              AppLocalizations.of(
+                                                                      context)
+                                                                  .genericError);
                                                 }
                                               },
                                             );
@@ -1079,12 +1073,9 @@ class WalletDashboardViewModel extends BaseViewModel {
           isFreeFabNotUsed = res['ok'];
           print(isFreeFabNotUsed);
 
-          walletService.showInfoFlushbar(
+          sharedService.sharedSimpleNotification(
               AppLocalizations.of(context).notice,
-              AppLocalizations.of(context).freeFabUsedAlready,
-              Icons.notification_important,
-              yellow,
-              context);
+              subtitle: AppLocalizations.of(context).freeFabUsedAlready);
         }
       }
     });
@@ -1248,17 +1239,6 @@ class WalletDashboardViewModel extends BaseViewModel {
   }
 
 /*----------------------------------------------------------------------
-                      Add New Token In Db
-----------------------------------------------------------------------*/
-
-  insertToken(TokenModel newToken) async {
-    if (newToken.chainName == 'FAB') {
-      newToken.contract = '0x' + newToken.contract;
-    }
-    await tokenListDatabaseService.insert(newToken);
-  }
-
-/*----------------------------------------------------------------------
                       Assign New Token Address
 ----------------------------------------------------------------------*/
   // String assignNewTokenAddress(TokenModel newToken) {
@@ -1283,46 +1263,53 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   Future<List<WalletBalance>> refreshBalancesV2() async {
     setBusy(true);
-
+    var walletBalancesApiRes = [];
     // get the walletbalancebody from the DB
     var walletBalancesBodyFromDB =
         await coreWalletDatabaseService.getWalletBalancesBody();
-    var walletBalances = await this.apiService.getWalletBalance(
-        jsonDecode(walletBalancesBodyFromDB['walletBalancesBody']));
-    log.w('walletBalances LENGTH ${walletBalances.length}');
-    wallets = walletBalances;
-    walletsCopy = wallets;
-    setBusy(false);
-    calcTotalBal();
+    if (walletBalancesBodyFromDB != null) {
+      walletBalancesApiRes = await this.apiService.getWalletBalance(
+          jsonDecode(walletBalancesBodyFromDB['walletBalancesBody']));
+      log.w('walletBalances LENGTH ${walletBalancesApiRes.length}');
+      wallets = walletBalancesApiRes;
+      walletsCopy = wallets;
+      setBusy(false);
+      calcTotalBal();
 
-    await checkToUpdateWallet();
-    moveTronUsdt();
-    moveTron();
-    // get exg address to get free fab
-    await getGas();
-    // check gas and fab balance if 0 then ask for free fab
-    if (gasAmount == 0.0 && fabBalance == 0.0) {
-      String address = await walletService
-          .getAddressFromCoreWalletDatabaseByTickerName('FAB');
-      if (storageService.isShowCaseView != null) {
-        if (storageService.isShowCaseView) {
+      await checkToUpdateWallet();
+      moveTronUsdt();
+      moveTron();
+      // get exg address to get free fab
+      await getGas();
+      // check gas and fab balance if 0 then ask for free fab
+      if (gasAmount == 0.0 && fabBalance == 0.0) {
+        String address = await walletService
+            .getAddressFromCoreWalletDatabaseByTickerName('FAB');
+        if (storageService.isShowCaseView != null) {
+          if (storageService.isShowCaseView) {
+            storageService.isShowCaseView = true;
+            _isShowCaseView = true;
+          }
+        } else {
           storageService.isShowCaseView = true;
           _isShowCaseView = true;
         }
+        var res = await apiService.getFreeFab(address);
+        if (res != null) {
+          isFreeFabNotUsed = res['ok'];
+        }
       } else {
-        storageService.isShowCaseView = true;
-        _isShowCaseView = true;
-      }
-      var res = await apiService.getFreeFab(address);
-      if (res != null) {
-        isFreeFabNotUsed = res['ok'];
+        log.i('Fab or gas balance available already');
+        // storageService.isShowCaseView = false;
       }
     } else {
-      log.i('Fab or gas balance available already');
-      // storageService.isShowCaseView = false;
+      walletBalancesApiRes = [];
+      log.e('Core wallet db empty');
+      // navigationService
+      //     .navigateUsingPushNamedAndRemoveUntil(WalletSetupViewRoute);
     }
 
-    return walletBalances;
+    return walletBalancesApiRes;
   }
 
   // Future refreshBalance() async {

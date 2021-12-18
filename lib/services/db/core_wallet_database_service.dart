@@ -35,7 +35,21 @@ class CoreWalletDatabaseService {
   String path = '';
 
   Future<Database> initDb() async {
-    if (_database != null) return _database;
+    // try {
+    //   await _database.then((res) {
+    //     print(res.isOpen);
+    //     print(res);
+    //   });
+    //   return _database;
+    // } catch (err) {
+    //   log.e('initDb - corrupted db - deleting ');
+    //   await deleteDb();
+    // }
+    if (_database != null) {
+      log.i('init db -- ${_database.toString()}');
+
+      return _database;
+    }
     var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
     log.w('initDB $path');
@@ -60,7 +74,6 @@ class CoreWalletDatabaseService {
   // Get All Records From The Database
 
   Future<CoreWalletModel> getAll() async {
-    //await deleteDb();
     await initDb();
     final Database db = await _database;
     log.w('getall $db');
@@ -71,9 +84,7 @@ class CoreWalletDatabaseService {
 
     CoreWalletModel walletCore = CoreWalletModel();
     if (res.isNotEmpty) {
-      var zero = res[0];
-
-      walletCore = CoreWalletModel.fromJson(zero);
+      walletCore = CoreWalletModel.fromJson(res.first);
       log.w('get all walletcoremodel ${walletCore.toJson()}');
     }
     return walletCore;
@@ -81,26 +92,51 @@ class CoreWalletDatabaseService {
 
 // Insert Data In The Database
   Future insert(CoreWalletModel walletCoreModel) async {
+    try {
+      await _database.then((res) {
+        print(res.isOpen);
+        print(res);
+      });
+    } catch (err) {
+      log.e('initDb - corrupted db - deleting ');
+      await deleteDb();
+    }
     await initDb();
     final Database db = await _database;
 
-    int id = await db.insert(tableName, walletCoreModel.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
-
+    int id = 0;
+    var dataToInsert = walletCoreModel.toJson();
+    log.w('dataToInsert $dataToInsert');
+    await db
+        .insert(tableName, dataToInsert,
+            conflictAlgorithm: ConflictAlgorithm.replace)
+        .then((resId) {
+      id = resId;
+      log.w('core wallet inserted Id $id');
+    }).catchError((err) {
+      log.e('Insert failed -Catch $err');
+    });
     return id;
   }
 
   // Get encrypted mnemonic
   Future<String> getEncryptedMnemonic() async {
+    await initDb();
     final Database db = await _database;
+    //  if (db == null) await initDb();
+    String encryptedMnemonic = '';
     List<Map> res = await db.query(tableName, columns: [columnMnemonic]);
-    if (res.length != 0) log.i('Encrypted Mnemonic --- ${res.first}');
+    if (res.length != 0) if (res[0]['mnemonic'] != null) {
+      log.i('Encrypted Mnemonic --- ${res.first}');
+      encryptedMnemonic = res.first['mnemonic'];
+    }
 
-    return res.length != 0 ? res.first['mnemonic'] : '';
+    return encryptedMnemonic;
   }
 
   // Get wallet balance body
   Future<Map<dynamic, dynamic>> getWalletBalancesBody() async {
+    await initDb();
     final Database db = await _database;
     var finalRes;
     List<Map> res =
@@ -135,7 +171,8 @@ class CoreWalletDatabaseService {
     String finalRes = '';
     finalRes =
         passedTicker == 'EXG' ? fabUtils.fabToExgAddress(address) : address;
-    log.i('$tickerName address ---finalRes $finalRes');
+    log.i(
+        '${passedTicker.isEmpty ? tickerName : passedTicker} address ---finalRes $finalRes');
     return finalRes;
   }
 

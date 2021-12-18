@@ -291,12 +291,9 @@ class MyOrdersViewModel extends ReactiveViewModel {
   //  Password mismatch notice
 
   noticePasswordMismatch(context) {
-    return walletService.showInfoFlushbar(
+    return sharedService.sharedSimpleNotification(
         AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        colors.red,
-        context);
+        subtitle: AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
   }
 
   //   Check Password

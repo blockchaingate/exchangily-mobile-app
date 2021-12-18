@@ -80,6 +80,7 @@ class WalletSetupViewmodel extends BaseViewModel {
     try {
       coreWalletDbData = await coreWalletDatabaseService.getEncryptedMnemonic();
     } catch (err) {
+      coreWalletDbData = '';
       log.e('importCreateNav importCreateNav CATCH err $err');
     }
     if (storageService.walletBalancesBody.isNotEmpty ||
@@ -118,6 +119,10 @@ class WalletSetupViewmodel extends BaseViewModel {
         }
       });
     } else {
+      await transactionHistoryDatabaseService
+          .deleteDb()
+          .whenComplete(() => log.e('transaction history database deleted!!'))
+          .catchError((err) => log.e('tx history database CATCH $err'));
       if (actionType == 'import')
         navigationService.navigateTo(ImportWalletViewRoute,
             arguments: actionType);
@@ -133,9 +138,9 @@ class WalletSetupViewmodel extends BaseViewModel {
     log.i('model busy $busy');
     await dialogService
         .showDialog(
-            title: AppLocalizations.of(context).enterPassword,
+            title: AppLocalizations.of(context).typeYourWalletPassword,
             description:
-                AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+                'To import wallet, provide the wallet password to delete any existing stored data which may negatively affect the import wallet process',
             buttonTitle: AppLocalizations.of(context).confirm)
         .then((res) async {
       if (res.confirmed) {
@@ -186,6 +191,9 @@ class WalletSetupViewmodel extends BaseViewModel {
         setBusy(false);
         finalRes = false;
         return finalRes;
+      } else if (res.returnedText == 'wrong password') {
+        sharedService.sharedSimpleNotification(
+            AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
       } else {
         log.e('Wrong pass');
         setBusy(false);
@@ -208,17 +216,26 @@ class WalletSetupViewmodel extends BaseViewModel {
 
   Future checkExistingWallet() async {
     setBusy(true);
-    var coreWalletDbData = await coreWalletDatabaseService.getAll();
+    var coreWalletDbData;
 
-    if (coreWalletDbData.mnemonic == null ||
-        coreWalletDbData.mnemonic.isEmpty) {
+    try {
+      coreWalletDbData = await coreWalletDatabaseService.getEncryptedMnemonic();
+    } catch (err) {
+      coreWalletDbData = '';
+      log.e('importCreateNav importCreateNav CATCH err $err');
+    }
+    if (coreWalletDbData == null || coreWalletDbData.isEmpty) {
       log.w('coreWalletDbData is null or empty');
-      var walletDatabase = await walletDatabaseService.getAll();
+      var walletDatabase;
+      try {
+        walletDatabase = await walletDatabaseService.getAll();
+      } catch (err) {
+        walletDatabase = [];
+      }
       if (storageService.walletBalancesBody.isNotEmpty ||
-          walletDatabase != null ||
           walletDatabase.isNotEmpty) {
         // ask user's permission to verify the wallet addresses
-        // show dialog to for this reason
+        // show dialog to user for this reason
         var res = await dialogService.showVerifyDialog(
             title: 'Important Notice: Wallet Update',
             secondaryButton: 'Cancel',
@@ -241,7 +258,7 @@ class WalletSetupViewmodel extends BaseViewModel {
                   await walletService.verifyWalletAddresses(res.returnedText);
               isWalletVerifySuccess =
                   walletVerificationRes['fabAddressCheck'] &&
-                      walletVerificationRes['fabAddressCheck'];
+                      walletVerificationRes['trxAddressCheck'];
               // if wallet verification is true then fill encrypted mnemonic and
               // addresses in the new corewalletdatabase
               if (isWalletVerifySuccess) {
@@ -253,9 +270,9 @@ class WalletSetupViewmodel extends BaseViewModel {
                 // show the warning in the UI and underneath a delete wallet button
                 // which will delete the wallet data and navigate to create/import view
                 bool res = await sharedService.dialogAcceptOrReject(
-                    'Current wallet is not compatible with the update, please delete the wallet and re-import again',
+                    'Current wallet is not compatible with the update, please delete the wallet and re-import again and don\'t worry, your funds are safe.',
                     'Delete wallet',
-                    'Cancel');
+                    '');
                 if (res) await deleteWallet();
                 setBusy(false);
               }
@@ -267,8 +284,7 @@ class WalletSetupViewmodel extends BaseViewModel {
       } else {
         isWallet = false;
       }
-    } else if (coreWalletDbData.mnemonic != null ||
-        coreWalletDbData.mnemonic.isNotEmpty) {
+    } else if (coreWalletDbData != null || coreWalletDbData.isNotEmpty) {
       isWalletVerifySuccess = true;
       isWallet = true;
 // add here the biometric check

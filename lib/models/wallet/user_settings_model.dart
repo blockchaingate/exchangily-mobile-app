@@ -2,7 +2,6 @@ class UserSettings {
   int _id;
   String _language;
   String _theme;
-  Map<String, String> _walletBalancesBody;
   // List<String> _favWalletCoins;
   // bool _isFavCoinTabSelected;
 
@@ -10,14 +9,12 @@ class UserSettings {
     int id,
     String language,
     String theme,
-    Map<String, String> walletBalancesBody,
     //   List<String> favWalletCoins,
     //  bool isFavCoinTabSelected
   }) {
     this._id = id;
     this._language = language ?? '';
     this._theme = theme ?? '';
-    this._walletBalancesBody = walletBalancesBody;
     // this._favWalletCoins = favWalletCoins;
     // this._isFavCoinTabSelected = isFavCoinTabSelected;
   }
@@ -26,7 +23,6 @@ class UserSettings {
         'id': _id,
         'language': _language,
         'theme': _theme,
-        'walletBalancesBody': _walletBalancesBody,
         // 'favWalletCoins': _favWalletCoins,
         // 'isFavCoinTabSelected': _isFavCoinTabSelected
       };
@@ -35,8 +31,7 @@ class UserSettings {
     return new UserSettings(
         id: json['id'] as int,
         language: json['language'] as String,
-        theme: json['json'] as String,
-        walletBalancesBody: json['walletBalancesBody']
+        theme: json['json'] as String
         // favWalletCoins: json['favWalletCoins'],
         // isFavCoinTabSelected: json['isFavCoinTabSelected'])
         );
@@ -56,11 +51,6 @@ class UserSettings {
   set theme(String theme) {
     this._theme = theme;
   }
-
-  // Map<String, String> get walletBalancesBody => _walletBalancesBody;
-  // set walletBalancesBody(Map<String, String> walletBalancesBody) {
-  //   this._walletBalancesBody = walletBalancesBody;
-  // }
 
   // bool get isFavCoinTabSelected => _isFavCoinTabSelected;
   // set isFavCoinTabSelected(bool isFavCoinTabSelected) {

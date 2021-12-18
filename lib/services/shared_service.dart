@@ -321,16 +321,19 @@ class SharedService {
                   style: TextStyle(fontSize: 14),
                 ),
                 actions: <Widget>[
-                  TextButton(
-                    child: Text(
-                      rejectButton.isEmpty ? '' : rejectButton,
-                      style: TextStyle(color: globals.white, fontSize: 12),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                      return false;
-                    },
-                  ),
+                  rejectButton.isEmpty
+                      ? Container()
+                      : TextButton(
+                          child: Text(
+                            rejectButton,
+                            style:
+                                TextStyle(color: globals.white, fontSize: 12),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop(false);
+                            return false;
+                          },
+                        ),
                   TextButton(
                     child: Text(acceptButton,
                         style: TextStyle(color: globals.white, fontSize: 12)),

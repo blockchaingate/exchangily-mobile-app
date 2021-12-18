@@ -445,8 +445,7 @@ class WalletDashboardView extends StatelessWidget {
               //         ? Icon(Icons.arrow_downward)
               //         : Icon(Icons.arrow_upward),
               //     onPressed: () async {
-              //       model.routeWithWalletInfoArgs(
-              //           WalletBalance(balance: 12, coin: 'cnb'), '');
+              //       model.coreWalletDatabaseService.getWalletBalancesBody();
               //     },
               //   ),
               // ),
@@ -1451,6 +1450,7 @@ class TotalBalanceWidget extends StatelessWidget {
                         model.isBusy
                             ? Container()
                             : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   // Column(
                                   //   children: [

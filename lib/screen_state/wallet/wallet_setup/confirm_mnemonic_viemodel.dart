@@ -12,24 +12,26 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/screen_state/base_state.dart';
-import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:overlay_support/overlay_support.dart';
+import 'package:stacked/stacked.dart';
 import '../../../logger.dart';
 import '../../../service_locator.dart';
 
-class ConfirmMnemonicScreenState extends BaseState {
-  final WalletService _walletService = locator<WalletService>();
+class ConfirmMnemonicViewmodel extends BaseViewModel {
+  final sharedService = locator<SharedService>();
   final log = getLogger('ConfirmMnemonicScreenState');
   String errorMessage = '';
   List<String> userTypedMnemonicList = [];
   List<String> randomMnemonicList = [];
   String listToStringMnemonic = '';
+  final List<TextEditingController> controller = [];
+  final count = 12;
+  String route = '';
 
   verifyMnemonic(controller, context, count, routeName) {
     userTypedMnemonicList.clear();
@@ -56,20 +58,16 @@ class ConfirmMnemonicScreenState extends BaseState {
         if (isValid) {
           importWallet(listToStringMnemonic, context);
         } else {
-          _walletService.showInfoFlushbar(
+          sharedService.sharedSimpleNotification(
               AppLocalizations.of(context).invalidMnemonic,
-              AppLocalizations.of(context).pleaseFillAllTheTextFieldsCorrectly,
-              Icons.cancel,
-              Colors.red,
-              context);
+              subtitle: AppLocalizations.of(context)
+                  .pleaseFillAllTheTextFieldsCorrectly);
         }
       } else {
-        _walletService.showInfoFlushbar(
+        sharedService.sharedSimpleNotification(
             AppLocalizations.of(context).invalidMnemonic,
-            AppLocalizations.of(context).pleaseFillAllTheTextFieldsCorrectly,
-            Icons.cancel,
-            Colors.red,
-            context);
+            subtitle: AppLocalizations.of(context)
+                .pleaseFillAllTheTextFieldsCorrectly);
       }
     } else {
       createWallet(context);
