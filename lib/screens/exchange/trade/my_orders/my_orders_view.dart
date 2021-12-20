@@ -16,15 +16,24 @@ class MyOrdersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RefreshController _refreshController =
+        RefreshController(initialRefresh: false);
     return ViewModelBuilder<MyOrdersViewModel>.reactive(
         createNewModelOnInsert: true,
+        fireOnModelReadyOnce: true,
         viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
         onModelReady: (model) {
           print('in init MyOrdersView');
           model.context = context;
+
+          model.refreshController = _refreshController;
           model.init();
         },
-        builder: (context, model, _) => Container(
+        onDispose: () {
+          _refreshController.dispose();
+          print('_refreshController disposed in my orders view');
+        },
+        builder: (context, MyOrdersViewModel model, _) => Container(
             child:
                 // error handling
                 model.isFutureError
@@ -230,6 +239,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
 
   @override
   Widget build(BuildContext context, MyOrdersViewModel model) {
+    model.refreshController = new RefreshController();
     return SmartRefresher(
       enablePullUp: true,
       header: Theme.of(context).platform == TargetPlatform.iOS

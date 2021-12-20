@@ -64,9 +64,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
   PairDecimalConfig decimalConfig = new PairDecimalConfig();
   bool isShowAllOrders = false;
 
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
-  RefreshController get refreshController => _refreshController;
+  RefreshController refreshController;
 
   int skip = 0;
   int count = 10;
@@ -136,7 +134,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
       await getMyOrdersByTickerName();
     }
     log.i('skip count $skip');
-    _refreshController.loadComplete();
+    refreshController.loadComplete();
     setBusy(false);
   }
 

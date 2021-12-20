@@ -93,8 +93,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   String exgAddress = '';
   //String wallets;
   bool isHideSmallAmountAssets = false;
-  RefreshController refreshController =
-      RefreshController(initialRefresh: false);
+
   bool isConfirmDeposit = false;
 
   //WalletInfo confirmDepositCoinWallet;
@@ -112,7 +111,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   final searchCoinTextController = TextEditingController();
   // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   //     FlutterLocalNotificationsPlugin();
-
+  var refreshController;
   //vars for announcement
   bool hasApiError = false;
   List announceList;
@@ -1305,8 +1304,8 @@ class WalletDashboardViewModel extends BaseViewModel {
     } else {
       walletBalancesApiRes = [];
       log.e('Core wallet db empty');
-      // navigationService
-      //     .navigateUsingPushNamedAndRemoveUntil(WalletSetupViewRoute);
+      navigationService
+          .navigateUsingPushNamedAndRemoveUntil(WalletSetupViewRoute);
     }
 
     return walletBalancesApiRes;

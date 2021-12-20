@@ -79,9 +79,16 @@ class UserSettingsDatabaseService {
 // Insert Data In The Database
   Future insert(UserSettings userSettings) async {
     await initDb();
-    final Database db = await _database;
-    int id = await db.insert(tableName, userSettings.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    int id = 0;
+    try {
+      final Database db = await _database;
+      id = await db.insert(tableName, userSettings.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    } catch (err) {
+      await deleteDb();
+      await initDb();
+      await insert(userSettings);
+    }
     return id;
   }
 

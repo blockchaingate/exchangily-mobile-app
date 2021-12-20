@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screens/announcement/anncounceList.dart';
@@ -45,14 +46,21 @@ class WalletDashboardView extends StatelessWidget {
     GlobalKey _one = GlobalKey();
     GlobalKey _two = GlobalKey();
     final key = new GlobalKey<ScaffoldState>();
+    RefreshController _refreshController =
+        RefreshController(initialRefresh: false);
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => WalletDashboardViewModel(),
-        onModelReady: (model) async {
+        onModelReady: (WalletDashboardViewModel model) async {
           model.context = context;
           model.globalKeyOne = _one;
           model.globalKeyTwo = _two;
+          model.refreshController = _refreshController;
           //  await model.retrieveWalletsFromLocalDatabase();
           await model.init();
+        },
+        onDispose: () {
+          _refreshController.dispose();
+          print('_refreshController disposed in wallet dashboard view');
         },
         builder: (context, WalletDashboardViewModel model, child) {
           // var connectionStatus = Provider.of<ConnectivityStatus>(context);
@@ -445,7 +453,7 @@ class WalletDashboardView extends StatelessWidget {
               //         ? Icon(Icons.arrow_downward)
               //         : Icon(Icons.arrow_upward),
               //     onPressed: () async {
-              //       model.coreWalletDatabaseService.getWalletBalancesBody();
+              //       model.coreWalletDatabaseService.insert(CoreWalletModel());
               //     },
               //   ),
               // ),
