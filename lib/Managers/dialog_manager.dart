@@ -12,15 +12,14 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_request.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
-import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
-import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -249,24 +248,36 @@ class _DialogManagerState extends State<DialogManager> {
                     finalRes = await _vaultService.decryptData(controller.text);
                   } else if (encryptedMnemonic.isNotEmpty) {
                     await _vaultService
-                        .decryptMnemonic(controller.text, encryptedMnemonic)
+                        .decryptMnemonic(controller.text, encryptedMnemonic,
+                            isDeleteWalletReq: request.isSpecialReq)
                         .then((data) {
                       finalRes = data;
                     });
                   }
-                  if (finalRes != '' && finalRes != null) {
+                  if (finalRes == Constants.ImportantWalletUpdateText) {
                     _dialogService.dialogComplete(DialogResponse(
-                        returnedText: finalRes, confirmed: true));
+                        confirmed: false,
+                        returnedText: '',
+                        isRequiredUpdate: true));
+                    controller.text = '';
+                    Navigator.of(context).pop();
+                  } else if (finalRes != '' && finalRes != null) {
+                    _dialogService.dialogComplete(DialogResponse(
+                        returnedText: finalRes,
+                        confirmed: true,
+                        isRequiredUpdate: false));
                     controller.text = '';
                     Navigator.of(context).pop();
                   } else {
                     _dialogService.dialogComplete(DialogResponse(
-                        confirmed: false, returnedText: 'wrong password'));
+                        confirmed: false,
+                        returnedText: 'wrong password',
+                        isRequiredUpdate: false));
                     controller.text = '';
                     Navigator.of(context).pop();
                   }
                 } catch (err) {
-                  log.e('Getting mnemonic failed');
+                  log.e('Getting mnemonic failed -- $err');
                 }
               }
             },

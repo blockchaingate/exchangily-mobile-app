@@ -1899,6 +1899,13 @@ class AppLocalizations {
     return Intl.message('Total Wallet Balance',
         name: 'totalWalletBalance', desc: 'totalWalletBalance');
   }
+
+  String get importantWalletUpdateNotice {
+    return Intl.message(
+        'Important Wallet Update Notice: Please delete the current wallet in Settings and then re-import',
+        name: 'importantWalletUpdateNotice',
+        desc: 'importantWalletUpdateNotice');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

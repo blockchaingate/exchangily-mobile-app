@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:bitbox/bitbox.dart' as Bitbox;
-import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -29,18 +28,15 @@ import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:hex/hex.dart';
 import 'dart:typed_data';
 import 'package:web3dart/web3dart.dart';
-import '../shared/globals.dart' as globals;
 import '../environments/coins.dart' as coinList;
 import '../utils/abi_util.dart';
 import '../utils/number_util.dart';
@@ -758,6 +754,14 @@ class WalletService {
       if (trxAddressFromCreate == trxAddressFromStorage) {
         res["trxAddressCheck"] = true;
         log.i('Trx Verification passed $res');
+
+        var walletCoreModel = CoreWalletModel(
+          id: 1,
+          walletBalancesBody:
+              walletDataFromCreateOfflineWalletV1.walletBalancesBody,
+        );
+        // store in single core database
+        await coreWalletDatabaseService.insert(walletCoreModel);
       } else
         res["trxAddressCheck"] = false;
     } else {
@@ -838,26 +842,32 @@ class WalletService {
           id: 1,
           walletBalancesBody: walletBalanceBodyJsonString,
         );
+      } // for loop ends
+      await coreWalletDatabaseService.getEncryptedMnemonic().then((res) async {
+        if (res.isNotEmpty) {
+          await coreWalletDatabaseService.deleteDb();
+        }
+      });
 
-        log.i("Wallet core model json ${walletCoreModel.toJson()}");
+      log.i("Wallet core model json ${walletCoreModel.toJson()}");
+
+      if (!isVerifying) {
+        // encrypt the mnemonic
+        if (key.isNotEmpty && mnemonic.isNotEmpty) {
+          var encryptedMnemonic =
+              await vaultService.encryptMnemonic(key, mnemonic);
+
+          log.i('encryptedMnemonic $encryptedMnemonic');
+
+          // store those json string address and encrypted mnemonic in the wallet core database
+          walletCoreModel.mnemonic = encryptedMnemonic;
+          log.w(
+              'createOfflineWalletsV1 walletCoreModel -- before inserting in the core wallet DB ${walletCoreModel.toJson()}');
+
+          // store in single core database
+          await coreWalletDatabaseService.insert(walletCoreModel);
+        }
       }
-
-      // if (!isVerifying) {
-      // encrypt the mnemonic
-      var encryptedMnemonic = await vaultService.encryptMnemonic(key, mnemonic);
-
-      log.i('encryptedMnemonic $encryptedMnemonic');
-
-      // store those json string address and encrypted mnemonic in the wallet core database
-      walletCoreModel.mnemonic = encryptedMnemonic;
-      log.w(
-          'createOfflineWalletsV1 walletCoreModel -- before inserting in the core wallet DB ${walletCoreModel.toJson()}');
-
-      // store in single core database
-      await coreWalletDatabaseService.insert(walletCoreModel);
-
-//      await coreWalletDatabaseService.getAll();
-      // }
       return walletCoreModel;
     } catch (e) {
       log.e('Catch createOfflineWalletsV1 $e');

@@ -73,11 +73,17 @@ class DialogService {
 
   // Calls the dialog listener and returns a future that will wait for the dialog to complete
   Future<DialogResponse> showDialog(
-      {String title, String description, String buttonTitle}) {
+      {String title,
+      String description,
+      String buttonTitle,
+      bool isSpecialReq}) {
     log.w('In show dialog');
     _dialogCompleter = Completer<DialogResponse>();
     _showDialogListener(DialogRequest(
-        title: title, description: description, buttonTitle: buttonTitle));
+        title: title,
+        description: description,
+        buttonTitle: buttonTitle,
+        isSpecialReq: isSpecialReq));
     return _dialogCompleter.future;
   }
 

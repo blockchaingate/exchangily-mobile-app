@@ -161,8 +161,7 @@ class WalletSetupView extends StatelessWidget {
                                               shape: MaterialStateProperty.all(
                                                 StadiumBorder(
                                                     side: BorderSide(
-                                                        color: globals
-                                                            .primaryColor,
+                                                        color: primaryColor,
                                                         width: 2)),
                                               ),
                                             ),
@@ -171,12 +170,12 @@ class WalletSetupView extends StatelessWidget {
                                                     .createWallet,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline4
+                                                    .headline5
                                                     .copyWith(
-                                                        color: globals
-                                                            .primaryColor)),
+                                                        color: primaryColor)),
                                             onPressed: () {
-                                              model.importCreateNav('create');
+                                              if (!model.isBusy)
+                                                model.importCreateNav('create');
                                             },
                                           ),
                                         ),
@@ -189,8 +188,7 @@ class WalletSetupView extends StatelessWidget {
                                               shape: MaterialStateProperty.all(
                                                 StadiumBorder(
                                                     side: BorderSide(
-                                                        color: globals
-                                                            .primaryColor,
+                                                        color: primaryColor,
                                                         width: 2)),
                                               ),
                                               backgroundColor:
@@ -201,10 +199,12 @@ class WalletSetupView extends StatelessWidget {
                                                 .importWallet,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline4,
+                                                .headline5
+                                                .copyWith(color: white),
                                           ),
                                           onPressed: () {
-                                            model.importCreateNav('import');
+                                            if (!model.isBusy)
+                                              model.importCreateNav('import');
                                           },
                                         ),
                                       ),

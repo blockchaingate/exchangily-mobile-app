@@ -279,7 +279,8 @@ class SettingsViewmodel extends BaseViewModel {
             title: AppLocalizations.of(context).enterPassword,
             description:
                 AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-            buttonTitle: AppLocalizations.of(context).confirm)
+            buttonTitle: AppLocalizations.of(context).confirm,
+            isSpecialReq: true)
         .then((res) async {
       if (res.confirmed) {
         isDeleting = true;
@@ -316,6 +317,7 @@ class SettingsViewmodel extends BaseViewModel {
             .whenComplete(() => log.e('User settings database deleted!!'))
             .catchError((err) => log.e('user setting database CATCH $err'));
 
+// may need to add old campaign databases here to delete as well
         storageService.walletBalancesBody = '';
 
         storageService.isShowCaseView = true;
@@ -383,10 +385,11 @@ class SettingsViewmodel extends BaseViewModel {
     } else {
       await dialogService
           .showDialog(
-              title: AppLocalizations.of(context).enterPassword,
-              description: AppLocalizations.of(context)
-                  .dialogManagerTypeSamePasswordNote,
-              buttonTitle: AppLocalizations.of(context).confirm)
+        title: AppLocalizations.of(context).enterPassword,
+        description:
+            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+        buttonTitle: AppLocalizations.of(context).confirm,
+      )
           .then((res) async {
         if (res.confirmed) {
           setBusy(true);
@@ -399,6 +402,11 @@ class SettingsViewmodel extends BaseViewModel {
           log.e('Dialog Closed By User');
           // setBusy(false);
           // return errorMessage = '';
+        } else if (res.isRequiredUpdate) {
+          log.e('Wallet update required');
+          setBusy(false);
+          return errorMessage =
+              AppLocalizations.of(context).importantWalletUpdateNotice;
         } else {
           log.e('Wrong pass');
           setBusy(false);

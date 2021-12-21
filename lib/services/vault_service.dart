@@ -12,6 +12,7 @@
 */
 
 import 'dart:io';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:path_provider/path_provider.dart';
@@ -67,7 +68,8 @@ class VaultService {
 // --------- decrypt mnemonic start here
 
   Future<String> decryptMnemonic(
-      String userTypedKey, String encryptedBase64Mnemonic) async {
+      String userTypedKey, String encryptedBase64Mnemonic,
+      {bool isDeleteWalletReq = false}) async {
     try {
       encrypt.Encrypted encryptedText =
           encrypt.Encrypted.fromBase64(encryptedBase64Mnemonic);
@@ -84,13 +86,15 @@ class VaultService {
       return decrypted;
     } catch (e) {
       log.e(
-          "decryptMnemonic Couldn't read file -$e -- moving to decryptDataV1");
-      return await decryptMnemonicV1(userTypedKey, encryptedBase64Mnemonic);
+          "decryptMnemonic Couldn't read file -$e -- moving to decryptMnemonicV1");
+      return await decryptMnemonicV1(userTypedKey, encryptedBase64Mnemonic,
+          isDeleteWalletReq: isDeleteWalletReq ?? false);
     }
   }
 
   Future<String> decryptMnemonicV1(
-      String userTypedKey, String encryptedBase64Mnemonic) async {
+      String userTypedKey, String encryptedBase64Mnemonic,
+      {bool isDeleteWalletReq = false}) async {
     try {
       encrypt.Encrypted encryptedText =
           encrypt.Encrypted.fromBase64(encryptedBase64Mnemonic);
@@ -101,13 +105,15 @@ class VaultService {
       return Future.value(decrypted);
     } catch (e) {
       log.e(
-          "decryptDataV1 -- Couldn't read file -$e -- -- moving to decryptDataV0");
-      return await decryptMnemonicV0(userTypedKey, encryptedBase64Mnemonic);
+          "decryptMnemonicV1 -- Couldn't read file -$e -- -- moving to decryptMnemonicV0");
+      return await decryptMnemonicV0(userTypedKey, encryptedBase64Mnemonic,
+          isDeleteWalletReq: isDeleteWalletReq);
     }
   }
 
   Future<String> decryptMnemonicV0(
-      String userTypedKey, String encryptedBase64Mnemonic) async {
+      String userTypedKey, String encryptedBase64Mnemonic,
+      {bool isDeleteWalletReq = false}) async {
     try {
       encrypt.Encrypted encryptedText =
           encrypt.Encrypted.fromBase64(encryptedBase64Mnemonic);
@@ -117,8 +123,12 @@ class VaultService {
       final decrypted = encrypter.decrypt(encryptedText, iv: iv);
       return Future.value(decrypted);
     } catch (e) {
-      log.e("Couldn't read file -$e");
-      return Future.value('');
+      log.e(
+          "decryptMnemonicV0 Couldn't read file -$e - moving to decryt data func which uses old method of file storage");
+
+      return isDeleteWalletReq
+          ? await decryptData(userTypedKey)
+          : Future.value(Constants.ImportantWalletUpdateText);
     }
   }
 

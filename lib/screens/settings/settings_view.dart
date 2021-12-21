@@ -72,7 +72,6 @@ class SettingsView extends StatelessWidget {
               //       )
               : SettingsContainer(model: model),
           bottomNavigationBar: BottomNavBar(count: 4),
-          // floatingActionButton: TextButton(child:Text('Click'),onPressed: () => model.clickMe(),),
         ),
       ),
     );
@@ -613,6 +612,7 @@ class SettingsContainer extends StatelessWidget {
               padding: EdgeInsets.all(5),
               child: Center(
                 child: Text(model.errorMessage,
+                    textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme
                         .bodyText2

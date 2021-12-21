@@ -20,7 +20,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class CoreWalletDatabaseService {
-  final log = getLogger('WalletCoreService');
+  final log = getLogger('CoreWalletDatabaseService');
 
   static final _databaseName = 'wallet_core.db';
   final String tableName = 'wallet_core';

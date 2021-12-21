@@ -141,7 +141,8 @@ class WalletSetupViewmodel extends BaseViewModel {
             title: AppLocalizations.of(context).typeYourWalletPassword,
             description:
                 'To import wallet, provide the wallet password to delete any existing stored data which may negatively affect the import wallet process',
-            buttonTitle: AppLocalizations.of(context).confirm)
+            buttonTitle: AppLocalizations.of(context).confirm,
+            isSpecialReq: true)
         .then((res) async {
       if (res.confirmed) {
         isDeleting = true;
@@ -262,7 +263,7 @@ class WalletSetupViewmodel extends BaseViewModel {
               // if wallet verification is true then fill encrypted mnemonic and
               // addresses in the new corewalletdatabase
               if (isWalletVerifySuccess) {
-                checkExistingWallet();
+                await goToWalletDashboard();
               } else {
                 // show popup
                 // if wallet verification failed then generate warning
@@ -285,31 +286,35 @@ class WalletSetupViewmodel extends BaseViewModel {
         isWallet = false;
       }
     } else if (coreWalletDbData != null || coreWalletDbData.isNotEmpty) {
-      isWalletVerifySuccess = true;
-      isWallet = true;
-// add here the biometric check
-      if (storageService.hasInAppBiometricAuthEnabled) {
-        if (!authService.isCancelled) await authService.authenticateApp();
-        if (hasAuthenticated) {
-          navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
-          storageService.hasAppGoneInTheBackgroundKey = false;
-        }
-        if (authService.isCancelled || !hasAuthenticated) {
-          isWallet = false;
-          setBusy(false);
-          authService.setIsCancelledValueFalse();
-        }
-        // bool isDeviceSupported = await authService.isDeviceSupported();
-        if (!storageService.hasPhoneProtectionEnabled)
-          //|| isDeviceSupported)
-          navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
-      } else
-        navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
-      setBusy(false);
-
-      walletService.storeTokenListInDB();
+      await goToWalletDashboard();
     }
 
     setBusy(false);
+  }
+
+  goToWalletDashboard() async {
+    isWalletVerifySuccess = true;
+    isWallet = true;
+// add here the biometric check
+    if (storageService.hasInAppBiometricAuthEnabled) {
+      if (!authService.isCancelled) await authService.authenticateApp();
+      if (hasAuthenticated) {
+        navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
+        storageService.hasAppGoneInTheBackgroundKey = false;
+      }
+      if (authService.isCancelled || !hasAuthenticated) {
+        isWallet = false;
+        setBusy(false);
+        authService.setIsCancelledValueFalse();
+      }
+      // bool isDeviceSupported = await authService.isDeviceSupported();
+      if (!storageService.hasPhoneProtectionEnabled)
+        //|| isDeviceSupported)
+        navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
+    } else
+      navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
+    setBusy(false);
+
+    walletService.storeTokenListInDB();
   }
 }

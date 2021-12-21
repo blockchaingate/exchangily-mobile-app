@@ -579,6 +579,11 @@ class MoveToExchangeViewModel extends BaseViewModel {
       log.e('Dialog Closed By User');
 
       setBusy(false);
+    } else if (res.isRequiredUpdate) {
+      log.e('Wallet update required');
+      setBusy(false);
+      sharedService.sharedSimpleNotification(
+          AppLocalizations.of(context).importantWalletUpdateNotice);
     } else {
       log.e('Wrong pass');
       setBusy(false);

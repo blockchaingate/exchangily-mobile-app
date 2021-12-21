@@ -57,7 +57,7 @@ class SharedService {
                   Show Simple Notification
 ------------------------------------------------------------------------- */
   sharedSimpleNotification(String content,
-      {String subtitle = '', bool isError = true}) {
+      {String subtitle = '', bool isError = true, int durationInSeconds = 3}) {
     return showSimpleNotification(
         Text(firstCharToUppercase(content),
             textAlign: subtitle.isEmpty ? TextAlign.center : TextAlign.start,
@@ -65,7 +65,7 @@ class SharedService {
                 color: isError ? red : green, fontWeight: FontWeight.w500)),
         position: NotificationPosition.top,
         background: white,
-        duration: Duration(seconds: 3),
+        duration: Duration(seconds: durationInSeconds),
         slideDismissDirection: DismissDirection.startToEnd,
         subtitle: Text(subtitle,
             style: headText5.copyWith(
