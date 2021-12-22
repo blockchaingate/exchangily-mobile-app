@@ -72,6 +72,20 @@ class SettingsView extends StatelessWidget {
               //       )
               : SettingsContainer(model: model),
           bottomNavigationBar: BottomNavBar(count: 4),
+          // floatingActionButton: TextButton(
+          //     child: Text('Click'),
+          //     onPressed: () async {
+          //       // var t = await model.sharedService
+          //       //     .dialogAcceptOrReject('test', 'confirm', 'cancel');
+          //       // print('t $t');
+          //       var x = await model.dialogService.showVerifyDialog(
+          //           title:
+          //               'Current wallet is not compatible with the update, please delete the wallet and re-import again.',
+          //           description: '',
+          //           buttonTitle: 'Delete wallet',
+          //           secondaryButton: '');
+          //       print('x ${x.returnedText} -- ${x.confirmed}');
+          //     }),
         ),
       ),
     );

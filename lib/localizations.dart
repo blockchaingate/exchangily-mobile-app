@@ -1911,6 +1911,12 @@ class AppLocalizations {
     return Intl.message('Verifying Wallet',
         name: 'verifyingWallet', desc: 'verifyingWallet');
   }
+
+  String get deleteWalletConfirmationPopup {
+    return Intl.message('Delete wallet confirmation',
+        name: 'deleteWalletConfirmationPopup',
+        desc: 'deleteWalletConfirmationPopup');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

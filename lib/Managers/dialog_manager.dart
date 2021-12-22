@@ -77,7 +77,7 @@ class _DialogManagerState extends State<DialogManager> {
                 .copyWith(fontWeight: FontWeight.bold)),
         context: context,
         title: request.title,
-        desc: request.description,
+        desc: request.description ?? '',
         closeFunction: () {
           FocusScope.of(context).requestFocus(FocusNode());
           _dialogService.dialogComplete(
@@ -93,18 +93,19 @@ class _DialogManagerState extends State<DialogManager> {
         //   ],
         // ),
         buttons: [
-          DialogButton(
-            color: red,
-            onPressed: () {
-              _dialogService.dialogComplete(DialogResponse(confirmed: false));
+          if (request.secondaryButton.isNotEmpty)
+            DialogButton(
+              color: red,
+              onPressed: () {
+                _dialogService.dialogComplete(DialogResponse(confirmed: false));
 
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              request.secondaryButton,
-              style: Theme.of(context).textTheme.headline4,
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                request.secondaryButton,
+                style: Theme.of(context).textTheme.headline4,
+              ),
             ),
-          ),
           DialogButton(
             color: primaryColor,
             onPressed: () {

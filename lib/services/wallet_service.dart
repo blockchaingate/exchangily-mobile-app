@@ -741,17 +741,35 @@ class WalletService {
 
     String fabAddressFromCreate = jsonDecode(
         walletDataFromCreateOfflineWalletV1.walletBalancesBody)['fabAddress'];
-    String fabAddressFromStorage = walletBalancesBodyFromStorage['fabAddress'];
+    String fabAddressFromStorage = '';
+    String trxAddressFromStorage = '';
+    String fabAddressFromCoreWalletDb = '';
+    String trxAddressFromCoreWalletDb = '';
+    if (walletBalancesBodyFromStorage != null) {
+      fabAddressFromStorage = walletBalancesBodyFromStorage['fabAddress'];
 
+      trxAddressFromStorage = walletBalancesBodyFromStorage['trxAddress'];
+    } else if (await coreWalletDatabaseService.getWalletBalancesBody() !=
+        null) {
+      fabAddressFromCoreWalletDb =
+          await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
+      trxAddressFromCoreWalletDb =
+          await coreWalletDatabaseService.getWalletAddressByTickerName('TRX');
+    }
     String trxAddressFromCreate = jsonDecode(
         walletDataFromCreateOfflineWalletV1.walletBalancesBody)['trxAddress'];
-    String trxAddressFromStorage = walletBalancesBodyFromStorage['trxAddress'];
     log.i(
-        'fabAddressFromCreate $fabAddressFromCreate -- fabAddressFromStorage $fabAddressFromStorage');
-    if (fabAddressFromCreate == fabAddressFromStorage) {
+        'fabAddressFromCreate $fabAddressFromCreate -- fabAddressFromStorage $fabAddressFromStorage -- fabAddressFromCoreWalletDb $fabAddressFromCoreWalletDb');
+    var fabAddressFromStorageToCompare = fabAddressFromStorage.isEmpty
+        ? fabAddressFromCoreWalletDb
+        : fabAddressFromStorage;
+    var trxAddressFromStorageToCompare = trxAddressFromStorage.isEmpty
+        ? trxAddressFromCoreWalletDb
+        : trxAddressFromStorage;
+    if (fabAddressFromCreate == fabAddressFromStorageToCompare) {
       res["fabAddressCheck"] = true;
       log.w('FabVerification passed $res');
-      if (trxAddressFromCreate == trxAddressFromStorage) {
+      if (trxAddressFromCreate == trxAddressFromStorageToCompare) {
         res["trxAddressCheck"] = true;
         log.i('Trx Verification passed $res');
 
@@ -843,11 +861,11 @@ class WalletService {
           walletBalancesBody: walletBalanceBodyJsonString,
         );
       } // for loop ends
-      await coreWalletDatabaseService.getEncryptedMnemonic().then((res) async {
-        if (res.isNotEmpty) {
-          await coreWalletDatabaseService.deleteDb();
-        }
-      });
+      // await coreWalletDatabaseService.getEncryptedMnemonic().then((res) async {
+      //   if (res.isNotEmpty) {
+      //     await coreWalletDatabaseService.deleteDb();
+      //   }
+      // });
 
       log.i("Wallet core model json ${walletCoreModel.toJson()}");
 

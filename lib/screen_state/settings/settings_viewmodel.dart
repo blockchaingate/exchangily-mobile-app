@@ -272,85 +272,84 @@ class SettingsViewmodel extends BaseViewModel {
 
   Future deleteWallet() async {
     errorMessage = '';
-    setBusy(true);
     // log.i('model busy $busy');
-    // await dialogService
-    //     .showDialog(
-    //         title: AppLocalizations.of(context).enterPassword,
-    //         description:
-    //             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-    //         buttonTitle: AppLocalizations.of(context).confirm,
-    //         isSpecialReq: true)
-    //     .then((res) async {
-    //   if (res.confirmed) {
-    isDeleting = true;
-    log.w('deleting wallet');
-    await walletDatabaseService
-        .deleteDb()
-        .whenComplete(() => log.e('wallet database deleted!!'))
-        .catchError((err) => log.e('wallet database CATCH $err'));
+    await dialogService
+        .showVerifyDialog(
+      title: AppLocalizations.of(context).deleteWalletConfirmationPopup,
+      buttonTitle: AppLocalizations.of(context).confirm,
+      secondaryButton: AppLocalizations.of(context).cancel,
+    )
+        .then((res) async {
+      if (res.confirmed) {
+        setBusy(true);
+        isDeleting = true;
+        log.w('deleting wallet');
+        await walletDatabaseService
+            .deleteDb()
+            .whenComplete(() => log.e('wallet database deleted!!'))
+            .catchError((err) => log.e('wallet database CATCH $err'));
 
-    await transactionHistoryDatabaseService
-        .deleteDb()
-        .whenComplete(() => log.e('trnasaction history database deleted!!'))
-        .catchError((err) => log.e('tx history database CATCH $err'));
+        await transactionHistoryDatabaseService
+            .deleteDb()
+            .whenComplete(() => log.e('trnasaction history database deleted!!'))
+            .catchError((err) => log.e('tx history database CATCH $err'));
 
-    await _vaultService
-        .deleteEncryptedData()
-        .whenComplete(() => log.e('encrypted data deleted!!'))
-        .catchError((err) => log.e('delete encrypted CATCH $err'));
+        await _vaultService
+            .deleteEncryptedData()
+            .whenComplete(() => log.e('encrypted data deleted!!'))
+            .catchError((err) => log.e('delete encrypted CATCH $err'));
 
-    await coreWalletDatabaseService
-        .deleteDb()
-        .whenComplete(() => log.e('coreWalletDatabaseService data deleted!!'))
-        .catchError((err) => log.e('coreWalletDatabaseService  CATCH $err'));
+        await coreWalletDatabaseService
+            .deleteDb()
+            .whenComplete(
+                () => log.e('coreWalletDatabaseService data deleted!!'))
+            .catchError(
+                (err) => log.e('coreWalletDatabaseService  CATCH $err'));
 
-    await tokenListDatabaseService
-        .deleteDb()
-        .whenComplete(() => log.e('Token list database deleted!!'))
-        .catchError((err) => log.e('token list database CATCH $err'));
+        await tokenListDatabaseService
+            .deleteDb()
+            .whenComplete(() => log.e('Token list database deleted!!'))
+            .catchError((err) => log.e('token list database CATCH $err'));
 
-    await userSettingsDatabaseService
-        .deleteDb()
-        .whenComplete(() => log.e('User settings database deleted!!'))
-        .catchError((err) => log.e('user setting database CATCH $err'));
+        await userSettingsDatabaseService
+            .deleteDb()
+            .whenComplete(() => log.e('User settings database deleted!!'))
+            .catchError((err) => log.e('user setting database CATCH $err'));
 
 // may need to add old campaign databases here to delete as well
-    storageService.walletBalancesBody = '';
+        storageService.walletBalancesBody = '';
 
-    storageService.isShowCaseView = true;
+        storageService.isShowCaseView = true;
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    log.e('before wallet removal, local storage has ${prefs.getKeys()}');
-    prefs.clear();
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        log.e('before wallet removal, local storage has ${prefs.getKeys()}');
+        prefs.clear();
 
-    storageService.clearStorage();
-    log.e('before local storage service clear ${prefs.getKeys()}');
+        storageService.clearStorage();
+        log.e('before local storage service clear ${prefs.getKeys()}');
 
-    log.e('all keys after clearing ${prefs.getKeys()}');
-    await _deleteCacheDir()
-        .catchError((err) => log.e('delete cache failed $err'));
-    await _deleteAppDir()
-        .catchError((err) => log.e('delete app dir failed $err'));
+        log.e('all keys after clearing ${prefs.getKeys()}');
+        await _deleteCacheDir()
+            .catchError((err) => log.e('delete cache failed $err'));
+        await _deleteAppDir()
+            .catchError((err) => log.e('delete app dir failed $err'));
 
-    Navigator.pushNamed(context, '/');
-    //   } else if (res.returnedText == 'Closed' && !res.confirmed) {
-    //     log.e('Dialog Closed By User');
-    //     isDeleting = false;
-    //     setBusy(false);
-    //     return errorMessage = '';
-    //   } else {
-    //     log.e('Wrong pass');
-    //     setBusy(false);
-    //     isDeleting = false;
-    //     return errorMessage =
-    //         AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
-    //   }
-    // }).catchError((error) {
-    //   log.e(error);
-    //   isDeleting = false;
-    //   setBusy(false);
-    // });
+        Navigator.pushNamed(context, '/');
+      } else if (res.returnedText == 'Closed' && !res.confirmed) {
+        log.e('Dialog Closed By User');
+        isDeleting = false;
+        setBusy(false);
+        return errorMessage = '';
+      } else {
+        log.e('Cancel Button');
+        setBusy(false);
+        isDeleting = false;
+      }
+    }).catchError((error) {
+      log.e(error);
+      isDeleting = false;
+      setBusy(false);
+    });
     isDeleting = false;
     setBusy(false);
   }

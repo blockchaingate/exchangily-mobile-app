@@ -186,6 +186,79 @@ class WalletSetupViewmodel extends BaseViewModel {
     }
   }
 
+  verifyWallet() async {
+    var res = await dialogService.showVerifyDialog(
+        title: 'Important Notice: Wallet Update',
+        secondaryButton: 'Cancel',
+        description:
+            'Please provide the wallet password to verify and install the latest update',
+        buttonTitle: AppLocalizations.of(context).confirm);
+    if (!res.confirmed) {
+      setBusy(false);
+
+      return;
+    } else {
+      isVerifying = true;
+      var res = await dialogService.showDialog(
+          title: AppLocalizations.of(context).enterPassword,
+          description:
+              AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+          buttonTitle: AppLocalizations.of(context).confirm);
+      if (res.confirmed) {
+        var walletVerificationRes =
+            await walletService.verifyWalletAddresses(res.returnedText);
+        isWalletVerifySuccess = walletVerificationRes['fabAddressCheck'] &&
+            walletVerificationRes['trxAddressCheck'];
+        isHideIcon = false;
+        // if wallet verification is true then fill encrypted mnemonic and
+        // addresses in the new corewalletdatabase
+        if (isWalletVerifySuccess) {
+          isVerifying = false;
+          goToWalletDashboard();
+          Future.delayed(new Duration(seconds: 3), () {
+            setBusyForObject(isHideIcon, true);
+            isHideIcon = true;
+            setBusyForObject(isHideIcon, false);
+          });
+        } else {
+          Future.delayed(new Duration(seconds: 3), () {
+            setBusyForObject(isHideIcon, true);
+            isHideIcon = true;
+            setBusyForObject(isHideIcon, false);
+          });
+          isWalletVerifySuccess = false;
+          setBusy(false);
+          // show popup
+          // if wallet verification failed then generate warning
+          // to delete and re-import the wallet
+          // show the warning in the UI and underneath a delete wallet button
+          // which will delete the wallet data and navigate to create/import view
+          sharedService.context = context;
+          await dialogService
+              .showVerifyDialog(
+                  title:
+                      'Current wallet is not compatible with the update, please delete the wallet and re-import again.',
+                  description: '',
+                  buttonTitle: 'Delete wallet',
+                  secondaryButton: '')
+              .then((isDelete) async {
+            await deleteWallet();
+          });
+        }
+      } else if (res.returnedText == 'Closed') {
+        log.e('Dialog Closed By User');
+        // setBusy(false);
+        // return errorMessage = '';
+      } else {
+        log.e('Wrong pass');
+        setBusy(false);
+
+        sharedService.sharedSimpleNotification(
+            AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
+      }
+    }
+  }
+
   Future checkExistingWallet() async {
     setBusy(true);
 
@@ -209,73 +282,13 @@ class WalletSetupViewmodel extends BaseViewModel {
           walletDatabase.isNotEmpty) {
         // ask user's permission to verify the wallet addresses
         // show dialog to user for this reason
-        var res = await dialogService.showVerifyDialog(
-            title: 'Important Notice: Wallet Update',
-            secondaryButton: 'Cancel',
-            description:
-                'Please provide the wallet password to verify and install the latest update',
-            buttonTitle: AppLocalizations.of(context).confirm);
-        if (!res.confirmed) {
-          setBusy(false);
-
-          return;
-        } else {
-          isVerifying = true;
-          var res = await dialogService.showDialog(
-              title: AppLocalizations.of(context).enterPassword,
-              description: AppLocalizations.of(context)
-                  .dialogManagerTypeSamePasswordNote,
-              buttonTitle: AppLocalizations.of(context).confirm);
-          if (res.confirmed) {
-            var walletVerificationRes =
-                await walletService.verifyWalletAddresses(res.returnedText);
-            isWalletVerifySuccess = walletVerificationRes['fabAddressCheck'] &&
-                walletVerificationRes['trxAddressCheck'];
-            isHideIcon = false;
-            // if wallet verification is true then fill encrypted mnemonic and
-            // addresses in the new corewalletdatabase
-            if (isWalletVerifySuccess) {
-              isVerifying = false;
-              goToWalletDashboard();
-              Future.delayed(new Duration(seconds: 3), () {
-                setBusyForObject(isHideIcon, true);
-                isHideIcon = true;
-                setBusyForObject(isHideIcon, false);
-              });
-            } else {
-              Future.delayed(new Duration(seconds: 3), () {
-                setBusyForObject(isHideIcon, true);
-                isHideIcon = true;
-                setBusyForObject(isHideIcon, false);
-              });
-              isWalletVerifySuccess = false;
-              setBusy(false);
-              // show popup
-              // if wallet verification failed then generate warning
-              // to delete and re-import the wallet
-              // show the warning in the UI and underneath a delete wallet button
-              // which will delete the wallet data and navigate to create/import view
-              sharedService.context = context;
-              await sharedService
-                  .dialogAcceptOrReject(
-                      'Current wallet is not compatible with the update, please delete the wallet and re-import again.',
-                      'Delete wallet',
-                      '')
-                  .then((isDelete) async {
-                await deleteWallet();
-              });
-            }
-          } else if (res.returnedText == 'wrong password') {
-            sharedService.sharedSimpleNotification(
-                AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
-          }
-        }
+        await verifyWallet();
       } else {
         isWallet = false;
         isVerifying = false;
       }
     } else if (coreWalletDbData != null || coreWalletDbData.isNotEmpty) {
-      await goToWalletDashboard();
+      await verifyWallet();
     }
     hasVerificationStarted = false;
     setBusy(false);

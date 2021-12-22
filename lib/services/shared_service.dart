@@ -302,54 +302,54 @@ class SharedService {
     navigationService.navigateUsingpopAndPushedNamed(route);
   }
 
-  Future<bool> dialogAcceptOrReject(
-      String title, String acceptButton, String rejectButton) async {
-    return showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                elevation: 10,
-                backgroundColor: globals.walletCardColor.withOpacity(0.85),
-                titleTextStyle: Theme.of(context)
-                    .textTheme
-                    .headline5
-                    .copyWith(fontWeight: FontWeight.bold),
-                contentTextStyle: TextStyle(color: globals.grey),
-                content: Text(
-                  // add here cupertino widget to check in these small widgets first then the entire app
-                  title,
-                  style: TextStyle(fontSize: 14),
-                ),
-                actions: <Widget>[
-                  rejectButton.isEmpty
-                      ? Container()
-                      : TextButton(
-                          child: Text(
-                            rejectButton,
-                            style:
-                                TextStyle(color: globals.white, fontSize: 12),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
-                            return false;
-                          },
-                        ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(red)),
-                    child: Text(acceptButton,
-                        style: TextStyle(color: white, fontSize: 14)),
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                      return true;
-                    },
-                  )
-                ],
-              );
-            }) ??
-        false;
-  }
+  // Future<bool> dialogAcceptOrReject(
+  //     String title, String acceptButton, String rejectButton) async {
+  //   return showDialog(
+  //       barrierDismissible: false,
+  //       context: context,
+  //       builder: (context) {
+  //         return AlertDialog(
+  //           elevation: 10,
+  //           backgroundColor: globals.walletCardColor.withOpacity(0.85),
+  //           titleTextStyle: Theme.of(context)
+  //               .textTheme
+  //               .headline5
+  //               .copyWith(fontWeight: FontWeight.bold),
+  //           contentTextStyle: TextStyle(color: globals.grey),
+  //           content: Text(
+  //             // add here cupertino widget to check in these small widgets first then the entire app
+  //             title,
+  //             style: TextStyle(fontSize: 14),
+  //           ),
+  //           actions: <Widget>[
+  //             rejectButton.isEmpty
+  //                 ? Container()
+  //                 : TextButton(
+  //                     child: Text(
+  //                       rejectButton,
+  //                       style: TextStyle(color: globals.white, fontSize: 12),
+  //                     ),
+  //                     onPressed: () {
+  //                       Navigator.of(context).pop(false);
+  //                       print('res -- False');
+  //                       return false;
+  //                     },
+  //                   ),
+  //             ElevatedButton(
+  //               style: ButtonStyle(
+  //                   backgroundColor: MaterialStateProperty.all(red)),
+  //               child: Text(acceptButton,
+  //                   style: TextStyle(color: white, fontSize: 14)),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop(false);
+  //                 print('res -- True');
+  //                 return true;
+  //               },
+  //             )
+  //           ],
+  //         );
+  //       });
+  // }
 
   Future<bool> closeApp() async {
     return showDialog(
