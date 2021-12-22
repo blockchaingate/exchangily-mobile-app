@@ -305,6 +305,7 @@ class SharedService {
   Future<bool> dialogAcceptOrReject(
       String title, String acceptButton, String rejectButton) async {
     return showDialog(
+            barrierDismissible: false,
             context: context,
             builder: (context) {
               return AlertDialog(
@@ -334,10 +335,13 @@ class SharedService {
                             return false;
                           },
                         ),
-                  TextButton(
+                  ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(red)),
                     child: Text(acceptButton,
-                        style: TextStyle(color: globals.white, fontSize: 12)),
+                        style: TextStyle(color: white, fontSize: 14)),
                     onPressed: () {
+                      Navigator.of(context).pop(false);
                       return true;
                     },
                   )

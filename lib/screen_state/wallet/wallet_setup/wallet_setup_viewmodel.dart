@@ -61,7 +61,9 @@ class WalletSetupViewmodel extends BaseViewModel {
       locator<UserSettingsDatabaseService>();
 
   final _vaultService = locator<VaultService>();
-
+  bool isVerifying = false;
+  bool hasVerificationStarted = false;
+  bool isHideIcon = true;
   init() async {
     await walletService.checkLanguage();
 
@@ -133,90 +135,58 @@ class WalletSetupViewmodel extends BaseViewModel {
 
   Future deleteWallet() async {
     errorMessage = '';
-    bool finalRes = false;
-    setBusy(true);
-    log.i('model busy $busy');
-    await dialogService
-        .showDialog(
-            title: AppLocalizations.of(context).typeYourWalletPassword,
-            description:
-                'To import wallet, provide the wallet password to delete any existing stored data which may negatively affect the import wallet process',
-            buttonTitle: AppLocalizations.of(context).confirm,
-            isSpecialReq: true)
-        .then((res) async {
-      if (res.confirmed) {
-        isDeleting = true;
-        log.w('deleting wallet');
-        await walletDatabaseService
-            .deleteDb()
-            .whenComplete(() => log.e('wallet database deleted!!'))
-            .catchError((err) => log.e('wallet database CATCH $err'));
 
-        await transactionHistoryDatabaseService
-            .deleteDb()
-            .whenComplete(() => log.e('trnasaction history database deleted!!'))
-            .catchError((err) => log.e('tx history database CATCH $err'));
+    setBusyForObject(isDeleting, true);
 
-        await _vaultService
-            .deleteEncryptedData()
-            .whenComplete(() => log.e('encrypted data deleted!!'))
-            .catchError((err) => log.e('delete encrypted CATCH $err'));
+    log.w('deleting wallet');
+    try {
+      await walletDatabaseService
+          .deleteDb()
+          .whenComplete(() => log.e('wallet database deleted!!'))
+          .catchError((err) => log.e('wallet database CATCH $err'));
 
-        await coreWalletDatabaseService
-            .deleteDb()
-            .whenComplete(
-                () => log.e('coreWalletDatabaseService data deleted!!'))
-            .catchError(
-                (err) => log.e('coreWalletDatabaseService  CATCH $err'));
+      await transactionHistoryDatabaseService
+          .deleteDb()
+          .whenComplete(() => log.e('trnasaction history database deleted!!'))
+          .catchError((err) => log.e('tx history database CATCH $err'));
 
-        await tokenListDatabaseService
-            .deleteDb()
-            .whenComplete(() => log.e('Token list database deleted!!'))
-            .catchError((err) => log.e('token list database CATCH $err'));
+      await _vaultService
+          .deleteEncryptedData()
+          .whenComplete(() => log.e('encrypted data deleted!!'))
+          .catchError((err) => log.e('delete encrypted CATCH $err'));
 
-        await userSettingsDatabaseService
-            .deleteDb()
-            .whenComplete(() => log.e('User settings database deleted!!'))
-            .catchError((err) => log.e('user setting database CATCH $err'));
+      await coreWalletDatabaseService
+          .deleteDb()
+          .whenComplete(() => log.e('coreWalletDatabaseService data deleted!!'))
+          .catchError((err) => log.e('coreWalletDatabaseService  CATCH $err'));
 
-        storageService.walletBalancesBody = '';
+      await tokenListDatabaseService
+          .deleteDb()
+          .whenComplete(() => log.e('Token list database deleted!!'))
+          .catchError((err) => log.e('token list database CATCH $err'));
 
-        storageService.isShowCaseView = true;
+      await userSettingsDatabaseService
+          .deleteDb()
+          .whenComplete(() => log.e('User settings database deleted!!'))
+          .catchError((err) => log.e('user setting database CATCH $err'));
 
-        storageService.clearStorage();
-        finalRes = true;
-        return finalRes;
-      } else if (res.returnedText == 'Closed' && !res.confirmed) {
-        log.e('Dialog Closed By User');
-        isDeleting = false;
-        setBusy(false);
-        finalRes = false;
-        return finalRes;
-      } else if (res.returnedText == 'wrong password') {
-        sharedService.sharedSimpleNotification(
-            AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
-      } else {
-        log.e('Wrong pass');
-        setBusy(false);
-        isDeleting = false;
-        finalRes = false;
-        return finalRes;
-      }
-    }).catchError((error) {
-      log.e(error);
-      isDeleting = false;
-      setBusy(false);
-      finalRes = false;
-      return finalRes;
-    });
-    isDeleting = false;
-    setBusy(false);
+      storageService.walletBalancesBody = '';
 
-    return finalRes;
+      storageService.isShowCaseView = true;
+
+      storageService.clearStorage();
+
+      setBusyForObject(isDeleting, false);
+    } catch (err) {
+      setBusyForObject(isDeleting, false);
+
+      errorMessage = 'Wallet deletion failed';
+    }
   }
 
   Future checkExistingWallet() async {
     setBusy(true);
+
     var coreWalletDbData;
 
     try {
@@ -246,49 +216,65 @@ class WalletSetupViewmodel extends BaseViewModel {
         if (!res.confirmed) {
           setBusy(false);
           return;
-        } else
-          await dialogService
-              .showDialog(
-                  title: AppLocalizations.of(context).enterPassword,
-                  description: AppLocalizations.of(context)
-                      .dialogManagerTypeSamePasswordNote,
-                  buttonTitle: AppLocalizations.of(context).confirm)
-              .then((res) async {
-            if (res.confirmed) {
-              var walletVerificationRes =
-                  await walletService.verifyWalletAddresses(res.returnedText);
-              isWalletVerifySuccess =
-                  walletVerificationRes['fabAddressCheck'] &&
-                      walletVerificationRes['trxAddressCheck'];
-              // if wallet verification is true then fill encrypted mnemonic and
-              // addresses in the new corewalletdatabase
-              if (isWalletVerifySuccess) {
-                await goToWalletDashboard();
-              } else {
-                // show popup
-                // if wallet verification failed then generate warning
-                // to delete and re-import the wallet
-                // show the warning in the UI and underneath a delete wallet button
-                // which will delete the wallet data and navigate to create/import view
-                bool res = await sharedService.dialogAcceptOrReject(
-                    'Current wallet is not compatible with the update, please delete the wallet and re-import again and don\'t worry, your funds are safe.',
-                    'Delete wallet',
-                    '');
-                if (res) await deleteWallet();
-                setBusy(false);
-              }
-            } else if (res.returnedText == 'wrong password') {
-              sharedService.sharedSimpleNotification(
-                  AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
+        } else {
+          isVerifying = true;
+          var res = await dialogService.showDialog(
+              title: AppLocalizations.of(context).enterPassword,
+              description: AppLocalizations.of(context)
+                  .dialogManagerTypeSamePasswordNote,
+              buttonTitle: AppLocalizations.of(context).confirm);
+          if (res.confirmed) {
+            var walletVerificationRes =
+                await walletService.verifyWalletAddresses(res.returnedText);
+            isWalletVerifySuccess = walletVerificationRes['fabAddressCheck'] &&
+                walletVerificationRes['trxAddressCheck'];
+            isHideIcon = false;
+            // if wallet verification is true then fill encrypted mnemonic and
+            // addresses in the new corewalletdatabase
+            if (isWalletVerifySuccess) {
+              isVerifying = false;
+              goToWalletDashboard();
+              Future.delayed(new Duration(seconds: 3), () {
+                setBusyForObject(isHideIcon, true);
+                isHideIcon = true;
+                setBusyForObject(isHideIcon, false);
+              });
+            } else {
+              Future.delayed(new Duration(seconds: 3), () {
+                setBusyForObject(isHideIcon, true);
+                isHideIcon = true;
+                setBusyForObject(isHideIcon, false);
+              });
+              isWalletVerifySuccess = false;
+              setBusy(false);
+              // show popup
+              // if wallet verification failed then generate warning
+              // to delete and re-import the wallet
+              // show the warning in the UI and underneath a delete wallet button
+              // which will delete the wallet data and navigate to create/import view
+              sharedService.context = context;
+              await sharedService
+                  .dialogAcceptOrReject(
+                      'Current wallet is not compatible with the update, please delete the wallet and re-import again.',
+                      'Delete wallet',
+                      '')
+                  .then((isDelete) async {
+                await deleteWallet();
+              });
             }
-          });
+          } else if (res.returnedText == 'wrong password') {
+            sharedService.sharedSimpleNotification(
+                AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
+          }
+        }
       } else {
         isWallet = false;
+        isVerifying = false;
       }
     } else if (coreWalletDbData != null || coreWalletDbData.isNotEmpty) {
       await goToWalletDashboard();
     }
-
+    hasVerificationStarted = false;
     setBusy(false);
   }
 

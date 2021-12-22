@@ -74,16 +74,43 @@ class WalletSetupView extends StatelessWidget {
                     Image.asset('assets/images/start-page/middle-design.png'),
               ),
               // UIHelper.verticalSpaceLarge,
-
+              model.isDeleting
+                  ? Text(
+                      '${AppLocalizations.of(context).deletingWallet}',
+                      style: Theme.of(context).textTheme.bodyText1,
+                    )
+                  : Container(),
+              !model.isBusy && model.errorMessage.isNotEmpty
+                  ? Text(
+                      '${model.errorMessage}',
+                      style: Theme.of(context).textTheme.bodyText1,
+                    )
+                  : Container(),
+              model.isHideIcon
+                  ? Container()
+                  : model.isWalletVerifySuccess
+                      ? Icon(Icons.check_box_outlined, color: green, size: 32)
+                      : Icon(Icons.cancel_outlined, color: red, size: 32),
               // Button Container
               model.isBusy
                   ? Shimmer.fromColors(
                       baseColor: globals.primaryColor,
                       highlightColor: globals.white,
                       child: Center(
-                        child: Text(
-                          '${AppLocalizations.of(context).checkingExistingWallet}...',
-                          style: Theme.of(context).textTheme.bodyText1,
+                        child: Column(
+                          children: [
+                            Text(
+                              '${AppLocalizations.of(context).checkingExistingWallet}...',
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                            model.isVerifying
+                                ? Text(
+                                    '${AppLocalizations.of(context).verifyingWallet}',
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  )
+                                : Container()
+                          ],
                         ),
                       ),
                     )

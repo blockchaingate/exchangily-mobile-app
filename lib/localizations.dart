@@ -1906,6 +1906,11 @@ class AppLocalizations {
         name: 'importantWalletUpdateNotice',
         desc: 'importantWalletUpdateNotice');
   }
+
+  String get verifyingWallet {
+    return Intl.message('Verifying Wallet',
+        name: 'verifyingWallet', desc: 'verifyingWallet');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
