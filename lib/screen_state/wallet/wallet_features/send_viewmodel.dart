@@ -210,6 +210,9 @@ class SendViewModel extends BaseViewModel {
 
   Future sendTransaction() async {
     setBusy(true);
+    errorMessage = '';
+    isShowErrorDetailsButton = false;
+    isShowDetailsMessage = false;
     var dialogResponse = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -396,12 +399,17 @@ class SendViewModel extends BaseViewModel {
           setBusy(false);
         });
       }
-    } else if (dialogResponse.returnedText != 'Closed') {
+    } else if (dialogResponse.returnedText == 'Closed') {
+      setBusy(false);
+    } else if (dialogResponse.isRequiredUpdate) {
+      log.e('Wallet update required');
+      setBusy(false);
+      return errorMessage =
+          AppLocalizations.of(context).importantWalletUpdateNotice;
+    } else {
       setBusy(false);
       return errorMessage =
           AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
-    } else {
-      setBusy(false);
     }
     transFee = 0.0;
     setBusy(false);

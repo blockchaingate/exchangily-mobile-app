@@ -1902,7 +1902,7 @@ class AppLocalizations {
 
   String get importantWalletUpdateNotice {
     return Intl.message(
-        'Important Wallet Update Notice: Please delete the current wallet in Settings and then re-import',
+        'Invalid password: If you fill the valid password then please delete the current wallet in Settings and then re-import, to use the latest wallet',
         name: 'importantWalletUpdateNotice',
         desc: 'importantWalletUpdateNotice');
   }

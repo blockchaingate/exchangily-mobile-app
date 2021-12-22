@@ -249,7 +249,7 @@ class _DialogManagerState extends State<DialogManager> {
                   } else if (encryptedMnemonic.isNotEmpty) {
                     await _vaultService
                         .decryptMnemonic(controller.text, encryptedMnemonic,
-                            isDeleteWalletReq: request.isSpecialReq)
+                            isDeleteWalletReq: request.isSpecialReq ?? false)
                         .then((data) {
                       finalRes = data;
                     });

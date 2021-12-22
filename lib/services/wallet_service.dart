@@ -576,7 +576,7 @@ class WalletService {
                 Generate BCH address
 ----------------------------------------------------------------------*/
 
-  String generateBchAddress(String mnemonic) {
+  Future<String> generateBchAddress(String mnemonic) async {
     String tickerName = 'BCH';
     var bchSeed = generateSeed(mnemonic);
     final masterNode = Bitbox.HDNode.fromSeed(bchSeed);
@@ -587,7 +587,7 @@ class WalletService {
     final childNode = accountNode.derive(0);
     final address = childNode.toCashAddress();
     // final address = cashAddress.split(":")[1];
-    getBchAddressDetails(address);
+    await getBchAddressDetails(address);
 
     return address;
   }
@@ -805,7 +805,7 @@ class WalletService {
     var root = generateBip32Root(seed);
 
     // BCH address
-    String bchAddress = generateBchAddress(mnemonic);
+    String bchAddress = await generateBchAddress(mnemonic);
     String trxAddress = generateTrxAddress(mnemonic);
 
     try {
@@ -854,8 +854,7 @@ class WalletService {
       if (!isVerifying) {
         // encrypt the mnemonic
         if (key.isNotEmpty && mnemonic.isNotEmpty) {
-          var encryptedMnemonic =
-              await vaultService.encryptMnemonic(key, mnemonic);
+          var encryptedMnemonic = vaultService.encryptMnemonic(key, mnemonic);
 
           log.i('encryptedMnemonic $encryptedMnemonic');
 
@@ -888,7 +887,7 @@ class WalletService {
     var root = generateBip32Root(seed);
 
     // BCH address
-    String bchAddress = generateBchAddress(mnemonic);
+    String bchAddress = await generateBchAddress(mnemonic);
     String trxAddress = generateTrxAddress(mnemonic);
 
     try {
@@ -1737,6 +1736,7 @@ class WalletService {
       int satoshisPerBytes,
       addressList,
       getTransFeeOnly) async {
+    amount = amount ?? 0.0;
     final txb = new BitcoinFlutter.TransactionBuilder(
         network: environment["chains"]["BTC"]["network"]);
     final root = bip32.BIP32.fromSeed(seed);

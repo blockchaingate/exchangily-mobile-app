@@ -104,17 +104,19 @@ class WalletSetupViewmodel extends BaseViewModel {
           // then import
 
           // otherwise ask user for wallet password to delete the existing wallet
-          bool hasExistingWalletDeletionCompleted = await deleteWallet();
-          if (hasExistingWalletDeletionCompleted) {
+          await deleteWallet().whenComplete(() {
             // if not then just navigate to the route
             if (actionType == 'import')
               navigationService.navigateTo(ImportWalletViewRoute,
                   arguments: actionType);
             else if (actionType == 'create')
               navigationService.navigateTo(BackupMnemonicViewRoute);
-          } else {
+          }).catchError((err) {
             log.e('Existing wallet deletion could not be completed');
-          }
+          });
+        } else if (res.returnedText == 'wrong password') {
+          sharedService.sharedSimpleNotification(
+              AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
         } else if (!res.confirmed && res.returnedText != 'Closed') {
           // if user wants to restore that then call check existing wallet func
           await checkExistingWallet();
@@ -215,6 +217,7 @@ class WalletSetupViewmodel extends BaseViewModel {
             buttonTitle: AppLocalizations.of(context).confirm);
         if (!res.confirmed) {
           setBusy(false);
+
           return;
         } else {
           isVerifying = true;

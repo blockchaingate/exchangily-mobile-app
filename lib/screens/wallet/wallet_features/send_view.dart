@@ -146,8 +146,10 @@ class SendWalletView extends StatelessWidget {
                                       activatedNegativeValues: false)
                                 ],
                                 onChanged: (String amount) {
-                                  model.amount = double.parse(amount);
-                                  model.checkAmount();
+                                  if (amount.isNotEmpty) {
+                                    model.amount = double.parse(amount);
+                                    model.checkAmount();
+                                  }
                                 },
                                 keyboardType: TextInputType.numberWithOptions(
                                     decimal: true), // numnber keyboard

@@ -77,5 +77,5 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 -----END CERTIFICATE-----""";
 
   static String ImportantWalletUpdateText =
-      'Important Wallet Update Notice: Please delete the current wallet in Settings and then re-import';
+      'Invalid password: If you fill the valid password then please delete the current wallet in Settings and then re-import, to use the latest wallet';
 }
