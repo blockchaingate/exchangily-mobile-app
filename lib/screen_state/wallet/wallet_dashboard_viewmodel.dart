@@ -21,7 +21,6 @@ import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/issue_token.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
-import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -129,6 +128,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   final fabUtils = FabUtils();
   List<Map<String, int>> walletDecimalList = [];
   List<IssueTokenModel> issueTokens = [];
+  List<IssueTokenModel> selectedCustomTokens = [];
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -152,39 +152,89 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     setBusy(false);
     issueTokens = await apiService.getIssueTokens();
+    await buildSelectedCustomTokenList();
   }
 
-  // addCustomToken
+// Send custom token
+  sendCustomToken(String smartContractAddress, int decimal) async {}
 
+// build Selected custom token list
+
+  buildSelectedCustomTokenList() async {
+    selectedCustomTokens.clear();
+    String selectedCustomTokensJson = storageService.customTokens;
+    if (selectedCustomTokensJson != null && selectedCustomTokensJson != '') {
+      setBusyForObject(selectedCustomTokens, true);
+      List<IssueTokenModel> customTokensFromStorage =
+          (jsonDecode(selectedCustomTokensJson) as List<dynamic>)
+              .cast<IssueTokenModel>();
+
+      selectedCustomTokens = customTokensFromStorage;
+      setBusyForObject(selectedCustomTokens, false);
+
+      log.w('selectedCustomTokens length ${selectedCustomTokens.length}');
+      selectedCustomTokens.forEach((token) {
+        print('token ${token.toJson()}');
+      });
+    }
+  }
+
+  getCustomTokenBalance() {}
+
+  // addCustomToken
   showCustomTokensBottomSheet() async {
-    navigationService.goBack();
+    // it checks the already addes tokens
+    // and show added checkmark infront of those tokens
+    // as well as remove button which will remove the token from the list
+
     if (issueTokens.isNotEmpty)
       showModalBottomSheet(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
           context: context,
-          builder: (context) => Container(
-                height: 500,
-                child: Column(
-                  children: [
-                    // Row(children: [
-                    //   Text('Symbol'),
-                    //   Text('Symbol'),
-                    //   Text('Symbol'),
-                    // ]),
-                    // ListTile(
-                    //   leading: Text('Symbol'),
-                    //   title: Text('Name'),
-                    //   trailing: Text('Total Supply'),
-                    // ),
-                    ListView.builder(
-                        itemCount: issueTokens.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            leading: Text(issueTokens[index].symbol),
-                            title: Text(issueTokens[index].name),
-                            trailing: Text(issueTokens[index].totalSupply),
-                          );
-                        }),
-                  ],
+          builder: (BuildContext context) => FractionallySizedBox(
+                heightFactor: 0.8,
+                child: Container(
+                  //  height: 500,
+                  child: ListView.builder(
+                      itemCount: issueTokens.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          onTap: () {
+                            if (!selectedCustomTokens
+                                .contains(issueTokens[index])) {
+                              // on adding the token
+                              // need to save its tokenId and decimal
+                              // by using which then app can get the balances
+                              // one by one and displays it in the UI
+                              setBusyForObject(selectedCustomTokens, true);
+                              selectedCustomTokens.add(issueTokens[index]);
+
+                              setBusyForObject(selectedCustomTokens, false);
+                            }
+                            log.i(
+                                'customTokens - length ${selectedCustomTokens.length}');
+                            var jsonString = [];
+                            jsonString = selectedCustomTokens
+                                .map((cToken) => jsonEncode(cToken.toJson()))
+                                .toList();
+                            print('jsonString $jsonString');
+                            storageService.customTokens = jsonString.toString();
+                            log.w(
+                                'storageService.customTokens ${storageService.customTokens}');
+                          },
+                          leading: Text(issueTokens[index].symbol.toUpperCase(),
+                              style: TextStyle(color: white, fontSize: 12)),
+                          title: Text(issueTokens[index].name,
+                              style: TextStyle(
+                                  color: primaryColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold)),
+                          trailing: Text(issueTokens[index].totalSupply,
+                              style: TextStyle(color: grey, fontSize: 14)),
+                        );
+                      }),
                 ),
               ));
     else

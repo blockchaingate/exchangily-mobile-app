@@ -75,28 +75,23 @@ class WalletDashboardView extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.blue,
                       ),
-                      child: Text('eXchangily'),
+                      child: Text('eXchangily', style: TextStyle(fontSize: 20)),
                     ),
                     ListTile(
                       title: Row(children: [
-                        Icon(Icons.add, color: white),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: Icon(Icons.add, color: primaryColor, size: 20),
+                        ),
                         Text('Add Custom Token')
                       ]),
                       onTap: () {
                         model.showCustomTokensBottomSheet();
                       },
                     ),
-                    ListTile(
-                      title: const Text('Item 2'),
-                      onTap: () {
-                        // Update the state of the app.
-                        // ...
-                      },
-                    ),
                   ],
                 ),
               ),
-
               body: GestureDetector(
                 onTap: () {
                   FocusScope.of(context).requestFocus(FocusNode());
@@ -379,7 +374,7 @@ class WalletDashboardView extends StatelessWidget {
                         //      ?
                         SingleChildScrollView(
                           child: DefaultTabController(
-                            length: 2,
+                            length: 3,
                             initialIndex: model.currentTabSelection,
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -411,15 +406,24 @@ class WalletDashboardView extends StatelessWidget {
                                                     fontSize: 10, color: grey))
                                           ],
                                         ),
-                                        // Text(
-                                        //     AppLocalizations.of(context)
-                                        //         .allAssets,
-                                        //     style: Theme.of(context)
-                                        //         .textTheme
-                                        //         .bodyText1
-                                        //         .copyWith(
-                                        //             fontWeight: FontWeight.w500,
-                                        //             decorationThickness: 3)),
+                                        // custom tokens
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.dashboard_customize,
+                                                color: primaryColor, size: 18),
+                                            Text(' Custom Tokens'),
+                                            UIHelper.horizontalSpaceSmall,
+                                            Text(
+                                                model
+                                                    .selectedCustomTokens.length
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 10, color: grey))
+                                          ],
+                                        ),
+                                        // Fav tab
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -493,13 +497,50 @@ class WalletDashboardView extends StatelessWidget {
                                                 //),
                                                 ),
 
-                                        // Fav coins tab
-                                        // Text(model.favWalletInfoList.length
-                                        //     .toString())
-                                        // model.anyObjectsBusy
-                                        //     ? model.sharedService
-                                        //         .loadingIndicator()
-                                        //     :
+                                        // Custom tokens tab
+                                        model.busy(model.selectedCustomTokens)
+                                            ? model.sharedService
+                                                .loadingIndicator()
+                                            : Container(
+                                                child: ListView.builder(
+                                                    //                 //  itemExtent: 100,
+                                                    shrinkWrap: true,
+                                                    itemCount: model
+                                                        .selectedCustomTokens
+                                                        .length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      var customToken = model
+                                                              .selectedCustomTokens[
+                                                          index];
+                                                      return Text(
+                                                          index.toString(),
+                                                          style: TextStyle(
+                                                              color: white));
+                                                      // ListTile(
+                                                      //     leading: Text(
+                                                      //         customToken
+                                                      //             .symbol),
+                                                      //     title: Text(
+                                                      //         customToken
+                                                      //             .name),
+                                                      //     trailing:
+                                                      //         ElevatedButton(
+                                                      //             onPressed:
+                                                      //                 () {
+                                                      //               model.sendCustomToken(
+                                                      //                   customToken
+                                                      //                       .tokenId,
+                                                      //                   customToken
+                                                      //                       .decimal);
+                                                      //             },
+                                                      //             child: Text(
+                                                      //                 AppLocalizations.of(context)
+                                                      //                     .send)));
+                                                    }),
+                                              ),
+
                                         FavTab(),
                                       ],
                                     ),
@@ -624,17 +665,17 @@ class WalletDashboardView extends StatelessWidget {
                 ),
               ),
               bottomNavigationBar: BottomNavBar(count: 0),
-              // floatingActionButton: Container(
-              //   color: white,
-              //   child: IconButton(
-              //     icon: model.isTopOfTheList
-              //         ? Icon(Icons.arrow_downward)
-              //         : Icon(Icons.arrow_upward),
-              //     onPressed: () async {
-              //       model.moveDown();
-              //     },
-              //   ),
-              // ),
+              floatingActionButton: Container(
+                color: white,
+                child: IconButton(
+                  icon: model.isTopOfTheList
+                      ? Icon(Icons.arrow_downward)
+                      : Icon(Icons.arrow_upward),
+                  onPressed: () async {
+                    model.showCustomTokensBottomSheet();
+                  },
+                ),
+              ),
             ),
           );
         });

@@ -319,6 +319,42 @@ class FabUtils {
   print(bs58check.encode(decoded));
   */
 
+  Future getFabTokenBalanceForABIForCustomTokens(
+      String balanceInfoABI, String smartContractAddress, String address,
+      [int decimal]) async {
+    var body = {
+      'address': trimHexPrefix(smartContractAddress),
+      'data': balanceInfoABI + fixLength(trimHexPrefix(address), 64)
+    };
+    var tokenBalance = 0.0;
+    var url = fabBaseUrl + 'callcontract';
+    print(
+        'Fab_util -- address $address getFabTokenBalanceForABI balance by address url -- $url -- body $body');
+    try {
+      var response = await client.post(url, body: body);
+      var json = jsonDecode(response.body);
+      var unlockBalance = json['executionResult']['output'];
+
+      if (unlockBalance == null || unlockBalance == '') {
+        return 0.0;
+      }
+      // var unlockInt = int.parse(unlockBalance, radix: 16a);
+      var unlockInt = BigInt.parse(unlockBalance, radix: decimal);
+
+      if ((decimal != null) && (decimal > 0)) {
+        tokenBalance =
+            ((unlockInt) / BigInt.parse(pow(10, decimal).toString()));
+      } else {
+        tokenBalance = bigNum2Double(unlockInt);
+        // print('tokenBalance for EXG==');
+        // print(tokenBalance);
+      }
+
+      //print('tokenBalance===' + tokenBalance.toString());
+    } catch (e) {}
+    return tokenBalance;
+  }
+
   Future getFabTokenBalanceForABI(
       String balanceInfoABI, String smartContractAddress, String address,
       [int decimal]) async {

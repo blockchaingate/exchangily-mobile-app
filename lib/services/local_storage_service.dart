@@ -25,6 +25,7 @@ class LocalStorageService {
   static const String CancelBiometricAuthKey = 'cancelbiometricAuthKey';
   static const String PhoneProtectedKey = 'phoneProtectedKey';
   static const String AppGoneInTheBackgroundKey = 'appGoneInTheBackgroundKey';
+  static const String CustomTokensKey = 'customTokensKey';
 
 /*----------------------------------------------------------------------
                   Instance
@@ -89,6 +90,12 @@ class LocalStorageService {
     }
     return objLength;
   }
+
+  // Custom tokens
+
+  String get customTokens => _getFromDisk(CustomTokensKey) ?? '';
+
+  set customTokens(String value) => _saveToDisk(CustomTokensKey, value);
 
 /*----------------------------------------------------------------------
                 Wallet Decimal List
