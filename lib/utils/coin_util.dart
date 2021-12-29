@@ -509,7 +509,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     var v = '';
 
     var signedMess;
-    if (coinName == 'TRX' || tokenType == 'TRX') {
+    if (coinName == 'TRX' || tokenType == 'TRX' || tokenType == 'TRON') {
       var privateKey = TronAddressUtil.generateTrxPrivKeyBySeed(seed);
       //var bytes = CryptoWeb3.hexToBytes(originalMessage);
 
@@ -650,7 +650,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       print('fabTokensOfficialAddress $fabTokensOfficialAddress for $coinName');
       return fabTokensOfficialAddress;
     }
-    if (tokenType == 'TRX') {
+    if (tokenType == 'TRX' || tokenType == 'TRON') {
       String trxTokensOfficialAddress =
           environment['addresses']['exchangilyOfficial'][9]['address'];
       print('TRXTokensOfficialAddress $trxTokensOfficialAddress for $coinName');

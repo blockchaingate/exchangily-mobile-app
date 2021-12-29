@@ -23,7 +23,7 @@ class CoinService {
       print('fabTokensOfficialAddress $fabTokensOfficialAddress for $coinName');
       return fabTokensOfficialAddress;
     }
-    if (tokenType == 'TRX') {
+    if (tokenType == 'TRX' || tokenType == 'TRON') {
       String trxTokensOfficialAddress =
           environment['addresses']['exchangilyOfficial'][9]['address'];
       print('TRXTokensOfficialAddress $trxTokensOfficialAddress for $coinName');

@@ -403,6 +403,7 @@ class WalletFeaturesView extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 2),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Container(
@@ -424,6 +425,7 @@ class WalletFeaturesView extends StatelessWidget {
                     )),
                 Text(
                   model.features[index].name,
+                  textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.subtitle1,
                 )
               ],

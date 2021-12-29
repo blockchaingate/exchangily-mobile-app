@@ -773,13 +773,13 @@ class WalletService {
         res["trxAddressCheck"] = true;
         log.i('Trx Verification passed $res');
 
-        var walletCoreModel = CoreWalletModel(
-          id: 1,
-          walletBalancesBody:
-              walletDataFromCreateOfflineWalletV1.walletBalancesBody,
-        );
-        // store in single core database
-        await coreWalletDatabaseService.insert(walletCoreModel);
+        // var walletCoreModel = CoreWalletModel(
+        //   id: 1,
+        //   walletBalancesBody:
+        //       walletDataFromCreateOfflineWalletV1.walletBalancesBody,
+        // );
+        // // store in single core database
+        // await coreWalletDatabaseService.update(walletCoreModel);
       } else
         res["trxAddressCheck"] = false;
     } else {

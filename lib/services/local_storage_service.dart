@@ -25,6 +25,7 @@ class LocalStorageService {
   static const String CancelBiometricAuthKey = 'cancelbiometricAuthKey';
   static const String PhoneProtectedKey = 'phoneProtectedKey';
   static const String AppGoneInTheBackgroundKey = 'appGoneInTheBackgroundKey';
+  static const String WalletVerificationKey = 'walletVerificationKey';
 
 /*----------------------------------------------------------------------
                   Instance
@@ -89,6 +90,13 @@ class LocalStorageService {
     }
     return objLength;
   }
+
+/*----------------------------------------------------------------------
+                walelt verification
+----------------------------------------------------------------------*/
+  bool get hasWalletVerified => _getFromDisk(WalletVerificationKey) ?? false;
+  set hasWalletVerified(bool value) =>
+      _saveToDisk(WalletVerificationKey, value);
 
 /*----------------------------------------------------------------------
                 Wallet Decimal List

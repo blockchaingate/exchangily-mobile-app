@@ -12,11 +12,8 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_viewmodel.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
@@ -31,7 +28,7 @@ class WalletSetupView extends StatelessWidget {
       viewModelBuilder: () => WalletSetupViewmodel(),
       onModelReady: (WalletSetupViewmodel model) async {
         model.context = context;
-        await model.checkVersion(context);
+
         model.init();
       },
       builder: (context, WalletSetupViewmodel model, child) => WillPopScope(

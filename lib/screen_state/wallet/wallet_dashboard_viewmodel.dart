@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
@@ -1266,47 +1267,60 @@ class WalletDashboardViewModel extends BaseViewModel {
     // get the walletbalancebody from the DB
     var walletBalancesBodyFromDB =
         await coreWalletDatabaseService.getWalletBalancesBody();
+    var finalWbb;
+    if (walletBalancesBodyFromDB == null) {
+      finalWbb = storageService.walletBalancesBody;
+      var walletCoreModel = CoreWalletModel(
+        id: 1,
+        walletBalancesBody: finalWbb,
+      );
+      // store in single core database
+      await coreWalletDatabaseService.insert(walletCoreModel);
+    }
     if (walletBalancesBodyFromDB != null) {
-      walletBalancesApiRes = await this.apiService.getWalletBalance(
-          jsonDecode(walletBalancesBodyFromDB['walletBalancesBody']));
-      log.w('walletBalances LENGTH ${walletBalancesApiRes.length}');
-      wallets = walletBalancesApiRes;
-      walletsCopy = wallets;
-      setBusy(false);
-      calcTotalBal();
+      finalWbb = walletBalancesBodyFromDB['walletBalancesBody'];
+    }
+    walletBalancesApiRes =
+        await this.apiService.getWalletBalance(jsonDecode(finalWbb));
+    log.w('walletBalances LENGTH ${walletBalancesApiRes.length}');
+    wallets = walletBalancesApiRes;
+    walletsCopy = wallets;
+    setBusy(false);
+    calcTotalBal();
 
-      await checkToUpdateWallet();
-      moveTronUsdt();
-      moveTron();
-      // get exg address to get free fab
-      await getGas();
-      // check gas and fab balance if 0 then ask for free fab
-      if (gasAmount == 0.0 && fabBalance == 0.0) {
-        String address = await walletService
-            .getAddressFromCoreWalletDatabaseByTickerName('FAB');
-        if (storageService.isShowCaseView != null) {
-          if (storageService.isShowCaseView) {
-            storageService.isShowCaseView = true;
-            _isShowCaseView = true;
-          }
-        } else {
+    await checkToUpdateWallet();
+    moveTronUsdt();
+    moveTron();
+    // get exg address to get free fab
+    await getGas();
+    // check gas and fab balance if 0 then ask for free fab
+    if (gasAmount == 0.0 && fabBalance == 0.0 && totalWalletBalance.isEmpty) {
+      String address = await walletService
+          .getAddressFromCoreWalletDatabaseByTickerName('FAB');
+      if (storageService.isShowCaseView != null) {
+        if (storageService.isShowCaseView) {
           storageService.isShowCaseView = true;
           _isShowCaseView = true;
         }
-        var res = await apiService.getFreeFab(address);
-        if (res != null) {
-          isFreeFabNotUsed = res['ok'];
-        }
       } else {
-        log.i('Fab or gas balance available already');
-        // storageService.isShowCaseView = false;
+        storageService.isShowCaseView = true;
+        _isShowCaseView = true;
+      }
+      var res = await apiService.getFreeFab(address);
+      if (res != null) {
+        isFreeFabNotUsed = res['ok'];
       }
     } else {
-      walletBalancesApiRes = [];
-      log.e('Core wallet db empty');
-      navigationService
-          .navigateUsingPushNamedAndRemoveUntil(WalletSetupViewRoute);
+      log.i('Fab or gas balance available already');
+      // storageService.isShowCaseView = false;
     }
+
+    // else {
+    //   walletBalancesApiRes = [];
+    //   log.e('Core wallet db empty');
+    //   // navigationService
+    //   //     .navigateUsingPushNamedAndRemoveUntil(WalletSetupViewRoute);
+    // }
 
     return walletBalancesApiRes;
   }

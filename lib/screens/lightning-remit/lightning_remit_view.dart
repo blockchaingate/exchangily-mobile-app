@@ -236,8 +236,7 @@ class LightningRemitView extends StatelessWidget {
                                       ? print('busy')
                                       : model.transfer();
                                 },
-                                child: Text(
-                                    AppLocalizations.of(context).tranfser,
+                                child: Text(AppLocalizations.of(context).send,
                                     style:
                                         Theme.of(context).textTheme.headline4),
                               ),

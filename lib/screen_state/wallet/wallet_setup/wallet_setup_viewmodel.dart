@@ -65,14 +65,10 @@ class WalletSetupViewmodel extends BaseViewModel {
   bool hasVerificationStarted = false;
   bool isHideIcon = true;
   init() async {
-    await walletService.checkLanguage();
-
     sharedService.context = context;
 
     await checkExistingWallet();
-  }
-
-  Future checkVersion(context) async {
+    await walletService.checkLanguage();
     await versionService.checkVersion(context);
   }
 
@@ -187,6 +183,7 @@ class WalletSetupViewmodel extends BaseViewModel {
   }
 
   verifyWallet() async {
+    storageService.hasWalletVerified = true;
     var res = await dialogService.showVerifyDialog(
         title: 'Important Notice: Wallet Update',
         secondaryButton: 'Cancel',
@@ -278,17 +275,31 @@ class WalletSetupViewmodel extends BaseViewModel {
       } catch (err) {
         walletDatabase = [];
       }
+      // CHECK TO VERIFY IF OLD DATA IS SAVED IN STORAGE
       if (storageService.walletBalancesBody.isNotEmpty ||
           walletDatabase.isNotEmpty) {
         // ask user's permission to verify the wallet addresses
         // show dialog to user for this reason
-        await verifyWallet();
+        if (!storageService.hasWalletVerified)
+          await verifyWallet();
+        else {
+          isVerifying = false;
+          goToWalletDashboard();
+        }
       } else {
         isWallet = false;
         isVerifying = false;
       }
-    } else if (coreWalletDbData != null || coreWalletDbData.isNotEmpty) {
-      await verifyWallet();
+    }
+    // IF THERE IS NO OLD DATA IN STORAGE BUT NEW CORE WALLET DATA IS PRESENT IN DATABASE
+    // THEN VERIFY AGAIN IF STORED DATA IS NOT PREVIOUSLY VERIGFIED
+    else if (coreWalletDbData != null || coreWalletDbData.isNotEmpty) {
+      if (!storageService.hasWalletVerified)
+        await verifyWallet();
+      else {
+        isVerifying = false;
+        goToWalletDashboard();
+      }
     }
     hasVerificationStarted = false;
     setBusy(false);

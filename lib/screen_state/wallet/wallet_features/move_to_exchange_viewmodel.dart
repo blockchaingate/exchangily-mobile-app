@@ -1,28 +1,23 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 import '../../../logger.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 
 class MoveToExchangeViewModel extends BaseViewModel {
   final log = getLogger('MoveToExchangeViewModel');
@@ -66,6 +61,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     setBusy(true);
     coinName = walletInfo.tickerName;
     if (coinName == 'FAB') walletInfo.tokenType = '';
+    if (coinName == 'USDTX') walletInfo.tokenType = 'TRX';
     tokenType = walletInfo.tokenType;
     //   if (coinName != 'TRX' && coinName != 'USDTX') {
     setFee();

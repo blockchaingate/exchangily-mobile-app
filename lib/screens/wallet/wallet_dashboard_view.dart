@@ -132,7 +132,7 @@ class WalletDashboardView extends StatelessWidget {
                                       alignment: Alignment.center,
                                       children: <Widget>[
                                         Positioned(
-                                          top: -10,
+                                          top: -30,
                                           child: Image.asset(
                                             'assets/images/start-page/logo.png',
                                             width: 180,
@@ -694,7 +694,7 @@ Widget _coinDetailsCard(
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline6
-                                        .copyWith(color: globals.primaryColor)),
+                                        .copyWith(color: white)),
                               ),
                       ],
                     ),
@@ -1457,7 +1457,8 @@ class TotalBalanceWidget extends StatelessWidget {
                         UIHelper.verticalSpaceSmall,
                         model.isBusy
                             ? Container()
-                            : Row(
+                            : Column(
+                                mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   // Column(

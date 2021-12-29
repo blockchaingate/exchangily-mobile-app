@@ -11,13 +11,12 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_viewmodel.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
-import '../../../shared/globals.dart' as globals;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 
@@ -46,7 +45,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           centerTitle: true,
           title: Text(AppLocalizations.of(context).secureYourWallet,
               style: Theme.of(context).textTheme.headline4),
-          backgroundColor: globals.secondaryColor,
+          backgroundColor: secondaryColor,
         ),
         body: Container(
             padding: EdgeInsets.all(15),
@@ -73,7 +72,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             ? Center(
                                 child: Text(
                                 AppLocalizations.of(context).passwordMatched,
-                                style: TextStyle(color: globals.white),
+                                style: TextStyle(color: white),
                               ))
                             : model.password.isEmpty ||
                                     model.confirmPassword.isEmpty
@@ -82,7 +81,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                     child: Text(
                                         AppLocalizations.of(context)
                                             .passwordDoesNotMatched,
-                                        style: TextStyle(color: globals.grey)))
+                                        style: TextStyle(color: grey)))
                         : Text(''),
                     UIHelper.verticalSpaceSmall,
                     Center(
@@ -90,14 +89,14 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             style: Theme.of(context)
                                 .textTheme
                                 .headline5
-                                .copyWith(color: globals.red))),
+                                .copyWith(color: red))),
                     UIHelper.verticalSpaceLarge,
                     UIHelper.verticalSpaceLarge,
                     Center(
                       child: model.isBusy
                           ? Shimmer.fromColors(
-                              baseColor: globals.primaryColor,
-                              highlightColor: globals.grey,
+                              baseColor: primaryColor,
+                              highlightColor: grey,
                               child: Text(
                                 widget.args['isImport']
                                     ? AppLocalizations.of(context)
@@ -147,17 +146,17 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         obscureText: true,
         maxLength: 32,
         style: model.checkPasswordConditions
-            ? TextStyle(color: globals.primaryColor, fontSize: 16)
-            : TextStyle(color: globals.grey, fontSize: 16),
+            ? TextStyle(color: primaryColor, fontSize: 16)
+            : TextStyle(color: grey, fontSize: 16),
         decoration: InputDecoration(
             suffixIcon:
                 model.checkPasswordConditions && model.password.isNotEmpty
                     ? Padding(
                         padding: EdgeInsets.only(right: 0),
-                        child: Icon(Icons.check, color: globals.primaryColor))
+                        child: Icon(Icons.check, color: primaryColor))
                     : Padding(
                         padding: EdgeInsets.only(right: 0),
-                        child: Icon(Icons.clear, color: globals.grey)),
+                        child: Icon(Icons.clear, color: grey)),
             labelText: AppLocalizations.of(context).enterPassword,
             prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headline5,
@@ -179,17 +178,18 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         obscureText: true,
         maxLength: 32,
         style: model.checkConfirmPasswordConditions
-            ? TextStyle(color: globals.primaryColor, fontSize: 16)
-            : TextStyle(color: globals.grey, fontSize: 16),
+            ? TextStyle(color: primaryColor, fontSize: 16)
+            : TextStyle(color: grey, fontSize: 16),
         decoration: InputDecoration(
+            hintStyle: TextStyle(color: Colors.white),
             suffixIcon: model.checkConfirmPasswordConditions &&
                     model.confirmPassword.isNotEmpty
                 ? Padding(
                     padding: EdgeInsets.only(right: 0),
-                    child: Icon(Icons.check, color: globals.primaryColor))
+                    child: Icon(Icons.check, color: primaryColor))
                 : Padding(
                     padding: EdgeInsets.only(right: 0),
-                    child: Icon(Icons.clear, color: globals.grey)),
+                    child: Icon(Icons.clear, color: grey)),
             labelText: AppLocalizations.of(context).confirmPassword,
             prefixIcon: Icon(Icons.lock, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headline5,
@@ -210,7 +210,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
       minWidth: double.infinity,
       child: MaterialButton(
         padding: EdgeInsets.all(15),
-        color: globals.primaryColor,
+        color: primaryColor,
         textColor: Colors.white,
         onPressed: () {
           // Remove the on screen keyboard by shifting focus to unused focus node
