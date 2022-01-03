@@ -10,6 +10,7 @@ class IssueTokenModel {
   String tokenId; // smart contract address
   String status;
   int decimal;
+  double balance;
 
   IssueTokenModel(
       {this.owner,
@@ -20,8 +21,10 @@ class IssueTokenModel {
       this.txid,
       this.tokenId,
       this.status,
-      this.decimal}) {
+      this.decimal,
+      this.balance}) {
     this.decimal ?? 18;
+    this.balance ?? 0.0;
   }
 
   IssueTokenModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +37,7 @@ class IssueTokenModel {
     tokenId = json['tokenId'];
     status = json['status'];
     decimal = json['decimal'] ?? 18;
+    balance = json['balance'] ?? 0.0;
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +51,7 @@ class IssueTokenModel {
     data['tokenId'] = this.tokenId;
     data['status'] = this.status;
     data['decimal'] = this.decimal;
+    data['balance'] = this.balance;
     return data;
   }
 }

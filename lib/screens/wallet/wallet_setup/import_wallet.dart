@@ -42,7 +42,10 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
             centerTitle: true,
             title: Text(
               AppLocalizations.of(context).importWallet,
-              style: TextStyle(fontSize: 12),
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             backgroundColor: globals.secondaryColor),
         body: Container(

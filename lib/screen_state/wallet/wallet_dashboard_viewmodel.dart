@@ -15,8 +15,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
-import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/issue_token.dart';
@@ -170,16 +170,21 @@ class WalletDashboardViewModel extends BaseViewModel {
               .cast<IssueTokenModel>();
 
       selectedCustomTokens = customTokensFromStorage;
-      setBusyForObject(selectedCustomTokens, false);
 
       log.w('selectedCustomTokens length ${selectedCustomTokens.length}');
-      selectedCustomTokens.forEach((token) {
+      selectedCustomTokens.forEach((token) async {
         print('token ${token.toJson()}');
+        token.balance = await getCustomTokenBalance(token.tokenId);
       });
+      setBusyForObject(selectedCustomTokens, false);
     }
   }
 
-  getCustomTokenBalance() {}
+  Future<double> getCustomTokenBalance(String tokenId) async {
+    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    return await fabUtils.getFabTokenBalanceForABIForCustomTokens(
+        Constants.CustomTokenSignatureAbi, tokenId, fabAddress);
+  }
 
   // addCustomToken
   showCustomTokensBottomSheet() async {

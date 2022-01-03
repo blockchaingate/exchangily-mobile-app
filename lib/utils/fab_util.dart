@@ -319,7 +319,7 @@ class FabUtils {
   print(bs58check.encode(decoded));
   */
 
-  Future getFabTokenBalanceForABIForCustomTokens(
+  Future<double> getFabTokenBalanceForABIForCustomTokens(
       String balanceInfoABI, String smartContractAddress, String address,
       [int decimal]) async {
     var body = {
@@ -351,7 +351,10 @@ class FabUtils {
       }
 
       //print('tokenBalance===' + tokenBalance.toString());
-    } catch (e) {}
+    } catch (e) {
+      log.e('Catch getFabTokenBalanceForABIForCustomTokens - $e');
+      tokenBalance = 0.0;
+    }
     return tokenBalance;
   }
 

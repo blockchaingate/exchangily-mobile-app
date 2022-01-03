@@ -514,30 +514,43 @@ class WalletDashboardView extends StatelessWidget {
                                                       var customToken = model
                                                               .selectedCustomTokens[
                                                           index];
-                                                      return Text(
-                                                          index.toString(),
-                                                          style: TextStyle(
-                                                              color: white));
-                                                      // ListTile(
-                                                      //     leading: Text(
-                                                      //         customToken
-                                                      //             .symbol),
-                                                      //     title: Text(
-                                                      //         customToken
-                                                      //             .name),
-                                                      //     trailing:
-                                                      //         ElevatedButton(
-                                                      //             onPressed:
-                                                      //                 () {
-                                                      //               model.sendCustomToken(
-                                                      //                   customToken
-                                                      //                       .tokenId,
-                                                      //                   customToken
-                                                      //                       .decimal);
-                                                      //             },
-                                                      //             child: Text(
-                                                      //                 AppLocalizations.of(context)
-                                                      //                     .send)));
+                                                      return ListTile(
+                                                          leading: Text(
+                                                            customToken.symbol
+                                                                .toUpperCase(),
+                                                            style: TextStyle(
+                                                                color: grey),
+                                                          ),
+                                                          title: Column(
+                                                            children: [
+                                                              Text(customToken
+                                                                  .name),
+                                                              Row(
+                                                                children: [
+                                                                  Text(AppLocalizations.of(
+                                                                          context)
+                                                                      .balance),
+                                                                  Text(customToken
+                                                                      .balance
+                                                                      .toString()),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          trailing:
+                                                              ElevatedButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    model.sendCustomToken(
+                                                                        customToken
+                                                                            .tokenId,
+                                                                        customToken
+                                                                            .decimal);
+                                                                  },
+                                                                  child: Text(
+                                                                      AppLocalizations.of(
+                                                                              context)
+                                                                          .send)));
                                                     }),
                                               ),
 
@@ -668,9 +681,7 @@ class WalletDashboardView extends StatelessWidget {
               floatingActionButton: Container(
                 color: white,
                 child: IconButton(
-                  icon: model.isTopOfTheList
-                      ? Icon(Icons.arrow_downward)
-                      : Icon(Icons.arrow_upward),
+                  icon: Icon(Icons.accessible_outlined),
                   onPressed: () async {
                     model.showCustomTokensBottomSheet();
                   },
