@@ -92,6 +92,7 @@ class KanbanUtils {
     String fullVersion = versionName + '+' + buildNumber;
     print('fullVersion $fullVersion');
     var body = {
+      'app': 'exchangily',
       'version': fullVersion,
       'rawTransaction': rawTransaction,
       'rawKanbanTransaction': rawKanbanTransaction
@@ -139,6 +140,7 @@ class KanbanUtils {
     String fullVersion = versionName + '+' + buildNumber;
     print('fullVersion $fullVersion');
     var body = {
+      'app': 'exchangily',
       'version': fullVersion,
       'rawKanbanTransaction': rawKanbanTransaction
     };
@@ -170,6 +172,7 @@ class KanbanUtils {
     String fullVersion = versionName + '+' + buildNumber;
     print('fullVersion $fullVersion');
     var body = {
+      'app': 'exchangily',
       'version': fullVersion,
       'signedTransactionData': rawKanbanTransaction
     };
