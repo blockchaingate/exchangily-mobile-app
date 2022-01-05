@@ -155,43 +155,58 @@ class WalletDashboardViewModel extends BaseViewModel {
     await buildSelectedCustomTokenList();
   }
 
+  testSomething() {
+    // fabUtils.getFabTokenBalanceForABIForCustomTokens(
+    //     Constants.CustomTokenSignatureAbi,
+    //     "fd603e9098f46dabaed3209819cfb027b105e406",
+    //     "0xdcd0f23125f74ef621dfa3310625f8af0dcd971b",
+    //     18);
+    print(BigInt.tryParse(
+        '000000000000000000000000000000000000000000115eec47f6cf7e35000000',
+        radix: 16));
+  }
+
 // Send custom token
   sendCustomToken(String smartContractAddress, int decimal) async {}
 
 // build Selected custom token list
 
-  buildSelectedCustomTokenList() async {
+  Future buildSelectedCustomTokenList() async {
+    log.i('Building selected custom token list...');
+    String fabAddress = await sharedService.getExgAddressFromWalletDatabase();
     selectedCustomTokens.clear();
     String selectedCustomTokensJson = storageService.customTokens;
     if (selectedCustomTokensJson != null && selectedCustomTokensJson != '') {
-      setBusyForObject(selectedCustomTokens, true);
       List<IssueTokenModel> customTokensFromStorage =
-          (jsonDecode(selectedCustomTokensJson) as List<dynamic>)
-              .cast<IssueTokenModel>();
+          IssueTokenModelList.fromJson(jsonDecode(selectedCustomTokensJson))
+              .issueTokens;
 
       selectedCustomTokens = customTokensFromStorage;
 
-      log.w('selectedCustomTokens length ${selectedCustomTokens.length}');
+      log.w(
+          'selectedCustomTokens length ${selectedCustomTokens.length} --selectedCustomTokens last item ${selectedCustomTokens.last.toJson()}');
       selectedCustomTokens.forEach((token) async {
         print('token ${token.toJson()}');
-        token.balance = await getCustomTokenBalance(token.tokenId);
+        var balance = await fabUtils.getFabTokenBalanceForABI(
+            Constants.CustomTokenSignatureAbi,
+            token.tokenId,
+            fabAddress,
+            token.decimal);
+        setBusyForObject(selectedCustomTokens, true);
+        token.balance = balance;
+        setBusyForObject(selectedCustomTokens, false);
       });
-      setBusyForObject(selectedCustomTokens, false);
     }
-  }
-
-  Future<double> getCustomTokenBalance(String tokenId) async {
-    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
-    return await fabUtils.getFabTokenBalanceForABIForCustomTokens(
-        Constants.CustomTokenSignatureAbi, tokenId, fabAddress);
+    log.w('Selected custom token list => Finished');
   }
 
   // addCustomToken
   showCustomTokensBottomSheet() async {
-    // it checks the already addes tokens
+    // todo checks the already added tokens
     // and show added checkmark infront of those tokens
     // as well as remove button which will remove the token from the list
 
+    var isMatched;
     if (issueTokens.isNotEmpty)
       showModalBottomSheet(
           shape: RoundedRectangleBorder(
@@ -199,53 +214,123 @@ class WalletDashboardViewModel extends BaseViewModel {
           ),
           context: context,
           builder: (BuildContext context) => FractionallySizedBox(
-                heightFactor: 0.8,
-                child: Container(
-                  //  height: 500,
-                  child: ListView.builder(
-                      itemCount: issueTokens.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          onTap: () {
-                            if (!selectedCustomTokens
-                                .contains(issueTokens[index])) {
-                              // on adding the token
-                              // need to save its tokenId and decimal
-                              // by using which then app can get the balances
-                              // one by one and displays it in the UI
-                              setBusyForObject(selectedCustomTokens, true);
-                              selectedCustomTokens.add(issueTokens[index]);
+                heightFactor: 0.9,
+                child: StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+                  return Container(
+                    padding: EdgeInsets.all(5),
+                    //  height: 500,
+                    child: ListView.builder(
+                        itemCount: issueTokens.length,
+                        itemBuilder: (context, index) {
+                          try {
+                            isMatched = selectedCustomTokens
+                                .firstWhere((element) =>
+                                    element.tokenId ==
+                                    issueTokens[index].tokenId)
+                                .symbol;
 
-                              setBusyForObject(selectedCustomTokens, false);
-                            }
-                            log.i(
-                                'customTokens - length ${selectedCustomTokens.length}');
-                            var jsonString = [];
-                            jsonString = selectedCustomTokens
-                                .map((cToken) => jsonEncode(cToken.toJson()))
-                                .toList();
-                            print('jsonString $jsonString');
-                            storageService.customTokens = jsonString.toString();
+                            print(
+                                '${issueTokens[index].symbol} -- is in the selectedCustomTokens list ? $isMatched match found -- with token id ${issueTokens[index].tokenId}');
+                          } catch (err) {
+                            isMatched = null;
                             log.w(
-                                'storageService.customTokens ${storageService.customTokens}');
-                          },
-                          leading: Text(issueTokens[index].symbol.toUpperCase(),
-                              style: TextStyle(color: white, fontSize: 12)),
-                          title: Text(issueTokens[index].name,
-                              style: TextStyle(
-                                  color: primaryColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold)),
-                          trailing: Text(issueTokens[index].totalSupply,
-                              style: TextStyle(color: grey, fontSize: 14)),
-                        );
-                      }),
-                ),
+                                'no match found for ${issueTokens[index].symbol} with token id ${issueTokens[index].tokenId}');
+                          }
+                          return Row(children: [
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                children: [
+                                  Text(issueTokens[index].symbol.toUpperCase(),
+                                      style: TextStyle(
+                                          color: white, fontSize: 12)),
+                                  Text(issueTokens[index].name,
+                                      style: TextStyle(
+                                          color: primaryColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold))
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                children: [
+                                  Text('Total Supply',
+                                      style: TextStyle(
+                                          color: primaryColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                  Text(issueTokens[index].totalSupply,
+                                      style:
+                                          TextStyle(color: grey, fontSize: 14))
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                  isMatched == null ? green : sellPrice,
+                                )),
+                                onPressed: () {
+                                  int tokenIndexToRemove = selectedCustomTokens
+                                      .indexWhere((element) =>
+                                          element.tokenId ==
+                                          issueTokens[index].tokenId);
+                                  setBusyForObject(selectedCustomTokens, true);
+
+                                  if (tokenIndexToRemove.isNegative) {
+                                    setState(() => selectedCustomTokens
+                                        .add(issueTokens[index]));
+                                  } else {
+                                    log.i(
+                                        'selectedCustomTokens - length before removing token ${selectedCustomTokens.length}');
+                                    setState(() => selectedCustomTokens
+                                        .removeAt(tokenIndexToRemove));
+
+                                    log.e(
+                                        'selectedCustomTokens - length --selectedCustomTokens.length => removed token ${issueTokens[index].symbol}');
+                                  }
+                                  setBusyForObject(selectedCustomTokens, false);
+
+                                  log.i(
+                                      'customTokens - length ${selectedCustomTokens.length}');
+                                  var jsonString = [];
+                                  jsonString = selectedCustomTokens
+                                      .map((cToken) =>
+                                          jsonEncode(cToken.toJson()))
+                                      .toList();
+                                  storageService.customTokens = '';
+                                  storageService.customTokens =
+                                      jsonString.toString();
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                          isMatched == null ? 'Add' : 'Remove',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 12)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ]);
+                        }),
+                  );
+                }),
               ));
     else
       log.e('Issue token list empty');
   }
-// TODO add decimalLimit property in the wallet info and fill it in the refresh balance from local stored decimal data
+// Todo: add decimalLimit property in the wallet info and
+// Todo: fill it in the refresh balance from local stored decimal data
 
   storeWalletDecimalData() async {
     walletDecimalList = [];

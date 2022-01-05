@@ -497,61 +497,187 @@ class WalletDashboardView extends StatelessWidget {
                                                 //),
                                                 ),
 
-                                        // Custom tokens tab
+                                        // ! Custom tokens tab
                                         model.busy(model.selectedCustomTokens)
                                             ? model.sharedService
                                                 .loadingIndicator()
-                                            : Container(
-                                                child: ListView.builder(
-                                                    //                 //  itemExtent: 100,
-                                                    shrinkWrap: true,
-                                                    itemCount: model
-                                                        .selectedCustomTokens
-                                                        .length,
-                                                    itemBuilder:
-                                                        (BuildContext context,
-                                                            int index) {
-                                                      var customToken = model
-                                                              .selectedCustomTokens[
-                                                          index];
-                                                      return ListTile(
-                                                          leading: Text(
-                                                            customToken.symbol
-                                                                .toUpperCase(),
-                                                            style: TextStyle(
-                                                                color: grey),
-                                                          ),
-                                                          title: Column(
+                                            : Column(
+                                                children: [
+                                                  // edit custom token list(add/remove)
+                                                  Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: TextButton(
+                                                          onPressed: () => model
+                                                              .showCustomTokensBottomSheet(),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
                                                             children: [
-                                                              Text(customToken
-                                                                  .name),
-                                                              Row(
-                                                                children: [
-                                                                  Text(AppLocalizations.of(
-                                                                          context)
-                                                                      .balance),
-                                                                  Text(customToken
-                                                                      .balance
-                                                                      .toString()),
-                                                                ],
+                                                              // add icon and text
+                                                              Icon(
+                                                                Icons.edit,
+                                                                color: yellow,
+                                                                size: 16,
                                                               ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            4.0),
+                                                                child: Text(
+                                                                    'Edit Token List'),
+                                                              ),
+
+                                                              // remove icon and text
                                                             ],
-                                                          ),
-                                                          trailing:
-                                                              ElevatedButton(
-                                                                  onPressed:
-                                                                      () {
-                                                                    model.sendCustomToken(
+                                                          ))),
+
+                                                  // symbol balance action text row
+                                                  Container(
+                                                    color: white,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 15,
+                                                            vertical: 5),
+                                                    child: Row(
+                                                      children: [
+                                                        Text('Logo'),
+                                                        UIHelper
+                                                            .horizontalSpaceMedium,
+                                                        Expanded(
+                                                            flex: 1,
+                                                            child:
+                                                                Text('Symbol')),
+                                                        Expanded(
+                                                            flex: 3,
+                                                            child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)
+                                                                  .balance,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            )),
+                                                        Expanded(
+                                                            flex: 1,
+                                                            child:
+                                                                Text('Action'))
+                                                      ],
+                                                    ),
+                                                  ),
+
+                                                  Container(
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 15,
+                                                            vertical: 10),
+                                                    child: ListView.builder(
+                                                        //                 //  itemExtent: 100,
+                                                        shrinkWrap: true,
+                                                        itemCount: model
+                                                            .selectedCustomTokens
+                                                            .length,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          var customToken =
+                                                              model.selectedCustomTokens[
+                                                                  index];
+                                                          return Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              // logo
+                                                              Container(
+                                                                width: 25,
+                                                                height: 25,
+                                                                decoration: BoxDecoration(
+                                                                    image: DecorationImage(
+                                                                        image: NetworkImage(
+                                                                          'https://test.blockchaingate.com/v2/issuetoken/${customToken.tokenId}/logo',
+                                                                        ),
+                                                                        fit: BoxFit.cover),
+                                                                    borderRadius: BorderRadius.circular(10.0)),
+                                                              ),
+                                                              UIHelper
+                                                                  .horizontalSpaceMedium,
+                                                              // Symbol and name
+                                                              Expanded(
+                                                                flex: 1,
+                                                                child: Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    // UIHelper
+                                                                    //     .verticalSpaceSmall,
+                                                                    Text(
+                                                                      customToken
+                                                                          .symbol
+                                                                          .toUpperCase(),
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              grey),
+                                                                    ),
+                                                                    Text(
+                                                                      customToken
+                                                                          .name,
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              white),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+
+                                                              // balance
+                                                              Expanded(
+                                                                flex: 3,
+                                                                child: model.busy(
+                                                                        model
+                                                                            .selectedCustomTokens)
+                                                                    ? Text(
+                                                                        '...')
+                                                                    : Text(
                                                                         customToken
-                                                                            .tokenId,
-                                                                        customToken
-                                                                            .decimal);
-                                                                  },
-                                                                  child: Text(
-                                                                      AppLocalizations.of(
-                                                                              context)
-                                                                          .send)));
-                                                    }),
+                                                                            .balance
+                                                                            .toString(),
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                white),
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                      ),
+                                                              ),
+                                                              UIHelper
+                                                                  .horizontalSpaceSmall,
+                                                              // action
+                                                              Expanded(
+                                                                  flex: 1,
+                                                                  child: ElevatedButton(
+                                                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(primaryColor)),
+                                                                      onPressed: () {
+                                                                        model.sendCustomToken(
+                                                                            customToken.tokenId,
+                                                                            customToken.decimal);
+                                                                      },
+                                                                      child: Text(AppLocalizations.of(context).send)))
+                                                            ],
+                                                          );
+                                                        }),
+                                                  ),
+                                                ],
                                               ),
 
                                         FavTab(),
@@ -678,15 +804,10 @@ class WalletDashboardView extends StatelessWidget {
                 ),
               ),
               bottomNavigationBar: BottomNavBar(count: 0),
-              floatingActionButton: Container(
-                color: white,
-                child: IconButton(
-                  icon: Icon(Icons.accessible_outlined),
-                  onPressed: () async {
-                    model.showCustomTokensBottomSheet();
-                  },
-                ),
-              ),
+              // floatingActionButton: TextButton(
+              //   child: Text('Click me to test something'),
+              //   onPressed: () => model.testSomething(),
+              // ),
             ),
           );
         });
