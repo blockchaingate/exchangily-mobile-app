@@ -70,7 +70,7 @@ class SendViewModel extends BaseViewModel {
   String serverError = '';
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   final receiverWalletAddressTextController = TextEditingController();
-  final sendAmountTextController = TextEditingController();
+  final amountController = TextEditingController();
   final gasPriceTextController = TextEditingController();
   final gasLimitTextController = TextEditingController();
   final satoshisPerByteTextController = TextEditingController();
@@ -87,6 +87,8 @@ class SendViewModel extends BaseViewModel {
   String fabAddress = '';
   String transFeeErrMsg = '';
   double unconfirmedBalance = 0.0;
+  bool isValidAmount = true;
+  double chainBalance = 0.0;
 
   // Init State
   initState() async {
@@ -103,8 +105,18 @@ class SendViewModel extends BaseViewModel {
     decimalLimit =
         await walletService.getSingleCoinWalletDecimalLimit(coinName);
     if (decimalLimit == null) decimalLimit = 8;
-    //  await getGasBalance();
+    if (tokenType.isNotEmpty) await getNativeChainTickerBalance();
     setBusy(false);
+  }
+
+  // get native chain ticker balance
+  getNativeChainTickerBalance() async {
+    if (fabAddress.isEmpty)
+      fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+
+    await apiService
+        .getSingleWalletBalance(fabAddress, tokenType, walletInfo.address)
+        .then((walletBalance) => chainBalance = walletBalance.first.balance);
   }
 
   /*---------------------------------------------------
@@ -166,16 +178,82 @@ class SendViewModel extends BaseViewModel {
         : false;
   }
 
-  fillMaxAmount() {
+/*---------------------------------------------------
+                  Amount After fee
+--------------------------------------------------- */
+  Future<double> amountAfterFee({bool isMaxAmount = false}) async {
     setBusy(true);
-    sendAmountTextController.text = NumberUtil()
-        .truncateDoubleWithoutRouding(walletInfo.availableBalance,
-            precision: decimalLimit)
-        .toString();
-    log.i(sendAmountTextController.text);
+
+    if (amountController.text.isEmpty) {
+      transFee = 0.0;
+      setBusy(false);
+      return 0.0;
+    }
+    amount = NumberUtil().truncateDoubleWithoutRouding(
+        double.parse(amountController.text),
+        precision: decimalLimit);
+
+    double finalAmount = 0.0;
+    // update if transfee is 0
+    if (!walletService.isTrx(walletInfo.tickerName)) await updateTransFee();
+    // if tron coins then assign fee accordingly
+    if (walletService.isTrx(walletInfo.tickerName)) {
+      if (walletInfo.tickerName == 'USDTX') {
+        transFee = 15;
+        finalAmount = amount;
+      }
+
+      if (walletInfo.tickerName == 'TRX') {
+        transFee = 1.0;
+        finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
+
+        isMaxAmount ? isValidAmount = true : isValidAmount = false;
+
+        !isMaxAmount ? isValidAmount = false : isValidAmount = true;
+      }
+    } else {
+      // in any token transfer, gas fee is paid in native tokens so
+      // in case of non-native tokens, need to check the balance of native tokens
+      // so that there is fee to pay when transffering non-native tokens
+      if (tokenType.isEmpty) {
+        if (isMaxAmount)
+          finalAmount = amount - transFee;
+        else
+          finalAmount = amount + transFee;
+      } else
+        finalAmount = amount;
+
+      finalAmount <= walletInfo.availableBalance
+          ? isValidAmount = true
+          : isValidAmount = false;
+    }
+    log.i(
+        'Func:amountAfterFee --  entered amount $amount + transaction fee $transFee = finalAmount $finalAmount after fee --  wallet bal ${walletInfo.availableBalance} -- isValidAmount $isValidAmount');
     setBusy(false);
-    amount = double.parse(sendAmountTextController.text);
-    checkAmount();
+    return finalAmount;
+  }
+
+/*---------------------------------------------------
+                  Fill Max Amount
+--------------------------------------------------- */
+  fillMaxAmount() async {
+    setBusy(true);
+
+    amount = walletInfo.availableBalance;
+    amountController.text = amount.toString();
+
+    await updateTransFee();
+    double finalAmount = 0.0;
+
+    finalAmount = await amountAfterFee(isMaxAmount: true);
+    if (transFee != 0.0)
+      amountController.text = NumberUtil()
+          .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)
+          .toString();
+    else
+      sharedService.sharedSimpleNotification(
+          AppLocalizations.of(context).insufficientGasAmount);
+    setBusy(false);
   }
 
   showDetailsMessageToggle() {
@@ -343,7 +421,7 @@ class SendViewModel extends BaseViewModel {
           if (txHash.isNotEmpty) {
             log.w('Txhash $txHash');
             receiverWalletAddressTextController.text = '';
-            sendAmountTextController.text = '';
+            amountController.text = '';
             isShowErrorDetailsButton = false;
             isShowDetailsMessage = false;
             sharedService.alertDialog(
@@ -492,18 +570,17 @@ class SendViewModel extends BaseViewModel {
     Check Fields to see if user has filled both address and amount fields correctly
 ------------------------------------------------------------------------------------*/
   checkFields(context) async {
-    print('in check fields');
+    log.w('in check fields');
     txHash = '';
     errorMessage = '';
-    //walletInfo = walletInfo;
-    if (sendAmountTextController.text == '') {
+    if (amountController.text == '') {
       print('amount empty');
       sharedService.alertDialog(AppLocalizations.of(context).amountMissing,
           AppLocalizations.of(context).invalidAmount,
           isWarning: false);
       return;
     }
-    amount = double.tryParse(sendAmountTextController.text);
+    // amount = double.tryParse(amountController.text);
     toAddress = receiverWalletAddressTextController.text;
 
     if (!isTrx()) {
@@ -571,15 +648,6 @@ class SendViewModel extends BaseViewModel {
           position: NotificationPosition.top,
           background: sellPrice);
       await updateTransFee();
-
-      return;
-    }
-
-    if (!checkSendAmount || amount == 0.0) {
-      print('amount no good');
-      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-          AppLocalizations.of(context).pleaseEnterValidNumber,
-          isWarning: false);
 
       return;
     }
@@ -709,7 +777,14 @@ class SendViewModel extends BaseViewModel {
     log.i('in update trans fee');
     var to = coinUtils.getOfficalAddress(walletInfo.tickerName.toUpperCase(),
         tokenType: walletInfo.tokenType.toUpperCase());
-    amount = double.tryParse(sendAmountTextController.text);
+    //amount = double.tryParse(amountController.text);
+
+    if (to == null || amount == null || amount <= 0) {
+      transFee = 0.0;
+      setBusy(false);
+      return;
+    }
+
     var gasPrice = int.tryParse(gasPriceTextController.text);
     var gasLimit = int.tryParse(gasLimitTextController.text);
     var satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);

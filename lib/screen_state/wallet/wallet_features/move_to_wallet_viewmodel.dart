@@ -655,6 +655,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                             borderRadius: BorderRadius.all(Radius.circular(4)),
                             child: Text(
                               AppLocalizations.of(context).close,
+                              textAlign: TextAlign.center,
                               style: bodyText2.copyWith(
                                   fontWeight: FontWeight.bold),
                             ),
@@ -698,14 +699,18 @@ class MoveToWalletViewmodel extends BaseViewModel {
                                 child: Text('e.g. FAB and FAB(ERC20)',
                                     style: headText5),
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  updateIsAlert(false);
-                                },
-                                child: Text(
-                                  AppLocalizations.of(context).close,
-                                  style: TextStyle(color: red),
+                              Container(
+                                alignment: Alignment.center,
+                                child: TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    updateIsAlert(false);
+                                  },
+                                  child: Text(
+                                    AppLocalizations.of(context).close,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: red),
+                                  ),
                                 ),
                               )
                             ])
@@ -1088,13 +1093,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
     isSubmittingTx = true;
     try {
       if (amountController.text.isEmpty) {
-        sharedService.showInfoFlushbar(
-            AppLocalizations.of(context).minimumAmountError,
-            AppLocalizations.of(context)
-                .yourWithdrawMinimumAmountaIsNotSatisfied,
-            Icons.cancel,
-            red,
-            context);
+        sharedService.sharedSimpleNotification(
+            AppLocalizations.of(context).amountMissing,
+            subtitle: AppLocalizations.of(context).pleaseEnterValidNumber);
         setBusy(false);
         return;
       }

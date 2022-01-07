@@ -219,8 +219,9 @@ class WalletService {
     return res;
   }
 
-  Future<bool> checkCoinWalletBalance(double amount, String tickerName) async {
-    bool isCorrectAmount = true;
+  Future<bool> hasSufficientWalletBalance(
+      double amount, String tickerName) async {
+    bool isValidAmount = true;
     String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
     String coinAddress = await walletDatabaseService
         .getWalletBytickerName(tickerName)
@@ -232,16 +233,16 @@ class WalletService {
       if (walletBalance != null) {
         log.w(walletBalance[0].balance);
         if (walletBalance[0].balance < amount)
-          isCorrectAmount = false;
+          isValidAmount = false;
         else
-          isCorrectAmount = true;
+          isValidAmount = true;
       }
     }).catchError((err) {
       log.e(err);
 
       throw Exception(err);
     });
-    return isCorrectAmount;
+    return isValidAmount;
   }
 
 /*----------------------------------------------------------------------

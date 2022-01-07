@@ -66,32 +66,32 @@ class WalletDashboardView extends StatelessWidget {
             child: Scaffold(
               key: _scaffoldKey,
               endDrawerEnableOpenDragGesture: true,
-              drawer: Drawer(
-                child: ListView(
-                  // Important: Remove any padding from the ListView.
-                  padding: EdgeInsets.zero,
-                  children: [
-                    const DrawerHeader(
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                      ),
-                      child: Text('eXchangily', style: TextStyle(fontSize: 20)),
-                    ),
-                    ListTile(
-                      title: Row(children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 4.0),
-                          child: Icon(Icons.add, color: primaryColor, size: 20),
-                        ),
-                        Text('Add Custom Token')
-                      ]),
-                      onTap: () {
-                        model.showCustomTokensBottomSheet();
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              // drawer: Drawer(
+              //   child: ListView(
+              //     // Important: Remove any padding from the ListView.
+              //     padding: EdgeInsets.zero,
+              //     children: [
+              //       const DrawerHeader(
+              //         decoration: BoxDecoration(
+              //           color: Colors.blue,
+              //         ),
+              //         child: Text('eXchangily', style: TextStyle(fontSize: 20)),
+              //       ),
+              //       ListTile(
+              //         title: Row(children: [
+              //           Padding(
+              //             padding: const EdgeInsets.only(right: 4.0),
+              //             child: Icon(Icons.add, color: primaryColor, size: 20),
+              //           ),
+              //           Text('Add Custom Token')
+              //         ]),
+              //         onTap: () {
+              //           model.showCustomTokensBottomSheet();
+              //         },
+              //       ),
+              //     ],
+              //   ),
+              // ),
               body: GestureDetector(
                 onTap: () {
                   FocusScope.of(context).requestFocus(FocusNode());
@@ -111,7 +111,7 @@ class WalletDashboardView extends StatelessWidget {
                   builder: Builder(
                     builder: (context) => ListView(
                       children: <Widget>[
-//   Build Background and Logo Container
+                        //   Build Background and Logo Container
 
                         Container(
                           // width: double.infinity,
@@ -124,32 +124,34 @@ class WalletDashboardView extends StatelessWidget {
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                Expanded(
-                                  child: Stack(
-                                    clipBehavior: Clip.none,
-                                    children: <Widget>[
-                                      Positioned(
-                                        top: 5,
-                                        right: 5,
-                                        child: IconButton(
-                                          icon: Icon(Icons.menu,
-                                              color: globals.white, size: 30),
-                                          onPressed: () {
-                                            _scaffoldKey.currentState
-                                                .openDrawer();
-                                          },
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                // drawer menu button
+
+                                // Expanded(
+                                //   child: Stack(
+                                //     clipBehavior: Clip.none,
+                                //     children: <Widget>[
+                                //       Positioned(
+                                //         top: 5,
+                                //         right: 5,
+                                //         child: IconButton(
+                                //           icon: Icon(Icons.menu,
+                                //               color: globals.white, size: 30),
+                                //           onPressed: () {
+                                //             _scaffoldKey.currentState
+                                //                 .openDrawer();
+                                //           },
+                                //         ),
+                                //       )
+                                //     ],
+                                //   ),
+                                // ),
                                 Expanded(
                                   child: Stack(
                                       clipBehavior: Clip.none,
                                       alignment: Alignment.center,
                                       children: <Widget>[
                                         Positioned(
-                                          top: -10,
+                                          top: 10,
                                           child: Image.asset(
                                             'assets/images/start-page/logo.png',
                                             width: 180,
@@ -374,7 +376,8 @@ class WalletDashboardView extends StatelessWidget {
                         //      ?
                         SingleChildScrollView(
                           child: DefaultTabController(
-                            length: 3,
+                            length: 2,
+                            //!isProduction ? 2 : 3,
                             initialIndex: model.currentTabSelection,
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -389,6 +392,7 @@ class WalletDashboardView extends StatelessWidget {
                                       // Tab Names
 
                                       tabs: [
+                                        // coins tab
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -406,23 +410,32 @@ class WalletDashboardView extends StatelessWidget {
                                                     fontSize: 10, color: grey))
                                           ],
                                         ),
-                                        // custom tokens
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.dashboard_customize,
-                                                color: primaryColor, size: 18),
-                                            Text(' Custom Tokens'),
-                                            UIHelper.horizontalSpaceSmall,
-                                            Text(
-                                                model
-                                                    .selectedCustomTokens.length
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontSize: 10, color: grey))
-                                          ],
-                                        ),
+                                        // custom tokens tab
+
+                                        // Visibility(
+                                        //   visible: !isProduction ? false : true,
+                                        //   child: Row(
+                                        //     mainAxisAlignment:
+                                        //         MainAxisAlignment.center,
+                                        //     children: [
+                                        //       Icon(Icons.dashboard_customize,
+                                        //           color: primaryColor,
+                                        //           size: 16),
+                                        //       Text(' Custom Tokens',
+                                        //           style: TextStyle(
+                                        //               fontSize: 12,
+                                        //               color: grey)),
+                                        //       UIHelper.horizontalSpaceSmall,
+                                        //       Text(
+                                        //           model.selectedCustomTokens
+                                        //               .length
+                                        //               .toString(),
+                                        //           style: TextStyle(
+                                        //               fontSize: 10,
+                                        //               color: grey))
+                                        //     ],
+                                        //   ),
+                                        // ),
                                         // Fav tab
                                         Row(
                                           mainAxisAlignment:
@@ -498,187 +511,184 @@ class WalletDashboardView extends StatelessWidget {
                                                 ),
 
                                         // ! Custom tokens tab
-                                        model.busy(model.selectedCustomTokens)
-                                            ? model.sharedService
-                                                .loadingIndicator()
-                                            : Column(
-                                                children: [
-                                                  // edit custom token list(add/remove)
-                                                  Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: TextButton(
-                                                          onPressed: () => model
-                                                              .showCustomTokensBottomSheet(),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              // add icon and text
-                                                              Icon(
-                                                                Icons.edit,
-                                                                color: yellow,
-                                                                size: 16,
-                                                              ),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        left:
-                                                                            4.0),
-                                                                child: Text(
-                                                                    'Edit Token List'),
-                                                              ),
+                                        // Visibility(
+                                        //     visible:
+                                        //         !isProduction ? false : true,
+                                        //     child:
+                                        //         model.busy(model
+                                        //                 .selectedCustomTokens)
+                                        //             ? model.sharedService
+                                        //                 .loadingIndicator()
+                                        //             : Column(
+                                        //                 children: [
+                                        //                   // edit custom token list(add/remove)
+                                        //                   Container(
+                                        //                       alignment:
+                                        //                           Alignment
+                                        //                               .center,
+                                        //                       child: TextButton(
+                                        //                           onPressed:
+                                        //                               () => model
+                                        //                                   .showCustomTokensBottomSheet(),
+                                        //                           child: Row(
+                                        //                             mainAxisAlignment:
+                                        //                                 MainAxisAlignment
+                                        //                                     .center,
+                                        //                             children: [
+                                        //                               // add icon and text
+                                        //                               Icon(
+                                        //                                 Icons
+                                        //                                     .edit,
+                                        //                                 color:
+                                        //                                     yellow,
+                                        //                                 size:
+                                        //                                     16,
+                                        //                               ),
+                                        //                               Padding(
+                                        //                                 padding:
+                                        //                                     const EdgeInsets.only(left: 4.0),
+                                        //                                 child: Text(
+                                        //                                     'Edit Token List'),
+                                        //                               ),
 
-                                                              // remove icon and text
-                                                            ],
-                                                          ))),
+                                        //                               // remove icon and text
+                                        //                             ],
+                                        //                           ))),
 
-                                                  // symbol balance action text row
-                                                  Container(
-                                                    color: white,
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 15,
-                                                            vertical: 5),
-                                                    child: Row(
-                                                      children: [
-                                                        Text('Logo'),
-                                                        UIHelper
-                                                            .horizontalSpaceMedium,
-                                                        Expanded(
-                                                            flex: 1,
-                                                            child:
-                                                                Text('Symbol')),
-                                                        Expanded(
-                                                            flex: 3,
-                                                            child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)
-                                                                  .balance,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                            )),
-                                                        Expanded(
-                                                            flex: 1,
-                                                            child:
-                                                                Text('Action'))
-                                                      ],
-                                                    ),
-                                                  ),
+                                        //                   // symbol balance action text row
+                                        //                   Container(
+                                        //                     color: white,
+                                        //                     padding: EdgeInsets
+                                        //                         .symmetric(
+                                        //                             horizontal:
+                                        //                                 15,
+                                        //                             vertical:
+                                        //                                 5),
+                                        //                     child: Row(
+                                        //                       children: [
+                                        //                         Text('Logo'),
+                                        //                         UIHelper
+                                        //                             .horizontalSpaceMedium,
+                                        //                         Expanded(
+                                        //                             flex: 1,
+                                        //                             child: Text(
+                                        //                                 'Symbol')),
+                                        //                         Expanded(
+                                        //                             flex: 3,
+                                        //                             child: Text(
+                                        //                               AppLocalizations.of(
+                                        //                                       context)
+                                        //                                   .balance,
+                                        //                               textAlign:
+                                        //                                   TextAlign
+                                        //                                       .center,
+                                        //                             )),
+                                        //                         Expanded(
+                                        //                             flex: 1,
+                                        //                             child: Text(
+                                        //                                 'Action'))
+                                        //                       ],
+                                        //                     ),
+                                        //                   ),
 
-                                                  Container(
-                                                    margin:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 15,
-                                                            vertical: 10),
-                                                    child: ListView.builder(
-                                                        //                 //  itemExtent: 100,
-                                                        shrinkWrap: true,
-                                                        itemCount: model
-                                                            .selectedCustomTokens
-                                                            .length,
-                                                        itemBuilder:
-                                                            (BuildContext
-                                                                    context,
-                                                                int index) {
-                                                          var customToken =
-                                                              model.selectedCustomTokens[
-                                                                  index];
-                                                          return Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              // logo
-                                                              Container(
-                                                                width: 25,
-                                                                height: 25,
-                                                                decoration: BoxDecoration(
-                                                                    image: DecorationImage(
-                                                                        image: NetworkImage(
-                                                                          'https://test.blockchaingate.com/v2/issuetoken/${customToken.tokenId}/logo',
-                                                                        ),
-                                                                        fit: BoxFit.cover),
-                                                                    borderRadius: BorderRadius.circular(10.0)),
-                                                              ),
-                                                              UIHelper
-                                                                  .horizontalSpaceMedium,
-                                                              // Symbol and name
-                                                              Expanded(
-                                                                flex: 1,
-                                                                child: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    // UIHelper
-                                                                    //     .verticalSpaceSmall,
-                                                                    Text(
-                                                                      customToken
-                                                                          .symbol
-                                                                          .toUpperCase(),
-                                                                      style: TextStyle(
-                                                                          color:
-                                                                              grey),
-                                                                    ),
-                                                                    Text(
-                                                                      customToken
-                                                                          .name,
-                                                                      style: TextStyle(
-                                                                          color:
-                                                                              white),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
+                                        //                   Container(
+                                        //                     margin: EdgeInsets
+                                        //                         .symmetric(
+                                        //                             horizontal:
+                                        //                                 15,
+                                        //                             vertical:
+                                        //                                 10),
+                                        //                     child: ListView
+                                        //                         .builder(
+                                        //                             //                 //  itemExtent: 100,
+                                        //                             shrinkWrap:
+                                        //                                 true,
+                                        //                             itemCount: model
+                                        //                                 .selectedCustomTokens
+                                        //                                 .length,
+                                        //                             itemBuilder:
+                                        //                                 (BuildContext
+                                        //                                         context,
+                                        //                                     int index) {
+                                        //                               var customToken =
+                                        //                                   model.selectedCustomTokens[
+                                        //                                       index];
+                                        //                               return Row(
+                                        //                                 mainAxisSize:
+                                        //                                     MainAxisSize.min,
+                                        //                                 children: [
+                                        //                                   // logo
+                                        //                                   Container(
+                                        //                                     width:
+                                        //                                         25,
+                                        //                                     height:
+                                        //                                         25,
+                                        //                                     decoration: BoxDecoration(
+                                        //                                         image: DecorationImage(
+                                        //                                             image: NetworkImage(
+                                        //                                               'https://test.blockchaingate.com/v2/issuetoken/${customToken.tokenId}/logo',
+                                        //                                             ),
+                                        //                                             fit: BoxFit.cover),
+                                        //                                         borderRadius: BorderRadius.circular(10.0)),
+                                        //                                   ),
+                                        //                                   UIHelper
+                                        //                                       .horizontalSpaceMedium,
+                                        //                                   // Symbol and name
+                                        //                                   Expanded(
+                                        //                                     flex:
+                                        //                                         1,
+                                        //                                     child:
+                                        //                                         Column(
+                                        //                                       mainAxisSize: MainAxisSize.min,
+                                        //                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                        //                                       mainAxisAlignment: MainAxisAlignment.start,
+                                        //                                       children: [
+                                        //                                         // UIHelper
+                                        //                                         //     .verticalSpaceSmall,
+                                        //                                         Text(
+                                        //                                           customToken.symbol.toUpperCase(),
+                                        //                                           style: TextStyle(color: grey),
+                                        //                                         ),
+                                        //                                         Text(
+                                        //                                           customToken.name,
+                                        //                                           style: TextStyle(color: white),
+                                        //                                         ),
+                                        //                                       ],
+                                        //                                     ),
+                                        //                                   ),
 
-                                                              // balance
-                                                              Expanded(
-                                                                flex: 3,
-                                                                child: model.busy(
-                                                                        model
-                                                                            .selectedCustomTokens)
-                                                                    ? Text(
-                                                                        '...')
-                                                                    : Text(
-                                                                        customToken
-                                                                            .balance
-                                                                            .toString(),
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                white),
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                      ),
-                                                              ),
-                                                              UIHelper
-                                                                  .horizontalSpaceSmall,
-                                                              // action
-                                                              Expanded(
-                                                                  flex: 1,
-                                                                  child: ElevatedButton(
-                                                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(primaryColor)),
-                                                                      onPressed: () {
-                                                                        model.sendCustomToken(
-                                                                            customToken.tokenId,
-                                                                            customToken.decimal);
-                                                                      },
-                                                                      child: Text(AppLocalizations.of(context).send)))
-                                                            ],
-                                                          );
-                                                        }),
-                                                  ),
-                                                ],
-                                              ),
+                                        //                                   // balance
+                                        //                                   Expanded(
+                                        //                                     flex:
+                                        //                                         3,
+                                        //                                     child: model.busy(model.selectedCustomTokens)
+                                        //                                         ? Text('...')
+                                        //                                         : Text(
+                                        //                                             customToken.balance.toString(),
+                                        //                                             style: TextStyle(color: white),
+                                        //                                             textAlign: TextAlign.center,
+                                        //                                           ),
+                                        //                                   ),
+                                        //                                   UIHelper
+                                        //                                       .horizontalSpaceSmall,
+                                        //                                   // action
+                                        //                                   Expanded(
+                                        //                                       flex: 1,
+                                        //                                       child: ElevatedButton(
+                                        //                                           style: ButtonStyle(backgroundColor: MaterialStateProperty.all(primaryColor)),
+                                        //                                           onPressed: () {
+                                        //                                             model.sendCustomToken(customToken.tokenId, customToken.decimal);
+                                        //                                           },
+                                        //                                           child: Text(
+                                        //                                             AppLocalizations.of(context).send,
+                                        //                                             style: TextStyle(fontSize: 14),
+                                        //                                           )))
+                                        //                                 ],
+                                        //                               );
+                                        //                             }),
+                                        //                   ),
+                                        //                 ],
+                                        //               ))
 
                                         FavTab(),
                                       ],

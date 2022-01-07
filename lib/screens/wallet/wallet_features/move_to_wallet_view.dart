@@ -13,7 +13,6 @@
 
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_wallet_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,7 +22,6 @@ import '../../../localizations.dart';
 import '../../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart';
 
 class MoveToWalletScreen extends StatelessWidget {

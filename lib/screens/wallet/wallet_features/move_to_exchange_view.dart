@@ -17,7 +17,6 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../../../shared/globals.dart' as globals;
 import 'package:flutter/gestures.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_exchange_viewmodel.dart';
@@ -75,7 +74,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                       activatedNegativeValues: false)
                 ],
                 onChanged: (String amount) {
-                  model.updateTransFee();
+                  model.amountAfterFee();
                 },
                 decoration: InputDecoration(
                   suffix: Text(
@@ -92,7 +91,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                 controller: model.amountController,
                 style: Theme.of(context).textTheme.headline5.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: model.isValid ? white : red),
+                    color: model.isValidAmount ? white : red),
               ),
               UIHelper.verticalSpaceSmall,
               // Wallet Balance
@@ -114,16 +113,24 @@ class MoveToExchangeScreen extends StatelessWidget {
                       )
                     ],
                   ),
-                  RichText(
-                    text: TextSpan(
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
+                  OutlinedButton(
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all(Size.square(20)),
+                        padding: MaterialStateProperty.all(
+                            EdgeInsets.symmetric(vertical: 2, horizontal: 5)),
+                        backgroundColor: MaterialStateProperty.all(green),
+                      ),
+                      onPressed: () {
+                        if (walletInfo.availableBalance != 0.0)
                           model.fillMaxAmount();
-                        },
-                      text: AppLocalizations.of(context).maxAmount,
-                      style: Theme.of(context).textTheme.subtitle2,
-                    ),
-                  ),
+                      },
+                      child: Text(
+                        AppLocalizations.of(context).maxAmount,
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle2
+                            .copyWith(color: white),
+                      ))
                 ],
               ),
               UIHelper.verticalSpaceSmall,
@@ -149,18 +156,51 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         Theme.of(context).textTheme.headline5),
                           )
                         : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(AppLocalizations.of(context).gasFee,
-                                  style: Theme.of(context).textTheme.headline5),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left:
-                                        5), // padding left to keep some space from the text
-                                child: Text(
-                                    '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 6).toString()} ${model.feeUnit}',
-                                    style:
-                                        Theme.of(context).textTheme.headline6),
-                              )
+                              Row(
+                                children: [
+                                  Text(AppLocalizations.of(context).gasFee,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left:
+                                            5), // padding left to keep some space from the text
+                                    child: Text(
+                                        '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 6).toString()} ${model.feeUnit}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6),
+                                  )
+                                ],
+                              ),
+                              // chain balance
+                              model.tokenType.isNotEmpty
+                                  ? Row(
+                                      children: [
+                                        Text(
+                                            model.walletInfo.tokenType +
+                                                ' ' +
+                                                AppLocalizations.of(context)
+                                                    .balance,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left:
+                                                  5), // padding left to keep some space from the text
+                                          child: Text(
+                                              '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, precision: 6).toString()} ${model.feeUnit}',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6),
+                                        )
+                                      ],
+                                    )
+                                  : Container()
                             ],
                           ),
                     UIHelper.verticalSpaceSmall,
@@ -175,7 +215,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                   5), // padding left to keep some space from the text
                           child: Text(
                               '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 6).toString()} GAS',
-                              style: Theme.of(context).textTheme.headline5),
+                              style: Theme.of(context).textTheme.headline6),
                         )
                       ],
                     ),
@@ -505,7 +545,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                 color: globals.primaryColor,
                 textColor: Colors.white,
                 onPressed: () {
-                  model.checkPass();
+                  if (model.isValidAmount && model.amount != 0.0)
+                    model.checkPass();
                 },
                 child: model.isBusy
                     ? SizedBox(
@@ -515,7 +556,10 @@ class MoveToExchangeScreen extends StatelessWidget {
                           strokeWidth: 1,
                         ))
                     : Text(AppLocalizations.of(context).confirm,
-                        style: Theme.of(context).textTheme.button),
+                        style: Theme.of(context).textTheme.button.copyWith(
+                            color: model.isValidAmount && model.amount != 0.0
+                                ? white
+                                : grey)),
               ),
             ],
           ),
