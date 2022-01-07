@@ -17,6 +17,8 @@ import 'dart:io';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
+import 'package:exchangilymobileapp/constants/ui_var.dart';
+import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/issue_token.dart';
@@ -79,6 +81,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   List<WalletInfo> walletInfo;
   List<WalletInfo> walletInfoCopy = [];
 
+  WalletInfo rightWalletInfo;
   final double elevation = 5;
   String totalUsdBalance = '';
 
@@ -882,11 +885,16 @@ class WalletDashboardViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
 
   onSingleCoinCardClick(index) {
-    FocusScope.of(context).requestFocus(FocusNode());
-    navigationService.navigateTo(WalletFeaturesViewRoute,
-        arguments: walletInfo[index]);
-    searchCoinTextController.clear();
-    resetWalletInfoObject();
+    if (MediaQuery.of(context).size.width < largeSize) {
+      FocusScope.of(context).requestFocus(FocusNode());
+      navigationService.navigateTo(WalletFeaturesViewRoute,
+          arguments: walletInfo[index]);
+      searchCoinTextController.clear();
+      resetWalletInfoObject();
+    } else {
+      rightWalletInfo = walletInfo[index];
+      (context as Element).markNeedsBuild();
+    }
   }
 
 /*----------------------------------------------------------------------
@@ -1426,6 +1434,8 @@ class WalletDashboardViewModel extends BaseViewModel {
     List<String> tickerNamesFromWalletInfoCopy = [];
 
     await walletDatabaseService.getAll().then((walletList) async {
+      //set large screen right widget info
+      rightWalletInfo = walletInfo[0];
       walletInfoCopy = [];
       // formattedUsdValueList = [];
       log.e('wallet list from db length ${walletList.length}');
