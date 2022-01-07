@@ -1105,7 +1105,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     var tlb = 0.0;
     var teb = 0.0;
     for (var i = 0; i < wallets.length; i++) {
-      if (!wallets[i].usdValue.usd.isNegative)
+      if (!wallets[i].balance.isNegative)
         twb += wallets[i].balance * wallets[i].usdValue.usd;
       tlb += wallets[i].lockBalance * wallets[i].usdValue.usd;
       teb += wallets[i].unlockedExchangeBalance * wallets[i].usdValue.usd;
@@ -1283,6 +1283,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     walletBalancesApiRes =
         await this.apiService.getWalletBalance(jsonDecode(finalWbb));
     log.w('walletBalances LENGTH ${walletBalancesApiRes.length}');
+
     wallets = walletBalancesApiRes;
     walletsCopy = wallets;
     setBusy(false);

@@ -26,7 +26,7 @@ class LocalStorageService {
   static const String PhoneProtectedKey = 'phoneProtectedKey';
   static const String AppGoneInTheBackgroundKey = 'appGoneInTheBackgroundKey';
   static const String WalletVerificationKey = 'walletVerificationKey';
-
+  static const String TestingLogStringListKey = 'testingLogStringListKey';
 /*----------------------------------------------------------------------
                   Instance
 ----------------------------------------------------------------------*/
@@ -90,6 +90,15 @@ class LocalStorageService {
     }
     return objLength;
   }
+
+/*----------------------------------------------------------------------
+                Wallet balance body
+----------------------------------------------------------------------  */
+  String get testingLogStringList =>
+      _getFromDisk(TestingLogStringListKey) ?? '';
+
+  set testingLogStringList(String value) =>
+      _saveToDisk(TestingLogStringListKey, value);
 
 /*----------------------------------------------------------------------
                 walelt verification

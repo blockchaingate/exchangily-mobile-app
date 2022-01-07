@@ -469,10 +469,11 @@ class WalletDashboardView extends StatelessWidget {
       itemCount: model.wallets.length,
       itemBuilder: (BuildContext context, int index) {
         var name = model.wallets[index].coin.toLowerCase();
-        var usdBalance = model.wallets[index].balance *
-            (model.wallets[index].usdValue.usd.isNegative
-                ? 0.0
-                : model.wallets[index].usdValue.usd);
+
+        var usdBalance = (!model.wallets[index].balance.isNegative
+                ? model.wallets[index].balance
+                : 0.0) *
+            model.wallets[index].usdValue.usd;
 
         return Visibility(
           // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
@@ -720,7 +721,7 @@ Widget _coinDetailsCard(
                                   baseColor: globals.grey,
                                   highlightColor: globals.white,
                                   child: Text(
-                                    '${NumberUtil().truncateDoubleWithoutRouding(model.wallets[index].balance * model.wallets[index].usdValue.usd, precision: 2).toString()}',
+                                    '${NumberUtil().truncateDoubleWithoutRouding((!model.wallets[index].balance.isNegative ? model.wallets[index].balance : 0.0) * model.wallets[index].usdValue.usd, precision: 2).toString()}',
                                     style: TextStyle(color: globals.green),
                                   ),
                                 ),
@@ -742,7 +743,7 @@ Widget _coinDetailsCard(
                                     //         highlightColor: globals.white,
                                     //         child:
                                     Text(
-                                  '${NumberUtil().truncateDoubleWithoutRouding(model.wallets[index].balance * model.wallets[index].usdValue.usd, precision: 2).toString()}',
+                                  '${NumberUtil().truncateDoubleWithoutRouding((!model.wallets[index].balance.isNegative ? model.wallets[index].balance : 0.0) * model.wallets[index].usdValue.usd, precision: 2).toString()}',
                                   style: TextStyle(color: globals.green),
                                 ),
                               )

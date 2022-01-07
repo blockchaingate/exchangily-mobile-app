@@ -618,6 +618,7 @@ class ApiService {
         //  log.i('json list getWalletBalance $jsonList');
         List newList = [];
         jsonList.forEach((element) {
+          if (element['balance'] == -1) element['balance'] = 0.0;
           if (element['balance'] != null) newList.add(element);
         });
         log.i('newList getWalletBalance $newList');

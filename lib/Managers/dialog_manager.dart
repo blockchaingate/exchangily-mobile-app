@@ -240,21 +240,26 @@ class _DialogManagerState extends State<DialogManager> {
                 String encryptedMnemonic = '';
                 var finalRes = '';
                 try {
-                  encryptedMnemonic =
-                      await coreWalletDatabaseService.getEncryptedMnemonic();
-                  if (encryptedMnemonic.isEmpty) {
-                    // if there is no encrypted mnemonic saved in the new core wallet db
-                    // then get the unencrypted mnemonic from the file
+                  // todo just check using new format first
+                  // todo:  then check with old format if new format
+                  /// todo: decryption is not available
+                  /// todo: finally pass the password in the function args
+                  /// todo: and after verification success, encrypt the mnemonic with
+                  ///  todo: the password and store it using new format
+                  // encryptedMnemonic =
+                  //     await coreWalletDatabaseService.getEncryptedMnemonic();
+                  //  if (encryptedMnemonic.isEmpty) {
+                  // if there is no encrypted mnemonic saved in the new core wallet db
+                  // then get the unencrypted mnemonic from the file
 
-                    finalRes = await _vaultService.decryptData(controller.text);
-                  } else if (encryptedMnemonic.isNotEmpty) {
-                    await _vaultService
-                        .decryptMnemonic(controller.text, encryptedMnemonic,
-                            isDeleteWalletReq: request.isSpecialReq ?? false)
-                        .then((data) {
-                      finalRes = data;
-                    });
-                  }
+                  //finalRes = await _vaultService.decryptData(controller.text);
+                  //   } else if (encryptedMnemonic.isNotEmpty) {
+                  await _vaultService
+                      .decryptMnemonic(controller.text, encryptedMnemonic)
+                      .then((data) {
+                    finalRes = data;
+                  });
+                  // }
                   if (finalRes == Constants.ImportantWalletUpdateText) {
                     _dialogService.dialogComplete(DialogResponse(
                         confirmed: false,
