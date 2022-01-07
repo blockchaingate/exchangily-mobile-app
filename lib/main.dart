@@ -27,6 +27,7 @@ import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import './shared/globals.dart' as globals;
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -46,6 +47,7 @@ Future<void> main() async {
   //     SystemUiOverlayStyle(statusBarColor: Colors.white));
 
   try {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
     await serviceLocator();
     Logger.level = Level.nothing;
     SystemChannels.textInput
@@ -56,7 +58,7 @@ Future<void> main() async {
       (_) {
         runApp(
             //  DevicePreview(builder: (context) =>
-            MyApp());
+            MyApp(packageInfo));
         // ));
       },
     );
@@ -66,6 +68,9 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  MyApp(this.packageInfo);
+  final PackageInfo packageInfo;
+
   @override
   Widget build(BuildContext context) {
     return StreamProvider(
@@ -78,12 +83,28 @@ class MyApp extends StatelessWidget {
             // locale: DevicePreview.of(context).locale,
 
             navigatorKey: locator<NavigationService>().navigatorKey,
-            builder: (context, widget) => Navigator(
-                key: locator<DialogService>().navigatorKey,
-                onGenerateRoute: (settings) => MaterialPageRoute(
-                    builder: (context) => DialogManager(
-                          child: widget,
-                        ))),
+            builder: (context, widget) => Stack(
+              children: [
+                Navigator(
+                    key: locator<DialogService>().navigatorKey,
+                    onGenerateRoute: (settings) => MaterialPageRoute(
+                        builder: (context) => DialogManager(
+                              child: widget,
+                            ))),
+                Positioned(
+                    top: 60,
+                    right: 10,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Text(
+                        // 'v ',
+                        'v: ${packageInfo.version}.${packageInfo.buildNumber}',
+                        style:
+                            TextStyle(fontSize: 10, color: Color(0x33ffffff)),
+                      ),
+                    ))
+              ],
+            ),
             localizationsDelegates: [
               AppLocalizationsDelegate(),
               GlobalMaterialLocalizations.delegate,
