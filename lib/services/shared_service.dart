@@ -53,6 +53,14 @@ class SharedService {
       locator<DecimalConfigDatabaseService>();
   final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
 
+  Future<ClipboardData> pasteClipBoardData() async {
+    ClipboardData data;
+    if (data != null) {
+      data = await Clipboard.getData(Clipboard.kTextPlain);
+    }
+    return data;
+  }
+
 /*--------------------------------------------------------------------------
                   Show Simple Notification
 ------------------------------------------------------------------------- */

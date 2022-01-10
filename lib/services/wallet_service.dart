@@ -298,7 +298,7 @@ class WalletService {
   Future<int> getSingleCoinWalletDecimalLimit(String coinName) async {
     int res = 0;
 // first look coin in the local storage
-// TODO uncomment code below once savedecimaldata in local storage works in wallet service
+// TODO uncomment code below once save decimaldata in local storage works in wallet service
     // List<Map<String, int>> decimalDataFromStorage =
     //     jsonEncode(storageService.walletDecimalList) as List;
     // decimalDataFromStorage.forEach((decimalDataList) {
@@ -327,29 +327,30 @@ class WalletService {
     return res;
   }
 
-  Future<bool> checkCoinWalletBalance(double amount, String tickerName) async {
-    bool isCorrectAmount = true;
-    String fabAddress =
-        await sharedService.getFabAddressFromCoreWalletDatabase();
-    String thirdPartyAddress = await coreWalletDatabaseService
-        .getWalletAddressByTickerName(tickerName);
-    log.w('thirdPartyAddress $thirdPartyAddress');
+  Future<bool> hasSufficientWalletBalance(
+      double amount, String tickerName) async {
+    bool isValidAmount = true;
+    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    String coinAddress = await walletDatabaseService
+        .getWalletBytickerName(tickerName)
+        .then((wallet) => wallet.address);
+    log.w('coinAddress $coinAddress');
     await apiService
         .getSingleWalletBalance(fabAddress, tickerName, thirdPartyAddress)
         .then((walletBalance) {
       if (walletBalance != null) {
         log.w(walletBalance[0].balance);
         if (walletBalance[0].balance < amount)
-          isCorrectAmount = false;
+          isValidAmount = false;
         else
-          isCorrectAmount = true;
+          isValidAmount = true;
       }
     }).catchError((err) {
       log.e(err);
 
       throw Exception(err);
     });
-    return isCorrectAmount;
+    return isValidAmount;
   }
 
 /*----------------------------------------------------------------------

@@ -23,7 +23,7 @@ import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import '../shared/globals.dart' as globals;
+
 import 'package:exchangilymobileapp/localizations.dart';
 
 class DialogManager extends StatefulWidget {
@@ -69,7 +69,7 @@ class _DialogManagerState extends State<DialogManager> {
         style: AlertStyle(
             animationType: AnimationType.grow,
             isOverlayTapDismiss: false,
-            backgroundColor: globals.walletCardColor,
+            backgroundColor: walletCardColor,
             descStyle: Theme.of(context).textTheme.bodyText1,
             titleStyle: Theme.of(context)
                 .textTheme
@@ -126,7 +126,7 @@ class _DialogManagerState extends State<DialogManager> {
         style: AlertStyle(
             animationType: AnimationType.grow,
             isOverlayTapDismiss: false,
-            backgroundColor: globals.walletCardColor,
+            backgroundColor: walletCardColor,
             descStyle: Theme.of(context).textTheme.bodyText1,
             titleStyle: Theme.of(context)
                 .textTheme
@@ -153,7 +153,7 @@ class _DialogManagerState extends State<DialogManager> {
         // ),
         buttons: [
           DialogButton(
-            color: globals.primaryColor,
+            color: primaryColor,
             onPressed: () {
               _dialogService.dialogComplete(DialogResponse(confirmed: false));
 
@@ -172,7 +172,7 @@ class _DialogManagerState extends State<DialogManager> {
         style: AlertStyle(
             animationType: AnimationType.grow,
             isOverlayTapDismiss: false,
-            backgroundColor: globals.walletCardColor,
+            backgroundColor: walletCardColor,
             descStyle: Theme.of(context).textTheme.bodyText1,
             titleStyle: Theme.of(context)
                 .textTheme
@@ -195,17 +195,17 @@ class _DialogManagerState extends State<DialogManager> {
           children: <Widget>[
             TextField(
               autofocus: true,
-              style: TextStyle(color: globals.white),
+              style: TextStyle(color: white),
               controller: controller,
               obscureText: true,
               decoration: InputDecoration(
                 labelStyle: Theme.of(context)
                     .textTheme
                     .bodyText1
-                    .copyWith(color: globals.white),
+                    .copyWith(color: white),
                 icon: Icon(
                   Icons.security,
-                  color: globals.primaryColor,
+                  color: primaryColor,
                 ),
                 labelText: AppLocalizations.of(context).typeYourWalletPassword,
               ),

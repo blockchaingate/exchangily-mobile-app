@@ -63,7 +63,7 @@ class FabUtils {
       String buildNumber = versionInfo['buildNumber'];
       String fullVersion = versionName + buildNumber;
       log.i('getAppVersion name $versionName');
-      var data = {'version': fullVersion, 'rawtx': txHex};
+      var data = {'app': 'exchangily', 'version': fullVersion, 'rawtx': txHex};
       try {
         var response = await client.post(url, body: data);
 
@@ -328,11 +328,12 @@ class FabUtils {
     };
     var tokenBalance = 0.0;
     var url = fabBaseUrl + 'callcontract';
-    print(
+    log.i(
         'Fab_util -- address $address getFabTokenBalanceForABI balance by address url -- $url -- body $body');
     try {
       var response = await client.post(url, body: body);
       var json = jsonDecode(response.body);
+      log.w('getFabTokenBalanceForABIForCustomTokens json $json');
       var unlockBalance = json['executionResult']['output'];
 
       if (unlockBalance == null || unlockBalance == '') {

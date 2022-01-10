@@ -27,6 +27,9 @@ class LocalStorageService {
   static const String AppGoneInTheBackgroundKey = 'appGoneInTheBackgroundKey';
   static const String WalletVerificationKey = 'walletVerificationKey';
   static const String TestingLogStringListKey = 'testingLogStringListKey';
+  static const String CustomTokensKey = 'customTokensKey';
+  static const String CustomTokenDataKey = 'customTokenDataKey';
+
 /*----------------------------------------------------------------------
                   Instance
 ----------------------------------------------------------------------*/
@@ -90,6 +93,18 @@ class LocalStorageService {
     }
     return objLength;
   }
+
+  // Custom token Data
+
+  String get customTokenData => _getFromDisk(CustomTokenDataKey) ?? '';
+
+  set customTokenData(String value) => _saveToDisk(CustomTokenDataKey, value);
+
+  // Custom tokens
+
+  String get customTokens => _getFromDisk(CustomTokensKey) ?? '';
+
+  set customTokens(String value) => _saveToDisk(CustomTokensKey, value);
 
 /*----------------------------------------------------------------------
                 Wallet balance body

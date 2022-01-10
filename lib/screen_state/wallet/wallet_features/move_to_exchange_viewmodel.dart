@@ -44,7 +44,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   String tokenType = '';
   String message = '';
   final amountController = TextEditingController();
-  bool isValid = false;
+  //bool isValid = false;
   double gasAmount = 0.0;
   bool isShowErrorDetailsButton = false;
   bool isShowDetailsMessage = false;
@@ -55,6 +55,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
   String feeUnit = '';
   final coinUtils = CoinUtils();
   int decimalLimit = 8;
+  double chainBalance = 0.0;
+  String fabAddress = '';
+  bool isValidAmount = true;
 
   // Init
   void initState() async {
@@ -63,13 +66,12 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (coinName == 'FAB') walletInfo.tokenType = '';
     if (coinName == 'USDTX') walletInfo.tokenType = 'TRX';
     tokenType = walletInfo.tokenType;
-    //   if (coinName != 'TRX' && coinName != 'USDTX') {
     setFee();
     await getGas();
     //  }
     specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)['tickerName'];
-    refreshBalance();
+    await refreshBalance();
 
     if (coinName == 'BTC') {
       feeUnit = 'BTC';
@@ -83,7 +85,19 @@ class MoveToExchangeViewModel extends BaseViewModel {
     decimalLimit =
         await walletService.getSingleCoinWalletDecimalLimit(coinName);
     if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
+    fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    if (tokenType.isNotEmpty) await getNativeChainTickerBalance();
     setBusy(false);
+  }
+
+  // get native chain ticker balance
+  getNativeChainTickerBalance() async {
+    if (fabAddress.isEmpty)
+      fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+
+    await apiService
+        .getSingleWalletBalance(fabAddress, tokenType, walletInfo.address)
+        .then((walletBalance) => chainBalance = walletBalance.first.balance);
   }
 
   showDetailsMessageToggle() {
@@ -95,29 +109,59 @@ class MoveToExchangeViewModel extends BaseViewModel {
 /*---------------------------------------------------
                   Amount After fee
 --------------------------------------------------- */
-  Future<double> amountAfterFee(double amount,
-      {bool isMaxAmount = false}) async {
+  Future<double> amountAfterFee({bool isMaxAmount = false}) async {
+    setBusy(true);
+
+    if (amountController.text.isEmpty) {
+      transFee = 0.0;
+      kanbanTransFee = 0.0;
+      setBusy(false);
+      return 0.0;
+    }
+    amount = NumberUtil().truncateDoubleWithoutRouding(
+        double.parse(amountController.text),
+        precision: decimalLimit);
+
     double finalAmount = 0.0;
-    // update transfee is 0
-    if (transFee == 0.0 && !walletService.isTrx(walletInfo.tickerName))
-      await updateTransFee();
+    // update if transfee is 0
+    if (!walletService.isTrx(walletInfo.tickerName)) await updateTransFee();
     // if tron coins then assign fee accordingly
     if (walletService.isTrx(walletInfo.tickerName)) {
       if (walletInfo.tickerName == 'USDTX') {
         transFee = 15;
         finalAmount = amount;
+        finalAmount <= walletInfo.availableBalance
+            ? isValidAmount = true
+            : isValidAmount = false;
       }
 
       if (walletInfo.tickerName == 'TRX') {
         transFee = 1.0;
         finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
+
+        isMaxAmount ? isValidAmount = true : isValidAmount = false;
+
+        !isMaxAmount ? isValidAmount = false : isValidAmount = true;
       }
     } else {
-      walletInfo.tokenType.isEmpty &&
-              (amount == walletInfo.availableBalance || isMaxAmount)
-          ? finalAmount = amount - transFee
-          : finalAmount = amount;
+      // in any token transfer, gas fee is paid in native tokens so
+      // in case of non-native tokens, need to check the balance of native tokens
+      // so that there is fee to pay when transffering non-native tokens
+      if (tokenType.isEmpty) {
+        if (isMaxAmount)
+          finalAmount = amount - transFee;
+        else
+          finalAmount = amount + transFee;
+      } else
+        finalAmount = amount;
+
+      finalAmount <= walletInfo.availableBalance
+          ? isValidAmount = true
+          : isValidAmount = false;
     }
+    log.i(
+        'Func:amountAfterFee -- finalAmount $finalAmount -- entered amount $amount -- isValidAmount $isValidAmount');
+    setBusy(false);
     return finalAmount;
   }
 
@@ -126,15 +170,21 @@ class MoveToExchangeViewModel extends BaseViewModel {
 --------------------------------------------------- */
   fillMaxAmount() async {
     setBusy(true);
-    amount = walletInfo.availableBalance;
-    double finalAmount = 0.0;
-    await amountAfterFee(amount, isMaxAmount: true)
-        .then((resAmount) => finalAmount = resAmount);
-    //  finalAmount = amount = finalAmount;
-    amountController.text = NumberUtil()
-        .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)
-        .toString();
 
+    amount = walletInfo.availableBalance;
+    amountController.text = amount.toString();
+
+    await updateTransFee();
+    double finalAmount = 0.0;
+
+    if (transFee != 0.0) {
+      finalAmount = await amountAfterFee(isMaxAmount: true);
+      amountController.text = NumberUtil()
+          .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)
+          .toString();
+    } else
+      sharedService.sharedSimpleNotification(
+          AppLocalizations.of(context).insufficientGasAmount);
     setBusy(false);
   }
 
@@ -207,66 +257,62 @@ class MoveToExchangeViewModel extends BaseViewModel {
     setBusy(true);
 
     if (amountController.text.isEmpty) {
-      sharedService.showInfoFlushbar(
+      sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).amountMissing,
-          AppLocalizations.of(context).pleaseEnterValidNumber,
-          Icons.cancel,
-          red,
-          context);
-      setBusy(false);
-      return;
-    }
-    if (gasAmount == 0.0 || gasAmount < kanbanTransFee) {
-      sharedService.showInfoFlushbar(
-          AppLocalizations.of(context).notice,
-          AppLocalizations.of(context).insufficientGasAmount,
-          Icons.cancel,
-          red,
-          context);
+          subtitle: AppLocalizations.of(context).pleaseEnterValidNumber);
 
       setBusy(false);
       return;
     }
-    if (!isValid &&
+    if (gasAmount == 0.0 || gasAmount < kanbanTransFee || transFee == 0.0) {
+      sharedService.sharedSimpleNotification(
+          AppLocalizations.of(context).notice,
+          subtitle: AppLocalizations.of(context).insufficientGasAmount);
+
+      setBusy(false);
+      return;
+    }
+
+    if (transFee > walletInfo.availableBalance &&
         walletInfo.tickerName != 'TRX' &&
         walletInfo.tickerName != 'USDTX') {
-      sharedService.showInfoFlushbar(
-          AppLocalizations.of(context).notice,
+      sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).insufficientBalance,
-          Icons.cancel,
-          red,
-          context);
+          subtitle:
+              '${AppLocalizations.of(context).gasFee} $transFee > ${AppLocalizations.of(context).walletbalance} ${walletInfo.availableBalance}');
+
       setBusy(false);
       return;
     }
 
-    amount = double.tryParse(amountController.text);
-
-    // amount = NumberUtil().roundDownLastDigit(amount);
     await refreshBalance();
 
     double finalAmount = 0.0;
     if (!walletService.isTrx(walletInfo.tickerName))
-      finalAmount = await amountAfterFee(amount);
+      finalAmount = await amountAfterFee();
+
     if (amount == null ||
         finalAmount > walletInfo.availableBalance ||
         amount == 0 ||
         amount.isNegative) {
-      log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
-      sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).insufficientBalance);
-
+      log.e(
+          'amount $amount --- final amount with fee: $finalAmount -- wallet bal: ${walletInfo.availableBalance}');
+      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).insufficientBalance,
+          isWarning: false);
       setBusy(false);
       return;
     }
-    // check chain balance
+
+    /// check chain balance to check
+    /// whether native token has enough balance to cover transaction fee
     if (tokenType.isNotEmpty) {
       bool hasSufficientChainBalance = await walletService
-          .checkCoinWalletBalance(transFee, walletInfo.tokenType);
+          .hasSufficientWalletBalance(transFee, walletInfo.tokenType);
       if (!hasSufficientChainBalance) {
         log.e('Chain $tokenType -- insufficient balance');
         sharedService.sharedSimpleNotification(walletInfo.tokenType,
-            subtitle: AppLocalizations.of(context).insufficientGasBalance);
+            subtitle: AppLocalizations.of(context).insufficientBalance);
         setBusy(false);
         return;
       }
@@ -277,7 +323,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       bool isCorrectAmount = true;
       await walletService
-          .checkCoinWalletBalance(15, 'TRX')
+          .hasSufficientWalletBalance(15, 'TRX')
           .then((res) => isCorrectAmount = res);
       log.w('isCorrectAmount $isCorrectAmount');
       if (!isCorrectAmount) {
@@ -317,13 +363,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
       String mnemonic = res.returnedText;
       if (walletInfo.tickerName != 'TRX' && walletInfo.tickerName != 'USDTX')
         seed = walletService.generateSeed(mnemonic);
-      log.i('wallet info  ${walletInfo.toJson()}');
-      // if (coinName == 'USDT' || coinName == 'HOT') {
-      //   tokenType = 'ETH';
-      // }
-      // if (coinName == 'EXG') {
-      //   tokenType = 'FAB';
-      // }
 
       var gasPrice = int.tryParse(gasPriceTextController.text);
       var gasLimit = int.tryParse(gasLimitTextController.text);
@@ -387,6 +426,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
               AppLocalizations.of(context).depositTransactionSuccess,
               '$specialTicker ${AppLocalizations.of(context).isOnItsWay}',
             );
+            Future.delayed(new Duration(seconds: 3), () {
+              refreshBalance();
+            });
           } else {
             if (res.containsKey("error") && res["error"] != null) {
               serverError = res['error'].toString();
@@ -462,6 +504,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
                   ]),
               position: NotificationPosition.bottom,
               background: primaryColor);
+          Future.delayed(new Duration(seconds: 3), () {
+            refreshBalance();
+          });
 
           // sharedService.alertDialog(
           //     success
@@ -527,14 +572,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
   updateTransFee() async {
     setBusy(true);
     var to = coinUtils.getOfficalAddress(coinName, tokenType: tokenType);
-    amount = double.tryParse(amountController.text);
+
+    //amount = double.tryParse(amountController.text);
 
     if (to == null || amount == null || amount <= 0) {
       transFee = 0.0;
+      kanbanTransFee = 0.0;
       setBusy(false);
       return;
     }
-    isValid = true;
+
     var gasPrice = int.tryParse(gasPriceTextController.text) ?? 0;
     var gasLimit = int.tryParse(gasLimitTextController.text) ?? 0;
     var satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
@@ -572,11 +619,12 @@ class MoveToExchangeViewModel extends BaseViewModel {
         kanbanTransFee = kanbanTransFeeDouble;
         setBusy(false);
       }
-      if (walletInfo.tickerName != 'TRX' &&
-          walletInfo.tickerName != 'USDTX' &&
-          transFee == 0.0) isValid = false;
-      //  log.e('total amount with fee ${amount + kanbanTransFee + transFee}');
-      log.i('availableBalance ${walletInfo.availableBalance}');
+
+      // if (walletInfo.tokenType.isEmpty)
+      //   log.w(
+      //       'Func: updateTransFee total amount with fee: amount $amount + kanbantransfee $kanbanTransFee + gasFee $transFee = ${amount + kanbanTransFee + transFee}');
+      log.i(
+          'Func: updateTransFee availableBalance ${walletInfo.availableBalance} -- amount entered $amount');
     }).catchError((onError) {
       setBusy(false);
       log.e(onError);

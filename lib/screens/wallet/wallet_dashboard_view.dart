@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screens/announcement/anncounceList.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features_view.dart';
 import 'package:exchangilymobileapp/shared/styles.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -67,13 +68,41 @@ class WalletDashboardView extends StatelessWidget {
           // if (connectionStatus == ConnectivityStatus.Offline)
           //   return NetworkStausView();
           // else
+
           return WillPopScope(
             onWillPop: () {
               model.onBackButtonPressed();
               return new Future(() => false);
             },
             child: Scaffold(
-              key: key,
+              key: _scaffoldKey,
+              endDrawerEnableOpenDragGesture: true,
+              // drawer: Drawer(
+              //   child: ListView(
+              //     // Important: Remove any padding from the ListView.
+              //     padding: EdgeInsets.zero,
+              //     children: [
+              //       const DrawerHeader(
+              //         decoration: BoxDecoration(
+              //           color: Colors.blue,
+              //         ),
+              //         child: Text('eXchangily', style: TextStyle(fontSize: 20)),
+              //       ),
+              //       ListTile(
+              //         title: Row(children: [
+              //           Padding(
+              //             padding: const EdgeInsets.only(right: 4.0),
+              //             child: Icon(Icons.add, color: primaryColor, size: 20),
+              //           ),
+              //           Text('Add Custom Token')
+              //         ]),
+              //         onTap: () {
+              //           model.showCustomTokensBottomSheet();
+              //         },
+              //       ),
+              //     ],
+              //   ),
+              // ),
               body: GestureDetector(
                 onTap: () {
                   FocusScope.of(context).requestFocus(FocusNode());
@@ -446,17 +475,51 @@ class WalletDashboardView extends StatelessWidget {
                 ),
               ),
               bottomNavigationBar: BottomNavBar(count: 0),
-              // floatingActionButton: Container(
-              //   color: white,
-              //   child: IconButton(
-              //     icon: model.isTopOfTheList
-              //         ? Icon(Icons.arrow_downward)
-              //         : Icon(Icons.arrow_upward),
-              //     onPressed: () async {
-              //       model.coreWalletDatabaseService.insert(CoreWalletModel());
-              //     },
-              //   ),
-              // ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
+              floatingActionButton: model.busy(model.selectedCustomTokens)
+                  ? Container()
+                  : Container(
+                      // color: red,
+                      width: 120,
+                      child: model.currentTabSelection == 1
+                          ? IconButton(
+                              iconSize: model.selectedCustomTokens.isNotEmpty
+                                  ? 20
+                                  : 26,
+                              icon: Row(
+                                children: [
+                                  Icon(
+                                    model.selectedCustomTokens.isNotEmpty
+                                        ? Icons.mode_edit_outline_outlined
+                                        : Icons.add,
+                                    color: model.selectedCustomTokens.isNotEmpty
+                                        ? yellow
+                                        : green,
+                                  ),
+                                  Expanded(
+                                    child: model.selectedCustomTokens.isNotEmpty
+                                        ? Text(
+                                            ' ' +
+                                                AppLocalizations.of(context)
+                                                    .editTokenList,
+                                            style: TextStyle(
+                                                color: white, fontSize: 10),
+                                          )
+                                        : Text(
+                                            ' ' +
+                                                AppLocalizations.of(context)
+                                                    .addToken,
+                                            style: TextStyle(
+                                                color: white, fontSize: 10)),
+                                  ),
+                                ],
+                              ),
+                              onPressed: () =>
+                                  model.showCustomTokensBottomSheet(),
+                            )
+                          : Container(),
+                    ),
             ),
           );
         });
@@ -490,6 +553,857 @@ class WalletDashboardView extends StatelessWidget {
     );
   }
 }
+
+Widget mainWidgets(WalletDashboardViewModel model, BuildContext context) {
+  return Column(
+    children: <Widget>[
+      LayoutBuilder(builder: (BuildContext ctx, BoxConstraints constraints) {
+        if (constraints.maxWidth < largeSize) {
+          return Container(
+            height: MediaQuery.of(context).padding.top,
+          );
+        } else {
+          return Container(
+            child: Column(
+              children: <Widget>[
+                topWidget(model, context),
+                amountAndGas(model, context),
+              ],
+            ),
+          );
+        }
+      }),
+
+      /*------------------------------------------------------------------------------
+                                        Build Wallet List Container
+        -------------------------------------------------------------------------------*/
+      //   !Platform.isAndroid
+      //      ?
+      Expanded(
+        child: LayoutBuilder(
+            builder: (BuildContext ctx, BoxConstraints constraints) {
+          if (constraints.maxWidth < largeSize) {
+            return coinList(model, ctx);
+            // return tester();
+          } else {
+            return Container(
+              // color: Colors.amber,
+              child: Row(
+                children: [
+                  SizedBox(
+                      width: 300,
+                      height: double.infinity,
+                      child: coinList(model, ctx)),
+                  Expanded(
+                    child: model.walletInfo == null
+                        ? Container()
+                        : WalletFeaturesView(walletInfo: model.rightWalletInfo),
+                  )
+                ],
+              ),
+            );
+          }
+        }),
+      ),
+    ],
+  );
+}
+
+/*-------------------------------------------------------------------------------------
+                Build Background, Logo Container with balance card
+-------------------------------------------------------------------------------------*/
+Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
+  return Container(
+    height: 150,
+    decoration: BoxDecoration(
+        // image: DecorationImage(
+        //     image: AssetImage('assets/images/wallet-page/background.png'),
+        //     fit: BoxFit.cover)
+        ),
+    child: Stack(children: <Widget>[
+      Container(
+          // height: 350.0,
+          height: 150,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/images/wallet-page/background.png'),
+                  fit: BoxFit.cover)
+              // color: Colors.white,
+              // gradient: LinearGradient(
+              //     begin: FractionalOffset.topCenter,
+              //     end: FractionalOffset.bottomCenter,
+              //     colors: [
+              //       secondaryColor.withOpacity(0.0),
+              //       secondaryColor.withOpacity(0.4),
+              //       secondaryColor
+              //     ],
+              //     stops: [
+              //       0.0,
+              //       0.5,
+              //       1.0
+              //     ])
+              )),
+      Positioned(
+        top: 40,
+        left: 0,
+        right: 0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/wallet-page/exlogo.png',
+              // width: 35,
+              height: 35,
+              color: white,
+            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 4, left: 4),
+            //   child: Text(
+            //     "My Wallet",
+            //     style: TextStyle(
+            //         fontSize: 23,
+            //         color: white,
+            //         fontWeight: FontWeight.bold,
+            //         fontFamily: 'WorkSans-Thin'),
+            //   ),
+            // )
+          ],
+        ),
+      ),
+
+      /*------------------------------------------------------------
+                                    Total Balance Card
+          ------------------------------------------------------------*/
+      Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+              margin: EdgeInsets.only(bottom: 0),
+              child: TotalBalanceWidget(model: model)))
+    ]),
+  );
+}
+
+/*-----------------------------------------------------------------
+                            Hide Small Amount Row
+  -----------------------------------------------------------------*/
+Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
+  return Column(
+    children: <Widget>[
+      Container(
+        padding: EdgeInsets.only(right: 10, top: 15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      model.isShowFavCoins
+                          ? print('...')
+                          : model.hideSmallAmountAssets();
+                    },
+                    child: Row(
+                      children: <Widget>[
+                        model.isHideSmallAmountAssets
+                            ? Icon(
+                                Icons.money_off,
+                                semanticLabel: 'Show all Amount Assets',
+                                color: globals.primaryColor,
+                              )
+                            : Icon(
+                                Icons.attach_money,
+                                semanticLabel: 'Hide Small Amount Assets',
+                                color: model.isShowFavCoins
+                                    ? grey
+                                    : globals.primaryColor,
+                              ),
+                        Container(
+                          padding: EdgeInsets.only(left: 5),
+                          child: Text(
+                            AppLocalizations.of(context).hideSmallAmountAssets,
+                            style: model.isShowFavCoins
+                                ? Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(wordSpacing: 1.25, color: grey)
+                                : Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(wordSpacing: 1.25),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            //Add free FAB container
+            !model.isFreeFabNotUsed
+                ? Container()
+                : Container(
+                    margin: EdgeInsets.symmetric(vertical: 5.0),
+                    decoration: BoxDecoration(
+                        color: globals.primaryColor,
+                        borderRadius: BorderRadius.circular(30)),
+                    child: SizedBox(
+                      width: 120,
+                      height: 20,
+                      child: OutlinedButton.icon(
+                          style: ButtonStyle(
+                              padding:
+                                  MaterialStateProperty.all(EdgeInsets.all(0))),
+                          onPressed: () => model.getFreeFab(),
+                          icon: Icon(
+                            Icons.add,
+                            size: 18,
+                            color: white,
+                          ),
+                          label: Text(
+                            AppLocalizations.of(context).getFree + ' FAB',
+                            style: Theme.of(context).textTheme.headline6,
+                          )),
+                    )),
+            UIHelper.horizontalSpaceMedium,
+          ],
+        ),
+      ),
+      // Gas Container
+      Container(
+        margin: EdgeInsets.only(left: 8.0),
+        child: model.isBusy
+            ? Shimmer.fromColors(
+                baseColor: globals.primaryColor,
+                highlightColor: globals.grey,
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: Icon(
+                        Icons.donut_large,
+                        size: 18,
+                        color: globals.primaryColor,
+                      ),
+                    ),
+                    UIHelper.horizontalSpaceSmall,
+                    Text(
+                      "${AppLocalizations.of(context).gas}: ${NumberUtil().truncateDoubleWithoutRouding(model.gasAmount, precision: 6).toString()}",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(wordSpacing: 1.25),
+                    ),
+                    UIHelper.horizontalSpaceSmall,
+                    MaterialButton(
+                      minWidth: 70.0,
+                      height: 24,
+                      color: globals.green,
+                      padding: EdgeInsets.all(0),
+                      onPressed: () {},
+                      child: Text(
+                        AppLocalizations.of(context).addGas,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline6
+                            .copyWith(color: black),
+                      ),
+                    ),
+                  ],
+                ))
+            : Row(
+                children: [
+                  AddGasRow(model: model),
+                  UIHelper.horizontalSpaceSmall,
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () =>
+                          FocusScope.of(context).requestFocus(FocusNode()),
+                      child: Container(
+                        margin: EdgeInsets.only(top: 5),
+                        height: 30,
+                        child: TextField(
+                          enabled: model.isShowFavCoins ? false : true,
+                          decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: primaryColor, width: 1),
+                              ),
+                              // helperText: 'Search',
+                              // helperStyle:
+                              //     Theme.of(context).textTheme.bodyText1,
+                              suffixIcon: Icon(Icons.search, color: white)),
+                          controller: model.searchCoinTextController,
+                          onChanged: (String value) {
+                            model.isShowFavCoins
+                                ? model.searchFavCoinsByTickerName(value)
+                                : model.searchCoinsByTickerName(value);
+                          },
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+      ),
+
+      UIHelper.verticalSpaceSmall,
+      model.isUpdateWallet
+          ? Container(
+              child: TextButton(
+              child: Text(AppLocalizations.of(context).updateWallet),
+              onPressed: () => model.updateWallet(),
+            ))
+          : Container(),
+    ],
+  );
+}
+
+//coin list
+Widget coinList(WalletDashboardViewModel model, BuildContext context) {
+  var top = 0.0;
+  return DefaultTabController(
+      length: 3,
+      initialIndex: model.currentTabSelection,
+      child: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            MediaQuery.of(context).size.width < largeSize
+                ? SliverAppBar(
+                    elevation: 0,
+                    backgroundColor: secondaryColor,
+                    expandedHeight: 120.0,
+                    floating: false,
+                    pinned: true,
+                    leading: Container(),
+                    flexibleSpace: LayoutBuilder(builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      // print('constraints=' + constraints.toString());
+                      top = constraints.biggest.height;
+                      return FlexibleSpaceBar(
+                        centerTitle: true,
+                        titlePadding: EdgeInsets.all(0),
+                        title: AnimatedOpacity(
+                          duration: Duration(milliseconds: 50),
+                          opacity: top ==
+                                  MediaQuery.of(context).padding.top +
+                                      kToolbarHeight
+                              ? 1.0
+                              : 0.0,
+                          child: TotalBalanceWidget(model: model),
+                        ),
+                        background: topWidget(model, context),
+                      );
+                    }))
+                : SliverToBoxAdapter(),
+            SliverToBoxAdapter(
+                child: MediaQuery.of(context).size.width < largeSize
+                    ? amountAndGas(model, context)
+                    : Container()),
+            SliverPersistentHeader(
+                pinned: true,
+                delegate: _SliverAppBarDelegate(
+                  new TabBar(
+                      // labelPadding: EdgeInsets.only(bottom: 14, top: 14),
+                      onTap: (int tabIndex) {
+                        model.updateTabSelection(tabIndex);
+                      },
+                      labelColor: white,
+                      unselectedLabelColor: primaryColor,
+                      indicatorColor: primaryColor,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      tabs: [
+                        Tab(
+                          icon: Icon(
+                            FontAwesomeIcons.coins,
+                            // color: white,
+                            size: 16,
+                          ),
+                          iconMargin: EdgeInsets.only(bottom: 3),
+                          // child: Text(
+                          //     model.walletInfoCopy.length.toString(),
+                          //     style: TextStyle(fontSize: 10, color: grey))
+                        ),
+                        // custom tokens
+                        Tab(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.dashboard_customize,
+                                  color: primaryColor, size: 16),
+                              Text(
+                                  ' ' +
+                                      AppLocalizations.of(context).customTokens,
+                                  style: TextStyle(fontSize: 10, color: white)),
+                              // UIHelper.horizontalSpaceSmall,
+                              // Text(model.selectedCustomTokens.length.toString(),
+                              //     style: TextStyle(fontSize: 10, color: grey))
+                            ],
+                          ),
+                        ),
+                        Tab(
+                          icon: Icon(Icons.star,
+                              // color: primaryColor,
+                              size: 18),
+                          iconMargin: EdgeInsets.only(bottom: 3),
+                          // child: Text(
+                          //     model.favWalletInfoList.length.toString(),
+                          //     style: TextStyle(fontSize: 10, color: grey)),
+                        )
+                      ]),
+                ))
+          ];
+        },
+        body: Container(
+          // color: Colors.amber,
+          margin: EdgeInsets.only(top: 0),
+          padding: EdgeInsets.only(top: 0),
+          child: TabBarView(
+            //  physics: ClampingScrollPhysics(),
+            children: [
+              // All coins tab
+              model.isBusy
+                  ? ListView.builder(
+                      padding: EdgeInsets.only(top: 0),
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: model.walletInfoCopy.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return _coinDetailsCard(
+                            model.walletInfoCopy[index].tickerName
+                                .toLowerCase(),
+                            index,
+                            model.walletInfoCopy,
+                            model.elevation,
+                            context,
+                            model);
+                      },
+                    )
+                  : buildListView(model),
+
+              model.busy(model.selectedCustomTokens)
+                  ? model.sharedService.loadingIndicator()
+                  : model.selectedCustomTokens.isEmpty
+                      ? Center(
+                          child: Image.asset(
+                            'assets/images/icons/wallet_empty.png',
+                            color: Colors.grey,
+                            width: 40,
+                            height: 40,
+                          ),
+                          //Text('Favorite list empty'),
+                        )
+                      : Column(
+                          children: [
+                            UIHelper.verticalSpaceSmall,
+                            // symbol balance action text row
+                            Container(
+                              color: globals.white,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 5),
+                              child: Row(
+                                children: [
+                                  Text(AppLocalizations.of(context).logo),
+                                  UIHelper.horizontalSpaceMedium,
+                                  Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                          AppLocalizations.of(context).symbol)),
+                                  Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        AppLocalizations.of(context).balance,
+                                        textAlign: TextAlign.center,
+                                      )),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                          AppLocalizations.of(context).action))
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              child: ListView.builder(
+                                  padding: EdgeInsets.only(top: 0),
+                                  shrinkWrap: true,
+                                  itemCount: model.selectedCustomTokens.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    var customToken =
+                                        model.selectedCustomTokens[index];
+                                    return Container(
+                                      padding: EdgeInsets.all(3),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          // logo
+
+                                          Container(
+                                            width: 25,
+                                            height: 25,
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: NetworkImage(
+                                                      'https://test.blockchaingate.com/v2/issuetoken/${customToken.tokenId}/logo',
+                                                    ),
+                                                    fit: BoxFit.cover),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10.0)),
+                                          ),
+                                          UIHelper.horizontalSpaceMedium,
+                                          UIHelper.horizontalSpaceSmall,
+                                          // Symbol and name
+                                          Expanded(
+                                            flex: 1,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                // UIHelper
+                                                //     .verticalSpaceSmall,
+                                                Text(
+                                                  customToken.symbol
+                                                      .toUpperCase(),
+                                                  style: TextStyle(color: grey),
+                                                ),
+                                                Text(
+                                                  customToken.name,
+                                                  style:
+                                                      TextStyle(color: white),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          UIHelper.horizontalSpaceSmall,
+                                          // Balance
+                                          Expanded(
+                                            flex: 2,
+                                            child: model.busy(
+                                                    model.selectedCustomTokens)
+                                                ? Text('...')
+                                                : Text(
+                                                    customToken.balance
+                                                        .toString(),
+                                                    style:
+                                                        TextStyle(color: white),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                          ),
+
+                                          // Send Action
+                                          Container(
+                                            padding: EdgeInsets.only(top: 5),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  margin: EdgeInsets.all(2),
+                                                  child: IconButton(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .zero,
+                                                    onPressed: () {
+                                                      var wi = WalletInfo(
+                                                          address: customToken
+                                                              .owner);
+                                                      model.navigationService
+                                                          .navigateTo(
+                                                              ReceiveViewRoute,
+                                                              arguments: wi);
+                                                    },
+                                                    icon: Column(
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .download_for_offline_rounded,
+                                                          color: green,
+                                                        ),
+                                                        Expanded(
+                                                          child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)
+                                                                  .receive,
+                                                              style: TextStyle(
+                                                                  fontSize: 10,
+                                                                  color:
+                                                                      white)),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: EdgeInsets.all(2),
+                                                  child: IconButton(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .zero,
+                                                    onPressed: () {
+                                                      model.sendCustomToken(
+                                                          customToken);
+                                                    },
+                                                    icon: Column(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.send_rounded,
+                                                          color: primaryColor,
+                                                        ),
+                                                        Expanded(
+                                                          child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)
+                                                                  .send,
+                                                              style: TextStyle(
+                                                                  fontSize: 10,
+                                                                  color:
+                                                                      white)),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ],
+                        ),
+
+              FavTab(),
+            ],
+          ),
+        ),
+      ));
+}
+
+ListView buildListView(WalletDashboardViewModel model) {
+  return ListView.builder(
+    //  physics: ClampingScrollPhysics(),
+    // controller: model.walletsScrollController,
+    padding: EdgeInsets.only(top: 0),
+    shrinkWrap: true,
+    itemCount: model.walletInfo.length,
+    itemBuilder: (BuildContext context, int index) {
+      var name = model.walletInfo[index].tickerName.toLowerCase();
+      var usdVal = model.walletInfo[index].usdValue;
+
+      return Visibility(
+        // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
+        visible: usdVal >= 0 && !model.isHideSmallAmountAssets,
+        child: _coinDetailsCard(
+            '$name', index, model.walletInfo, model.elevation, context, model),
+        // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
+        replacement: Visibility(
+            visible: model.isHideSmallAmountAssets && usdVal != 0,
+            child: _coinDetailsCard('$name', index, model.walletInfo,
+                model.elevation, context, model)),
+      );
+    },
+  );
+}
+
+//single scroll view
+
+// Widget SSV() {
+//   return SingleChildScrollView(
+//     child: DefaultTabController(
+//       length: 2,
+//       initialIndex: model.currentTabSelection,
+//       child: Column(mainAxisSize: MainAxisSize.min, children: [
+//         TabBar(
+//             labelPadding: EdgeInsets.only(bottom: 5),
+//             onTap: (int tabIndex) {
+//               model.updateTabSelection(tabIndex);
+//             },
+//             indicatorColor: primaryColor,
+//             indicatorSize: TabBarIndicatorSize.tab,
+//             // Tab Names
+
+//             tabs: [
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   Icon(
+//                     FontAwesomeIcons.coins,
+//                     color: white,
+//                     size: 16,
+//                   ),
+//                   UIHelper.horizontalSpaceSmall,
+//                   Text(model.walletInfoCopy.length.toString(),
+//                       style: TextStyle(fontSize: 10, color: grey))
+//                 ],
+//               ),
+//               // Text(
+//               //     AppLocalizations.of(context)
+//               //         .allAssets,
+//               //     style: Theme.of(context)
+//               //         .textTheme
+//               //         .bodyText1
+//               //         .copyWith(
+//               //             fontWeight: FontWeight.w500,
+//               //             decorationThickness: 3)),
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   Icon(Icons.star, color: primaryColor, size: 18),
+//                   UIHelper.horizontalSpaceSmall,
+//                   Text(model.favWalletInfoList.length.toString(),
+//                       style: TextStyle(fontSize: 10, color: grey))
+//                 ],
+//               ),
+//             ]),
+//         UIHelper.verticalSpaceSmall,
+//         // Tabs view container
+//         Container(
+//           height: MediaQuery.of(context).size.height * .55 - model.minusHeight,
+//           child: TabBarView(
+//             physics: NeverScrollableScrollPhysics(),
+//             children: [
+//               // All coins tab
+//               model.isBusy
+//                   ? ListView.builder(
+//                       shrinkWrap: true,
+//                       itemCount: model.walletInfoCopy.length,
+//                       itemBuilder: (BuildContext context, int index) {
+//                         return _coinDetailsCard(
+//                             model.walletInfoCopy[index].tickerName
+//                                 .toLowerCase(),
+//                             index,
+//                             model.walletInfoCopy,
+//                             model.elevation,
+//                             context,
+//                             model);
+//                       },
+//                     )
+//                   : SmartRefresher(
+//                       enablePullDown: true,
+//                       header: Theme.of(context).platform == TargetPlatform.iOS
+//                           ? ClassicHeader()
+//                           : MaterialClassicHeader(),
+//                       controller: model.refreshController,
+//                       onRefresh: model.onRefresh,
+//                       // child: NotificationListener<
+//                       //         ScrollEndNotification>(
+//                       //     onNotification:
+//                       //         (scrollEnd) {
+//                       //       var metrics =
+//                       //           scrollEnd.metrics;
+//                       //       if (metrics.atEdge) {
+//                       //         if (metrics.pixels == 0)
+//                       //           print('At top');
+//                       //         else
+//                       //           print('At bottom');
+//                       //       }
+//                       //       return true;
+//                       //     },
+//                       child: buildListView(model)
+//                       //),
+//                       ),
+
+//               // Fav coins tab
+//               // Text(model.favWalletInfoList.length
+//               //     .toString())
+//               // model.anyObjectsBusy
+//               //     ? model.sharedService
+//               //         .loadingIndicator()
+//               //     :
+//               FavTab(),
+//             ],
+//           ),
+//         ),
+//       ]),
+//     ),
+//   );
+// }
+
+// //Top area widgets
+
+// Widget TopAreaWidgets(WalletDashboardViewModel model, BuildContext context) {
+//   return Container(
+//     child: Column(
+//       children: <Widget>[
+//         /*-------------------------------------------------------------------------------------
+//                               Build Background and Logo Container
+// -------------------------------------------------------------------------------------*/
+//         Container(
+//           // width: double.infinity,
+//           height: 130,
+//           decoration: BoxDecoration(
+//               image: DecorationImage(
+//                   image: AssetImage('assets/images/wallet-page/background.png'),
+//                   fit: BoxFit.cover)),
+//           child: Column(
+//               mainAxisAlignment: MainAxisAlignment.start,
+//               children: <Widget>[
+//                 Expanded(
+//                   child: Stack(
+//                     clipBehavior: Clip.none,
+//                     children: <Widget>[
+//                       // Positioned(
+//                       //   top: 5,
+//                       //   right: 5,
+//                       //   child: IconButton(
+//                       //     icon: Icon(Icons.menu,
+//                       //         color: globals.white, size: 40),
+//                       //     onPressed: () {
+//                       //       log.i('trying to open the drawer');
+//                       //       key.currentState.openDrawer();
+//                       //     },
+//                       //   ),
+//                       // )
+//                     ],
+//                   ),
+//                 ),
+//                 Expanded(
+//                   child: Stack(
+//                       clipBehavior: Clip.none,
+//                       alignment: Alignment.center,
+//                       children: <Widget>[
+//                         Positioned(
+//                           top: -10,
+//                           child: Image.asset(
+//                             'assets/images/start-page/logo.png',
+//                             width: 180,
+//                             color: globals.white,
+//                           ),
+//                         ),
+//                       ]),
+//                 ),
+
+// /*------------------------------------------------------------
+//                           Total Balance Card
+// ------------------------------------------------------------*/
+//                 Expanded(
+//                   child: TotalBalanceWidget(model: model),
+//                 ),
+//               ]),
+//         ),
+
+// /*-----------------------------------------------------------------
+//                           Hide Small Amount Row
+// -----------------------------------------------------------------*/
+//       ],
+//     ),
+//   );
+// }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------
                                                 Coin Details Wallet Card
@@ -1374,7 +2288,8 @@ class TotalBalanceWidget extends StatelessWidget {
                               height: 50,
                               child: Center(
                                 child: Container(
-                                    padding: EdgeInsets.all(8),
+                                    width: 40,
+                                    height: 40,
                                     decoration: BoxDecoration(
                                         borderRadius:
                                             BorderRadius.circular(30)),
@@ -1522,9 +2437,27 @@ class TotalBalanceWidget extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        )
-      ],
+            InkWell(
+                onTap: () async {
+                  await model.refreshBalance();
+                },
+                child: model.isBusy
+                    ? Container(
+                        margin: EdgeInsets.only(left: 3.0),
+                        child: SizedBox(
+                          child: model.sharedService.loadingIndicator(),
+                          width: 16,
+                          height: 16,
+                        ),
+                      )
+                    : Icon(
+                        Icons.refresh,
+                        color: globals.white,
+                        size: 28,
+                      ))
+          ],
+        ),
+      ),
     );
   }
 }
@@ -1614,5 +2547,30 @@ class DepositWidget extends StatelessWidget {
             Icon(Icons.arrow_downward, color: globals.green, size: 16),
           ],
         ));
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate(this._tabBar);
+
+  final TabBar _tabBar;
+
+  @override
+  double get minExtent => _tabBar.preferredSize.height;
+  @override
+  double get maxExtent => _tabBar.preferredSize.height;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return new Container(
+      child: _tabBar,
+      color: secondaryColor,
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return false;
   }
 }

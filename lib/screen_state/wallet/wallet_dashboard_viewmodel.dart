@@ -15,13 +15,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
+import 'package:exchangilymobileapp/constants/ui_var.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
-import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -87,6 +89,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   List<WalletBalance> walletsCopy = [];
   List<WalletBalance> favWallets = [];
 
+  WalletInfo rightWalletInfo;
   final double elevation = 5;
   String totalUsdBalance = '';
 
@@ -138,6 +141,9 @@ class WalletDashboardViewModel extends BaseViewModel {
   String totalLockedBalance = '';
 
   String totalExchangeBalance = '';
+  List<CustomTokenModel> issueTokens = [];
+  List<CustomTokenModel> selectedCustomTokens = [];
+  var receiverWalletAddressTextController = TextEditingController();
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -161,6 +167,8 @@ class WalletDashboardViewModel extends BaseViewModel {
     walletService.storeTokenListInDB();
 
     setBusy(false);
+    issueTokens = await apiService.getIssueTokens();
+    await buildSelectedCustomTokenList();
   }
 
 // set route with coin token type and address
@@ -220,6 +228,183 @@ class WalletDashboardViewModel extends BaseViewModel {
   }
 
 // TODO add decimalLimit property in the wallet info and fill it in the refresh balance from local stored decimal data
+// Send custom token
+  sendCustomToken(CustomTokenModel customTokenModel) async {
+    var exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+
+    var wallet = WalletInfo(
+        tickerName: customTokenModel.symbol,
+        tokenType: 'FAB',
+        address: exgAddress,
+        availableBalance: customTokenModel.balance);
+    storageService.customTokenData = jsonEncode(customTokenModel.toJson());
+    navigationService.navigateTo(SendViewRoute, arguments: wallet);
+  }
+
+// build Selected custom token list
+
+  Future buildSelectedCustomTokenList() async {
+    log.i('Building selected custom token list...');
+    String fabAddress = await sharedService.getExgAddressFromWalletDatabase();
+    selectedCustomTokens.clear();
+    String selectedCustomTokensJson = storageService.customTokens;
+    if (selectedCustomTokensJson != null && selectedCustomTokensJson != '') {
+      List<CustomTokenModel> customTokensFromStorage =
+          CustomTokenModelList.fromJson(jsonDecode(selectedCustomTokensJson))
+              .customTokens;
+
+      selectedCustomTokens = customTokensFromStorage;
+
+      log.w(
+          'selectedCustomTokens length ${selectedCustomTokens.length} --selectedCustomTokens last item ${selectedCustomTokens.last.toJson()}');
+      selectedCustomTokens.forEach((token) async {
+        log.w('token before adding balance ${token.toJson()}');
+        var balance = await fabUtils.getFabTokenBalanceForABI(
+            Constants.CustomTokenSignatureAbi,
+            token.tokenId,
+            fabAddress,
+            token.decimal);
+        setBusyForObject(selectedCustomTokens, true);
+        token.balance = balance;
+        setBusyForObject(selectedCustomTokens, false);
+        log.i('token after adding balance ${token.toJson()}');
+      });
+    }
+    log.w('Selected custom token list => Finished');
+  }
+
+  // addCustomToken
+  showCustomTokensBottomSheet() async {
+    // todo checks the already added tokens
+    // and show added checkmark infront of those tokens
+    // as well as remove button which will remove the token from the list
+
+    var isMatched;
+    if (issueTokens.isNotEmpty)
+      showModalBottomSheet(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          context: context,
+          builder: (BuildContext context) => FractionallySizedBox(
+                heightFactor: 0.9,
+                child: StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                    padding: EdgeInsets.all(5),
+                    //  height: 500,
+                    child: ListView.builder(
+                        itemCount: issueTokens.length,
+                        itemBuilder: (context, index) {
+                          try {
+                            isMatched = selectedCustomTokens
+                                .firstWhere((element) =>
+                                    element.tokenId ==
+                                    issueTokens[index].tokenId)
+                                .symbol;
+
+                            print(
+                                '${issueTokens[index].symbol} -- is in the selectedCustomTokens list ? $isMatched match found -- with token id ${issueTokens[index].tokenId}');
+                          } catch (err) {
+                            isMatched = null;
+                            log.w(
+                                'no match found for ${issueTokens[index].symbol} with token id ${issueTokens[index].tokenId}');
+                          }
+                          return Row(children: [
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                children: [
+                                  Text(issueTokens[index].symbol.toUpperCase(),
+                                      style: TextStyle(
+                                          color: white, fontSize: 12)),
+                                  Text(issueTokens[index].name,
+                                      style: TextStyle(
+                                          color: primaryColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold))
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                children: [
+                                  Text('Total Supply',
+                                      style: TextStyle(
+                                          color: primaryColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                  Text(issueTokens[index].totalSupply,
+                                      style:
+                                          TextStyle(color: grey, fontSize: 14))
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                  isMatched == null ? green : sellPrice,
+                                )),
+                                onPressed: () {
+                                  int tokenIndexToRemove = selectedCustomTokens
+                                      .indexWhere((element) =>
+                                          element.tokenId ==
+                                          issueTokens[index].tokenId);
+                                  setBusyForObject(selectedCustomTokens, true);
+
+                                  if (tokenIndexToRemove.isNegative) {
+                                    setState(() => selectedCustomTokens
+                                        .add(issueTokens[index]));
+                                  } else {
+                                    log.i(
+                                        'selectedCustomTokens - length before removing token ${selectedCustomTokens.length}');
+                                    setState(() => selectedCustomTokens
+                                        .removeAt(tokenIndexToRemove));
+
+                                    log.e(
+                                        'selectedCustomTokens - length --selectedCustomTokens.length => removed token ${issueTokens[index].symbol}');
+                                  }
+                                  setBusyForObject(selectedCustomTokens, false);
+
+                                  log.i(
+                                      'customTokens - length ${selectedCustomTokens.length}');
+                                  var jsonString = [];
+                                  jsonString = selectedCustomTokens
+                                      .map((cToken) =>
+                                          jsonEncode(cToken.toJson()))
+                                      .toList();
+                                  storageService.customTokens = '';
+                                  storageService.customTokens =
+                                      jsonString.toString();
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                          isMatched == null ? 'Add' : 'Remove',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 12)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ]);
+                        }),
+                  );
+                }),
+              ));
+    else
+      log.e('Issue token list empty');
+  }
+// Todo: add decimalLimit property in the wallet info and
+// Todo: fill it in the refresh balance from local stored decimal data
 
   storeWalletDecimalData() async {
     walletDecimalList = [];
@@ -787,6 +972,23 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   updateShowCaseViewStatus() {
     _isShowCaseView = false;
+  }
+
+/*----------------------------------------------------------------------
+                        On Single Coin Card Click
+----------------------------------------------------------------------*/
+
+  onSingleCoinCardClick(index) {
+    if (MediaQuery.of(context).size.width < largeSize) {
+      FocusScope.of(context).requestFocus(FocusNode());
+      navigationService.navigateTo(WalletFeaturesViewRoute,
+          arguments: walletInfo[index]);
+      searchCoinTextController.clear();
+      resetWalletInfoObject();
+    } else {
+      rightWalletInfo = walletInfo[index];
+      (context as Element).markNeedsBuild();
+    }
   }
 
 /*----------------------------------------------------------------------

@@ -1,16 +1,18 @@
 // symbol, logo, tokenId are probably what you want
 // they are fab tokens like EXG
-class IssueTokenModel {
+class CustomTokenModel {
   String owner;
   String name;
   String symbol;
   String logo;
   String totalSupply;
   String txid;
-  String tokenId;
+  String tokenId; // smart contract address
   String status;
+  int decimal;
+  double balance;
 
-  IssueTokenModel(
+  CustomTokenModel(
       {this.owner,
       this.name,
       this.symbol,
@@ -18,9 +20,14 @@ class IssueTokenModel {
       this.totalSupply,
       this.txid,
       this.tokenId,
-      this.status});
+      this.status,
+      this.decimal,
+      this.balance}) {
+    this.decimal ?? 18;
+    this.balance ?? 0.0;
+  }
 
-  IssueTokenModel.fromJson(Map<String, dynamic> json) {
+  CustomTokenModel.fromJson(Map<String, dynamic> json) {
     owner = json['owner'];
     name = json['name'];
     symbol = json['symbol'];
@@ -29,6 +36,8 @@ class IssueTokenModel {
     txid = json['txid'];
     tokenId = json['tokenId'];
     status = json['status'];
+    decimal = json['decimal'] ?? 18;
+    balance = json['balance'] ?? 0.0;
   }
 
   Map<String, dynamic> toJson() {
@@ -41,17 +50,19 @@ class IssueTokenModel {
     data['txid'] = this.txid;
     data['tokenId'] = this.tokenId;
     data['status'] = this.status;
+    data['decimal'] = this.decimal;
+    data['balance'] = this.balance;
     return data;
   }
 }
 
-class IssueTokenModelList {
-  final List<IssueTokenModel> issueTokens;
-  IssueTokenModelList({this.issueTokens});
+class CustomTokenModelList {
+  final List<CustomTokenModel> customTokens;
+  CustomTokenModelList({this.customTokens});
 
-  factory IssueTokenModelList.fromJson(List<dynamic> parsedJson) {
-    List<IssueTokenModel> issueTokens = [];
-    issueTokens = parsedJson.map((i) => IssueTokenModel.fromJson(i)).toList();
-    return IssueTokenModelList(issueTokens: issueTokens);
+  factory CustomTokenModelList.fromJson(List<dynamic> parsedJson) {
+    List<CustomTokenModel> customTokens = [];
+    customTokens = parsedJson.map((i) => CustomTokenModel.fromJson(i)).toList();
+    return CustomTokenModelList(customTokens: customTokens);
   }
 }

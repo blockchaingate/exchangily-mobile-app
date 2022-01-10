@@ -141,6 +141,8 @@ class VaultService {
   String fixed32Chars(String input, int keyLength) {
     if (input.length < 32) {
       int diff = 32 - keyLength;
+
+      //TODO: add hex character instead of '0' for better security
       for (var i = 0; i < diff; i++) {
         input += '0';
       }

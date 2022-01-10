@@ -30,6 +30,7 @@ class WalletSetupView extends StatelessWidget {
         model.context = context;
 
         model.init();
+        await model.checkVersion(context);
       },
       builder: (context, WalletSetupViewmodel model, child) => WillPopScope(
         onWillPop: () {

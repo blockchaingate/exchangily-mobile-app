@@ -120,26 +120,30 @@ class VersionService {
   }
 
   Future checkVersion(context) async {
-    await getVersionInfo().then((res) async {
-      if (res == "error") {
-        log.e("checkVersion has error!");
-      } else {
-        log.i("Have Res info");
+    try {
+      await getVersionInfo().then((res) async {
+        if (res == "error") {
+          log.e("checkVersion has error!");
+        } else {
+          log.i("Have Res info");
 
-        // PackageInfo packageInfo = await PackageInfo.fromPlatform();
-        // String userVersion = (packageInfo.version).toString();
-        Version currentVersion = Version.parse(res['userVersion']);
-        print("userVersion: " + res['userVersion']);
+          // PackageInfo packageInfo = await PackageInfo.fromPlatform();
+          // String userVersion = (packageInfo.version).toString();
+          Version currentVersion = Version.parse(res['userVersion']);
+          print("userVersion: " + res['userVersion']);
 
-        Version latestVersion = Version.parse(res['data']['version']);
+          Version latestVersion = Version.parse(res['data']['version']);
 
-        print("latestVersion: " + res['data']['version']);
+          print("latestVersion: " + res['data']['version']);
 
-        if (res['status'] == 'good' && latestVersion > currentVersion) {
-          _showMyDialog(res['data'], context, res['userVersion']);
+          if (res['status'] == 'good' && latestVersion > currentVersion) {
+            _showMyDialog(res['data'], context, res['userVersion']);
+          }
         }
-      }
-    });
+      });
+    } catch (err) {
+      log.e('Check version CATCh $err');
+    }
   }
 
   Future<void> _showMyDialog(res, context, userVersion) async {
