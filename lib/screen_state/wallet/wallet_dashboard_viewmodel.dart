@@ -21,7 +21,7 @@ import 'package:exchangilymobileapp/constants/ui_var.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet/issue_token.dart';
+import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
@@ -130,8 +130,9 @@ class WalletDashboardViewModel extends BaseViewModel {
   bool isTopOfTheList = true;
   final fabUtils = FabUtils();
   List<Map<String, int>> walletDecimalList = [];
-  List<IssueTokenModel> issueTokens = [];
-  List<IssueTokenModel> selectedCustomTokens = [];
+  List<CustomTokenModel> issueTokens = [];
+  List<CustomTokenModel> selectedCustomTokens = [];
+  var receiverWalletAddressTextController = TextEditingController();
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -158,19 +159,18 @@ class WalletDashboardViewModel extends BaseViewModel {
     await buildSelectedCustomTokenList();
   }
 
-  testSomething() {
-    // fabUtils.getFabTokenBalanceForABIForCustomTokens(
-    //     Constants.CustomTokenSignatureAbi,
-    //     "fd603e9098f46dabaed3209819cfb027b105e406",
-    //     "0xdcd0f23125f74ef621dfa3310625f8af0dcd971b",
-    //     18);
-    print(BigInt.tryParse(
-        '000000000000000000000000000000000000000000115eec47f6cf7e35000000',
-        radix: 16));
-  }
-
 // Send custom token
-  sendCustomToken(String smartContractAddress, int decimal) async {}
+  sendCustomToken(CustomTokenModel customTokenModel) async {
+    var exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+
+    var wallet = WalletInfo(
+        tickerName: customTokenModel.symbol,
+        tokenType: 'FAB',
+        address: exgAddress,
+        availableBalance: customTokenModel.balance);
+    storageService.customTokenData = jsonEncode(customTokenModel.toJson());
+    navigationService.navigateTo(SendViewRoute, arguments: wallet);
+  }
 
 // build Selected custom token list
 
@@ -180,16 +180,16 @@ class WalletDashboardViewModel extends BaseViewModel {
     selectedCustomTokens.clear();
     String selectedCustomTokensJson = storageService.customTokens;
     if (selectedCustomTokensJson != null && selectedCustomTokensJson != '') {
-      List<IssueTokenModel> customTokensFromStorage =
-          IssueTokenModelList.fromJson(jsonDecode(selectedCustomTokensJson))
-              .issueTokens;
+      List<CustomTokenModel> customTokensFromStorage =
+          CustomTokenModelList.fromJson(jsonDecode(selectedCustomTokensJson))
+              .customTokens;
 
       selectedCustomTokens = customTokensFromStorage;
 
       log.w(
           'selectedCustomTokens length ${selectedCustomTokens.length} --selectedCustomTokens last item ${selectedCustomTokens.last.toJson()}');
       selectedCustomTokens.forEach((token) async {
-        print('token ${token.toJson()}');
+        log.w('token before adding balance ${token.toJson()}');
         var balance = await fabUtils.getFabTokenBalanceForABI(
             Constants.CustomTokenSignatureAbi,
             token.tokenId,
@@ -198,6 +198,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         setBusyForObject(selectedCustomTokens, true);
         token.balance = balance;
         setBusyForObject(selectedCustomTokens, false);
+        log.i('token after adding balance ${token.toJson()}');
       });
     }
     log.w('Selected custom token list => Finished');
@@ -221,6 +222,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                 child: StatefulBuilder(
                     builder: (BuildContext context, StateSetter setState) {
                   return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                     padding: EdgeInsets.all(5),
                     //  height: 500,
                     child: ListView.builder(

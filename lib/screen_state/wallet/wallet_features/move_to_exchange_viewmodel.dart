@@ -176,12 +176,12 @@ class MoveToExchangeViewModel extends BaseViewModel {
     await updateTransFee();
     double finalAmount = 0.0;
 
-    finalAmount = await amountAfterFee(isMaxAmount: true);
-    if (transFee != 0.0)
+    if (transFee != 0.0) {
+      finalAmount = await amountAfterFee(isMaxAmount: true);
       amountController.text = NumberUtil()
           .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)
           .toString();
-    else
+    } else
       sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).insufficientGasAmount);
     setBusy(false);

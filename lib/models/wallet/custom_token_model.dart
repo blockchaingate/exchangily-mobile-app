@@ -1,6 +1,6 @@
 // symbol, logo, tokenId are probably what you want
 // they are fab tokens like EXG
-class IssueTokenModel {
+class CustomTokenModel {
   String owner;
   String name;
   String symbol;
@@ -12,7 +12,7 @@ class IssueTokenModel {
   int decimal;
   double balance;
 
-  IssueTokenModel(
+  CustomTokenModel(
       {this.owner,
       this.name,
       this.symbol,
@@ -27,7 +27,7 @@ class IssueTokenModel {
     this.balance ?? 0.0;
   }
 
-  IssueTokenModel.fromJson(Map<String, dynamic> json) {
+  CustomTokenModel.fromJson(Map<String, dynamic> json) {
     owner = json['owner'];
     name = json['name'];
     symbol = json['symbol'];
@@ -56,13 +56,13 @@ class IssueTokenModel {
   }
 }
 
-class IssueTokenModelList {
-  final List<IssueTokenModel> issueTokens;
-  IssueTokenModelList({this.issueTokens});
+class CustomTokenModelList {
+  final List<CustomTokenModel> customTokens;
+  CustomTokenModelList({this.customTokens});
 
-  factory IssueTokenModelList.fromJson(List<dynamic> parsedJson) {
-    List<IssueTokenModel> issueTokens = [];
-    issueTokens = parsedJson.map((i) => IssueTokenModel.fromJson(i)).toList();
-    return IssueTokenModelList(issueTokens: issueTokens);
+  factory CustomTokenModelList.fromJson(List<dynamic> parsedJson) {
+    List<CustomTokenModel> customTokens = [];
+    customTokens = parsedJson.map((i) => CustomTokenModel.fromJson(i)).toList();
+    return CustomTokenModelList(customTokens: customTokens);
   }
 }

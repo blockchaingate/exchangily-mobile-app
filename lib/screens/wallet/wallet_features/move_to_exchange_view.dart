@@ -113,24 +113,28 @@ class MoveToExchangeScreen extends StatelessWidget {
                       )
                     ],
                   ),
-                  OutlinedButton(
-                      style: ButtonStyle(
-                        minimumSize: MaterialStateProperty.all(Size.square(20)),
-                        padding: MaterialStateProperty.all(
-                            EdgeInsets.symmetric(vertical: 2, horizontal: 5)),
-                        backgroundColor: MaterialStateProperty.all(green),
-                      ),
-                      onPressed: () {
-                        if (walletInfo.availableBalance != 0.0)
-                          model.fillMaxAmount();
-                      },
-                      child: Text(
-                        AppLocalizations.of(context).maxAmount,
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2
-                            .copyWith(color: white),
-                      ))
+                  model.tokenType.isNotEmpty
+                      ? OutlinedButton(
+                          style: ButtonStyle(
+                            minimumSize:
+                                MaterialStateProperty.all(Size.square(20)),
+                            padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(
+                                    vertical: 2, horizontal: 5)),
+                            backgroundColor: MaterialStateProperty.all(green),
+                          ),
+                          onPressed: () {
+                            if (walletInfo.availableBalance != 0.0)
+                              model.fillMaxAmount();
+                          },
+                          child: Text(
+                            AppLocalizations.of(context).maxAmount,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle2
+                                .copyWith(color: white),
+                          ))
+                      : Container()
                 ],
               ),
               UIHelper.verticalSpaceSmall,

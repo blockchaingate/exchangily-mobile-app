@@ -16,7 +16,7 @@ import 'dart:io';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/models/app_update_model.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
-import 'package:exchangilymobileapp/models/wallet/issue_token.dart';
+import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
@@ -49,8 +49,6 @@ class ApiService {
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
 
-  final blockchaingateUrl = environment['endpoints']['blockchaingate'];
-
 // Post app update
 
   postAppUpdate() async {
@@ -77,22 +75,24 @@ class ApiService {
 
 // Get issue tokens
 
-  Future<List<IssueTokenModel>> getIssueTokens() async {
-    String url =
-        blockchaingateUrl + GetIsueTokenApiRoute + '/' + GetWithoutLogoApiRoute;
-    log.i('getTokenListUpdates url $url');
+  Future<List<CustomTokenModel>> getIssueTokens() async {
+    String url = baseBlockchainGateV2Url +
+        GetIsueTokenApiRoute +
+        '/' +
+        GetWithoutLogoApiRoute;
+    log.i('getIssueTokens url $url');
     try {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
 
       log.w('json data $json');
       var parsedTokenList = json as List;
-      log.w('getTokenListUpdates  $parsedTokenList');
-      IssueTokenModelList isueTokenList =
-          IssueTokenModelList.fromJson(parsedTokenList);
-      return isueTokenList.issueTokens;
+
+      CustomTokenModelList isueTokenList =
+          CustomTokenModelList.fromJson(parsedTokenList);
+      return isueTokenList.customTokens;
     } catch (err) {
-      log.e('getTokenListUpdates CATCH $err');
+      log.e('getIssueTokens CATCH $err');
       throw Exception(err);
     }
   }

@@ -1884,6 +1884,25 @@ class AppLocalizations {
   String get time {
     return Intl.message('Time', name: 'time', desc: 'time_market_orders');
   }
+
+  String get logo {
+    return Intl.message('Logo',
+        name: 'logo', desc: 'wallet_dashboard_custom_token_logo');
+  }
+
+  String get addToken {
+    return Intl.message('Add Token', name: 'addToken', desc: 'addToken');
+  }
+
+  String get editTokenList {
+    return Intl.message('Edit Token List',
+        name: 'editTokenList', desc: 'editTokenList');
+  }
+
+  String get customTokens {
+    return Intl.message('Custom Tokens',
+        name: 'customTokens', desc: 'customTokens');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

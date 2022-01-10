@@ -26,6 +26,7 @@ class LocalStorageService {
   static const String PhoneProtectedKey = 'phoneProtectedKey';
   static const String AppGoneInTheBackgroundKey = 'appGoneInTheBackgroundKey';
   static const String CustomTokensKey = 'customTokensKey';
+  static const String CustomTokenDataKey = 'customTokenDataKey';
 
 /*----------------------------------------------------------------------
                   Instance
@@ -90,6 +91,12 @@ class LocalStorageService {
     }
     return objLength;
   }
+
+  // Custom token Data
+
+  String get customTokenData => _getFromDisk(CustomTokenDataKey) ?? '';
+
+  set customTokenData(String value) => _saveToDisk(CustomTokenDataKey, value);
 
   // Custom tokens
 

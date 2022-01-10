@@ -190,7 +190,7 @@ class WalletService {
   Future<int> getSingleCoinWalletDecimalLimit(String coinName) async {
     int res = 0;
 // first look coin in the local storage
-// TODO uncomment code below once savedecimaldata in local storage works in wallet service
+// TODO uncomment code below once save decimaldata in local storage works in wallet service
     // List<Map<String, int>> decimalDataFromStorage =
     //     jsonEncode(storageService.walletDecimalList) as List;
     // decimalDataFromStorage.forEach((decimalDataList) {

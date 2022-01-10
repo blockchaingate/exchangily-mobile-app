@@ -12,11 +12,14 @@
 */
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -24,6 +27,8 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
@@ -52,6 +57,8 @@ class SendViewModel extends BaseViewModel {
       locator<WalletDataBaseService>();
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
+  final storageService = locator<LocalStorageService>();
+  final navigationService = locator<NavigationService>();
 
   BuildContext context;
   var options = {};
@@ -101,7 +108,7 @@ class SendViewModel extends BaseViewModel {
     String coinName = walletInfo.tickerName;
     await setFee(coinName);
     fabAddress = await sharedService.getFABAddressFromWalletDatabase();
-    await refreshBalance();
+    if (storageService.customTokenData.isEmpty) await refreshBalance();
     decimalLimit =
         await walletService.getSingleCoinWalletDecimalLimit(coinName);
     if (decimalLimit == null) decimalLimit = 8;
@@ -168,6 +175,15 @@ class SendViewModel extends BaseViewModel {
           environment["chains"]["FAB"]["gasLimit"].toString();
       feeUnit = 'FAB';
     }
+  }
+
+  test() {
+    // CustomTokenModel customTokenModel =
+    //     (jsonDecode(storageService.customTokenData) as dynamic)
+    //         .cast<CustomTokenModel>();
+    CustomTokenModel customTokenModel =
+        CustomTokenModel.fromJson(jsonDecode(storageService.customTokenData));
+    print(customTokenModel.toJson());
   }
 
   bool isTrx() {
@@ -310,8 +326,21 @@ class SendViewModel extends BaseViewModel {
           (tokenType != null) &&
           (tokenType != '')) {
         var decimal;
-        String contractAddr =
-            environment["addresses"]["smartContract"][tickerName];
+
+        String contractAddr = '';
+
+        if (storageService.customTokenData.isNotEmpty) {
+          try {
+            CustomTokenModel customTokenModel = CustomTokenModel.fromJson(
+                jsonDecode(storageService.customTokenData));
+            contractAddr = customTokenModel.tokenId;
+            decimalLimit = customTokenModel.decimal;
+          } catch (err) {
+            log.e(
+                'Send transaction func: custom token from storage failed conversion');
+          }
+        } else
+          contractAddr = environment["addresses"]["smartContract"][tickerName];
 
         if (contractAddr == null) {
           await tokenListDatabaseService
@@ -322,6 +351,7 @@ class SendViewModel extends BaseViewModel {
             log.i('send token address ${token.toJson()}');
           });
         }
+
         options = {
           'tokenType': tokenType,
           'contractAddress': contractAddr,
