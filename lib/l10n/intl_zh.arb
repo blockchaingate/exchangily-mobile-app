@@ -2165,5 +2165,83 @@
     "description": "lock_app_now",
     "type": "text",
     "placeholders": {}
+  },
+  "totalExchangeBalance": "交易所余额",
+  "@totalExchangeBalance": {
+    "description": "totalExchangeBalance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalLockedBalance": "锁定余额",
+  "@totalLockedBalance": {
+    "description": "totalLockedBalance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalWalletBalance": "钱包总余额",
+  "@totalWalletBalance": {
+    "description": "totalWalletBalance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "importantWalletUpdateNotice": " 密码无效：如果您填写了有效密码，请在设置中删除当前钱包，然后重新导入，使用最新的钱包",
+  "@importantWalletUpdateNotice": {
+    "description": "importantWalletUpdateNotice",
+    "type": "text",
+    "placeholders": {}
+  },
+  "verifyingWallet": "验证钱包",
+  "@verifyingWallet": {
+    "description": "verifyingWallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteWalletConfirmationPopup": " 删除钱包确认",
+  "@deleteWalletConfirmationPopup": {
+    "description": "deleteWalletConfirmationPopup",
+    "type": "text",
+    "placeholders": {}
+  },
+  "logo": "Logo",
+  "@logo": {
+    "description": "wallet_dashboard_custom_token_logo",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addToken": "添加代币",
+  "@addToken": {
+    "description": "addToken",
+    "type": "text",
+    "placeholders": {}
+  },
+  "editTokenList": "编辑代币列表",
+  "@editTokenList": {
+    "description": "editTokenList",
+    "type": "text",
+    "placeholders": {}
+  },
+  "customTokens": "自定义代币",
+  "@customTokens": {
+    "description": "customTokens",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalSupply": "总供应量",
+  "@totalSupply": {
+    "description": "totalSupply",
+    "type": "text",
+    "placeholders": {}
+  },
+  "add": "添加",
+  "@add": {
+    "description": "add",
+    "type": "text",
+    "placeholders": {}
+  },
+  "remove": "移除",
+  "@remove": {
+    "description": "remove",
+    "type": "text",
+    "placeholders": {}
   }
 }

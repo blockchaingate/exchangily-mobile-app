@@ -30,7 +30,7 @@ class SendWalletView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => SendViewModel(),
-        onModelReady: (model) async {
+        onModelReady: (SendViewModel model) async {
           model.context = context;
           model.walletInfo = walletInfo;
 
@@ -479,12 +479,25 @@ class SendWalletView extends StatelessWidget {
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6)
-                                      : Text(
-                                          '${AppLocalizations.of(context).gasFee}: 15 TRX',
-                                          textAlign: TextAlign.left,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6),
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                                '${AppLocalizations.of(context).gasFee}: 15 TRX',
+                                                textAlign: TextAlign.left,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6),
+                                            Text(
+                                                'TRX' +
+                                                    '${AppLocalizations.of(context).balance}: ${model.chainBalance} TRX',
+                                                textAlign: TextAlign.left,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6),
+                                          ],
+                                        ),
                                 )
                               : Column(
                                   children: <Widget>[

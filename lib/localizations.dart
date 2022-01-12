@@ -1936,6 +1936,19 @@ class AppLocalizations {
     return Intl.message('Custom Tokens',
         name: 'customTokens', desc: 'customTokens');
   }
+
+  String get totalSupply {
+    return Intl.message('Total Supply',
+        name: 'totalSupply', desc: 'totalSupply');
+  }
+
+  String get add {
+    return Intl.message('Add', name: 'add', desc: 'add');
+  }
+
+  String get remove {
+    return Intl.message('Remove', name: 'remove', desc: 'remove');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -330,11 +330,12 @@ class WalletService {
   Future<bool> hasSufficientWalletBalance(
       double amount, String tickerName) async {
     bool isValidAmount = true;
-    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
-    String coinAddress = await walletDatabaseService
-        .getWalletBytickerName(tickerName)
-        .then((wallet) => wallet.address);
-    log.w('coinAddress $coinAddress');
+    String fabAddress =
+        await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
+
+    String thirdPartyAddress = await coreWalletDatabaseService
+        .getWalletAddressByTickerName(tickerName);
+    log.w('coinAddress $thirdPartyAddress');
     await apiService
         .getSingleWalletBalance(fabAddress, tickerName, thirdPartyAddress)
         .then((walletBalance) {

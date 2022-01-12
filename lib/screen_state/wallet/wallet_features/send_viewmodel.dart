@@ -103,10 +103,11 @@ class SendViewModel extends BaseViewModel {
     walletInfo.tickerName == 'USDTX'
         ? tickerName = 'USDT(TRC20)'
         : tickerName = walletInfo.tickerName;
+    if (walletInfo.tokenType == 'TRON') walletInfo.tokenType = "TRX";
     tokenType = walletInfo.tokenType;
     String coinName = walletInfo.tickerName;
     await setFee(coinName);
-    fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
     if (storageService.customTokenData.isEmpty) await refreshBalance();
     decimalLimit =
         await walletService.getSingleCoinWalletDecimalLimit(coinName);
@@ -118,11 +119,11 @@ class SendViewModel extends BaseViewModel {
   // get native chain ticker balance
   getNativeChainTickerBalance() async {
     if (fabAddress.isEmpty)
-      fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+      fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
 
     await apiService
         .getSingleWalletBalance(fabAddress, tokenType, walletInfo.address)
-        .then((walletBalance) => chainBalance = walletBalance.first.balance);
+        .then((walletBalance) => chainBalance = walletBalance[0].balance);
   }
 
   /*---------------------------------------------------
@@ -216,16 +217,13 @@ class SendViewModel extends BaseViewModel {
       if (walletInfo.tickerName == 'USDTX') {
         transFee = 15;
         finalAmount = amount;
-      }
-
-      if (walletInfo.tickerName == 'TRX') {
+      } else if (walletInfo.tickerName == 'TRX') {
         transFee = 1.0;
         finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
-
-        isMaxAmount ? isValidAmount = true : isValidAmount = false;
-
-        !isMaxAmount ? isValidAmount = false : isValidAmount = true;
       }
+      finalAmount <= walletInfo.availableBalance
+          ? isValidAmount = true
+          : isValidAmount = false;
     } else {
       // in any token transfer, gas fee is paid in native tokens so
       // in case of non-native tokens, need to check the balance of native tokens
@@ -643,30 +641,30 @@ class SendViewModel extends BaseViewModel {
 
     // ! Check if ETH is available for making USDT transaction
     // ! Same for Fab token based coins
-    // double totalAmount = amount + transFee;
-    // if (tokenType == 'ETH' || tokenType == 'FAB'
-    //     // tickerName == 'ETH' ||
-    //     // tickerName == 'FAB' ||
-    //     // tickerName == 'BTC'
-    //     ) {
-    //   await walletService
-    //       .checkCoinWalletBalance(transFee, tokenType)
-    //       .then((isValidAmount) {
-    //     if (!isValidAmount) {
-    //       log.e('not enough $tokenType balance to make tx');
-    //       var coin =
-    //           tokenType.isEmpty ? walletInfo.tickerName : walletInfo.tokenType;
-    //       showSimpleNotification(
-    //           Center(
-    //             child: Text(
-    //                 '${AppLocalizations.of(context).low} $coin ${AppLocalizations.of(context).balance}'),
-    //           ),
-    //           position: NotificationPosition.top,
-    //           background: sellPrice);
-    //       return;
-    //     }
-    //   });
-    // }
+
+    if (tokenType == 'ETH' || tokenType == 'FAB' || tokenType == 'TRX'
+        // tickerName == 'ETH' ||
+        // tickerName == 'FAB' ||
+        // tickerName == 'BTC'
+        ) {
+      await walletService
+          .hasSufficientWalletBalance(transFee, tokenType)
+          .then((isValidNativeChainBal) {
+        if (!isValidNativeChainBal) {
+          log.e('not enough $tokenType balance to make tx');
+          var coin =
+              tokenType.isEmpty ? walletInfo.tickerName : walletInfo.tokenType;
+          showSimpleNotification(
+              Center(
+                child: Text(
+                    '${AppLocalizations.of(context).low} $coin ${AppLocalizations.of(context).balance}'),
+              ),
+              position: NotificationPosition.top,
+              background: sellPrice);
+        }
+      });
+      return;
+    }
 
     if (transFee == 0.0 && !isTrx()) {
       log.e('transfee $transFee not enough $tokenType balance to make tx');

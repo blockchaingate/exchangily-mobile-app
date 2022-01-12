@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
@@ -20,10 +21,8 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_f
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import '../../../shared/globals.dart' as globals;
 
 class WalletFeaturesView extends StatelessWidget {
   final WalletInfo walletInfo;
@@ -65,7 +64,7 @@ class WalletFeaturesView extends StatelessWidget {
                             'assets/images/start-page/logo.png',
                             width: 200,
                             height: 60,
-                            color: globals.white,
+                            color: white,
                           ),
                         ),
                         Align(
@@ -79,7 +78,7 @@ class WalletFeaturesView extends StatelessWidget {
                                   //Navigator.pop(context);
                                   // Navigator.of(context, rootNavigator: true).pop('dialog');
                                   model.navigationService
-                                      .navigateTo('/dashboard');
+                                      .navigateTo(DashboardViewRoute);
                                 })),
                         Align(
                           alignment: Alignment.centerRight,
@@ -117,7 +116,7 @@ class WalletFeaturesView extends StatelessWidget {
                                 Icon(
                                   Icons.arrow_forward,
                                   size: 17,
-                                  color: globals.white,
+                                  color: white,
                                 ),
                                 Text('${walletInfo.name ?? ''}',
                                     style:
@@ -208,10 +207,10 @@ class WalletFeaturesView extends StatelessWidget {
                       horizontal: 20.0,
                     ),
                     child: Card(
-                      color: globals.walletCardColor,
+                      color: walletCardColor,
                       elevation: model.elevation,
                       child: InkWell(
-                        splashColor: globals.primaryColor.withAlpha(30),
+                        splashColor: primaryColor.withAlpha(30),
                         onTap: () {
                           var route = model.features[6].route;
                           Navigator.pushNamed(context, '$route',
@@ -225,7 +224,7 @@ class WalletFeaturesView extends StatelessWidget {
                             children: <Widget>[
                               Container(
                                   decoration: BoxDecoration(
-                                      color: globals.walletCardColor,
+                                      color: walletCardColor,
                                       borderRadius: BorderRadius.circular(50),
                                       boxShadow: [
                                         BoxShadow(
@@ -238,7 +237,7 @@ class WalletFeaturesView extends StatelessWidget {
                                   child: Icon(
                                     model.features[6].icon,
                                     size: 18,
-                                    color: globals.white,
+                                    color: white,
                                   )),
                               Padding(
                                 padding: const EdgeInsets.only(left: 4.0),
@@ -271,7 +270,7 @@ class WalletFeaturesView extends StatelessWidget {
     String nativeTicker = model.specialTicker.split('(')[0];
     return Card(
         elevation: model.elevation,
-        color: globals.walletCardColor,
+        color: walletCardColor,
         child: Container(
           padding: EdgeInsets.all(5),
           child: Column(
@@ -290,7 +289,7 @@ class WalletFeaturesView extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
-                            .copyWith(color: globals.buyPrice),
+                            .copyWith(color: buyPrice),
                       ),
                     ),
                     Expanded(
@@ -306,7 +305,7 @@ class WalletFeaturesView extends StatelessWidget {
                             : Center(
                                 child: Icon(
                                   Icons.refresh,
-                                  color: globals.white,
+                                  color: white,
                                   size: 18,
                                 ),
                               ),
@@ -320,7 +319,7 @@ class WalletFeaturesView extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
-                            .copyWith(color: globals.buyPrice),
+                            .copyWith(color: buyPrice),
                       ),
                     )
                   ],
@@ -359,7 +358,7 @@ class WalletFeaturesView extends StatelessWidget {
                       ),
                     )
                   : Container(),
-              // Last column row contains wallet balance and exchange balance
+              // row contains wallet balance and exchange balance
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
                 child: Row(
@@ -379,7 +378,32 @@ class WalletFeaturesView extends StatelessWidget {
                             style: Theme.of(context).textTheme.subtitle1)),
                   ],
                 ),
-              )
+              ),
+              // Last container locked wallet balance
+              model.walletInfo.lockedBalance != 0.0
+                  ? Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 4,
+                            child: Text(
+                                '${AppLocalizations.of(context).totalLockedBalance} ${model.specialTicker.contains('(') && model.walletInfo.tickerName != 'USDT' ? '\n' + message + ' ' + nativeTicker : ''}',
+                                style: Theme.of(context).textTheme.subtitle1),
+                          ),
+                          Expanded(
+                              flex: 4,
+                              child: Text(
+                                  '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.lockedBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
+                                  textAlign: TextAlign.right,
+                                  style:
+                                      Theme.of(context).textTheme.subtitle1)),
+                        ],
+                      ),
+                    )
+                  : Container()
             ],
           ),
         ));
@@ -388,10 +412,10 @@ class WalletFeaturesView extends StatelessWidget {
   // Features Card
 
   Widget _featuresCard(context, index, model) => Card(
-        color: globals.walletCardColor,
+        color: walletCardColor,
         elevation: model.elevation,
         child: InkWell(
-          splashColor: globals.primaryColor.withAlpha(30),
+          splashColor: primaryColor.withAlpha(30),
           onTap: (model.features[index].route != null &&
                   model.features[index].route != '')
               ? () {
@@ -408,7 +432,7 @@ class WalletFeaturesView extends StatelessWidget {
               children: <Widget>[
                 Container(
                     decoration: BoxDecoration(
-                        color: globals.walletCardColor,
+                        color: walletCardColor,
                         borderRadius: BorderRadius.circular(50),
                         boxShadow: [
                           new BoxShadow(
@@ -421,7 +445,7 @@ class WalletFeaturesView extends StatelessWidget {
                     child: Icon(
                       model.features[index].icon,
                       size: 40,
-                      color: globals.white,
+                      color: white,
                     )),
                 Text(
                   model.features[index].name,

@@ -234,8 +234,6 @@ class _DialogManagerState extends State<DialogManager> {
             onPressed: () async {
               if (controller.text != '') {
                 FocusScope.of(context).requestFocus(FocusNode());
-                var coreWalletDatabaseService =
-                    locator<CoreWalletDatabaseService>();
 
                 String encryptedMnemonic = '';
                 var finalRes = '';

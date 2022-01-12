@@ -72,6 +72,10 @@ class WalletSetupViewmodel extends BaseViewModel {
     await versionService.checkVersion(context);
   }
 
+  Future checkVersion(context) async {
+    await versionService.checkVersion(context);
+  }
+
   importCreateNav(String actionType) async {
     // check if there is any pre existing wallet data
     String coreWalletDbData = '';
@@ -294,7 +298,7 @@ class WalletSetupViewmodel extends BaseViewModel {
     // IF THERE IS NO OLD DATA IN STORAGE BUT NEW CORE WALLET DATA IS PRESENT IN DATABASE
     // THEN VERIFY AGAIN IF STORED DATA IS NOT PREVIOUSLY VERIGFIED
     else if (coreWalletDbData != null || coreWalletDbData.isNotEmpty) {
-      if (!storageService.hasWalletVerified)
+      if (storageService.hasWalletVerified)
         await verifyWallet();
       else {
         isVerifying = false;

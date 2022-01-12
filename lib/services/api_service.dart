@@ -24,6 +24,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_mo
 import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_history_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:flutter/material.dart';
 

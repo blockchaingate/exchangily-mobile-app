@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2021-10-29T10:31:20.975309",
+  "@@last_modified": "2022-01-12T14:13:55.307410",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -2112,7 +2112,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "pleaseSetupDeviceSecurity": "Please setup the device security either using Pin/Password or Biometric in the phone app settings",
+  "pleaseSetupDeviceSecurity": "Please setup device security in the settings",
   "@pleaseSetupDeviceSecurity": {
     "description": "walletsetup_please_setup_device_security",
     "type": "text",
@@ -2136,7 +2136,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "lockedOutPerm": "Too many failed attempts, please try to unlock using Pin or Password",
+  "lockedOutPerm": "Too many failed attempts, please try to unlock using Pin orPassword",
   "@lockedOutPerm": {
     "description": "locked_out_perm",
     "type": "text",
@@ -2145,6 +2145,90 @@
   "lockAppNow": "Lock App Now",
   "@lockAppNow": {
     "description": "lock_app_now",
+    "type": "text",
+    "placeholders": {}
+  },
+  "time": "Time",
+  "@time": {
+    "description": "time_market_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalExchangeBalance": "Exchange Balance",
+  "@totalExchangeBalance": {
+    "description": "totalExchangeBalance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalLockedBalance": "Locked Balance",
+  "@totalLockedBalance": {
+    "description": "totalLockedBalance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalWalletBalance": "Total Wallet Balance",
+  "@totalWalletBalance": {
+    "description": "totalWalletBalance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "importantWalletUpdateNotice": "Invalid password: If you fill the valid password then please delete the current wallet in Settings and then re-import, to use the latest wallet",
+  "@importantWalletUpdateNotice": {
+    "description": "importantWalletUpdateNotice",
+    "type": "text",
+    "placeholders": {}
+  },
+  "verifyingWallet": "Verifying Wallet",
+  "@verifyingWallet": {
+    "description": "verifyingWallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteWalletConfirmationPopup": "Delete wallet confirmation",
+  "@deleteWalletConfirmationPopup": {
+    "description": "deleteWalletConfirmationPopup",
+    "type": "text",
+    "placeholders": {}
+  },
+  "logo": "Logo",
+  "@logo": {
+    "description": "wallet_dashboard_custom_token_logo",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addToken": "Add Token",
+  "@addToken": {
+    "description": "addToken",
+    "type": "text",
+    "placeholders": {}
+  },
+  "editTokenList": "Edit Token List",
+  "@editTokenList": {
+    "description": "editTokenList",
+    "type": "text",
+    "placeholders": {}
+  },
+  "customTokens": "Custom Tokens",
+  "@customTokens": {
+    "description": "customTokens",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalSupply": "Total Supply",
+  "@totalSupply": {
+    "description": "totalSupply",
+    "type": "text",
+    "placeholders": {}
+  },
+  "add": "Add",
+  "@add": {
+    "description": "add",
+    "type": "text",
+    "placeholders": {}
+  },
+  "remove": "Remove",
+  "@remove": {
+    "description": "remove",
     "type": "text",
     "placeholders": {}
   }

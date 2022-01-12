@@ -2099,5 +2099,83 @@
       "description": "lock_app_now",
       "type": "text",
       "placeholders": {}
+    },
+    "totalExchangeBalance": "Exchange Balance",
+    "@totalExchangeBalance": {
+      "description": "totalExchangeBalance",
+      "type": "text",
+      "placeholders": {}
+    },
+    "totalLockedBalance": "Locked Balance",
+    "@totalLockedBalance": {
+      "description": "totalLockedBalance",
+      "type": "text",
+      "placeholders": {}
+    },
+    "totalWalletBalance": "Total Wallet Balance",
+    "@totalWalletBalance": {
+      "description": "totalWalletBalance",
+      "type": "text",
+      "placeholders": {}
+    },
+    "importantWalletUpdateNotice": "Invalid password: If you fill the valid password then please delete the current wallet in Settings and then re-import, to use the latest wallet",
+    "@importantWalletUpdateNotice": {
+      "description": "importantWalletUpdateNotice",
+      "type": "text",
+      "placeholders": {}
+    },
+    "verifyingWallet": "Verifying Wallet",
+    "@verifyingWallet": {
+      "description": "verifyingWallet",
+      "type": "text",
+      "placeholders": {}
+    },
+    "deleteWalletConfirmationPopup": "Delete wallet confirmation",
+    "@deleteWalletConfirmationPopup": {
+      "description": "deleteWalletConfirmationPopup",
+      "type": "text",
+      "placeholders": {}
+    },
+    "logo": "Logo",
+    "@logo": {
+      "description": "wallet_dashboard_custom_token_logo",
+      "type": "text",
+      "placeholders": {}
+    },
+    "addToken": "Add Token",
+    "@addToken": {
+      "description": "addToken",
+      "type": "text",
+      "placeholders": {}
+    },
+    "editTokenList": "Edit Token List",
+    "@editTokenList": {
+      "description": "editTokenList",
+      "type": "text",
+      "placeholders": {}
+    },
+    "customTokens": "Custom Tokens",
+    "@customTokens": {
+      "description": "customTokens",
+      "type": "text",
+      "placeholders": {}
+    },
+    "totalSupply": "Total Supply",
+    "@totalSupply": {
+      "description": "totalSupply",
+      "type": "text",
+      "placeholders": {}
+    },
+    "add": "Add",
+    "@add": {
+      "description": "add",
+      "type": "text",
+      "placeholders": {}
+    },
+    "remove": "Remove",
+    "@remove": {
+      "description": "remove",
+      "type": "text",
+      "placeholders": {}
     }
 }

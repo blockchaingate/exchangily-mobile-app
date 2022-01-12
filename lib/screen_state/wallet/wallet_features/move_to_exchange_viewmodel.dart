@@ -28,7 +28,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   SharedService sharedService = locator<SharedService>();
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
-  CoreWalletDatabaseService walletDatabaseService =
+  CoreWalletDatabaseService coreWalletDatabaseService =
       locator<CoreWalletDatabaseService>();
   WalletInfo walletInfo;
   BuildContext context;
@@ -85,7 +85,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
     decimalLimit =
         await walletService.getSingleCoinWalletDecimalLimit(coinName);
     if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
-    fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    fabAddress =
+        await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
     if (tokenType.isNotEmpty) await getNativeChainTickerBalance();
     setBusy(false);
   }
@@ -93,7 +94,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
   // get native chain ticker balance
   getNativeChainTickerBalance() async {
     if (fabAddress.isEmpty)
-      fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+      fabAddress =
+          await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
 
     await apiService
         .getSingleWalletBalance(fabAddress, tokenType, walletInfo.address)
@@ -121,6 +123,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     amount = NumberUtil().truncateDoubleWithoutRouding(
         double.parse(amountController.text),
         precision: decimalLimit);
+    log.w('amountAfterFee func: amount $amount');
 
     double finalAmount = 0.0;
     // update if transfee is 0
@@ -138,10 +141,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
       if (walletInfo.tickerName == 'TRX') {
         transFee = 1.0;
         finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
-
-        isMaxAmount ? isValidAmount = true : isValidAmount = false;
-
-        !isMaxAmount ? isValidAmount = false : isValidAmount = true;
       }
     } else {
       // in any token transfer, gas fee is paid in native tokens so
@@ -150,19 +149,22 @@ class MoveToExchangeViewModel extends BaseViewModel {
       if (tokenType.isEmpty) {
         if (isMaxAmount)
           finalAmount = amount - transFee;
-        else
+        else {
+          log.e(
+              'finalAmount ${amount + transFee} = amount $amount  + transFee $transFee');
           finalAmount = amount + transFee;
+        }
       } else
         finalAmount = amount;
-
-      finalAmount <= walletInfo.availableBalance
-          ? isValidAmount = true
-          : isValidAmount = false;
     }
+    finalAmount <= walletInfo.availableBalance
+        ? isValidAmount = true
+        : isValidAmount = false;
     log.i(
-        'Func:amountAfterFee -- finalAmount $finalAmount -- entered amount $amount -- isValidAmount $isValidAmount');
+        'Func:amountAfterFee --trans fee $transFee  -- entered amount $amount = finalAmount $finalAmount -- decimal limit final amount ${NumberUtil().truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)} -- isValidAmount $isValidAmount');
     setBusy(false);
-    return finalAmount;
+    return NumberUtil()
+        .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit);
   }
 
 /*---------------------------------------------------
@@ -386,7 +388,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
           decimal = token.decimal;
         });
       }
-
+      if (decimal == null) decimal = decimalLimit;
       var option = {
         "gasPrice": gasPrice ?? 0,
         "gasLimit": gasLimit ?? 0,
@@ -422,10 +424,11 @@ class MoveToExchangeViewModel extends BaseViewModel {
             isShowDetailsMessage = false;
             message = txId.toString();
 
-            sharedService.alertDialog(
-              AppLocalizations.of(context).depositTransactionSuccess,
-              '$specialTicker ${AppLocalizations.of(context).isOnItsWay}',
-            );
+            sharedService.sharedSimpleNotification(
+                AppLocalizations.of(context).depositTransactionSuccess,
+                subtitle:
+                    '$specialTicker ${AppLocalizations.of(context).isOnItsWay}',
+                isError: false);
             Future.delayed(new Duration(seconds: 3), () {
               refreshBalance();
             });
@@ -557,7 +560,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
         .then((walletBalance) {
       if (walletBalance != null) {
         log.w('refreshed balance ${walletBalance[0].balance}');
+        setBusyForObject(walletInfo, true);
         walletInfo.availableBalance = walletBalance[0].balance;
+        setBusyForObject(walletInfo, false);
       }
     }).catchError((err) {
       log.e(err);
@@ -615,7 +620,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
         .then((ret) {
       log.w('updateTransFee $ret');
       if (ret != null && ret['transFee'] != null) {
-        transFee = ret['transFee'];
+        transFee = NumberUtil()
+            .truncateDoubleWithoutRouding(ret['transFee'], precision: 8);
+        log.i('transfee $transFee');
         kanbanTransFee = kanbanTransFeeDouble;
         setBusy(false);
       }

@@ -12,7 +12,6 @@
 */
 
 import 'dart:io';
-import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:path_provider/path_provider.dart';
@@ -158,6 +157,7 @@ class VaultService {
       final file = File('${directory.path}/my_file.byte');
 
       String fileContent = await file.readAsString();
+
       encrypt.Encrypted encryptedText =
           encrypt.Encrypted.fromBase64(fileContent);
 

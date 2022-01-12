@@ -1232,6 +1232,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
               serverError = '';
               isShowErrorDetailsButton = false;
               message = txId;
+              Future.delayed(new Duration(seconds: 3), () {
+                getSingleCoinExchangeBal();
+              });
             } else {
               serverError = ret['data'].toString();
               if (serverError == null || serverError == '') {
@@ -1241,12 +1244,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
                 isSubmittingTx = false;
               }
             }
-            sharedService.alertDialog(
+            sharedService.sharedSimpleNotification(
                 success && ret['transactionHash'] != null
                     ? AppLocalizations.of(context).withdrawTransactionSuccessful
                     : AppLocalizations.of(context).withdrawTransactionFailed,
-                success ? "" : AppLocalizations.of(context).serverError,
-                isWarning: false);
+                subtitle:
+                    success ? "" : AppLocalizations.of(context).networkIssue,
+                isError: success ? false : true);
           }).catchError((err) {
             log.e('Withdraw catch $err');
             isShowErrorDetailsButton = true;
@@ -1254,7 +1258,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
             serverError = err.toString();
           });
         } else {
-          // withdraw function
+          // noraml withdraw function
           await walletService
               .withdrawDo(seed, coinName, coinAddress, tokenType, amount,
                   kanbanPrice, kanbanGasLimit, isSpeicalTronTokenWithdraw)
@@ -1268,6 +1272,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
               serverError = '';
               isShowErrorDetailsButton = false;
               message = txId;
+              Future.delayed(new Duration(seconds: 3), () {
+                getSingleCoinExchangeBal();
+              });
             } else {
               serverError = ret['data'];
               if (serverError == null || serverError == '') {
@@ -1277,12 +1284,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
                 isSubmittingTx = false;
               }
             }
-            sharedService.alertDialog(
+            sharedService.sharedSimpleNotification(
                 success && ret['transactionHash'] != null
                     ? AppLocalizations.of(context).withdrawTransactionSuccessful
                     : AppLocalizations.of(context).withdrawTransactionFailed,
-                success ? "" : AppLocalizations.of(context).serverError,
-                isWarning: false);
+                subtitle:
+                    success ? "" : AppLocalizations.of(context).networkIssue,
+                isError: success ? false : true);
           }).catchError((err) {
             log.e('Withdraw catch $err');
             isShowErrorDetailsButton = true;

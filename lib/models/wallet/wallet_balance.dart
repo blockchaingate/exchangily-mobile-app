@@ -80,8 +80,6 @@ class DepositErr {
 ----------------------------------------------------------------------*/
 
 class WalletBalance {
-  static final log = getLogger('WalletBalance');
-
   String _coin;
   double _balance;
   double _unconfirmedBalance;

@@ -171,9 +171,9 @@ class WalletDashboardViewModel extends BaseViewModel {
     await buildSelectedCustomTokenList();
   }
 
-// set route with coin token type and address
-
-  routeWithWalletInfoArgs(WalletBalance wallet, String routeName) async {
+  // get wallet info object with address using single wallet balance
+  Future<WalletInfo> getWalletInfoObjFromWalletBalance(
+      WalletBalance wallet) async {
     //FocusScope.of(context).requestFocus(FocusNode());
 
     // take the tickername and then get the coin type
@@ -220,6 +220,16 @@ class WalletDashboardViewModel extends BaseViewModel {
         inExchange: wallet.unlockedExchangeBalance,
         address: walletAddress,
         name: coinName);
+
+    log.w('routeWithWalletInfoArgs walletInfo ${walletInfo.toJson()}');
+    return walletInfo;
+  }
+
+// set route with coin token type and address
+
+  routeWithWalletInfoArgs(WalletBalance wallet, String routeName) async {
+    // assign address from local DB to walletinfo object
+    var walletInfo = await getWalletInfoObjFromWalletBalance(wallet);
 
     log.w('routeWithWalletInfoArgs walletInfo ${walletInfo.toJson()}');
     searchCoinTextController.clear();
@@ -311,91 +321,127 @@ class WalletDashboardViewModel extends BaseViewModel {
                             log.w(
                                 'no match found for ${issueTokens[index].symbol} with token id ${issueTokens[index].tokenId}');
                           }
-                          return Row(children: [
-                            Expanded(
-                              flex: 1,
-                              child: Column(
-                                children: [
-                                  Text(issueTokens[index].symbol.toUpperCase(),
-                                      style: TextStyle(
-                                          color: white, fontSize: 12)),
-                                  Text(issueTokens[index].name,
-                                      style: TextStyle(
-                                          color: primaryColor,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold))
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              flex: 3,
-                              child: Column(
-                                children: [
-                                  Text('Total Supply',
-                                      style: TextStyle(
-                                          color: primaryColor,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  Text(issueTokens[index].totalSupply,
-                                      style:
-                                          TextStyle(color: grey, fontSize: 14))
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                  isMatched == null ? green : sellPrice,
-                                )),
-                                onPressed: () {
-                                  int tokenIndexToRemove = selectedCustomTokens
-                                      .indexWhere((element) =>
-                                          element.tokenId ==
-                                          issueTokens[index].tokenId);
-                                  setBusyForObject(selectedCustomTokens, true);
-
-                                  if (tokenIndexToRemove.isNegative) {
-                                    setState(() => selectedCustomTokens
-                                        .add(issueTokens[index]));
-                                  } else {
-                                    log.i(
-                                        'selectedCustomTokens - length before removing token ${selectedCustomTokens.length}');
-                                    setState(() => selectedCustomTokens
-                                        .removeAt(tokenIndexToRemove));
-
-                                    log.e(
-                                        'selectedCustomTokens - length --selectedCustomTokens.length => removed token ${issueTokens[index].symbol}');
-                                  }
-                                  setBusyForObject(selectedCustomTokens, false);
-
-                                  log.i(
-                                      'customTokens - length ${selectedCustomTokens.length}');
-                                  var jsonString = [];
-                                  jsonString = selectedCustomTokens
-                                      .map((cToken) =>
-                                          jsonEncode(cToken.toJson()))
-                                      .toList();
-                                  storageService.customTokens = '';
-                                  storageService.customTokens =
-                                      jsonString.toString();
-                                },
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                          isMatched == null ? 'Add' : 'Remove',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(fontSize: 12)),
-                                    ),
-                                  ],
+                          return Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          issueTokens[index]
+                                              .symbol
+                                              .toUpperCase(),
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              color: white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold)),
+                                      Text(issueTokens[index].name,
+                                          style: TextStyle(
+                                              color: primaryColor,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold))
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ]);
+                                // Total supply
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                          AppLocalizations.of(context)
+                                              .totalSupply,
+                                          style: TextStyle(
+                                              color: primaryColor,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold)),
+                                      UIHelper.verticalSpaceSmall,
+                                      Text(issueTokens[index].totalSupply,
+                                          style: TextStyle(
+                                              color: grey, fontSize: 12))
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: OutlinedButton(
+                                    style: ButtonStyle(
+                                      side: MaterialStateProperty.all(
+                                          (BorderSide(
+                                              color: primaryColor, width: 1))),
+                                      shape: MaterialStateProperty.all(
+                                          StadiumBorder(
+                                        side: BorderSide(
+                                            color: primaryColor, width: 1),
+                                      )),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 4.0),
+                                          child: Text(
+                                              isMatched == null
+                                                  ? AppLocalizations.of(context)
+                                                      .add
+                                                  : AppLocalizations.of(context)
+                                                      .remove,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 13, color: red)),
+                                        ),
+                                        Icon(
+                                          Icons.cancel_outlined,
+                                          color: red,
+                                          size: 18,
+                                        )
+                                      ],
+                                    ),
+                                    onPressed: () {
+                                      int tokenIndexToRemove =
+                                          selectedCustomTokens.indexWhere(
+                                              (element) =>
+                                                  element.tokenId ==
+                                                  issueTokens[index].tokenId);
+                                      setBusyForObject(
+                                          selectedCustomTokens, true);
+
+                                      if (tokenIndexToRemove.isNegative) {
+                                        setState(() => selectedCustomTokens
+                                            .add(issueTokens[index]));
+                                      } else {
+                                        log.i(
+                                            'selectedCustomTokens - length before removing token ${selectedCustomTokens.length}');
+                                        setState(() => selectedCustomTokens
+                                            .removeAt(tokenIndexToRemove));
+
+                                        log.e(
+                                            'selectedCustomTokens - length --selectedCustomTokens.length => removed token ${issueTokens[index].symbol}');
+                                      }
+                                      setBusyForObject(
+                                          selectedCustomTokens, false);
+
+                                      log.i(
+                                          'customTokens - length ${selectedCustomTokens.length}');
+                                      var jsonString = [];
+                                      jsonString = selectedCustomTokens
+                                          .map((cToken) =>
+                                              jsonEncode(cToken.toJson()))
+                                          .toList();
+                                      storageService.customTokens = '';
+                                      storageService.customTokens =
+                                          jsonString.toString();
+                                    },
+                                  ),
+                                ),
+                              ]);
                         }),
                   );
                 }),
@@ -978,15 +1024,14 @@ class WalletDashboardViewModel extends BaseViewModel {
                         On Single Coin Card Click
 ----------------------------------------------------------------------*/
 
-  onSingleCoinCardClick(index) {
+  onSingleCoinCardClick(index) async {
     if (MediaQuery.of(context).size.width < largeSize) {
       FocusScope.of(context).requestFocus(FocusNode());
       navigationService.navigateTo(WalletFeaturesViewRoute,
-          arguments: walletInfo[index]);
+          arguments: wallets[index]);
       searchCoinTextController.clear();
-      resetWalletInfoObject();
     } else {
-      rightWalletInfo = walletInfo[index];
+      rightWalletInfo = await getWalletInfoObjFromWalletBalance(wallets[index]);
       (context as Element).markNeedsBuild();
     }
   }
@@ -1527,224 +1572,6 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     return walletBalancesApiRes;
   }
-
-  // Future refreshBalance() async {
-  //   setBusy(true);
-  //   List<String> tickerNamesFromWalletInfoCopy = [];
-
-  //   await walletDatabaseService.getAll().then((walletList) async {
-  //     walletInfoCopy = [];
-  //     // formattedUsdValueList = [];
-  //     log.e('wallet list from db length ${walletList.length}');
-  //     final dbWalletLength = walletList.length;
-  //     final tickers = walletList.map((e) => e.tickerName).toSet();
-
-  //     walletList.retainWhere((element) => tickers.remove(element.tickerName));
-  //     walletInfoCopy = walletList;
-  //     if (walletList.length != dbWalletLength) {
-  //       await walletDatabaseService.deleteDb();
-  //       walletInfoCopy.forEach((wallet) async {
-  //         await walletDatabaseService.insert(wallet);
-  //       });
-  //     }
-  //   });
-  //   log.i('walletInfo copy list  length ${walletInfoCopy.length}');
-
-  //   walletInfo = [];
-
-  //   bool isLocalWalletLengthEqualApiWallets = false;
-
-  //   List<WalletBalance> walletBalanceList = [];
-  //   walletBalanceList = await refreshBalancesV2();
-
-  //   if (walletBalanceList != null) {
-  //     // Loop wallet info list to udpate balances
-  //     log.e(
-  //         'walletInfoCopy length ${walletInfoCopy.length} -- balance list length ${walletBalanceList.length}');
-  //     isLocalWalletLengthEqualApiWallets =
-  //         walletInfoCopy.length == walletBalanceList.length;
-  //     walletInfoCopy.forEach((wallet) async {
-  //       // Loop wallet balance list from api
-  //       for (var j = 0; j <= walletBalanceList.length; j++) {
-  //         // wallet info copy properties assigning to variables for easier use
-  //         String walletInfoTickerName = wallet.tickerName;
-  //         // wallet balance list properties assigning to variables for easier use
-  //         String walletBalanceCoinName = walletBalanceList[j].coin;
-
-  //         // Compare wallet info copy ticker name to wallet balance coin name
-  //         if (walletInfoTickerName == walletBalanceCoinName) {
-  //           double marketPrice = walletBalanceList[j].usdValue.usd ?? 0.0;
-  //           double availableBal = walletBalanceList[j].balance ?? 0.0;
-  //           double lockedBal = walletBalanceList[j].lockBalance ?? 0.0;
-
-  //           // Check if market price error from api then show the notification with ticker name
-  //           // so that user know why USD val for that ticker is 0
-
-  //           if (marketPrice.isNegative) {
-  //             marketPrice = 0.0;
-  //           }
-  //           if (availableBal.isNegative) {
-  //             availableBal = 0.0;
-  //           }
-  //           // Calculating individual coin USD val
-  //           double usdValue = walletService.calculateCoinUsdBalance(
-  //               marketPrice, availableBal, lockedBal);
-  //           // String holder = NumberUtil.currencyFormat(usdValue, 2);
-  //           // formattedUsdValueList.add(holder);
-
-  //           WalletInfo wi = new WalletInfo(
-  //               id: wallet.id,
-  //               tickerName: walletInfoTickerName,
-  //               tokenType: wallet.tokenType,
-  //               address: wallet.address,
-  //               availableBalance: availableBal,
-  //               lockedBalance: lockedBal,
-  //               usdValue: usdValue,
-  //               name: wallet.name,
-  //               inExchange: walletBalanceList[j].unlockedExchangeBalance);
-  //           walletInfo.add(wi);
-  //           log.i('single wallet info object${wi.toJson()}');
-  //           if (!tickerNamesFromWalletInfoCopy.contains(walletInfoTickerName)) {
-  //             tickerNamesFromWalletInfoCopy.add(walletInfoTickerName);
-  //           }
-  //           log.i(
-  //               'wallet info copy tickerNames length ${tickerNamesFromWalletInfoCopy.length} -- $tickerNamesFromWalletInfoCopy');
-  //           await walletDatabaseService.update(wi);
-  //           break;
-  //           // break the second j loop of wallet balance list when match found
-  //         } // If ends
-  //       } // For loop j ends
-  //     });
-  //     // walletInfo for each ends
-  //   }
-  //   List<WalletBalance> newTokenListFromWalletBalances = [];
-  //   log.i(
-  //       'isLocalWalletLengthEqualApiWallets $isLocalWalletLengthEqualApiWallets --  tickerNamesFromWalletInfoCopy.isNotEmpty ${tickerNamesFromWalletInfoCopy.isNotEmpty}');
-  //   if (!isLocalWalletLengthEqualApiWallets &&
-  //       tickerNamesFromWalletInfoCopy.isNotEmpty) {
-  //     walletBalanceList.forEach((walletBalanceObj) {
-  //       bool isOldTicker =
-  //           tickerNamesFromWalletInfoCopy.contains(walletBalanceObj.coin);
-  //       print('wallet info contains ${walletBalanceObj.coin}? => $isOldTicker');
-  //       if (!isOldTicker) {
-  //         //  newTokenList.add(walletBalanceObj.coin);
-  //         newTokenListFromWalletBalances.add(walletBalanceObj);
-  //         log.i('new coin to add ${walletBalanceObj.toJson()}');
-  //       }
-  //     });
-  //   }
-
-  //   /// if new token list from wallet balances is not empty
-  //   /// then call token list update api
-
-  //   if (newTokenListFromWalletBalances.isNotEmpty) {
-  //     await walletService
-  //         .getTokenListUpdates()
-  //         .then((newTokenListFromTokenUpdateApi) async {
-  //       if (newTokenListFromTokenUpdateApi != null &&
-  //           newTokenListFromTokenUpdateApi.isNotEmpty) {
-  //         var existingTokensInTokenDatabase =
-  //             await tokenListDatabaseService.getAll();
-  //         if (existingTokensInTokenDatabase != null) {
-  //           log.i(
-  //               'new token update list length ${newTokenListFromTokenUpdateApi.length} -- token list database list length ${existingTokensInTokenDatabase.length}');
-  //           //  if length of token list db and token update list is not same
-  //           // then delete the db
-  //           if (existingTokensInTokenDatabase.length !=
-  //               newTokenListFromTokenUpdateApi.length) {
-  //             await tokenListDatabaseService.deleteDb().whenComplete(() => log.e(
-  //                 'token list database cleared before inserting updated token data from api'));
-  //             print(
-  //                 'existingTokensInTokenDatabase length ${existingTokensInTokenDatabase.length}');
-
-  //             /// Fill the token list database with new data from the api
-
-  //             newTokenListFromTokenUpdateApi.forEach((singleNewToken) async {
-  //               await tokenListDatabaseService.insert(singleNewToken);
-  //             });
-  //           }
-  //           // print the new token list database length
-  //           var t = await tokenListDatabaseService.getAll();
-  //           log.i(
-  //               'tokenListDatabase filled with new tokens: length ${t.length}');
-  //         }
-  //       }
-  //       newTokenListFromWalletBalances.forEach((newTokenWalletBalance) async {
-  //         // compare tickername of wallet balance api token against tokenListUpdate api token tickername
-  //         newTokenListFromTokenUpdateApi
-  //             .forEach((singleNewTokenFromTokenUpdateApi) async {
-  //           if (newTokenWalletBalance.coin ==
-  //               singleNewTokenFromTokenUpdateApi.tickerName) {
-  //             log.i('----- Building new wallet object -----');
-  //             await buildNewWalletObject(
-  //                 singleNewTokenFromTokenUpdateApi, newTokenWalletBalance);
-  //           }
-  //         });
-  //       });
-  //       var allWalletDatabaseData = await walletDatabaseService.getAll();
-  //       log.i(
-  //           'All wallet database data length ${allWalletDatabaseData.length}');
-  //     }).catchError((err) {
-  //       log.e('Token list api call fails in api service');
-  //     });
-  //   } else {
-  //     log.w('No new tokens');
-  //     print(walletInfoCopy.length);
-  //     print(walletBalanceList.length);
-  //     var t = await tokenListDatabaseService.getAll();
-  //     // try {
-  //     //   int i = 1;
-  //     //   t.forEach((element) {
-  //     //     log.i('$i -- ${element.toJson()}');
-  //     //     i++;
-  //     //   });
-  //     // } catch (err) {
-  //     //   log.e('something break $err');
-  //     // }
-  //     print('tokenListDatabaseService length ${t.length}');
-  //   }
-
-  //   calcTotalBal();
-
-  //   if (walletInfo != null && walletInfo.isNotEmpty) {
-  //     walletInfoCopy = [];
-  //     walletInfoCopy = walletInfo.map((element) => element).toList();
-  //   }
-
-  //   // if (formattedUsdValueList != null) {
-  //   //   formattedUsdValueListCopy = [];
-  //   //   formattedUsdValueListCopy =
-  //   //       formattedUsdValueList.map((element) => element).toList();
-  //   // }
-  //   // await walletDatabaseService.deleteWalletByTickerName('TRX');
-  //   await checkToUpdateWallet();
-  //   moveTronUsdt();
-  //   moveTron();
-  //   // get exg address to get free fab
-  //   await getGas();
-  //   // check gas and fab balance if 0 then ask for free fab
-  //   if (gasAmount == 0.0 && fabBalance == 0.0) {
-  //     String address = await sharedService.getFABAddressFromWalletDatabase();
-  //     if (storageService.isShowCaseView != null) {
-  //       if (storageService.isShowCaseView) {
-  //         storageService.isShowCaseView = true;
-  //         _isShowCaseView = true;
-  //       }
-  //     } else {
-  //       storageService.isShowCaseView = true;
-  //       _isShowCaseView = true;
-  //     }
-  //     var res = await apiService.getFreeFab(address);
-  //     if (res != null) {
-  //       isFreeFabNotUsed = res['ok'];
-  //     }
-  //   } else {
-  //     log.i('Fab or gas balance available already');
-  //     // storageService.isShowCaseView = false;
-  //   }
-  //   // buildFavCoinList();
-  //   setBusy(false);
-  // }
 
   debugVersionPopup() async {
     // await _showNotification();

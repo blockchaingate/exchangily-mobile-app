@@ -107,10 +107,10 @@ class NumberUtil {
       if (numStringArray.length == 2) {
         var decimalPart = numStringArray[1];
         if (decimalPart.length > decimalLength) {
-          print('decimalPart before: $decimalPart');
-          print('decimalLength: $decimalLength');
+          print('toBigInt func: decimalPart before: $decimalPart');
+          print('toBigInt func: decimalLength: $decimalLength');
           decimalPart = decimalPart.substring(0, decimalLength);
-          print('decimalPart after: $decimalPart');
+          print('toBigInt func: decimalPart after: $decimalPart');
         }
         decimalLength -= decimalPart.length;
         val += decimalPart;

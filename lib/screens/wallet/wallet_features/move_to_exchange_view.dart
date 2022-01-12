@@ -33,7 +33,7 @@ class MoveToExchangeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => MoveToExchangeViewModel(),
-      onModelReady: (model) {
+      onModelReady: (MoveToExchangeViewModel model) {
         model.context = context;
         model.walletInfo = walletInfo;
         model.initState();
@@ -100,10 +100,18 @@ class MoveToExchangeScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: <Widget>[
-                      Text(
-                          AppLocalizations.of(context).walletbalance +
-                              '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()}',
-                          style: Theme.of(context).textTheme.subtitle2),
+                      model.busy(model.walletInfo)
+                          ? Text(
+                              AppLocalizations.of(context).walletbalance +
+                                  '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle2
+                                  .copyWith(color: yellow))
+                          : Text(
+                              AppLocalizations.of(context).walletbalance +
+                                  '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()}',
+                              style: Theme.of(context).textTheme.subtitle2),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 3,
