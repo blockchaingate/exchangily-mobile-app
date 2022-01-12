@@ -2177,5 +2177,23 @@
       "description": "remove",
       "type": "text",
       "placeholders": {}
+    },
+    "restore": "Restore",
+    "@restore": {
+      "description": "restore",
+      "type": "text",
+      "placeholders": {}
+    },
+    "existingWalletFound": "Existing wallet found",
+    "@existingWalletFound": {
+      "description": "existingWalletFound",
+      "type": "text",
+      "placeholders": {}
+    },
+    "askWalletRestore": "Do you want to restore existing wallet",
+    "@askWalletRestore": {
+      "description": "askWalletRestore",
+      "type": "text",
+      "placeholders": {}
     }
 }

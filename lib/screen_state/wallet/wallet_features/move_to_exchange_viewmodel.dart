@@ -176,9 +176,11 @@ class MoveToExchangeViewModel extends BaseViewModel {
     amount = walletInfo.availableBalance;
     amountController.text = amount.toString();
 
-    await updateTransFee();
+    if (!walletService.isTrx(walletInfo.tickerName)) await updateTransFee();
     double finalAmount = 0.0;
-
+    if (walletService.isTrx(walletInfo.tickerName)) {
+      transFee = 1;
+    }
     if (transFee != 0.0) {
       finalAmount = await amountAfterFee(isMaxAmount: true);
       amountController.text = NumberUtil()

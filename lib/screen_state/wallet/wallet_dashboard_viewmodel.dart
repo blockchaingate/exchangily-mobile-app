@@ -1338,8 +1338,13 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   hideSmallAmountAssets() {
     setBusyForObject(isHideSmallAmountAssets, true);
+    log.i(
+        'hide small amounts func: isBusy $isBusy -- ishidesmallamounts object busy  ${busy(isHideSmallAmountAssets)}');
     isHideSmallAmountAssets = !isHideSmallAmountAssets;
     setBusyForObject(isHideSmallAmountAssets, false);
+
+    log.i(
+        'hide small amounts func: isBusy $isBusy -- ishidesmallamounts object busy  ${busy(isHideSmallAmountAssets)}');
   }
 
 // Calculate Total Usd Balance of Coins

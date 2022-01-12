@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2022-01-12T14:13:55.307410",
+  "@@last_modified": "2022-01-12T16:59:46.122346",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -2229,6 +2229,24 @@
   "remove": "Remove",
   "@remove": {
     "description": "remove",
+    "type": "text",
+    "placeholders": {}
+  },
+  "restore": "Restore",
+  "@restore": {
+    "description": "restore",
+    "type": "text",
+    "placeholders": {}
+  },
+  "existingWalletFound": "Existing wallet found",
+  "@existingWalletFound": {
+    "description": "existingWalletFound",
+    "type": "text",
+    "placeholders": {}
+  },
+  "askWalletRestore": "Do you want to restore existing wallet",
+  "@askWalletRestore": {
+    "description": "askWalletRestore",
     "type": "text",
     "placeholders": {}
   }

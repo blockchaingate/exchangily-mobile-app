@@ -161,11 +161,44 @@ class MoveToExchangeScreen extends StatelessWidget {
                                     textAlign: TextAlign.left,
                                     style:
                                         Theme.of(context).textTheme.headline5)
-                                : Text(
-                                    '${AppLocalizations.of(context).gasFee}: 15 TRX',
-                                    textAlign: TextAlign.left,
-                                    style:
-                                        Theme.of(context).textTheme.headline5),
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                          '${AppLocalizations.of(context).gasFee}: 15 TRX',
+                                          textAlign: TextAlign.left,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                      // chain balance
+                                      model.tokenType.isNotEmpty
+                                          ? Row(
+                                              children: [
+                                                Text(
+                                                    model.walletInfo.tokenType +
+                                                        ' ' +
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .balance,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline5),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left:
+                                                          5), // padding left to keep some space from the text
+                                                  child: Text(
+                                                      '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, precision: 6).toString()} ${model.feeUnit}',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline6),
+                                                )
+                                              ],
+                                            )
+                                          : Container()
+                                    ],
+                                  ),
                           )
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

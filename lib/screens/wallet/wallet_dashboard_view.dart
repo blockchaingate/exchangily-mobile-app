@@ -211,7 +211,6 @@ Widget mainWidgets(WalletDashboardViewModel model, BuildContext context) {
             builder: (BuildContext ctx, BoxConstraints constraints) {
           if (constraints.maxWidth < largeSize) {
             return coinList(model, ctx);
-            // return tester();
           } else {
             return Container(
               // color: Colors.amber,
@@ -561,7 +560,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
             children: [
               // All coins tab
 
-              model.isBusy
+              model.isBusy || model.busy(model.isHideSmallAmountAssets)
                   ? ShimmerLayout(
                       layoutType: 'walletDashboard',
                       count: 9,
@@ -780,8 +779,6 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
 
 ListView buildListView(WalletDashboardViewModel model) {
   return ListView.builder(
-    //  physics: ClampingScrollPhysics(),
-    // controller: model.walletsScrollController,
     padding: EdgeInsets.only(top: 0),
     shrinkWrap: true,
     itemCount: model.wallets.length,

@@ -1949,6 +1949,20 @@ class AppLocalizations {
   String get remove {
     return Intl.message('Remove', name: 'remove', desc: 'remove');
   }
+
+  String get restore {
+    return Intl.message('Restore', name: 'restore', desc: 'restore');
+  }
+
+  String get existingWalletFound {
+    return Intl.message('Existing wallet found',
+        name: 'existingWalletFound', desc: 'existingWalletFound');
+  }
+
+  String get askWalletRestore {
+    return Intl.message('Do you want to restore existing wallet',
+        name: 'askWalletRestore', desc: 'askWalletRestore');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -60,6 +60,8 @@ class CreatePasswordViewModel extends BaseViewModel {
       navigationService
           .navigateUsingPushNamedAndRemoveUntil(DashboardViewRoute);
       randomMnemonicFromRoute = '';
+      passTextController.text = '';
+      confirmPassTextController.text = '';
     }).catchError((onError) {
       passwordMatch = false;
       password = '';

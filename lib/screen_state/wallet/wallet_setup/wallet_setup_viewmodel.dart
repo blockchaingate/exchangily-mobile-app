@@ -92,9 +92,10 @@ class WalletSetupViewmodel extends BaseViewModel {
     {
       await dialogService
           .showVerifyDialog(
-              title: 'Existing wallet found',
-              secondaryButton: 'Restore',
-              description: 'Do you want to restore existing wallet?',
+              title: AppLocalizations.of(context).existingWalletFound,
+              secondaryButton: AppLocalizations.of(context).restore,
+              description:
+                  '${AppLocalizations.of(context).askWalletRestore} + ?',
               buttonTitle:
                   'Import') // want to ask whether i should show Delete & Import
           .then((res) async {

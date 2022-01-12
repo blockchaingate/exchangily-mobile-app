@@ -71,7 +71,7 @@ class VerifyMnemonicWalletView extends StatelessWidget {
             FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
             // FilteringTextInputFormatter.allow(RegExp(r'([a-z]{0,})$'))
           ],
-          style: TextStyle(color: white),
+          style: TextStyle(color: white, fontWeight: FontWeight.w400),
           controller: controller[i],
           autocorrect: true,
           decoration: InputDecoration(
