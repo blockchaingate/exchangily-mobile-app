@@ -759,7 +759,8 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                             decoration: BoxDecoration(
                                                 image: DecorationImage(
                                                     image: NetworkImage(
-                                                      'https://test.blockchaingate.com/v2/issuetoken/${customToken.tokenId}/logo',
+                                                      baseBlockchainGateV2Url +
+                                                          'issuetoken/${customToken.tokenId}/logo',
                                                     ),
                                                     fit: BoxFit.cover),
                                                 borderRadius:
@@ -785,11 +786,11 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                       .toUpperCase(),
                                                   style: TextStyle(color: grey),
                                                 ),
-                                                Text(
-                                                  customToken.name,
-                                                  style:
-                                                      TextStyle(color: white),
-                                                ),
+                                                // Text(
+                                                //   customToken.name,
+                                                //   style:
+                                                //       TextStyle(color: white),
+                                                // ),
                                               ],
                                             ),
                                           ),
