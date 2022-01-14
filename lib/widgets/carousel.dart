@@ -22,7 +22,7 @@ class Carousel extends StatelessWidget {
           await model.initState();
         },
         builder: (context, model, child) => Container(
-              height: MediaQuery.of(context).size.width * 0.4,
+              height: MediaQuery.of(context).size.width * 0.45,
               child: Swiper(
                 loop: true,
                 autoplay: imageData.length > 1 ? true : false,

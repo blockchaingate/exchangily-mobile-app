@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import "package:flutter/material.dart";
@@ -24,24 +25,29 @@ class Gas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       // mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(left: 5.0),
-          child: Icon(
-            Icons.donut_large,
-            size: 18,
-            color: globals.primaryColor,
-          ),
+          child: Container(
+              decoration: BoxDecoration(
+                  color: globals.iconBackgroundColor, shape: BoxShape.circle),
+              width: 30,
+              height: 30,
+              child: Icon(
+                Icons.local_gas_station,
+                color: isProduction
+                    ? globals.secondaryColor
+                    : globals.red.withAlpha(200),
+              )),
         ),
-        UIHelper.horizontalSpaceSmall,
+        // UIHelper.horizontalSpaceSmall,
         Text(
           "${AppLocalizations.of(context).gas}: ${NumberUtil().truncateDoubleWithoutRouding(gasAmount, precision: 6)}",
-          style:
-              Theme.of(context).textTheme.headline5.copyWith(wordSpacing: 1.25),
+          style: Theme.of(context).textTheme.headline2,
         ),
-        UIHelper.horizontalSpaceSmall,
+        // UIHelper.horizontalSpaceSmall,
         MaterialButton(
           minWidth: 70.0,
           height: 24,

@@ -100,6 +100,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   bool isConfirmDeposit = false;
 
+  bool openSearch = false;
+
   //WalletInfo confirmDepositCoinWallet;
 
   var lang;
@@ -281,6 +283,11 @@ class WalletDashboardViewModel extends BaseViewModel {
       });
     }
     log.w('Selected custom token list => Finished');
+  }
+
+  //switchSearch
+  switchSeatch() {
+    openSearch = !openSearch;
   }
 
   // addCustomToken
@@ -1340,9 +1347,14 @@ class WalletDashboardViewModel extends BaseViewModel {
     refreshController.refreshCompleted();
   }
 
-// Hide Small Amount Assets
-
+  // Hide Small Amount Assets
   hideSmallAmountAssets() {
+    // print("hideSmallAmountAssets function: $isHideSmallAmountAssets");
+    // wallets.forEach((w) => {
+    //       print(w.coin +
+    //           " wallets.balance.isNegative: " +
+    //           w.balance.isNegative.toString())
+    //     });
     setBusyForObject(isHideSmallAmountAssets, true);
     log.i(
         'hide small amounts func: isBusy $isBusy -- ishidesmallamounts object busy  ${busy(isHideSmallAmountAssets)}');
@@ -1351,6 +1363,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     log.i(
         'hide small amounts func: isBusy $isBusy -- ishidesmallamounts object busy  ${busy(isHideSmallAmountAssets)}');
+    // print("end hideSmallAmountAssets function: $isHideSmallAmountAssets");
   }
 
 // Calculate Total Usd Balance of Coins
