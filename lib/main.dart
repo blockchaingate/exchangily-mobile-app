@@ -89,15 +89,18 @@ class MyApp extends StatelessWidget {
                               child: widget,
                             ))),
                 Positioned(
-                    top: 60,
-                    right: 10,
+                    bottom: 120,
+                    right: 0,
                     child: Material(
                       color: Colors.transparent,
-                      child: Text(
-                        // 'v ',
-                        'v: ${packageInfo.version}.${packageInfo.buildNumber}',
-                        style:
-                            TextStyle(fontSize: 10, color: Color(0x33ffffff)),
+                      child: RotatedBox(
+                        quarterTurns: 1,
+                        child: Text(
+                          // 'v ',
+                          'v: ${packageInfo.version}.${packageInfo.buildNumber}',
+                          style:
+                              TextStyle(fontSize: 10, color: Color(0x44ffffff)),
+                        ),
                       ),
                     ))
               ],
