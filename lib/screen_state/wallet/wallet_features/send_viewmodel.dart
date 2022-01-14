@@ -659,9 +659,9 @@ class SendViewModel extends BaseViewModel {
               ),
               position: NotificationPosition.top,
               background: sellPrice);
+          return;
         }
       });
-      return;
     }
 
     if (transFee == 0.0 && !isTrx()) {
