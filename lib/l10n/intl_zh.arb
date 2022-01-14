@@ -2243,5 +2243,23 @@
     "description": "remove",
     "type": "text",
     "placeholders": {}
+  },
+  "restore": "恢复",
+  "@restore": {
+    "description": "restore",
+    "type": "text",
+    "placeholders": {}
+  },
+  "existingWalletFound": "找到现有钱包",
+  "@existingWalletFound": {
+    "description": "existingWalletFound",
+    "type": "text",
+    "placeholders": {}
+  },
+  "askWalletRestore": "你想恢复现有的钱包吗",
+  "@askWalletRestore": {
+    "description": "askWalletRestore",
+    "type": "text",
+    "placeholders": {}
   }
 }
