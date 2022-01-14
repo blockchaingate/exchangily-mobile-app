@@ -194,7 +194,8 @@ class SendViewModel extends BaseViewModel {
 
 /*---------------------------------------------------
                   Amount After fee
---------------------------------------------------- */
+----------------------------------------------------*/
+
   Future<double> amountAfterFee({bool isMaxAmount = false}) async {
     setBusy(true);
 
@@ -241,7 +242,8 @@ class SendViewModel extends BaseViewModel {
     log.i(
         'Func:amountAfterFee --  entered amount $amount + transaction fee $transFee = finalAmount $finalAmount after fee --  wallet bal ${walletInfo.availableBalance} -- isValidAmount $isValidAmount');
     setBusy(false);
-    return finalAmount;
+    return NumberUtil()
+        .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit);
   }
 
 /*---------------------------------------------------

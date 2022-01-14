@@ -395,11 +395,17 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                       .remove,
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                  fontSize: 13, color: red)),
+                                                  fontSize: 13,
+                                                  color: isMatched == null
+                                                      ? green
+                                                      : red)),
                                         ),
                                         Icon(
-                                          Icons.cancel_outlined,
-                                          color: red,
+                                          isMatched == null
+                                              ? Icons.add
+                                              : Icons.cancel_outlined,
+                                          color:
+                                              isMatched == null ? green : red,
                                           size: 18,
                                         )
                                       ],
