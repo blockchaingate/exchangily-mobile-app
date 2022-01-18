@@ -33,6 +33,7 @@ import 'localizations.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
+
   // debugRepaintRainbowEnabled = true;
   // isrgrootx1.pem
 
@@ -78,7 +79,7 @@ class MyApp extends StatelessWidget {
         child: OverlaySupport(
           child: MaterialApp(
             // locale: DevicePreview.of(context).locale,
-
+            debugShowCheckedModeBanner: false,
             navigatorKey: locator<NavigationService>().navigatorKey,
             builder: (context, widget) => Stack(
               children: [

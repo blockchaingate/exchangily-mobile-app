@@ -109,7 +109,7 @@ class WalletDashboardView extends StatelessWidget {
                   : Container(
                       // color: red,
                       width: 120,
-                      child: model.currentTabSelection == 1
+                      child: model.currentTabSelection == 2
                           ? IconButton(
                               iconSize: model.selectedCustomTokens.isNotEmpty
                                   ? 20
@@ -638,24 +638,6 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                           // child: Text(model.wallets.length.toString(),
                           //     style: TextStyle(fontSize: 10))
                         ),
-                        // custom tokens
-                        Tab(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(MdiIcons.circleMultiple, size: 16),
-                              // Text(
-                              //     ' ' +
-                              //         AppLocalizations.of(context).customTokens,
-                              //     style: TextStyle(
-                              //       fontSize: 10,
-                              //     )),
-                              // UIHelper.horizontalSpaceSmall,
-                              // Text(model.selectedCustomTokens.length.toString(),
-                              //     style: TextStyle(fontSize: 10, color: grey))
-                            ],
-                          ),
-                        ),
                         Tab(
                           icon: Icon(Icons.star,
                               // color: primaryColor,
@@ -664,7 +646,16 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                           // child: Text(
                           //     model.favWalletInfoList.length.toString(),
                           //     style: TextStyle(fontSize: 10, color: grey)),
-                        )
+                        ),
+                        // custom tokens
+                        Tab(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(MdiIcons.cookiePlusOutline, size: 16),
+                            ],
+                          ),
+                        ),
                       ]),
                 ))
           ];
@@ -685,6 +676,8 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                     )
                   : buildListView(model),
 
+// Favorite tab
+              FavTab(),
               model.busy(model.selectedCustomTokens)
                   ? model.sharedService.loadingIndicator()
                   : model.selectedCustomTokens.isEmpty
@@ -894,9 +887,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                   }),
                             ),
                           ],
-                        ),
-
-              FavTab(),
+                        )
             ],
           ),
         ),
