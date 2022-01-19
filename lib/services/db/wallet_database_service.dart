@@ -18,7 +18,7 @@ import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class WalletDataBaseService {
+class WalletDatabaseService {
   final log = getLogger('WalletDatabaseService');
 
   static final _databaseName = 'wallet_database.db';

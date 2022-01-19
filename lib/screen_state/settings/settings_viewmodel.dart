@@ -58,7 +58,7 @@ class SettingsViewmodel extends BaseViewModel {
   final storageService = locator<LocalStorageService>();
   final NavigationService navigationService = locator<NavigationService>();
 
-  final walletDatabaseService = locator<WalletDataBaseService>();
+  final walletDatabaseService = locator<WalletDatabaseService>();
   final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   UserSettingsDatabaseService userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();

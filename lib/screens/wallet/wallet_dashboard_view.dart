@@ -1146,50 +1146,21 @@ Widget _coinDetailsCard(
                 child: Container(
                   child: Column(
                     children: <Widget>[
-                      model.isBusy
-                          ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('\$',
-                                    style: TextStyle(color: globals.green)),
-                                Expanded(
-                                  child: Shimmer.fromColors(
-                                    baseColor: globals.grey,
-                                    highlightColor: globals.white,
-                                    child: Text(
-                                      '${NumberUtil().truncateDoubleWithoutRouding((!model.wallets[index].balance.isNegative ? model.wallets[index].balance : 0.0) * model.wallets[index].usdValue.usd, precision: 2).toString()}',
-                                      style: TextStyle(color: globals.green),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('\$',
-                                    style: TextStyle(color: globals.green)),
-                                Expanded(
-                                  child:
-                                      // model.formattedUsdValueList.isEmpty ||
-                                      //         model.formattedUsdValueList == null
-                                      //     ? Shimmer.fromColors(
-                                      //         baseColor: globals.grey,
-                                      //         highlightColor: globals.white,
-                                      //         child:
-                                      Text(
-                                    '${NumberUtil().truncateDoubleWithoutRouding((!model.wallets[index].balance.isNegative ? model.wallets[index].balance : 0.0) * model.wallets[index].usdValue.usd, precision: 2).toString()}',
-                                    style: TextStyle(color: globals.green),
-                                  ),
-                                )
-                                // : Text(
-                                //     '${model.formattedUsdValueList[index]} USD',
-                                //     textAlign: TextAlign.start,
-                                //     style: TextStyle(color: globals.green)),
-                                // ),
-                              ],
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          UIHelper.horizontalSpaceSmall,
+                          Text('\$', style: TextStyle(color: globals.green)),
+                          Expanded(
+                            child: Text(
+                              '${NumberUtil().truncateDoubleWithoutRouding((!model.wallets[index].balance.isNegative ? model.wallets[index].balance : 0.0) * model.wallets[index].usdValue.usd, precision: 2).toString()}',
+                              style: TextStyle(color: globals.green),
                             ),
+                          )
+                        ],
+                      ),
 
                       // Deposit and Withdraw Container Row
                       Row(

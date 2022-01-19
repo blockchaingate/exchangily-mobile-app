@@ -75,7 +75,7 @@ Future serviceLocator() async {
   // Wallet
   locator.registerLazySingleton(() => WalletService());
   locator.registerLazySingleton(() => CoreWalletDatabaseService());
-  locator.registerLazySingleton(() => WalletDataBaseService());
+  locator.registerLazySingleton(() => WalletDatabaseService());
 
   locator.registerLazySingleton(() => VaultService());
   locator.registerLazySingleton(() => TokenListDatabaseService());

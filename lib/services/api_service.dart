@@ -46,8 +46,8 @@ class ApiService {
   ConfigService configService = locator<ConfigService>();
   SharedService sharedService = locator<SharedService>();
   LocalStorageService storageService = locator<LocalStorageService>();
-  WalletDataBaseService walletDatabaseService =
-      locator<WalletDataBaseService>();
+  WalletDatabaseService walletDatabaseService =
+      locator<WalletDatabaseService>();
 
 // Post app update
 

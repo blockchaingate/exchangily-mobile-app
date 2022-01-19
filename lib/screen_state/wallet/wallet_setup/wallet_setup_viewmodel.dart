@@ -36,7 +36,7 @@ import '../../../service_locator.dart';
 class WalletSetupViewmodel extends BaseViewModel {
   final log = getLogger('WalletSetupViewmodel');
   SharedService sharedService = locator<SharedService>();
-  final walletDatabaseService = locator<WalletDataBaseService>();
+  final walletDatabaseService = locator<WalletDatabaseService>();
   WalletService walletService = locator<WalletService>();
   final NavigationService navigationService = locator<NavigationService>();
   final authService = locator<LocalAuthService>();
@@ -72,6 +72,12 @@ class WalletSetupViewmodel extends BaseViewModel {
     await checkExistingWallet();
     await walletService.checkLanguage();
     await versionService.checkVersion(context);
+  }
+
+  test() async {
+    await walletDatabaseService.initDb();
+    var t = await walletDatabaseService.getAll();
+    print(t.length);
   }
 
   Future checkVersion(context) async {
@@ -273,6 +279,7 @@ class WalletSetupViewmodel extends BaseViewModel {
       log.w('coreWalletDbData is null or empty');
       var walletDatabase;
       try {
+        await walletDatabaseService.initDb();
         walletDatabase = await walletDatabaseService.getAll();
       } catch (err) {
         walletDatabase = [];

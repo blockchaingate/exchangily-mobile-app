@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
@@ -73,11 +74,12 @@ class WalletService {
   final storageService = locator<LocalStorageService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
+  final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+  final walletDatabaseService = locator<WalletDatabaseService>();
 
   double currentTickerUsdValue;
   var txids = [];
   var httpClient = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
-  final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   double coinUsdBalance;
 
   Map<String, String> coinTickerAndNameList = {
@@ -736,14 +738,26 @@ class WalletService {
     if (storageService.walletBalancesBody.isNotEmpty) {
       walletBalancesBodyFromStorage =
           jsonDecode(storageService.walletBalancesBody);
+    } else {
+      await walletDatabaseService.initDb();
+      var fabWallet = await walletDatabaseService.getWalletBytickerName('FAB');
+      var trxWallet = await walletDatabaseService.getWalletBytickerName('TRX');
+      walletBalancesBodyFromStorage = {
+        "fabAddress": fabWallet.address,
+        "trxAddress": trxWallet.address
+      };
     }
 
     // Compare the address if matched then don't notify otherwise raise flag
 
     String fabAddressFromCreate = jsonDecode(
         walletDataFromCreateOfflineWalletV1.walletBalancesBody)['fabAddress'];
+    String trxAddressFromCreate = jsonDecode(
+        walletDataFromCreateOfflineWalletV1.walletBalancesBody)['trxAddress'];
+
     String fabAddressFromStorage = '';
     String trxAddressFromStorage = '';
+
     String fabAddressFromCoreWalletDb = '';
     String trxAddressFromCoreWalletDb = '';
     if (walletBalancesBodyFromStorage != null) {
@@ -757,8 +771,6 @@ class WalletService {
       trxAddressFromCoreWalletDb =
           await coreWalletDatabaseService.getWalletAddressByTickerName('TRX');
     }
-    String trxAddressFromCreate = jsonDecode(
-        walletDataFromCreateOfflineWalletV1.walletBalancesBody)['trxAddress'];
     log.i(
         'fabAddressFromCreate $fabAddressFromCreate -- fabAddressFromStorage $fabAddressFromStorage -- fabAddressFromCoreWalletDb $fabAddressFromCoreWalletDb');
     var fabAddressFromStorageToCompare = fabAddressFromStorage.isEmpty
@@ -773,14 +785,17 @@ class WalletService {
       if (trxAddressFromCreate == trxAddressFromStorageToCompare) {
         res["trxAddressCheck"] = true;
         log.i('Trx Verification passed $res');
-
-        // var walletCoreModel = CoreWalletModel(
-        //   id: 1,
-        //   walletBalancesBody:
-        //       walletDataFromCreateOfflineWalletV1.walletBalancesBody,
-        // );
-        // // store in single core database
-        // await coreWalletDatabaseService.update(walletCoreModel);
+        // need to store the wallet balance body in the
+        // new single db especially for older apps where
+        // there is no concept of walletBalancesBody or
+        // app before new wallet balance api
+        var walletCoreModel = CoreWalletModel(
+          id: 1,
+          walletBalancesBody:
+              walletDataFromCreateOfflineWalletV1.walletBalancesBody,
+        );
+        // store in single core database
+        await coreWalletDatabaseService.update(walletCoreModel);
       } else
         res["trxAddressCheck"] = false;
     } else {
