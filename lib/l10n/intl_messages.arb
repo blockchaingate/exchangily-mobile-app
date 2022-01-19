@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2022-01-12T16:59:46.122346",
+  "@@last_modified": "2022-01-19T11:54:05.672903",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -2247,6 +2247,24 @@
   "askWalletRestore": "Do you want to restore existing wallet",
   "@askWalletRestore": {
     "description": "askWalletRestore",
+    "type": "text",
+    "placeholders": {}
+  },
+  "walletVerificationFailed": "Current wallet is not compatible with the update, please delete the wallet and re-import again.",
+  "@walletVerificationFailed": {
+    "description": "walletVerificationFailed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "walletUpdateNoticeTitle": "Important Notice: Wallet Update",
+  "@walletUpdateNoticeTitle": {
+    "description": "walletUpdateNoticeTitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "walletUpdateNoticeDecription": "Please provide the wallet password to verify and install the latest update",
+  "@walletUpdateNoticeDecription": {
+    "description": "walletUpdateNoticeDecription",
     "type": "text",
     "placeholders": {}
   }

@@ -23,7 +23,6 @@ import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-
 import 'package:exchangilymobileapp/localizations.dart';
 
 class DialogManager extends StatefulWidget {
@@ -240,12 +239,10 @@ class _DialogManagerState extends State<DialogManager> {
                 try {
                   var coreWalletDatabaseService =
                       locator<CoreWalletDatabaseService>();
-                  // todo just check using new format first
+                  // todo: just check using new format first
                   // todo:  then check with old format if new format
                   /// todo: decryption is not available
-                  /// todo: finally pass the password in the function args
-                  /// todo: and after verification success, encrypt the mnemonic with
-                  ///  todo: the password and store it using new format
+
                   encryptedMnemonic =
                       await coreWalletDatabaseService.getEncryptedMnemonic();
                   try {

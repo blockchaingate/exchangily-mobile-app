@@ -64,6 +64,8 @@ class WalletSetupViewmodel extends BaseViewModel {
   bool isVerifying = false;
   bool hasVerificationStarted = false;
   bool isHideIcon = true;
+
+  // init
   init() async {
     sharedService.context = context;
 
@@ -96,8 +98,8 @@ class WalletSetupViewmodel extends BaseViewModel {
               secondaryButton: AppLocalizations.of(context).restore,
               description:
                   '${AppLocalizations.of(context).askWalletRestore} + ?',
-              buttonTitle:
-                  'Import') // want to ask whether i should show Delete & Import
+              buttonTitle: AppLocalizations.of(context)
+                  .importWallet) // want to ask whether i should show Delete & Import
           .then((res) async {
         if (res.confirmed) {
           // confirmed means import wallet true
@@ -136,11 +138,11 @@ class WalletSetupViewmodel extends BaseViewModel {
     }
   }
 
+  // Delete wallet
+
   Future deleteWallet() async {
     errorMessage = '';
-
     setBusyForObject(isDeleting, true);
-
     log.w('deleting wallet');
     try {
       await walletDatabaseService
@@ -174,15 +176,12 @@ class WalletSetupViewmodel extends BaseViewModel {
           .catchError((err) => log.e('user setting database CATCH $err'));
 
       storageService.walletBalancesBody = '';
-
       storageService.isShowCaseView = true;
-
       storageService.clearStorage();
 
       setBusyForObject(isDeleting, false);
     } catch (err) {
       setBusyForObject(isDeleting, false);
-
       errorMessage = 'Wallet deletion failed';
     }
   }
@@ -214,7 +213,6 @@ class WalletSetupViewmodel extends BaseViewModel {
         // if wallet verification is true then fill encrypted mnemonic and
         // addresses in the new corewalletdatabase
         if (isWalletVerifySuccess) {
-          storageService.hasWalletVerified = true;
           isVerifying = false;
           goToWalletDashboard();
           Future.delayed(new Duration(seconds: 3), () {
@@ -309,10 +307,12 @@ class WalletSetupViewmodel extends BaseViewModel {
     setBusy(false);
   }
 
+  // Go to wallet dashboard
+
   goToWalletDashboard() async {
     isWalletVerifySuccess = true;
     isWallet = true;
-// add here the biometric check
+    // add here the biometric check
     if (storageService.hasInAppBiometricAuthEnabled) {
       if (!authService.isCancelled) await authService.authenticateApp();
       if (hasAuthenticated) {

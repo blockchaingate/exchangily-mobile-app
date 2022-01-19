@@ -316,9 +316,8 @@ class SettingsViewmodel extends BaseViewModel {
             .whenComplete(() => log.e('User settings database deleted!!'))
             .catchError((err) => log.e('user setting database CATCH $err'));
 
-// may need to add old campaign databases here to delete as well
+        // may need to add old campaign databases here to delete as well
         storageService.walletBalancesBody = '';
-
         storageService.isShowCaseView = true;
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -329,8 +328,10 @@ class SettingsViewmodel extends BaseViewModel {
         log.e('before local storage service clear ${prefs.getKeys()}');
 
         log.e('all keys after clearing ${prefs.getKeys()}');
+
         await _deleteCacheDir()
             .catchError((err) => log.e('delete cache failed $err'));
+
         await _deleteAppDir()
             .catchError((err) => log.e('delete app dir failed $err'));
 

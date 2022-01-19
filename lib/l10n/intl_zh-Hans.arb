@@ -2260,5 +2260,24 @@
       "description": "askWalletRestore",
       "type": "text",
       "placeholders": {}
+    },
+    "walletVerificationFailed": "当前钱包与更新不兼容，请删除钱包并重新导入。",
+    "@walletVerificationFailed": {
+      "description": "walletVerificationFailed",
+      "type": "text",
+      "placeholders": {}
+    },
+    "walletUpdateNoticeTitle": " 重要通知：更新钱包",
+    "@walletUpdateNoticeTitle": {
+      "description": "walletUpdateNoticeTitle",
+      "type": "text",
+      "placeholders": {}
+    },
+    "walletUpdateNoticeDecription": "请提供钱包密码以验证并安装最新更新",
+    "@walletUpdateNoticeDecription": {
+      "description": "walletUpdateNoticeDecription",
+      "type": "text",
+      "placeholders": {}
     }
+    
 }

@@ -2195,5 +2195,23 @@
       "description": "askWalletRestore",
       "type": "text",
       "placeholders": {}
+    },
+    "walletVerificationFailed": "Current wallet is not compatible with the update, please delete the wallet and re-import again.",
+    "@walletVerificationFailed": {
+      "description": "walletVerificationFailed",
+      "type": "text",
+      "placeholders": {}
+    },
+    "walletUpdateNoticeTitle": "Important Notice: Wallet Update",
+    "@walletUpdateNoticeTitle": {
+      "description": "walletUpdateNoticeTitle",
+      "type": "text",
+      "placeholders": {}
+    },
+    "walletUpdateNoticeDecription": "Please provide the wallet password to verify and install the latest update",
+    "@walletUpdateNoticeDecription": {
+      "description": "walletUpdateNoticeDecription",
+      "type": "text",
+      "placeholders": {}
     }
 }
