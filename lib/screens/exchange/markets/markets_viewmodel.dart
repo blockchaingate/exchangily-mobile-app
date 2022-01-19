@@ -38,7 +38,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
   LocalAuthService localAuthService = locator<LocalAuthService>();
-  LocalStorageService localStorageService = locator<LocalStorageService>();
+  LocalStorageService storageService = locator<LocalStorageService>();
 
   final NavigationService navigationService = locator<NavigationService>();
   BuildContext context;
@@ -48,15 +48,18 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   void start() async {
     super.start();
     log.w(
-        'market view model starting service -- hasAppGoneInTheBackgroundKey = ${localStorageService.hasAppGoneInTheBackgroundKey} -- auth in progress ${localAuthService.authInProgress}');
+        'market view model starting service -- hasAppGoneInTheBackgroundKey = ${storageService.hasAppGoneInTheBackgroundKey} -- auth in progress ${localAuthService.authInProgress}');
 
-    if (localStorageService.hasInAppBiometricAuthEnabled) {
+    if (storageService.hasInAppBiometricAuthEnabled) {
       // bool canCheckBiometrics = await localAuthService.canCheckBiometrics();
-      if (!localAuthService.authInProgress &&
-          localStorageService.hasAppGoneInTheBackgroundKey)
-        await localAuthService.authenticateApp();
+      if (!storageService.IsCameraOpen) {
+        if (!localAuthService.authInProgress &&
+            storageService.hasAppGoneInTheBackgroundKey)
+          await localAuthService.authenticateApp();
+      }
     }
-    localStorageService.hasAppGoneInTheBackgroundKey = false;
+    storageService.hasAppGoneInTheBackgroundKey = false;
+    storageService.IsCameraOpen = false;
     // start subscription again
     // if (streamSubscription != null && streamSubscription.isPaused)
     //   streamSubscription.resume();
@@ -72,7 +75,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   void stop() async {
     super.stop();
     log.w(' mvm stopping service');
-    localStorageService.hasAppGoneInTheBackgroundKey = true;
+    storageService.hasAppGoneInTheBackgroundKey = true;
     //var isEmptyValue = await stream.isEmpty.then((value) => value);
     //log.e('is empty $isEmptyValue -- is broadcasr ${stream.isBroadcast}');
     // print(streamSubscription);

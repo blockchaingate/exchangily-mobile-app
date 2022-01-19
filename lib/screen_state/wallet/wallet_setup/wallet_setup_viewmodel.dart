@@ -267,7 +267,7 @@ class WalletSetupViewmodel extends BaseViewModel {
       coreWalletDbData = await coreWalletDatabaseService.getEncryptedMnemonic();
     } catch (err) {
       coreWalletDbData = '';
-      log.e('importCreateNav importCreateNav CATCH err $err');
+      log.e('checkExistingWallet func: getEncryptedMnemonic CATCH err $err');
     }
     if (coreWalletDbData == null || coreWalletDbData.isEmpty) {
       log.w('coreWalletDbData is null or empty');

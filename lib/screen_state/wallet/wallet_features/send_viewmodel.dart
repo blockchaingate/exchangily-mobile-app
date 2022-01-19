@@ -887,7 +887,7 @@ class SendViewModel extends BaseViewModel {
     try {
       log.i("Barcode: try");
       String barcode = '';
-
+      storageService.IsCameraOpen = true;
       var result = await BarcodeScanner.scan();
       barcode = result.rawContent;
       log.i("Barcode Res: $result ");

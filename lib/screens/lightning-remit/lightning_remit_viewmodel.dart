@@ -10,8 +10,6 @@ import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
-import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -270,6 +268,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     try {
       setBusy(true);
       String barcode = '';
+      storageService.IsCameraOpen = true;
       barcode = await BarcodeScanner.scan().then((value) => value.rawContent);
       addressController.text = barcode;
       setBusy(false);
@@ -293,6 +292,7 @@ class LightningRemitViewmodel extends FutureViewModel {
       sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
           isWarning: false);
     }
+
     setBusy(false);
   }
 

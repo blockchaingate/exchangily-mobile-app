@@ -29,6 +29,7 @@ class LocalStorageService {
   static const String TestingLogStringListKey = 'testingLogStringListKey';
   static const String CustomTokensKey = 'customTokensKey';
   static const String CustomTokenDataKey = 'customTokenDataKey';
+  static const String CameraOpenKey = 'CameraOpenKey';
 
 /*----------------------------------------------------------------------
                   Instance
@@ -93,6 +94,11 @@ class LocalStorageService {
     }
     return objLength;
   }
+
+  // is camera open
+
+  bool get IsCameraOpen => _getFromDisk(CameraOpenKey) ?? false;
+  set IsCameraOpen(bool value) => _saveToDisk(CameraOpenKey, value);
 
   // Custom token Data
 
