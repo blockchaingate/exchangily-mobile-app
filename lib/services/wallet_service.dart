@@ -739,7 +739,6 @@ class WalletService {
     }
 
     // Compare the address if matched then don't notify otherwise raise flag
-    // TODO also compare the trx addresses
 
     String fabAddressFromCreate = jsonDecode(
         walletDataFromCreateOfflineWalletV1.walletBalancesBody)['fabAddress'];

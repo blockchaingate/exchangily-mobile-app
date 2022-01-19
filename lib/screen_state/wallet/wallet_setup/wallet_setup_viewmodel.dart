@@ -190,10 +190,9 @@ class WalletSetupViewmodel extends BaseViewModel {
   verifyWallet() async {
     storageService.hasWalletVerified = true;
     var res = await dialogService.showVerifyDialog(
-        title: 'Important Notice: Wallet Update',
-        secondaryButton: 'Cancel',
-        description:
-            'Please provide the wallet password to verify and install the latest update',
+        title: AppLocalizations.of(context).walletUpdateNoticeTitle,
+        secondaryButton: AppLocalizations.of(context).cancel,
+        description: AppLocalizations.of(context).walletUpdateNoticeDecription,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (!res.confirmed) {
       setBusy(false);
@@ -215,6 +214,7 @@ class WalletSetupViewmodel extends BaseViewModel {
         // if wallet verification is true then fill encrypted mnemonic and
         // addresses in the new corewalletdatabase
         if (isWalletVerifySuccess) {
+          storageService.hasWalletVerified = true;
           isVerifying = false;
           goToWalletDashboard();
           Future.delayed(new Duration(seconds: 3), () {
@@ -229,6 +229,7 @@ class WalletSetupViewmodel extends BaseViewModel {
             setBusyForObject(isHideIcon, false);
           });
           isWalletVerifySuccess = false;
+          storageService.hasWalletVerified = false;
           setBusy(false);
           // show popup
           // if wallet verification failed then generate warning
@@ -238,10 +239,9 @@ class WalletSetupViewmodel extends BaseViewModel {
           sharedService.context = context;
           await dialogService
               .showVerifyDialog(
-                  title:
-                      'Current wallet is not compatible with the update, please delete the wallet and re-import again.',
+                  title: AppLocalizations.of(context).walletVerificationFailed,
                   description: '',
-                  buttonTitle: 'Delete wallet',
+                  buttonTitle: AppLocalizations.of(context).deleteWallet,
                   secondaryButton: '')
               .then((isDelete) async {
             await deleteWallet();
@@ -265,7 +265,6 @@ class WalletSetupViewmodel extends BaseViewModel {
     setBusy(true);
 
     var coreWalletDbData;
-
     try {
       coreWalletDbData = await coreWalletDatabaseService.getEncryptedMnemonic();
     } catch (err) {
@@ -297,9 +296,9 @@ class WalletSetupViewmodel extends BaseViewModel {
       }
     }
     // IF THERE IS NO OLD DATA IN STORAGE BUT NEW CORE WALLET DATA IS PRESENT IN DATABASE
-    // THEN VERIFY AGAIN IF STORED DATA IS NOT PREVIOUSLY VERIGFIED
+    // THEN VERIFY AGAIN IF STORED DATA IS NOT PREVIOUSLY VERIFIED
     else if (coreWalletDbData != null || coreWalletDbData.isNotEmpty) {
-      if (storageService.hasWalletVerified)
+      if (!storageService.hasWalletVerified)
         await verifyWallet();
       else {
         isVerifying = false;

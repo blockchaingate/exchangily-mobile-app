@@ -1963,6 +1963,25 @@ class AppLocalizations {
     return Intl.message('Do you want to restore existing wallet',
         name: 'askWalletRestore', desc: 'askWalletRestore');
   }
+
+  String get walletVerificationFailed {
+    return Intl.message(
+        'Current wallet is not compatible with the update, please delete the wallet and re-import again.',
+        name: 'walletVerificationFailed',
+        desc: 'walletVerificationFailed');
+  }
+
+  String get walletUpdateNoticeTitle {
+    return Intl.message('Important Notice: Wallet Update',
+        name: 'walletUpdateNoticeTitle', desc: 'walletUpdateNoticeTitle');
+  }
+
+  String get walletUpdateNoticeDecription {
+    return Intl.message(
+        'Please provide the wallet password to verify and install the latest update',
+        name: 'walletUpdateNoticeDecription',
+        desc: 'walletUpdateNoticeDecription');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -10,8 +10,6 @@
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
