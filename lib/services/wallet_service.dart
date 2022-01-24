@@ -249,7 +249,7 @@ class WalletService {
       tokenType = 'LTC';
     else if (firstHalf == '0006' && secondHalf != '0000')
       tokenType = 'DOGE';
-    else if (firstHalf == '0007' && secondHalf != '0000') tokenType = 'TRON';
+    else if (firstHalf == '0007' && secondHalf != '0000') tokenType = 'TRX';
     log.i('hexCoinType $hexCoinType - tokenType $tokenType');
     return tokenType;
   }

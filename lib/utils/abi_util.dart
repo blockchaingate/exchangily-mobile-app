@@ -119,7 +119,7 @@ class AbiUtils {
       }
       if (chain == 'ETH') {
         retStr += Constants.EthChainPrefix;
-      } else if (chain == 'TRX') {
+      } else if (chain == 'TRX' || chain == 'TRON') {
         retStr += Constants.TronChainPrefix;
       } else if (chain == 'FAB') {
         retStr += Constants.FabChainPrefix;
