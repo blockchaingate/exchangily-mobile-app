@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -92,7 +93,7 @@ class KanbanUtils {
     String fullVersion = versionName + '+' + buildNumber;
     print('fullVersion $fullVersion');
     var body = {
-      'app': 'exchangily',
+      'app': Constants.appName,
       'version': fullVersion,
       'rawTransaction': rawTransaction,
       'rawKanbanTransaction': rawKanbanTransaction
@@ -140,7 +141,7 @@ class KanbanUtils {
     String fullVersion = versionName + '+' + buildNumber;
     print('fullVersion $fullVersion');
     var body = {
-      'app': 'exchangily',
+      'app': Constants.appName,
       'version': fullVersion,
       'rawKanbanTransaction': rawKanbanTransaction
     };

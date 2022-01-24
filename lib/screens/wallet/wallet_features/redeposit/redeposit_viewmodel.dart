@@ -131,9 +131,7 @@ class RedepositViewModel extends FutureViewModel {
     });
   }
 
-/*----------------------------------------------------------------------
-                    Check pass
-----------------------------------------------------------------------*/
+// Check Pass func
 
   checkPass() async {
     //TransactionHistory transactionByTxId = new TransactionHistory();
@@ -188,11 +186,17 @@ class RedepositViewModel extends FutureViewModel {
       //     ? BigInt.parse(errDepositItem['amount'])
       //     : BigInt.from(errDepositAmount);
       log.i('checkPass errDepositItem amount $amountInBigIntByApi');
+
       var coinType = errDepositItem['coinType'];
-
       var transactionID = errDepositItem['transactionID'];
-
       var addressInKanban = keyPairKanban["address"];
+
+      // TRX coins deposit
+      // if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
+
+      // }
+      // // Other coins deposit
+      // else {
       var originalMessage = walletService.getOriginalMessage(
           coinType,
           trimHexPrefix(transactionID),
@@ -208,8 +212,8 @@ class RedepositViewModel extends FutureViewModel {
 
       var resRedeposit = await kanbanUtils.submitReDeposit(txKanbanHex);
 
+      log.w('resRedeposit $resRedeposit');
       if ((resRedeposit != null) && (resRedeposit['success'])) {
-        log.w('resRedeposit $resRedeposit');
         var newTransactionId = resRedeposit['data']['transactionID'];
 
         sharedService.alertDialog(
@@ -225,7 +229,8 @@ class RedepositViewModel extends FutureViewModel {
           await getErrDeposit();
           setBusy(false);
         }
-      } else if (resRedeposit['message'] != '') {
+      } else if (resRedeposit['message'] != null ||
+          resRedeposit['message'] != '') {
         errorMessage = resRedeposit['message'];
       } else {
         sharedService.showInfoFlushbar(
@@ -235,6 +240,7 @@ class RedepositViewModel extends FutureViewModel {
             red,
             context);
       }
+      //  } // other coins redeposit else ends
     } else {
       if (res.returnedText != 'Closed') {
         showNotification(context);
@@ -263,9 +269,13 @@ class RedepositViewModel extends FutureViewModel {
         coinName = ticker;
         log.w('submit redeposit ticker $ticker');
       });
-    Constants.specialTokens.forEach((specialTokenTicker) {
-      if (coinName == specialTokenTicker) isSpecial = true;
-    });
+    for (var i = 0; i < Constants.specialTokens.length; i++) {
+      if (coinName == Constants.specialTokens[i]) {
+        isSpecial = true;
+        break;
+      }
+    }
+
     if (isSpecial) {
       specialCoinType = await CoinUtils()
           .getCoinTypeIdByName(coinName.substring(0, coinName.length - 1));
@@ -273,7 +283,7 @@ class RedepositViewModel extends FutureViewModel {
     abiHex = abiUtils.getDepositFuncABI(isSpecial ? specialCoinType : coinType,
         txHash, amountInLink, addressInKanban, signedMess,
         chain: chainType, isSpecialDeposit: isSpecial);
-    abiUtils.getAmountFromDepositAbiHex(abiHex);
+    // abiUtils.getAmountFromDepositAbiHex(abiHex);
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
 

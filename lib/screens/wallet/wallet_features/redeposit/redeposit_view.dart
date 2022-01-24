@@ -17,9 +17,7 @@ import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../utils/string_util.dart';
@@ -230,7 +228,7 @@ class Redeposit extends StatelessWidget {
                     ],
                   ),
                 ),
-                model.errorMessage.isNotEmpty
+                model.errorMessage != null || model.errorMessage.isNotEmpty
                     ? Center(
                         child: Text(
                         model.errorMessage,

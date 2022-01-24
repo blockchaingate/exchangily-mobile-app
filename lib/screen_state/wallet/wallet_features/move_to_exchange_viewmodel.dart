@@ -113,7 +113,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
 --------------------------------------------------- */
   Future<double> amountAfterFee({bool isMaxAmount = false}) async {
     setBusy(true);
-
+    if (amountController.text == '.') {
+      setBusy(false);
+      return 0.0;
+    }
     if (amountController.text.isEmpty) {
       transFee = 0.0;
       kanbanTransFee = 0.0;
