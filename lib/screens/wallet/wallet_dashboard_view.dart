@@ -652,7 +652,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(MdiIcons.cookiePlusOutline, size: 16),
+                              Icon(MdiIcons.circleMultipleOutline, size: 16),
                             ],
                           ),
                         ),
@@ -1969,26 +1969,24 @@ class AddGasRow extends StatelessWidget {
     if (model.isShowCaseView && model.gasAmount < 0.5 && !model.isBusy)
       model.showcaseEvent(context);
     return model.isShowCaseView || model.gasAmount < 0.5
-        ? SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Showcase(
-                  key: model.globalKeyOne,
-                  //  titleTextStyle:TextStyle(decoration:T ),
-                  title: AppLocalizations.of(context).note + ':',
-                  description:
-                      AppLocalizations.of(context).walletDashboardInstruction1,
-                  child: TweenAnimationBuilder(
-                      duration: Duration(milliseconds: 500),
-                      tween: tween,
-                      builder: (_, Offset offset, __) {
-                        return Container(
-                            child: (Gas(gasAmount: model.gasAmount)));
-                      }),
-                ),
-              ],
-            ),
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Showcase(
+                key: model.globalKeyOne,
+                //  titleTextStyle:TextStyle(decoration:T ),
+                title: AppLocalizations.of(context).note + ':',
+                description:
+                    AppLocalizations.of(context).walletDashboardInstruction1,
+                child: TweenAnimationBuilder(
+                    duration: Duration(milliseconds: 500),
+                    tween: tween,
+                    builder: (_, Offset offset, __) {
+                      return Container(
+                          child: (Gas(gasAmount: model.gasAmount)));
+                    }),
+              ),
+            ],
           )
         : Gas(gasAmount: model.gasAmount);
   }
