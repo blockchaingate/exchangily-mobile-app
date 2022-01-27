@@ -17,20 +17,16 @@ import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/constants/ui_var.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screens/announcement/anncounceList.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features_view.dart';
-import 'package:exchangilymobileapp/shared/styles.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/network_status.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
-import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_wallet_dashboard_layout.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -107,7 +103,12 @@ class WalletDashboardView extends StatelessWidget {
               floatingActionButton: model.busy(model.selectedCustomTokens)
                   ? Container()
                   : Container(
-                      // color: red,
+                      decoration: BoxDecoration(
+                        color: model.currentTabSelection == 2
+                            ? primaryColor
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(35),
+                      ),
                       width: 120,
                       child: model.currentTabSelection == 2
                           ? IconButton(
@@ -368,7 +369,12 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
           top: 15,
           right: 5,
           child: IconButton(
-              onPressed: () => model.refreshBalancesV2(),
+              onPressed: () {
+                if (model.currentTabSelection == 0)
+                  model.refreshBalancesV2();
+                else
+                  model.getBalanceForSelectedCustomTokens();
+              },
               icon: model.isBusy
                   ? Container(
                       margin: EdgeInsets.only(left: 3.0),
@@ -676,7 +682,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                     )
                   : buildListView(model),
 
-// Favorite tab
+              // Favorite tab
               FavTab(),
               model.busy(model.selectedCustomTokens)
                   ? model.sharedService.loadingIndicator()
@@ -726,165 +732,179 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                 ],
                               ),
                             ),
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: ListView.builder(
-                                  padding: EdgeInsets.only(top: 0),
-                                  shrinkWrap: true,
-                                  itemCount: model.selectedCustomTokens.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    var customToken =
-                                        model.selectedCustomTokens[index];
-                                    return Container(
-                                      padding: EdgeInsets.all(3),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          // logo
 
-                                          Container(
-                                            width: 25,
-                                            height: 25,
-                                            decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    image: NetworkImage(
-                                                      baseBlockchainGateV2Url +
-                                                          'issuetoken/${customToken.tokenId}/logo',
-                                                    ),
-                                                    fit: BoxFit.cover),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.0)),
-                                          ),
-                                          UIHelper.horizontalSpaceMedium,
-                                          UIHelper.horizontalSpaceSmall,
-                                          // Symbol and name
-                                          Expanded(
-                                            flex: 1,
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                // UIHelper
-                                                //     .verticalSpaceSmall,
-                                                Text(
-                                                  customToken.symbol
-                                                      .toUpperCase(),
-                                                  style: TextStyle(color: grey),
-                                                ),
-                                                // Text(
-                                                //   customToken.name,
-                                                //   style:
-                                                //       TextStyle(color: white),
-                                                // ),
-                                              ],
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 10),
+                                child: ListView.builder(
+                                    padding: EdgeInsets.only(top: 0),
+                                    shrinkWrap: true,
+                                    itemCount:
+                                        model.selectedCustomTokens.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      var customToken =
+                                          model.selectedCustomTokens[index];
+                                      return Container(
+                                        margin: EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 1),
+                                        decoration: BoxDecoration(
+                                            color: walletCardColor,
+                                            borderRadius:
+                                                BorderRadius.circular(9)),
+                                        padding: EdgeInsets.all(3),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            // logo
+
+                                            Container(
+                                              width: 25,
+                                              height: 25,
+                                              decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(
+                                                        baseBlockchainGateV2Url +
+                                                            'issuetoken/${customToken.tokenId}/logo',
+                                                      ),
+                                                      fit: BoxFit.cover),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0)),
                                             ),
-                                          ),
-                                          UIHelper.horizontalSpaceSmall,
-                                          // Balance
-                                          Expanded(
-                                            flex: 2,
-                                            child: model.busy(
-                                                    model.selectedCustomTokens)
-                                                ? Text('...')
-                                                : Text(
-                                                    customToken.balance
-                                                        .toString(),
+                                            UIHelper.horizontalSpaceMedium,
+                                            UIHelper.horizontalSpaceSmall,
+                                            // Symbol and name
+                                            Expanded(
+                                              flex: 1,
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  // UIHelper
+                                                  //     .verticalSpaceSmall,
+                                                  Text(
+                                                    customToken.symbol
+                                                        .toUpperCase(),
                                                     style:
-                                                        TextStyle(color: white),
-                                                    textAlign: TextAlign.center,
+                                                        TextStyle(color: grey),
                                                   ),
-                                          ),
-
-                                          // Send Action
-                                          Container(
-                                            padding: EdgeInsets.only(top: 5),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  margin: EdgeInsets.all(2),
-                                                  child: IconButton(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .zero,
-                                                    onPressed: () {
-                                                      var wi = WalletInfo(
-                                                          address: customToken
-                                                              .owner);
-                                                      model.navigationService
-                                                          .navigateTo(
-                                                              ReceiveViewRoute,
-                                                              arguments: wi);
-                                                    },
-                                                    icon: Column(
-                                                      children: [
-                                                        Icon(
-                                                          Icons
-                                                              .download_for_offline_rounded,
-                                                          color: green,
-                                                        ),
-                                                        Expanded(
-                                                          child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)
-                                                                  .receive,
-                                                              style: TextStyle(
-                                                                  fontSize: 10,
-                                                                  color:
-                                                                      white)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.all(2),
-                                                  child: IconButton(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .zero,
-                                                    onPressed: () {
-                                                      model.sendCustomToken(
-                                                          customToken);
-                                                    },
-                                                    icon: Column(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.send_rounded,
-                                                          color: primaryColor,
-                                                        ),
-                                                        Expanded(
-                                                          child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)
-                                                                  .send,
-                                                              style: TextStyle(
-                                                                  fontSize: 10,
-                                                                  color:
-                                                                      white)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
+                                                  // Text(
+                                                  //   customToken.name,
+                                                  //   style:
+                                                  //       TextStyle(color: white),
+                                                  // ),
+                                                ],
+                                              ),
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  }),
+                                            UIHelper.horizontalSpaceSmall,
+                                            // Balance
+                                            Expanded(
+                                              flex: 2,
+                                              child: model.busy(model
+                                                      .selectedCustomTokens)
+                                                  ? Text('...')
+                                                  : Text(
+                                                      customToken.balance
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                          color: white),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                            ),
+
+                                            // Send Action
+                                            Container(
+                                              padding: EdgeInsets.only(top: 5),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    margin: EdgeInsets.all(2),
+                                                    child: IconButton(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .zero,
+                                                      onPressed: () {
+                                                        var wi = WalletInfo(
+                                                            address: customToken
+                                                                .owner);
+                                                        model.navigationService
+                                                            .navigateTo(
+                                                                ReceiveViewRoute,
+                                                                arguments: wi);
+                                                      },
+                                                      icon: Column(
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .download_for_offline_rounded,
+                                                            color: green,
+                                                          ),
+                                                          Expanded(
+                                                            child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)
+                                                                    .receive,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        10,
+                                                                    color:
+                                                                        white)),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    margin: EdgeInsets.all(2),
+                                                    child: IconButton(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .zero,
+                                                      onPressed: () {
+                                                        model.sendCustomToken(
+                                                            customToken);
+                                                      },
+                                                      icon: Column(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.send_rounded,
+                                                            color: primaryColor,
+                                                          ),
+                                                          Expanded(
+                                                            child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)
+                                                                    .send,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        10,
+                                                                    color:
+                                                                        white)),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    }),
+                              ),
                             ),
                           ],
                         )

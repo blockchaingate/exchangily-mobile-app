@@ -276,7 +276,7 @@ Future broadcastTronTransaction(transactionHex) async {
   // print(
   //    'broadcasrTronTransaction $BroadcasrTronTransactionUrl -- body ${jsonEncode(body)}');
   try {
-    var response = await httpClient.post(BroadcasrTronTransactionUrl,
+    var response = await httpClient.post(broadcasrTronTransactionUrl,
         body: jsonEncode(body));
     var json = jsonDecode(response.body);
     if (json != null) {

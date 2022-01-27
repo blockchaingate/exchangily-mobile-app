@@ -52,14 +52,14 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
 
     if (storageService.hasInAppBiometricAuthEnabled) {
       // bool canCheckBiometrics = await localAuthService.canCheckBiometrics();
-      if (!storageService.IsCameraOpen) {
+      if (!storageService.isCameraOpen) {
         if (!localAuthService.authInProgress &&
             storageService.hasAppGoneInTheBackgroundKey)
           await localAuthService.authenticateApp();
       }
     }
     storageService.hasAppGoneInTheBackgroundKey = false;
-    storageService.IsCameraOpen = false;
+    storageService.isCameraOpen = false;
     // start subscription again
     // if (streamSubscription != null && streamSubscription.isPaused)
     //   streamSubscription.resume();

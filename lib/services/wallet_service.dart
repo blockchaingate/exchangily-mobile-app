@@ -6,7 +6,7 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
-import 'package:exchangilymobileapp/models/wallet/token.dart';
+import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
@@ -389,7 +389,7 @@ class WalletService {
   }
 
 /*----------------------------------------------------------------------
-                Get Random Mnemonic
+                getTokenListUpdates
 ----------------------------------------------------------------------*/
   Future<List<TokenModel>> getTokenListUpdates() async {
     List<TokenModel> newTokens = [];

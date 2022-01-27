@@ -14,6 +14,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
@@ -23,7 +24,7 @@ import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
-import 'package:exchangilymobileapp/models/wallet/token.dart';
+import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -31,7 +32,6 @@ import 'package:exchangilymobileapp/services/db/decimal_config_database_service.
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -146,6 +146,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   List<CustomTokenModel> issueTokens = [];
   List<CustomTokenModel> selectedCustomTokens = [];
   var receiverWalletAddressTextController = TextEditingController();
+
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -162,6 +163,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     //  getDecimalPairConfig();
     getConfirmDepositStatus();
     buildFavCoinListV1();
+
     currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
     // walletsScrollController.addListener(_scrollListener());
     //   await storeWalletDecimalData();
@@ -170,7 +172,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     setBusy(false);
     issueTokens = await apiService.getIssueTokens();
-    await buildSelectedCustomTokenList();
+    await getBalanceForSelectedCustomTokens();
   }
 
   // get wallet info object with address using single wallet balance
@@ -253,10 +255,9 @@ class WalletDashboardViewModel extends BaseViewModel {
     navigationService.navigateTo(SendViewRoute, arguments: wallet);
   }
 
-// build Selected custom token list
+// get balance for Selected custom tokens
 
-  Future buildSelectedCustomTokenList() async {
-    log.i('Building selected custom token list...');
+  Future getBalanceForSelectedCustomTokens() async {
     String fabAddress = await sharedService.getExgAddressFromWalletDatabase();
     selectedCustomTokens.clear();
     String selectedCustomTokensJson = storageService.customTokens;
@@ -286,7 +287,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   }
 
   //switchSearch
-  switchSeatch() {
+  switchSearch() {
     openSearch = !openSearch;
   }
 
@@ -308,7 +309,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                 child: StatefulBuilder(
                     builder: (BuildContext context, StateSetter setState) {
                   return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                    margin: EdgeInsets.symmetric(horizontal: 7, vertical: 15),
                     padding: EdgeInsets.all(5),
                     //  height: 500,
                     child: ListView.builder(
@@ -329,11 +330,11 @@ class WalletDashboardViewModel extends BaseViewModel {
                                 'no match found for ${issueTokens[index].symbol} with token id ${issueTokens[index].tokenId}');
                           }
                           return Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Expanded(
-                                  flex: 1,
+                                  flex: 2,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
@@ -348,9 +349,9 @@ class WalletDashboardViewModel extends BaseViewModel {
                                               fontWeight: FontWeight.bold)),
                                       Text(issueTokens[index].name,
                                           style: TextStyle(
-                                              color: primaryColor,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold))
+                                            color: primaryColor,
+                                            fontSize: 12,
+                                          ))
                                     ],
                                   ),
                                 ),
@@ -359,14 +360,17 @@ class WalletDashboardViewModel extends BaseViewModel {
                                   flex: 3,
                                   child: Column(
                                     children: [
-                                      Text(
-                                          AppLocalizations.of(context)
-                                              .totalSupply,
-                                          style: TextStyle(
-                                              color: primaryColor,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold)),
-                                      UIHelper.verticalSpaceSmall,
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 3.0),
+                                        child: Text(
+                                            AppLocalizations.of(context)
+                                                .totalSupply,
+                                            style: TextStyle(
+                                                color: primaryColor,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold)),
+                                      ),
                                       Text(issueTokens[index].totalSupply,
                                           style: TextStyle(
                                               color: grey, fontSize: 12))
@@ -393,7 +397,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                       children: [
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(right: 4.0),
+                                              const EdgeInsets.only(right: 2.0),
                                           child: Text(
                                               isMatched == null
                                                   ? AppLocalizations.of(context)
@@ -402,18 +406,18 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                       .remove,
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                  fontSize: 13,
+                                                  fontSize: 12,
                                                   color: isMatched == null
                                                       ? green
                                                       : red)),
                                         ),
                                         Icon(
                                           isMatched == null
-                                              ? Icons.add
+                                              ? Icons.add_box_rounded
                                               : Icons.cancel_outlined,
                                           color:
                                               isMatched == null ? green : red,
-                                          size: 18,
+                                          size: 14,
                                         )
                                       ],
                                     ),
@@ -430,6 +434,10 @@ class WalletDashboardViewModel extends BaseViewModel {
                                         setState(() => selectedCustomTokens
                                             .add(issueTokens[index]));
                                       } else {
+                                        if (selectedCustomTokens.isNotEmpty) {
+                                          log.w(
+                                              'last item ${selectedCustomTokens.last.toJson()}');
+                                        }
                                         log.i(
                                             'selectedCustomTokens - length before removing token ${selectedCustomTokens.length}');
                                         setState(() => selectedCustomTokens
@@ -479,15 +487,6 @@ class WalletDashboardViewModel extends BaseViewModel {
       });
     });
 
-    // walletInfo.forEach((wallet) async {
-    //   int decimalLimit = 0;
-    //   for (var i = 0; i < walletDecimalList.length; i++) {
-    //     if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
-    //     Map<String, int> dataToAdd = {};
-    //     dataToAdd = {wallet.tickerName: decimalLimit};
-    //     walletDecimalList.add(dataToAdd);
-    //   }
-    // });
     log.i('walletDecimalList $walletDecimalList');
     int storedDecimalListLength =
         storageService.getStoredListLength(storageService.walletDecimalList);
@@ -502,22 +501,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     log.i('latest storedDecimalList ${storageService.walletDecimalList}');
   }
-
-  // moveDown() {
-  //   walletsScrollController.animateTo(
-  //       walletsScrollController.offset +
-  //           walletsScrollController.position.maxScrollExtent,
-  //       curve: Curves.linear,
-  //       duration: Duration(milliseconds: 500));
-  // }
-
-  // moveUp() {
-  //   walletsScrollController.animateTo(
-  //       walletsScrollController.offset +
-  //           walletsScrollController.position.minScrollExtent,
-  //       curve: Curves.linear,
-  //       duration: Duration(milliseconds: 500));
-  // }
 
   _scrollListener() {
     walletsScrollController = ScrollController();
@@ -1092,8 +1075,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     Map<String, String> localAppVersion =
         await sharedService.getLocalAppVersion();
     String store = '';
-    String appDownloadLinkOnWebsite =
-        'http://exchangily.com/download/latest.apk';
+    String appDownloadLinkOnWebsite = exchangilyAppLatestApkUrl;
     if (Platform.isIOS) {
       store = 'App Store';
     } else {
@@ -1618,18 +1600,3 @@ class WalletDashboardViewModel extends BaseViewModel {
     return top;
   }
 }
-
-// Future<void> _showNotification() async {
-//   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-//       FlutterLocalNotificationsPlugin();
-
-//   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-//       'your channel id', 'your channel name', 'your channel description',
-//       importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
-//   var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-//   var platformChannelSpecifics = NotificationDetails(
-//       androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-//   await flutterLocalNotificationsPlugin.show(0, 'Test Server Warning',
-//       'You are using Test Server!', platformChannelSpecifics,
-//       payload: 'item x');
-// }

@@ -17,7 +17,7 @@ import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/models/app_update_model.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
-import 'package:exchangilymobileapp/models/wallet/token.dart';
+import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
@@ -52,7 +52,7 @@ class ApiService {
 // Post app update
 
   postAppUpdate() async {
-    String url = PostAppUpdateVersionUrl;
+    String url = postAppUpdateVersionUrl;
     log.i('postAppUpdate url $url');
     var versionInfo = await sharedService.getLocalAppVersion();
     log.i('getAppVersion $versionInfo');
@@ -85,7 +85,7 @@ class ApiService {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
 
-      log.w('json data $json');
+      log.w('getIssueTokens func: json data $json');
       var parsedTokenList = json as List;
 
       CustomTokenModelList isueTokenList =
@@ -108,10 +108,10 @@ class ApiService {
   Future getTronTsWalletBalance(String address) async {
     var body = {"address": address, "visible": true};
 
-    log.i('getTronTsWalletBalance url $TronGetAccountUrl - body $body');
+    log.i('getTronTsWalletBalance url $tronGetAccountUrl - body $body');
     try {
       var response =
-          await client.post(TronGetAccountUrl, body: jsonEncode(body));
+          await client.post(tronGetAccountUrl, body: jsonEncode(body));
       var json = jsonDecode(response.body);
       if (json != null) {
         log.e('getTronTsWalletBalance $json}');
@@ -143,10 +143,10 @@ class ApiService {
     };
 
     debugPrint(
-        'getTronTsWalletBalance url $TronUsdtAccountBalanceUrl - body $body');
+        'getTronTsWalletBalance url $tronUsdtAccountBalanceUrl - body $body');
     try {
       var response =
-          await client.post(TronUsdtAccountBalanceUrl, body: jsonEncode(body));
+          await client.post(tronUsdtAccountBalanceUrl, body: jsonEncode(body));
       var json = jsonDecode(response.body);
       if (json != null) {
         log.e('getTronUsdtTsWalletBalance $json}');
@@ -171,10 +171,10 @@ class ApiService {
 ----------------------------------------------------------------------*/
 
   Future getTronLatestBlock() async {
-    log.i('getBanner url $GetTronLatestBlockUrl');
+    log.i('getBanner url $getTronLatestBlockUrl');
 
     try {
-      var response = await client.get(GetTronLatestBlockUrl);
+      var response = await client.get(getTronLatestBlockUrl);
       var json = jsonDecode(response.body);
       if (json != null) {
         log.e('getTronLatestBlock $json}');
@@ -611,7 +611,7 @@ class ApiService {
 -------------------------------------------------------------------------------------*/
 
   Future<List<WalletBalance>> getWalletBalance(body) async {
-    String url = configService.getKanbanBaseUrl() + WalletBalancesApiRoute;
+    String url = configService.getKanbanBaseUrl() + walletBalancesApiRoute;
     log.i('getWalletBalance URL $url');
     log.i('getWalletBalance body $body');
 
@@ -689,8 +689,8 @@ class ApiService {
   Future getGasBalance(String exgAddress) async {
     try {
       String url = configService.getKanbanBaseUrl() +
-          KanbanApiRoute +
-          GetBalanceApiRoute +
+          kanbanApiRoute +
+          getBalanceApiRoute +
           exgAddress;
       log.e('get gas balance url $url');
       final res = await client.get(url);

@@ -25,15 +25,12 @@ import './eth_util.dart';
 
 //import '../packages/bip32/utils/ecurve.dart' as ecc;
 import 'package:hex/hex.dart';
-import 'package:web3dart/web3dart.dart';
 import '../utils/string_util.dart';
 import '../environments/environment.dart';
 import './btc_util.dart';
 import "package:pointycastle/pointycastle.dart";
 import 'dart:typed_data';
 import 'dart:convert';
-import "package:pointycastle/api.dart";
-import "package:pointycastle/impl.dart";
 import "package:pointycastle/ecc/curves/secp256k1.dart";
 import "package:pointycastle/digests/sha256.dart";
 import "package:pointycastle/signers/ecdsa_signer.dart";

@@ -22,10 +22,7 @@ class CustomTokenModel {
       this.tokenId,
       this.status,
       this.decimal,
-      this.balance}) {
-    this.decimal ?? 18;
-    this.balance ?? 0.0;
-  }
+      this.balance});
 
   CustomTokenModel.fromJson(Map<String, dynamic> json) {
     owner = json['owner'];
@@ -36,7 +33,7 @@ class CustomTokenModel {
     txid = json['txid'];
     tokenId = json['tokenId'];
     status = json['status'];
-    decimal = json['decimal'] ?? 18;
+    decimal = json['decimals'] ?? 18;
     balance = json['balance'] ?? 0.0;
   }
 
@@ -50,7 +47,7 @@ class CustomTokenModel {
     data['txid'] = this.txid;
     data['tokenId'] = this.tokenId;
     data['status'] = this.status;
-    data['decimal'] = this.decimal;
+    data['decimals'] = this.decimal;
     data['balance'] = this.balance;
     return data;
   }

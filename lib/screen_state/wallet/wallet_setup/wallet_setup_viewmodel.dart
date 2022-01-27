@@ -41,26 +41,27 @@ class WalletSetupViewmodel extends BaseViewModel {
   final NavigationService navigationService = locator<NavigationService>();
   final authService = locator<LocalAuthService>();
   final storageService = locator<LocalStorageService>();
-  BuildContext context;
-  bool isWallet = false;
-  String errorMessage = '';
-  get hasAuthenticated => authService.hasAuthorized;
-
-  VersionService versionService = locator<VersionService>();
-  final dialogService = locator<DialogService>();
-  bool isWalletVerifySuccess = false;
-  bool isDeleting = false;
-
+  final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
 
-  final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   UserSettingsDatabaseService userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();
 
   final _vaultService = locator<VaultService>();
+  VersionService versionService = locator<VersionService>();
+  final dialogService = locator<DialogService>();
+
+  BuildContext context;
+  bool isWallet = false;
+  String errorMessage = '';
+  get hasAuthenticated => authService.hasAuthorized;
+
+  bool isWalletVerifySuccess = false;
+  bool isDeleting = false;
+
   bool isVerifying = false;
   bool hasVerificationStarted = false;
   bool isHideIcon = true;

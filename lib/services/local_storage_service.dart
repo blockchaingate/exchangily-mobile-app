@@ -97,8 +97,8 @@ class LocalStorageService {
 
   // is camera open
 
-  bool get IsCameraOpen => _getFromDisk(CameraOpenKey) ?? false;
-  set IsCameraOpen(bool value) => _saveToDisk(CameraOpenKey, value);
+  bool get isCameraOpen => _getFromDisk(CameraOpenKey) ?? false;
+  set isCameraOpen(bool value) => _saveToDisk(CameraOpenKey, value);
 
   // Custom token Data
 
@@ -113,7 +113,7 @@ class LocalStorageService {
   set customTokens(String value) => _saveToDisk(CustomTokensKey, value);
 
 /*----------------------------------------------------------------------
-                Wallet balance body
+                testing log string list
 ----------------------------------------------------------------------  */
   String get testingLogStringList =>
       _getFromDisk(TestingLogStringListKey) ?? '';

@@ -268,7 +268,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     try {
       setBusy(true);
       String barcode = '';
-      storageService.IsCameraOpen = true;
+      storageService.isCameraOpen = true;
       barcode = await BarcodeScanner.scan().then((value) => value.rawContent);
       addressController.text = barcode;
       setBusy(false);

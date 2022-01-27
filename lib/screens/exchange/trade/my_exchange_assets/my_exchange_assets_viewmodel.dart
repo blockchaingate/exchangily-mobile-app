@@ -7,8 +7,6 @@ import 'package:exchangilymobileapp/services/db/token_list_database_service.dart
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:stacked/stacked.dart';
-import 'dart:convert';
-import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
 class MyExchangeAssetsViewModel extends FutureViewModel {

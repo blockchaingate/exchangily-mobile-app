@@ -27,8 +27,8 @@ class KanbanUtils {
     ConfigService configService = locator<ConfigService>();
 
     var url = configService.getKanbanBaseUrl() +
-        KanbanApiRoute +
-        GetScarAddressApiRoute;
+        kanbanApiRoute +
+        getScarAddressApiRoute;
 
     var response = await client.get(url);
     return response.body;
@@ -56,8 +56,8 @@ class KanbanUtils {
   Future<double> getGas(String address) async {
     ConfigService configService = locator<ConfigService>();
     var url = configService.getKanbanBaseUrl() +
-        KanbanApiRoute +
-        GetBalanceApiRoute +
+        kanbanApiRoute +
+        getBalanceApiRoute +
         address;
 
     var response = await client.get(url);
@@ -69,8 +69,8 @@ class KanbanUtils {
   Future<int> getNonce(String address) async {
     ConfigService configService = locator<ConfigService>();
     var url = configService.getKanbanBaseUrl() +
-        KanbanApiRoute +
-        GetTransactionCountApiRoute +
+        kanbanApiRoute +
+        getTransactionCountApiRoute +
         address;
     print('URL getNonce $url');
 
@@ -83,7 +83,7 @@ class KanbanUtils {
   Future<Map<String, dynamic>> submitDeposit(
       String rawTransaction, String rawKanbanTransaction) async {
     ConfigService configService = locator<ConfigService>();
-    var url = configService.getKanbanBaseUrl() + SubmitDepositApiRoute;
+    var url = configService.getKanbanBaseUrl() + submitDepositApiRoute;
     print('submitDeposit url $url');
     final sharedService = locator<SharedService>();
     var versionInfo = await sharedService.getLocalAppVersion();
@@ -114,7 +114,7 @@ class KanbanUtils {
 
   Future getKanbanErrDeposit(String address) async {
     ConfigService configService = locator<ConfigService>();
-    var url = configService.getKanbanBaseUrl() + DepositerrApiRoute + address;
+    var url = configService.getKanbanBaseUrl() + depositerrApiRoute + address;
     print('kanbanUtil getKanbanErrDeposit $url');
     try {
       var response = await client.get(url);
@@ -131,7 +131,7 @@ class KanbanUtils {
   Future<Map<String, dynamic>> submitReDeposit(
       String rawKanbanTransaction) async {
     ConfigService configService = locator<ConfigService>();
-    var url = configService.getKanbanBaseUrl() + ResubmitDepositApiRoute;
+    var url = configService.getKanbanBaseUrl() + resubmitDepositApiRoute;
 
     final sharedService = locator<SharedService>();
     var versionInfo = await sharedService.getLocalAppVersion();
@@ -163,7 +163,7 @@ class KanbanUtils {
       String rawKanbanTransaction) async {
     ConfigService configService = locator<ConfigService>();
     var url =
-        configService.getKanbanBaseUrl() + KanbanApiRoute + SendRawTxApiRoute;
+        configService.getKanbanBaseUrl() + kanbanApiRoute + sendRawTxApiRoute;
     print('URL sendKanbanRawTransaction $url');
 
     final sharedService = locator<SharedService>();

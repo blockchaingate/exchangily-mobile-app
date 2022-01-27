@@ -9,47 +9,48 @@ const String baseBlockchainGateV2Url = isProduction
     ? 'https://api.blockchaingate.com/v2/'
     : 'https://test.blockchaingate.com/v2/';
 
-const String TronBaseApiUrl = 'https://api.trongrid.io/';
+const String tronBaseApiUrl = 'https://api.trongrid.io/';
 /*----------------------------------------------------------------------
                         LightningRemit
 ----------------------------------------------------------------------*/
-const String ChargeTextApiRoute = "charge";
-const String OrdersTextApiRoute = "orders";
-const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
+const String chargeTextApiRoute = "charge";
+const String ordersTextApiRoute = "orders";
+const String payOrderApiRoute = ordersTextApiRoute + "/code/";
 
 /*----------------------------------------------------------------------
                         Wallet
 ----------------------------------------------------------------------*/
-
+const String exchangilyAppLatestApkUrl =
+    'http://exchangily.com/download/latest.apk';
 // app update post
-const String PostAppUpdateVersionUrl =
+const String postAppUpdateVersionUrl =
     "http://52.194.202.239:3000/app-update/set-version-info";
 
-const String FabTransactionJsonApiRoute = 'gettransactionjson/';
+const String fabTransactionJsonApiRoute = 'gettransactionjson/';
 
-const String KanbanApiRoute = 'kanban/';
-const String GetScarAddressApiRoute = 'getScarAddress';
-const String GetTransactionCountApiRoute = 'getTransactionCount/';
-const String GetBalanceApiRoute = 'getBalance/';
-const String ResubmitDepositApiRoute = 'resubmitDeposit';
-const String SendRawTxApiRoute = 'sendRawTransaction';
-const String DepositerrApiRoute = 'depositerr/';
-const String SubmitDepositApiRoute = 'submitDeposit';
+const String kanbanApiRoute = 'kanban/';
+const String getScarAddressApiRoute = 'getScarAddress';
+const String getTransactionCountApiRoute = 'getTransactionCount/';
+const String getBalanceApiRoute = 'getBalance/';
+const String resubmitDepositApiRoute = 'resubmitDeposit';
+const String sendRawTxApiRoute = 'sendRawTransaction';
+const String depositerrApiRoute = 'depositerr/';
+const String submitDepositApiRoute = 'submitDeposit';
 
-const String TronUsdtAccountBalanceUrl =
-    TronBaseApiUrl + "wallet/triggerconstantcontract";
-const String TronGetAccountUrl = TronBaseApiUrl + "wallet/getaccount";
+const String tronUsdtAccountBalanceUrl =
+    tronBaseApiUrl + "wallet/triggerconstantcontract";
+const String tronGetAccountUrl = tronBaseApiUrl + "wallet/getaccount";
 //  const requestURL = `${TRON_API_ENDPOINT}/wallet/getaccount`;
 // const requestBody = {
 //   address,
 //   visible: true
 // };
 
-const String BroadcasrTronTransactionUrl =
-    TronBaseApiUrl + "wallet/broadcasthex";
-const String GetTronLatestBlockUrl = TronBaseApiUrl + 'wallet/getnowblock';
+const String broadcasrTronTransactionUrl =
+    tronBaseApiUrl + "wallet/broadcasthex";
+const String getTronLatestBlockUrl = tronBaseApiUrl + 'wallet/getnowblock';
 
-const String WalletBalancesApiRoute = 'walletBalances';
+const String walletBalancesApiRoute = 'walletBalances';
 const String SingleWalletBalanceApiRoute = 'singleCoinWalletBalance';
 const String WalletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";
 

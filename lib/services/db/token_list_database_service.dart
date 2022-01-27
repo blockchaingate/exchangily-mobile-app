@@ -13,7 +13,7 @@
 
 import 'dart:async';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/token.dart';
+import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 

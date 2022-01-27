@@ -84,7 +84,7 @@ class FabUtils {
   }
 
   Future getFabTransactionStatus(String txid) async {
-    var url = fabBaseUrl + FabTransactionJsonApiRoute + txid;
+    var url = fabBaseUrl + fabTransactionJsonApiRoute + txid;
 
     var response = await client.get(url);
     print(url);
