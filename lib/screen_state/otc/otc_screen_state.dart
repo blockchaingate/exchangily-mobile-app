@@ -15,13 +15,15 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/language_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../localizations.dart';
+import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import '../../logger.dart';
 import '../../service_locator.dart';
 import '../base_state.dart';
@@ -42,6 +44,8 @@ class OtcScreenState extends BaseState {
   BuildContext context;
   String versionName = '';
   String versionCode = '';
+  LaguageService langServ = locator<LaguageService>();
+
   void showMnemonic() async {
     await displayMnemonic();
     isVisible = !isVisible;
@@ -55,10 +59,10 @@ class OtcScreenState extends BaseState {
 
     await dialogService
         .showDialog(
-            title: AppLocalizations.of(context).enterPassword,
-            description:
-                AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-            buttonTitle: AppLocalizations.of(context).confirm)
+            title: FlutterI18n.translate(context, "enterPassword"),
+            description: FlutterI18n.translate(
+                context, "dialogManagerTypeSamePasswordNote"),
+            buttonTitle: FlutterI18n.translate(context, "confirm"))
         .then((res) async {
       if (res.confirmed) {
         log.w('deleting wallet');
@@ -78,7 +82,7 @@ class OtcScreenState extends BaseState {
         log.e('Wrong pass');
         setState(ViewState.Idle);
         return errorMessage =
-            AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
+            FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword");
       }
     }).catchError((error) {
       log.e(error);
@@ -97,10 +101,10 @@ class OtcScreenState extends BaseState {
     } else {
       await dialogService
           .showDialog(
-              title: AppLocalizations.of(context).enterPassword,
-              description: AppLocalizations.of(context)
-                  .dialogManagerTypeSamePasswordNote,
-              buttonTitle: AppLocalizations.of(context).confirm)
+              title: FlutterI18n.translate(context, "enterPassword"),
+              description: FlutterI18n.translate(
+                  context, "dialogManagerTypeSamePasswordNote"),
+              buttonTitle: FlutterI18n.translate(context, "confirm"))
           .then((res) async {
         if (res.confirmed) {
           isVisible = !isVisible;
@@ -115,7 +119,7 @@ class OtcScreenState extends BaseState {
           log.e('Wrong pass');
           setState(ViewState.Idle);
           return errorMessage =
-              AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
+              FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword");
         }
       }).catchError((error) {
         log.e(error);
@@ -129,18 +133,15 @@ class OtcScreenState extends BaseState {
 
   changeWalletLanguage(newValue) async {
     setState(ViewState.Busy);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     selectedLanguage = newValue;
     log.w('Selec $selectedLanguage');
     if (newValue == 'Chinese') {
       log.e('in zh');
 
-      AppLocalizations.load(Locale('zh', 'ZH'));
-      prefs.setString('lang', 'zh');
+      langServ.setLanguage('zh', context);
     } else if (newValue == 'English') {
       log.e('in en');
-      AppLocalizations.load(Locale('en', 'EN'));
-      prefs.setString('lang', 'en');
+      langServ.setLanguage('en', context);
     }
     setState(ViewState.Idle);
   }

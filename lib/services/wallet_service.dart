@@ -4,6 +4,7 @@ import 'package:bitbox/bitbox.dart' as Bitbox;
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
@@ -1010,7 +1011,7 @@ class WalletService {
                         Text('${transaction.tag}'),
                         UIHelper.horizontalSpaceSmall,
                         Icon(Icons.check)
-                        //  Text(AppLocalizations.of(context).completed),
+                        //  Text(FlutterI18n.translate(context, "completed")),
                       ],
                     ),
                     position: NotificationPosition.bottom,

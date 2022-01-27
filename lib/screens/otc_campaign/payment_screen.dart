@@ -1,13 +1,15 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/payment_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../localizations.dart';
+import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignPaymentScreen extends StatelessWidget {
@@ -24,7 +26,7 @@ class CampaignPaymentScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
             centerTitle: true,
-            title: Text(AppLocalizations.of(context).payment,
+            title: Text(FlutterI18n.translate(context, "payment"),
                 style: Theme.of(context).textTheme.headline3)),
         // Scaffold body container
         body: SingleChildScrollView(
@@ -120,8 +122,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                             ),
                                           ),
                                           suffix: Column(children: [
-                                            Text(AppLocalizations.of(context)
-                                                .tokenQuantity),
+                                            Text(FlutterI18n.translate(
+                                                context, "tokenQuantity")),
                                             model.busy && model.isTokenCalc
                                                 ? SizedBox(
                                                     width: 10,
@@ -136,8 +138,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           ]),
                                           filled: true,
                                           fillColor: globals.walletCardColor,
-                                          hintText: AppLocalizations.of(context)
-                                              .amount,
+                                          hintText: FlutterI18n.translate(
+                                              context, "amount"),
                                           hintStyle: Theme.of(context)
                                               .textTheme
                                               .headline6
@@ -166,8 +168,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       padding:
                                           const EdgeInsets.only(left: 10.0),
                                       child: Text(
-                                        AppLocalizations.of(context)
-                                            .paymentType,
+                                        FlutterI18n.translate(
+                                            context, "paymentType"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5,
@@ -241,8 +243,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text(AppLocalizations.of(context)
-                                            .gasFee),
+                                        Text(FlutterI18n.translate(
+                                            context, "gasFee")),
                                         UIHelper.horizontalSpaceSmall,
                                         Text(
                                             model.transportationFee.toString() +
@@ -268,8 +270,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                             MainAxisAlignment.center,
                                         children: <Widget>[
                                           Text(
-                                            AppLocalizations.of(context)
-                                                .bankWireDetails,
+                                            FlutterI18n.translate(
+                                                context, "bankWireDetails"),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5,
@@ -284,8 +286,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           Expanded(
                                             flex: 2,
                                             child: Text(
-                                              AppLocalizations.of(context)
-                                                  .bankName,
+                                              FlutterI18n.translate(
+                                                  context, "bankName"),
                                               textAlign: TextAlign.start,
                                             ),
                                           ),
@@ -302,9 +304,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                         children: <Widget>[
                                           Expanded(
                                             flex: 2,
-                                            child: Text(
-                                                AppLocalizations.of(context)
-                                                    .routingNumber),
+                                            child: Text(FlutterI18n.translate(
+                                                context, "routingNumber")),
                                           ),
                                           Expanded(
                                             flex: 1,
@@ -318,10 +319,9 @@ class CampaignPaymentScreen extends StatelessWidget {
                                         children: <Widget>[
                                           Expanded(
                                             flex: 2,
-                                            child: Text(
-                                                AppLocalizations.of(context)
-                                                        .bankAccount +
-                                                    ' #'),
+                                            child: Text(FlutterI18n.translate(
+                                                    context, "bankAccount") +
+                                                ' #'),
                                           ),
                                           Expanded(
                                             flex: 1,
@@ -349,8 +349,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                         MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
                                       Text(
-                                        AppLocalizations.of(context)
-                                            .receiveAddress,
+                                        FlutterI18n.translate(
+                                            context, "receiveAddress"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5,
@@ -379,15 +379,16 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                         flex: 6,
                                                         child: Center(
                                                           child: Text(
-                                                            AppLocalizations.of(
-                                                                        context)
-                                                                    .available +
+                                                            FlutterI18n.translate(
+                                                                    context,
+                                                                    "available") +
                                                                 model
                                                                     .walletBalances
                                                                     .coin +
-                                                                AppLocalizations.of(
-                                                                        context)
-                                                                    .balance,
+                                                                FlutterI18n
+                                                                    .translate(
+                                                                        context,
+                                                                        "balance"),
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
@@ -440,7 +441,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                   width: 2)),
                                           color: globals.secondaryColor,
                                           child: Text(
-                                            AppLocalizations.of(context).cancel,
+                                            FlutterI18n.translate(
+                                                context, "cancel"),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5,
@@ -459,8 +461,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           ? RaisedButton(
                                               padding: EdgeInsets.all(0),
                                               child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .confirm,
+                                                  FlutterI18n.translate(
+                                                      context, "confirm"),
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .headline5),
@@ -468,8 +470,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           : RaisedButton(
                                               padding: EdgeInsets.all(0),
                                               child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .confirm,
+                                                  FlutterI18n.translate(
+                                                      context, "confirm"),
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .headline5),
@@ -510,7 +512,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                     children: <Widget>[
                       Center(
                           child: Text(
-                              AppLocalizations.of(context).orderInformation,
+                              FlutterI18n.translate(
+                                  context, "orderInformation"),
                               style: Theme.of(context).textTheme.headline4)),
                       UIHelper.verticalSpaceSmall,
                       Container(
@@ -521,20 +524,22 @@ class CampaignPaymentScreen extends StatelessWidget {
                             UIHelper.horizontalSpaceSmall,
                             Expanded(
                               flex: 2,
-                              child: Text(AppLocalizations.of(context).date,
+                              child: Text(
+                                  FlutterI18n.translate(context, "date"),
                                   textAlign: TextAlign.start,
                                   style: Theme.of(context).textTheme.bodyText1),
                             ),
                             Expanded(
                                 flex: 2,
                                 child: Text(
-                                    AppLocalizations.of(context).quantity,
+                                    FlutterI18n.translate(context, "quantity"),
                                     textAlign: TextAlign.start,
                                     style:
                                         Theme.of(context).textTheme.bodyText1)),
                             Expanded(
                               flex: 1,
-                              child: Text(AppLocalizations.of(context).status,
+                              child: Text(
+                                  FlutterI18n.translate(context, "status"),
                                   textAlign: TextAlign.start,
                                   style: Theme.of(context).textTheme.bodyText1),
                             )
@@ -547,7 +552,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                               baseColor: globals.primaryColor,
                               highlightColor: globals.white,
                               child: Text(
-                                AppLocalizations.of(context).loading,
+                                FlutterI18n.translate(context, "loading"),
                                 style: Theme.of(context).textTheme.bodyText2,
                               ))
                           : model.orderInfoList != null
@@ -621,8 +626,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                   ),
                                 )
                               : Container(
-                                  child: Text(AppLocalizations.of(context)
-                                      .serverError)),
+                                  child: Text(FlutterI18n.translate(
+                                      context, "serverError"))),
                     ],
                   ),
                 )

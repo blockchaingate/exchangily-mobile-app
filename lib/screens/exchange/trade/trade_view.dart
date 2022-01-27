@@ -1,6 +1,7 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my_exchange_assets_view.dart';
@@ -89,7 +90,7 @@ class TradeView extends StatelessWidget {
                 //               : Container(
                 //                   child: Center(
                 //                     child: Text(
-                //                         AppLocalizations.of(context).loading),
+                //                         FlutterI18n.translate(context, "loading")),
                 //                   ),
                 //                 ),
                 //         ),
@@ -128,7 +129,7 @@ class TradeView extends StatelessWidget {
                     ? Container(
                         child: Center(
                         child: Text(
-                          AppLocalizations.of(context).serverError,
+                          FlutterI18n.translate(context, "serverError"),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ))
@@ -194,8 +195,8 @@ class TradeView extends StatelessWidget {
 
                                           tabs: [
                                             Text(
-                                                AppLocalizations.of(context)
-                                                    .orderBook,
+                                                FlutterI18n.translate(
+                                                    context, "orderBook"),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyText1
@@ -205,8 +206,8 @@ class TradeView extends StatelessWidget {
                                                         decorationThickness:
                                                             3)),
                                             Text(
-                                                AppLocalizations.of(context)
-                                                    .marketTrades,
+                                                FlutterI18n.translate(
+                                                    context, "marketTrades"),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyText1
@@ -216,8 +217,8 @@ class TradeView extends StatelessWidget {
                                                         decorationThickness:
                                                             3)),
                                             Text(
-                                                AppLocalizations.of(context)
-                                                    .myOrders,
+                                                FlutterI18n.translate(
+                                                    context, "myOrders"),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyText1
@@ -227,8 +228,8 @@ class TradeView extends StatelessWidget {
                                                         decorationThickness:
                                                             3)),
                                             Text(
-                                                AppLocalizations.of(context)
-                                                    .assets,
+                                                FlutterI18n.translate(
+                                                    context, "assets"),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyText1
@@ -332,7 +333,7 @@ class TradeView extends StatelessWidget {
                         //                     bidOrAsk: true)),
                         //           );
                         //         },
-                        //         child: Text(AppLocalizations.of(context).buy,
+                        //         child: Text(FlutterI18n.translate(context, "buy"),
                         //             style:
                         //                 TextStyle(fontSize: 13, color: white)),
                         //       ),
@@ -360,7 +361,8 @@ class TradeView extends StatelessWidget {
                                                   pairPriceByRoute.symbol)),
                                     );
                                 },
-                                child: Text(AppLocalizations.of(context).buy,
+                                child: Text(
+                                    FlutterI18n.translate(context, "buy"),
                                     style:
                                         TextStyle(fontSize: 13, color: white)),
                               ),
@@ -389,7 +391,8 @@ class TradeView extends StatelessWidget {
                                                 pairPriceByRoute.symbol)),
                                   );
                               },
-                              child: Text(AppLocalizations.of(context).sell,
+                              child: Text(
+                                  FlutterI18n.translate(context, "sell"),
                                   style: TextStyle(
                                       fontSize: 13, color: Colors.white)),
                             ))

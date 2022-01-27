@@ -93,6 +93,9 @@ dependencies:
   # Material icons
   material_design_icons_flutter: ^4.0.5345
 
+  #flutter_i18n
+  flutter_i18n:
+
   # Flushbar instead of Snackbar for notifications
   #flushbar: ^1.9.0
   flushbar:
@@ -242,6 +245,8 @@ flutter:
     - assets/images/icons/
     - assets/images/lightning-remit/
     - assets/cert/
+    - assets/i18n/
+
 flutter_icons:
   image_path: "assets/images/launcher/mobile-icon-ios.png"
 

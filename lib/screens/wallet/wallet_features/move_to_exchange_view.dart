@@ -12,6 +12,7 @@
 */
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -54,7 +55,7 @@ class MoveToExchangeScreen extends StatelessWidget {
             },
           ),
           middle: Text(
-            '${AppLocalizations.of(context).move}  ${model.specialTicker}  ${AppLocalizations.of(context).toExchange}',
+            '${FlutterI18n.translate(context, "move")}  ${model.specialTicker}  ${FlutterI18n.translate(context, "toExchange")}',
             style: Theme.of(context).textTheme.headline5,
           ),
           backgroundColor: Color(0XFF1f2233),
@@ -78,14 +79,14 @@ class MoveToExchangeScreen extends StatelessWidget {
                 },
                 decoration: InputDecoration(
                   suffix: Text(
-                      AppLocalizations.of(context).decimalLimit +
+                      FlutterI18n.translate(context, "decimalLimit") +
                           ': ' +
                           model.decimalLimit.toString(),
                       style: Theme.of(context).textTheme.headline6),
                   enabledBorder: OutlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0XFF871fff), width: 1.0)),
-                  hintText: AppLocalizations.of(context).enterAmount,
+                  hintText: FlutterI18n.translate(context, "enterAmount"),
                   hintStyle: TextStyle(fontSize: 14.0, color: Colors.grey),
                 ),
                 controller: model.amountController,
@@ -102,14 +103,14 @@ class MoveToExchangeScreen extends StatelessWidget {
                     children: <Widget>[
                       model.busy(model.walletInfo)
                           ? Text(
-                              AppLocalizations.of(context).walletbalance +
+                              FlutterI18n.translate(context, "walletbalance") +
                                   '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()}',
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle2
                                   .copyWith(color: yellow))
                           : Text(
-                              AppLocalizations.of(context).walletbalance +
+                              FlutterI18n.translate(context, "walletbalance") +
                                   '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()}',
                               style: Theme.of(context).textTheme.subtitle2),
                       Padding(
@@ -136,7 +137,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                               model.fillMaxAmount();
                           },
                           child: Text(
-                            AppLocalizations.of(context).maxAmount,
+                            FlutterI18n.translate(context, "maxAmount"),
                             style: Theme.of(context)
                                 .textTheme
                                 .subtitle2
@@ -157,7 +158,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                             alignment: Alignment.topLeft,
                             child: walletInfo.tickerName == 'TRX'
                                 ? Text(
-                                    '${AppLocalizations.of(context).gasFee}: 1 TRX',
+                                    '${FlutterI18n.translate(context, "gasFee")}: 1 TRX',
                                     textAlign: TextAlign.left,
                                     style:
                                         Theme.of(context).textTheme.headline5)
@@ -166,7 +167,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                          '${AppLocalizations.of(context).gasFee}: 15 TRX',
+                                          '${FlutterI18n.translate(context, "gasFee")}: 15 TRX',
                                           textAlign: TextAlign.left,
                                           style: Theme.of(context)
                                               .textTheme
@@ -178,9 +179,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                                                 Text(
                                                     model.walletInfo.tokenType +
                                                         ' ' +
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .balance,
+                                                        FlutterI18n.translate(
+                                                            context, "balance"),
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline5),
@@ -205,7 +205,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                             children: <Widget>[
                               Row(
                                 children: [
-                                  Text(AppLocalizations.of(context).gasFee,
+                                  Text(FlutterI18n.translate(context, "gasFee"),
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline5),
@@ -228,8 +228,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         Text(
                                             model.walletInfo.tokenType +
                                                 ' ' +
-                                                AppLocalizations.of(context)
-                                                    .balance,
+                                                FlutterI18n.translate(
+                                                    context, "balance"),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5),
@@ -252,7 +252,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                     // Kanaban Gas Fee Row
                     Row(
                       children: <Widget>[
-                        Text(AppLocalizations.of(context).kanbanGasFee,
+                        Text(FlutterI18n.translate(context, "kanbanGasFee"),
                             style: Theme.of(context).textTheme.headline5),
                         Padding(
                           padding: EdgeInsets.only(
@@ -271,7 +271,7 @@ class MoveToExchangeScreen extends StatelessWidget {
               // Switch Row
               Row(
                 children: <Widget>[
-                  Text(AppLocalizations.of(context).advance,
+                  Text(FlutterI18n.translate(context, "advance"),
                       style: Theme.of(context).textTheme.headline5),
                   Container(
                     child: Switch(
@@ -302,7 +302,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                               Expanded(
                                 flex: 3,
                                 child: Text(
-                                    AppLocalizations.of(context).gasPrice,
+                                    FlutterI18n.translate(context, "gasPrice"),
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5
@@ -348,7 +348,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                               Expanded(
                                   flex: 3,
                                   child: Text(
-                                    AppLocalizations.of(context).gasLimit,
+                                    FlutterI18n.translate(context, "gasLimit"),
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5
@@ -394,7 +394,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                               Expanded(
                                 flex: 3,
                                 child: Text(
-                                  AppLocalizations.of(context).satoshisPerByte,
+                                  FlutterI18n.translate(
+                                      context, "satoshisPerByte"),
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline5
@@ -437,7 +438,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                           Expanded(
                               flex: 3,
                               child: Text(
-                                AppLocalizations.of(context).kanbanGasPrice,
+                                FlutterI18n.translate(
+                                    context, "kanbanGasPrice"),
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline5
@@ -477,7 +479,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                           Expanded(
                             flex: 3,
                             child: Text(
-                                AppLocalizations.of(context).kanbanGasLimit,
+                                FlutterI18n.translate(
+                                    context, "kanbanGasLimit"),
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline5
@@ -526,8 +529,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                           UIHelper.verticalSpaceSmall,
                           RichText(
                             text: TextSpan(
-                                text: AppLocalizations.of(context)
-                                    .taphereToCopyTxId,
+                                text: FlutterI18n.translate(
+                                    context, "taphereToCopyTxId"),
                                 style: TextStyle(
                                     decoration: TextDecoration.underline,
                                     color: globals.primaryColor),
@@ -558,7 +561,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         color: red,
                                         decoration: TextDecoration.underline),
                                 text:
-                                    '${AppLocalizations.of(context).error} ${AppLocalizations.of(context).details}',
+                                    '${FlutterI18n.translate(context, "error")} ${FlutterI18n.translate(context, "details")}',
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     model.showDetailsMessageToggle();
@@ -600,7 +603,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                         child: CircularProgressIndicator(
                           strokeWidth: 1,
                         ))
-                    : Text(AppLocalizations.of(context).confirm,
+                    : Text(FlutterI18n.translate(context, "confirm"),
                         style: Theme.of(context).textTheme.button.copyWith(
                             color: model.isValidAmount && model.amount != 0.0
                                 ? white

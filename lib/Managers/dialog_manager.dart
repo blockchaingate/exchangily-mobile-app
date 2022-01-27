@@ -24,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 class DialogManager extends StatefulWidget {
   final Widget child;
@@ -206,7 +207,8 @@ class _DialogManagerState extends State<DialogManager> {
                   Icons.security,
                   color: primaryColor,
                 ),
-                labelText: AppLocalizations.of(context).typeYourWalletPassword,
+                labelText:
+                    FlutterI18n.translate(context, "typeYourWalletPassword"),
               ),
             ),
           ],
@@ -221,7 +223,7 @@ class _DialogManagerState extends State<DialogManager> {
               Navigator.of(context).pop();
             },
             child: Text(
-              AppLocalizations.of(context).cancel,
+              FlutterI18n.translate(context, "cancel"),
               style: Theme.of(context)
                   .textTheme
                   .headline4

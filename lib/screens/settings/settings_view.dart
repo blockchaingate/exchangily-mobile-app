@@ -19,7 +19,8 @@ import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import '../../localizations.dart';
+import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import '../../shared/globals.dart' as globals;
 
 class SettingsView extends StatelessWidget {
@@ -43,7 +44,7 @@ class SettingsView extends StatelessWidget {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             centerTitle: true,
-            title: Text(AppLocalizations.of(context).settings,
+            title: Text(FlutterI18n.translate(context, "settings"),
                 style: Theme.of(context).textTheme.headline3),
             backgroundColor: globals.secondaryColor,
             leading: Container(),
@@ -193,8 +194,8 @@ class SettingsContainer extends StatelessWidget {
                         Container(
                             margin: EdgeInsets.all(5.0),
                             child: Text(
-                                AppLocalizations.of(context)
-                                    .changeWalletLanguage,
+                                FlutterI18n.translate(
+                                    context, "changeWalletLanguage"),
                                 style: Theme.of(context).textTheme.subtitle2)),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -225,7 +226,7 @@ class SettingsContainer extends StatelessWidget {
                               UIHelper.horizontalSpaceSmall,
                               Row(
                                 children: [
-                                  Text('Chinese',
+                                  Text('简体中文',
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline5),
@@ -249,96 +250,14 @@ class SettingsContainer extends StatelessWidget {
                             ]),
                       ],
                     )
-                  // Row(
-                  //     children: [
-                  //       Expanded(
-                  //         flex: 2,
-                  //         child: CupertinoPicker(
-                  //             diameterRatio: 1.3,
-                  //             offAxisFraction: 5,
-                  //             scrollController: model.scrollController,
-                  //             itemExtent: 50,
-                  //             onSelectedItemChanged: (int value) {
-                  //               String lang = '';
-                  //               if (value == 1) {
-                  //                 lang = 'en';
-                  //               } else if (value == 2) {
-                  //                 lang = 'zh';
-                  //               }
-                  //               model.changeWalletLanguage(lang);
-                  //             },
-                  //             children: [
-                  //               Row(
-                  //                 mainAxisAlignment: MainAxisAlignment.end,
-                  //                 children: [
-                  //                   Padding(
-                  //                     padding:
-                  //                         const EdgeInsets.only(right: 3.0),
-                  //                     child: Icon(
-                  //                       Icons.language,
-                  //                       color: grey,
-                  //                       size: 18,
-                  //                     ),
-                  //                   ),
-                  //                   UIHelper.horizontalSpaceSmall,
-                  //                   Text(
-                  //                     AppLocalizations.of(context)
-                  //                         .changeWalletLanguage,
-                  //                     style:
-                  //                         Theme.of(context).textTheme.headline5,
-                  //                   ),
-                  //                 ],
-                  //               ),
-                  //               Center(
-                  //                 child: Text(
-                  //                   "English",
-                  //                   style:
-                  //                       Theme.of(context).textTheme.headline5,
-                  //                 ),
-                  //               ),
-                  //               Center(
-                  //                 child: Text(
-                  //                   "简体中文",
-                  //                   style:
-                  //                       Theme.of(context).textTheme.headline5,
-                  //                   textAlign: TextAlign.center,
-                  //                 ),
-                  //               ),
-                  //             ]),
-                  //       ),
-                  //       Expanded(
-                  //         flex: 1,
-                  //         child: Column(
-                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                  //             mainAxisAlignment: MainAxisAlignment.start,
-                  //             children: [
-                  //               Padding(
-                  //                 padding: const EdgeInsets.only(left: 5.0),
-                  //                 child: Icon(
-                  //                   Icons.keyboard_arrow_up,
-                  //                   color: primaryColor,
-                  //                   size: 12,
-                  //                 ),
-                  //               ),
-                  //               Padding(
-                  //                 padding: const EdgeInsets.only(left: 5.0),
-                  //                 child: Icon(
-                  //                   Icons.keyboard_arrow_down,
-                  //                   color: primaryColor,
-                  //                   size: 12,
-                  //                 ),
-                  //               ),
-                  //             ]),
-                  //       )
-                  //     ],
-                  //   )
                   : Center(
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                             iconEnabledColor: globals.primaryColor,
                             iconSize: 26,
                             hint: Text(
-                              AppLocalizations.of(context).changeWalletLanguage,
+                              FlutterI18n.translate(
+                                  context, "changeWalletLanguage"),
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline5,
                             ),
@@ -408,7 +327,7 @@ class SettingsContainer extends StatelessWidget {
             //         ),
             //         Expanded(
             //           child: Text(
-            //               AppLocalizations.of(context).showDialogWarnings,
+            //               FlutterI18n.translate(context, "showDialogWarnings"),
             //               style: Theme.of(context).textTheme.headline5,
             //               textAlign: TextAlign.left),
             //         ),
@@ -446,8 +365,8 @@ class SettingsContainer extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                            AppLocalizations.of(context)
-                                .settingsShowcaseInstructions,
+                            FlutterI18n.translate(
+                                context, "settingsShowcaseInstructions"),
                             style: Theme.of(context).textTheme.headline5,
                             textAlign: TextAlign.left),
                       ),
@@ -484,8 +403,8 @@ class SettingsContainer extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                            AppLocalizations.of(context)
-                                .enableBiometricAuthentication,
+                            FlutterI18n.translate(
+                                context, "enableBiometricAuthentication"),
                             style: Theme.of(context).textTheme.headline5,
                             textAlign: TextAlign.left),
                       ),
@@ -527,7 +446,8 @@ class SettingsContainer extends StatelessWidget {
                                 color: white, size: 18),
                           ),
                           Expanded(
-                            child: Text(AppLocalizations.of(context).lockAppNow,
+                            child: Text(
+                                FlutterI18n.translate(context, "lockAppNow"),
                                 style: Theme.of(context).textTheme.headline5,
                                 textAlign: TextAlign.left),
                           ),
@@ -570,7 +490,8 @@ class SettingsContainer extends StatelessWidget {
                       ),
                       // Add column here and add text box that shows which node is current
                       Expanded(
-                        child: Text(AppLocalizations.of(context).useAsiaNode,
+                        child: Text(
+                            FlutterI18n.translate(context, "useAsiaNode"),
                             style: Theme.of(context).textTheme.headline5,
                             textAlign: TextAlign.left),
                       ),
@@ -643,8 +564,8 @@ class SettingsContainer extends StatelessWidget {
         ),
         Text(
           !model.isVisible
-              ? AppLocalizations.of(context).displayMnemonic
-              : AppLocalizations.of(context).hideMnemonic,
+              ? FlutterI18n.translate(context, "displayMnemonic")
+              : FlutterI18n.translate(context, "hideMnemonic"),
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline5,
         ),
@@ -665,9 +586,9 @@ class SettingsContainer extends StatelessWidget {
           ),
         ),
         model.isDeleting
-            ? Text(AppLocalizations.of(context).deleteWallet + '...')
+            ? Text(FlutterI18n.translate(context, "deleteWallet") + '...')
             : Text(
-                AppLocalizations.of(context).deleteWallet,
+                FlutterI18n.translate(context, "deleteWallet"),
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline5,
               ),

@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -50,11 +51,11 @@ class CampaignInstructionsScreenState extends BaseState {
           });
         } else if (res == null) {
           navigateTo('/campaignLogin',
-              errorMessage: AppLocalizations.of(context).sessionExpired);
+              errorMessage: FlutterI18n.translate(context, "sessionExpired"));
         }
       }).catchError((err) {
         log.e('getMemberProfile catch');
-        setErrorMessage(AppLocalizations.of(context).serverError);
+        setErrorMessage(FlutterI18n.translate(context, "serverError"));
         setBusy(false);
       });
 

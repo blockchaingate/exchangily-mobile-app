@@ -10,8 +10,7 @@ If you get any error then save the pubspec.yaml file and try again
 localizations process
 
 1. Add getter in the localization.dart file
-2. Update the AppLocalizations.of(context).
-3. Run readme.txt commands for localization at least
+2. Update the FlutterI18n.translate(context, "3"). Run readme.txt commands for localization at least
 4. Copy and paste the new entry from intl_messages to intl_en
 5. Push the code and merge to master
 6. After translation to another lang, pull the code

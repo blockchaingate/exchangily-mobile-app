@@ -14,6 +14,7 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -50,7 +51,7 @@ class BottomNavBar extends StatelessWidget {
               height: 30,
               color: _selectedIndex == 0 ? primaryColor : grey,
             ),
-            label: AppLocalizations.of(context).wallet),
+            label: FlutterI18n.translate(context, "wallet")),
         BottomNavigationBarItem(
             icon: Image.asset(
               'assets/images/icons/price-up.png',
@@ -58,7 +59,7 @@ class BottomNavBar extends StatelessWidget {
               height: 30,
               color: _selectedIndex == 1 ? primaryColor : grey,
             ),
-            label: AppLocalizations.of(context).trade),
+            label: FlutterI18n.translate(context, "trade")),
         BottomNavigationBarItem(
           icon: Image.asset(
             'assets/images/lightning-remit/remit.png',
@@ -66,7 +67,7 @@ class BottomNavBar extends StatelessWidget {
             height: 30,
             color: _selectedIndex == 2 ? primaryColor : grey,
           ),
-          label: AppLocalizations.of(context).remit,
+          label: FlutterI18n.translate(context, "remit"),
         ),
         // BottomNavigationBarItem(
         //     icon: Icon(Icons.branding_watermark, size: iconSize),
@@ -80,7 +81,7 @@ class BottomNavBar extends StatelessWidget {
               height: 30,
               color: _selectedIndex == 3 ? primaryColor : grey,
             ),
-            label: AppLocalizations.of(context).event),
+            label: FlutterI18n.translate(context, "event")),
 
         BottomNavigationBarItem(
             icon: Image.asset(
@@ -89,7 +90,7 @@ class BottomNavBar extends StatelessWidget {
               height: 30,
               color: _selectedIndex == 4 ? primaryColor : grey,
             ),
-            label: AppLocalizations.of(context).settings),
+            label: FlutterI18n.translate(context, "settings")),
       ].toList(),
       onTap: (int idx) {
         String currentRouteName = sharedService.getCurrentRouteName(context);

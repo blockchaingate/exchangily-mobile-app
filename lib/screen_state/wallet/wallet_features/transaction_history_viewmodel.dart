@@ -4,6 +4,7 @@ import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
@@ -173,7 +174,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     Clipboard.setData(new ClipboardData(text: txId));
     showSimpleNotification(
         Center(
-            child: Text(AppLocalizations.of(context).copiedSuccessfully,
+            child: Text(FlutterI18n.translate(context, "copiedSuccessfully"),
                 style: Theme.of(context).textTheme.headline5)),
         position: NotificationPosition.bottom,
         background: primaryColor);
@@ -206,7 +207,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                     title: Container(
                       child: Center(
                           child: Text(
-                        '${AppLocalizations.of(context).transactionDetails}....',
+                        '${FlutterI18n.translate(context, "transactionDetails")}....',
                         style: Theme.of(context).textTheme.headline4.copyWith(
                             color: primaryColor, fontWeight: FontWeight.w500),
                       )),
@@ -218,7 +219,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                           UIHelper.verticalSpaceSmall,
                           transactionHistory.tag != send
                               ? Text(
-                                  '${AppLocalizations.of(context).kanban} Txid',
+                                  '${FlutterI18n.translate(context, "kanban")} Txid',
                                   style: Theme.of(context).textTheme.bodyText1,
                                 )
                               : Container(),
@@ -244,9 +245,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                                                     .kanbanTxId.isEmpty
                                                 ? transactionHistory
                                                         .kanbanTxStatus.isEmpty
-                                                    ? AppLocalizations.of(
-                                                            context)
-                                                        .inProgress
+                                                    ? FlutterI18n.translate(
+                                                        context, "inProgress")
                                                     : firstCharToUppercase(
                                                         transactionHistory
                                                             .kanbanTxStatus)
@@ -273,8 +273,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                               : Container(),
                           UIHelper.verticalSpaceMedium,
                           Text(
-                            //AppLocalizations.of(context).quantity,
-                            '${transactionHistory.chainName} ${AppLocalizations.of(context).chain} Txid',
+                            //FlutterI18n.translate(context, "quantity"),
+                            '${transactionHistory.chainName} ${FlutterI18n.translate(context, "chain")} Txid',
                             style: Theme.of(context).textTheme.bodyText1,
                           ),
                           Row(
@@ -297,8 +297,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                                               .tickerChainTxId.isEmpty
                                           ? transactionHistory
                                                   .tickerChainTxStatus.isEmpty
-                                              ? AppLocalizations.of(context)
-                                                  .inProgress
+                                              ? FlutterI18n.translate(
+                                                  context, "inProgress")
                                               : transactionHistory
                                                   .tickerChainTxStatus
                                           : transactionHistory.tickerChainTxId
@@ -335,7 +335,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4)),
                               child: Text(
-                                AppLocalizations.of(context).close,
+                                FlutterI18n.translate(context, "close"),
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyText2
@@ -361,7 +361,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                     color: secondaryColor.withOpacity(0.5),
                     child: Center(
                         child: Text(
-                            '${AppLocalizations.of(context).transactionDetails}')),
+                            '${FlutterI18n.translate(context, "transactionDetails")}')),
                   ),
                   titleTextStyle: Theme.of(context)
                       .textTheme
@@ -373,8 +373,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                     children: <Widget>[
                       transactionHistory.tag != send
                           ? Text(
-                              //AppLocalizations.of(context).,
-                              '${AppLocalizations.of(context).kanban} Txid',
+                              '${FlutterI18n.translate(context, "kanban")} Txid',
                               style: Theme.of(context).textTheme.bodyText1,
                             )
                           : Container(),
@@ -398,8 +397,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                                                 .kanbanTxId.isEmpty
                                             ? transactionHistory
                                                     .kanbanTxStatus.isEmpty
-                                                ? AppLocalizations.of(context)
-                                                    .inProgress
+                                                ? FlutterI18n.translate(
+                                                    context, "inProgress")
                                                 : firstCharToUppercase(
                                                     transactionHistory
                                                         .kanbanTxStatus)
@@ -426,8 +425,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                           : Container(),
                       UIHelper.verticalSpaceMedium,
                       Text(
-                        //AppLocalizations.of(context).quantity,
-                        '${transactionHistory.chainName} ${AppLocalizations.of(context).chain} Txid',
+                        //FlutterI18n.translate(context, "quantity"),
+                        '${transactionHistory.chainName} ${FlutterI18n.translate(context, "chain")} Txid',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       Row(
@@ -450,8 +449,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                                       transactionHistory.tickerChainTxId.isEmpty
                                           ? transactionHistory
                                                   .tickerChainTxStatus.isEmpty
-                                              ? AppLocalizations.of(context)
-                                                  .inProgress
+                                              ? FlutterI18n.translate(
+                                                  context, "inProgress")
                                               : transactionHistory
                                                   .tickerChainTxStatus
                                           : transactionHistory.tickerChainTxId
@@ -481,7 +480,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                           setBusy(false);
                         },
                         child: Text(
-                          AppLocalizations.of(context).close,
+                          FlutterI18n.translate(context, "close"),
                           style: Theme.of(context).textTheme.button,
                         ),
                       )

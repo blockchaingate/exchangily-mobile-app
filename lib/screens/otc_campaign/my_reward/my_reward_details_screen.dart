@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
@@ -17,7 +18,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(AppLocalizations.of(context).myRewardDetails,
+        title: Text(FlutterI18n.translate(context, "myRewardDetails"),
             style: Theme.of(context).textTheme.headline4),
       ),
       body: Container(
@@ -31,28 +32,30 @@ class MyRewardDetailsScreen extends StatelessWidget {
                 Expanded(
                     flex: 1,
                     child: Center(
-                        child: Text(AppLocalizations.of(context).level,
+                        child: Text(FlutterI18n.translate(context, "level"),
                             style: Theme.of(context).textTheme.subtitle2))),
                 Expanded(
                     flex: 1,
                     child: Center(
-                        child: Text(AppLocalizations.of(context).referrals,
+                        child: Text(FlutterI18n.translate(context, "referrals"),
                             style: Theme.of(context).textTheme.subtitle2))),
                 Expanded(
                     flex: 3,
                     child: Center(
                         child: Text(
-                            AppLocalizations.of(context).totalTokenAmount,
+                            FlutterI18n.translate(context, "totalTokenAmount"),
                             style: Theme.of(context).textTheme.subtitle2))),
                 Expanded(
                     flex: 2,
                     child: Center(
-                        child: Text(AppLocalizations.of(context).rewardsToken,
+                        child: Text(
+                            FlutterI18n.translate(context, "rewardsToken"),
                             style: Theme.of(context).textTheme.subtitle2))),
                 Expanded(
                     flex: 2,
                     child: Center(
-                        child: Text(AppLocalizations.of(context).totalValue,
+                        child: Text(
+                            FlutterI18n.translate(context, "totalValue"),
                             style: Theme.of(context).textTheme.subtitle2)))
               ],
             ),

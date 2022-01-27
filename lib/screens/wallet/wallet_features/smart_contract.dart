@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -144,7 +145,7 @@ class _SmartContractState extends State<SmartContract> {
             },
           ),
           middle: Text(
-            AppLocalizations.of(context).smartContract,
+            FlutterI18n.translate(context, "smartContract"),
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Color(0XFF1f2233),
@@ -154,7 +155,7 @@ class _SmartContractState extends State<SmartContract> {
             padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
             child: ListView(
               children: <Widget>[
-                Text(AppLocalizations.of(context).smartContractAddress,
+                Text(FlutterI18n.translate(context, "smartContractAddress"),
                     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
                 SizedBox(height: 10),
                 TextField(
@@ -162,7 +163,7 @@ class _SmartContractState extends State<SmartContract> {
                     enabledBorder: OutlineInputBorder(
                         borderSide: new BorderSide(
                             color: Color(0XFF871fff), width: 1.0)),
-                    hintText: AppLocalizations.of(context).enterAddress,
+                    hintText: FlutterI18n.translate(context, "enterAddress"),
                     hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
                   ),
                   controller: smartContractAddressController,
@@ -172,13 +173,13 @@ class _SmartContractState extends State<SmartContract> {
                   },
                 ),
                 SizedBox(height: 20),
-                Text(AppLocalizations.of(context).smartContractName,
+                Text(FlutterI18n.translate(context, "smartContractName"),
                     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
                 SizedBox(height: 10),
                 Text("$_smartContractName",
                     style: new TextStyle(color: Colors.white, fontSize: 18.0)),
                 SizedBox(height: 20),
-                Text(AppLocalizations.of(context).function,
+                Text(FlutterI18n.translate(context, "function"),
                     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
                 SizedBox(height: 10),
                 new DropdownButton(
@@ -215,7 +216,7 @@ class _SmartContractState extends State<SmartContract> {
                     if (payable)
                       Column(
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).payableValue,
+                          Text(FlutterI18n.translate(context, "payableValue"),
                               style: new TextStyle(
                                   color: Colors.grey, fontSize: 18.0)),
                           SizedBox(height: 10),
@@ -257,7 +258,7 @@ class _SmartContractState extends State<SmartContract> {
                     //   print(res);
                   },
                   child: Text(
-                    AppLocalizations.of(context).confirm,
+                    FlutterI18n.translate(context, "confirm"),
                     style: Theme.of(context).textTheme.button,
                   ),
                 )
@@ -288,9 +289,9 @@ class _SmartContractState extends State<SmartContract> {
 
   checkPass(abiHex, value, context) async {
     var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
-        description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote);
+        title: FlutterI18n.translate(context, "enterPassword"),
+        description: FlutterI18n.translate(
+            context, "dialogManagerTypeSamePasswordNote"));
     if (res.confirmed) {
       log.w('Pass matched');
       log.w('${res.returnedText}');
@@ -327,8 +328,8 @@ class _SmartContractState extends State<SmartContract> {
 
   showNotification(context) {
     sharedService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+        FlutterI18n.translate(context, "passwordMismatch"),
+        FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword"),
         Icons.cancel,
         globals.red,
         context);

@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
@@ -66,7 +67,7 @@ class CreatePasswordViewModel extends BaseViewModel {
       passwordMatch = false;
       password = '';
       confirmPassword = '';
-      errorMessage = AppLocalizations.of(context).somethingWentWrong;
+      errorMessage = FlutterI18n.translate(context, "somethingWentWrong");
       log.e(onError);
       setBusy(false);
     });
@@ -112,24 +113,25 @@ class CreatePasswordViewModel extends BaseViewModel {
       checkPasswordConditions = false;
       checkConfirmPasswordConditions = false;
       sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).emptyPassword,
-          subtitle: AppLocalizations.of(context).pleaseFillBothPasswordFields);
+          FlutterI18n.translate(context, "emptyPassword"),
+          subtitle:
+              FlutterI18n.translate(context, "pleaseFillBothPasswordFields"));
 
       setBusy(false);
       return;
     } else {
       if (!regex.hasMatch(pass)) {
         sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).passwordConditionsMismatch,
-          subtitle: AppLocalizations.of(context).passwordConditions,
+          FlutterI18n.translate(context, "passwordConditionsMismatch"),
+          subtitle: FlutterI18n.translate(context, "passwordConditions"),
         );
 
         setBusy(false);
         return;
       } else if (pass != confirmPass) {
         sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).passwordMismatch,
-          subtitle: AppLocalizations.of(context).passwordRetype,
+          FlutterI18n.translate(context, "passwordMismatch"),
+          subtitle: FlutterI18n.translate(context, "passwordRetype"),
         );
         setBusy(false);
         return;

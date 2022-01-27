@@ -40,7 +40,8 @@ import 'package:package_info/package_info.dart';
 
 import 'package:exchangilymobileapp/environments/environment.dart';
 
-import '../localizations.dart';
+import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import '../shared/globals.dart' as globals;
 
 class SharedService {
@@ -86,8 +87,8 @@ class SharedService {
 
   showNotification(context) {
     showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+        FlutterI18n.translate(context, "passwordMismatch"),
+        FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword"),
         Icons.cancel,
         red,
         context);
@@ -373,14 +374,14 @@ class SharedService {
                 contentTextStyle: TextStyle(color: globals.grey),
                 content: Text(
                   // add here cupertino widget to check in these small widgets first then the entire app
-                  '${AppLocalizations.of(context).closeTheApp}?',
+                  '${FlutterI18n.translate(context, "closeTheApp")}?',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14),
                 ),
                 actions: <Widget>[
                   TextButton(
                     child: Text(
-                      AppLocalizations.of(context).no,
+                      FlutterI18n.translate(context, "no"),
                       style: TextStyle(color: white, fontSize: 12),
                     ),
                     onPressed: () {
@@ -388,7 +389,7 @@ class SharedService {
                     },
                   ),
                   TextButton(
-                    child: Text(AppLocalizations.of(context).yes,
+                    child: Text(FlutterI18n.translate(context, "yes"),
                         style: TextStyle(color: yellow, fontSize: 12)),
                     onPressed: () {
                       SystemChannels.platform
@@ -474,7 +475,8 @@ class SharedService {
                                     !checkBoxValue;
                               }),
                           Text(
-                            AppLocalizations.of(context).doNotShowTheseWarnings,
+                            FlutterI18n.translate(
+                                context, "doNotShowTheseWarnings"),
                             style: Theme.of(context).textTheme.headline6,
                           ),
                         ],
@@ -491,15 +493,15 @@ class SharedService {
                   ?
                   //  RaisedButton(
                   //     child:
-                  //         Text(AppLocalizations.of(context).taphereToCopyTxId,style:Theme.of(context).textTheme.headline5),
+                  //         Text(FlutterI18n.translate(context, "taphereToCopyTxId"),style:Theme.of(context).textTheme.headline5),
                   //     onPressed: () {
                   //       Clipboard.setData(new ClipboardData(text: message));
                   //     })
                   Center(
                       child: RichText(
                         text: TextSpan(
-                            text:
-                                AppLocalizations.of(context).taphereToCopyTxId,
+                            text: FlutterI18n.translate(
+                                context, "taphereToCopyTxId"),
                             style: TextStyle(
                                 fontSize: 12,
                                 decoration: TextDecoration.underline,
@@ -529,8 +531,8 @@ class SharedService {
                             child: Center(
                               child: Text(
                                 isLater
-                                    ? AppLocalizations.of(context).later
-                                    : AppLocalizations.of(context).close,
+                                    ? FlutterI18n.translate(context, "later")
+                                    : FlutterI18n.translate(context, "close"),
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 12),
                               ),
@@ -554,7 +556,7 @@ class SharedService {
                                   padding: EdgeInsets.all(5),
                                   child: Center(
                                     child: Text(
-                                      AppLocalizations.of(context).website,
+                                      FlutterI18n.translate(context, "website"),
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 12),
                                     ),
@@ -572,7 +574,8 @@ class SharedService {
                                   padding: EdgeInsets.all(5),
                                   child: Center(
                                     child: Text(
-                                      AppLocalizations.of(context).updateNow,
+                                      FlutterI18n.translate(
+                                          context, "updateNow"),
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 12),
                                     ),
@@ -636,7 +639,7 @@ class SharedService {
     Clipboard.setData(new ClipboardData(text: text));
     Flushbar(
       backgroundColor: globals.secondaryColor.withOpacity(0.75),
-      message: AppLocalizations.of(context).addressCopied,
+      message: FlutterI18n.translate(context, "addressCopied"),
       icon: Icon(
         Icons.done,
         size: 24,

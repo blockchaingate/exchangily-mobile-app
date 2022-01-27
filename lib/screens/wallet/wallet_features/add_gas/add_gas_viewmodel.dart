@@ -4,6 +4,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -134,8 +135,8 @@ class AddGasViewModel extends FutureViewModel {
     setBusy(true);
     if (isAmountInvalid) {
       sharedService.showInfoFlushbar(
-          AppLocalizations.of(context).notice,
-          "FAB ${AppLocalizations.of(context).insufficientBalance}",
+          FlutterI18n.translate(context, "notice"),
+          "FAB ${FlutterI18n.translate(context, "insufficientBalance")}",
           Icons.cancel,
           red,
           context);
@@ -144,10 +145,10 @@ class AddGasViewModel extends FutureViewModel {
     var gasPrice = int.tryParse(gasPriceTextController.text);
     var gasLimit = int.tryParse(gasLimitTextController.text);
     var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
+        title: FlutterI18n.translate(context, "enterPassword"),
         description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm);
+            FlutterI18n.translate(context, "dialogManagerTypeSamePasswordNote"),
+        buttonTitle: FlutterI18n.translate(context, "confirm"));
     if (res.confirmed) {
       String mnemonic = res.returnedText;
       var options = {
@@ -167,8 +168,8 @@ class AddGasViewModel extends FutureViewModel {
       amountController.text = '';
       sharedService.alertDialog(
           (ret["errMsg"] == '')
-              ? AppLocalizations.of(context).addGasTransactionSuccess
-              : AppLocalizations.of(context).addGasTransactionFailed,
+              ? FlutterI18n.translate(context, "addGasTransactionSuccess")
+              : FlutterI18n.translate(context, "addGasTransactionFailed"),
           (ret["errMsg"] == '') ? ret['txHash'] : formattedErrorMsg,
           isWarning: false,
           isCopyTxId: ret["errMsg"] == '' ? true : false,
@@ -262,8 +263,8 @@ class AddGasViewModel extends FutureViewModel {
 
   wrongPasswordNotification(context) {
     sharedService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+        FlutterI18n.translate(context, "passwordMismatch"),
+        FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword"),
         Icons.cancel,
         red,
         context);

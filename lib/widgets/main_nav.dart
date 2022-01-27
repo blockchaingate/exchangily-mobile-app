@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard_view.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -65,18 +66,18 @@ class _MainNavState extends State<MainNav> {
               icon: Icon(FontAwesomeIcons.wallet, size: iconSize),
               title: Padding(
                   padding: EdgeInsets.only(top: paddingValue),
-                  child: Text(AppLocalizations.of(context).wallet)),
+                  child: Text(FlutterI18n.translate(context, "wallet"))),
             ),
             // BottomNavigationBarItem(
             //     icon: Icon(FontAwesomeIcons.chartBar, size: iconSize),
             //     title: Padding(
             //         padding: EdgeInsets.only(top: paddingValue),
-            //         child: Text(AppLocalizations.of(context).market))),
+            //         child: Text(FlutterI18n.translate(context, "market")))),
             BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.coins, size: iconSize),
                 title: Padding(
                     padding: EdgeInsets.only(top: paddingValue),
-                    child: Text(AppLocalizations.of(context).trade))),
+                    child: Text(FlutterI18n.translate(context, "trade")))),
             // BottomNavigationBarItem(
             //     icon: Icon(Icons.branding_watermark, size: iconSize),
             //     title: Padding(
@@ -86,13 +87,13 @@ class _MainNavState extends State<MainNav> {
                 icon: Icon(Icons.event, size: iconSize),
                 title: Padding(
                     padding: EdgeInsets.only(top: paddingValue),
-                    child: Text(AppLocalizations.of(context).event))),
+                    child: Text(FlutterI18n.translate(context, "event")))),
 
             BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.cog, size: iconSize),
                 title: Padding(
                     padding: EdgeInsets.only(top: paddingValue),
-                    child: Text(AppLocalizations.of(context).settings))),
+                    child: Text(FlutterI18n.translate(context, "settings")))),
           ],
           onTap: navigateToPage,
           currentIndex: _page,

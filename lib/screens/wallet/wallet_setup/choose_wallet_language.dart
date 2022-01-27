@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/choose_wallet_language_screen_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,8 @@ class ChooseWalletLanguageView extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: Text(
-                        AppLocalizations.of(context).pleaseChooseTheLanguage,
+                        FlutterI18n.translate(
+                            context, "pleaseChooseTheLanguage"),
                         textAlign: TextAlign.start,
                         style: Theme.of(context).textTheme.headline5),
                   )
@@ -79,7 +81,7 @@ class ChooseWalletLanguageView extends StatelessWidget {
                     highlightColor: globals.white,
                     child: Center(
                       child: Text(
-                        AppLocalizations.of(context).loading + '...',
+                        FlutterI18n.translate(context, "loading") + '...',
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ),

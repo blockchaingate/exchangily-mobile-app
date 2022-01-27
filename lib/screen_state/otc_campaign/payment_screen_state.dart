@@ -4,6 +4,7 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
@@ -153,10 +154,10 @@ class CampaignPaymentScreenState extends BaseState {
     setBusy(true);
     log.w(('Sending payment amount $amount'));
     var dialogResponse = await dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
+        title: FlutterI18n.translate(context, "enterPassword"),
         description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm);
+            FlutterI18n.translate(context, "dialogManagerTypeSamePasswordNote"),
+        buttonTitle: FlutterI18n.translate(context, "confirm"));
     if (dialogResponse.confirmed) {
       isConfirming = true;
       String mnemonic = dialogResponse.returnedText;
@@ -200,15 +201,16 @@ class CampaignPaymentScreenState extends BaseState {
           sendAmountTextController.text = '';
           await createCampaignOrder(txHash, tokenPurchaseQuantity);
           sharedService.alertDialog(
-              AppLocalizations.of(context).sendTransactionComplete,
-              '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
+              FlutterI18n.translate(context, "sendTransactionComplete"),
+              '$tickerName ${FlutterI18n.translate(context, "isOnItsWay")}',
               isWarning: false);
         }
         // There is an error
         else if (errorMessage.isNotEmpty) {
           log.e('Coin send Error Message: $errorMessage');
-          sharedService.alertDialog(AppLocalizations.of(context).genericError,
-              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+          sharedService.alertDialog(
+              FlutterI18n.translate(context, "genericError"),
+              '$tickerName ${FlutterI18n.translate(context, "transanctionFailed")}',
               isWarning: false);
           setBusy(false);
           isConfirming = false;
@@ -216,8 +218,9 @@ class CampaignPaymentScreenState extends BaseState {
         // Both txhash and error message is empty
         else if (txHash == '' && errorMessage == '') {
           log.w('Both TxHash and Error Message are empty $errorMessage');
-          sharedService.alertDialog(AppLocalizations.of(context).genericError,
-              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+          sharedService.alertDialog(
+              FlutterI18n.translate(context, "genericError"),
+              '$tickerName ${FlutterI18n.translate(context, "transanctionFailed")}',
               isWarning: false);
           setBusy(false);
           isConfirming = false;
@@ -230,14 +233,15 @@ class CampaignPaymentScreenState extends BaseState {
         setBusy(false);
         isConfirming = false;
         setErrorMessage(
-            AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
+            FlutterI18n.translate(context, "serverTimeoutPleaseTryAgainLater"));
         return '';
       })
           // Coin send catch
           .catchError((error) {
         log.e('In coin send Catch error - $error');
-        sharedService.alertDialog(AppLocalizations.of(context).genericError,
-            '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+        sharedService.alertDialog(
+            FlutterI18n.translate(context, "genericError"),
+            '$tickerName ${FlutterI18n.translate(context, "transanctionFailed")}',
             isWarning: false);
         setBusy(false);
         isConfirming = false;
@@ -245,7 +249,7 @@ class CampaignPaymentScreenState extends BaseState {
     } else if (dialogResponse.returnedText != 'Closed') {
       setBusy(false);
       setErrorMessage(
-          AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
+          FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword"));
     }
     isConfirming = false;
     setBusy(false);
@@ -282,12 +286,12 @@ class CampaignPaymentScreenState extends BaseState {
     await campaignService.createCampaignOrder(campaignOrder).then((res) async {
       log.w(res);
       if (res == null) {
-        setErrorMessage(AppLocalizations.of(context).serverError);
+        setErrorMessage(FlutterI18n.translate(context, "serverError"));
         return;
       } else if (res['message'] != null) {
         setBusy(false);
         isConfirming = false;
-        setErrorMessage(AppLocalizations.of(context).createOrderFailed);
+        setErrorMessage(FlutterI18n.translate(context, "createOrderFailed"));
       } else {
         // If order gets success
         log.e(res['orderNum']);
@@ -295,12 +299,12 @@ class CampaignPaymentScreenState extends BaseState {
         // If USD order then show order numer
         if (_groupValue == 'USD') {
           sharedService.alertDialog(
-              AppLocalizations.of(context).orderCreatedSuccessfully,
-              '${AppLocalizations.of(context).orderCreatedSuccessfully} $orderNumber ${AppLocalizations.of(context).afterHyphenWhenYouMakePayment}',
+              FlutterI18n.translate(context, "orderCreatedSuccessfully"),
+              '${FlutterI18n.translate(context, "orderCreatedSuccessfully")} $orderNumber ${FlutterI18n.translate(context, "afterHyphenWhenYouMakePayment")}',
               isWarning: false);
         } else {
-          sharedService.alertDialog(AppLocalizations.of(context).success,
-              AppLocalizations.of(context).yourOrderHasBeenCreated,
+          sharedService.alertDialog(FlutterI18n.translate(context, "success"),
+              FlutterI18n.translate(context, "yourOrderHasBeenCreated"),
               isWarning: false);
         }
         await getCampaignOrdeList();
@@ -331,11 +335,11 @@ class CampaignPaymentScreenState extends BaseState {
         log.w('orderListFromApi length ${orderListFromApi.length}');
         orderStatusList = [
           "",
-          AppLocalizations.of(context).waiting,
-          AppLocalizations.of(context).paid,
-          AppLocalizations.of(context).paymentReceived,
-          AppLocalizations.of(context).failed,
-          AppLocalizations.of(context).orderCancelled,
+          FlutterI18n.translate(context, "waiting"),
+          FlutterI18n.translate(context, "paid"),
+          FlutterI18n.translate(context, "paymentReceived"),
+          FlutterI18n.translate(context, "failed"),
+          FlutterI18n.translate(context, "orderCancelled"),
         ];
         usdtUnconfirmedOrderQuantity = 0;
         for (int i = 0; i < orderListFromApi.length; i++) {
@@ -351,7 +355,7 @@ class CampaignPaymentScreenState extends BaseState {
         log.w('${orderInfoList.length} - ${uiOrderStatusList.length}');
       } else {
         log.e('Api result null');
-        setErrorMessage(AppLocalizations.of(context).loadOrdersFailed);
+        setErrorMessage(FlutterI18n.translate(context, "loadOrdersFailed"));
         setBusy(false);
       }
     }).catchError((err) {
@@ -392,7 +396,7 @@ class CampaignPaymentScreenState extends BaseState {
                 .headline4
                 .copyWith(decoration: TextDecoration.underline)),
         context: context,
-        title: AppLocalizations.of(context).updateYourOrderStatus,
+        title: FlutterI18n.translate(context, "updateYourOrderStatus"),
         closeFunction: () {
           Navigator.of(context, rootNavigator: true).pop();
           FocusScope.of(context).requestFocus(FocusNode());
@@ -403,7 +407,7 @@ class CampaignPaymentScreenState extends BaseState {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  AppLocalizations.of(context).quantity,
+                  FlutterI18n.translate(context, "quantity"),
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 UIHelper.horizontalSpaceSmall,
@@ -421,18 +425,19 @@ class CampaignPaymentScreenState extends BaseState {
               controller: updateOrderDescriptionController,
               obscureText: false,
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context).paymentDescription,
+                hintText: FlutterI18n.translate(context, "paymentDescription"),
                 hintStyle: Theme.of(context).textTheme.bodyText1,
                 labelStyle: Theme.of(context).textTheme.headline6,
                 icon: Icon(
                   Icons.event_note,
                   color: globals.primaryColor,
                 ),
-                labelText: AppLocalizations.of(context).paymentDescriptionNote,
+                labelText:
+                    FlutterI18n.translate(context, "paymentDescriptionNote"),
               ),
             ),
             // isDescription
-            //     ? Text(AppLocalizations.of(context).descriptionIsRequired)
+            //     ? Text(FlutterI18n.translate(context, "descriptionIsRequired"))
             //     : Text('')
           ],
         ),
@@ -455,8 +460,8 @@ class CampaignPaymentScreenState extends BaseState {
                 updateOrderDescriptionController.text = '';
                 await getCampaignOrdeList();
                 sharedService.showInfoFlushbar(
-                    AppLocalizations.of(context).updateStatus,
-                    AppLocalizations.of(context).orderUpdateNotification,
+                    FlutterI18n.translate(context, "updateStatus"),
+                    FlutterI18n.translate(context, "orderUpdateNotification"),
                     Icons.check,
                     globals.green,
                     context);
@@ -468,9 +473,9 @@ class CampaignPaymentScreenState extends BaseState {
               padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 7),
               // model.busy is not working here and same reason that it does not show the error when desc field is empty
               child: busy
-                  ? Text(AppLocalizations.of(context).loading)
+                  ? Text(FlutterI18n.translate(context, "loading"))
                   : Text(
-                      AppLocalizations.of(context).confirmPayment,
+                      FlutterI18n.translate(context, "confirmPayment"),
                       style: Theme.of(context).textTheme.headline5,
                     ),
             ),
@@ -490,14 +495,14 @@ class CampaignPaymentScreenState extends BaseState {
               await getCampaignOrdeList();
               FocusScope.of(context).requestFocus(FocusNode());
               sharedService.showInfoFlushbar(
-                  AppLocalizations.of(context).updateStatus,
-                  AppLocalizations.of(context).orderCancelledNotification,
+                  FlutterI18n.translate(context, "updateStatus"),
+                  FlutterI18n.translate(context, "orderCancelledNotification"),
                   Icons.check,
                   globals.green,
                   context);
             },
             child: Text(
-              AppLocalizations.of(context).cancelOrder,
+              FlutterI18n.translate(context, "cancelOrder"),
               style: Theme.of(context).textTheme.headline5,
             ),
           ),
@@ -510,7 +515,7 @@ class CampaignPaymentScreenState extends BaseState {
   checkFields(context) async {
     log.i('checking fields');
     if (sendAmountTextController.text == '' || _groupValue == null) {
-      setErrorMessage(AppLocalizations.of(context).pleaseFillAllTheFields);
+      setErrorMessage(FlutterI18n.translate(context, "pleaseFillAllTheFields"));
       return;
     }
     setErrorMessage('');
@@ -527,9 +532,12 @@ class CampaignPaymentScreenState extends BaseState {
           amount > walletBalances.balance ||
           !isBalanceAvailabeForOrder()) {
         log.e('$usdtUnconfirmedOrderQuantity');
-        setErrorMessage(AppLocalizations.of(context).pleaseEnterValidNumber);
-        sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-            AppLocalizations.of(context).pleaseEnterAmountLessThanYourWallet,
+        setErrorMessage(
+            FlutterI18n.translate(context, "pleaseEnterValidNumber"));
+        sharedService.alertDialog(
+            FlutterI18n.translate(context, "invalidAmount"),
+            FlutterI18n.translate(
+                context, "pleaseEnterAmountLessThanYourWallet"),
             isWarning: false);
       } else {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -574,7 +582,7 @@ class CampaignPaymentScreenState extends BaseState {
     var res = RegexValidator(pattern).isValid(amount);
     checkSendAmount = res;
     if (!checkSendAmount) {
-      setErrorMessage(AppLocalizations.of(context).invalidAmount);
+      setErrorMessage(FlutterI18n.translate(context, "invalidAmount"));
     } else {
       setErrorMessage('');
       double castedAmount = double.parse(amount);

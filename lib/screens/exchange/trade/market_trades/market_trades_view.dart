@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_trade_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -28,19 +29,19 @@ class MarketTradesView extends StatelessWidget {
                     UIHelper.horizontalSpaceSmall,
                     Expanded(
                         flex: 1,
-                        child: Text(AppLocalizations.of(context).price,
+                        child: Text(FlutterI18n.translate(context, "price"),
                             textAlign: TextAlign.right,
                             style: Theme.of(context).textTheme.subtitle2)),
                     UIHelper.horizontalSpaceMedium,
                     Expanded(
                         flex: 2,
-                        child: Text(AppLocalizations.of(context).quantity,
+                        child: Text(FlutterI18n.translate(context, "quantity"),
                             textAlign: TextAlign.right,
                             style: Theme.of(context).textTheme.subtitle2)),
                     UIHelper.horizontalSpaceSmall,
                     Expanded(
                         flex: 2,
-                        child: Text(AppLocalizations.of(context).time,
+                        child: Text(FlutterI18n.translate(context, "time"),
                             textAlign: TextAlign.right,
                             style: Theme.of(context).textTheme.subtitle2)),
                     UIHelper.horizontalSpaceMedium,

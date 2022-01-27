@@ -1,4 +1,5 @@
 // import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 // import 'package:exchangilymobileapp/models/trade/price.dart';
 // import "package:flutter/material.dart";
 // import "detail-pair.dart";
@@ -111,25 +112,25 @@
 //                       )),
 //                   Expanded(
 //                     flex: 1,
-//                     child: Text(AppLocalizations.of(context).volume,
+//                     child: Text(FlutterI18n.translate(context, "volume"),
 //                         style: Theme.of(context).textTheme.subtitle2,
 //                         textAlign: TextAlign.end),
 //                   ),
 //                   Expanded(
 //                     flex: 1,
-//                     child: Text(AppLocalizations.of(context).high,
+//                     child: Text(FlutterI18n.translate(context, "high"),
 //                         style: Theme.of(context).textTheme.subtitle2,
 //                         textAlign: TextAlign.end),
 //                   ),
 //                   Expanded(
 //                     flex: 1,
-//                     child: Text(AppLocalizations.of(context).low,
+//                     child: Text(FlutterI18n.translate(context, "low"),
 //                         style: Theme.of(context).textTheme.subtitle2,
 //                         textAlign: TextAlign.end),
 //                   ),
 //                   Expanded(
 //                     flex: 1,
-//                     child: Text(AppLocalizations.of(context).change,
+//                     child: Text(FlutterI18n.translate(context, "change"),
 //                         style: Theme.of(context).textTheme.subtitle2,
 //                         textAlign: TextAlign.end),
 //                   ),

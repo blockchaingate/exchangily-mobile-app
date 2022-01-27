@@ -18,10 +18,12 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import '../../../localizations.dart';
+import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import '../../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter/gestures.dart';
 
 class MoveToWalletScreen extends StatelessWidget {
@@ -65,7 +67,7 @@ class MoveToWalletScreen extends StatelessWidget {
                 },
               ),
               middle: Text(
-                  '${AppLocalizations.of(context).move}  ${model.specialTickerForTxHistory}  ${AppLocalizations.of(context).toWallet}',
+                  '${FlutterI18n.translate(context, "move")}  ${model.specialTickerForTxHistory}  ${FlutterI18n.translate(context, "toWallet")}',
                   style: Theme.of(context).textTheme.headline5),
               backgroundColor: Color(0XFF1f2233),
             ),
@@ -96,16 +98,16 @@ class MoveToWalletScreen extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                          AppLocalizations.of(context)
-                                                  .minimumAmount +
+                                          FlutterI18n.translate(
+                                                  context, "minimumAmount") +
                                               ': ',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
                                       Text(
                                           model.token.minWithdraw == null
-                                              ? AppLocalizations.of(context)
-                                                  .loading
+                                              ? FlutterI18n.translate(
+                                                  context, "loading")
                                               : model.token.minWithdraw
                                                   .toString(),
                                           style: Theme.of(context)
@@ -118,8 +120,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                          AppLocalizations.of(context)
-                                                  .decimalLimit +
+                                          FlutterI18n.translate(
+                                                  context, "decimalLimit") +
                                               ': ',
                                           style: Theme.of(context)
                                               .textTheme
@@ -136,7 +138,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                   borderSide: new BorderSide(
                                       color: Color(0XFF871fff), width: 1.0)),
                               hintText:
-                                  AppLocalizations.of(context).enterAmount,
+                                  FlutterI18n.translate(context, "enterAmount"),
                               hintStyle: Theme.of(context)
                                   .textTheme
                                   .headline5
@@ -151,7 +153,7 @@ class MoveToWalletScreen extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(
-                              AppLocalizations.of(context).inExchange +
+                              FlutterI18n.translate(context, "inExchange") +
                                   ' ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, precision: model.decimalLimit).toString()}',
                               style: Theme.of(context).textTheme.subtitle2),
                           Padding(
@@ -197,12 +199,12 @@ class MoveToWalletScreen extends StatelessWidget {
                       //         alignment: Alignment.topLeft,
                       //         child: walletInfo.tickerName == 'TRX'
                       //             ? Text(
-                      //                 '${AppLocalizations.of(context).gasFee}: 1 TRX',
+                      //                 '${FlutterI18n.translate(context, "gasFee")}: 1 TRX',
                       //                 textAlign: TextAlign.left,
                       //                 style:
                       //                     Theme.of(context).textTheme.headline6)
                       //             : Text(
-                      //                 '${AppLocalizations.of(context).gasFee}: 15 TRX',
+                      //                 '${FlutterI18n.translate(context, "gasFee")}: 15 TRX',
                       //                 textAlign: TextAlign.left,
                       //                 style: Theme.of(context)
                       //                     .textTheme
@@ -301,8 +303,8 @@ class MoveToWalletScreen extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(
-                              AppLocalizations.of(context).withdraw +
-                                  AppLocalizations.of(context).fee,
+                              FlutterI18n.translate(context, "withdraw") +
+                                  FlutterI18n.translate(context, "fee"),
                               style: Theme.of(context).textTheme.headline6),
                           UIHelper.horizontalSpaceSmall,
                           Padding(
@@ -321,7 +323,7 @@ class MoveToWalletScreen extends StatelessWidget {
                       UIHelper.verticalSpaceSmall,
                       Row(
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).kanbanGasFee,
+                          Text(FlutterI18n.translate(context, "kanbanGasFee"),
                               style: Theme.of(context).textTheme.headline6),
                           Padding(
                             padding: EdgeInsets.only(
@@ -337,7 +339,7 @@ class MoveToWalletScreen extends StatelessWidget {
                       UIHelper.verticalSpaceSmall,
                       Row(
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).advance,
+                          Text(FlutterI18n.translate(context, "advance"),
                               style: Theme.of(context).textTheme.headline6),
                           SizedBox(
                             height: 15,
@@ -365,8 +367,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                   Expanded(
                                     flex: 3,
                                     child: Text(
-                                        AppLocalizations.of(context)
-                                            .kanbanGasPrice,
+                                        FlutterI18n.translate(
+                                            context, "kanbanGasPrice"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5
@@ -417,8 +419,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                   Expanded(
                                       flex: 3,
                                       child: Text(
-                                        AppLocalizations.of(context)
-                                            .kanbanGasLimit,
+                                        FlutterI18n.translate(
+                                            context, "kanbanGasLimit"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5
@@ -467,117 +469,6 @@ class MoveToWalletScreen extends StatelessWidget {
                           )),
 
                       UIHelper.verticalSpaceSmall,
-
-                      // TS wallet balance show
-                      // Expanded(
-                      //   child: Column(
-                      //     children: [
-                      //       Container(
-                      //           child: Row(
-                      //         mainAxisAlignment:
-                      //             MainAxisAlignment.center,
-                      //         children: [
-                      //           Text(
-                      //             'TS ${AppLocalizations.of(context).wallet}',
-                      //             style: Theme.of(context)
-                      //                 .textTheme
-                      //                 .subtitle2,
-                      //           ),
-                      //           Text(
-                      //             '${AppLocalizations.of(context).balance}: ',
-                      //             style: Theme.of(context)
-                      //                 .textTheme
-                      //                 .subtitle2,
-                      //           ),
-                      //           model.isWithdrawChoice
-                      //               ? SizedBox(
-                      //                   width: 20,
-                      //                   height: 20,
-                      //                   child: IconButton(
-                      //                       padding: EdgeInsets.zero,
-                      //                       icon: Icon(
-                      //                         Icons.info_outline,
-                      //                         color: primaryColor,
-                      //                         size: 16,
-                      //                       ),
-                      //                       onPressed: () =>
-                      //                           model.showInfoDialog(
-                      //                               true)),
-                      //                 )
-                      //               : Container()
-                      //         ],
-                      //       )),
-
-                      //       // show ts wallet balance for tron chain
-                      //       model.walletInfo.tickerName == 'USDT' ||
-                      //               model.walletInfo.tickerName ==
-                      //                   'USDTX'
-                      //           ? Container(
-                      //               margin:
-                      //                   EdgeInsets.only(left: 5.0),
-                      //               child: model.trxTsWalletBalance !=
-                      //                           null &&
-                      //                       model.ethChainBalance !=
-                      //                           null
-                      //                   ? model
-                      //                           .isShowTrxTsWalletBalance
-                      //                       ? Text(
-                      //                           model
-                      //                               .trxTsWalletBalance
-                      //                               .toString(),
-                      //                           maxLines: 2,
-                      //                           style:
-                      //                               Theme.of(context)
-                      //                                   .textTheme
-                      //                                   .headline6,
-                      //                         )
-                      //                       : Text(
-                      //                           model.ethChainBalance
-                      //                               .toString(),
-                      //                           maxLines: 2,
-                      //                           style:
-                      //                               Theme.of(context)
-                      //                                   .textTheme
-                      //                                   .headline6,
-                      //                         )
-                      //                   : Container(
-                      //                       child: Text(
-                      //                           AppLocalizations.of(context)
-                      //                               .loading)))
-                      //           : Container(
-                      //               margin:
-                      //                   EdgeInsets.only(left: 5.0),
-                      //               child: model.fabChainBalance !=
-                      //                           null &&
-                      //                       model.ethChainBalance !=
-                      //                           null
-                      //                   ? model.isShowFabChainBalance
-                      //                       ? Text(
-                      //                           model.fabChainBalance
-                      //                               .toString(),
-                      //                           maxLines: 2,
-                      //                           style:
-                      //                               Theme.of(context)
-                      //                                   .textTheme
-                      //                                   .headline6,
-                      //                         )
-                      //                       : Text(
-                      //                           model.ethChainBalance
-                      //                               .toString(),
-                      //                           maxLines: 2,
-                      //                           style:
-                      //                               Theme.of(context)
-                      //                                   .textTheme
-                      //                                   .headline6,
-                      //                         )
-                      //                   : Container(
-                      //                       child: Text(
-                      //                           AppLocalizations.of(context)
-                      //                               .loading))),
-                      //     ],
-                      //   ),
-                      // ),
-
                       // Success/Error container
                       Container(
                           child: Visibility(
@@ -595,8 +486,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                   UIHelper.verticalSpaceSmall,
                                   RichText(
                                     text: TextSpan(
-                                        text: AppLocalizations.of(context)
-                                            .taphereToCopyTxId,
+                                        text: FlutterI18n.translate(
+                                            context, "taphereToCopyTxId"),
                                         style: TextStyle(
                                             decoration:
                                                 TextDecoration.underline,
@@ -627,7 +518,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                 decoration:
                                                     TextDecoration.underline),
                                         text:
-                                            '${AppLocalizations.of(context).error} ${AppLocalizations.of(context).details}',
+                                            '${FlutterI18n.translate(context, "error")} ${FlutterI18n.translate(context, "details")}',
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
                                             model.showDetailsMessageToggle();
@@ -665,7 +556,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                 child: CircularProgressIndicator(
                                   strokeWidth: 1,
                                 ))
-                            : Text(AppLocalizations.of(context).confirm,
+                            : Text(FlutterI18n.translate(context, "confirm"),
                                 style: Theme.of(context).textTheme.headline4),
                       ),
                     ],

@@ -2,6 +2,7 @@
 // import "package:flutter/material.dart";
 // import "../../trade/main.dart";
 // import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 // import '../../../shared/globals.dart' as globals;
 
 // class DetailPair extends StatelessWidget {

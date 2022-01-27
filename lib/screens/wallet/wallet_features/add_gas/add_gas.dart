@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas/add_gas_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -46,7 +47,7 @@ class AddGas extends StatelessWidget {
                 },
               ),
               middle: Text(
-                AppLocalizations.of(context).addGas,
+                FlutterI18n.translate(context, "addGas"),
                 style: TextStyle(color: Colors.white),
               ),
               backgroundColor: Color(0XFF1f2233),
@@ -78,7 +79,8 @@ class AddGas extends StatelessWidget {
                             borderSide: new BorderSide(
                                 color: Color(0XFF871fff), width: 1.0)),
                         hintText:
-                            AppLocalizations.of(context).enterAmount + '(FAB)',
+                            FlutterI18n.translate(context, "enterAmount") +
+                                '(FAB)',
                         hintStyle: Theme.of(context).textTheme.headline6,
                       ),
                       controller: model.amountController,
@@ -93,7 +95,7 @@ class AddGas extends StatelessWidget {
                         padding: const EdgeInsets.only(
                             left: 2.0, right: 4.0, top: 2.0),
                         child: Text(
-                            '${AppLocalizations.of(context).gas} ${AppLocalizations.of(context).balance}',
+                            '${FlutterI18n.translate(context, "gas")} ${FlutterI18n.translate(context, "balance")}',
                             style:
                                 TextStyle(fontSize: 12.0, color: Colors.white)),
                       ),
@@ -106,7 +108,7 @@ class AddGas extends StatelessWidget {
                         padding: const EdgeInsets.only(
                             left: 2.0, right: 4.0, top: 2.0),
                         child: Text(
-                            'FAB ${AppLocalizations.of(context).balance}',
+                            'FAB ${FlutterI18n.translate(context, "balance")}',
                             style:
                                 TextStyle(fontSize: 12.0, color: Colors.white)),
                       ),
@@ -119,7 +121,7 @@ class AddGas extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 2.0, right: 4.0, top: 2.0),
-                        child: Text(AppLocalizations.of(context).gasFee,
+                        child: Text(FlutterI18n.translate(context, "gasFee"),
                             style:
                                 TextStyle(fontSize: 12.0, color: Colors.white)),
                       ),
@@ -140,7 +142,7 @@ class AddGas extends StatelessWidget {
                     ),
                     // Advance
                     Row(children: <Widget>[
-                      Text(AppLocalizations.of(context).advance,
+                      Text(FlutterI18n.translate(context, "advance"),
                           style: Theme.of(context)
                               .textTheme
                               .headline5
@@ -164,7 +166,7 @@ class AddGas extends StatelessWidget {
                               Expanded(
                                 flex: 3,
                                 child: Text(
-                                    AppLocalizations.of(context).gasPrice,
+                                    FlutterI18n.translate(context, "gasPrice"),
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5
@@ -208,7 +210,7 @@ class AddGas extends StatelessWidget {
                               Expanded(
                                   flex: 3,
                                   child: Text(
-                                    AppLocalizations.of(context).gasLimit,
+                                    FlutterI18n.translate(context, "gasLimit"),
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5
@@ -256,7 +258,8 @@ class AddGas extends StatelessWidget {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text(AppLocalizations.of(context).cancel,
+                              child: Text(
+                                  FlutterI18n.translate(context, "cancel"),
                                   style: TextStyle(color: Colors.white))),
                         ),
                         SizedBox(width: 8),
@@ -275,20 +278,19 @@ class AddGas extends StatelessWidget {
                               // var res = await AddGasDo(double.parse(myController.text));
                               model.amountController.text == '' ||
                                       amount == null
-                                  ? model.sharedService
-                                      .showInfoFlushbar(
-                                          AppLocalizations.of(context)
-                                              .invalidAmount,
-                                          AppLocalizations.of(context)
-                                              .pleaseEnterValidNumber,
-                                          Icons.cancel,
-                                          red,
-                                          context)
+                                  ? model.sharedService.showInfoFlushbar(
+                                      FlutterI18n.translate(
+                                          context, "invalidAmount"),
+                                      FlutterI18n.translate(
+                                          context, "pleaseEnterValidNumber"),
+                                      Icons.cancel,
+                                      red,
+                                      context)
                                   : model.checkPass(amount, context);
                               //   print(res);
                             },
                             child: Text(
-                              AppLocalizations.of(context).confirm,
+                              FlutterI18n.translate(context, "confirm"),
                               style: Theme.of(context).textTheme.button,
                             ),
                           ),

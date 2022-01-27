@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/team_reward_details_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -24,7 +25,7 @@ class MyReferralView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).memberDetails,
+          title: Text(FlutterI18n.translate(context, "memberDetails"),
               style: Theme.of(context).textTheme.headline4),
         ),
         body: Container(

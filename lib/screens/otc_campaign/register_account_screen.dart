@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/register_account_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -20,7 +21,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context).register,
+            FlutterI18n.translate(context, "register"),
             style: Theme.of(context).textTheme.headline3,
           ),
           centerTitle: true,
@@ -54,12 +55,11 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                     suffixIcon: Icon(
                                       Icons.email,
                                       size: 16,
-                                      semanticLabel:
-                                          AppLocalizations.of(context)
-                                              .enterYourEmail,
+                                      semanticLabel: FlutterI18n.translate(
+                                          context, "enterYourEmail"),
                                     ),
-                                    labelText: AppLocalizations.of(context)
-                                        .enterYourEmail,
+                                    labelText: FlutterI18n.translate(
+                                        context, "enterYourEmail"),
                                     labelStyle:
                                         Theme.of(context).textTheme.headline6),
                                 keyboardType: TextInputType.emailAddress,
@@ -82,14 +82,14 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                         suffixIcon: IconButton(
                                           icon: Icon(Icons.enhanced_encryption),
                                           iconSize: 16,
-                                          tooltip: AppLocalizations.of(context)
-                                              .showPassword,
+                                          tooltip: FlutterI18n.translate(
+                                              context, "showPassword"),
                                           onPressed: () {
                                             model.showPasswordText(false);
                                           },
                                         ),
-                                        labelText: AppLocalizations.of(context)
-                                            .enterPassword,
+                                        labelText: FlutterI18n.translate(
+                                            context, "enterPassword"),
                                         labelStyle: Theme.of(context)
                                             .textTheme
                                             .headline6),
@@ -107,14 +107,14 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                         suffixIcon: IconButton(
                                           icon: Icon(Icons.remove_red_eye),
                                           iconSize: 16,
-                                          tooltip: AppLocalizations.of(context)
-                                              .showPassword,
+                                          tooltip: FlutterI18n.translate(
+                                              context, "showPassword"),
                                           onPressed: () {
                                             model.showPasswordText(true);
                                           },
                                         ),
-                                        labelText: AppLocalizations.of(context)
-                                            .enterPassword,
+                                        labelText: FlutterI18n.translate(
+                                            context, "enterPassword"),
                                         labelStyle: Theme.of(context)
                                             .textTheme
                                             .headline6),
@@ -137,8 +137,8 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                       color: globals.white54,
                                     ),
                                     decoration: InputDecoration(
-                                        labelText: AppLocalizations.of(context)
-                                            .confirmPassword,
+                                        labelText: FlutterI18n.translate(
+                                            context, "confirmPassword"),
                                         labelStyle: Theme.of(context)
                                             .textTheme
                                             .headline6),
@@ -154,8 +154,8 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                       color: globals.white54,
                                     ),
                                     decoration: InputDecoration(
-                                        labelText: AppLocalizations.of(context)
-                                            .confirmPassword,
+                                        labelText: FlutterI18n.translate(
+                                            context, "confirmPassword"),
                                         labelStyle: Theme.of(context)
                                             .textTheme
                                             .headline6),
@@ -186,8 +186,8 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                         model.pasteClipboardText();
                                       },
                                     ),
-                                    labelText: AppLocalizations.of(context)
-                                        .pasteExgAddress,
+                                    labelText: FlutterI18n.translate(
+                                        context, "pasteExgAddress"),
                                     labelStyle:
                                         Theme.of(context).textTheme.headline6),
                               ))
@@ -210,12 +210,11 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                     suffixIcon: Icon(
                                       Icons.device_hub,
                                       size: 16,
-                                      semanticLabel:
-                                          AppLocalizations.of(context)
-                                              .referralCode,
+                                      semanticLabel: FlutterI18n.translate(
+                                          context, "referralCode"),
                                     ),
-                                    labelText: AppLocalizations.of(context)
-                                        .referralCode,
+                                    labelText: FlutterI18n.translate(
+                                        context, "referralCode"),
                                     labelStyle:
                                         Theme.of(context).textTheme.headline6),
                               ))
@@ -253,8 +252,8 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                 elevation: 5,
                                 focusElevation: 5,
                                 child: Text(
-                                    AppLocalizations.of(context)
-                                            .alreadyHaveAnAccount +
+                                    FlutterI18n.translate(
+                                            context, "alreadyHaveAnAccount") +
                                         '?',
                                     textAlign: TextAlign.center,
                                     style:
@@ -280,13 +279,15 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                       baseColor: globals.primaryColor,
                                       highlightColor: globals.grey,
                                       child: Text(
-                                        (AppLocalizations.of(context).signUp),
+                                        (FlutterI18n.translate(
+                                            context, "signUp")),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline4,
                                       ))
                                   : Text(
-                                      (AppLocalizations.of(context).signUp),
+                                      (FlutterI18n.translate(
+                                          context, "signUp")),
                                       style:
                                           Theme.of(context).textTheme.headline4,
                                     ),

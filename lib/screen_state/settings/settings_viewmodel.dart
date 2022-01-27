@@ -16,12 +16,14 @@ import 'dart:io';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
+import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/language_service.dart';
 import 'package:exchangilymobileapp/services/local_auth_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -30,12 +32,14 @@ import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../localizations.dart';
+import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import '../../logger.dart';
 import '../../service_locator.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
@@ -93,9 +97,23 @@ class SettingsViewmodel extends BaseViewModel {
   final t = TextEditingController();
   bool _lockAppNow = false;
   get lockAppNow => _lockAppNow;
+  Locale currentLang;
+  LaguageService langService = locator<LaguageService>();
 
   init() async {
     setBusy(true);
+    Future.delayed(Duration.zero, () async {
+      currentLang = FlutterI18n.currentLocale(context);
+      if (currentLang == 'Chinese' ||
+          currentLang == 'zh' ||
+          currentLang == '简体中文') {
+        selectedLanguage = "简体中文";
+      } else if (currentLang == 'English' || currentLang == 'en') {
+        selectedLanguage = "English";
+      } else {
+        selectedLanguage = "English";
+      }
+    });
 
     storageService.isShowCaseView == null
         ? isShowCaseOnce = false
@@ -103,7 +121,7 @@ class SettingsViewmodel extends BaseViewModel {
 
     getAppVersion();
     baseServerUrl = configService.getKanbanBaseUrl();
-    await setLanguageFromDb();
+    await langService.setLanguageFromDb();
     await selectDefaultWalletLanguage();
     setBusy(false);
   }
@@ -129,15 +147,15 @@ class SettingsViewmodel extends BaseViewModel {
     } else if (!hasAuthorized) {
       if (authService.isLockedOut)
         sharedService.sharedSimpleNotification(
-            AppLocalizations.of(context).lockedOutTemp);
+            FlutterI18n.translate(context, "lockedOutTemp"));
       else if (authService.isLockedOutPerm)
         sharedService.sharedSimpleNotification(
-            AppLocalizations.of(context).lockedOutPerm);
+            FlutterI18n.translate(context, "lockedOutPerm"));
     }
 
     if (!storageService.hasPhoneProtectionEnabled) {
       sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).pleaseSetupDeviceSecurity);
+          FlutterI18n.translate(context, "pleaseSetupDeviceSecurity"));
       storageService.hasCancelledBiometricAuth = false;
       storageService.hasInAppBiometricAuthEnabled = false;
     }
@@ -147,21 +165,21 @@ class SettingsViewmodel extends BaseViewModel {
 
   //                    setLanguageFromDb
 
-  setLanguageFromDb() async {
-    setBusy(true);
-    await userSettingsDatabaseService.getById(1).then((res) {
-      if (res != null) {
-        userSettings.language = res.language;
-        log.i('user settings db not null');
-      } else {
-        userSettings.language = Platform.localeName.substring(0, 2);
-        isUserSettingsEmpty = true;
-        log.i(
-            'user settings db null-- isUserSettingsEmpty $isUserSettingsEmpty');
-      }
-    }).catchError((err) => log.e('user settings db empty $err'));
-    setBusy(false);
-  }
+  // setLanguageFromDb() async {
+  //   setBusy(true);
+  //   await userSettingsDatabaseService.getById(1).then((res) {
+  //     if (res != null) {
+  //       userSettings.language = res.language;
+  //       log.i('user settings db not null');
+  //     } else {
+  //       userSettings.language = Platform.localeName.substring(0, 2);
+  //       isUserSettingsEmpty = true;
+  //       log.i(
+  //           'user settings db null-- isUserSettingsEmpty $isUserSettingsEmpty');
+  //     }
+  //   }).catchError((err) => log.e('user settings db empty $err'));
+  //   setBusy(false);
+  // }
 
 /*-------------------------------------------------------------------------------------
                       selectDefaultWalletLanguage
@@ -275,9 +293,9 @@ class SettingsViewmodel extends BaseViewModel {
     // log.i('model busy $busy');
     await dialogService
         .showVerifyDialog(
-      title: AppLocalizations.of(context).deleteWalletConfirmationPopup,
-      buttonTitle: AppLocalizations.of(context).confirm,
-      secondaryButton: AppLocalizations.of(context).cancel,
+      title: FlutterI18n.translate(context, "deleteWalletConfirmationPopup"),
+      buttonTitle: FlutterI18n.translate(context, "confirm"),
+      secondaryButton: FlutterI18n.translate(context, "cancel"),
     )
         .then((res) async {
       if (res.confirmed) {
@@ -383,10 +401,10 @@ class SettingsViewmodel extends BaseViewModel {
     } else {
       await dialogService
           .showDialog(
-        title: AppLocalizations.of(context).enterPassword,
+        title: FlutterI18n.translate(context, "enterPassword"),
         description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm,
+            FlutterI18n.translate(context, "dialogManagerTypeSamePasswordNote"),
+        buttonTitle: FlutterI18n.translate(context, "confirm"),
       )
           .then((res) async {
         if (res.confirmed) {
@@ -404,12 +422,12 @@ class SettingsViewmodel extends BaseViewModel {
           log.e('Wallet update required');
           setBusy(false);
           return errorMessage =
-              AppLocalizations.of(context).importantWalletUpdateNotice;
+              FlutterI18n.translate(context, "importantWalletUpdateNotice");
         } else {
           log.e('Wrong pass');
           setBusy(false);
           return errorMessage =
-              AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
+              FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword");
         }
       }).catchError((error) {
         log.e(error);
@@ -429,37 +447,10 @@ class SettingsViewmodel extends BaseViewModel {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("announceData");
 
-    // Get the Map key using value
-    // String key = languages.keys.firstWhere((k) => languages[k] == lang);
-    String key = '';
-    log.e('KEY or Value $updatedLanguageValue');
-    if (languages.containsValue(updatedLanguageValue)) {
-      key = languages.keys
-          .firstWhere((k) => languages[k] == updatedLanguageValue);
-      log.i('key in changeWalletLanguage $key');
-    } else
-      key = updatedLanguageValue;
-// selected language should be English,Chinese or other language selected not its lang code
-    selectedLanguage = key.isEmpty ? updatedLanguageValue : languages[key];
-    log.w('selectedLanguage $selectedLanguage');
-    if (updatedLanguageValue == 'Chinese' ||
-        updatedLanguageValue == 'zh' ||
-        key == 'zh') {
-      log.e('in zh');
-      AppLocalizations.load(Locale('zh', 'ZH'));
-
-      UserSettings us = new UserSettings(id: 1, language: 'zh', theme: '');
-      await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
-      storageService.language = 'zh';
-    } else if (updatedLanguageValue == 'English' ||
-        updatedLanguageValue == 'en' ||
-        key == 'en') {
-      log.e('in en');
-      AppLocalizations.load(Locale('en', 'EN'));
-      storageService.language = 'en';
-      UserSettings us = new UserSettings(id: 1, language: 'en', theme: '');
-      await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
-    }
+    await langService.setLanguage(updatedLanguageValue, context).then((value) {
+      selectedLanguage = langService.getCurrentLanguage();
+      print("setting vm selectedLanguage: " + selectedLanguage);
+    });
 
     setBusy(false);
   }
@@ -488,4 +479,24 @@ class SettingsViewmodel extends BaseViewModel {
   onBackButtonPressed() async {
     await sharedService.onBackButtonPressed('/dashboard');
   }
+}
+
+/*----------------------------------------------------------------------
+                    FadeRoute
+----------------------------------------------------------------------*/
+class FadeRoute extends PageRouteBuilder {
+  final Widget widget;
+  FadeRoute({this.widget})
+      : super(pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return widget;
+        }, transitionsBuilder: (BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child) {
+          return new FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        });
 }

@@ -18,6 +18,7 @@ import 'dart:typed_data';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
@@ -182,8 +183,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       gasAmount = data;
       if (gasAmount == 0) {
         sharedService.alertDialog(
-          AppLocalizations.of(context).notice,
-          AppLocalizations.of(context).insufficientGasAmount,
+          FlutterI18n.translate(context, "notice"),
+          FlutterI18n.translate(context, "insufficientGasAmount"),
         );
       }
     }).catchError((onError) => log.e(onError));
@@ -574,10 +575,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     isReloadMyOrders = false;
     await _dialogService
         .showDialog(
-            title: AppLocalizations.of(context).enterPassword,
-            description:
-                AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-            buttonTitle: AppLocalizations.of(context).confirm)
+            title: FlutterI18n.translate(context, "enterPassword"),
+            description: FlutterI18n.translate(
+                context, "dialogManagerTypeSamePasswordNote"),
+            buttonTitle: FlutterI18n.translate(context, "confirm"))
         .then((res) async {
       if (res.confirmed) {
         String mnemonic = res.returnedText;
@@ -592,7 +593,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(AppLocalizations.of(context).orderCreatedSuccessfully,
+                Text(FlutterI18n.translate(context, "orderCreatedSuccessfully"),
                     style: Theme.of(context).textTheme.headline5),
                 Text('txid:' + resKanban['transactionHash'],
                     style: Theme.of(context).textTheme.headline6),
@@ -631,7 +632,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
           });
         } else {
           sharedService.sharedSimpleNotification(
-              AppLocalizations.of(context).placeOrderTransactionFailed,
+              FlutterI18n.translate(context, "placeOrderTransactionFailed"),
               subtitle: resKanban.toString());
         }
       } else if (res.returnedText == 'Closed' && !res.confirmed) {
@@ -663,7 +664,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
         price.isNegative ||
         quantity.isNegative) {
       setBusy(false);
-      sharedService.alertDialog("", AppLocalizations.of(context).invalidAmount,
+      sharedService.alertDialog(
+          "", FlutterI18n.translate(context, "invalidAmount"),
           isWarning: false);
       return;
     }
@@ -671,7 +673,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       setBusy(false);
       showSimpleNotification(
         Center(
-          child: Text(AppLocalizations.of(context).insufficientGasBalance,
+          child: Text(FlutterI18n.translate(context, "insufficientGasBalance"),
               style: Theme.of(context)
                   .textTheme
                   .headline4
@@ -688,7 +690,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       log.e('SELL tx amount $quantity -- targetCoinbalance $targetCoinbalance');
       if (quantity > targetCoinbalance) {
         sharedService.alertDialog(
-            "", AppLocalizations.of(context).invalidAmount,
+            "", FlutterI18n.translate(context, "invalidAmount"),
             isWarning: false);
         setBusy(false);
         return;
@@ -700,7 +702,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
           'BUY tx amount ${caculateTransactionAmount()} -- baseCoinbalance $baseCoinbalance');
       if (caculateTransactionAmount() > baseCoinbalance) {
         sharedService.alertDialog(
-            "", AppLocalizations.of(context).invalidAmount,
+            "", FlutterI18n.translate(context, "invalidAmount"),
             isWarning: false);
         setBusy(false);
         return;
@@ -786,8 +788,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 --------------------------------------------------- */
   showNotification(context) {
     sharedService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+        FlutterI18n.translate(context, "passwordMismatch"),
+        FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword"),
         Icons.cancel,
         globals.red,
         context);

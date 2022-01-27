@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,7 +24,7 @@ class CampaignOrderDetailsScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).orderDetails,
+          title: Text(FlutterI18n.translate(context, "orderDetails"),
               style: Theme.of(context).textTheme.headline4),
         ),
         body: SingleChildScrollView(
@@ -37,18 +38,18 @@ class CampaignOrderDetailsScreen extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                       flex: 2,
-                      child: Text(AppLocalizations.of(context).date,
+                      child: Text(FlutterI18n.translate(context, "date"),
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyText1),
                     ),
                     Expanded(
                         flex: 3,
-                        child: Text(AppLocalizations.of(context).quantity,
+                        child: Text(FlutterI18n.translate(context, "quantity"),
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.bodyText1)),
                     Expanded(
                       flex: 2,
-                      child: Text(AppLocalizations.of(context).status,
+                      child: Text(FlutterI18n.translate(context, "status"),
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyText1),
                     )

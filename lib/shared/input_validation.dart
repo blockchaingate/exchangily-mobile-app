@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,7 +60,7 @@ class _InputValidationState extends State<InputValidation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text(AppLocalizations.of(context).inputValidation),
+      body: Text(FlutterI18n.translate(context, "inputValidation")),
     );
   }
 

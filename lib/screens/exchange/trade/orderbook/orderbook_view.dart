@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -41,7 +42,7 @@ class OrderBookView extends StatelessWidget {
                           bottom: BorderSide(width: 1.0, color: Colors.grey),
                         ),
                       ),
-                      child: Text(AppLocalizations.of(context).price,
+                      child: Text(FlutterI18n.translate(context, "price"),
                           style: Theme.of(context).textTheme.headline6)),
                   // Heading Quantity
                   Container(
@@ -51,7 +52,7 @@ class OrderBookView extends StatelessWidget {
                           bottom: BorderSide(width: 1.0, color: Colors.grey),
                         ),
                       ),
-                      child: Text(AppLocalizations.of(context).quantity,
+                      child: Text(FlutterI18n.translate(context, "quantity"),
                           style: Theme.of(context).textTheme.headline6))
                 ],
               ),
@@ -86,12 +87,13 @@ class OrderBookView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Container(
-                        child: Text(AppLocalizations.of(context).buyOrders,
+                        child: Text(FlutterI18n.translate(context, "buyOrders"),
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.headline6),
                       ),
                       Container(
-                        child: Text(AppLocalizations.of(context).sellOrders,
+                        child: Text(
+                            FlutterI18n.translate(context, "sellOrders"),
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.headline6),
                       ),
@@ -109,11 +111,11 @@ class OrderBookView extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(AppLocalizations.of(context).quantity,
+                            Text(FlutterI18n.translate(context, "quantity"),
                                 style: TextStyle(fontSize: 9, color: grey)),
-                            Text(AppLocalizations.of(context).price,
+                            Text(FlutterI18n.translate(context, "price"),
                                 style: TextStyle(fontSize: 9, color: grey)),
-                            Text(AppLocalizations.of(context).quantity,
+                            Text(FlutterI18n.translate(context, "quantity"),
                                 style: TextStyle(fontSize: 9, color: grey)),
                           ],
                         ),

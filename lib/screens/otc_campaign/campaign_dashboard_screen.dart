@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -65,8 +66,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                       Icons.event_note,
                       color: globals.green,
                     ),
-                    title: Text(
-                        AppLocalizations.of(context).readCampaignInstructions),
+                    title: Text(FlutterI18n.translate(
+                        context, "readCampaignInstructions")),
                     onTap: () {
                       Navigator.pushNamed(context, '/campaignInstructions');
                     },
@@ -75,7 +76,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                   ListTile(
                     title: model.campaignUserData != null
                         ? Text(
-                            '${AppLocalizations.of(context).myReferralCode} ${model.campaignUserData.referralCode.toString()}',
+                            '${FlutterI18n.translate(context, "myReferralCode")} ${model.campaignUserData.referralCode.toString()}',
                             style: Theme.of(context)
                                 .textTheme
                                 .headline5
@@ -96,7 +97,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                       color: globals.red,
                     ),
                     title: Text(
-                      AppLocalizations.of(context).logout,
+                      FlutterI18n.translate(context, "logout"),
                     ),
                     onTap: () {
                       model.logout();
@@ -141,7 +142,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                               child: model.campaignUserData == null
                                   ? Text('')
                                   : Text(
-                                      '${AppLocalizations.of(context).welcome} ${model.campaignUserData.email}',
+                                      '${FlutterI18n.translate(context, "welcome")} ${model.campaignUserData.email}',
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline5),
@@ -151,7 +152,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   model.logout();
                                 },
                                 child: Text(
-                                  AppLocalizations.of(context).logout,
+                                  FlutterI18n.translate(context, "logout"),
                                   style: Theme.of(context).textTheme.headline5,
                                   textAlign: TextAlign.end,
                                 )))
@@ -179,7 +180,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             ),
                           ),
                           title: Text(
-                            AppLocalizations.of(context).myTotalAssets,
+                            FlutterI18n.translate(context, "myTotalAssets"),
                             style: TextStyle(letterSpacing: 1.1),
                           ),
                           subtitle: Column(
@@ -189,7 +190,9 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     const EdgeInsets.symmetric(vertical: 3.0),
                                 child: Row(
                                   children: <Widget>[
-                                    Text(AppLocalizations.of(context).quantity,
+                                    Text(
+                                        FlutterI18n.translate(
+                                            context, "quantity"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1),
@@ -257,7 +260,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    AppLocalizations.of(context).level,
+                                    FlutterI18n.translate(context, "level"),
                                     style:
                                         Theme.of(context).textTheme.headline5,
                                   ),
@@ -298,8 +301,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 5.0),
                                     child: Text(
-                                      AppLocalizations.of(context)
-                                              .referralCount +
+                                      FlutterI18n.translate(
+                                              context, "referralCount") +
                                           ' ',
                                       style:
                                           Theme.of(context).textTheme.headline5,
@@ -349,13 +352,15 @@ class CampaignDashboardScreen extends StatelessWidget {
                             title: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text(AppLocalizations.of(context).myInvestment,
+                                Text(
+                                    FlutterI18n.translate(
+                                        context, "myInvestment"),
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5
                                         .copyWith(color: globals.buyPrice)),
                                 Text(
-                                  AppLocalizations.of(context).myTokens,
+                                  FlutterI18n.translate(context, "myTokens"),
                                   style: Theme.of(context).textTheme.headline5,
                                 ),
                               ],
@@ -434,8 +439,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 size: 22,
                               ),
                             ),
-                            title: Text(
-                                AppLocalizations.of(context).myReferralReward),
+                            title: Text(FlutterI18n.translate(
+                                context, "myReferralReward")),
                             subtitle: model.busy
                                 ? Shimmer.fromColors(
                                     baseColor: globals.primaryColor,
@@ -483,10 +488,10 @@ class CampaignDashboardScreen extends StatelessWidget {
                             title: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text(AppLocalizations.of(context)
-                                    .teamsTotalValue),
+                                Text(FlutterI18n.translate(
+                                    context, "teamsTotalValue")),
                                 Text(
-                                  AppLocalizations.of(context).teamReward,
+                                  FlutterI18n.translate(context, "teamReward"),
                                   style: Theme.of(context).textTheme.headline5,
                                 )
                               ],
@@ -535,137 +540,13 @@ class CampaignDashboardScreen extends StatelessWidget {
                                                       .memberLevelTextColor)))
                                     ],
                                   ),
-                            trailing:
-                                // Column(
-                                //   mainAxisAlignment: MainAxisAlignment.center,
-                                //   children: <Widget>[
-                                //     Padding(
-                                //       padding: const EdgeInsets.only(bottom: 3.0),
-                                //       child: Text(
-                                //         AppLocalizations.of(context).teamReward,
-                                //         style: Theme.of(context).textTheme.headline5,
-                                //       ),
-                                //     ),
-                                //     model.busy
-                                //         ? Shimmer.fromColors(
-                                //             baseColor: globals.primaryColor,
-                                //             highlightColor: globals.grey,
-                                //             child: Text(
-                                //               ('00.00'),
-                                //               style:
-                                //                   Theme.of(context).textTheme.headline5,
-                                //             ))
-                                //         : Text(
-                                //             model.myTeamsTotalRewards
-                                //                 .toStringAsFixed(2),
-                                //             style: Theme.of(context)
-                                //                 .textTheme
-                                //                 .headline5
-                                //                 .copyWith(
-                                //                     fontWeight: FontWeight.w600,
-                                //                     color: Color(
-                                //                         model.memberLevelTextColor))),
-                                //   ],
-                                // ),
-                                Icon(
+                            trailing: Icon(
                               Icons.navigate_next,
                               color: globals.white54,
                             )),
                       ],
                     ),
                   ),
-                  //   UIHelper.divider,
-
-/*-------------------------------------------------------------------------------------
-                                  My Investment container with list tiles
--------------------------------------------------------------------------------------*/
-                  // Container(
-                  //   margin: EdgeInsets.only(bottom: 5.0),
-                  //   child: Column(
-                  //     children: <Widget>[
-                  //       ListTile(
-                  //         onTap: () {},
-                  //         dense: false,
-                  //         leading: Padding(
-                  //           padding: const EdgeInsets.only(top: 5.0),
-                  //           child: Icon(
-                  //             Icons.verified_user,
-                  //             color: globals.primaryColor,
-                  //             size: 22,
-                  //           ),
-                  //         ),
-                  //         title: Text(AppLocalizations.of(context)
-                  //             .myInvestmentWithoutRewards),
-                  //         subtitle: model.busy
-                  //             ? Shimmer.fromColors(
-                  //                 baseColor: globals.primaryColor,
-                  //                 highlightColor: globals.grey,
-                  //                 child: Text(
-                  //                   ('0.000'),
-                  //                   style: Theme.of(context).textTheme.headline5,
-                  //                 ))
-                  //             : Text(model.myInvestmentWithoutRewards.toString(),
-                  //                 style: Theme.of(context).textTheme.headline5),
-                  //         // trailing: Icon(
-                  //         //   Icons.navigate_next,
-                  //         //   color: globals.white54,
-                  //         // ),
-                  //       )
-                  //     ],
-                  //   ),
-                  // ),
-                  // UIHelper.divider,
-/*-------------------------------------------------------------------------------------
-                                  My referrals container with list tiles
--------------------------------------------------------------------------------------*/
-                  // Container(
-                  //   child: Column(
-                  //     children: <Widget>[
-                  //       ListTile(
-                  //         onTap: () {},
-                  //         dense: false,
-                  //         leading: Padding(
-                  //           padding: const EdgeInsets.only(top: 5.0),
-                  //           child: Icon(
-                  //             Icons.share,
-                  //             color: globals.primaryColor,
-                  //             size: 22,
-                  //           ),
-                  //         ),
-                  //         title: Text(AppLocalizations.of(context).myReferrals),
-                  //         subtitle: model.busy
-                  //             ? Shimmer.fromColors(
-                  //                 baseColor: globals.primaryColor,
-                  //                 highlightColor: globals.grey,
-                  //                 child: Text(
-                  //                   ('0.000'),
-                  //                   style: Theme.of(context).textTheme.headline5,
-                  //                 ))
-                  //             : Text(model.myTotalReferrals.toString(),
-                  //                 style: Theme.of(context).textTheme.headline5),
-                  //         // trailing: Icon(
-                  //         //   Icons.navigate_next,
-                  //         //   color: globals.white54,
-                  //         // ),
-                  //       )
-                  //     ],
-                  //   ),
-                  // ),
-                  // UIHelper.verticalSpaceLarge,
-/*-------------------------------------------------------------------------------------
-                          Button Container
--------------------------------------------------------------------------------------*/
-                  // Container(
-                  //     child: SizedBox(
-                  //   width: 150,
-                  //   child: RaisedButton(
-                  //       padding: EdgeInsets.all(0),
-                  //       onPressed: () {
-                  //         Navigator.pushNamed(context, '/campaignPayment');
-                  //       },
-                  //       child: Text(AppLocalizations.of(context).buy,
-                  //           style: Theme.of(context).textTheme.headline4)),
-                  // ))
                 ],
               ),
             ),
@@ -677,7 +558,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.pushNamed(context, '/campaignPayment');
                     },
-                    child: Text(AppLocalizations.of(context).buy,
+                    child: Text(FlutterI18n.translate(context, "buy"),
                         style: Theme.of(context).textTheme.headline4))),
             bottomNavigationBar: BottomNavBar(count: 2)),
       ),

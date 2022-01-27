@@ -4,6 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
@@ -188,7 +189,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
           .toString();
     } else
       sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).insufficientGasAmount);
+          FlutterI18n.translate(context, "insufficientGasAmount"));
     setBusy(false);
   }
 
@@ -245,8 +246,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
       gasAmount = data;
       if (gasAmount == 0) {
         sharedService.alertDialog(
-          AppLocalizations.of(context).notice,
-          AppLocalizations.of(context).insufficientGasAmount,
+          FlutterI18n.translate(context, "notice"),
+          FlutterI18n.translate(context, "insufficientGasAmount"),
         );
       }
     }).catchError((onError) => log.e(onError));
@@ -262,16 +263,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     if (amountController.text.isEmpty) {
       sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).amountMissing,
-          subtitle: AppLocalizations.of(context).pleaseEnterValidNumber);
+          FlutterI18n.translate(context, "amountMissing"),
+          subtitle: FlutterI18n.translate(context, "pleaseEnterValidNumber"));
 
       setBusy(false);
       return;
     }
     if (gasAmount == 0.0 || gasAmount < kanbanTransFee || transFee == 0.0) {
       sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).notice,
-          subtitle: AppLocalizations.of(context).insufficientGasAmount);
+          FlutterI18n.translate(context, "notice"),
+          subtitle: FlutterI18n.translate(context, "insufficientGasAmount"));
 
       setBusy(false);
       return;
@@ -281,9 +282,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
         walletInfo.tickerName != 'TRX' &&
         walletInfo.tickerName != 'USDTX') {
       sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).insufficientBalance,
+          FlutterI18n.translate(context, "insufficientBalance"),
           subtitle:
-              '${AppLocalizations.of(context).gasFee} $transFee > ${AppLocalizations.of(context).walletbalance} ${walletInfo.availableBalance}');
+              '${FlutterI18n.translate(context, "gasFee")} $transFee > ${FlutterI18n.translate(context, "walletbalance")} ${walletInfo.availableBalance}');
 
       setBusy(false);
       return;
@@ -301,8 +302,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
         amount.isNegative) {
       log.e(
           'amount $amount --- final amount with fee: $finalAmount -- wallet bal: ${walletInfo.availableBalance}');
-      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-          AppLocalizations.of(context).insufficientBalance,
+      sharedService.alertDialog(FlutterI18n.translate(context, "invalidAmount"),
+          FlutterI18n.translate(context, "insufficientBalance"),
           isWarning: false);
       setBusy(false);
       return;
@@ -316,7 +317,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       if (!hasSufficientChainBalance) {
         log.e('Chain $tokenType -- insufficient balance');
         sharedService.sharedSimpleNotification(walletInfo.tokenType,
-            subtitle: AppLocalizations.of(context).insufficientBalance);
+            subtitle: FlutterI18n.translate(context, "insufficientBalance"));
         setBusy(false);
         return;
       }
@@ -332,8 +333,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
       log.w('isCorrectAmount $isCorrectAmount');
       if (!isCorrectAmount) {
         sharedService.alertDialog(
-            '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
-            'TRX ${AppLocalizations.of(context).insufficientBalance}',
+            '${FlutterI18n.translate(context, "fee")} ${FlutterI18n.translate(context, "notice")}',
+            'TRX ${FlutterI18n.translate(context, "insufficientBalance")}',
             isWarning: false);
         setBusy(false);
         return;
@@ -348,8 +349,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
         isCorrectAmount = false;
       if (!isCorrectAmount) {
         sharedService.alertDialog(
-            '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
-            'TRX ${AppLocalizations.of(context).insufficientBalance}',
+            '${FlutterI18n.translate(context, "fee")} ${FlutterI18n.translate(context, "notice")}',
+            'TRX ${FlutterI18n.translate(context, "insufficientBalance")}',
             isWarning: false);
         setBusy(false);
         return;
@@ -358,10 +359,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     message = '';
     var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
+        title: FlutterI18n.translate(context, "enterPassword"),
         description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm);
+            FlutterI18n.translate(context, "dialogManagerTypeSamePasswordNote"),
+        buttonTitle: FlutterI18n.translate(context, "confirm"));
     if (res.confirmed) {
       var seed;
       String mnemonic = res.returnedText;
@@ -427,9 +428,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
             message = txId.toString();
 
             sharedService.sharedSimpleNotification(
-                AppLocalizations.of(context).depositTransactionSuccess,
+                FlutterI18n.translate(context, "depositTransactionSuccess"),
                 subtitle:
-                    '$specialTicker ${AppLocalizations.of(context).isOnItsWay}',
+                    '$specialTicker ${FlutterI18n.translate(context, "isOnItsWay")}',
                 isError: false);
             Future.delayed(new Duration(seconds: 3), () {
               refreshBalance();
@@ -446,13 +447,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
         }).timeout(Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
           setBusy(false);
-          sharedService.alertDialog(AppLocalizations.of(context).notice,
-              AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater,
+          sharedService.alertDialog(
+              FlutterI18n.translate(context, "notice"),
+              FlutterI18n.translate(
+                  context, "serverTimeoutPleaseTryAgainLater"),
               isWarning: false);
         }).catchError((error) {
           log.e('In Catch error - $error');
-          sharedService.alertDialog(AppLocalizations.of(context).networkIssue,
-              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+          sharedService.alertDialog(
+              FlutterI18n.translate(context, "networkIssue"),
+              '$tickerName ${FlutterI18n.translate(context, "transanctionFailed")}',
               isWarning: false);
 
           setBusy(false);
@@ -493,19 +497,20 @@ class MoveToExchangeViewModel extends BaseViewModel {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     success
-                        ? Text(AppLocalizations.of(context)
-                            .depositTransactionSuccess)
-                        : Text(AppLocalizations.of(context)
-                            .depositTransactionFailed),
+                        ? Text(FlutterI18n.translate(
+                            context, "depositTransactionSuccess"))
+                        : Text(FlutterI18n.translate(
+                            context, "depositTransactionFailed")),
                     success
                         ? Text("")
                         : ret["data"] != null
                             ? Text(ret["data"] ==
                                     'incorrect amount for two transactions'
-                                ? AppLocalizations.of(context)
-                                    .incorrectDepositAmountOfTwoTx
+                                ? FlutterI18n.translate(
+                                    context, "incorrectDepositAmountOfTwoTx")
                                 : ret["data"])
-                            : Text(AppLocalizations.of(context).networkIssue),
+                            : Text(
+                                FlutterI18n.translate(context, "networkIssue")),
                   ]),
               position: NotificationPosition.bottom,
               background: primaryColor);
@@ -515,20 +520,20 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
           // sharedService.alertDialog(
           //     success
-          //         ? AppLocalizations.of(context).depositTransactionSuccess
-          //         : AppLocalizations.of(context).depositTransactionFailed,
+          //         ? FlutterI18n.translate(context, "depositTransactionSuccess")
+          //         : FlutterI18n.translate(context, "depositTransactionFailed"),
           //     success
           //         ? ""
           //         : ret.containsKey("error") && ret["error"] != null
           //             ? ret["error"]
-          //             : AppLocalizations.of(context).serverError,
+          //             : FlutterI18n.translate(context, "serverError"),
           //     isWarning: false);
         }).catchError((onError) {
           log.e('Deposit Catch $onError');
 
           sharedService.alertDialog(
-              AppLocalizations.of(context).depositTransactionFailed,
-              AppLocalizations.of(context).networkIssue,
+              FlutterI18n.translate(context, "depositTransactionFailed"),
+              FlutterI18n.translate(context, "networkIssue"),
               isWarning: false);
           serverError = onError.toString();
         });
@@ -541,7 +546,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       log.e('Wallet update required');
       setBusy(false);
       sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).importantWalletUpdateNotice);
+          FlutterI18n.translate(context, "importantWalletUpdateNotice"));
     } else {
       log.e('Wrong pass');
       setBusy(false);

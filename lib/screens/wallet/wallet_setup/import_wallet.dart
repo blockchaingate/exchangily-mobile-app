@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/confirm_mnemonic_viemodel.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/confirm_mnemonic/verify_mnemonic.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class ImportWalletView extends StatelessWidget {
         appBar: AppBar(
             centerTitle: true,
             title: Text(
-              AppLocalizations.of(context).importWallet,
+              FlutterI18n.translate(context, "importWallet"),
               style: TextStyle(fontSize: 14),
             ),
             backgroundColor: globals.secondaryColor),
@@ -47,7 +48,7 @@ class ImportWalletView extends StatelessWidget {
                 padding: EdgeInsets.all(15),
                 child: RaisedButton(
                   child: Text(
-                    AppLocalizations.of(context).confirm,
+                    FlutterI18n.translate(context, "confirm"),
                     style: Theme.of(context).textTheme.button,
                   ),
                   onPressed: () {

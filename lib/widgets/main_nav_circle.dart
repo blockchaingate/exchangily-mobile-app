@@ -7,6 +7,7 @@ import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard_view.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
 
@@ -36,16 +37,16 @@ class _MainNavCircleState extends State<MainNavCircle> {
         //   tabs: [
         //     TabData(
         //         iconData: FontAwesomeIcons.wallet,
-        //         title: AppLocalizations.of(context).wallet),
+        //         title: FlutterI18n.translate(context, "wallet")),
         //     TabData(
         //         iconData: FontAwesomeIcons.coins,
-        //         title: AppLocalizations.of(context).trade),
+        //         title: FlutterI18n.translate(context, "trade")),
         //     TabData(
         //         iconData: Icons.event,
-        //         title: AppLocalizations.of(context).event),
+        //         title: FlutterI18n.translate(context, "event")),
         //     TabData(
         //         iconData: FontAwesomeIcons.cog,
-        //         title: AppLocalizations.of(context).settings)
+        //         title: FlutterI18n.translate(context, "settings"))
         //   ],
         //   initialSelection: 0,
         //   key: bottomNavigationKey,

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -91,17 +92,19 @@ class PairPriceView extends StatelessWidget {
                   UIHelper.horizontalSpaceMedium,
                   Expanded(
                     flex: 2,
-                    child: Text(AppLocalizations.of(context).volume,
+                    child: Text(FlutterI18n.translate(context, "volume"),
                         style: Theme.of(context).textTheme.subtitle2),
                   ),
                   Expanded(
                     flex: 2,
-                    child: Text(AppLocalizations.of(context).low.toString(),
+                    child: Text(
+                        FlutterI18n.translate(context, "low").toString(),
                         style: Theme.of(context).textTheme.subtitle2),
                   ),
                   Expanded(
                     flex: 2,
-                    child: Text(AppLocalizations.of(context).high.toString(),
+                    child: Text(
+                        FlutterI18n.translate(context, "high").toString(),
                         style: Theme.of(context).textTheme.subtitle2),
                   ),
                 ],

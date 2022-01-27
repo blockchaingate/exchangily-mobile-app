@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
@@ -248,12 +249,13 @@ class RouteGenerator {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context).error,
+          title: Text(FlutterI18n.translate(context, "error"),
               style: TextStyle(color: Colors.white)),
         ),
         body: Center(
           child: Text(
-              AppLocalizations.of(context).noRouteDefined + ' ${settings.name}',
+              FlutterI18n.translate(context, "noRouteDefined") +
+                  ' ${settings.name}',
               style: TextStyle(color: Colors.white)),
         ),
       );

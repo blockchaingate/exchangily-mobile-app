@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:io';
+
 import 'package:exchangilymobileapp/Managers/dialog_manager.dart';
 import 'package:exchangilymobileapp/Managers/life_cycle_manager.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
@@ -28,9 +30,27 @@ import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import './shared/globals.dart' as globals;
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'localizations.dart';
 
 Future<void> main() async {
+  final String defaultLocale = Platform.localeName;
+  print("defaultLocale: " + defaultLocale);
+  final String shortLocale = defaultLocale.substring(0, 2);
+  print("shortLocale: " + shortLocale);
+  //init i18n setting
+  FlutterI18nDelegate flutterI18nDelegate = FlutterI18nDelegate(
+    translationLoader: FileTranslationLoader(
+        useCountryCode: false,
+        fallbackFile: 'en',
+        basePath: 'assets/i18n',
+        forcedLocale: [
+          'en',
+          'zh',
+        ].contains(defaultLocale)
+            ? Locale(shortLocale)
+            : Locale("en")),
+  );
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
 
@@ -56,7 +76,7 @@ Future<void> main() async {
       (_) {
         runApp(
             //  DevicePreview(builder: (context) =>
-            MyApp(packageInfo));
+            MyApp(packageInfo, flutterI18nDelegate));
         // ));
       },
     );
@@ -66,7 +86,8 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp(this.packageInfo);
+  MyApp(this.packageInfo, this.flutterI18nDelegate);
+  final FlutterI18nDelegate flutterI18nDelegate;
   final PackageInfo packageInfo;
 
   @override
@@ -107,19 +128,19 @@ class MyApp extends StatelessWidget {
               ],
             ),
             localizationsDelegates: [
-              AppLocalizationsDelegate(),
+              flutterI18nDelegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate
             ],
             // locale: Langua,
-            supportedLocales: [
-              const Locale("en", ""), // English
-              const Locale("zh", ""), // Chinese
-              const Locale("hi", ""), // Hindi India
-            ],
+            // supportedLocales: [
+            //   const Locale("en", ""), // English
+            //   const Locale("zh", ""), // Chinese
+            //   const Locale("hi", ""), // Hindi India
+            // ],
             onGenerateTitle: (BuildContext context) =>
-                AppLocalizations.of(context).title,
+                FlutterI18n.translate(context, "title"),
 
             onGenerateRoute: RouteGenerator.generateRoute,
             title: 'Exchangily Wallet',

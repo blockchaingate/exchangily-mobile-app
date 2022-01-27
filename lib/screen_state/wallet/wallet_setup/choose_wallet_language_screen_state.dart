@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';

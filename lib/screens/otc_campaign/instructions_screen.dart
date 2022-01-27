@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/instructions_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/campaign_single.dart';
@@ -33,63 +34,14 @@ class CampaignInstructionScreen extends StatelessWidget {
         },
         child: SafeArea(
           child: Scaffold(
-              // appBar: AppBar(title: Text("instruction")),
-
-              // floatingActionButtonLocation:
-              //     FloatingActionButtonLocation.centerDocked,
-              // floatingActionButton: Container(
-              //   decoration: BoxDecoration(
-              //       color: white.withOpacity(.90),
-              //       borderRadius: BorderRadius.circular(25),
-              //       border: Border.all(
-              //           color: primaryColor.withAlpha(145), width: 1.5)),
-              //   constraints: BoxConstraints(minWidth: 250),
-              //   margin: EdgeInsets.symmetric(horizontal: 60, vertical: 80),
-              //   child: FlatButton(
-              //     //   borderSide: BorderSide(color: primaryColor),
-              //     // color: primaryColor,
-              //     padding: EdgeInsets.all(0),
-              //     child: Text(
-              //         AppLocalizations.of(context).tapHereToEnterInCampaign,
-              //         style: Theme.of(context).textTheme.headline5.copyWith(
-              //             color: primaryColor, fontWeight: FontWeight.bold)),
-              //     onPressed: () {
-              //       model.busy
-              //           ? print('loading...')
-              //           : Navigator.pushNamed(context, '/campaignLogin');
-              //     },
-              //   ),
-              // ),
               key: key,
               body: model.busy
                   ? LoadingGif()
-
-                  // Column(
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     children: <Widget>[
-                  //       Container(
-                  //         child: Center(
-                  //           child: Shimmer.fromColors(
-                  //               baseColor: globals.primaryColor,
-                  //               highlightColor: globals.grey,
-                  //               child: Text(
-                  //                   AppLocalizations.of(context)
-                  //                       .checkingAccountDetails,
-                  //                   style: Theme.of(context)
-                  //                       .textTheme
-                  //                       .bodyText1
-                  //                       .copyWith(
-                  //                           color: globals.primaryColor))),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   )
                   : model.hasApiError
                       ? Container(
                           child: Center(
                             child: Text(
-                              AppLocalizations.of(context)
-                                      .serverBusy
+                              FlutterI18n.translate(context, "serverBusy")
                                       .toString() +
                                   "...",
                               style: TextStyle(color: Colors.white),
@@ -117,7 +69,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                   ),
                                 ],
                               )
-                                  // Text(AppLocalizations.of(context).event),
+                                  // Text(FlutterI18n.translate(context, "event")),
 
                                   ),
                             )

@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
@@ -219,7 +220,9 @@ class OtcScreen extends StatelessWidget {
                                                   TargetPlatform.iOS
                                               ? Center(
                                                   child: CupertinoButton(
-                                                      child: Text(AppLocalizations.of(context).buy,
+                                                      child: Text(
+                                                          FlutterI18n.translate(
+                                                              context, "buy"),
                                                           style:
                                                               Theme.of(context)
                                                                   .textTheme

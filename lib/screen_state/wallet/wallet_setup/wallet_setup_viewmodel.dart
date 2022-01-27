@@ -30,7 +30,8 @@ import 'package:exchangilymobileapp/services/version_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import '../../../localizations.dart';
+import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import '../../../service_locator.dart';
 
 class WalletSetupViewmodel extends BaseViewModel {
@@ -100,12 +101,12 @@ class WalletSetupViewmodel extends BaseViewModel {
     {
       await dialogService
           .showVerifyDialog(
-              title: AppLocalizations.of(context).existingWalletFound,
-              secondaryButton: AppLocalizations.of(context).restore,
+              title: FlutterI18n.translate(context, "existingWalletFound"),
+              secondaryButton: FlutterI18n.translate(context, "restore"),
               description:
-                  '${AppLocalizations.of(context).askWalletRestore} + ?',
-              buttonTitle: AppLocalizations.of(context)
-                  .importWallet) // want to ask whether i should show Delete & Import
+                  '${FlutterI18n.translate(context, "askWalletRestore")} + ?',
+              buttonTitle: FlutterI18n.translate(context,
+                  "importWallet")) // want to ask whether i should show Delete & Import
           .then((res) async {
         if (res.confirmed) {
           // confirmed means import wallet true
@@ -124,8 +125,8 @@ class WalletSetupViewmodel extends BaseViewModel {
             log.e('Existing wallet deletion could not be completed');
           });
         } else if (res.returnedText == 'wrong password') {
-          sharedService.sharedSimpleNotification(
-              AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
+          sharedService.sharedSimpleNotification(FlutterI18n.translate(
+              context, "pleaseProvideTheCorrectPassword"));
         } else if (!res.confirmed && res.returnedText != 'Closed') {
           // if user wants to restore that then call check existing wallet func
           await checkExistingWallet();
@@ -195,10 +196,11 @@ class WalletSetupViewmodel extends BaseViewModel {
   verifyWallet() async {
     storageService.hasWalletVerified = true;
     var res = await dialogService.showVerifyDialog(
-        title: AppLocalizations.of(context).walletUpdateNoticeTitle,
-        secondaryButton: AppLocalizations.of(context).cancel,
-        description: AppLocalizations.of(context).walletUpdateNoticeDecription,
-        buttonTitle: AppLocalizations.of(context).confirm);
+        title: FlutterI18n.translate(context, "walletUpdateNoticeTitle"),
+        secondaryButton: FlutterI18n.translate(context, "cancel"),
+        description:
+            FlutterI18n.translate(context, "walletUpdateNoticeDecription"),
+        buttonTitle: FlutterI18n.translate(context, "confirm"));
     if (!res.confirmed) {
       setBusy(false);
 
@@ -206,10 +208,10 @@ class WalletSetupViewmodel extends BaseViewModel {
     } else {
       isVerifying = true;
       var res = await dialogService.showDialog(
-          title: AppLocalizations.of(context).enterPassword,
-          description:
-              AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-          buttonTitle: AppLocalizations.of(context).confirm);
+          title: FlutterI18n.translate(context, "enterPassword"),
+          description: FlutterI18n.translate(
+              context, "dialogManagerTypeSamePasswordNote"),
+          buttonTitle: FlutterI18n.translate(context, "confirm"));
       if (res.confirmed) {
         var walletVerificationRes =
             await walletService.verifyWalletAddresses(res.returnedText);
@@ -243,9 +245,10 @@ class WalletSetupViewmodel extends BaseViewModel {
           sharedService.context = context;
           await dialogService
               .showVerifyDialog(
-                  title: AppLocalizations.of(context).walletVerificationFailed,
+                  title: FlutterI18n.translate(
+                      context, "walletVerificationFailed"),
                   description: '',
-                  buttonTitle: AppLocalizations.of(context).deleteWallet,
+                  buttonTitle: FlutterI18n.translate(context, "deleteWallet"),
                   secondaryButton: '')
               .then((isDelete) async {
             await deleteWallet();
@@ -260,7 +263,7 @@ class WalletSetupViewmodel extends BaseViewModel {
         setBusy(false);
 
         sharedService.sharedSimpleNotification(
-            AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
+            FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword"));
       }
     }
   }

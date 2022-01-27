@@ -14,6 +14,7 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -55,7 +56,7 @@ class _BackupMnemonicWalletScreenState
         appBar: AppBar(
           centerTitle: true,
           elevation: 0,
-          title: Text(AppLocalizations.of(context).backupMnemonic,
+          title: Text(FlutterI18n.translate(context, "backupMnemonic"),
               style: Theme.of(context).textTheme.headline3),
           backgroundColor: globals.secondaryColor,
           actions: <Widget>[
@@ -75,8 +76,8 @@ class _BackupMnemonicWalletScreenState
                           children: [
                             Container(
                                 child: Text(
-                              AppLocalizations.of(context)
-                                  .backupMnemonicNoticeTitle,
+                              FlutterI18n.translate(
+                                  context, "backupMnemonicNoticeTitle"),
                               // textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline3,
                             )),
@@ -84,8 +85,8 @@ class _BackupMnemonicWalletScreenState
                             Container(
                                 // padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: Text(
-                              AppLocalizations.of(context)
-                                  .backupMnemonicNoticeContent,
+                              FlutterI18n.translate(
+                                  context, "backupMnemonicNoticeContent"),
                               style: Theme.of(context).textTheme.headline5,
                             ))
                           ],
@@ -119,7 +120,7 @@ class _BackupMnemonicWalletScreenState
                     ),
                     SizedBox(width: 5),
                     Text(
-                      AppLocalizations.of(context).important,
+                      FlutterI18n.translate(context, "important"),
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w800,
@@ -136,7 +137,7 @@ class _BackupMnemonicWalletScreenState
                 children: <Widget>[
                   Expanded(
                       child: Text(
-                    AppLocalizations.of(context).warningBackupMnemonic,
+                    FlutterI18n.translate(context, "warningBackupMnemonic"),
                     style: Theme.of(context).textTheme.headline5,
                   )),
                 ],
@@ -156,7 +157,7 @@ class _BackupMnemonicWalletScreenState
                   child: MaterialButton(
                     color: primaryColor,
                     child: Text(
-                      AppLocalizations.of(context).confirm,
+                      FlutterI18n.translate(context, "confirm"),
                       // style: Theme.of(context).textTheme.headline4,
                       style: TextStyle(
                           fontWeight: FontWeight.w800,

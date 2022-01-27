@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
@@ -95,20 +96,20 @@ class LightningRemitView extends StatelessWidget {
                                               size: 18,
                                             ),
                                             title: Text(
-                                                AppLocalizations.of(context)
-                                                    .noCoinBalance,
+                                                FlutterI18n.translate(
+                                                    context, "noCoinBalance"),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyText2),
                                             subtitle: Text(
-                                                AppLocalizations.of(context)
-                                                    .transferFundsToExchangeUsingDepositButton,
+                                                FlutterI18n.translate(context,
+                                                    "transferFundsToExchangeUsingDepositButton"),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .subtitle2))
                                         : Text(
-                                            AppLocalizations.of(context)
-                                                .selectCoin,
+                                            FlutterI18n.translate(
+                                                context, "selectCoin"),
                                             textAlign: TextAlign.start,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -166,8 +167,8 @@ class LightningRemitView extends StatelessWidget {
                               prefixIcon: IconButton(
                                   padding: EdgeInsets.only(left: 10),
                                   alignment: Alignment.centerLeft,
-                                  tooltip:
-                                      AppLocalizations.of(context).scanBarCode,
+                                  tooltip: FlutterI18n.translate(
+                                      context, "scanBarCode"),
                                   icon: Icon(
                                     Icons.camera_alt,
                                     color: white,
@@ -189,8 +190,8 @@ class LightningRemitView extends StatelessWidget {
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Color(0XFF871fff), width: 0.5)),
-                              hintText: AppLocalizations.of(context)
-                                  .receiverWalletAddress,
+                              hintText: FlutterI18n.translate(
+                                  context, "receiverWalletAddress"),
                               hintStyle: Theme.of(context).textTheme.headline5),
                           controller: model.addressController,
                           style: Theme.of(context)
@@ -211,7 +212,7 @@ class LightningRemitView extends StatelessWidget {
                                   borderSide: BorderSide(
                                       color: Color(0XFF871fff), width: 0.5)),
                               hintText:
-                                  AppLocalizations.of(context).enterAmount,
+                                  FlutterI18n.translate(context, "enterAmount"),
                               hintStyle: Theme.of(context).textTheme.headline5),
                           controller: model.amountController,
                           style: Theme.of(context)
@@ -236,7 +237,8 @@ class LightningRemitView extends StatelessWidget {
                                       ? print('busy')
                                       : model.transfer();
                                 },
-                                child: Text(AppLocalizations.of(context).send,
+                                child: Text(
+                                    FlutterI18n.translate(context, "send"),
                                     style:
                                         Theme.of(context).textTheme.headline4),
                               ),
@@ -259,7 +261,8 @@ class LightningRemitView extends StatelessWidget {
                                     ? print('busy')
                                     : model.showBarcode();
                               },
-                              child: Text(AppLocalizations.of(context).receive,
+                              child: Text(
+                                  FlutterI18n.translate(context, "receive"),
                                   style: Theme.of(context).textTheme.headline4),
                             ),
                           ),
@@ -333,10 +336,10 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 5.0),
                 child: model.exchangeBalances.isEmpty
-                    ? Text(AppLocalizations.of(context).noCoinBalance)
+                    ? Text(FlutterI18n.translate(context, "noCoinBalance"))
                     : Text(
                         //model.tickerName == ''
-                        // ? AppLocalizations.of(context).selectCoin
+                        // ? FlutterI18n.translate(context, "selectCoin")
                         // :
                         model.tickerName),
               ),
@@ -369,7 +372,7 @@ class TxHistoryView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(AppLocalizations.of(context).transactionHistory,
+        title: Text(FlutterI18n.translate(context, "transactionHistory"),
             style: Theme.of(context).textTheme.headline3),
         backgroundColor: secondaryColor,
       ),
@@ -477,7 +480,7 @@ class TxHistoryView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(AppLocalizations.of(context).quantity,
+                              Text(FlutterI18n.translate(context, "quantity"),
                                   style: Theme.of(context).textTheme.subtitle2),
                               Text(
                                 transaction.quantity.toStringAsFixed(

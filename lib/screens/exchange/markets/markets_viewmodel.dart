@@ -16,6 +16,7 @@ import 'dart:convert';
 
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -154,8 +155,8 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
     setBusy(false);
     errorMessage = error.toString();
 
-    sharedService.alertDialog(AppLocalizations.of(context).serverError,
-        AppLocalizations.of(context).marketPriceFetchFailed,
+    sharedService.alertDialog(FlutterI18n.translate(context, "serverError"),
+        FlutterI18n.translate(context, "marketPriceFetchFailed"),
         path: DashboardViewRoute, isWarning: false);
   }
 

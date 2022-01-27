@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_details_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -17,7 +18,7 @@ class OtcDetailsScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
             centerTitle: true,
-            title: Text('OTC ${AppLocalizations.of(context).details}'),
+            title: Text('OTC ${FlutterI18n.translate(context, "details")}'),
             backgroundColor: globals.secondaryColor),
         body: Container(
             padding: EdgeInsets.all(5.0),
@@ -223,7 +224,8 @@ class OtcDetailsScreen extends StatelessWidget {
                                 Container(
                                     //  width: 50,
                                     child: Text(
-                                        AppLocalizations.of(context).quantity,
+                                        FlutterI18n.translate(
+                                            context, "quantity"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5)),
@@ -270,7 +272,8 @@ class OtcDetailsScreen extends StatelessWidget {
                                 Container(
                                     //  width: 50,
                                     child: Text(
-                                        AppLocalizations.of(context).amount,
+                                        FlutterI18n.translate(
+                                            context, "amount"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5)),
@@ -325,8 +328,8 @@ class OtcDetailsScreen extends StatelessWidget {
                                               color:
                                                   globals.grey.withAlpha(105),
                                               child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .cancel,
+                                                  FlutterI18n.translate(
+                                                      context, "cancel"),
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .headline5),
@@ -337,8 +340,8 @@ class OtcDetailsScreen extends StatelessWidget {
                                             padding: EdgeInsets.all(5.0),
                                             color: globals.grey.withAlpha(105),
                                             child: Text(
-                                              AppLocalizations.of(context)
-                                                  .cancel,
+                                              FlutterI18n.translate(
+                                                  context, "cancel"),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline4,
@@ -355,8 +358,8 @@ class OtcDetailsScreen extends StatelessWidget {
                                               color: globals.primaryColor,
                                               padding: EdgeInsets.all(5.0),
                                               child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .confirm,
+                                                  FlutterI18n.translate(
+                                                      context, "confirm"),
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .headline5),
@@ -367,8 +370,8 @@ class OtcDetailsScreen extends StatelessWidget {
                                             padding: EdgeInsets.all(5.0),
                                             color: globals.primaryColor,
                                             child: Text(
-                                              AppLocalizations.of(context)
-                                                  .confirm,
+                                              FlutterI18n.translate(
+                                                  context, "confirm"),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline4,

@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/constants/ui_var.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
@@ -128,8 +129,8 @@ class WalletDashboardView extends StatelessWidget {
                                     child: model.selectedCustomTokens.isNotEmpty
                                         ? Text(
                                             ' ' +
-                                                AppLocalizations.of(context)
-                                                    .editTokenList,
+                                                FlutterI18n.translate(
+                                                    context, "editTokenList"),
                                             style: TextStyle(
                                                 color: white,
                                                 fontSize: 11,
@@ -137,8 +138,8 @@ class WalletDashboardView extends StatelessWidget {
                                           )
                                         : Text(
                                             ' ' +
-                                                AppLocalizations.of(context)
-                                                    .addToken,
+                                                FlutterI18n.translate(
+                                                    context, "addToken"),
                                             style: TextStyle(
                                                 color: white, fontSize: 10)),
                                   ),
@@ -424,7 +425,8 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                         Container(
                           padding: EdgeInsets.only(left: 5),
                           child: Text(
-                            AppLocalizations.of(context).hideSmallAmountAssets,
+                            FlutterI18n.translate(
+                                context, "hideSmallAmountAssets"),
                             style: model.isShowFavCoins
                                 ? Theme.of(context)
                                     .textTheme
@@ -470,7 +472,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                             color: white,
                           ),
                           label: Text(
-                            AppLocalizations.of(context).getFree + ' FAB',
+                            FlutterI18n.translate(context, "getFree") + ' FAB',
                             style: Theme.of(context).textTheme.headline6,
                           )),
                     )),
@@ -498,7 +500,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
             //         ),
             //         UIHelper.horizontalSpaceSmall,
             //         Text(
-            //           "${AppLocalizations.of(context).gas}: ${NumberUtil().truncateDoubleWithoutRouding(model.gasAmount, precision: 6).toString()}",
+            //           "${FlutterI18n.translate(context, "gas")}: ${NumberUtil().truncateDoubleWithoutRouding(model.gasAmount, precision: 6).toString()}",
             //           style: Theme.of(context)
             //               .textTheme
             //               .headline5
@@ -512,7 +514,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
             //           padding: EdgeInsets.all(0),
             //           onPressed: () {},
             //           child: Text(
-            //             AppLocalizations.of(context).addGas,
+            //             FlutterI18n.translate(context, "addGas"),
             //             style: Theme.of(context)
             //                 .textTheme
             //                 .headline6
@@ -559,7 +561,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
       model.isUpdateWallet
           ? Container(
               child: TextButton(
-              child: Text(AppLocalizations.of(context).updateWallet),
+              child: Text(FlutterI18n.translate(context, "updateWallet")),
               onPressed: () => model.updateWallet(),
             ))
           : Container(),
@@ -692,7 +694,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                               height: 40,
                             ),
                             SizedBox(height: 5),
-                            Text(AppLocalizations.of(context).customTokens,
+                            Text(FlutterI18n.translate(context, "customTokens"),
                                 style: TextStyle(
                                     fontSize: 12, color: Colors.white)),
                           ],
@@ -707,22 +709,23 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                   horizontal: 15, vertical: 5),
                               child: Row(
                                 children: [
-                                  Text(AppLocalizations.of(context).logo),
+                                  Text(FlutterI18n.translate(context, "logo")),
                                   UIHelper.horizontalSpaceMedium,
                                   Expanded(
                                       flex: 1,
-                                      child: Text(
-                                          AppLocalizations.of(context).symbol)),
+                                      child: Text(FlutterI18n.translate(
+                                          context, "symbol"))),
                                   Expanded(
                                       flex: 3,
                                       child: Text(
-                                        AppLocalizations.of(context).balance,
+                                        FlutterI18n.translate(
+                                            context, "balance"),
                                         textAlign: TextAlign.center,
                                       )),
                                   Expanded(
                                       flex: 1,
-                                      child: Text(
-                                          AppLocalizations.of(context).action))
+                                      child: Text(FlutterI18n.translate(
+                                          context, "action")))
                                 ],
                               ),
                             ),
@@ -836,9 +839,10 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                         ),
                                                         Expanded(
                                                           child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)
-                                                                  .receive,
+                                                              FlutterI18n
+                                                                  .translate(
+                                                                      context,
+                                                                      "receive"),
                                                               style: TextStyle(
                                                                   fontSize: 10,
                                                                   color:
@@ -866,9 +870,10 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                         ),
                                                         Expanded(
                                                           child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)
-                                                                  .send,
+                                                              FlutterI18n
+                                                                  .translate(
+                                                                      context,
+                                                                      "send"),
                                                               style: TextStyle(
                                                                   fontSize: 10,
                                                                   color:
@@ -1024,7 +1029,8 @@ Widget _coinDetailsCard(
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.only(right: 5.0),
-                            child: Text(AppLocalizations.of(context).available,
+                            child: Text(
+                                FlutterI18n.translate(context, "available"),
                                 style: Theme.of(context).textTheme.headline6),
                           ),
                           model.isBusy
@@ -1059,7 +1065,8 @@ Widget _coinDetailsCard(
                           Padding(
                             padding: const EdgeInsets.only(
                                 top: 2.0, right: 5.0, bottom: 2.0),
-                            child: Text(AppLocalizations.of(context).locked,
+                            child: Text(
+                                FlutterI18n.translate(context, "locked"),
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline6
@@ -1100,7 +1107,7 @@ Widget _coinDetailsCard(
                             child: Padding(
                               padding: const EdgeInsets.only(right: 5.0),
                               child: Text(
-                                  AppLocalizations.of(context).inExchange,
+                                  FlutterI18n.translate(context, "inExchange"),
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context).textTheme.headline6),
                             ),
@@ -1179,7 +1186,8 @@ Widget _coinDetailsCard(
                                 child: Column(
                                   children: [
                                     Text(
-                                      AppLocalizations.of(context).withdraw,
+                                      FlutterI18n.translate(
+                                          context, "withdraw"),
                                       style: Theme.of(context)
                                           .textTheme
                                           .subtitle2
@@ -1344,9 +1352,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                       const EdgeInsets.only(
                                                           right: 5.0),
                                                   child: Text(
-                                                      AppLocalizations.of(
-                                                              context)
-                                                          .available,
+                                                      FlutterI18n.translate(
+                                                          context, "available"),
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .headline6),
@@ -1404,9 +1411,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                           right: 5.0,
                                                           bottom: 2.0),
                                                   child: Text(
-                                                      AppLocalizations.of(
-                                                              context)
-                                                          .locked,
+                                                      FlutterI18n.translate(
+                                                          context, "locked"),
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .headline6
@@ -1466,9 +1472,9 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                         const EdgeInsets.only(
                                                             right: 5.0),
                                                     child: Text(
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .inExchange,
+                                                        FlutterI18n.translate(
+                                                            context,
+                                                            "inExchange"),
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: Theme.of(context)
@@ -1600,9 +1606,10 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                             child: Column(
                                                               children: [
                                                                 Text(
-                                                                  AppLocalizations.of(
-                                                                          context)
-                                                                      .deposit,
+                                                                  FlutterI18n
+                                                                      .translate(
+                                                                          context,
+                                                                          "deposit"),
                                                                   style: Theme.of(
                                                                           context)
                                                                       .textTheme
@@ -1629,9 +1636,10 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                             child: Column(
                                                               children: [
                                                                 Text(
-                                                                  AppLocalizations.of(
-                                                                          context)
-                                                                      .deposit,
+                                                                  FlutterI18n
+                                                                      .translate(
+                                                                          context,
+                                                                          "deposit"),
                                                                   style: Theme.of(
                                                                           context)
                                                                       .textTheme
@@ -1650,8 +1658,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                             )),
                                                     onTap: () => model
                                                         .routeWithWalletInfoArgs(
-                                                            model
-                                                                .favWallets[index],
+                                                            model.favWallets[index],
                                                             DepositViewRoute)),
                                                 Divider(
                                                   endIndent: 5,
@@ -1664,9 +1671,10 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                       child: Column(
                                                         children: [
                                                           Text(
-                                                            AppLocalizations.of(
-                                                                    context)
-                                                                .withdraw,
+                                                            FlutterI18n
+                                                                .translate(
+                                                                    context,
+                                                                    "withdraw"),
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
@@ -1760,7 +1768,9 @@ class TotalBalanceWidget extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).totalWalletBalance,
+                          Text(
+                              FlutterI18n.translate(
+                                  context, "totalWalletBalance"),
                               style: Theme.of(context)
                                   .textTheme
                                   .headline4
@@ -1859,8 +1869,8 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 3.0),
                                   child: Text(
-                                      AppLocalizations.of(context)
-                                          .totalExchangeBalance,
+                                      FlutterI18n.translate(
+                                          context, "totalExchangeBalance"),
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline6
@@ -1885,8 +1895,8 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 3.0),
                                   child: Text(
-                                      AppLocalizations.of(context)
-                                          .totalExchangeBalance,
+                                      FlutterI18n.translate(
+                                          context, "totalExchangeBalance"),
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline4
@@ -1975,9 +1985,9 @@ class AddGasRow extends StatelessWidget {
               Showcase(
                 key: model.globalKeyOne,
                 //  titleTextStyle:TextStyle(decoration:T ),
-                title: AppLocalizations.of(context).note + ':',
-                description:
-                    AppLocalizations.of(context).walletDashboardInstruction1,
+                title: FlutterI18n.translate(context, "note") + ':',
+                description: FlutterI18n.translate(
+                    context, "walletDashboardInstruction1"),
                 child: TweenAnimationBuilder(
                     duration: Duration(milliseconds: 500),
                     tween: tween,
@@ -2010,8 +2020,8 @@ class DepositWidget extends StatelessWidget {
             ? Showcase(
                 key: model.globalKeyTwo,
                 descTextStyle: TextStyle(fontSize: 9, color: black),
-                description:
-                    AppLocalizations.of(context).walletDashboardInstruction2,
+                description: FlutterI18n.translate(
+                    context, "walletDashboardInstruction2"),
                 child: buildPaddingDeposit(context),
               )
             : buildPaddingDeposit(context),
@@ -2025,7 +2035,7 @@ class DepositWidget extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              AppLocalizations.of(context).deposit,
+              FlutterI18n.translate(context, "deposit"),
               style:
                   Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 8),
             ),

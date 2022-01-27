@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 class VerifyMnemonicWalletView extends StatelessWidget {
   final List<TextEditingController> mnemonicTextController;
@@ -37,7 +38,8 @@ class VerifyMnemonicWalletView extends StatelessWidget {
             children: <Widget>[
               Expanded(
                   child: Text(
-                AppLocalizations.of(context).warningImportOrConfirmMnemonic,
+                FlutterI18n.translate(
+                    context, "warningImportOrConfirmMnemonic"),
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline4,
               )),

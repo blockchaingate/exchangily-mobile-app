@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -39,7 +40,7 @@ class CampaignLoginScreenState extends BaseState {
   // INIT
   init() async {
     setBusy(true);
-    setErrorMessage(AppLocalizations.of(context).checkingAccountDetails);
+    setErrorMessage(FlutterI18n.translate(context, "checkingAccountDetails"));
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var loginToken = prefs.getString('loginToken');
     log.w('login token $loginToken');
@@ -64,7 +65,7 @@ class CampaignLoginScreenState extends BaseState {
         }
       }).catchError((err) {
         log.e('getMemberRewardByToken catch');
-        setErrorMessage(AppLocalizations.of(context).serverError);
+        setErrorMessage(FlutterI18n.translate(context, "serverError"));
         setBusy(false);
       });
     } else {
@@ -86,7 +87,7 @@ class CampaignLoginScreenState extends BaseState {
             descStyle: Theme.of(context).textTheme.bodyText1,
             titleStyle: Theme.of(context).textTheme.headline5),
         context: context,
-        title: AppLocalizations.of(context).pleaseEnterYourEmailAddress,
+        title: FlutterI18n.translate(context, "pleaseEnterYourEmailAddress"),
         closeFunction: () {
           Navigator.of(context, rootNavigator: true).pop();
           FocusScope.of(context).requestFocus(FocusNode());
@@ -119,8 +120,9 @@ class CampaignLoginScreenState extends BaseState {
                     log.e('reset pass message $message');
 
                     sharedService.showInfoFlushbar(
-                        AppLocalizations.of(context).passwordResetError,
-                        AppLocalizations.of(context).pleaseEnterTheCorrectEmail,
+                        FlutterI18n.translate(context, "passwordResetError"),
+                        FlutterI18n.translate(
+                            context, "pleaseEnterTheCorrectEmail"),
                         Icons.cancel,
                         globals.red,
                         context);
@@ -128,9 +130,9 @@ class CampaignLoginScreenState extends BaseState {
                     log.w('reset password success $res');
 
                     sharedService.showInfoFlushbar(
-                        AppLocalizations.of(context).passwordReset,
-                        AppLocalizations.of(context)
-                            .resetPasswordEmailInstruction,
+                        FlutterI18n.translate(context, "passwordReset"),
+                        FlutterI18n.translate(
+                            context, "resetPasswordEmailInstruction"),
                         Icons.check,
                         globals.green,
                         context);
@@ -147,7 +149,7 @@ class CampaignLoginScreenState extends BaseState {
               padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 7),
               // model.busy is not working here and same reason that it does not show the error when desc field is empty
               child: Text(
-                AppLocalizations.of(context).confirm,
+                FlutterI18n.translate(context, "confirm"),
                 style: Theme.of(context).textTheme.headline5,
               ),
             ),
@@ -162,7 +164,7 @@ class CampaignLoginScreenState extends BaseState {
               FocusScope.of(context).requestFocus(FocusNode());
             },
             child: Text(
-              AppLocalizations.of(context).cancel,
+              FlutterI18n.translate(context, "cancel"),
               style: Theme.of(context).textTheme.headline5,
             ),
           ),
@@ -177,7 +179,7 @@ class CampaignLoginScreenState extends BaseState {
     await campaignService.login(user).then((res) async {
       // json deconde in campaign api let us see the response then its properties
       if (res == null) {
-        setErrorMessage(AppLocalizations.of(context).serverError);
+        setErrorMessage(FlutterI18n.translate(context, "serverError"));
         return false;
       }
       String error = res['message'];
@@ -203,11 +205,12 @@ class CampaignLoginScreenState extends BaseState {
   checkCredentials() {
     setBusy(true);
     isLogging = true;
-    setErrorMessage(AppLocalizations.of(context).checkingCredentials);
+    setErrorMessage(FlutterI18n.translate(context, "checkingCredentials"));
     if (emailTextController.text.isEmpty) {
-      setErrorMessage(AppLocalizations.of(context).pleaseEnterYourEmailAddress);
+      setErrorMessage(
+          FlutterI18n.translate(context, "pleaseEnterYourEmailAddress"));
     } else if (passwordTextController.text.isEmpty) {
-      setErrorMessage(AppLocalizations.of(context).pleaseFillYourPassword);
+      setErrorMessage(FlutterI18n.translate(context, "pleaseFillYourPassword"));
     } else {
       user = new User(
           email: emailTextController.text,

@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
@@ -31,8 +32,8 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                       flex: 1,
                       child: Text(
                           order.bidOrAsk
-                              ? AppLocalizations.of(context).buy
-                              : AppLocalizations.of(context).sell,
+                              ? FlutterI18n.translate(context, "buy")
+                              : FlutterI18n.translate(context, "sell"),
                           style: Theme.of(context).textTheme.headline6.copyWith(
                                 color: Color(
                                     (order.bidOrAsk) ? 0xFF0da88b : 0xFFe2103c),

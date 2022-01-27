@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/member_profile.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
@@ -157,13 +158,13 @@ class CampaignDashboardScreenState extends BaseState {
         String level = member.membership;
         if (level == 'gold') {
           memberLevelTextColor = 0xffE6BE8A;
-          memberLevel = AppLocalizations.of(context).gold;
+          memberLevel = FlutterI18n.translate(context, "gold");
         } else if (level == 'diamond') {
           memberLevelTextColor = 0xffffffff;
-          memberLevel = AppLocalizations.of(context).diamond;
+          memberLevel = FlutterI18n.translate(context, "diamond");
         } else {
           memberLevelTextColor = 0xff696969;
-          memberLevel = AppLocalizations.of(context).silver;
+          memberLevel = FlutterI18n.translate(context, "silver");
         }
         //assignColorAccordingToMemberLevel(level);
 
@@ -190,13 +191,13 @@ class CampaignDashboardScreenState extends BaseState {
     log.w('Entry assignColorAccordingToMemberLevel $memberLevel');
     if (memberLevel == 'gold') {
       memberLevelTextColor = 0xffE6BE8A;
-      memberLevel = AppLocalizations.of(context).gold;
+      memberLevel = FlutterI18n.translate(context, "gold");
     } else if (memberLevel == 'diamond') {
       memberLevelTextColor = 0xffffffff;
-      memberLevel = AppLocalizations.of(context).diamond;
+      memberLevel = FlutterI18n.translate(context, "diamond");
     } else {
       memberLevelTextColor = 0xff696969;
-      memberLevel = AppLocalizations.of(context).silver;
+      memberLevel = FlutterI18n.translate(context, "silver");
     }
     log.e('Exit assignColorAccordingToMemberLevel $memberLevel');
   }
@@ -221,11 +222,11 @@ class CampaignDashboardScreenState extends BaseState {
         log.w(orderListFromApi.length);
         orderStatusList = [
           "",
-          AppLocalizations.of(context).waiting,
-          AppLocalizations.of(context).paid,
-          AppLocalizations.of(context).paymentReceived,
-          AppLocalizations.of(context).failed,
-          AppLocalizations.of(context).orderCancelled,
+          FlutterI18n.translate(context, "waiting"),
+          FlutterI18n.translate(context, "paid"),
+          FlutterI18n.translate(context, "paymentReceived"),
+          FlutterI18n.translate(context, "failed"),
+          FlutterI18n.translate(context, "orderCancelled"),
         ];
 
         for (int i = 0; i < orderListFromApi.length; i++) {
@@ -242,7 +243,7 @@ class CampaignDashboardScreenState extends BaseState {
         navigateByRouteName('/campaignOrderDetails', orderInfoList);
       } else {
         log.e('Api result null');
-        setErrorMessage(AppLocalizations.of(context).loadOrdersFailed);
+        setErrorMessage(FlutterI18n.translate(context, "loadOrdersFailed"));
         setBusy(false);
       }
     }).catchError((err) {

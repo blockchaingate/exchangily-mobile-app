@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
@@ -44,7 +45,7 @@ class MyOrdersView extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              AppLocalizations.of(context).serverError +
+                              FlutterI18n.translate(context, "serverError") +
                                   ': ${model.errorMessage}',
                               style: TextStyle(color: Colors.white),
                             ),
@@ -74,7 +75,7 @@ class MyOrdersView extends StatelessWidget {
                               //   child: Column(
                               //     children: [
                               //       Text(
-                              //         AppLocalizations.of(context).serverError +
+                              //         FlutterI18n.translate(context, "serverError") +
                               //             ': ${model.errorMessage}',
                               //         style: TextStyle(color: Colors.white),
                               //       ),
@@ -97,8 +98,8 @@ class MyOrdersView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                      AppLocalizations.of(context)
-                                          .showAllPairOrders,
+                                      FlutterI18n.translate(
+                                          context, "showAllPairOrders"),
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline6),
@@ -136,26 +137,26 @@ class MyOrdersView extends StatelessWidget {
                                     ),
                                     tabs: [
                                       Text(
-                                          AppLocalizations.of(context)
-                                              .allOrders,
+                                          FlutterI18n.translate(
+                                              context, "allOrders"),
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
                                       Text(
-                                          AppLocalizations.of(context)
-                                              .openOrders,
+                                          FlutterI18n.translate(
+                                              context, "openOrders"),
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
                                       Text(
-                                          AppLocalizations.of(context)
-                                              .closedOrders,
+                                          FlutterI18n.translate(
+                                              context, "closedOrders"),
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
                                       Text(
-                                          AppLocalizations.of(context)
-                                              .cancelledOrders,
+                                          FlutterI18n.translate(
+                                              context, "cancelledOrders"),
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
@@ -204,28 +205,28 @@ class MyOrdersView extends StatelessWidget {
         // ),
         Expanded(
           flex: 1,
-          child: Text(AppLocalizations.of(context).type,
+          child: Text(FlutterI18n.translate(context, "type"),
               style: Theme.of(context).textTheme.subtitle2),
         ),
         Expanded(
             flex: 2,
-            child: Text(AppLocalizations.of(context).pair,
+            child: Text(FlutterI18n.translate(context, "pair"),
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
             flex: 2,
-            child: Text(AppLocalizations.of(context).price,
+            child: Text(FlutterI18n.translate(context, "price"),
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
             flex: 2,
-            child: Text(AppLocalizations.of(context).quantity,
+            child: Text(FlutterI18n.translate(context, "quantity"),
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
             flex: 2,
-            child: Text(AppLocalizations.of(context).filledAmount,
+            child: Text(FlutterI18n.translate(context, "filledAmount"),
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
           flex: 1,
-          child: Text(AppLocalizations.of(context).cancel,
+          child: Text(FlutterI18n.translate(context, "cancel"),
               style: Theme.of(context).textTheme.subtitle2),
         ),
       ]),
@@ -256,7 +257,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
           } else if (mode == LoadStatus.failed) {
             body = Text("Load Failed!Click retry!");
           } else if (mode == LoadStatus.canLoading) {
-            body = Text(AppLocalizations.of(context).releaseToLoadMore);
+            body = Text(FlutterI18n.translate(context, "releaseToLoadMore"));
           } else {
             body = Text("No more Data");
           }
@@ -284,8 +285,8 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                     flex: 1,
                     child: Text(
                         order.bidOrAsk
-                            ? AppLocalizations.of(context).buy
-                            : AppLocalizations.of(context).sell,
+                            ? FlutterI18n.translate(context, "buy")
+                            : FlutterI18n.translate(context, "sell"),
                         style: Theme.of(context).textTheme.headline6.copyWith(
                               color: Color(
                                   (order.bidOrAsk) ? 0xFF0da88b : 0xFFe2103c),

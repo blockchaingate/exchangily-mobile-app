@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -71,7 +72,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 padding: EdgeInsets.only(left: 6),
                 // width: MediaQuery.of(context).size.width * 3 / 15,
                 child: Text(
-                  AppLocalizations.of(context).ticker,
+                  FlutterI18n.translate(context, "ticker"),
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
@@ -99,7 +100,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               label: Container(
                 // width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
-                  AppLocalizations.of(context).price,
+                  FlutterI18n.translate(context, "price"),
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
@@ -125,7 +126,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               label: Container(
                 //   width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
-                  '24H ${AppLocalizations.of(context).volume}',
+                  '24H ${FlutterI18n.translate(context, "volume")}',
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
@@ -149,7 +150,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
             //   label: Container(
             //     width: MediaQuery.of(context).size.width * 2 / 11,
             //     child: Text(
-            //       AppLocalizations.of(context).low,
+            //       FlutterI18n.translate(context, "low"),
             //       style: Theme.of(context).textTheme.headline6,
             //     ),
             //   ),
@@ -173,7 +174,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               label: Container(
                 //  width: MediaQuery.of(context).size.width * 2 / 15,
                 child: Text(
-                  '24H ${AppLocalizations.of(context).change}',
+                  '24H ${FlutterI18n.translate(context, "change")}',
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),

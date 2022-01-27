@@ -17,6 +17,7 @@ import 'dart:ui';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:flushbar/flushbar.dart';
@@ -60,7 +61,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).receive,
+        title: Text(FlutterI18n.translate(context, "receive"),
             style: Theme.of(context).textTheme.headline3),
         centerTitle: true,
       ),
@@ -115,8 +116,8 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                           return Container(
                             child: Center(
                               child: Text(
-                                  AppLocalizations.of(context)
-                                      .somethingWentWrong,
+                                  FlutterI18n.translate(
+                                      context, "somethingWentWrong"),
                                   textAlign: TextAlign.center),
                             ),
                           );
@@ -127,7 +128,8 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
           Container(
             padding: EdgeInsets.all(10.0),
             child: RaisedButton(
-                child: Text(AppLocalizations.of(context).saveAndShareQrCode,
+                child: Text(
+                    FlutterI18n.translate(context, "saveAndShareQrCode"),
                     style: Theme.of(context)
                         .textTheme
                         .headline4
@@ -206,7 +208,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                     ),
                   ),
                   Text(
-                    '${AppLocalizations.of(context).copyAddress}',
+                    '${FlutterI18n.translate(context, "copyAddress")}',
                     style: Theme.of(context)
                         .textTheme
                         .headline5
@@ -238,7 +240,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
     Clipboard.setData(new ClipboardData(text: address));
     Flushbar(
       backgroundColor: globals.secondaryColor.withOpacity(0.75),
-      message: AppLocalizations.of(context).addressCopied,
+      message: FlutterI18n.translate(context, "addressCopied"),
       icon: Icon(
         Icons.done,
         size: 24,

@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my_exchange_assets_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class MyExchangeAssetsView extends StatelessWidget {
                         flex: 1,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 5),
-                          child: Text(AppLocalizations.of(context).symbol,
+                          child: Text(FlutterI18n.translate(context, "symbol"),
                               style: Theme.of(context).textTheme.subtitle2),
                         ),
                       ),
@@ -39,7 +40,7 @@ class MyExchangeAssetsView extends StatelessWidget {
                         flex: 1,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 5),
-                          child: Text(AppLocalizations.of(context).coin,
+                          child: Text(FlutterI18n.translate(context, "coin"),
                               style: Theme.of(context).textTheme.subtitle2),
                         ),
                       ),
@@ -48,13 +49,14 @@ class MyExchangeAssetsView extends StatelessWidget {
                         flex: 2,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 5),
-                          child: Text(AppLocalizations.of(context).amount,
+                          child: Text(FlutterI18n.translate(context, "amount"),
                               style: Theme.of(context).textTheme.subtitle2),
                         ),
                       ),
                       Expanded(
                           flex: 2,
-                          child: Text(AppLocalizations.of(context).lockedAmount,
+                          child: Text(
+                              FlutterI18n.translate(context, "lockedAmount"),
                               style: Theme.of(context).textTheme.subtitle2)),
                     ]),
                   ),
