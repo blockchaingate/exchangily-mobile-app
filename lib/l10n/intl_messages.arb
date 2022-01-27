@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2022-01-19T11:54:05.672903",
+  "@@last_modified": "2022-01-27T09:49:57.401116",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -2265,6 +2265,12 @@
   "walletUpdateNoticeDecription": "Please provide the wallet password to verify and install the latest update",
   "@walletUpdateNoticeDecription": {
     "description": "walletUpdateNoticeDecription",
+    "type": "text",
+    "placeholders": {}
+  },
+  "favoriteTokens": "Favorite Tokens",
+  "@favoriteTokens": {
+    "description": "favoriteTokens",
     "type": "text",
     "placeholders": {}
   }

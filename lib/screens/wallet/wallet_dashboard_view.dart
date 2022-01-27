@@ -658,7 +658,11 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(MdiIcons.cookiePlusOutline, size: 16),
+                              Image.asset(
+                                'assets/images/icons/custom-token-logo.png',
+                                width: 18,
+                                color: primaryColor,
+                              )
                             ],
                           ),
                         ),
@@ -760,10 +764,10 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             // logo
-
                                             Container(
                                               width: 25,
                                               height: 25,
+                                              margin: EdgeInsets.only(left: 5),
                                               decoration: BoxDecoration(
                                                   image: DecorationImage(
                                                       image: NetworkImage(
@@ -1258,7 +1262,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                         height: 40,
                       ),
                       SizedBox(height: 5),
-                      Text("Favorite Tokens",
+                      Text(AppLocalizations.of(context).favoriteTokens,
                           style: TextStyle(fontSize: 12, color: Colors.white)),
                     ],
                   )

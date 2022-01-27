@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 
 import 'l10n/messages_all.dart';
@@ -1981,6 +1980,11 @@ class AppLocalizations {
         'Please provide the wallet password to verify and install the latest update',
         name: 'walletUpdateNoticeDecription',
         desc: 'walletUpdateNoticeDecription');
+  }
+
+  String get favoriteTokens {
+    return Intl.message('Favorite Tokens',
+        name: 'favoriteTokens', desc: 'favoriteTokens');
   }
 }
 

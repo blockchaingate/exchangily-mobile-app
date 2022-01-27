@@ -115,6 +115,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "fabLockForExgAirdrop" : MessageLookupByLibrary.simpleMessage("Fab Lock For Exg Airdrop"),
     "failed" : MessageLookupByLibrary.simpleMessage("Failed"),
     "favAssets" : MessageLookupByLibrary.simpleMessage("Favorite Assets"),
+    "favoriteTokens" : MessageLookupByLibrary.simpleMessage("Favorite Tokens"),
     "fee" : MessageLookupByLibrary.simpleMessage("Fee"),
     "filledAmount" : MessageLookupByLibrary.simpleMessage("Filled Amount"),
     "finishWalletBackup" : MessageLookupByLibrary.simpleMessage("Finish Wallet Backup"),

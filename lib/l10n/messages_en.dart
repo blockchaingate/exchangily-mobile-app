@@ -113,6 +113,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "existingWalletFound" : MessageLookupByLibrary.simpleMessage("Existing wallet found"),
     "fabLockForExgAirdrop" : MessageLookupByLibrary.simpleMessage("Fab Lock For Exg Airdrop"),
     "failed" : MessageLookupByLibrary.simpleMessage("Failed"),
+    "favoriteTokens" : MessageLookupByLibrary.simpleMessage("Favorite Tokens"),
     "fee" : MessageLookupByLibrary.simpleMessage("Fee"),
     "filledAmount" : MessageLookupByLibrary.simpleMessage("Filled Amount"),
     "finishWalletBackup" : MessageLookupByLibrary.simpleMessage("Finish Wallet Backup"),

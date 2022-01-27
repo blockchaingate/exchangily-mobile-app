@@ -2202,7 +2202,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "logo": "Logo",
+  "logo": "标志",
   "@logo": {
     "description": "wallet_dashboard_custom_token_logo",
     "type": "text",
@@ -2277,6 +2277,12 @@
   "walletUpdateNoticeDecription": "请提供钱包密码以验证并安装最新更新",
   "@walletUpdateNoticeDecription": {
     "description": "walletUpdateNoticeDecription",
+    "type": "text",
+    "placeholders": {}
+  },
+  "favoriteTokens": "收藏代币",
+  "@favoriteTokens": {
+    "description": "favoriteTokens",
     "type": "text",
     "placeholders": {}
   }

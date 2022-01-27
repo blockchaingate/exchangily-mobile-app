@@ -928,7 +928,7 @@
         "description": "continue_text",
         "type": "text",
         "placeholders": {}
-    }
+    },
     "placeOrderTransactionFailed": "下单失败",
     "@placeOrderTransactionFailed": {
         "description": "place_order_transaction_failed",
@@ -1852,7 +1852,7 @@
         "description": "flash_pay_tranfser_wrong_password",
         "type": "text",
         "placeholders": {}
-    }，
+    },
     "pleaseCorrectTheFormatOfReceiveAddress": "请输入正确的接收地址",
     "@pleaseCorrectTheFormatOfReceiveAddress": {
         "description": "flash_pay_tranfser_correct_format_of_receive_address",
@@ -2201,7 +2201,7 @@
       "type": "text",
       "placeholders": {}
     },
-    "logo": "Logo",
+    "logo": "标志",
     "@logo": {
       "description": "wallet_dashboard_custom_token_logo",
       "type": "text",
@@ -2278,6 +2278,11 @@
       "description": "walletUpdateNoticeDecription",
       "type": "text",
       "placeholders": {}
+    },
+    "favoriteTokens": "收藏代币",
+    "@favoriteTokens": {
+      "description": "favoriteTokens",
+      "type": "text",
+      "placeholders": {}
     }
-    
 }

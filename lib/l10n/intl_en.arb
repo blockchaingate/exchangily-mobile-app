@@ -2213,5 +2213,11 @@
       "description": "walletUpdateNoticeDecription",
       "type": "text",
       "placeholders": {}
+    },
+    "favoriteTokens": "Favorite Tokens",
+    "@favoriteTokens": {
+      "description": "favoriteTokens",
+      "type": "text",
+      "placeholders": {}
     }
 }
