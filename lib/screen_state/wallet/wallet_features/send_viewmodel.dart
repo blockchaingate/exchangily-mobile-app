@@ -47,7 +47,7 @@ import 'package:stacked/stacked.dart';
 class SendViewModel extends BaseViewModel {
   final log = getLogger('SendViewModel');
 
-  DialogService _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
   final apiService = locator<ApiService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
@@ -72,7 +72,7 @@ class SendViewModel extends BaseViewModel {
   bool isShowErrorDetailsButton = false;
   bool isShowDetailsMessage = false;
   String serverError = '';
-  final scaffoldKey = new GlobalKey<ScaffoldState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   final receiverWalletAddressTextController = TextEditingController();
   final amountController = TextEditingController();
   final gasPriceTextController = TextEditingController();
@@ -109,15 +109,16 @@ class SendViewModel extends BaseViewModel {
     if (storageService.customTokenData.isEmpty) await refreshBalance();
     decimalLimit =
         await walletService.getSingleCoinWalletDecimalLimit(coinName);
-    if (decimalLimit == null) decimalLimit = 8;
+    decimalLimit ??= 8;
     if (tokenType.isNotEmpty) await getNativeChainTickerBalance();
     setBusy(false);
   }
 
   // get native chain ticker balance
   getNativeChainTickerBalance() async {
-    if (fabAddress.isEmpty)
+    if (fabAddress.isEmpty) {
       fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
+    }
 
     await apiService
         .getSingleWalletBalance(fabAddress, tokenType, walletInfo.address)
@@ -228,12 +229,14 @@ class SendViewModel extends BaseViewModel {
       // in case of non-native tokens, need to check the balance of native tokens
       // so that there is fee to pay when transffering non-native tokens
       if (tokenType.isEmpty) {
-        if (isMaxAmount)
+        if (isMaxAmount) {
           finalAmount = amount - transFee;
-        else
+        } else {
           finalAmount = amount + transFee;
-      } else
+        }
+      } else {
         finalAmount = amount;
+      }
 
       finalAmount <= walletInfo.availableBalance
           ? isValidAmount = true
@@ -259,13 +262,14 @@ class SendViewModel extends BaseViewModel {
     double finalAmount = 0.0;
 
     finalAmount = await amountAfterFee(isMaxAmount: true);
-    if (transFee != 0.0)
+    if (transFee != 0.0) {
       amountController.text = NumberUtil()
           .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)
           .toString();
-    else
+    } else {
       sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).insufficientGasAmount);
+    }
     setBusy(false);
   }
 
@@ -325,7 +329,7 @@ class SendViewModel extends BaseViewModel {
           (tickerName != '') &&
           (tokenType != null) &&
           (tokenType != '')) {
-        var decimal;
+        int decimal;
 
         String contractAddr = '';
 
@@ -339,8 +343,9 @@ class SendViewModel extends BaseViewModel {
             log.e(
                 'Send transaction func: custom token from storage failed conversion');
           }
-        } else
+        } else {
           contractAddr = environment["addresses"]["smartContract"][tickerName];
+        }
 
         if (contractAddr == null) {
           await tokenListDatabaseService
@@ -370,8 +375,9 @@ class SendViewModel extends BaseViewModel {
 
       // Convert FAB to EXG format
       if (walletInfo.tokenType == 'FAB') {
-        if (!toAddress.startsWith('0x'))
+        if (!toAddress.startsWith('0x')) {
           toAddress = fabUtils.fabToExgAddress(toAddress);
+        }
       }
       log.i('OPTIONS before send $options');
 
@@ -406,7 +412,7 @@ class SendViewModel extends BaseViewModel {
             );
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
-            Future.delayed(new Duration(milliseconds: 3), () {
+            Future.delayed(const Duration(milliseconds: 3), () {
               refreshBalance();
             });
           } else if (res['broadcastTronTransactionRes']['result'] == 'false') {
@@ -420,7 +426,7 @@ class SendViewModel extends BaseViewModel {
             setBusy(false);
           }
           setBusy(false);
-        }).timeout(Duration(seconds: 25), onTimeout: () {
+        }).timeout(const Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
           setBusy(false);
           isShowErrorDetailsButton = false;
@@ -462,7 +468,7 @@ class SendViewModel extends BaseViewModel {
             //  walletService.addTxids(allTxids);
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
-            Future.delayed(new Duration(milliseconds: 30), () {
+            Future.delayed(const Duration(milliseconds: 30), () {
               refreshBalance();
             });
             return txHash;
@@ -487,7 +493,7 @@ class SendViewModel extends BaseViewModel {
             setBusy(false);
           }
           setBusy(false);
-        }).timeout(Duration(seconds: 25), onTimeout: () {
+        }).timeout(const Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
           isShowErrorDetailsButton = false;
           isShowDetailsMessage = false;
@@ -528,7 +534,7 @@ class SendViewModel extends BaseViewModel {
       WalletInfo walletInfo, double amount, String txHash) {
     String date = DateTime.now().toLocal().toString();
 
-    TransactionHistory transactionHistory = new TransactionHistory(
+    TransactionHistory transactionHistory = TransactionHistory(
       id: null,
       tickerName: walletInfo.tickerName,
       address: '',
@@ -723,29 +729,31 @@ class SendViewModel extends BaseViewModel {
         if (tokenType.isEmpty) {
           totalAmount = amount + transFee;
           log.i('total amount $totalAmount');
-        } else
-          // for tokens, fee will be paid in native tokens so just need to check if transfee is not 0
+        } else {
           totalAmount = amount;
+        }
         log.w('wallet bal ${walletInfo.availableBalance}');
-        if (totalAmount <= walletInfo.availableBalance && transFee != 0.0)
+        if (totalAmount <= walletInfo.availableBalance && transFee != 0.0) {
           checkSendAmount = true;
-        else
+        } else {
           checkSendAmount = false;
+        }
       } else if (walletInfo.tickerName == 'TRX') {
-        if (amount + 1 <= walletInfo.availableBalance)
+        if (amount + 1 <= walletInfo.availableBalance) {
           checkSendAmount = true;
-        else
+        } else {
           checkSendAmount = false;
+        }
       } else if (walletInfo.tickerName == 'USDTX') {
         double trxBalance = 0.0;
 
         trxBalance = await getTrxBalance();
         log.w('checkAmount trx bal $trxBalance');
-        if (amount <= walletInfo.availableBalance && trxBalance >= 15)
+        if (amount <= walletInfo.availableBalance && trxBalance >= 15) {
           checkSendAmount = true;
-        else {
+        } else {
           checkSendAmount = false;
-          if (trxBalance < 15)
+          if (trxBalance < 15) {
             showSimpleNotification(
                 Center(
                   child: Text(
@@ -753,6 +761,7 @@ class SendViewModel extends BaseViewModel {
                 ),
                 position: NotificationPosition.top,
                 background: sellPrice);
+          }
         }
       }
       log.i('check send amount $checkSendAmount -- trans fee $transFee');
@@ -785,7 +794,7 @@ class SendViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
 
   copyAddress(context) {
-    Clipboard.setData(new ClipboardData(text: txHash));
+    Clipboard.setData(ClipboardData(text: txHash));
     showSimpleNotification(
         Row(
           mainAxisAlignment: MainAxisAlignment.start,

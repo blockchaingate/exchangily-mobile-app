@@ -50,7 +50,7 @@ class CoinService {
 
   Future<TokenModel> getSingleTokenData(String tickerName,
       {int coinType = 0}) async {
-    var res;
+    TokenModel res;
 
 // first look coin in the local storage
 // TODO uncomment code below once save decimaldata in local storage works in wallet service
@@ -60,9 +60,10 @@ class CoinService {
     //   if (decimalDataList.containsKey(coinName))
     //     res = decimalDataList[coinName];
     // });
-    if (coinType == 0)
+    if (coinType == 0) {
       await getCoinTypeByTickerName(tickerName)
           .then((value) => coinType = value);
+    }
     // if res not found in local storage then call old token list api
     //  if (res == null || res == 0) {
     try {
@@ -114,10 +115,11 @@ class CoinService {
           .getContractAddressByCoinType(ct)
           .then((value) {
         if (value != null) {
-          if (!value.startsWith('0x'))
+          if (!value.startsWith('0x')) {
             smartContractAddress = '0x' + value;
-          else
+          } else {
             smartContractAddress = value;
+          }
         }
       });
     }
@@ -144,22 +146,23 @@ class CoinService {
 
   Future<int> getCoinTypeByTickerName(String tickerName) async {
     int coinType = 0;
-    var hardCodedCoinList;
+    MapEntry<int, String> hardCodedCoinList;
     bool isOldToken = newCoinTypeMap.containsValue(tickerName);
     print('is old token value $isOldToken');
-    if (isOldToken)
+    if (isOldToken) {
       hardCodedCoinList = newCoinTypeMap.entries
           .firstWhere((coinTypeMap) => coinTypeMap.value == tickerName);
+    }
     // var coins =
     //     coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
     if (hardCodedCoinList != null) {
       coinType = hardCodedCoinList.key;
     } else {
       await apiService.getTokenListUpdates().then((tokens) {
-        tokens.forEach((token) async {
+        for (var token in tokens) {
           //    await tokenListDatabaseService.insert(token);
           if (token.tickerName == tickerName) coinType = token.decimal;
-        });
+        }
       });
 
       // await tokenListDatabaseService

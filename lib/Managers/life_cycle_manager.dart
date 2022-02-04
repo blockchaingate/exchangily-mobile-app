@@ -7,8 +7,9 @@ import 'package:flutter/material.dart';
 
 class LifeCycleManager extends StatefulWidget {
   final Widget child;
-  LifeCycleManager({Key key, this.child}) : super(key: key);
+  const LifeCycleManager({Key key, this.child}) : super(key: key);
 
+  @override
   _LifeCycleManagerState createState() => _LifeCycleManagerState();
 }
 
@@ -36,13 +37,13 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     print('state = $state');
-     services.forEach((service) {
+     for (var service in services) {
       if (state == AppLifecycleState.resumed) {
         service.start();
       } else {
         service.stop();
       }
-    });
+    }
   }
 
   @override

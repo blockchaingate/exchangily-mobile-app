@@ -37,6 +37,7 @@ class OtcScreenState extends BaseState {
   List<String> languages = ['English', 'Chinese'];
   String selectedLanguage;
   // bool result = false;
+  @override
   String errorMessage = '';
   DialogResponse dialogResponse;
   BuildContext context;
@@ -135,11 +136,11 @@ class OtcScreenState extends BaseState {
     if (newValue == 'Chinese') {
       log.e('in zh');
 
-      AppLocalizations.load(Locale('zh', 'ZH'));
+      AppLocalizations.load(const Locale('zh', 'ZH'));
       prefs.setString('lang', 'zh');
     } else if (newValue == 'English') {
       log.e('in en');
-      AppLocalizations.load(Locale('en', 'EN'));
+      AppLocalizations.load(const Locale('en', 'EN'));
       prefs.setString('lang', 'en');
     }
     setState(ViewState.Idle);

@@ -34,7 +34,7 @@ class CampaignTeamReferralView extends StatelessWidget {
           children: <Widget>[
             Container(
               color: primaryColor.withAlpha(110),
-              padding: EdgeInsets.symmetric(horizontal: 7, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -51,7 +51,7 @@ class CampaignTeamReferralView extends StatelessWidget {
             // Members List
 
             Expanded(
-              child: Container(
+              child: SizedBox(
                 height: UIHelper.getScreenFullHeight(context),
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -62,7 +62,7 @@ class CampaignTeamReferralView extends StatelessWidget {
                       elevation: 2,
                       color: globals.walletCardColor,
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 10.0),
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
                         child: Row(
                           children: <Widget>[
                             UIHelper.horizontalSpaceSmall,

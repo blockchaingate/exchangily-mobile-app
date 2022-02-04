@@ -12,7 +12,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 class Carousel extends StatelessWidget {
   final List imageData;
   final String lang;
-  Carousel({this.imageData, this.lang});
+  const Carousel({this.imageData, this.lang});
 
   @override
   Widget build(BuildContext context) {
@@ -21,17 +21,17 @@ class Carousel extends StatelessWidget {
           model.context = context;
           await model.initState();
         },
-        builder: (context, model, child) => Container(
+        builder: (context, model, child) => SizedBox(
               height: MediaQuery.of(context).size.width * 0.45,
               child: Swiper(
                 loop: true,
                 autoplay: imageData.length > 1 ? true : false,
                 autoplayDelay: 7000,
                 // duration: 600,
-                pagination: new SwiperPagination(builder:
-                    new SwiperCustomPagination(builder:
+                pagination: SwiperPagination(builder:
+                    SwiperCustomPagination(builder:
                         (BuildContext context, SwiperPluginConfig config) {
-                  return new DotSwiperPaginationBuilder(
+                  return const DotSwiperPaginationBuilder(
                           color: Colors.white38,
                           activeColor: Colors.white,
                           size: 8.0,

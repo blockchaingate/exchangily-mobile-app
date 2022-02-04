@@ -31,7 +31,7 @@ class TxHisotryCardWidget extends StatelessWidget {
     return Card(
         elevation: 4,
         child: Container(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
             color: walletCardColor,
             child: Row(children: <Widget>[
               Expanded(
@@ -39,7 +39,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: 4),
+                        margin: const EdgeInsets.only(left: 4),
                         child: Padding(
                           padding: transaction.tickerName.length > 3
                               ? const EdgeInsets.only(left: 0.0)
@@ -48,18 +48,18 @@ class TxHisotryCardWidget extends StatelessWidget {
                               ? Column(
                                   children: [
                                     Text(
-                                        '${transaction.tickerName.split('(')[0]}',
+                                        transaction.tickerName.split('(')[0],
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6),
                                     Text(
-                                        '${transaction.tickerName.split('(')[1].substring(0, transaction.tickerName.split('(')[1].length - 1)}',
+                                        transaction.tickerName.split('(')[1].substring(0, transaction.tickerName.split('(')[1].length - 1),
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2),
                                   ],
                                 )
-                              : Text('${transaction.tickerName}',
+                              : Text(transaction.tickerName,
                                   style: Theme.of(context).textTheme.subtitle2),
                         ),
                       ),
@@ -171,7 +171,7 @@ class TxHisotryCardWidget extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
                     alignment: Alignment.centerRight,
                     child: AutoSizeText(
                       NumberUtil()

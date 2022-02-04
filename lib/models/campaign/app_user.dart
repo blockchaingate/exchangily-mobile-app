@@ -11,11 +11,11 @@ class AppUser {
       double totalTokensPurchased,
       double pointsEarned,
       String userId}) {
-    this._parentDiscount = parentDiscount ?? 0.0;
-    this._totalUSDMadeByChildren = totalUSDMadeByChildren ?? 0.0;
-    this._totalTokensPurchased = totalTokensPurchased ?? 0.0;
-    this._pointsEarned = pointsEarned ?? 0.0;
-    this._userId = userId;
+    _parentDiscount = parentDiscount ?? 0.0;
+    _totalUSDMadeByChildren = totalUSDMadeByChildren ?? 0.0;
+    _totalTokensPurchased = totalTokensPurchased ?? 0.0;
+    _pointsEarned = pointsEarned ?? 0.0;
+    _userId = userId;
   }
 
   Map<String, dynamic> toJson() => {
@@ -27,7 +27,7 @@ class AppUser {
       };
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
-    return new AppUser(
+    return AppUser(
         parentDiscount: json['parentDiscount'] as double,
         totalUSDMadeByChildren: json['totalUSDMadeByChildren'],
         totalTokensPurchased: json['totalTokensPurchased'],
@@ -37,29 +37,29 @@ class AppUser {
   double get parentDiscount => _parentDiscount;
 
   set parentDiscount(double parentDiscount) {
-    this._parentDiscount = parentDiscount;
+    _parentDiscount = parentDiscount;
   }
 
   double get totalUSDMadeByChildren => _totalUSDMadeByChildren;
 
   set totalUSDMadeByChildren(double totalUSDMadeByChildren) {
-    this._totalUSDMadeByChildren = totalUSDMadeByChildren;
+    _totalUSDMadeByChildren = totalUSDMadeByChildren;
   }
 
   double get totalTokensPurchased => _totalTokensPurchased;
 
   set totalTokensPurchased(double totalTokensPurchased) {
-    this._totalTokensPurchased = totalTokensPurchased;
+    _totalTokensPurchased = totalTokensPurchased;
   }
 
   double get pointsEarned => _pointsEarned;
 
   set pointsEarned(double pointsEarned) {
-    this._pointsEarned = pointsEarned;
+    _pointsEarned = pointsEarned;
   }
 
   String get userId => _userId;
   set userId(String userId) {
-    this._userId = userId;
+    _userId = userId;
   }
 }

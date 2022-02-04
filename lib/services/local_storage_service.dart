@@ -35,13 +35,9 @@ class LocalStorageService {
                   Instance
 ----------------------------------------------------------------------*/
   static Future<LocalStorageService> getInstance() async {
-    if (_instance == null) {
-      _instance = LocalStorageService();
-    }
+    _instance ??= LocalStorageService();
 
-    if (_preferences == null) {
-      _preferences = await SharedPreferences.getInstance();
-    }
+    _preferences ??= await SharedPreferences.getInstance();
 
     return _instance;
   }

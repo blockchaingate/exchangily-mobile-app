@@ -25,8 +25,9 @@ class VaultService {
     int userKeyLength = userTypedKey.length;
     String fixed32CharKey = '';
 
-    if (userKeyLength < 32)
+    if (userKeyLength < 32) {
       fixed32CharKey = fixed32Chars(userTypedKey, userKeyLength);
+    }
     final key = encrypt.Key.fromUtf8(
         fixed32CharKey.isEmpty ? userTypedKey : fixed32CharKey);
 
@@ -53,8 +54,9 @@ class VaultService {
     int userKeyLength = userTypedKey.length;
     String fixed32CharKey = '';
 
-    if (userKeyLength < 32)
+    if (userKeyLength < 32) {
       fixed32CharKey = fixed32Chars(userTypedKey, userKeyLength);
+    }
     final key = encrypt.Key.fromUtf8(
         fixed32CharKey.isEmpty ? userTypedKey : fixed32CharKey);
 
@@ -77,8 +79,9 @@ class VaultService {
       int userKeyLength = userTypedKey.length;
       String fixed32CharKey = '';
 
-      if (userKeyLength < 32)
+      if (userKeyLength < 32) {
         fixed32CharKey = fixed32Chars(userTypedKey, userKeyLength);
+      }
       final key = encrypt.Key.fromUtf8(
           fixed32CharKey.isEmpty ? userTypedKey : fixed32CharKey);
 
@@ -163,8 +166,9 @@ class VaultService {
 
       int userKeyLength = userTypedKey.length;
       String fixed32CharKey = '';
-      if (userKeyLength < 32)
+      if (userKeyLength < 32) {
         fixed32CharKey = fixed32Chars(userTypedKey, userKeyLength);
+      }
       final key = encrypt.Key.fromUtf8(
           fixed32CharKey.isEmpty ? userTypedKey : fixed32CharKey);
       final iv = encrypt.IV.fromLength(16);

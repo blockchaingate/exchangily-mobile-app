@@ -16,8 +16,8 @@ class OrderbookViewModel extends StreamViewModel {
 
   TradeService tradeService = locator<TradeService>();
   SharedService sharedService = locator<SharedService>();
-  Orderbook orderbook = new Orderbook();
-  PairDecimalConfig decimalConfig = new PairDecimalConfig();
+  Orderbook orderbook = Orderbook();
+  PairDecimalConfig decimalConfig = PairDecimalConfig();
 
   @override
   Stream get stream => tradeService.getOrderBookStreamByTickerName(tickerName);

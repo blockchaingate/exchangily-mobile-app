@@ -85,7 +85,7 @@ class CampaignRegisterAccountScreenState extends BaseState {
           AppLocalizations.of(context).bothPasswordFieldsShouldMatch);
     } else {
       setErrorMessage('');
-      user = new User(
+      user = User(
           email: emailTextController.text,
           password: passwordTextController.text);
       register(user);

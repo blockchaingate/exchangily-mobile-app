@@ -10,8 +10,8 @@ class ShimmerMarketPairsLayout extends StatelessWidget {
     double height = 14;
     double width = 50;
     return Container(
-      margin: EdgeInsets.all(2.0),
-      padding: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(2.0),
+      padding: const EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,11 +30,11 @@ class ShimmerMarketPairsLayout extends StatelessWidget {
                       borderRadius: BorderRadius.circular(3),
                       color: Colors.grey,
                     ),
-                    margin: EdgeInsets.symmetric(horizontal: 7),
+                    margin: const EdgeInsets.symmetric(horizontal: 7),
                     height: height,
                   ),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+                    margin: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
                     height: height,
                     width: width - 6,
                     decoration: BoxDecoration(
@@ -63,7 +63,7 @@ class ShimmerMarketPairsLayout extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 6),
+              margin: const EdgeInsets.symmetric(horizontal: 6),
               height: height,
               width: width - 15,
               decoration: BoxDecoration(

@@ -10,7 +10,7 @@ class ShimmerMarketTradesLayout extends StatelessWidget {
     double height = 20;
     double width = 50;
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -18,7 +18,7 @@ class ShimmerMarketTradesLayout extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 5),
+              margin: const EdgeInsets.symmetric(horizontal: 5),
               height: height,
               width: width - 10,
               decoration: BoxDecoration(

@@ -27,7 +27,7 @@ class LightningRemitView extends StatelessWidget {
       builder: (context, model, _) => WillPopScope(
         onWillPop: () async {
           model.onBackButtonPressed();
-          return new Future(() => false);
+          return Future(() => false);
         },
         child: Scaffold(
           body: GestureDetector(
@@ -46,10 +46,10 @@ class LightningRemitView extends StatelessWidget {
             },
             child: Container(
               color: secondaryColor,
-              margin: EdgeInsets.only(top: 40),
+              margin: const EdgeInsets.only(top: 40),
               child: Stack(children: [
                 Container(
-                  margin: EdgeInsets.all(10.0),
+                  margin: const EdgeInsets.all(10.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -69,11 +69,11 @@ class LightningRemitView extends StatelessWidget {
                                     width: 0.50),
                               ),
                               child: DropdownButton(
-                                  underline: SizedBox.shrink(),
+                                  underline: const SizedBox.shrink(),
                                   elevation: 5,
                                   isExpanded: true,
-                                  icon: Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
+                                  icon: const Padding(
+                                    padding: EdgeInsets.only(right: 8.0),
                                     child: Icon(Icons.arrow_drop_down),
                                   ),
                                   iconEnabledColor: primaryColor,
@@ -84,7 +84,7 @@ class LightningRemitView extends StatelessWidget {
                                   iconSize: 30,
                                   hint: Padding(
                                     padding: model.exchangeBalances.isEmpty
-                                        ? EdgeInsets.all(0)
+                                        ? const EdgeInsets.all(0)
                                         : const EdgeInsets.only(left: 10.0),
                                     child: model.exchangeBalances.isEmpty
                                         ? ListTile(
@@ -164,7 +164,7 @@ class LightningRemitView extends StatelessWidget {
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                               prefixIcon: IconButton(
-                                  padding: EdgeInsets.only(left: 10),
+                                  padding: const EdgeInsets.only(left: 10),
                                   alignment: Alignment.centerLeft,
                                   tooltip:
                                       AppLocalizations.of(context).scanBarCode,
@@ -186,7 +186,7 @@ class LightningRemitView extends StatelessWidget {
                                     size: 18,
                                   ),
                                   onPressed: () => model.contentPaste()),
-                              enabledBorder: OutlineInputBorder(
+                              enabledBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Color(0XFF871fff), width: 0.5)),
                               hintText: AppLocalizations.of(context)
@@ -205,9 +205,9 @@ class LightningRemitView extends StatelessWidget {
                       UIHelper.verticalSpaceSmall,
                       TextField(
                           keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
+                              const TextInputType.numberWithOptions(decimal: true),
                           decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
+                              enabledBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Color(0XFF871fff), width: 0.5)),
                               hintText:
@@ -251,7 +251,7 @@ class LightningRemitView extends StatelessWidget {
                           Expanded(
                             child: OutlineButton(
                               borderSide: BorderSide(color: primaryColor),
-                              padding: EdgeInsets.all(15),
+                              padding: const EdgeInsets.all(15),
                               color: primaryColor,
                               textColor: Colors.white,
                               onPressed: () {
@@ -265,7 +265,7 @@ class LightningRemitView extends StatelessWidget {
                           ),
                           IconButton(
                             //  borderSide: BorderSide(color: primaryColor),
-                            padding: EdgeInsets.all(15),
+                            padding: const EdgeInsets.all(15),
                             color: primaryColor,
                             // textColor: Colors.white,
                             onPressed: () async {
@@ -315,7 +315,7 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       // padding: EdgeInsets.all(10.0),
       width: double.infinity,
       child: FloatingActionButton(
@@ -324,7 +324,7 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
             decoration: BoxDecoration(
               color: primaryColor,
               border: Border.all(width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(5)),
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
             ),
             width: 400,
             height: 220,
@@ -342,13 +342,14 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
               ),
               Text(model.quantity == 0.0 ? '' : model.quantity.toString()),
               model.exchangeBalances.isNotEmpty
-                  ? Icon(Icons.arrow_drop_down)
+                  ? const Icon(Icons.arrow_drop_down)
                   : Container()
             ]),
           ),
           onPressed: () {
-            if (model.exchangeBalances.isNotEmpty)
+            if (model.exchangeBalances.isNotEmpty) {
               model.coinListBottomSheet(context);
+            }
           }),
     );
   }
@@ -359,7 +360,7 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
 class TxHistoryView extends StatelessWidget {
   final List<TransactionHistory> transactionHistory;
   final LightningRemitViewmodel model;
-  TxHistoryView({this.transactionHistory, this.model});
+  const TxHistoryView({this.transactionHistory, this.model});
   @override
   Widget build(BuildContext context) {
     /*----------------------------------------------------------------------
@@ -375,7 +376,7 @@ class TxHistoryView extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
-            padding: EdgeInsets.all(4.0),
+            padding: const EdgeInsets.all(4.0),
             child: Column(
               children: <Widget>[
                 for (var transaction in transactionHistory)
@@ -383,11 +384,11 @@ class TxHistoryView extends StatelessWidget {
                     elevation: 4,
                     child: Container(
                       padding:
-                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                          const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                       color: walletCardColor,
                       child: Row(
                         children: <Widget>[
-                          Container(
+                          SizedBox(
                             width: 45,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -395,7 +396,7 @@ class TxHistoryView extends StatelessWidget {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 3.0),
-                                  child: Text('${transaction.tickerName}',
+                                  child: Text(transaction.tickerName,
                                       style: Theme.of(context)
                                           .textTheme
                                           .subtitle2),
@@ -433,7 +434,7 @@ class TxHistoryView extends StatelessWidget {
                                         overflow: TextOverflow.ellipsis,
                                         text: TextSpan(
                                             text:
-                                                '${transaction.tickerChainTxId}',
+                                                transaction.tickerChainTxId,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2

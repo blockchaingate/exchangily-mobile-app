@@ -14,11 +14,11 @@ class MemberProfile {
       String dateCreated,
       double totalValue,
       double totalQuantities}) {
-    this._membership = membership ?? '';
-    this._walletExgAddress = walletExgAddress ?? '';
-    this._referralCode = referralCode;
-    this._totalValue = totalValue ?? 0.0;
-    this._totalQuantities = totalQuantities ?? 0.0;
+    _membership = membership ?? '';
+    _walletExgAddress = walletExgAddress ?? '';
+    _referralCode = referralCode;
+    _totalValue = totalValue ?? 0.0;
+    _totalQuantities = totalQuantities ?? 0.0;
   }
 
   Map<String, dynamic> toJson() => {
@@ -30,7 +30,7 @@ class MemberProfile {
       };
 
   factory MemberProfile.fromJson(Map<String, dynamic> json) {
-    return new MemberProfile(
+    return MemberProfile(
       membership: json['membership'] as String,
       walletExgAddress: json['walletExgAddress'] as String,
       referralCode: json['referralCode'] as int,
@@ -42,30 +42,30 @@ class MemberProfile {
   String get membership => _membership;
 
   set membership(String membership) {
-    this._membership = membership;
+    _membership = membership;
   }
 
   String get walletExgAddress => _walletExgAddress;
 
   set walletExgAddress(String walletExgAddress) {
-    this._walletExgAddress = walletExgAddress;
+    _walletExgAddress = walletExgAddress;
   }
 
   int get referralCode => _referralCode;
 
   set referralCode(int referralCode) {
-    this._referralCode = referralCode;
+    _referralCode = referralCode;
   }
 
   double get totalValue => _totalValue;
 
   set totalValue(double totalValue) {
-    this._totalValue = totalValue;
+    _totalValue = totalValue;
   }
 
   double get totalQuantities => _totalQuantities;
 
   set totalQuantities(double totalQuantities) {
-    this._totalQuantities = totalQuantities;
+    _totalQuantities = totalQuantities;
   }
 }

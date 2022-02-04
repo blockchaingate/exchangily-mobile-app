@@ -35,8 +35,9 @@ class LocalAuthService {
     // &&
 
     //     navigationService.currentRoute() != SettingViewRoute
-    if (localStorageService.hasAppGoneInTheBackgroundKey)
+    if (localStorageService.hasAppGoneInTheBackgroundKey) {
       navigationService.navigateUsingPushReplacementNamed(WalletSetupViewRoute);
+    }
     _auth.stopAuthentication();
   }
 
@@ -68,8 +69,9 @@ class LocalAuthService {
         _hasAuthorized = res;
         localStorageService.hasPhoneProtectionEnabled = true;
         localStorageService.hasCancelledBiometricAuth = false;
-        if (_hasAuthorized)
+        if (_hasAuthorized) {
           localStorageService.hasAppGoneInTheBackgroundKey = false;
+        }
         log.w('_hasAuthorized  $_hasAuthorized');
       });
     } on PlatformException catch (e) {
@@ -106,8 +108,9 @@ class LocalAuthService {
     }
     if (_isCancelled &&
         localStorageService.hasPhoneProtectionEnabled &&
-        localStorageService.hasInAppBiometricAuthEnabled)
+        localStorageService.hasInAppBiometricAuthEnabled) {
       cancelAuthentication();
+    }
 
     _authInProgress = false;
     log.i(

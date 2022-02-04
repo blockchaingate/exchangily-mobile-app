@@ -25,18 +25,18 @@ class TransactionHistory {
       double quantity,
       String tag,
       String chainName}) {
-    this._id = id;
-    this._tickerName = tickerName ?? '';
-    this._address = address ?? '';
-    this._amount = amount ?? 0.0;
-    this._date = date ?? '';
-    this._tickerChainTxId = tickerChainTxId ?? '';
-    this._kanbanTxId = kanbanTxId ?? '';
-    this._tickerChainTxStatus = tickerChainTxStatus ?? '';
-    this._kanbanTxStatus = kanbanTxStatus ?? '';
-    this._quantity = quantity ?? 0.0;
-    this._tag = tag ?? '';
-    this._chainName = chainName ?? '';
+    _id = id;
+    _tickerName = tickerName ?? '';
+    _address = address ?? '';
+    _amount = amount ?? 0.0;
+    _date = date ?? '';
+    _tickerChainTxId = tickerChainTxId ?? '';
+    _kanbanTxId = kanbanTxId ?? '';
+    _tickerChainTxStatus = tickerChainTxStatus ?? '';
+    _kanbanTxStatus = kanbanTxStatus ?? '';
+    _quantity = quantity ?? 0.0;
+    _tag = tag ?? '';
+    _chainName = chainName ?? '';
   }
 
   Map<String, dynamic> toJson() => {
@@ -73,70 +73,70 @@ class TransactionHistory {
   int get id => _id;
 
   set id(int id) {
-    this._id = id;
+    _id = id;
   }
 
   String get tickerName => _tickerName;
 
   set tickerName(String tickerName) {
-    this._tickerName = tickerName;
+    _tickerName = tickerName;
   }
 
   String get address => _address;
 
   set address(String address) {
-    this._address = address;
+    _address = address;
   }
 
   double get amount => _amount;
 
   set amount(double amount) {
-    this._amount = amount;
+    _amount = amount;
   }
 
   String get date => _date;
 
   set date(String date) {
-    this._date = date;
+    _date = date;
   }
 
   String get tickerChainTxId => _tickerChainTxId;
 
   set tickerChainTxId(String tickerChainTxId) {
-    this._tickerChainTxId = tickerChainTxId;
+    _tickerChainTxId = tickerChainTxId;
   }
 
   String get kanbanTxId => _kanbanTxId;
 
   set kanbanTxId(String kanbanTxId) {
-    this._kanbanTxId = kanbanTxId;
+    _kanbanTxId = kanbanTxId;
   }
 
   String get tickerChainTxStatus => _tickerChainTxStatus;
   set tickerChainTxStatus(String tickerChainTxStatus) {
-    this._tickerChainTxStatus = tickerChainTxStatus;
+    _tickerChainTxStatus = tickerChainTxStatus;
   }
 
   String get kanbanTxStatus => _kanbanTxStatus;
   set kanbanTxStatus(String kanbanTxStatus) {
-    this._kanbanTxStatus = kanbanTxStatus;
+    _kanbanTxStatus = kanbanTxStatus;
   }
 
   double get quantity => _quantity;
   set quantity(double quantity) {
-    this._quantity = quantity;
+    _quantity = quantity;
   }
 
   String get tag => _tag;
 
   set tag(String tag) {
-    this._tag = tag;
+    _tag = tag;
   }
 
   String get chainName => _chainName;
 
   set chainName(String chainName) {
-    this._chainName = chainName;
+    _chainName = chainName;
   }
 }
 
@@ -145,9 +145,9 @@ class TransactionHistoryList {
   TransactionHistoryList({this.transactions});
 
   factory TransactionHistoryList.fromJson(List<dynamic> parsedJson) {
-    List<TransactionHistory> transactions = new List<TransactionHistory>();
+    List<TransactionHistory> transactions = <TransactionHistory>[];
     transactions =
         parsedJson.map((i) => TransactionHistory.fromJson(i)).toList();
-    return new TransactionHistoryList(transactions: transactions);
+    return TransactionHistoryList(transactions: transactions);
   }
 }

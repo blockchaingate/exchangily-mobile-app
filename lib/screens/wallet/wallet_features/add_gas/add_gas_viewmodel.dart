@@ -81,7 +81,7 @@ class AddGasViewModel extends FutureViewModel {
     contractInfo = await walletService.getFabSmartContract(scarContractAddress,
         fxnDepositCallHex, options['gasLimit'], options['gasPrice']);
     extraAmount = contractInfo['totalFee'];
-    if (utxos != null)
+    if (utxos != null) {
       utxos.forEach((utxo) {
         var utxoValue = utxo['value'];
         print(utxoValue);
@@ -91,6 +91,7 @@ class AddGasViewModel extends FutureViewModel {
         //  print(' t ${t.toDouble()}');
         sumUtxos = sumUtxos + t.toDouble();
       });
+    }
     double amt = 0.0;
     //for (var i = 0; i < sumUtxos; i + 0.05) {
     // totalAmount =
@@ -226,7 +227,7 @@ class AddGasViewModel extends FutureViewModel {
     sumUtxos = 0.0;
     int i = 1;
 
-    utxos.forEach((utxo) {
+    for (var utxo in utxos) {
       var utxoValue = utxo['value'];
       print(utxoValue);
       // double utxoValueDouble = bigNum2Double(utxo['value']);
@@ -238,7 +239,7 @@ class AddGasViewModel extends FutureViewModel {
         utxosNeeded = i;
       }
       i++;
-    });
+    }
     log.e('totalAmount $totalAmount -- sumUtxos $sumUtxos');
     log.i('utxosNeeded $utxosNeeded');
 

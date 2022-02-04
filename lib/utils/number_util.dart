@@ -183,9 +183,9 @@ class DecimalTextInputFormatter extends TextInputFormatter {
     String num = "[0-9]*$dp";
 
     if (activatedNegativeValues) {
-      _exp = new RegExp("^((((-){0,1})|((-){0,1}[0-9]$num))){0,1}\$");
+      _exp = RegExp("^((((-){0,1})|((-){0,1}[0-9]$num))){0,1}\$");
     } else {
-      _exp = new RegExp("^($num){0,1}\$");
+      _exp = RegExp("^($num){0,1}\$");
     }
   }
 

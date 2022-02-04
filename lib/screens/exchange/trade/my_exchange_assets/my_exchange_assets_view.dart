@@ -4,7 +4,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
-import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
+import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:stacked/stacked.dart';
 
 class MyExchangeAssetsView extends StatelessWidget {
@@ -16,14 +16,14 @@ class MyExchangeAssetsView extends StatelessWidget {
       viewModelBuilder: () => MyExchangeAssetsViewModel(),
       builder: (context, model, _) => Container(
         child: model.isBusy
-            ? ShimmerLayout(
+            ? const ShimmerLayout(
                 layoutType: 'marketTrades',
               )
             : Column(
                 children: [
                   Container(
                     color: walletCardColor,
-                    padding: EdgeInsets.all(5.0),
+                    padding: const EdgeInsets.all(5.0),
                     child: Row(children: <Widget>[
                       UIHelper.horizontalSpaceSmall,
                       Expanded(
@@ -76,7 +76,7 @@ class MyExchangeAssetsView extends StatelessWidget {
                                     flex: 1,
                                     child: Container(
                                         padding:
-                                            EdgeInsets.symmetric(vertical: 7),
+                                            const EdgeInsets.symmetric(vertical: 7),
                                         //  margin: EdgeInsets.only(right: 10.0),
                                         decoration: BoxDecoration(
                                           borderRadius:

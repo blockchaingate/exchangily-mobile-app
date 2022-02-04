@@ -28,7 +28,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   final log = getLogger('MoveToWalletViewmodel');
 
   final client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
-  DialogService _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
@@ -67,11 +67,11 @@ class MoveToWalletViewmodel extends BaseViewModel {
   String message = '';
 
   bool isWithdrawChoicePopup = false;
-  TokenModel token = new TokenModel();
+  TokenModel token = TokenModel();
   int decimalLimit = 6;
   String ercSmartContractAddress = '';
-  TokenModel ercChainToken = new TokenModel();
-  TokenModel mainChainToken = new TokenModel();
+  TokenModel ercChainToken = TokenModel();
+  TokenModel mainChainToken = TokenModel();
   bool isSubmittingTx = false;
   var tokenType;
 
@@ -188,23 +188,23 @@ class MoveToWalletViewmodel extends BaseViewModel {
               //:
               AlertDialog(
             titlePadding: EdgeInsets.zero,
-            contentPadding: EdgeInsets.all(5.0),
+            contentPadding: const EdgeInsets.all(5.0),
             elevation: 5,
             backgroundColor: walletCardColor.withOpacity(0.85),
             title: Container(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               color: secondaryColor.withOpacity(0.5),
               child: Center(
                   child: Text(
-                      '${AppLocalizations.of(context).withdrawPopupNote}')),
+                      AppLocalizations.of(context).withdrawPopupNote)),
             ),
             titleTextStyle: headText5,
             contentTextStyle: TextStyle(color: grey),
             content: Container(
-              padding: EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5.0),
               child: isWithdrawChoice
                   ? Container(
-                      padding: EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       child: StatefulBuilder(builder:
                           (BuildContext context, StateSetter setState) {
                         return Column(
@@ -257,14 +257,16 @@ class MoveToWalletViewmodel extends BaseViewModel {
                                                           false;
                                                       if (walletInfo
                                                               .tickerName !=
-                                                          'FAB')
+                                                          'FAB') {
                                                         walletInfo.tokenType =
                                                             'FAB';
+                                                      }
                                                       if (walletInfo
                                                               .tickerName ==
-                                                          'FAB')
+                                                          'FAB') {
                                                         walletInfo.tokenType =
                                                             '';
+                                                      }
                                                       updateTickerForErc =
                                                           walletInfo.tickerName;
                                                       log.i(
@@ -277,9 +279,10 @@ class MoveToWalletViewmodel extends BaseViewModel {
                                                           true;
                                                       if (walletInfo
                                                               .tickerName !=
-                                                          'TRX')
+                                                          'TRX') {
                                                         walletInfo.tokenType =
                                                             'TRX';
+                                                      }
 
                                                       isSpeicalTronTokenWithdraw =
                                                           true;
@@ -333,10 +336,11 @@ class MoveToWalletViewmodel extends BaseViewModel {
                                                           !isShowTrxTsWalletBalance) {
                                                         setWithdrawLimit(
                                                             'USDT');
-                                                      } else
+                                                      } else {
                                                         setWithdrawLimit(
                                                             walletInfo
                                                                 .tickerName);
+                                                      }
                                                       setBusy(false);
                                                     }
                                                   });
@@ -602,10 +606,10 @@ class MoveToWalletViewmodel extends BaseViewModel {
                 data: ThemeData.dark(),
                 child: CupertinoAlertDialog(
                   title: Container(
-                    margin: EdgeInsets.only(bottom: 5.0),
+                    margin: const EdgeInsets.only(bottom: 5.0),
                     child: Center(
                         child: Text(
-                      '${AppLocalizations.of(context).note}',
+                      AppLocalizations.of(context).note,
                       style: headText4.copyWith(
                           color: primaryColor, fontWeight: FontWeight.w500),
                     )),
@@ -643,13 +647,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
                   ),
                   actions: <Widget>[
                     Container(
-                      margin: EdgeInsets.all(5),
+                      margin: const EdgeInsets.all(5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           CupertinoButton(
-                            padding: EdgeInsets.only(left: 5),
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                            padding: const EdgeInsets.only(left: 5),
+                            borderRadius: const BorderRadius.all(Radius.circular(4)),
                             child: Text(
                               AppLocalizations.of(context).close,
                               textAlign: TextAlign.center,
@@ -668,19 +672,19 @@ class MoveToWalletViewmodel extends BaseViewModel {
                 ))
             : AlertDialog(
                 titlePadding: EdgeInsets.zero,
-                contentPadding: EdgeInsets.all(5.0),
+                contentPadding: const EdgeInsets.all(5.0),
                 elevation: 5,
                 backgroundColor: walletCardColor.withOpacity(0.85),
                 title: Container(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   color: secondaryColor.withOpacity(0.5),
                   child: Center(
-                      child: Text('${AppLocalizations.of(context).note}')),
+                      child: Text(AppLocalizations.of(context).note)),
                 ),
                 titleTextStyle: headText4.copyWith(fontWeight: FontWeight.bold),
                 contentTextStyle: TextStyle(color: grey),
                 content: Container(
-                  padding: EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.all(5.0),
                   child: !isTSWalletInfo
                       ? Column(
                           mainAxisSize: MainAxisSize.min,
@@ -773,7 +777,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    token = new TokenModel();
+    token = TokenModel();
     int ct = 0;
     await coinService.getCoinTypeByTickerName(ticker).then((value) {
       ct = value;
@@ -783,16 +787,18 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (res != null) {
         token = res;
         if (_groupValue == 'ETH') ercChainToken = token;
-        if (_groupValue == 'TRX' || _groupValue == 'FAB')
+        if (_groupValue == 'TRX' || _groupValue == 'FAB') {
           mainChainToken = token;
+        }
       } else {
         await coinService.getSingleTokenData(ticker).then((resFromApi) {
           if (resFromApi != null) {
             print('token from api res ${resFromApi.toJson()}');
             token = resFromApi;
             if (_groupValue == 'ETH') ercChainToken = token;
-            if (_groupValue == 'TRX' || _groupValue == 'FAB')
+            if (_groupValue == 'TRX' || _groupValue == 'FAB') {
               mainChainToken = token;
+            }
           }
         });
       }
@@ -869,10 +875,11 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (_groupValue == 'ETH') await getEthChainBalance();
       if (_groupValue == 'TRX') await getTrxUsdtTsWalletBalance();
 
-      if (_groupValue == 'FAB')
+      if (_groupValue == 'FAB') {
         tickerName == 'FAB'
             ? await getFabBalance()
             : await getFabChainBalance(tickerName);
+      }
     }
     setBusy(false);
   }
@@ -900,11 +907,11 @@ class MoveToWalletViewmodel extends BaseViewModel {
     log.e(
         'getFabChainBalance tokenlist db empty, in else now-- getting data from api');
     await apiService.getTokenListUpdates().then((tokens) {
-      tokens.forEach((tokenRes) {
+      for (var tokenRes in tokens) {
         if (tokenRes.tickerName == 'USDTX') {
           smartContractAddress = tokenRes.contract;
         }
-      });
+      }
     });
 
     String trxOfficialddress = coinService.getCoinOfficalAddress('TRX');
@@ -935,7 +942,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
     setBusy(true);
     var address = sharedService.getEXGOfficialAddress();
 
-    var smartContractAddress;
+    String smartContractAddress;
     await coinService
         .getSmartContractAddressByTickerName(tickerName)
         .then((value) => smartContractAddress = value);
@@ -1039,17 +1046,18 @@ class MoveToWalletViewmodel extends BaseViewModel {
         await setWithdrawLimit('BST');
       } else if (walletInfo.tickerName == 'EXGE' && isShowFabChainBalance) {
         await setWithdrawLimit('EXG');
-      } else
+      } else {
         await setWithdrawLimit(walletInfo.tickerName);
+      }
     } else if (value == 'TRX') {
       isShowTrxTsWalletBalance = true;
       //   if (walletInfo.tickerName != 'TRX') walletInfo.tokenType = 'TRX';
 
       isSpeicalTronTokenWithdraw = true;
       log.i('chain type ${walletInfo.tokenType}');
-      if (walletInfo.tickerName == 'TRX' && isShowTrxTsWalletBalance)
+      if (walletInfo.tickerName == 'TRX' && isShowTrxTsWalletBalance) {
         await setWithdrawLimit('TRX');
-      else {
+      } else {
         await setWithdrawLimit('USDTX');
         tokenType = 'TRX';
       }
@@ -1077,8 +1085,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
       } else if (walletInfo.tickerName == 'USDTX' &&
           !isShowTrxTsWalletBalance) {
         await setWithdrawLimit('USDT');
-      } else
+      } else {
         await setWithdrawLimit(walletInfo.tickerName);
+      }
       setBusy(false);
     }
   }
@@ -1133,7 +1142,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
           isShowFabChainBalance &&
           amount > fabChainBalance) {
         sharedService.alertDialog(AppLocalizations.of(context).notice,
-            '${AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart + ' ' + fabChainBalance.toString() + '. ' + AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart}',
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart + ' ' + fabChainBalance.toString() + '. ' + AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
 
         setBusy(false);
@@ -1146,7 +1155,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
           !isShowFabChainBalance &&
           amount > ethChainBalance) {
         sharedService.alertDialog(AppLocalizations.of(context).notice,
-            '${AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart + ' ' + ethChainBalance.toString() + '. ' + AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart}',
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart + ' ' + ethChainBalance.toString() + '. ' + AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
 
         setBusy(false);
@@ -1156,7 +1165,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
           !isShowFabChainBalance &&
           amount > trxTsWalletBalance) {
         sharedService.alertDialog(AppLocalizations.of(context).notice,
-            '${AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart + ' ' + trxTsWalletBalance.toString() + '. ' + AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart}',
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart + ' ' + trxTsWalletBalance.toString() + '. ' + AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
         setBusy(false);
         return;
@@ -1232,7 +1241,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
               serverError = '';
               isShowErrorDetailsButton = false;
               message = txId;
-              Future.delayed(new Duration(seconds: 3), () {
+              Future.delayed(const Duration(seconds: 3), () {
                 getSingleCoinExchangeBal();
               });
             } else {
@@ -1272,7 +1281,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
               serverError = '';
               isShowErrorDetailsButton = false;
               message = txId;
-              Future.delayed(new Duration(seconds: 3), () {
+              Future.delayed(const Duration(seconds: 3), () {
                 getSingleCoinExchangeBal();
               });
             } else {

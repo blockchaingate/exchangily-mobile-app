@@ -26,13 +26,14 @@ import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignPaymentScreenState extends BaseState {
   final log = getLogger('PaymentScreenState');
-  NavigationService _navigationService = locator<NavigationService>();
+  final NavigationService _navigationService = locator<NavigationService>();
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
@@ -41,7 +42,7 @@ class CampaignPaymentScreenState extends BaseState {
       locator<TokenListDatabaseService>();
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
-  ApiService _apiService = locator<ApiService>();
+  final ApiService _apiService = locator<ApiService>();
 
   final sendAmountTextController = TextEditingController();
   String _groupValue;
@@ -225,7 +226,7 @@ class CampaignPaymentScreenState extends BaseState {
         return txHash;
       })
           // Coin send timeout
-          .timeout(Duration(seconds: 25), onTimeout: () {
+          .timeout(const Duration(seconds: 25), onTimeout: () {
         log.e('In coin send time out');
         setBusy(false);
         isConfirming = false;
@@ -269,7 +270,7 @@ class CampaignPaymentScreenState extends BaseState {
       userData = res;
 
       // contructing campaign order object to send to buy coin api request
-      campaignOrder = new CampaignOrder(
+      campaignOrder = CampaignOrder(
           memberId: userData.id,
           walletAdd: exgWalletAddress,
           paymentType: _groupValue,
@@ -369,9 +370,10 @@ class CampaignPaymentScreenState extends BaseState {
     uiOrderStatusList.add(orderStatusList[status]);
     orderInfoList.add(orderListFromApi[i]);
     log.w(orderListFromApi[i].toJson());
-    if (orderListFromApi[i].txId != '')
+    if (orderListFromApi[i].txId != '') {
       usdtUnconfirmedOrderQuantity =
           usdtUnconfirmedOrderQuantity + orderListFromApi[i].quantity;
+    }
     log.e(
         'add order in the list totalOrderAmount $usdtUnconfirmedOrderQuantity');
   }
@@ -414,10 +416,10 @@ class CampaignPaymentScreenState extends BaseState {
               ],
             ),
             TextField(
+              maxLengthEnforcement: MaxLengthEnforcement.enforced,
               minLines: 1,
               maxLength: 100,
-              maxLengthEnforced: true,
-              style: TextStyle(color: globals.white),
+              style: const TextStyle(color: globals.white),
               controller: updateOrderDescriptionController,
               obscureText: false,
               decoration: InputDecoration(

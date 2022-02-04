@@ -20,7 +20,7 @@ import '../../../shared/globals.dart' as globals;
 
 class Gas extends StatelessWidget {
   final double gasAmount;
-  Gas({Key key, this.gasAmount}) : super(key: key);
+  const Gas({Key key, this.gasAmount}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class Gas extends StatelessWidget {
           minWidth: 70.0,
           height: 24,
           color: globals.primaryColor,
-          padding: EdgeInsets.all(0),
+          padding: const EdgeInsets.all(0),
           onPressed: () {
             Navigator.pushNamed(context, '/addGas');
           },

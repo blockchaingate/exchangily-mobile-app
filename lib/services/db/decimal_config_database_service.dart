@@ -20,14 +20,14 @@ import 'package:path/path.dart';
 class DecimalConfigDatabaseService {
   final log = getLogger('DecimalConfigDatabaseService');
 
-  static final _databaseName = 'decimal_config_database.db';
+  static const _databaseName = 'decimal_config_database.db';
   final String tableName = 'decimal_config';
  
   final String columnName = 'name';
   final String columnPriceDecimal = 'priceDecimal';
   final String columnQtyDecimal = 'qtyDecimal';
 
-  static final _databaseVersion = 5;
+  static const _databaseVersion = 5;
   static Future<Database> _database;
   String path = '';
 

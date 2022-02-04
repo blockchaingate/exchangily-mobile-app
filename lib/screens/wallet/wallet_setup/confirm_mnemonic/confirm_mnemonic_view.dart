@@ -38,7 +38,7 @@ class ConfirmMnemonicView extends StatelessWidget {
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async {
           model.onBackButtonPressed();
-          return new Future(() => false);
+          return Future(() => false);
         },
         child: Scaffold(
           appBar: AppBar(
@@ -51,7 +51,7 @@ class ConfirmMnemonicView extends StatelessWidget {
               ),
               backgroundColor: secondaryColor),
           body: Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: ListView(
               scrollDirection: Axis.vertical,
               children: <Widget>[
@@ -133,10 +133,10 @@ class ConfirmMnemonicView extends StatelessWidget {
                               )),
                           UIHelper.verticalSpaceSmall,
                           Container(
-                            margin: EdgeInsets.symmetric(
+                            margin: const EdgeInsets.symmetric(
                               vertical: 0,
                             ),
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 5),
                             child: GridView.extent(
                                 maxCrossAxisExtent: 125,
@@ -145,7 +145,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                                 crossAxisSpacing: 10,
                                 shrinkWrap: true,
                                 childAspectRatio: 2,
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 children: List.generate(model.count, (i) {
                                   // if (model.shuffledList.isEmpty)
                                   //   model.shuffledList = model.randomMnemonicList;
@@ -162,7 +162,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                                     controller: model.tapTextControllerList[i],
                                     textAlign: TextAlign.center,
                                     textAlignVertical:
-                                        TextAlignVertical(y: 0.7),
+                                        const TextAlignVertical(y: 0.7),
                                     enableInteractiveSelection:
                                         false, // readonly
                                     // enabled: false, // if false use cant see the selection border around
@@ -181,7 +181,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                                               ? green
                                               : primaryColor,
                                       filled: true,
-                                      hintText: '$singleWord',
+                                      hintText: singleWord,
                                       hintMaxLines: 1,
                                       hintStyle: TextStyle(
                                           color: white,
@@ -203,7 +203,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                         ],
                       ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(primaryColor),

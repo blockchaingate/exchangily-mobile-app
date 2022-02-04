@@ -16,6 +16,7 @@ import 'dart:convert';
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:http/src/response.dart';
 import '../environments/environment.dart';
 
 import 'package:convert/convert.dart';
@@ -82,7 +83,7 @@ class BtcUtils {
   }
 
   Future getBtcTransactionStatus(String txid) async {
-    var response;
+    Response response;
     var url = btcBaseUrl + 'gettransactionjson/' + txid;
     try {
       response = await client.get(url);
@@ -102,7 +103,7 @@ class BtcUtils {
   }
 
   getBtcNode(root, {String tickerName, index = 0}) {
-    var coinType = environment["CoinType"]["$tickerName"].toString();
+    var coinType = environment["CoinType"][tickerName].toString();
     var node =
         root.derivePath("m/44'/" + coinType + "'/0'/0/" + index.toString());
     return node;
@@ -110,7 +111,7 @@ class BtcUtils {
 
   String getBtcAddressForNode(node, {String tickerName}) {
     return P2PKH(
-            data: new PaymentData(pubkey: node.publicKey),
+            data: PaymentData(pubkey: node.publicKey),
             //  new P2PKHData(pubkey: node.publicKey),
             network: environment["chains"]["BTC"]["network"])
         .data

@@ -22,7 +22,6 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -104,10 +103,11 @@ class SharedService {
           .getContractAddressByTickerName(tickerName)
           .then((value) {
         if (value != null) {
-          if (!value.startsWith('0x'))
+          if (!value.startsWith('0x')) {
             smartContractAddress = '0x' + value;
-          else
+          } else {
             smartContractAddress = value;
+          }
         }
       });
       print('official smart contract address $smartContractAddress');
@@ -121,7 +121,7 @@ class SharedService {
 
   Future<PairDecimalConfig> getSinglePairDecimalConfig(String pairName,
       {String base = ''}) async {
-    PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
+    PairDecimalConfig singlePairDecimalConfig = PairDecimalConfig();
     log.i('tickername $pairName -- endswith usdt ${pairName.endsWith('USDT')}');
 
     // if (pairName == 'BTC' || pairName == 'ETH' || pairName == 'EXG')
@@ -136,7 +136,7 @@ class SharedService {
 
     if (pairName == 'USDT' || pairName == 'DUSD') {
       return singlePairDecimalConfig =
-          new PairDecimalConfig(name: pairName, priceDecimal: 2, qtyDecimal: 2);
+          PairDecimalConfig(name: pairName, priceDecimal: 2, qtyDecimal: 2);
     } else {
       log.i('base $base');
       await getAllPairDecimalConfig().then((res) {
@@ -176,10 +176,11 @@ class SharedService {
     log.e('decimal configs length in db ${result.length}');
     if (result == null || result.isEmpty) {
       await apiService.getPairDecimalConfig().then((res) async {
-        if (res == null)
+        if (res == null) {
           return null;
-        else
+        } else {
           result = res;
+        }
       });
     }
     print('returning result');
@@ -213,7 +214,7 @@ class SharedService {
 --------------------------------------------------- */
 
   Decoration gradientBoxDecoration() {
-    return BoxDecoration(
+    return const BoxDecoration(
       borderRadius: BorderRadius.all(Radius.circular(25)),
       gradient: LinearGradient(
         colors: [Colors.redAccent, Colors.yellow],
@@ -257,10 +258,10 @@ class SharedService {
             ? Container(
                 decoration: BoxDecoration(
                     color: white.withAlpha(175),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                    borderRadius: const BorderRadius.all(Radius.circular(5))),
                 width: 25,
                 height: 25,
-                child: CupertinoActivityIndicator())
+                child: const CupertinoActivityIndicator())
             : SizedBox(
                 width: 20,
                 height: 20,
@@ -370,12 +371,12 @@ class SharedService {
                     .textTheme
                     .headline5
                     .copyWith(fontWeight: FontWeight.bold),
-                contentTextStyle: TextStyle(color: globals.grey),
+                contentTextStyle: const TextStyle(color: globals.grey),
                 content: Text(
                   // add here cupertino widget to check in these small widgets first then the entire app
                   '${AppLocalizations.of(context).closeTheApp}?',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 14),
                 ),
                 actions: <Widget>[
                   TextButton(
@@ -420,20 +421,20 @@ class SharedService {
         context: context,
         builder: (context) {
           return AlertDialog(
-            titlePadding: EdgeInsets.all(0),
-            actionsPadding: EdgeInsets.all(0),
+            titlePadding: const EdgeInsets.all(0),
+            actionsPadding: const EdgeInsets.all(0),
             elevation: 5,
             backgroundColor: globals.walletCardColor.withOpacity(0.95),
             title: title == ""
                 ? Container()
                 : Container(
                     color: globals.primaryColor.withOpacity(0.1),
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Text(title),
                   ),
             titleTextStyle: Theme.of(context).textTheme.headline5,
-            contentTextStyle: TextStyle(color: globals.grey),
-            contentPadding: EdgeInsets.symmetric(horizontal: 10),
+            contentTextStyle: const TextStyle(color: globals.grey),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 10),
             content: Visibility(
               visible: message != '',
               child: StatefulBuilder(
@@ -507,14 +508,14 @@ class SharedService {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Clipboard.setData(
-                                    new ClipboardData(text: message));
+                                    ClipboardData(text: message));
                               }),
                       ),
                     )
                   : Container(),
               isDismissible
                   ? Container(
-                      margin: EdgeInsetsDirectional.only(bottom: 10),
+                      margin: const EdgeInsetsDirectional.only(bottom: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -531,7 +532,7 @@ class SharedService {
                                 isLater
                                     ? AppLocalizations.of(context).later
                                     : AppLocalizations.of(context).close,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white, fontSize: 12),
                               ),
                             ),
@@ -551,11 +552,11 @@ class SharedService {
                           isWebsite
                               ? FlatButton(
                                   color: primaryColor,
-                                  padding: EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(5),
                                   child: Center(
                                     child: Text(
                                       AppLocalizations.of(context).website,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.white, fontSize: 12),
                                     ),
                                   ),
@@ -569,11 +570,11 @@ class SharedService {
                           isUpdate
                               ? FlatButton(
                                   color: green,
-                                  padding: EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(5),
                                   child: Center(
                                     child: Text(
                                       AppLocalizations.of(context).updateNow,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.white, fontSize: 12),
                                     ),
                                   ),
@@ -623,7 +624,7 @@ class SharedService {
       //   color: globals.primaryColor,
       // ),
       // leftBarIndicatorColor: leftBarColor,
-      duration: Duration(seconds: 5),
+      duration: const Duration(seconds: 5),
       isDismissible: true,
     ).show(context);
   }
@@ -633,7 +634,7 @@ class SharedService {
 --------------------------------------------------- */
 
   copyAddress(context, text) {
-    Clipboard.setData(new ClipboardData(text: text));
+    Clipboard.setData(ClipboardData(text: text));
     Flushbar(
       backgroundColor: globals.secondaryColor.withOpacity(0.75),
       message: AppLocalizations.of(context).addressCopied,
@@ -643,7 +644,7 @@ class SharedService {
         color: globals.primaryColor,
       ),
       leftBarIndicatorColor: globals.green,
-      duration: Duration(seconds: 4),
+      duration: const Duration(seconds: 4),
     ).show(context);
   }
 

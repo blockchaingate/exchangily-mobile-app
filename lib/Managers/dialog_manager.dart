@@ -27,14 +27,15 @@ import 'package:exchangilymobileapp/localizations.dart';
 
 class DialogManager extends StatefulWidget {
   final Widget child;
-  DialogManager({Key key, this.child}) : super(key: key);
+  const DialogManager({Key key, this.child}) : super(key: key);
 
+  @override
   _DialogManagerState createState() => _DialogManagerState();
 }
 
 class _DialogManagerState extends State<DialogManager> {
   final log = getLogger('DialogManager');
-  DialogService _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
   final _vaultService = locator<VaultService>();
   TextEditingController controller = TextEditingController();
 
@@ -246,7 +247,7 @@ class _DialogManagerState extends State<DialogManager> {
                   encryptedMnemonic =
                       await coreWalletDatabaseService.getEncryptedMnemonic();
                   try {
-                    if (encryptedMnemonic == null) encryptedMnemonic = '';
+                    encryptedMnemonic ??= '';
                   } catch (err) {
                     log.e(
                         'failed to assign empty string to null encrypted mnemonic variable');

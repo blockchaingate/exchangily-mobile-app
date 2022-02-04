@@ -8,7 +8,7 @@ import 'package:validators/validators.dart';
 
 class CacheImage extends StatefulWidget {
   final BoxFit fit;
-  CacheImage(this.url, {this.fit});
+  const CacheImage(this.url, {this.fit});
   final String url;
 
   @override
@@ -29,7 +29,7 @@ class _CacheImageState extends State<CacheImage> {
     // print("Image status: isurl: $isurl  isasset: $isasset url: widget.url");
 
     return isurl
-        ? new CachedNetworkImage(
+        ? CachedNetworkImage(
             imageUrl: isurl
                 ? widget.url
                 : "http://www.netzerotools.com/assets/images/msa-10162695-workman-arc-flash-full-body-harness.png",
@@ -44,8 +44,8 @@ class _CacheImageState extends State<CacheImage> {
                 ),
               );
             },
-            errorWidget: (context, url, error) => new Icon(Icons.error),
-            fit: widget.fit != null ? widget.fit : BoxFit.cover,
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+            fit: widget.fit ?? BoxFit.cover,
           )
         : Image(
             image: AssetImage(

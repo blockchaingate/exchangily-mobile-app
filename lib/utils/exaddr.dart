@@ -147,7 +147,7 @@ decodeBase58Address (address) {
 
 encodeAsLegacy (decoded) {
   var versionByte = VERSION_BYTE[Format['Legacy']][decoded['network']][decoded['type']];
-  var buffer = new Uint8List(decoded['hash'].length + 1);
+  var buffer = Uint8List(decoded['hash'].length + 1);
   buffer[0] = versionByte;
   for(var i=0;i<decoded['hash'].length;i++) {
     buffer[i + 1] = decoded['hash'][i];
@@ -162,7 +162,7 @@ encodeAsKbpay (decoded) {
   var versionByte = VERSION_BYTE[Format['Kbpay']][decoded['network']][decoded['type']];
 
   //var buffer = Uint8List.fromList(decoded['hash']);
-  var buffer = new Uint8List(decoded['hash'].length + 1);
+  var buffer = Uint8List(decoded['hash'].length + 1);
   buffer[0] = versionByte;
   for(var i=0;i<decoded['hash'].length;i++) {
     buffer[i + 1] = decoded['hash'][i];

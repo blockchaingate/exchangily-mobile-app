@@ -22,7 +22,7 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 class MoveToExchangeViewModel extends BaseViewModel {
   final log = getLogger('MoveToExchangeViewModel');
 
-  DialogService _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
@@ -93,9 +93,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
   // get native chain ticker balance
   getNativeChainTickerBalance() async {
-    if (fabAddress.isEmpty)
+    if (fabAddress.isEmpty) {
       fabAddress =
           await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
+    }
 
     await apiService
         .getSingleWalletBalance(fabAddress, tokenType, walletInfo.address)
@@ -150,15 +151,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
       // in case of non-native tokens, need to check the balance of native tokens
       // so that there is fee to pay when transffering non-native tokens
       if (tokenType.isEmpty) {
-        if (isMaxAmount)
+        if (isMaxAmount) {
           finalAmount = amount - transFee;
-        else {
+        } else {
           log.e(
               'finalAmount ${amount + transFee} = amount $amount  + transFee $transFee');
           finalAmount = amount + transFee;
         }
-      } else
+      } else {
         finalAmount = amount;
+      }
     }
     finalAmount <= walletInfo.availableBalance
         ? isValidAmount = true
@@ -189,9 +191,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
       amountController.text = NumberUtil()
           .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)
           .toString();
-    } else
+    } else {
       sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).insufficientGasAmount);
+    }
     setBusy(false);
   }
 
@@ -295,8 +298,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     await refreshBalance();
 
     double finalAmount = 0.0;
-    if (!walletService.isTrx(walletInfo.tickerName))
+    if (!walletService.isTrx(walletInfo.tickerName)) {
       finalAmount = await amountAfterFee();
+    }
 
     if (amount == null ||
         finalAmount > walletInfo.availableBalance ||
@@ -347,8 +351,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       bool isCorrectAmount = true;
       double trxFee = 1.0;
-      if (amount + trxFee > walletInfo.availableBalance)
+      if (amount + trxFee > walletInfo.availableBalance) {
         isCorrectAmount = false;
+      }
       if (!isCorrectAmount) {
         sharedService.alertDialog(
             '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
@@ -368,8 +373,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (res.confirmed) {
       var seed;
       String mnemonic = res.returnedText;
-      if (walletInfo.tickerName != 'TRX' && walletInfo.tickerName != 'USDTX')
+      if (walletInfo.tickerName != 'TRX' && walletInfo.tickerName != 'USDTX') {
         seed = walletService.generateSeed(mnemonic);
+      }
 
       var gasPrice = int.tryParse(gasPriceTextController.text);
       var gasLimit = int.tryParse(gasLimitTextController.text);
@@ -377,12 +383,13 @@ class MoveToExchangeViewModel extends BaseViewModel {
       var kanbanGasPrice = int.tryParse(kanbanGasPriceTextController.text);
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
       String tickerName = walletInfo.tickerName;
-      var decimal;
+      int decimal;
       //  BigInt bigIntAmount = BigInt.tryParse(amountController.text);
       // log.w('Big int amount $bigIntAmount');
       String contractAddr = '';
-      if (walletInfo.tokenType.isNotEmpty)
+      if (walletInfo.tokenType.isNotEmpty) {
         contractAddr = environment["addresses"]["smartContract"][tickerName];
+      }
       if (contractAddr == null && tokenType != '') {
         log.i(
             '$tickerName with token type $tokenType contract is null so fetching from token database');
@@ -393,7 +400,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
           decimal = token.decimal;
         });
       }
-      if (decimal == null) decimal = decimalLimit;
+      decimal ??= decimalLimit;
       var option = {
         "gasPrice": gasPrice ?? 0,
         "gasLimit": gasLimit ?? 0,
@@ -434,7 +441,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
                 subtitle:
                     '$specialTicker ${AppLocalizations.of(context).isOnItsWay}',
                 isError: false);
-            Future.delayed(new Duration(seconds: 3), () {
+            Future.delayed(const Duration(seconds: 3), () {
               refreshBalance();
             });
           } else {
@@ -446,7 +453,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
               isShowErrorDetailsButton = true;
             }
           }
-        }).timeout(Duration(seconds: 25), onTimeout: () {
+        }).timeout(const Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
           setBusy(false);
           sharedService.alertDialog(AppLocalizations.of(context).notice,
@@ -501,7 +508,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
                         : Text(AppLocalizations.of(context)
                             .depositTransactionFailed),
                     success
-                        ? Text("")
+                        ? const Text("")
                         : ret["data"] != null
                             ? Text(ret["data"] ==
                                     'incorrect amount for two transactions'
@@ -512,7 +519,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
                   ]),
               position: NotificationPosition.bottom,
               background: primaryColor);
-          Future.delayed(new Duration(seconds: 3), () {
+          Future.delayed(const Duration(seconds: 3), () {
             refreshBalance();
           });
 

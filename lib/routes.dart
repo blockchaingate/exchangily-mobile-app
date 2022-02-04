@@ -68,7 +68,7 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => WalletSetupView());
+        return MaterialPageRoute(builder: (_) => const WalletSetupView());
 
 /*----------------------------------------------------------------------
                           Wallet Setup
@@ -77,13 +77,13 @@ class RouteGenerator {
       case ChooseWalletLanguageViewRoute:
         return MaterialPageRoute(builder: (_) => ChooseWalletLanguageView());
       case WalletSetupViewRoute:
-        return MaterialPageRoute(builder: (_) => WalletSetupView());
+        return MaterialPageRoute(builder: (_) => const WalletSetupView());
 
       case ImportWalletViewRoute:
         return MaterialPageRoute(builder: (_) => ImportWalletView());
 
       case BackupMnemonicViewRoute:
-        return MaterialPageRoute(builder: (_) => BackupMnemonicWalletScreen());
+        return MaterialPageRoute(builder: (_) => const BackupMnemonicWalletScreen());
 
       case ConfirmMnemonicViewRoute:
         return MaterialPageRoute(
@@ -100,14 +100,14 @@ class RouteGenerator {
 
       case DashboardViewRoute:
         return MaterialPageRoute(
-            settings: RouteSettings(name: 'WalletDashboardScreen'),
-            builder: (_) => WalletDashboardView());
+            settings: const RouteSettings(name: 'WalletDashboardScreen'),
+            builder: (_) => const WalletDashboardView());
 
       case AddGasViewRoute:
         return MaterialPageRoute(builder: (_) => AddGas());
 
       case SmartContractViewRoute:
-        return MaterialPageRoute(builder: (_) => SmartContract());
+        return MaterialPageRoute(builder: (_) => const SmartContract());
 
       case DepositViewRoute:
         return MaterialPageRoute(
@@ -148,7 +148,7 @@ class RouteGenerator {
 
       case MarketsViewRoute:
         return MaterialPageRoute(
-            settings: RouteSettings(name: 'MarketsView'),
+            settings: const RouteSettings(name: 'MarketsView'),
             builder: (_) => MarketsView(hideSlider: args));
 
       case '/exchangeTrade':
@@ -164,16 +164,16 @@ class RouteGenerator {
 ----------------------------------------------------------------------*/
       case '/campaignInstructions':
         return MaterialPageRoute(
-            settings: RouteSettings(name: 'CampaignInstructionScreen'),
-            builder: (_) => CampaignInstructionScreen());
+            settings: const RouteSettings(name: 'CampaignInstructionScreen'),
+            builder: (_) => const CampaignInstructionScreen());
 
       case '/campaignSingle':
         return MaterialPageRoute(
-            settings: RouteSettings(name: 'CampaignSingle'),
+            settings: const RouteSettings(name: 'CampaignSingle'),
             builder: (_) => CampaignSingle(args));
 
       case '/campaignPayment':
-        return MaterialPageRoute(builder: (_) => CampaignPaymentScreen());
+        return MaterialPageRoute(builder: (_) => const CampaignPaymentScreen());
 
       case '/campaignDashboard':
         return MaterialPageRoute(builder: (_) => CampaignDashboardScreen());
@@ -211,7 +211,7 @@ class RouteGenerator {
 
       case '/campaignRegisterAccount':
         return MaterialPageRoute(
-            builder: (_) => CampaignRegisterAccountScreen());
+            builder: (_) => const CampaignRegisterAccountScreen());
 
       // case '/switchLanguage':
       //   return MaterialPageRoute(builder: (_) => LanguageScreen());
@@ -220,23 +220,23 @@ class RouteGenerator {
 ----------------------------------------------------------------------*/
       case LightningRemitViewRoute:
         return MaterialPageRoute(
-            settings: RouteSettings(name: 'LightningRemitView'),
-            builder: (_) => LightningRemitView());
+            settings: const RouteSettings(name: 'LightningRemitView'),
+            builder: (_) => const LightningRemitView());
 
 /*----------------------------------------------------------------------
                       Navigation Routes
 ----------------------------------------------------------------------*/
       case SettingViewRoute:
         return MaterialPageRoute(
-            settings: RouteSettings(name: 'SettingsScreen'),
-            builder: (_) => SettingsView());
+            settings: const RouteSettings(name: 'SettingsScreen'),
+            builder: (_) => const SettingsView());
 
       /// OTC Screen
       case '/otc':
-        return MaterialPageRoute(builder: (_) => OtcScreen());
+        return MaterialPageRoute(builder: (_) => const OtcScreen());
 
       case '/otcDetails':
-        return MaterialPageRoute(builder: (_) => OtcDetailsScreen());
+        return MaterialPageRoute(builder: (_) => const OtcDetailsScreen());
 
       default:
         return _errorRoute(settings);
@@ -249,12 +249,12 @@ class RouteGenerator {
       return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context).error,
-              style: TextStyle(color: Colors.white)),
+              style: const TextStyle(color: Colors.white)),
         ),
         body: Center(
           child: Text(
               AppLocalizations.of(context).noRouteDefined + ' ${settings.name}',
-              style: TextStyle(color: Colors.white)),
+              style: const TextStyle(color: Colors.white)),
         ),
       );
     });

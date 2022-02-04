@@ -2,7 +2,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 
-import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
+import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -15,7 +15,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
   @override
   Widget build(BuildContext context, MyOrdersViewModel model) {
     return model.isBusy
-        ? ShimmerLayout(layoutType: 'marketTrades')
+        ? const ShimmerLayout(layoutType: 'marketTrades')
         : ListView.builder(
             itemCount: orders.length,
             shrinkWrap: true,
@@ -54,10 +54,10 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                       flex: 1,
                       child: order.isActive
                           ? model.isBusy
-                              ? CircularProgressIndicator()
+                              ? const CircularProgressIndicator()
                               : IconButton(
                                   color: red,
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.close,
                                     size: 16,
                                   ),
@@ -67,7 +67,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                           : IconButton(
                               disabledColor:
                                   Theme.of(context).disabledColor.withAlpha(50),
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.close,
                                 size: 16,
                               ),

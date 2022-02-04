@@ -29,7 +29,7 @@ class CampaignInstructionScreen extends StatelessWidget {
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async {
           model.onBackButtonPressed();
-          return new Future(() => false);
+          return Future(() => false);
         },
         child: SafeArea(
           child: Scaffold(
@@ -62,7 +62,7 @@ class CampaignInstructionScreen extends StatelessWidget {
               // ),
               key: key,
               body: model.busy
-                  ? LoadingGif()
+                  ? const LoadingGif()
 
                   // Column(
                   //     mainAxisAlignment: MainAxisAlignment.center,
@@ -92,17 +92,17 @@ class CampaignInstructionScreen extends StatelessWidget {
                                       .serverBusy
                                       .toString() +
                                   "...",
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ),
                         )
-                      : model.campaignInfoList.length == 0
+                      : model.campaignInfoList.isEmpty
                           ? Center(
                               child: Container(
                                   child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
+                                children: const [
                                   Icon(
                                     Icons.event,
                                     color: Colors.white,
@@ -122,7 +122,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                   ),
                             )
                           : ListView.builder(
-                              padding: EdgeInsets.fromLTRB(10, 10, 10, 60),
+                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
                               itemCount: model.campaignInfoList.length,
                               itemBuilder: (context, index) {
                                 if (model.campaignInfoList[index]["status"] ==
@@ -130,11 +130,11 @@ class CampaignInstructionScreen extends StatelessWidget {
                                     //     &&
                                     // model.campaignInfoList[index]
                                     //     .containsKey("type")
-                                    )
+                                    ) {
                                   return Container(
                                       // height: 100,
                                       width: double.infinity,
-                                      margin: EdgeInsets.only(bottom: 10),
+                                      margin: const EdgeInsets.only(bottom: 10),
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(5),
                                         child: InkWell(
@@ -239,7 +239,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                   ),
                                                 ),
                                                 Container(
-                                                  padding: EdgeInsets.all(10),
+                                                  padding: const EdgeInsets.all(10),
                                                   child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
@@ -263,7 +263,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold)),
-                                                      SizedBox(
+                                                      const SizedBox(
                                                         height: 10,
                                                       ),
                                                       Text(
@@ -281,10 +281,10 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                                       [
                                                                       "endDate"] ??
                                                               '',
-                                                          style: TextStyle(
+                                                          style: const TextStyle(
                                                             color: Colors.white,
                                                           )),
-                                                      SizedBox(
+                                                      const SizedBox(
                                                         height: 10,
                                                       ),
                                                       Text(
@@ -298,7 +298,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                           maxLines: 4,
                                                           overflow: TextOverflow
                                                               .ellipsis,
-                                                          style: TextStyle(
+                                                          style: const TextStyle(
                                                             color: Color(
                                                                 0xffeeeeee),
                                                           )),
@@ -310,8 +310,9 @@ class CampaignInstructionScreen extends StatelessWidget {
                                           ),
                                         ),
                                       ));
-                                else
+                                } else {
                                   return Container();
+                                }
                               },
                             ),
               bottomNavigationBar: BottomNavBar(count: 3)),

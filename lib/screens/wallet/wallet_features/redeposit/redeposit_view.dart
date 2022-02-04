@@ -26,7 +26,7 @@ import '../../../../utils/string_util.dart';
 class Redeposit extends StatelessWidget {
   final WalletInfo walletInfo;
 
-  Redeposit({Key key, this.walletInfo}) : super(key: key);
+  const Redeposit({Key key, this.walletInfo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +43,12 @@ class Redeposit extends StatelessWidget {
               '${AppLocalizations.of(context).redeposit}  ${walletInfo.tickerName}  ${AppLocalizations.of(context).toExchange}',
               style: Theme.of(context).textTheme.headline4,
             ),
-            backgroundColor: Color(0XFF1f2233),
+            backgroundColor: const Color(0XFF1f2233),
           ),
-          backgroundColor: Color(0xFF1F2233),
+          backgroundColor: const Color(0xFF1F2233),
           body: Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20.0),
             child: ListView(
               children: <Widget>[
                 model.isBusy && !model.isConfirmButtonPressed
@@ -103,11 +103,11 @@ class Redeposit extends StatelessWidget {
                             style: Theme.of(context).textTheme.headline5,
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 10,
                             ),
                             child: Text(
-                              '${walletInfo.tickerName}'.toUpperCase(),
+                              walletInfo.tickerName.toUpperCase(),
                               style: Theme.of(context).textTheme.headline5,
                             ),
                           )
@@ -204,7 +204,7 @@ class Redeposit extends StatelessWidget {
                                           model.updateTransFee();
                                         },
                                         keyboardType:
-                                            TextInputType.numberWithOptions(
+                                            const TextInputType.numberWithOptions(
                                                 decimal:
                                                     true), // numnber keyboard
                                         decoration: InputDecoration(
@@ -237,7 +237,7 @@ class Redeposit extends StatelessWidget {
                     : Container(),
                 UIHelper.verticalSpaceSmall,
                 MaterialButton(
-                  padding: EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15),
                   color: primaryColor,
                   textColor: Colors.white,
                   onPressed: () {

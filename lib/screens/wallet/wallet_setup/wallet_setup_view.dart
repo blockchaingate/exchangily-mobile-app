@@ -34,10 +34,10 @@ class WalletSetupView extends StatelessWidget {
       builder: (context, WalletSetupViewmodel model, child) => WillPopScope(
         onWillPop: () {
           model.sharedService.closeApp();
-          return new Future(() => false);
+          return Future(() => false);
         },
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 40),
           color: walletCardColor,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -48,12 +48,12 @@ class WalletSetupView extends StatelessWidget {
               // UIHelper.verticalSpaceLarge,
               Column(
                 children: [
-                  Container(
+                  SizedBox(
                     height: 50,
                     child: Image.asset('assets/images/start-page/logo.png'),
                   ),
                   Container(
-                      padding: EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Text(
                         AppLocalizations.of(context).welcomeText,
                         style: Theme.of(context)
@@ -66,20 +66,20 @@ class WalletSetupView extends StatelessWidget {
               //  UIHelper.verticalSpaceLarge,
               // Middle Graphics Container
               Container(
-                padding: EdgeInsets.all(25),
+                padding: const EdgeInsets.all(25),
                 child:
                     Image.asset('assets/images/start-page/middle-design.png'),
               ),
               // UIHelper.verticalSpaceLarge,
               model.isDeleting
                   ? Text(
-                      '${AppLocalizations.of(context).deletingWallet}',
+                      AppLocalizations.of(context).deletingWallet,
                       style: Theme.of(context).textTheme.bodyText1,
                     )
                   : Container(),
               !model.isBusy && model.errorMessage.isNotEmpty
                   ? Text(
-                      '${model.errorMessage}',
+                      model.errorMessage,
                       style: Theme.of(context).textTheme.bodyText1,
                     )
                   : Container(),
@@ -102,7 +102,7 @@ class WalletSetupView extends StatelessWidget {
                             ),
                             model.isVerifying
                                 ? Text(
-                                    '${AppLocalizations.of(context).verifyingWallet}',
+                                    AppLocalizations.of(context).verifyingWallet,
                                     style:
                                         Theme.of(context).textTheme.bodyText1,
                                   )
@@ -134,7 +134,7 @@ class WalletSetupView extends StatelessWidget {
                                   ? ElevatedButton(
                                       style: ButtonStyle(
                                           shape: MaterialStateProperty.all(
-                                            StadiumBorder(
+                                            const StadiumBorder(
                                                 side: BorderSide(
                                                     color: Colors.transparent,
                                                     width: 2)),
@@ -174,7 +174,7 @@ class WalletSetupView extends StatelessWidget {
                                   ? Row(children: <Widget>[
                                       Expanded(
                                         child: Container(
-                                          margin: EdgeInsets.only(right: 5),
+                                          margin: const EdgeInsets.only(right: 5),
                                           child: ElevatedButton(
                                             style: ButtonStyle(
                                               elevation:
@@ -198,8 +198,9 @@ class WalletSetupView extends StatelessWidget {
                                                     .copyWith(
                                                         color: primaryColor)),
                                             onPressed: () {
-                                              if (!model.isBusy)
+                                              if (!model.isBusy) {
                                                 model.importCreateNav('create');
+                                              }
                                             },
                                           ),
                                         ),
@@ -227,8 +228,9 @@ class WalletSetupView extends StatelessWidget {
                                                 .copyWith(color: white),
                                           ),
                                           onPressed: () {
-                                            if (!model.isBusy)
+                                            if (!model.isBusy) {
                                               model.importCreateNav('import');
+                                            }
                                           },
                                         ),
                                       ),

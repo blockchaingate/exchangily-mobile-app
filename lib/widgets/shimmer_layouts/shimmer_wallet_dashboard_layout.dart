@@ -14,8 +14,8 @@ class ShimmerWalletDashboardLayout extends StatelessWidget {
       baseColor: white,
       highlightColor: primaryColor,
       child: Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.only(bottom: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -40,7 +40,7 @@ class ShimmerWalletDashboardLayout extends StatelessWidget {
                       color: Colors.grey),
                 ),
                 Container(
-                  margin: EdgeInsets.all(5),
+                  margin: const EdgeInsets.all(5),
                   height: height,
                   width: width,
                   decoration: BoxDecoration(
@@ -67,7 +67,7 @@ class ShimmerWalletDashboardLayout extends StatelessWidget {
                       color: Colors.grey),
                 ),
                 Container(
-                  margin: EdgeInsets.all(5),
+                  margin: const EdgeInsets.all(5),
                   height: height,
                   width: width - 15,
                   decoration: BoxDecoration(

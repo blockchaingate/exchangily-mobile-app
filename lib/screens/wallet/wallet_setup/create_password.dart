@@ -48,7 +48,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           backgroundColor: secondaryColor,
         ),
         body: Container(
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             child: ListView(
               scrollDirection: Axis.vertical,
               children: <Widget>[
@@ -76,13 +76,13 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               ))
                             : model.password.isEmpty ||
                                     model.confirmPassword.isEmpty
-                                ? Text('')
+                                ? const Text('')
                                 : Center(
                                     child: Text(
                                         AppLocalizations.of(context)
                                             .passwordDoesNotMatched,
                                         style: TextStyle(color: grey)))
-                        : Text(''),
+                        : const Text(''),
                     UIHelper.verticalSpaceSmall,
                     Center(
                         child: Text(model.errorMessage,
@@ -152,13 +152,13 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
             suffixIcon:
                 model.checkPasswordConditions && model.password.isNotEmpty
                     ? Padding(
-                        padding: EdgeInsets.only(right: 0),
+                        padding: const EdgeInsets.only(right: 0),
                         child: Icon(Icons.check, color: primaryColor))
                     : Padding(
-                        padding: EdgeInsets.only(right: 0),
+                        padding: const EdgeInsets.only(right: 0),
                         child: Icon(Icons.clear, color: grey)),
             labelText: AppLocalizations.of(context).enterPassword,
-            prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
+            prefixIcon: const Icon(Icons.lock_outline, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headline5,
             helperStyle: Theme.of(context).textTheme.headline5));
   }
@@ -181,17 +181,17 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
             ? TextStyle(color: primaryColor, fontSize: 16)
             : TextStyle(color: grey, fontSize: 16),
         decoration: InputDecoration(
-            hintStyle: TextStyle(color: Colors.white),
+            hintStyle: const TextStyle(color: Colors.white),
             suffixIcon: model.checkConfirmPasswordConditions &&
                     model.confirmPassword.isNotEmpty
                 ? Padding(
-                    padding: EdgeInsets.only(right: 0),
+                    padding: const EdgeInsets.only(right: 0),
                     child: Icon(Icons.check, color: primaryColor))
                 : Padding(
-                    padding: EdgeInsets.only(right: 0),
+                    padding: const EdgeInsets.only(right: 0),
                     child: Icon(Icons.clear, color: grey)),
             labelText: AppLocalizations.of(context).confirmPassword,
-            prefixIcon: Icon(Icons.lock, color: Colors.white),
+            prefixIcon: const Icon(Icons.lock, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headline5,
             helperStyle: Theme.of(context).textTheme.headline5));
   }
@@ -206,10 +206,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
       CreatePasswordViewModel model, BuildContext context) {
     return ButtonTheme(
       shape:
-          RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       minWidth: double.infinity,
       child: MaterialButton(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         color: primaryColor,
         textColor: Colors.white,
         onPressed: () {

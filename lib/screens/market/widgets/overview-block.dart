@@ -6,7 +6,7 @@ class MarketOverviewBlock extends StatelessWidget {
   final String pair;
   final double price;
   final double change;
-  MarketOverviewBlock(this.pair, this.price, this.change);
+  const MarketOverviewBlock(this.pair, this.price, this.change);
   @override
   Widget build(BuildContext context) {
     return Container(

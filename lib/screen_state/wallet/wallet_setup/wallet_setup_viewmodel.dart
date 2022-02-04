@@ -75,11 +75,7 @@ class WalletSetupViewmodel extends BaseViewModel {
     await versionService.checkVersion(context);
   }
 
-  test() async {
-    await walletDatabaseService.initDb();
-    var t = await walletDatabaseService.getAll();
-    print(t.length);
-  }
+
 
   Future checkVersion(context) async {
     await versionService.checkVersion(context);
@@ -116,11 +112,12 @@ class WalletSetupViewmodel extends BaseViewModel {
           // otherwise ask user for wallet password to delete the existing wallet
           await deleteWallet().whenComplete(() {
             // if not then just navigate to the route
-            if (actionType == 'import')
+            if (actionType == 'import') {
               navigationService.navigateTo(ImportWalletViewRoute,
                   arguments: actionType);
-            else if (actionType == 'create')
+            } else if (actionType == 'create') {
               navigationService.navigateTo(BackupMnemonicViewRoute);
+            }
           }).catchError((err) {
             log.e('Existing wallet deletion could not be completed');
           });
@@ -137,11 +134,12 @@ class WalletSetupViewmodel extends BaseViewModel {
           .deleteDb()
           .whenComplete(() => log.e('transaction history database deleted!!'))
           .catchError((err) => log.e('tx history database CATCH $err'));
-      if (actionType == 'import')
+      if (actionType == 'import') {
         navigationService.navigateTo(ImportWalletViewRoute,
             arguments: actionType);
-      else if (actionType == 'create')
+      } else if (actionType == 'create') {
         navigationService.navigateTo(BackupMnemonicViewRoute);
+      }
     }
   }
 
@@ -222,13 +220,13 @@ class WalletSetupViewmodel extends BaseViewModel {
         if (isWalletVerifySuccess) {
           isVerifying = false;
           goToWalletDashboard();
-          Future.delayed(new Duration(seconds: 3), () {
+          Future.delayed(const Duration(seconds: 3), () {
             setBusyForObject(isHideIcon, true);
             isHideIcon = true;
             setBusyForObject(isHideIcon, false);
           });
         } else {
-          Future.delayed(new Duration(seconds: 3), () {
+          Future.delayed(const Duration(seconds: 3), () {
             setBusyForObject(isHideIcon, true);
             isHideIcon = true;
             setBusyForObject(isHideIcon, false);
@@ -269,7 +267,7 @@ class WalletSetupViewmodel extends BaseViewModel {
   Future checkExistingWallet() async {
     setBusy(true);
 
-    var coreWalletDbData;
+    String coreWalletDbData;
     try {
       coreWalletDbData = await coreWalletDatabaseService.getEncryptedMnemonic();
     } catch (err) {
@@ -278,7 +276,7 @@ class WalletSetupViewmodel extends BaseViewModel {
     }
     if (coreWalletDbData == null || coreWalletDbData.isEmpty) {
       log.w('coreWalletDbData is null or empty');
-      var walletDatabase;
+      List walletDatabase;
       try {
         await walletDatabaseService.initDb();
         walletDatabase = await walletDatabaseService.getAll();
@@ -290,9 +288,9 @@ class WalletSetupViewmodel extends BaseViewModel {
           walletDatabase.isNotEmpty) {
         // ask user's permission to verify the wallet addresses
         // show dialog to user for this reason
-        if (!storageService.hasWalletVerified)
+        if (!storageService.hasWalletVerified) {
           await verifyWallet();
-        else {
+        } else {
           isVerifying = false;
           goToWalletDashboard();
         }
@@ -304,9 +302,9 @@ class WalletSetupViewmodel extends BaseViewModel {
     // IF THERE IS NO OLD DATA IN STORAGE BUT NEW CORE WALLET DATA IS PRESENT IN DATABASE
     // THEN VERIFY AGAIN IF STORED DATA IS NOT PREVIOUSLY VERIFIED
     else if (coreWalletDbData != null || coreWalletDbData.isNotEmpty) {
-      if (!storageService.hasWalletVerified)
+      if (!storageService.hasWalletVerified) {
         await verifyWallet();
-      else {
+      } else {
         isVerifying = false;
         goToWalletDashboard();
       }
@@ -333,11 +331,12 @@ class WalletSetupViewmodel extends BaseViewModel {
         authService.setIsCancelledValueFalse();
       }
       // bool isDeviceSupported = await authService.isDeviceSupported();
-      if (!storageService.hasPhoneProtectionEnabled)
-        //|| isDeviceSupported)
+      if (!storageService.hasPhoneProtectionEnabled) {
         navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
-    } else
+      }
+    } else {
       navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
+    }
     setBusy(false);
 
     walletService.storeTokenListInDB();

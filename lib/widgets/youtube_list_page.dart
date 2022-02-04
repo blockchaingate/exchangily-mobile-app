@@ -10,7 +10,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class YoutubeListPage extends StatefulWidget {
   final Map videoObj;
 
-  YoutubeListPage({@required this.videoObj});
+  const YoutubeListPage({@required this.videoObj});
   @override
   _YoutubeListPageState createState() => _YoutubeListPageState();
 }

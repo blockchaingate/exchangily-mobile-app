@@ -38,8 +38,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
   final log = getLogger('MyOrdersViewModel');
 
   TradeService tradeService = locator<TradeService>();
-  OrderService _orderService = locator<OrderService>();
-  DialogService _dialogService = locator<DialogService>();
+  final OrderService _orderService = locator<OrderService>();
+  final DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   NavigationService navigationService = locator<NavigationService>();
   ApiService apiService = locator<ApiService>();
@@ -61,7 +61,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
   bool isFutureError = false;
 
   String onClickOrderHash = '';
-  PairDecimalConfig decimalConfig = new PairDecimalConfig();
+  PairDecimalConfig decimalConfig = PairDecimalConfig();
   bool isShowAllOrders = false;
 
   RefreshController refreshController;
@@ -69,7 +69,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
   int skip = 0;
   int count = 10;
 
-  bool _isOrderbookLoaded = false;
+  final bool _isOrderbookLoaded = false;
   bool get isOrderbookLoaded => _isOrderbookLoaded;
   String get orderCancelledText => _orderCancelledText;
 
@@ -121,16 +121,18 @@ class MyOrdersViewModel extends ReactiveViewModel {
     log.e('in loading new orders -- Skip $skip');
 
     if (isShowAllOrders) {
-      if (myAllOrders.length == 10)
+      if (myAllOrders.length == 10) {
         skip += 10;
-      else
+      } else {
         skip = 0;
+      }
       await getAllMyOrders();
     } else {
-      if (singlePairOrders.length == 10)
+      if (singlePairOrders.length == 10) {
         skip += 10;
-      else
+      } else {
         skip = 0;
+      }
       await getMyOrdersByTickerName();
     }
     log.i('skip count $skip');
@@ -161,7 +163,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
       if (data != null) {
         myAllOrders = data;
         log.e('getAllMyOrders length ${myAllOrders.length}');
-        data.forEach((element) {
+        for (var element in data) {
           /// 'amount' = orderQuantity,
           /// 'filledAmount' = filledQuantity
           // filledAmount =
@@ -177,7 +179,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
           } else if (element.isCancelled) {
             cancelledOrders.add(element);
           }
-        });
+        }
         log.w('getAllMyOrders open orders ${myOpenOrders.length}');
         log.w('getAllMyOrders close orders ${myCloseOrders.length}');
         log.w(
@@ -210,7 +212,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
         .getMyOrdersByTickerName(exgAddress, tickerName, skip: skip)
         .then((value) {
       log.e('getMyOrdersByTickerName order length ${singlePairOrders.length}');
-      singlePairOrders.forEach((element) {
+      for (var element in singlePairOrders) {
         myAllOrders = singlePairOrders;
 
         /// 'amount' = orderQuantity,
@@ -230,7 +232,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
         }
 
         // Add order lists to orders tab bar view
-      });
+      }
       log.w('getMyOrdersByTickerName open orders ${myOpenOrders.length}');
       log.w('getMyOrdersByTickerName close orders ${myCloseOrders.length}');
       log.w(
@@ -255,7 +257,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
     if (data != null) {
       myAllOrders = data;
       log.e('My order length ${myAllOrders.length}');
-      data.forEach((element) {
+      for (var element in data) {
         /// 'amount' = orderQuantity,
         /// 'filledAmount' = filledQuantity
         filledAmount = doubleAdd(element.orderQuantity, element.filledQuantity);
@@ -272,7 +274,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
         }
 
         // Add order lists to orders tab bar view
-      });
+      }
       log.w('open orders ${myOpenOrders.length}');
       log.w('close orders ${myCloseOrders.length}');
       myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
@@ -314,7 +316,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
       if (resKanban != null && resKanban["transactionHash"] != null) {
         log.w('resKanban=== $resKanban');
 
-        Timer.periodic(Duration(seconds: 2), (timer) async {
+        Timer.periodic(const Duration(seconds: 2), (timer) async {
           var res =
               await tradeService.getTxStatus(resKanban["transactionHash"]);
           if (res != null) {

@@ -32,6 +32,7 @@ class ChooseWalletLanguageScreenState extends BaseState {
   final NavigationService navigationService = locator<NavigationService>();
   final LocalStorageService storageService = locator<LocalStorageService>();
   final walletService = locator<WalletService>();
+  @override
   String errorMessage = '';
   bool isUserSettingsEmpty = false;
 
@@ -57,7 +58,7 @@ class ChooseWalletLanguageScreenState extends BaseState {
     setState(ViewState.Busy);
     //  SharedPreferences prefs = await SharedPreferences.getInstance();
     UserSettings userSettings =
-        new UserSettings(language: languageCode, theme: '');
+        UserSettings(language: languageCode, theme: '');
     await userSettingsDatabaseService.getById(1).then((res) {
       if (res != null) {
         //   userSettings.language = res.language;

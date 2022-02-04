@@ -8,7 +8,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 
 class MarketDataTable extends StatefulWidget {
   final List<Price> pairList;
-  MarketDataTable(this.pairList);
+  const MarketDataTable(this.pairList);
 
   @override
   _MarketDataTableState createState() => _MarketDataTableState(pairList);
@@ -68,7 +68,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
           columns: [
             DataColumn(
               label: Container(
-                padding: EdgeInsets.only(left: 6),
+                padding: const EdgeInsets.only(left: 6),
                 // width: MediaQuery.of(context).size.width * 3 / 15,
                 child: Text(
                   AppLocalizations.of(context).ticker,
@@ -199,7 +199,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                     cells: <DataCell>[
                       DataCell(
                         Container(
-                          padding: EdgeInsets.only(left: 6),
+                          padding: const EdgeInsets.only(left: 6),
                           // width: MediaQuery.of(context).size.width * 3 / 11,
                           // color: Colors.green,
                           child: Text(

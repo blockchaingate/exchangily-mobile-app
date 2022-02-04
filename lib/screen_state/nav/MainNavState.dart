@@ -21,6 +21,7 @@ class MainNavState extends BaseState {
   List<String> languages = ['English', 'Chinese'];
   String selectedLanguage;
   // bool result = false;
+  @override
   String errorMessage = '';
   DialogResponse dialogResponse;
   BuildContext context;

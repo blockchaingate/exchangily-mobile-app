@@ -20,7 +20,7 @@ class OtcDetailsScreen extends StatelessWidget {
             title: Text('OTC ${AppLocalizations.of(context).details}'),
             backgroundColor: globals.secondaryColor),
         body: Container(
-            padding: EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(5.0),
             // Main column
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -29,7 +29,7 @@ class OtcDetailsScreen extends StatelessWidget {
                   elevation: 4,
                   child: Container(
                     padding:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
                     color: globals.walletCardColor,
                     // height: 110,
                     child: Column(
@@ -44,7 +44,7 @@ class OtcDetailsScreen extends StatelessWidget {
                         ),
                         // Name
                         Container(
-                            padding: EdgeInsets.all(5.0),
+                            padding: const EdgeInsets.all(5.0),
                             child: Row(children: <Widget>[
                               Text(
                                 'Name: ',
@@ -57,7 +57,7 @@ class OtcDetailsScreen extends StatelessWidget {
                             ])),
                         // Volume
                         Container(
-                            padding: EdgeInsets.all(5.0),
+                            padding: const EdgeInsets.all(5.0),
                             child: Row(children: <Widget>[
                               Text(
                                 'Volume/30d: ',
@@ -70,7 +70,7 @@ class OtcDetailsScreen extends StatelessWidget {
                             ])),
                         // Completed Rate
                         Container(
-                            padding: EdgeInsets.all(5.0),
+                            padding: const EdgeInsets.all(5.0),
                             child: Row(children: <Widget>[
                               Text(
                                 'Completed Rate: ',
@@ -83,7 +83,7 @@ class OtcDetailsScreen extends StatelessWidget {
                             ])),
                         // Average coin deliver time
                         Container(
-                            padding: EdgeInsets.all(5.0),
+                            padding: const EdgeInsets.all(5.0),
                             child: Row(children: <Widget>[
                               Text(
                                 'Average Coin Deliver Time: ',
@@ -96,7 +96,7 @@ class OtcDetailsScreen extends StatelessWidget {
                             ])),
                         // Registration time
                         Container(
-                            padding: EdgeInsets.all(5.0),
+                            padding: const EdgeInsets.all(5.0),
                             child: Row(children: <Widget>[
                               Text(
                                 'Registration Time: ',
@@ -116,7 +116,7 @@ class OtcDetailsScreen extends StatelessWidget {
                   elevation: 4,
                   child: Container(
                     padding:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
                     color: globals.walletCardColor,
                     // height: 110,
                     child: Column(
@@ -136,7 +136,7 @@ class OtcDetailsScreen extends StatelessWidget {
                             children: <Widget>[
                               // Coin container
                               Container(
-                                  padding: EdgeInsets.all(5.0),
+                                  padding: const EdgeInsets.all(5.0),
                                   child: Row(children: <Widget>[
                                     Text(
                                       'Coin: ',
@@ -151,7 +151,7 @@ class OtcDetailsScreen extends StatelessWidget {
                                   ])),
                               // Quantity
                               Container(
-                                  padding: EdgeInsets.all(5.0),
+                                  padding: const EdgeInsets.all(5.0),
                                   child: Row(children: <Widget>[
                                     Text(
                                       'Quantity: ',
@@ -172,7 +172,7 @@ class OtcDetailsScreen extends StatelessWidget {
                             children: <Widget>[
                               // Limits
                               Container(
-                                  padding: EdgeInsets.all(5.0),
+                                  padding: const EdgeInsets.all(5.0),
                                   child: Row(children: <Widget>[
                                     Text(
                                       'Limits: ',
@@ -187,7 +187,7 @@ class OtcDetailsScreen extends StatelessWidget {
                                   ])),
                               // Price
                               Container(
-                                  padding: EdgeInsets.all(5.0),
+                                  padding: const EdgeInsets.all(5.0),
                                   child: Row(children: <Widget>[
                                     Text(
                                       'Price: ',
@@ -212,7 +212,7 @@ class OtcDetailsScreen extends StatelessWidget {
                   elevation: 4,
                   child: Container(
                     padding:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
                     child: Column(
                       children: <Widget>[
                         // Quantity container row
@@ -227,7 +227,7 @@ class OtcDetailsScreen extends StatelessWidget {
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5)),
-                                Container(
+                                SizedBox(
                                   width: 150,
                                   child: TextField(
                                       controller: model.quantityTextController,
@@ -237,15 +237,15 @@ class OtcDetailsScreen extends StatelessWidget {
                                       keyboardType: TextInputType
                                           .number, // numnber keyboard
                                       decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.all(10.0),
-                                          border: OutlineInputBorder(
+                                          contentPadding: const EdgeInsets.all(10.0),
+                                          border: const OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.elliptical(2, 2))),
                                           filled: true,
                                           fillColor: globals.grey.withAlpha(75),
                                           isDense: true,
                                           focusedBorder: UnderlineInputBorder(
-                                              borderRadius: BorderRadius.all(
+                                              borderRadius: const BorderRadius.all(
                                                   Radius.elliptical(2, 2)),
                                               borderSide: BorderSide(
                                                   color: globals.primaryColor,
@@ -274,7 +274,7 @@ class OtcDetailsScreen extends StatelessWidget {
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5)),
-                                Container(
+                                SizedBox(
                                   width: 150,
                                   child: TextField(
                                       controller: model.amountTextController,
@@ -284,8 +284,8 @@ class OtcDetailsScreen extends StatelessWidget {
                                       keyboardType: TextInputType
                                           .number, // numnber keyboard
                                       decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.all(10.0),
-                                          border: OutlineInputBorder(
+                                          contentPadding: const EdgeInsets.all(10.0),
+                                          border: const OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.elliptical(2, 2))),
                                           filled: true,
@@ -293,7 +293,7 @@ class OtcDetailsScreen extends StatelessWidget {
                                               globals.grey.withAlpha(105),
                                           isDense: true,
                                           focusedBorder: UnderlineInputBorder(
-                                              borderRadius: BorderRadius.all(
+                                              borderRadius: const BorderRadius.all(
                                                   Radius.elliptical(2, 2)),
                                               borderSide: BorderSide(
                                                   color: globals.primaryColor,
@@ -316,12 +316,12 @@ class OtcDetailsScreen extends StatelessWidget {
                             children: <Widget>[
                               Container(
                                   width: 100, // Providing width to button
-                                  margin: EdgeInsets.only(right: 5.0),
+                                  margin: const EdgeInsets.only(right: 5.0),
                                   child: Theme.of(context).platform ==
                                           TargetPlatform.iOS
                                       ? Center(
                                           child: CupertinoButton(
-                                              padding: EdgeInsets.all(5.0),
+                                              padding: const EdgeInsets.all(5.0),
                                               color:
                                                   globals.grey.withAlpha(105),
                                               child: Text(
@@ -334,7 +334,7 @@ class OtcDetailsScreen extends StatelessWidget {
                                         )
                                       : Center(
                                           child: RaisedButton(
-                                            padding: EdgeInsets.all(5.0),
+                                            padding: const EdgeInsets.all(5.0),
                                             color: globals.grey.withAlpha(105),
                                             child: Text(
                                               AppLocalizations.of(context)
@@ -346,14 +346,14 @@ class OtcDetailsScreen extends StatelessWidget {
                                             onPressed: () {},
                                           ),
                                         )),
-                              Container(
+                              SizedBox(
                                   width: 100, // Providing width to button
                                   child: Theme.of(context).platform ==
                                           TargetPlatform.iOS
                                       ? Center(
                                           child: CupertinoButton(
                                               color: globals.primaryColor,
-                                              padding: EdgeInsets.all(5.0),
+                                              padding: const EdgeInsets.all(5.0),
                                               child: Text(
                                                   AppLocalizations.of(context)
                                                       .confirm,
@@ -364,7 +364,7 @@ class OtcDetailsScreen extends StatelessWidget {
                                         )
                                       : Center(
                                           child: RaisedButton(
-                                            padding: EdgeInsets.all(5.0),
+                                            padding: const EdgeInsets.all(5.0),
                                             color: globals.primaryColor,
                                             child: Text(
                                               AppLocalizations.of(context)

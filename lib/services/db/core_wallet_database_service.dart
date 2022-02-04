@@ -22,7 +22,7 @@ import 'package:path/path.dart';
 class CoreWalletDatabaseService {
   final log = getLogger('CoreWalletDatabaseService');
 
-  static final _databaseName = 'wallet_core.db';
+  static const _databaseName = 'wallet_core.db';
   final String tableName = 'wallet_core';
   // database table and column names
   final String columnId = 'id';
@@ -30,7 +30,7 @@ class CoreWalletDatabaseService {
   final String columnMnemonic = "mnemonic";
   final String columnWalletBalancesBody = "walletBalancesBody";
 
-  static final _databaseVersion = 1;
+  static const _databaseVersion = 1;
   static Future<Database> _database;
   String path = '';
 
@@ -139,7 +139,7 @@ class CoreWalletDatabaseService {
     //  if (db == null) await initDb();
     String encryptedMnemonic = '';
     List<Map> res = await db.query(tableName, columns: [columnMnemonic]);
-    if (res.length != 0) if (res[0]['mnemonic'] != null) {
+    if (res.isNotEmpty) if (res[0]['mnemonic'] != null) {
       log.i('Encrypted Mnemonic --- ${res.first}');
       encryptedMnemonic = res.first['mnemonic'];
     }
@@ -151,7 +151,7 @@ class CoreWalletDatabaseService {
   Future<Map<dynamic, dynamic>> getWalletBalancesBody() async {
     await initDb();
     final Database db = await _database;
-    var finalRes;
+    Map finalRes;
     List<Map> res =
         await db.query(tableName, columns: [columnWalletBalancesBody]);
     try {
@@ -177,7 +177,6 @@ class CoreWalletDatabaseService {
       passedTicker = tickerName;
       tickerName = 'FAB';
     }
-    ;
 
     address = jsonToMap(
         res.first['walletBalancesBody'], '${tickerName.toLowerCase()}Address');

@@ -18,8 +18,8 @@ class OrderType {
   double _quantity;
 
   OrderType({double price, double quantity}) {
-    this._price = price ?? 0.0;
-    this._quantity = quantity ?? 0.0;
+    _price = price ?? 0.0;
+    _quantity = quantity ?? 0.0;
   }
 
   factory OrderType.fromJson(Map<String, dynamic> json) {
@@ -27,20 +27,20 @@ class OrderType {
         price: json['p'].toDouble(), quantity: json['q'].toDouble());
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['p'] = this._price;
-    data['q'] = this._quantity;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['p'] = _price;
+    data['q'] = _quantity;
     return data;
   }
 
   double get price => _price;
   set price(double price) {
-    this._price = price;
+    _price = price;
   }
 
   double get quantity => _quantity;
   set quantity(double quantity) {
-    this._quantity = quantity;
+    _quantity = quantity;
   }
 }
 
@@ -58,10 +58,10 @@ class Orderbook {
     double price,
     double orderQuantity,
   }) {
-    this._buyOrders = buyOrders ?? [];
-    this._sellOrders = sellOrders ?? [];
-    this._price = price ?? 0.0;
-    this._quantity = orderQuantity ?? 0.0;
+    _buyOrders = buyOrders ?? [];
+    _sellOrders = sellOrders ?? [];
+    _price = price ?? 0.0;
+    _quantity = orderQuantity ?? 0.0;
   }
 
   factory Orderbook.fromJson(Map<String, dynamic> json) {
@@ -84,31 +84,31 @@ class Orderbook {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['b'] = this._buyOrders;
-    data['s'] = this._sellOrders;
-    data['p'] = this._price;
-    data['q'] = this._quantity;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['b'] = _buyOrders;
+    data['s'] = _sellOrders;
+    data['p'] = _price;
+    data['q'] = _quantity;
     return data;
   }
 
   List<OrderType> get buyOrders => _buyOrders;
   set buyOrders(List<OrderType> buyOrders) {
-    this._buyOrders = buyOrders;
+    _buyOrders = buyOrders;
   }
 
   List<OrderType> get sellOrders => _sellOrders;
   set sellOrders(List<OrderType> sellOrders) {
-    this._sellOrders = sellOrders;
+    _sellOrders = sellOrders;
   }
 
   double get price => _price;
   set price(double price) {
-    this._price = price;
+    _price = price;
   }
 
   double get quantity => _quantity;
   set quantity(double quantity) {
-    this._quantity = quantity;
+    _quantity = quantity;
   }
 }

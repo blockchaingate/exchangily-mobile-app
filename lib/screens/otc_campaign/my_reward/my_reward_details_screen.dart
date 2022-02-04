@@ -25,7 +25,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
         children: <Widget>[
           // Static lables row
           Container(
-            margin: EdgeInsets.only(top: 5),
+            margin: const EdgeInsets.only(top: 5),
             child: Row(
               children: <Widget>[
                 Expanded(
@@ -73,7 +73,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
                         elevation: 5,
                         color: globals.walletCardColor,
                         child: Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 15.0, horizontal: 2),
                           child: Row(
                             children: <Widget>[

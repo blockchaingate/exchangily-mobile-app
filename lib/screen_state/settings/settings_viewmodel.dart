@@ -62,7 +62,8 @@ class SettingsViewmodel extends BaseViewModel {
   final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   UserSettingsDatabaseService userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();
-
+  ConfigService configService = locator<ConfigService>();
+  final authService = locator<LocalAuthService>();
   final Map<String, String> languages = {'en': 'English', 'zh': '简体中文'};
   String selectedLanguage;
   // bool result = false;
@@ -81,11 +82,10 @@ class SettingsViewmodel extends BaseViewModel {
   GlobalKey two;
   bool isShowCaseOnce;
   String baseServerUrl;
-  ConfigService configService = locator<ConfigService>();
-  final authService = locator<LocalAuthService>();
+
   bool isHKServer;
   Map<String, String> versionInfo;
-  UserSettings userSettings = new UserSettings();
+  UserSettings userSettings = UserSettings();
   bool isUserSettingsEmpty = false;
   final coinUtils = CoinUtils();
   bool _isBiometricAuth = false;
@@ -127,12 +127,13 @@ class SettingsViewmodel extends BaseViewModel {
           !storageService.hasInAppBiometricAuthEnabled;
       storageService.hasPhoneProtectionEnabled = true;
     } else if (!hasAuthorized) {
-      if (authService.isLockedOut)
+      if (authService.isLockedOut) {
         sharedService.sharedSimpleNotification(
             AppLocalizations.of(context).lockedOutTemp);
-      else if (authService.isLockedOutPerm)
+      } else if (authService.isLockedOutPerm) {
         sharedService.sharedSimpleNotification(
             AppLocalizations.of(context).lockedOutPerm);
+      }
     }
 
     if (!storageService.hasPhoneProtectionEnabled) {
@@ -437,8 +438,9 @@ class SettingsViewmodel extends BaseViewModel {
       key = languages.keys
           .firstWhere((k) => languages[k] == updatedLanguageValue);
       log.i('key in changeWalletLanguage $key');
-    } else
+    } else {
       key = updatedLanguageValue;
+    }
 // selected language should be English,Chinese or other language selected not its lang code
     selectedLanguage = key.isEmpty ? updatedLanguageValue : languages[key];
     log.w('selectedLanguage $selectedLanguage');
@@ -446,18 +448,18 @@ class SettingsViewmodel extends BaseViewModel {
         updatedLanguageValue == 'zh' ||
         key == 'zh') {
       log.e('in zh');
-      AppLocalizations.load(Locale('zh', 'ZH'));
+      AppLocalizations.load(const Locale('zh', 'ZH'));
 
-      UserSettings us = new UserSettings(id: 1, language: 'zh', theme: '');
+      UserSettings us = UserSettings(id: 1, language: 'zh', theme: '');
       await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
       storageService.language = 'zh';
     } else if (updatedLanguageValue == 'English' ||
         updatedLanguageValue == 'en' ||
         key == 'en') {
       log.e('in en');
-      AppLocalizations.load(Locale('en', 'EN'));
+      AppLocalizations.load(const Locale('en', 'EN'));
       storageService.language = 'en';
-      UserSettings us = new UserSettings(id: 1, language: 'en', theme: '');
+      UserSettings us = UserSettings(id: 1, language: 'en', theme: '');
       await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
     }
 

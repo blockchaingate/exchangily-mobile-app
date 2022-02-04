@@ -15,10 +15,10 @@ class ExchangeBalanceModel {
       int coinType,
       double unlockedAmount,
       double lockedAmount}) {
-    this._ticker = ticker ?? '';
-    this._coinType = coinType ?? 0;
-    this._unlockedAmount = unlockedAmount ?? 0.0;
-    this._lockedAmount = lockedAmount ?? 0.0;
+    _ticker = ticker ?? '';
+    _coinType = coinType ?? 0;
+    _unlockedAmount = unlockedAmount ?? 0.0;
+    _lockedAmount = lockedAmount ?? 0.0;
   }
 
   factory ExchangeBalanceModel.fromJson(Map<String, dynamic> json) {
@@ -37,33 +37,33 @@ class ExchangeBalanceModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ticker'] = this.ticker;
-    data['coinType'] = this.coinType;
-    data['unlockedAmount'] = this.unlockedAmount;
-    data['lockedAmount'] = this.lockedAmount;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['ticker'] = ticker;
+    data['coinType'] = coinType;
+    data['unlockedAmount'] = unlockedAmount;
+    data['lockedAmount'] = lockedAmount;
 
     return data;
   }
 
   String get ticker => _ticker;
   set ticker(String ticker) {
-    this._ticker = ticker;
+    _ticker = ticker;
   }
 
   int get coinType => _coinType;
   set coinType(int coinType) {
-    this._coinType = coinType;
+    _coinType = coinType;
   }
 
   double get unlockedAmount => _unlockedAmount;
   set unlockedAmount(double unlockedAmount) {
-    this._unlockedAmount = unlockedAmount;
+    _unlockedAmount = unlockedAmount;
   }
 
   double get lockedAmount => _lockedAmount;
   set lockedAmount(double lockedAmount) {
-    this._lockedAmount = lockedAmount;
+    _lockedAmount = lockedAmount;
   }
 }
 
@@ -72,8 +72,8 @@ class ExchangeBalanceModelList {
   ExchangeBalanceModelList({this.balances});
 
   factory ExchangeBalanceModelList.fromJson(List<dynamic> parsedJson) {
-    List<ExchangeBalanceModel> balances = new List<ExchangeBalanceModel>();
+    List<ExchangeBalanceModel> balances = <ExchangeBalanceModel>[];
     balances = parsedJson.map((i) => ExchangeBalanceModel.fromJson(i)).toList();
-    return new ExchangeBalanceModelList(balances: balances);
+    return ExchangeBalanceModelList(balances: balances);
   }
 }

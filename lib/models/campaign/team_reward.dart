@@ -12,8 +12,8 @@ class TeamReward {
       List<String> members,
       double totalRewardNextQuantities}) {
     this.id = id ?? '';
-    this._totalValue = totalValue ?? 0.0;
-    this._totalQuantities = totalQuantities ?? 0.0;
+    _totalValue = totalValue ?? 0.0;
+    _totalQuantities = totalQuantities ?? 0.0;
 
     this.members = members ?? '';
   }
@@ -30,30 +30,30 @@ class TeamReward {
   }
 
   Map<String, dynamic> toJson() => {
-        "id": this.id,
-        "totalValue": this._totalValue,
-        "totalQuantities": this._totalQuantities,
-        "members": this.members,
+        "id": id,
+        "totalValue": _totalValue,
+        "totalQuantities": _totalQuantities,
+        "members": members,
       };
 
   double get totalValue => _totalValue;
   set totalValue(double totalValue) {
-    this._totalValue = totalValue;
+    _totalValue = totalValue;
   }
 
   List<String> get members => _members;
   set members(List<String> members) {
-    this._members = members;
+    _members = members;
   }
 
   double get totalQuantities => _totalQuantities;
   set totalQuantities(double totalQuantities) {
-    this._totalQuantities = totalQuantities;
+    _totalQuantities = totalQuantities;
   }
 
   String get id => _id;
   set id(String id) {
-    this._id = id;
+    _id = id;
   }
 }
 
@@ -62,8 +62,8 @@ class TeamRewardList {
   TeamRewardList({this.rewards});
 
   factory TeamRewardList.fromJson(List<dynamic> parsedJson) {
-    List<TeamReward> rewards = new List<TeamReward>();
+    List<TeamReward> rewards = <TeamReward>[];
     rewards = parsedJson.map((i) => TeamReward.fromJson(i)).toList();
-    return new TeamRewardList(rewards: rewards);
+    return TeamRewardList(rewards: rewards);
   }
 }

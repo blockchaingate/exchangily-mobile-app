@@ -27,7 +27,7 @@ import 'dart:convert';
 class LoadHTMLFileToWEbView extends StatefulWidget {
   final String pair;
 
-  LoadHTMLFileToWEbView(
+  const LoadHTMLFileToWEbView(
     this.pair,
   );
   @override
@@ -47,13 +47,13 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
           model.isTradingChartModelBusy ?? false
               ? Container(
                   color: grey,
-                  padding: EdgeInsets.all(0),
-                  margin: EdgeInsets.all(0),
+                  padding: const EdgeInsets.all(0),
+                  margin: const EdgeInsets.all(0),
                   height: 280,
-                  child: Center(child: CupertinoActivityIndicator()))
+                  child: const Center(child: CupertinoActivityIndicator()))
               : Container(
-                  padding: EdgeInsets.all(0),
-                  margin: EdgeInsets.all(0),
+                  padding: const EdgeInsets.all(0),
+                  margin: const EdgeInsets.all(0),
                   height: 280,
                   child: WebView(
                     initialUrl: '',
@@ -74,7 +74,7 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
                     itemBuilder: (BuildContext context, int index) {
                       String key = model.intervalMap.keys.elementAt(index);
                       return FlatButton(
-                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
                         textColor:
                             model.intervalMap[key] == model.tradingChartInterval
                                 ? primaryColor
@@ -94,7 +94,7 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
     var lang = await userSettingsDatabaseService.getLanguage();
     // var lang = model.storageService.language;
-    if (lang == null) lang = 'en';
+    lang ??= 'en';
     if (lang == 'en') {
       lang = 'en-US';
     } else if (lang == 'zh') {

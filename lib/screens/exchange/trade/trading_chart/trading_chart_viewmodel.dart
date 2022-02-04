@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class TradingChartViewModel extends ReactiveViewModel {
-  TradeService _tradeService = locator<TradeService>();
+  final TradeService _tradeService = locator<TradeService>();
   ConfigService configService = locator<ConfigService>();
   final storageService = locator<LocalStorageService>();
   final log = getLogger('TradingChartViewModel');
@@ -38,7 +38,7 @@ class TradingChartViewModel extends ReactiveViewModel {
     _tradeService.setTradingChartInterval(interval, true);
     _tradingChartInterval = _tradeService.interval;
     log.i('tradingChartInterval $tradingChartInterval');
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       _tradeService.setTradingChartInterval(_tradingChartInterval, false);
     });
     setBusy(false);

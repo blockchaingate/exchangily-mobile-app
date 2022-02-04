@@ -32,15 +32,15 @@ class TokenModel {
       String contract,
       String minWithdraw,
       String feeWithdraw}) {
-    this._id = id;
-    this._decimal = decimal;
-    this._coinName = coinName;
-    this._chainName = chainName;
-    this._tickerName = tickerName;
-    this._tokenType = tokenType;
-    this._contract = contract;
-    this._minWithdraw = minWithdraw;
-    this._feeWithdraw = feeWithdraw;
+    _id = id;
+    _decimal = decimal;
+    _coinName = coinName;
+    _chainName = chainName;
+    _tickerName = tickerName;
+    _tokenType = tokenType;
+    _contract = contract;
+    _minWithdraw = minWithdraw;
+    _feeWithdraw = feeWithdraw;
   }
 
   factory TokenModel.fromJson(Map<String, dynamic> json) {
@@ -50,7 +50,7 @@ class TokenModel {
     var fw = json['feeWithdraw'];
     String feeWithdraw = fw.toString();
 
-    return new TokenModel(
+    return TokenModel(
         decimal: json['decimal'] as int,
         tickerName: json['tickerName'] as String,
         coinName: json['coinName'] as String,
@@ -64,83 +64,83 @@ class TokenModel {
   // To json
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
 
-    data['decimal'] = this._decimal;
-    data['tickerName'] = this._tickerName;
-    data['coinName'] = this._coinName;
-    data['chainName'] = this._chainName;
-    data['type'] = this._tokenType;
-    data['contract'] = this._contract;
-    data['minWithdraw'] = this._minWithdraw;
-    data['feeWithdraw'] = this._feeWithdraw;
+    data['decimal'] = _decimal;
+    data['tickerName'] = _tickerName;
+    data['coinName'] = _coinName;
+    data['chainName'] = _chainName;
+    data['type'] = _tokenType;
+    data['contract'] = _contract;
+    data['minWithdraw'] = _minWithdraw;
+    data['feeWithdraw'] = _feeWithdraw;
     return data;
   }
 
   void clear() {
-    this._id = null;
-    this._decimal = null;
-    this._coinName = '';
-    this._chainName = '';
-    this._tickerName = '';
-    this._tokenType = null;
-    this._contract = '';
-    this._minWithdraw = '';
-    this._feeWithdraw = '';
+    _id = null;
+    _decimal = null;
+    _coinName = '';
+    _chainName = '';
+    _tickerName = '';
+    _tokenType = null;
+    _contract = '';
+    _minWithdraw = '';
+    _feeWithdraw = '';
   }
 
   int get id => _id;
 
   set id(int id) {
-    this._id = id;
+    _id = id;
   }
 
   int get decimal => _decimal;
 
   set decimal(int decimal) {
-    this._decimal = decimal;
+    _decimal = decimal;
   }
 
   String get coinName => _coinName;
 
   set coinName(String coinName) {
-    this._coinName = coinName;
+    _coinName = coinName;
   }
 
   String get chainName => _chainName;
 
   set chainName(String chainName) {
-    this._chainName = chainName;
+    _chainName = chainName;
   }
 
   String get tickerName => _tickerName;
 
   set tickerName(String tickerName) {
-    this._tickerName = tickerName;
+    _tickerName = tickerName;
   }
 
   int get coinType => _tokenType;
 
   set coinType(int tokenType) {
-    this._tokenType = tokenType;
+    _tokenType = tokenType;
   }
 
   String get contract => _contract;
 
   set contract(String contract) {
-    this._contract = contract;
+    _contract = contract;
   }
 
   String get minWithdraw => _minWithdraw;
 
   set minWithdraw(String minWithdraw) {
-    this._minWithdraw = minWithdraw;
+    _minWithdraw = minWithdraw;
   }
 
   String get feeWithdraw => _feeWithdraw;
 
   set feeWithdraw(String feeWithdraw) {
-    this._feeWithdraw = feeWithdraw;
+    _feeWithdraw = feeWithdraw;
   }
 }
 
@@ -151,6 +151,6 @@ class TokenList {
   factory TokenList.fromJson(List<dynamic> parsedJson) {
     List<TokenModel> tokens = [];
     tokens = parsedJson.map((i) => TokenModel.fromJson(i)).toList();
-    return new TokenList(tokens: tokens);
+    return TokenList(tokens: tokens);
   }
 }

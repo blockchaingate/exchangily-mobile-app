@@ -15,7 +15,7 @@ class OrderBookView extends StatelessWidget {
   final bool isVerticalOrderbook;
   final Orderbook orderbook;
   final PairDecimalConfig decimalConfig;
-  OrderBookView(
+  const OrderBookView(
       {Key key, this.isVerticalOrderbook, this.orderbook, this.decimalConfig});
 
   @override
@@ -58,12 +58,12 @@ class OrderBookView extends StatelessWidget {
               buildVerticalOrderbookColumn(
                   orderbook.sellOrders, false, decimalConfig, tradeService),
               Container(
-                  padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       orderbook.buyOrders != [] && orderbook.sellOrders != []
-                          ? Text('${orderbook.price.toString()}',
+                          ? Text(orderbook.price.toString(),
                               style: Theme.of(context).textTheme.headline4)
                           : Center(
                               child: Text('No Orders',
@@ -77,7 +77,7 @@ class OrderBookView extends StatelessWidget {
           )
         : Container(
             color: secondaryColor.withAlpha(250),
-            padding: EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(5.0),
             child: ListView(
               //   mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -105,7 +105,7 @@ class OrderBookView extends StatelessWidget {
                     Flexible(
                       flex: 1,
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 7),
+                        padding: const EdgeInsets.symmetric(horizontal: 7),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -201,7 +201,7 @@ class OrderBookView extends StatelessWidget {
               // model.setBusy(false);
             },
             child: Padding(
-                padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+                padding: const EdgeInsets.fromLTRB(0, 3, 0, 3),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -213,12 +213,12 @@ class OrderBookView extends StatelessWidget {
                             fontSize: 13.0)),
                     Container(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                            const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                         color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                         child: Text(
                             order.quantity
                                 .toStringAsFixed(decimalConfig.qtyDecimal),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white,
                                 fontSize: 13.0)))
@@ -247,7 +247,7 @@ class OrderDetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         // margin: EdgeInsets.only(bottom: 2.0),
-        padding: EdgeInsets.all(3.0),
+        padding: const EdgeInsets.all(3.0),
         color: isBuy ? buyOrders : sellOrders,
         child: isBuy
             ? Row(

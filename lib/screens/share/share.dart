@@ -12,7 +12,7 @@ class _ShareState extends State<Share> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Event Share Page'),
+        title: const Text('Event Share Page'),
       ),
       body: Container(
         child: ListView(

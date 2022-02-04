@@ -162,13 +162,13 @@ class VersionService {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width * 0.8,
-                padding: EdgeInsets.fromLTRB(10, 20, 10, 15),
-                margin: EdgeInsets.only(top: 12.0, right: 6.0),
+                padding: const EdgeInsets.fromLTRB(10, 20, 10, 15),
+                margin: const EdgeInsets.only(top: 12.0, right: 6.0),
                 decoration: BoxDecoration(
-                    color: Color(0xff333333),
+                    color: const Color(0xff333333),
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(16.0),
-                    boxShadow: <BoxShadow>[
+                    boxShadow: const <BoxShadow>[
                       BoxShadow(
                         color: Colors.black26,
                         blurRadius: 0.0,
@@ -180,18 +180,18 @@ class VersionService {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       "App Update Available",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
-                    new Text("Current Version: " + userVersion),
-                    new Text("Lastest Version: " + res['version']),
-                    new Text("Force Update: " + res['forceUpdate'].toString()),
-                    SizedBox(
+                    Text("Current Version: " + userVersion),
+                    Text("Lastest Version: " + res['version']),
+                    Text("Force Update: " + res['forceUpdate'].toString()),
+                    const SizedBox(
                       height: 20,
                     ),
                     Column(
@@ -207,7 +207,7 @@ class VersionService {
                                 children: [
                                   Text(
                                     l['name'],
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 ],
                               ),
@@ -329,7 +329,7 @@ class VersionService {
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: Align(
+                        child: const Align(
                           alignment: Alignment.topRight,
                           child: CircleAvatar(
                             radius: 12.0,

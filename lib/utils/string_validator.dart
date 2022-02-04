@@ -22,6 +22,7 @@ class RegexValidator implements StringValidator {
   RegexValidator(this.regexSource);
   final String regexSource;
 
+  @override
   bool isValid(String value) {
     try {
       final regex = RegExp(regexSource);
@@ -43,6 +44,7 @@ class ValidatorInputFormatter implements TextInputFormatter {
   final StringValidator editingValidator;
   ValidatorInputFormatter(this.editingValidator);
 
+  @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     final oldValueValid = editingValidator.isValid(oldValue.text);

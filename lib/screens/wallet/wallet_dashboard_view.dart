@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/constants/ui_var.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
@@ -24,9 +25,10 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmod
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features_view.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
+import 'package:exchangilymobileapp/utils/wallet/total_balance_widget.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/network_status.dart';
-import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
+import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -40,12 +42,13 @@ import 'wallet_features/gas.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 class WalletDashboardView extends StatelessWidget {
-  WalletDashboardView({Key key}) : super(key: key);
+  const WalletDashboardView({Key key}) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
     GlobalKey _one = GlobalKey();
     GlobalKey _two = GlobalKey();
-    final key = new GlobalKey<ScaffoldState>();
+    final key = GlobalKey<ScaffoldState>();
     RefreshController _refreshController =
         RefreshController(initialRefresh: false);
     return ViewModelBuilder.reactive(
@@ -71,7 +74,7 @@ class WalletDashboardView extends StatelessWidget {
           return WillPopScope(
             onWillPop: () {
               model.onBackButtonPressed();
-              return new Future(() => false);
+              return Future(() => false);
             },
             child: Scaffold(
               key: key,
@@ -172,12 +175,12 @@ class WalletDashboardView extends StatelessWidget {
           // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
           visible: usdBalance >= 0 && !model.isHideSmallAmountAssets,
           child: _coinDetailsCard(
-              '$name', index, model.wallets, model.elevation, context, model),
+              name, index, model.wallets, model.elevation, context, model),
           // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
           replacement: Visibility(
               visible: model.isHideSmallAmountAssets && usdBalance != 0,
-              child: _coinDetailsCard('$name', index, model.wallets,
-                  model.elevation, context, model)),
+              child: _coinDetailsCard(
+                  name, index, model.wallets, model.elevation, context, model)),
         );
       },
     );
@@ -244,14 +247,14 @@ Widget mainWidgets(WalletDashboardViewModel model, BuildContext context) {
 Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
   return Container(
     height: 160,
-    decoration: BoxDecoration(),
+    decoration: const BoxDecoration(),
     child: Stack(children: <Widget>[
       Container(
           // height: 350.0,
           height: 140,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('assets/images/wallet-page/background.png'),
+                  image: AssetImage(Constants.walletBackgroundLocalUrl),
                   fit: BoxFit.cover))),
       Positioned(
         top: 15,
@@ -263,7 +266,7 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/wallet-page/exlogo.png',
+                Constants.excahngilyLogoLocalUrl,
                 // width: 35,
                 height: 30,
                 color: white,
@@ -274,36 +277,64 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
       ),
 
       Container(
-          child: new Swiper(
+          child: Swiper(
         itemBuilder: (BuildContext context, int index) {
           // Total Balance Card //
-          if (index == 0)
+          model.swiperWidgetIndex = index;
+
+          Widget logoWidget;
+          String titleWidget;
+          if (index == 0) {
+            // logoWidget = Image.asset(
+            //   Constants.dollarSignImageLocalUrl,
+            //   width: 30,
+            //   height: 30,
+            //   color: iconBackgroundColor, // image background color
+            //   fit: BoxFit.contain,
+            // );
+            // titleWidget = AppLocalizations.of(context).totalWalletBalance;
             return TotalBalanceWidget(model: model, index: index);
-          else if (index == 1)
+          } else if (index == 1) {
+            // logoWidget = Container(
+            //     decoration: BoxDecoration(
+            //         color: iconBackgroundColor, shape: BoxShape.circle),
+            //     width: 30,
+            //     height: 30,
+            //     child: Icon(
+            //       // Icons.local_gas_station,
+            //       MdiIcons.finance,
+            //       color: isProduction ? secondaryColor : red.withAlpha(200),
+            //     ));
+            // titleWidget = AppLocalizations.of(context).totalExchangeBalance;
             return TotalBalanceWidget2(model: model, index: index);
-          else
+          } else {
             return TotalBalanceWidget3(model: model, index: index);
+          }
+
+          // return TotalBalanceCardWidget(
+          //   logo: logoWidget,
+          //   title: titleWidget,
+          // );
         },
         itemCount: 3,
         itemWidth: 500,
         itemHeight: 180.0,
         layout: SwiperLayout.TINDER,
-        pagination: new SwiperPagination(
-          margin: new EdgeInsets.fromLTRB(5, 10, 5, 0),
-          builder: const DotSwiperPaginationBuilder(
+        pagination: const SwiperPagination(
+          margin: EdgeInsets.fromLTRB(5, 10, 5, 0),
+          builder: DotSwiperPaginationBuilder(
             color: Color(0xccffffff),
           ),
         ),
         autoplay: true,
         autoplayDelay: 7000,
-        // TotalBalanceWidget(model: model)
       )),
       //Announcement Widget
       Positioned(
         top: 15,
         child: Stack(
           children: [
-            Container(
+            SizedBox(
               width: 50,
               height: 50,
               child: Center(
@@ -314,18 +345,19 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
                         BoxDecoration(borderRadius: BorderRadius.circular(30)),
                     child: InkWell(
                       onTap: () {
-                        if (!model.hasApiError)
+                        if (!model.hasApiError) {
                           Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => AnnouncementList()))
+                                      builder: (context) => const AnnouncementList()))
                               .then((value) {
                             model.updateAnnce();
                           });
-                        else
+                        } else {
                           print("API has error");
+                        }
                       },
-                      child: Container(
+                      child: const SizedBox(
                           width: 40,
                           height: 40,
                           // decoration: BoxDecoration(
@@ -348,7 +380,7 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
                     child: Container(
                       width: 15,
                       height: 15,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           shape: BoxShape.circle, color: Colors.red),
                       child: Center(
                         child: Text(
@@ -357,7 +389,8 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
                           //     .length
                           //     .toString(),
                           model.unreadMsgNum.toString(),
-                          style: TextStyle(fontSize: 10, color: Colors.white),
+                          style: const TextStyle(
+                              fontSize: 10, color: Colors.white),
                         ),
                       ),
                     ))
@@ -370,17 +403,18 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
           right: 5,
           child: IconButton(
               onPressed: () {
-                if (model.currentTabSelection == 0)
+                if (model.currentTabSelection == 0) {
                   model.refreshBalancesV2();
-                else
+                } else {
                   model.getBalanceForSelectedCustomTokens();
+                }
               },
               icon: model.isBusy
                   ? Container(
-                      margin: EdgeInsets.only(left: 3.0),
+                      margin: const EdgeInsets.only(left: 3.0),
                       child: model.sharedService.loadingIndicator(),
                     )
-                  : Icon(
+                  : const Icon(
                       Icons.refresh,
                       color: Color(0xbbffffff),
                       size: 22,
@@ -396,13 +430,14 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
   return Column(
     children: <Widget>[
       Container(
-        padding: EdgeInsets.only(right: 10, top: 0),
+        padding: const EdgeInsets.only(right: 10, top: 0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -428,7 +463,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                                     : globals.primaryColor,
                               ),
                         Container(
-                          padding: EdgeInsets.only(left: 5),
+                          padding: const EdgeInsets.only(left: 5),
                           child: Text(
                             AppLocalizations.of(context).hideSmallAmountAssets,
                             style: model.isShowFavCoins
@@ -458,7 +493,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
             !model.isFreeFabNotUsed
                 ? Container()
                 : Container(
-                    margin: EdgeInsets.symmetric(vertical: 5.0),
+                    margin: const EdgeInsets.symmetric(vertical: 5.0),
                     decoration: BoxDecoration(
                         color: globals.primaryColor,
                         borderRadius: BorderRadius.circular(30)),
@@ -467,8 +502,8 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                       height: 20,
                       child: OutlinedButton.icon(
                           style: ButtonStyle(
-                              padding:
-                                  MaterialStateProperty.all(EdgeInsets.all(0))),
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.all(0))),
                           onPressed: () => model.getFreeFab(),
                           icon: Icon(
                             Icons.add,
@@ -486,7 +521,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
       ),
       // Gas Container
       Container(
-        margin: EdgeInsets.only(left: 8.0),
+        margin: const EdgeInsets.only(left: 8.0),
         child:
             // model.isBusy
             // ? Shimmer.fromColors(
@@ -535,7 +570,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
               child: GestureDetector(
                 onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
                 child: Container(
-                  margin: EdgeInsets.only(top: 5),
+                  margin: const EdgeInsets.only(top: 5),
                   height: 30,
                   child: TextField(
                     enabled: model.isShowFavCoins ? false : true,
@@ -611,7 +646,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
             //         }))
             //     : SliverToBoxAdapter(),
             SliverToBoxAdapter(
-              child: Container(
+              child: SizedBox(
                   // color: Colors.lightBlue,
                   height: 180,
                   width: MediaQuery.of(context).size.width,
@@ -624,7 +659,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
             SliverPersistentHeader(
                 pinned: true,
                 delegate: _SliverAppBarDelegate(
-                  new TabBar(
+                  TabBar(
                       // labelPadding: EdgeInsets.only(bottom: 14, top: 14),
                       onTap: (int tabIndex) {
                         model.updateTabSelection(tabIndex);
@@ -634,7 +669,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                       indicatorColor: primaryColor,
                       indicatorSize: TabBarIndicatorSize.tab,
                       tabs: [
-                        Tab(
+                        const Tab(
                           icon: Icon(
                             FontAwesomeIcons.coins,
                             // color: white,
@@ -644,7 +679,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                           // child: Text(model.wallets.length.toString(),
                           //     style: TextStyle(fontSize: 10))
                         ),
-                        Tab(
+                        const Tab(
                           icon: Icon(Icons.star,
                               // color: primaryColor,
                               size: 18),
@@ -659,8 +694,8 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset(
-                                'assets/images/icons/custom-token-logo.png',
-                                width: 18,
+                                Constants.customTokenLogoLocalUrl,
+                                width: 16,
                                 color: primaryColor,
                               )
                             ],
@@ -672,15 +707,15 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
         },
         body: Container(
           // color: Colors.amber,
-          margin: EdgeInsets.only(top: 0),
-          padding: EdgeInsets.only(top: 0),
+          margin: const EdgeInsets.only(top: 0),
+          padding: const EdgeInsets.only(top: 0),
           child: TabBarView(
             //  physics: ClampingScrollPhysics(),
             children: [
               // All coins tab
 
               model.isBusy || model.busy(model.isHideSmallAmountAssets)
-                  ? ShimmerLayout(
+                  ? const ShimmerLayout(
                       layoutType: 'walletDashboard',
                       count: 9,
                     )
@@ -696,14 +731,14 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Image.asset(
-                              'assets/images/icons/wallet_empty.png',
+                              Constants.emptyWalletLocalUrl,
                               color: Colors.grey,
                               width: 40,
                               height: 40,
                             ),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             Text(AppLocalizations.of(context).customTokens,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 12, color: Colors.white)),
                           ],
                         )
@@ -713,7 +748,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                             // symbol balance action text row
                             Container(
                               color: globals.white,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 5),
                               child: Row(
                                 children: [
@@ -739,10 +774,10 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
 
                             Expanded(
                               child: Container(
-                                margin: EdgeInsets.symmetric(
+                                margin: const EdgeInsets.symmetric(
                                     horizontal: 5, vertical: 10),
                                 child: ListView.builder(
-                                    padding: EdgeInsets.only(top: 0),
+                                    padding: const EdgeInsets.only(top: 0),
                                     shrinkWrap: true,
                                     itemCount:
                                         model.selectedCustomTokens.length,
@@ -751,13 +786,13 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                       var customToken =
                                           model.selectedCustomTokens[index];
                                       return Container(
-                                        margin: EdgeInsets.symmetric(
+                                        margin: const EdgeInsets.symmetric(
                                             vertical: 5, horizontal: 1),
                                         decoration: BoxDecoration(
                                             color: walletCardColor,
                                             borderRadius:
                                                 BorderRadius.circular(9)),
-                                        padding: EdgeInsets.all(3),
+                                        padding: const EdgeInsets.all(3),
                                         child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
@@ -767,7 +802,8 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                             Container(
                                               width: 25,
                                               height: 25,
-                                              margin: EdgeInsets.only(left: 5),
+                                              margin: const EdgeInsets.only(
+                                                  left: 5),
                                               decoration: BoxDecoration(
                                                   image: DecorationImage(
                                                       image: NetworkImage(
@@ -813,7 +849,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                               flex: 2,
                                               child: model.busy(model
                                                       .selectedCustomTokens)
-                                                  ? Text('...')
+                                                  ? const Text('...')
                                                   : Text(
                                                       customToken.balance
                                                           .toString(),
@@ -826,7 +862,8 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
 
                                             // Send Action
                                             Container(
-                                              padding: EdgeInsets.only(top: 5),
+                                              padding:
+                                                  const EdgeInsets.only(top: 5),
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
@@ -834,7 +871,8 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                     CrossAxisAlignment.center,
                                                 children: [
                                                   Container(
-                                                    margin: EdgeInsets.all(2),
+                                                    margin:
+                                                        const EdgeInsets.all(2),
                                                     child: IconButton(
                                                       padding:
                                                           EdgeInsetsDirectional
@@ -871,7 +909,8 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                     ),
                                                   ),
                                                   Container(
-                                                    margin: EdgeInsets.all(2),
+                                                    margin:
+                                                        const EdgeInsets.all(2),
                                                     child: IconButton(
                                                       padding:
                                                           EdgeInsetsDirectional
@@ -920,7 +959,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
 
 ListView buildListView(WalletDashboardViewModel model) {
   return ListView.builder(
-    padding: EdgeInsets.only(top: 0),
+    padding: const EdgeInsets.only(top: 0),
     shrinkWrap: true,
     itemCount: model.wallets.length,
     itemBuilder: (BuildContext context, int index) {
@@ -931,12 +970,12 @@ ListView buildListView(WalletDashboardViewModel model) {
         // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
         visible: usdVal.usd >= 0 && !model.isHideSmallAmountAssets,
         child: _coinDetailsCard(
-            '$name', index, model.wallets, model.elevation, context, model),
+            name, index, model.wallets, model.elevation, context, model),
         // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
         replacement: Visibility(
-            visible: model.isHideSmallAmountAssets && usdVal != 0,
-            child: _coinDetailsCard('$name', index, model.wallets,
-                model.elevation, context, model)),
+            visible: model.isHideSmallAmountAssets && usdVal.usd != 0,
+            child: _coinDetailsCard(
+                name, index, model.wallets, model.elevation, context, model)),
       );
     },
   );
@@ -992,11 +1031,11 @@ Widget _coinDetailsCard(
   if (model.isHideSmallAmountAssets &&
       (model.wallets[index].balance * model.wallets[index].usdValue.usd)
               .toInt() <
-          1)
+          1) {
     return Container();
-  else
+  } else {
     return Card(
-      color: globals.walletCardColor,
+      color: walletCardColor,
       elevation: elevation,
       child: InkWell(
         splashColor: Colors.blue.withAlpha(30),
@@ -1006,7 +1045,7 @@ Widget _coinDetailsCard(
               wallets[index], WalletFeaturesViewRoute);
         },
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
             // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -1014,14 +1053,14 @@ Widget _coinDetailsCard(
               UIHelper.horizontalSpaceSmall,
               // Card logo container
               Container(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                       color: globals.walletCardColor,
                       borderRadius: BorderRadius.circular(50),
                       boxShadow: [
                         BoxShadow(
                             color: globals.fabLogoColor,
-                            offset: Offset(1.0, 5.0),
+                            offset: const Offset(1.0, 5.0),
                             blurRadius: 10.0,
                             spreadRadius: 1.0),
                       ]),
@@ -1039,7 +1078,7 @@ Widget _coinDetailsCard(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        '$tickerName'.toUpperCase(),
+                        tickerName.toUpperCase(),
                         style: Theme.of(context).textTheme.headline3,
                       ),
                       // Available Row
@@ -1179,7 +1218,14 @@ Widget _coinDetailsCard(
                           Text('\$', style: TextStyle(color: globals.green)),
                           Expanded(
                             child: Text(
-                              '${NumberUtil().truncateDoubleWithoutRouding((!model.wallets[index].balance.isNegative ? model.wallets[index].balance : 0.0) * model.wallets[index].usdValue.usd, precision: 2).toString()}',
+                              NumberUtil()
+                                  .truncateDoubleWithoutRouding(
+                                      (!model.wallets[index].balance.isNegative
+                                              ? model.wallets[index].balance
+                                              : 0.0) *
+                                          model.wallets[index].usdValue.usd,
+                                      precision: 2)
+                                  .toString(),
                               style: TextStyle(color: globals.green),
                             ),
                           )
@@ -1194,7 +1240,7 @@ Widget _coinDetailsCard(
                               model: model,
                               index: index,
                               tickerName: tickerName),
-                          Divider(
+                          const Divider(
                             endIndent: 5,
                           ),
                           InkWell(
@@ -1209,7 +1255,7 @@ Widget _coinDetailsCard(
                                           .subtitle2
                                           .copyWith(fontSize: 8),
                                     ),
-                                    Icon(
+                                    const Icon(
                                       Icons.arrow_upward,
                                       color: globals.red,
                                       size: 16,
@@ -1232,6 +1278,7 @@ Widget _coinDetailsCard(
         ),
       ),
     );
+  }
 }
 
 // FAB TAB
@@ -1256,14 +1303,15 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'assets/images/icons/wallet_empty.png',
+                        Constants.emptyWalletLocalUrl,
                         color: Colors.grey,
                         width: 40,
                         height: 40,
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(AppLocalizations.of(context).favoriteTokens,
-                          style: TextStyle(fontSize: 12, color: Colors.white)),
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.white)),
                     ],
                   )
                 :
@@ -1318,7 +1366,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                     WalletFeaturesViewRoute);
                               },
                               child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
                                 child: Row(
                                   // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -1326,7 +1375,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                     UIHelper.horizontalSpaceSmall,
                                     // Card logo container
                                     Container(
-                                        padding: EdgeInsets.all(8),
+                                        padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                             color: globals.walletCardColor,
                                             borderRadius:
@@ -1334,7 +1383,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                             boxShadow: [
                                               BoxShadow(
                                                   color: globals.fabLogoColor,
-                                                  offset: Offset(1.0, 5.0),
+                                                  offset:
+                                                      const Offset(1.0, 5.0),
                                                   blurRadius: 10.0,
                                                   spreadRadius: 1.0),
                                             ]),
@@ -1353,7 +1403,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              '$tickerName'.toUpperCase(),
+                                              tickerName.toUpperCase(),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline3,
@@ -1575,7 +1625,20 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                           highlightColor:
                                                               globals.white,
                                                           child: Text(
-                                                            '${NumberUtil().truncateDoubleWithoutRouding(model.favWallets[index].balance * model.favWallets[index].usdValue.usd, precision: 2).toString()}',
+                                                            NumberUtil()
+                                                                .truncateDoubleWithoutRouding(
+                                                                    model
+                                                                            .favWallets[
+                                                                                index]
+                                                                            .balance *
+                                                                        model
+                                                                            .favWallets[
+                                                                                index]
+                                                                            .usdValue
+                                                                            .usd,
+                                                                    precision:
+                                                                        2)
+                                                                .toString(),
                                                             style: TextStyle(
                                                                 color: globals
                                                                     .green),
@@ -1677,7 +1740,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                             model
                                                                 .favWallets[index],
                                                             DepositViewRoute)),
-                                                Divider(
+                                                const Divider(
                                                   endIndent: 5,
                                                 ),
                                                 InkWell(
@@ -1699,7 +1762,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                                     fontSize:
                                                                         8),
                                                           ),
-                                                          Icon(
+                                                          const Icon(
                                                             Icons.arrow_upward,
                                                             color: globals.red,
                                                             size: 16,
@@ -1758,7 +1821,7 @@ class TotalBalanceWidget extends StatelessWidget {
                 width: 350,
                 height: 90,
                 //model.totalBalanceContainerWidth,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -1839,15 +1902,13 @@ class TotalBalanceWidget2 extends StatelessWidget {
             left: 30,
             child: Card(
               elevation: model.elevation,
-              color: isProduction
-                  ? globals.secondaryColor
-                  : globals.red.withAlpha(200),
+              color: isProduction ? secondaryColor : red.withAlpha(200),
               child: Container(
                 //duration: Duration(milliseconds: 250),
                 width: 350,
                 height: 90,
                 //model.totalBalanceContainerWidth,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -1862,7 +1923,7 @@ class TotalBalanceWidget2 extends StatelessWidget {
                             //     ?
                             Container(
                                 decoration: BoxDecoration(
-                                    color: globals.iconBackgroundColor,
+                                    color: iconBackgroundColor,
                                     shape: BoxShape.circle),
                                 width: 30,
                                 height: 30,
@@ -1870,8 +1931,8 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                   // Icons.local_gas_station,
                                   MdiIcons.finance,
                                   color: isProduction
-                                      ? globals.secondaryColor
-                                      : globals.red.withAlpha(200),
+                                      ? secondaryColor
+                                      : red.withAlpha(200),
                                 ))),
                     Expanded(
                       flex: 3,
@@ -1964,7 +2025,7 @@ class TotalBalanceWidget3 extends StatelessWidget {
                 width: 350,
                 height: 90,
                 //model.totalBalanceContainerWidth,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: AddGasRow(model: model),
               ),
             )),
@@ -1977,21 +2038,15 @@ class AddGasRow extends StatelessWidget {
   const AddGasRow({Key key, this.model}) : super(key: key);
   final WalletDashboardViewModel model;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   widget.model.globalKeyOne = _one;
-
-  //   widget.model.showcaseEvent(context);
-  // }
-
   @override
   Widget build(BuildContext context) {
-    var begin = Offset(0.0, 1.0);
+    var begin = const Offset(0.0, 1.0);
     var end = Offset.zero;
     var tween = Tween(begin: begin, end: end);
-    if (model.isShowCaseView && model.gasAmount < 0.5 && !model.isBusy)
+
+    if (model.isShowCaseView && model.gasAmount < 0.5 && !model.isBusy) {
       model.showcaseEvent(context);
+    }
     return model.isShowCaseView || model.gasAmount < 0.5
         ? SafeArea(
             child: Column(
@@ -2004,7 +2059,7 @@ class AddGasRow extends StatelessWidget {
                   description:
                       AppLocalizations.of(context).walletDashboardInstruction1,
                   child: TweenAnimationBuilder(
-                      duration: Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 500),
                       tween: tween,
                       builder: (_, Offset offset, __) {
                         return Container(
@@ -2074,7 +2129,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new Container(
+    return Container(
       child: _tabBar,
       color: secondaryColor,
     );

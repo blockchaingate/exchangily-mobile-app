@@ -166,8 +166,8 @@ class CoinUtils {
 ----------------------------------------------------------------------*/
 
   Uint8List hash256(Uint8List buffer) {
-    Uint8List _tmp = new SHA256Digest().process(buffer);
-    return new SHA256Digest().process(_tmp);
+    Uint8List _tmp = SHA256Digest().process(buffer);
+    return SHA256Digest().process(_tmp);
   }
 
 /*----------------------------------------------------------------------
@@ -178,12 +178,13 @@ class CoinUtils {
     TokenListDatabaseService tokenListDatabaseService =
         locator<TokenListDatabaseService>();
     int coinType = 0;
-    var hardCodedCoinList;
+    MapEntry<int, String> hardCodedCoinList;
     bool isOldToken = coinList.newCoinTypeMap.containsValue(coinName);
     print('is old token value $isOldToken');
-    if (isOldToken)
+    if (isOldToken) {
       hardCodedCoinList = coinList.newCoinTypeMap.entries
           .firstWhere((coinTypeMap) => coinTypeMap.value == coinName);
+    }
     // var coins =
     //     coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
     if (hardCodedCoinList != null) {
@@ -467,7 +468,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     print('messageVISize===');
     print(messageVISize);
     int length = messagePrefix.length + messageVISize + message.length;
-    Uint8List buffer = new Uint8List(length);
+    Uint8List buffer = Uint8List(length);
     buffer.setRange(0, messagePrefix.length, messagePrefix);
     encode(message.length, buffer, messagePrefix.length);
     buffer.setRange(
@@ -483,7 +484,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     int messageVISize = encodingLength(message.length);
 
     int length = messagePrefix.length + messageVISize + message.length + 1;
-    Uint8List buffer = new Uint8List(length);
+    Uint8List buffer = Uint8List(length);
     buffer.setRange(0, 1, [25]);
 
     buffer.setRange(1, messagePrefix.length + 1, messagePrefix);
@@ -570,7 +571,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
           seed,
           bip32.NetworkType(
               wif: network.wif,
-              bip32: new bip32.Bip32Type(
+              bip32: bip32.Bip32Type(
                   public: network.bip32.public,
                   private: network.bip32.private)));
 
@@ -696,9 +697,9 @@ getAddressForCoin(root, 'EXG', tokenType: 'FAB');
     } else if (tokenType == 'FAB') {
       var node = fabUtils.getFabNode(root, index: index);
       var fabPublicKey = node.publicKey;
-      Digest sha256 = new Digest("SHA-256");
+      Digest sha256 = Digest("SHA-256");
       var pass1 = sha256.process(fabPublicKey);
-      Digest ripemd160 = new Digest("RIPEMD-160");
+      Digest ripemd160 = Digest("RIPEMD-160");
       var pass2 = ripemd160.process(pass1);
       var fabTokenAddr = '0x' + HEX.encode(pass2);
       return fabTokenAddr;

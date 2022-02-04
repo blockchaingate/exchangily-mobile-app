@@ -12,9 +12,9 @@ class UserSettings {
     //   List<String> favWalletCoins,
     //  bool isFavCoinTabSelected
   }) {
-    this._id = id;
-    this._language = language ?? '';
-    this._theme = theme ?? '';
+    _id = id;
+    _language = language ?? '';
+    _theme = theme ?? '';
     // this._favWalletCoins = favWalletCoins;
     // this._isFavCoinTabSelected = isFavCoinTabSelected;
   }
@@ -28,7 +28,7 @@ class UserSettings {
       };
 
   factory UserSettings.fromJson(Map<String, dynamic> json) {
-    return new UserSettings(
+    return UserSettings(
         id: json['id'] as int,
         language: json['language'] as String,
         theme: json['json'] as String
@@ -39,17 +39,17 @@ class UserSettings {
 
   int get id => _id;
   set id(int id) {
-    this._id = id;
+    _id = id;
   }
 
   String get language => _language;
   set language(String language) {
-    this._language = language;
+    _language = language;
   }
 
   String get theme => _theme;
   set theme(String theme) {
-    this._theme = theme;
+    _theme = theme;
   }
 
   // bool get isFavCoinTabSelected => _isFavCoinTabSelected;

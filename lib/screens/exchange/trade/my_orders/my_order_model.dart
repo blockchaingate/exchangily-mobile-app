@@ -41,22 +41,22 @@ class OrderModel {
       double totalOrderQuantity,
       double filledPercentage,
       bool isCancelled}) {
-    this._orderHash = orderHash;
+    _orderHash = orderHash;
 
-    this._orderType = orderType;
-    this._bidOrAsk = bidOrAsk;
-    this._price = price ?? 0.0;
-    this._orderQuantity = orderQuantity ??
+    _orderType = orderType;
+    _bidOrAsk = bidOrAsk;
+    _price = price ?? 0.0;
+    _orderQuantity = orderQuantity ??
         0.0; // how much is left, if i order 10 and filled 3 then oq is 7
-    this._originalOrderQuantity = originalOrderQuantity ?? 0.0;
-    this._filledQuantity = filledQuantity ??
+    _originalOrderQuantity = originalOrderQuantity ?? 0.0;
+    _filledQuantity = filledQuantity ??
         0.0; // how many filled so if order of 10 with 3 filled then 3 is the value
-    this._time = time;
-    this._isActive = isActive;
-    this._pairName = pairName;
-    this._totalOrderQuantity = orderQuantity + filledQuantity;
-    this._filledPercentage = (filledQuantity * 100) / _totalOrderQuantity;
-    this._isCancelled = isCancelled;
+    _time = time;
+    _isActive = isActive;
+    _pairName = pairName;
+    _totalOrderQuantity = orderQuantity + filledQuantity;
+    _filledPercentage = (filledQuantity * 100) / _totalOrderQuantity;
+    _isCancelled = isCancelled;
   }
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -75,79 +75,79 @@ class OrderModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['orderHash'] = this._orderHash;
-    data['orderType'] = this._orderType;
-    data['bidOrAsk'] = this._bidOrAsk;
-    data['price'] = this._price;
-    data['orderQuantity'] = this._orderQuantity;
-    data['originalOrderQuantity'] = this._originalOrderQuantity;
-    data['filledQuantity'] = this._filledQuantity;
-    data['time'] = this._time;
-    data['isActive'] = this._isActive;
-    data['pairName'] = this._pairName;
-    data['isCancelled'] = this._isCancelled;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['orderHash'] = _orderHash;
+    data['orderType'] = _orderType;
+    data['bidOrAsk'] = _bidOrAsk;
+    data['price'] = _price;
+    data['orderQuantity'] = _orderQuantity;
+    data['originalOrderQuantity'] = _originalOrderQuantity;
+    data['filledQuantity'] = _filledQuantity;
+    data['time'] = _time;
+    data['isActive'] = _isActive;
+    data['pairName'] = _pairName;
+    data['isCancelled'] = _isCancelled;
     return data;
   }
 
   String get orderHash => _orderHash;
   set orderHash(String orderHash) {
-    this._orderHash = orderHash;
+    _orderHash = orderHash;
   }
 
   double get price => _price;
   set price(double price) {
-    this._price = price;
+    _price = price;
   }
 
   double get filledQuantity => _filledQuantity;
   set filledQuantity(double filledQuantity) {
-    this._filledQuantity = filledQuantity;
+    _filledQuantity = filledQuantity;
   }
 
   double get orderQuantity => _orderQuantity;
   set orderQuantity(double orderQuantity) {
-    this._orderQuantity = orderQuantity;
+    _orderQuantity = orderQuantity;
   }
 
   int get time => _time;
   set time(int time) {
-    this._time = time;
+    _time = time;
   }
 
   int get orderType => _orderType;
   set orderType(int orderType) {
-    this._orderType = orderType;
+    _orderType = orderType;
   }
 
   bool get isActive => _isActive;
   set isActive(bool isActive) {
-    this._isActive = isActive;
+    _isActive = isActive;
   }
 
   bool get bidOrAsk => _bidOrAsk;
   set bidOrAsk(bool bidOrAsk) {
-    this._bidOrAsk = bidOrAsk;
+    _bidOrAsk = bidOrAsk;
   }
 
   String get pairName => _pairName;
   set pairName(String pairName) {
-    this._pairName = pairName;
+    _pairName = pairName;
   }
 
   double get totalOrderQuantity => _totalOrderQuantity;
   set totalOrderQuantity(double totalOrderQuantity) {
-    this._totalOrderQuantity = totalOrderQuantity;
+    _totalOrderQuantity = totalOrderQuantity;
   }
 
   double get filledPercentage => _filledPercentage;
   set filledPercentage(double filledPercentage) {
-    this._filledPercentage = filledPercentage;
+    _filledPercentage = filledPercentage;
   }
 
   bool get isCancelled => _isCancelled;
   set isCancelled(bool isCancelled) {
-    this._isCancelled = isCancelled;
+    _isCancelled = isCancelled;
   }
 }
 
@@ -156,13 +156,13 @@ class OrderList {
   OrderList({this.orders});
 
   factory OrderList.fromJson(List<dynamic> parsedJson) {
-    List<OrderModel> orders = new List<OrderModel>();
-    parsedJson.forEach((i) {
+    List<OrderModel> orders = <OrderModel>[];
+    for (var i in parsedJson) {
       // print('raw orders ${i}');
       OrderModel order = OrderModel.fromJson(i);
       //  print('ready for ui orders ${order.toJson()}');
       orders.add(order);
-    });
-    return new OrderList(orders: orders);
+    }
+    return OrderList(orders: orders);
   }
 }

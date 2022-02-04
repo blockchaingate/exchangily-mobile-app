@@ -16,7 +16,6 @@ import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import '../../localizations.dart';
@@ -36,7 +35,7 @@ class SettingsView extends StatelessWidget {
       builder: (context, model, _) => WillPopScope(
         onWillPop: () async {
           model.onBackButtonPressed();
-          return new Future(() => false);
+          return Future(() => false);
         },
         child: Scaffold(
           // When the keyboard appears, the Flutter widgets resize to avoid that we use resizeToAvoidBottomInset: false
@@ -85,7 +84,7 @@ class SettingsView extends StatelessWidget {
 
 class SettingsWidget extends StatelessWidget {
   final SettingsViewmodel model;
-  SettingsWidget({
+  const SettingsWidget({
     Key key,
     this.model,
   }) : super(key: key);
@@ -114,7 +113,7 @@ class SettingsContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: ListView(
           // crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -125,7 +124,7 @@ class SettingsContainer extends StatelessWidget {
                 child: Container(
                   alignment: Alignment.centerLeft,
                   color: globals.walletCardColor,
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   // height: 100,
                   child:
                       // !model.isShowCaseOnce
@@ -191,7 +190,7 @@ class SettingsContainer extends StatelessWidget {
                   ? Column(
                       children: [
                         Container(
-                            margin: EdgeInsets.all(5.0),
+                            margin: const EdgeInsets.all(5.0),
                             child: Text(
                                 AppLocalizations.of(context)
                                     .changeWalletLanguage,
@@ -213,8 +212,9 @@ class SettingsContainer extends StatelessWidget {
                                       String lang = '';
                                       if (value) {
                                         lang = 'en';
-                                      } else
+                                      } else {
                                         lang = 'zh';
+                                      }
 
                                       model.changeWalletLanguage(lang);
                                     },
@@ -237,8 +237,9 @@ class SettingsContainer extends StatelessWidget {
                                       String lang = '';
                                       if (!value) {
                                         lang = 'en';
-                                      } else
+                                      } else {
                                         lang = 'zh';
+                                      }
 
                                       model.changeWalletLanguage(lang);
                                     },
@@ -249,89 +250,6 @@ class SettingsContainer extends StatelessWidget {
                             ]),
                       ],
                     )
-                  // Row(
-                  //     children: [
-                  //       Expanded(
-                  //         flex: 2,
-                  //         child: CupertinoPicker(
-                  //             diameterRatio: 1.3,
-                  //             offAxisFraction: 5,
-                  //             scrollController: model.scrollController,
-                  //             itemExtent: 50,
-                  //             onSelectedItemChanged: (int value) {
-                  //               String lang = '';
-                  //               if (value == 1) {
-                  //                 lang = 'en';
-                  //               } else if (value == 2) {
-                  //                 lang = 'zh';
-                  //               }
-                  //               model.changeWalletLanguage(lang);
-                  //             },
-                  //             children: [
-                  //               Row(
-                  //                 mainAxisAlignment: MainAxisAlignment.end,
-                  //                 children: [
-                  //                   Padding(
-                  //                     padding:
-                  //                         const EdgeInsets.only(right: 3.0),
-                  //                     child: Icon(
-                  //                       Icons.language,
-                  //                       color: grey,
-                  //                       size: 18,
-                  //                     ),
-                  //                   ),
-                  //                   UIHelper.horizontalSpaceSmall,
-                  //                   Text(
-                  //                     AppLocalizations.of(context)
-                  //                         .changeWalletLanguage,
-                  //                     style:
-                  //                         Theme.of(context).textTheme.headline5,
-                  //                   ),
-                  //                 ],
-                  //               ),
-                  //               Center(
-                  //                 child: Text(
-                  //                   "English",
-                  //                   style:
-                  //                       Theme.of(context).textTheme.headline5,
-                  //                 ),
-                  //               ),
-                  //               Center(
-                  //                 child: Text(
-                  //                   "简体中文",
-                  //                   style:
-                  //                       Theme.of(context).textTheme.headline5,
-                  //                   textAlign: TextAlign.center,
-                  //                 ),
-                  //               ),
-                  //             ]),
-                  //       ),
-                  //       Expanded(
-                  //         flex: 1,
-                  //         child: Column(
-                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                  //             mainAxisAlignment: MainAxisAlignment.start,
-                  //             children: [
-                  //               Padding(
-                  //                 padding: const EdgeInsets.only(left: 5.0),
-                  //                 child: Icon(
-                  //                   Icons.keyboard_arrow_up,
-                  //                   color: primaryColor,
-                  //                   size: 12,
-                  //                 ),
-                  //               ),
-                  //               Padding(
-                  //                 padding: const EdgeInsets.only(left: 5.0),
-                  //                 child: Icon(
-                  //                   Icons.keyboard_arrow_down,
-                  //                   color: primaryColor,
-                  //                   size: 12,
-                  //                 ),
-                  //               ),
-                  //             ]),
-                  //       )
-                  //     ],
-                  //   )
                   : Center(
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
@@ -357,7 +275,7 @@ class SettingsContainer extends StatelessWidget {
                                       width: 20,
                                       height: 20,
                                     ),
-                                    SizedBox(width: 15),
+                                    const SizedBox(width: 15),
                                     Text("English",
                                         textAlign: TextAlign.center,
                                         style: Theme.of(context)
@@ -378,7 +296,7 @@ class SettingsContainer extends StatelessWidget {
                                       width: 20,
                                       height: 20,
                                     ),
-                                    SizedBox(width: 15),
+                                    const SizedBox(width: 15),
                                     Text("简体中文",
                                         textAlign: TextAlign.center,
                                         style: Theme.of(context)
@@ -434,7 +352,7 @@ class SettingsContainer extends StatelessWidget {
                 elevation: 5,
                 color: globals.walletCardColor,
                 child: Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Row(
                     //  crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -470,9 +388,9 @@ class SettingsContainer extends StatelessWidget {
             // Biometric authentication toggle
             Card(
                 elevation: 5,
-                color: globals.walletCardColor,
+                color: walletCardColor,
                 child: Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Row(
                     //  crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -513,9 +431,9 @@ class SettingsContainer extends StatelessWidget {
                     model.storageService.hasPhoneProtectionEnabled
                 ? Card(
                     elevation: 5,
-                    color: globals.walletCardColor,
+                    color: walletCardColor,
                     child: Container(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Row(
                         //  crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -559,7 +477,7 @@ class SettingsContainer extends StatelessWidget {
                 elevation: 5,
                 color: globals.walletCardColor,
                 child: Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Row(
                     //  crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -608,13 +526,13 @@ class SettingsContainer extends StatelessWidget {
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     if (!isProduction)
-                      Text(' Debug', style: TextStyle(color: Colors.white))
+                      const Text(' Debug', style: TextStyle(color: Colors.white))
                   ],
                 )),
               ),
             ),
             Container(
-              padding: EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
               child: Center(
                 child: Text(model.errorMessage,
                     textAlign: TextAlign.center,
@@ -631,7 +549,7 @@ class SettingsContainer extends StatelessWidget {
   Container showMnemonicContainer(BuildContext context) {
     return Container(
       color: globals.walletCardColor,
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Padding(
           padding: const EdgeInsets.only(right: 3.0),

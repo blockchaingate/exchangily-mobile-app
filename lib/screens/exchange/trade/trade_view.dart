@@ -12,7 +12,7 @@ import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
+import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:stacked/stacked.dart';
@@ -25,7 +25,7 @@ import 'package:flutter/cupertino.dart';
 class TradeView extends StatelessWidget {
   final Price pairPriceByRoute;
   TradeView({Key key, this.pairPriceByRoute}) : super(key: key);
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<TradeViewModel>.reactive(
@@ -42,7 +42,7 @@ class TradeView extends StatelessWidget {
         builder: (context, model, _) => WillPopScope(
               onWillPop: () async {
                 model.onBackButtonPressed();
-                return new Future(() => false);
+                return Future(() => false);
               },
               child: Scaffold(
                 // endDrawerEnableOpenDragGesture: true,
@@ -63,7 +63,7 @@ class TradeView extends StatelessWidget {
                     //  ],
                     backgroundColor: primaryColor.withOpacity(0.25),
                     leading: IconButton(
-                      icon: Icon(Icons.arrow_back_ios),
+                      icon: const Icon(Icons.arrow_back_ios),
                       onPressed: () {
                         model.onBackButtonPressed();
                       },
@@ -129,7 +129,7 @@ class TradeView extends StatelessWidget {
                         child: Center(
                         child: Text(
                           AppLocalizations.of(context).serverError,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ))
                     : model.isBusy && model.isDisposing
@@ -141,7 +141,7 @@ class TradeView extends StatelessWidget {
                             child: ListView(children: [
                               /// Ticker price stream
                               Container(
-                                margin: EdgeInsets.only(top: 5.0),
+                                margin: const EdgeInsets.only(top: 5.0),
                                 child: PairPriceView(
                                   pairPrice: model.hasStreamTickerData &&
                                           model.currentPairPrice != null
@@ -159,10 +159,10 @@ class TradeView extends StatelessWidget {
                               model.currentPairPrice.price == 0.0
                                   ? Container(
                                       color: secondaryColor.withAlpha(155),
-                                      padding: EdgeInsets.all(0),
-                                      margin: EdgeInsets.all(0),
+                                      padding: const EdgeInsets.all(0),
+                                      margin: const EdgeInsets.all(0),
                                       height: 280,
-                                      child: Center(
+                                      child: const Center(
                                           child: CupertinoActivityIndicator()))
                                   : Container(
                                       child: LoadHTMLFileToWEbView(
@@ -183,7 +183,7 @@ class TradeView extends StatelessWidget {
                                     children: [
                                       TabBar(
                                           labelPadding:
-                                              EdgeInsets.only(bottom: 5),
+                                              const EdgeInsets.only(bottom: 5),
                                           onTap: (int tabIndex) {
                                             //  model.switchStreams(tabIndex);
                                           },
@@ -240,7 +240,7 @@ class TradeView extends StatelessWidget {
                                           ]),
                                       UIHelper.verticalSpaceSmall,
                                       // Tabs view container
-                                      Container(
+                                      SizedBox(
                                         height:
                                             MediaQuery.of(context).size.height *
                                                 0.60,
@@ -249,7 +249,7 @@ class TradeView extends StatelessWidget {
                                             // order book container
                                             Container(
                                               child: !model.hasStreamOrderbook
-                                                  ? ShimmerLayout(
+                                                  ? const ShimmerLayout(
                                                       layoutType: 'orderbook',
                                                     )
                                                   : OrderBookView(
@@ -266,7 +266,7 @@ class TradeView extends StatelessWidget {
                                             Container(
                                               child: !model
                                                       .hasStreamMarketTrades
-                                                  ? ShimmerLayout(
+                                                  ? const ShimmerLayout(
                                                       layoutType:
                                                           'marketTrades',
                                                     )
@@ -294,7 +294,7 @@ class TradeView extends StatelessWidget {
                                             //         ),
                                             //       )
                                             //     :
-                                            MyExchangeAssetsView()
+                                            const MyExchangeAssetsView()
                                           ],
                                         ),
                                       ),
@@ -308,8 +308,8 @@ class TradeView extends StatelessWidget {
                 // floatingActionButton:
                 // bottomNavigationBar: BottomNavBar(count: 1),
                 bottomNavigationBar: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    margin: EdgeInsets.only(bottom: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    margin: const EdgeInsets.only(bottom: 15),
                     width: 160,
                     //margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
                     child: Row(
@@ -341,13 +341,13 @@ class TradeView extends StatelessWidget {
                         Flexible(
                             flex: 1,
                             child: Container(
-                              margin: EdgeInsets.only(right: 2.0),
+                              margin: const EdgeInsets.only(right: 2.0),
                               child: FlatButton(
-                                padding: EdgeInsets.all(0),
+                                padding: const EdgeInsets.all(0),
                                 color: buyPrice,
                                 onPressed: () {
                                   if (model.currentPairPrice != null &&
-                                      !model.isBusy)
+                                      !model.isBusy) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -359,6 +359,7 @@ class TradeView extends StatelessWidget {
                                               tickerName:
                                                   pairPriceByRoute.symbol)),
                                     );
+                                  }
                                 },
                                 child: Text(AppLocalizations.of(context).buy,
                                     style:
@@ -366,17 +367,17 @@ class TradeView extends StatelessWidget {
                               ),
                             )),
                         // Sell button
-                        SizedBox(width: 5),
+                        const SizedBox(width: 5),
                         Flexible(
                             flex: 1,
                             child: RaisedButton(
-                              padding: EdgeInsets.all(0),
+                              padding: const EdgeInsets.all(0),
                               color: sellPrice,
                               shape: StadiumBorder(
                                   side: BorderSide(color: sellPrice, width: 1)),
                               onPressed: () {
                                 if (model.currentPairPrice != null &&
-                                    !model.isBusy)
+                                    !model.isBusy) {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -388,9 +389,10 @@ class TradeView extends StatelessWidget {
                                             tickerName:
                                                 pairPriceByRoute.symbol)),
                                   );
+                                }
                               },
                               child: Text(AppLocalizations.of(context).sell,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 13, color: Colors.white)),
                             ))
                       ],

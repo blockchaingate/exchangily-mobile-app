@@ -13,16 +13,16 @@ class MyReferrals {
       bool disqualified,
       String parentReferMemberId,
       String dateCreated}) {
-    this._id = id;
-    this._email = email;
-    this._disqualifiedReason = disqualifiedReason;
-    this._disqualified = disqualified;
-    this._parentReferMemberId = parentReferMemberId;
-    this._dateCreated = dateCreated;
+    _id = id;
+    _email = email;
+    _disqualifiedReason = disqualifiedReason;
+    _disqualified = disqualified;
+    _parentReferMemberId = parentReferMemberId;
+    _dateCreated = dateCreated;
   }
 
   factory MyReferrals.fromJson(Map<String, dynamic> json) {
-    return new MyReferrals(
+    return MyReferrals(
       //id: json['id'],
       email: json['memberId']['email'],
       // parentReferMemberId: json['parentReferMemberId'],
@@ -33,31 +33,31 @@ class MyReferrals {
   }
 
   Map<String, dynamic> toJson() => {
-        "email": this._email,
+        "email": _email,
       };
 
   String get id => _id;
 
   set id(String id) {
-    this._id = id;
+    _id = id;
   }
 
   String get email => _email;
 
   set email(String email) {
-    this._email = email;
+    _email = email;
   }
 
   bool get disqualified => _disqualified;
 
   set disqualified(bool disqualified) {
-    this._disqualified = disqualified;
+    _disqualified = disqualified;
   }
 
   String get disqualifiedReason => _disqualifiedReason;
 
   set disqualifiedReason(String disqualifiedReason) {
-    this._disqualifiedReason = disqualifiedReason;
+    _disqualifiedReason = disqualifiedReason;
   }
 }
 
@@ -66,8 +66,8 @@ class MyReferralsList {
   MyReferralsList({this.myReferralsList});
 
   factory MyReferralsList.fromJson(List<dynamic> parsedJson) {
-    List<MyReferrals> myReferralsList = new List<MyReferrals>();
+    List<MyReferrals> myReferralsList = <MyReferrals>[];
     myReferralsList = parsedJson.map((i) => MyReferrals.fromJson(i)).toList();
-    return new MyReferralsList(myReferralsList: myReferralsList);
+    return MyReferralsList(myReferralsList: myReferralsList);
   }
 }

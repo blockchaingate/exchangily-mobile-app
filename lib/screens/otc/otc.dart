@@ -17,10 +17,10 @@ class OtcScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
             centerTitle: true,
-            title: Text('OTC'),
+            title: const Text('OTC'),
             backgroundColor: globals.secondaryColor),
         body: Container(
-            padding: EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(5.0),
             // Main column
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -38,7 +38,7 @@ class OtcScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Container(
-                              padding: EdgeInsets.all(5.0),
+                              padding: const EdgeInsets.all(5.0),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50)),
                               child: Image.asset(
@@ -51,7 +51,7 @@ class OtcScreen extends StatelessWidget {
                               ),
                             ),
                             // Fixec Merchant data
-                            Container(
+                            SizedBox(
                               width: 80,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -110,7 +110,7 @@ class OtcScreen extends StatelessWidget {
                               ),
                             ),
                             // Dynamic Merchant data
-                            Container(
+                            SizedBox(
                               width: 110,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -150,7 +150,7 @@ class OtcScreen extends StatelessWidget {
                                         .copyWith(color: globals.grey),
                                   ),
                                   // Payment icons
-                                  Container(
+                                  SizedBox(
                                     height: 20,
                                     child: Row(
                                       mainAxisAlignment:
@@ -161,16 +161,16 @@ class OtcScreen extends StatelessWidget {
                                         IconButton(
                                             visualDensity:
                                                 VisualDensity.comfortable,
-                                            padding: EdgeInsets.all(0),
+                                            padding: const EdgeInsets.all(0),
                                             iconSize: 16,
-                                            icon: Icon(
+                                            icon: const Icon(
                                               Icons.credit_card,
                                               color: globals.red,
                                             ),
                                             onPressed: () {}),
                                         IconButton(
-                                            padding: EdgeInsets.all(0),
-                                            icon: Icon(
+                                            padding: const EdgeInsets.all(0),
+                                            icon: const Icon(
                                               Icons.card_giftcard,
                                               color: globals.red,
                                               size: 16,
@@ -185,7 +185,7 @@ class OtcScreen extends StatelessWidget {
                             // Last stars and buy button container
                             Container(
                                 // width: 125,
-                                padding: EdgeInsets.only(left: 10.0),
+                                padding: const EdgeInsets.only(left: 10.0),
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment
                                         .start, // Element stars and buy button position starting from the top
@@ -194,9 +194,9 @@ class OtcScreen extends StatelessWidget {
                                       // First column element is merchant rating
                                       Container(
                                         height: 25, // to align with name row
-                                        padding: EdgeInsets.only(top: 5.0),
+                                        padding: const EdgeInsets.only(top: 5.0),
                                         child: Row(
-                                          children: <Widget>[
+                                          children: const <Widget>[
                                             Icon(Icons.star,
                                                 color: globals.white, size: 16),
                                             Icon(Icons.star,
@@ -212,7 +212,7 @@ class OtcScreen extends StatelessWidget {
                                       ),
 
                                       // Second column element is buy button
-                                      Container(
+                                      SizedBox(
                                           width: 84,
                                           height: 64,
                                           child: Theme.of(context).platform ==

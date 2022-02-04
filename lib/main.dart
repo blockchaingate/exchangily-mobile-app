@@ -66,7 +66,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp(this.packageInfo);
+  const MyApp(this.packageInfo);
   final PackageInfo packageInfo;
 
   @override
@@ -100,23 +100,23 @@ class MyApp extends StatelessWidget {
                           // 'v ',
                           'v: ${packageInfo.version}.${packageInfo.buildNumber}',
                           style:
-                              TextStyle(fontSize: 10, color: Color(0x44ffffff)),
+                              const TextStyle(fontSize: 10, color: Color(0x44ffffff)),
                         ),
                       ),
                     ))
               ],
             ),
-            localizationsDelegates: [
+            localizationsDelegates: const [
               AppLocalizationsDelegate(),
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate
             ],
             // locale: Langua,
-            supportedLocales: [
-              const Locale("en", ""), // English
-              const Locale("zh", ""), // Chinese
-              const Locale("hi", ""), // Hindi India
+            supportedLocales: const [
+              Locale("en", ""), // English
+              Locale("zh", ""), // Chinese
+              Locale("hi", ""), // Hindi India
             ],
             onGenerateTitle: (BuildContext context) =>
                 AppLocalizations.of(context).title,
@@ -124,25 +124,24 @@ class MyApp extends StatelessWidget {
             onGenerateRoute: RouteGenerator.generateRoute,
             title: 'Exchangily Wallet',
             theme: ThemeData(
-              appBarTheme: AppBarTheme(
+              appBarTheme: const AppBarTheme(
                 systemOverlayStyle: SystemUiOverlayStyle.light,
               ),
               // added unselectedWidgetColor to update inactive radio button's color
               unselectedWidgetColor: Colors.white,
               disabledColor: globals.grey.withAlpha(100),
               primaryColor: globals.primaryColor,
-              accentColor: globals.secondaryColor,
               backgroundColor: globals.secondaryColor,
               cardColor: globals.walletCardColor,
               canvasColor: globals.secondaryColor,
               buttonTheme: ButtonThemeData(
                   minWidth: double.infinity,
                   buttonColor: globals.primaryColor,
-                  padding: EdgeInsets.all(15),
-                  shape: StadiumBorder(),
+                  padding: const EdgeInsets.all(15),
+                  shape: const StadiumBorder(),
                   textTheme: ButtonTextTheme.primary),
               fontFamily: 'Roboto',
-              textTheme: TextTheme(
+              textTheme: const TextTheme(
                   button: TextStyle(fontSize: 14, color: globals.white),
                   headline1: TextStyle(
                       fontSize: 22,
@@ -179,7 +178,7 @@ class MyApp extends StatelessWidget {
                   headline6: TextStyle(
                       fontSize: 10.5,
                       color: globals.white,
-                      fontWeight: FontWeight.w500)),
+                      fontWeight: FontWeight.w500)), colorScheme: ColorScheme.fromSwatch().copyWith(secondary: globals.secondaryColor),
             ),
             // Removed the home and scaffold because initial route has set
             initialRoute: '/',

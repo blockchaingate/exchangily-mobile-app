@@ -18,13 +18,13 @@ class CampaignReward {
       double totalRewardQuantities,
       int totalAccounts,
       double totalRewardNextQuantities}) {
-    this._level = level ?? 0;
-    this._totalValue = totalValue ?? 0.0;
-    this._totalQuantities = totalQuantities ?? 0.0;
-    this._totalRewardQuantities = totalRewardQuantities ?? 0.0;
-    this._totalAccounts = totalAccounts ?? 0;
-    this._totalRewardNextQuantities = totalRewardNextQuantities ?? 0.0;
-    this._users = users;
+    _level = level ?? 0;
+    _totalValue = totalValue ?? 0.0;
+    _totalQuantities = totalQuantities ?? 0.0;
+    _totalRewardQuantities = totalRewardQuantities ?? 0.0;
+    _totalAccounts = totalAccounts ?? 0;
+    _totalRewardNextQuantities = totalRewardNextQuantities ?? 0.0;
+    _users = users;
   }
 
   factory CampaignReward.fromJson(Map<String, dynamic> json) {
@@ -46,48 +46,48 @@ class CampaignReward {
   }
 
   Map<String, dynamic> toJson() => {
-        "level": this._level,
-        'users': this._users,
-        "totalValue": this._totalValue,
-        "totalQuantities": this._totalQuantities,
-        "totalRewardQuantities": this._totalRewardQuantities,
-        "totalAccounts": this._totalAccounts,
-        "totalRewardNextQuantities": this._totalRewardNextQuantities,
+        "level": _level,
+        'users': _users,
+        "totalValue": _totalValue,
+        "totalQuantities": _totalQuantities,
+        "totalRewardQuantities": _totalRewardQuantities,
+        "totalAccounts": _totalAccounts,
+        "totalRewardNextQuantities": _totalRewardNextQuantities,
       };
 
   double get totalValue => _totalValue;
   set totalValue(double totalValue) {
-    this._totalValue = totalValue;
+    _totalValue = totalValue;
   }
 
   List<String> get users => _users;
   set users(List<String> users) {
-    this._users = users;
+    _users = users;
   }
 
   double get totalQuantities => _totalQuantities;
   set totalQuantities(double totalQuantities) {
-    this._totalQuantities = totalQuantities;
+    _totalQuantities = totalQuantities;
   }
 
   double get totalRewardQuantities => _totalRewardQuantities;
   set totalRewardQuantities(double totalRewardQuantities) {
-    this._totalRewardQuantities = totalRewardQuantities;
+    _totalRewardQuantities = totalRewardQuantities;
   }
 
   double get totalRewardNextQuantities => _totalRewardNextQuantities;
   set totalRewardNextQuantities(double totalRewardNextQuantities) {
-    this._totalRewardNextQuantities = totalRewardNextQuantities;
+    _totalRewardNextQuantities = totalRewardNextQuantities;
   }
 
   int get level => _level;
   set level(int level) {
-    this._level = level;
+    _level = level;
   }
 
   int get totalAccounts => _totalAccounts;
   set totalAccounts(int totalAccounts) {
-    this._totalAccounts = totalAccounts;
+    _totalAccounts = totalAccounts;
   }
 }
 
@@ -96,8 +96,8 @@ class CampaignRewardList {
   CampaignRewardList({this.rewards});
 
   factory CampaignRewardList.fromJson(List<dynamic> parsedJson) {
-    List<CampaignReward> rewards = new List<CampaignReward>();
+    List<CampaignReward> rewards = <CampaignReward>[];
     rewards = parsedJson.map((i) => CampaignReward.fromJson(i)).toList();
-    return new CampaignRewardList(rewards: rewards);
+    return CampaignRewardList(rewards: rewards);
   }
 }

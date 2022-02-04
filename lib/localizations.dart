@@ -1075,7 +1075,7 @@ class AppLocalizations {
 
   String get tokenDetails {
     return Intl.message('Token Details',
-        name: 'tokenDetails', desc: 'campaign_da\shboard_token_details');
+        name: 'tokenDetails', desc: 'campaign_dashboard_token_details');
   }
 
   String get totalTokenAmount {

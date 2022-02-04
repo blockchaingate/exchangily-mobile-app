@@ -31,7 +31,7 @@ import 'package:exchangilymobileapp/utils/fab_util.dart';
 
 class ReceiveWalletScreen extends StatefulWidget {
   final WalletInfo walletInfo;
-  ReceiveWalletScreen({Key key, this.walletInfo}) : super(key: key);
+  const ReceiveWalletScreen({Key key, this.walletInfo}) : super(key: key);
 
   @override
   _ReceiveWalletScreenState createState() => _ReceiveWalletScreenState();
@@ -53,9 +53,10 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   }
 
   final log = getLogger('Receive');
-  final scaffoldKey = new GlobalKey<ScaffoldState>();
-  GlobalKey _globalKey = new GlobalKey();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey _globalKey = GlobalKey();
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
@@ -66,7 +67,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.all(10.0),
+          margin: const EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -89,7 +90,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
       width: double.infinity,
       height: 350,
       color: globals.walletCardColor,
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -125,7 +126,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                 ),
               )),
           Container(
-            padding: EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(10.0),
             child: RaisedButton(
                 child: Text(AppLocalizations.of(context).saveAndShareQrCode,
                     style: Theme.of(context)
@@ -138,7 +139,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                     String filePath = "${dir.path}/$receiveFileName";
                     File file = File(filePath);
 
-                    Future.delayed(new Duration(milliseconds: 30), () {
+                    Future.delayed(const Duration(milliseconds: 30), () {
                       _capturePng().then((byteData) {
                         file.writeAsBytes(byteData).then((onFile) {
                           Share.shareFiles([onFile.path],
@@ -168,7 +169,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
       width: double.infinity,
       height: 150,
       color: globals.walletCardColor,
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -181,7 +182,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                   .textTheme
                   .headline5
                   .copyWith(fontWeight: FontWeight.w800)),
-          Container(
+          SizedBox(
             width: 200,
             child: OutlinedButton(
               style: ButtonStyle(
@@ -191,22 +192,22 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                 side: MaterialStateProperty.all(
                     BorderSide(color: primaryColor, width: 0.5)),
                 padding: MaterialStateProperty.all(
-                    EdgeInsets.symmetric(vertical: 0, horizontal: 5)),
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 5)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
+                  const Padding(
+                    padding: EdgeInsets.only(right: 4.0),
                     child: Icon(
                       Icons.content_copy,
                       size: 16,
                     ),
                   ),
                   Text(
-                    '${AppLocalizations.of(context).copyAddress}',
+                    AppLocalizations.of(context).copyAddress,
                     style: Theme.of(context)
                         .textTheme
                         .headline5
@@ -235,7 +236,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
         ? widget.walletInfo.address
         : convertedToFabAddress;
     log.w(address);
-    Clipboard.setData(new ClipboardData(text: address));
+    Clipboard.setData(ClipboardData(text: address));
     Flushbar(
       backgroundColor: globals.secondaryColor.withOpacity(0.75),
       message: AppLocalizations.of(context).addressCopied,
@@ -245,7 +246,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
         color: globals.primaryColor,
       ),
       leftBarIndicatorColor: globals.green,
-      duration: Duration(seconds: 4),
+      duration: const Duration(seconds: 4),
     ).show(context);
   }
 

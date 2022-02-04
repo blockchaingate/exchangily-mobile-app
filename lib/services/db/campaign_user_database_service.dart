@@ -20,7 +20,7 @@ import 'package:path/path.dart';
 class CampaignUserDatabaseService {
   final log = getLogger('CampaignUserDatabaseService');
 
-  static final _databaseName = 'campaign_user_database.db';
+  static const _databaseName = 'campaign_user_database.db';
   final String tableName = 'campaign_user_data';
   // database table and column names
   final String columnId = 'id';
@@ -28,7 +28,7 @@ class CampaignUserDatabaseService {
   final String columnToken = 'token';
   final String columnReferralCode = 'referralCode';
 
-  static final _databaseVersion = 6;
+  static const _databaseVersion = 6;
   static Future<Database> _database;
   String path = '';
 
@@ -85,7 +85,7 @@ class CampaignUserDatabaseService {
     List<Map> res =
         await db.query(tableName, where: 'email= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
-    if (res.length > 0) {
+    if (res.isNotEmpty) {
       return CampaignUserData.fromJson((res.first));
     }
     return null;
@@ -97,7 +97,7 @@ class CampaignUserDatabaseService {
     List<Map> res =
         await db.query(tableName, where: 'email= ?', whereArgs: [email]);
     log.w('ID - $email --- $res');
-    if (res.length > 0) {
+    if (res.isNotEmpty) {
       return CampaignUserData.fromJson((res.first));
     }
     return null;
@@ -111,7 +111,7 @@ class CampaignUserDatabaseService {
     List<Map> res =
         await db.query(tableName, where: 'token= ?', whereArgs: [token]);
     log.w('Login token - $token --- $res');
-    if (res.length > 0) {
+    if (res.isNotEmpty) {
       return CampaignUserData.fromJson((res.first));
     }
     return null;

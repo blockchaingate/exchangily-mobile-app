@@ -32,16 +32,16 @@ class Price {
       double volume,
       double change,
       double changeValue}) {
-    this._symbol = symbol ?? '';
-    this._price = price ?? 0.0;
-    this._high = high ?? 0.0;
-    this._low = low ?? 0.0;
-    this._open = open ?? 0.0;
-    this._close = close ?? 0.0;
-    this._volume = volume ?? 0.0;
-    this._change = change ?? 0.0;
+    _symbol = symbol ?? '';
+    _price = price ?? 0.0;
+    _high = high ?? 0.0;
+    _low = low ?? 0.0;
+    _open = open ?? 0.0;
+    _close = close ?? 0.0;
+    _volume = volume ?? 0.0;
+    _change = change ?? 0.0;
 
-    this._changeValue = changeValue ?? 0.0;
+    _changeValue = changeValue ?? 0.0;
   }
 
   factory Price.fromJson(Map<String, dynamic> json) {
@@ -54,8 +54,9 @@ class Price {
     //   print(
     //       'SYMBOL $symbol changePercentage ${(close - open) / open} -- open $open -- close $close');
     double changePercentage = ((close - open) / open) * 100;
-    if (changePercentage.isInfinite || changePercentage.isNaN)
+    if (changePercentage.isInfinite || changePercentage.isNaN) {
       changePercentage = 0.0;
+    }
     //print('changePercentage $changePercentage -- open $open -- close $close');
     return Price(
         changeValue: close - open,
@@ -70,60 +71,60 @@ class Price {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['s'] = this._symbol;
-    data['p'] = this._price;
-    data['h'] = this._high;
-    data['l'] = this._low;
-    data['o'] = this._open;
-    data['c'] = this._close;
-    data['v'] = this._volume;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['s'] = _symbol;
+    data['p'] = _price;
+    data['h'] = _high;
+    data['l'] = _low;
+    data['o'] = _open;
+    data['c'] = _close;
+    data['v'] = _volume;
     return data;
   }
 
   String get symbol => _symbol;
   set symbol(String symbol) {
-    this._symbol = symbol;
+    _symbol = symbol;
   }
 
   double get price => _price;
   set price(double price) {
-    this._price = price;
+    _price = price;
   }
 
   double get high => _high;
   set high(double high) {
-    this._high = high;
+    _high = high;
   }
 
   double get low => _low;
   set low(double low) {
-    this._low = low;
+    _low = low;
   }
 
   double get open => _open;
   set open(double open) {
-    this._open = open;
+    _open = open;
   }
 
   double get close => _close;
   set close(double close) {
-    this._close = close;
+    _close = close;
   }
 
   double get volume => _volume;
   set volume(double volume) {
-    this._volume = volume;
+    _volume = volume;
   }
 
   double get changeValue => _changeValue;
   set changeValue(double changeValue) {
-    this._changeValue = changeValue;
+    _changeValue = changeValue;
   }
 
   double get change => _change;
   set change(double change) {
-    this._change = change;
+    _change = change;
   }
 }
 
@@ -131,12 +132,12 @@ class PriceList {
   final List<Price> prices;
   PriceList({this.prices});
   factory PriceList.fromJson(List<dynamic> parsedJson) {
-    List<Price> prices = new List<Price>();
-    parsedJson.forEach((i) {
+    List<Price> prices = <Price>[];
+    for (var i in parsedJson) {
       Price price = Price.fromJson(i);
       prices.add(price);
-    });
+    }
 
-    return new PriceList(prices: prices);
+    return PriceList(prices: prices);
   }
 }

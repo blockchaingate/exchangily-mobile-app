@@ -18,7 +18,7 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
   ApiService apiService = locator<ApiService>();
-  ExchangeBalanceModel exchangeBalance = new ExchangeBalanceModel();
+  ExchangeBalanceModel exchangeBalance = ExchangeBalanceModel();
   List<ExchangeBalanceModel> exchangeBalances = [];
   var storageService = locator<LocalStorageService>();
 
@@ -33,10 +33,10 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
   }
 
   @override
-  void onData(data) {
+  void onData(data) async {
     setBusyForObject(exchangeBalance, true);
     exchangeBalances = data;
-    exchangeBalances.forEach((element) async {
+    for (var element in exchangeBalances) {
       print(element.toJson());
       if (element.ticker.isEmpty) {
         await tokenListDatabaseService
@@ -56,11 +56,11 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
         log.i(
             'exchanageBalanceModel null tickerName added ${element.toJson()}');
       }
-    });
+    }
     setBusyForObject(exchangeBalance, false);
-    exchangeBalances.forEach((element) {
+    for (var element in exchangeBalances) {
       log.w(element.toJson());
-    });
+    }
   }
 
   Future getSingleCoinExchangeBalanceFromAll(String tickerName) async {
@@ -72,7 +72,7 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
     });
     if (exchangeBalance.lockedAmount == null) {
       List res = data as List;
-      res.forEach((coin) {
+      for (var coin in res) {
         if (coin['coin'] == tickerName) {
           log.w('singleCoinExchangeBalance $coin');
           exchangeBalance.unlockedAmount = coin['amount'];
@@ -80,7 +80,7 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
           print(
               'exchangeBalance using all coins for loop ${exchangeBalance.toJson()}');
         }
-      });
+      }
     }
     setBusy(false);
     return exchangeBalance;

@@ -67,9 +67,9 @@ const String BitcoinCashExplorerUrl = "https://explorer.bitcoin.com/bch/tx/";
 const String TronExplorerUrl = "https://tronscan.org/#/transaction/";
 
 // Free Fab
-final String getFreeFabUrl =
+const String getFreeFabUrl =
     baseBlockchainGateV2Url + 'airdrop/getQuestionair/';
-final String postFreeFabUrl =
+const String postFreeFabUrl =
     baseBlockchainGateV2Url + 'airdrop/answerQuestionair/';
 
 // USD Coin Price
@@ -138,7 +138,7 @@ final String fabBaseUrl = environment["endpoints"]["fab"];
 final String ethBaseUrl = environment["endpoints"]["eth"];
 final String eventsUrl = environment["eventInfo"];
 
-final String txStatusStatusRoute = 'kanban/explorer/getTransactionStatus';
+const String txStatusStatusRoute = 'kanban/explorer/getTransactionStatus';
 
 // Websockets
 

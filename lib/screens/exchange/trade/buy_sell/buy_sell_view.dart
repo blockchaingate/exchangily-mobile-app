@@ -32,7 +32,7 @@ class BuySellView extends StatelessWidget {
   final String pairSymbolWithSlash;
   final tickerName;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     GlobalKey _one = GlobalKey();
@@ -60,7 +60,7 @@ class BuySellView extends StatelessWidget {
             // endDrawerEnableOpenDragGesture: true,
             // endDrawer: Drawer(child: Container(child: SettingsPortableView())),
             appBar: buildCupertinoNavigationBar(context),
-            backgroundColor: Color(0xFF1F2233),
+            backgroundColor: const Color(0xFF1F2233),
             body: ShowCaseWidget(
               onStart: (index, key) {
                 print('onStart: $index, $key');
@@ -81,8 +81,8 @@ class BuySellView extends StatelessWidget {
 
                       // Price and quantity text
                       Container(
-                        margin: EdgeInsets.all(3),
-                        decoration: BoxDecoration(
+                        margin: const EdgeInsets.all(3),
+                        decoration: const BoxDecoration(
                           color: Color(0xFF2c2c4c),
                           border: Border(
                               top:
@@ -100,7 +100,8 @@ class BuySellView extends StatelessWidget {
                             Expanded(
                                 flex: 5,
                                 child: Container(
-                                  padding: EdgeInsets.only(right: 4, left: 1),
+                                  padding:
+                                      const EdgeInsets.only(right: 4, left: 1),
                                   // LeftSideColumnWidgets View model widget
                                   child: LeftSideColumnWidgets(),
                                 )),
@@ -111,7 +112,7 @@ class BuySellView extends StatelessWidget {
                               child: Container(
                                   // height:
                                   //     MediaQuery.of(context).size.height / 2,
-                                  margin: EdgeInsets.only(left: 3),
+                                  margin: const EdgeInsets.only(left: 3),
                                   child:
 
 /*----------------------------------------------------------
@@ -119,7 +120,7 @@ class BuySellView extends StatelessWidget {
  -----------------------------------------------------------*/
                                       // OrderBookView(tickerName: model.tickerName),
                                       !model.dataReady
-                                          ? Container(
+                                          ? SizedBox(
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height /
@@ -131,7 +132,7 @@ class BuySellView extends StatelessWidget {
                                                       child: Container(
                                                           color: white,
                                                           child:
-                                                              CupertinoActivityIndicator()))))
+                                                              const CupertinoActivityIndicator()))))
                                           :
 
 /*----------------------------------------------------------------------
@@ -198,9 +199,8 @@ class BuySellView extends StatelessWidget {
                                                     false,
                                                     model),
                                                 Container(
-                                                    padding:
-                                                        EdgeInsets.fromLTRB(
-                                                            0, 8, 0, 8),
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(0, 8, 0, 8),
                                                     child: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -212,7 +212,9 @@ class BuySellView extends StatelessWidget {
                                                                         .sellOrders !=
                                                                     []
                                                             ? Text(
-                                                                '${model.orderbook.price.toString()}',
+                                                                model.orderbook
+                                                                    .price
+                                                                    .toString(),
                                                                 style: Theme.of(
                                                                         context)
                                                                     .textTheme
@@ -254,8 +256,9 @@ class BuySellView extends StatelessWidget {
                       model.isReloadMyOrders
                           ? Container(
                               height: MediaQuery.of(context).size.height * 0.20,
-                              margin: EdgeInsets.all(5),
-                              child: Center(child: CircularProgressIndicator()))
+                              margin: const EdgeInsets.all(5),
+                              child: const Center(
+                                  child: CircularProgressIndicator()))
                           : MyOrdersView(
                               tickerName: model.tickerName,
                             ),
@@ -284,8 +287,8 @@ class BuySellView extends StatelessWidget {
                       ? BorderSide(width: 2.0, color: primaryColor)
                       : BorderSide.none),
             ),
-            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
             child: GestureDetector(
                 onTap: () {
                   model.selectBuySellTab(true);
@@ -293,7 +296,9 @@ class BuySellView extends StatelessWidget {
                 child: Text(
                   AppLocalizations.of(context).buy,
                   style: TextStyle(
-                      color: model.bidOrAsk ? Color(0XFF871fff) : Colors.white,
+                      color: model.bidOrAsk
+                          ? const Color(0XFF871fff)
+                          : Colors.white,
                       fontSize: 14.0),
                 ))),
         Container(
@@ -301,10 +306,10 @@ class BuySellView extends StatelessWidget {
               border: Border(
                   bottom: model.bidOrAsk
                       ? BorderSide.none
-                      : BorderSide(width: 2.0, color: Color(0XFF871fff))),
+                      : const BorderSide(width: 2.0, color: Color(0XFF871fff))),
             ),
-            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
             child: GestureDetector(
                 onTap: () {
                   model.selectBuySellTab(false);
@@ -312,7 +317,9 @@ class BuySellView extends StatelessWidget {
                 child: Text(
                   AppLocalizations.of(context).sell,
                   style: TextStyle(
-                      color: model.bidOrAsk ? Colors.white : Color(0XFF871fff),
+                      color: model.bidOrAsk
+                          ? Colors.white
+                          : const Color(0XFF871fff),
                       fontSize: 14.0),
                 )))
       ],
@@ -334,10 +341,10 @@ class BuySellView extends StatelessWidget {
       //     _scaffoldKey.currentState.openEndDrawer();
       //   },
       // ),
-      padding: EdgeInsetsDirectional.only(start: 0),
+      padding: const EdgeInsetsDirectional.only(start: 0),
       leading: CupertinoButton(
-        padding: EdgeInsets.all(0),
-        child: Icon(
+        padding: const EdgeInsets.all(0),
+        child: const Icon(
           Icons.arrow_back,
           color: Colors.white,
         ),
@@ -349,7 +356,7 @@ class BuySellView extends StatelessWidget {
         pairSymbolWithSlash ?? '',
         style: Theme.of(context).textTheme.headline3,
       ),
-      backgroundColor: Color(0XFF1f2233),
+      backgroundColor: const Color(0XFF1f2233),
     );
   }
 }
@@ -468,7 +475,7 @@ Column buildVerticalOrderbookColumn(
             // model.setBusy(false);
           },
           child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 2, 0, 2),
+              padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -480,8 +487,8 @@ Column buildVerticalOrderbookColumn(
                           color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
                           fontSize: 13.0)),
                   Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 2),
                       color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                       child: Text(
                           NumberUtil()
@@ -489,7 +496,7 @@ Column buildVerticalOrderbookColumn(
                                   precision:
                                       model.singlePairDecimalConfig.qtyDecimal)
                               .toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
                               fontSize: 13.0)))
@@ -573,9 +580,9 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
       children: <Widget>[
         // price text input
         Padding(
-          padding: EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5),
           child: TextField(
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [
               DecimalTextInputFormatter(
                   decimalRange: model.singlePairDecimalConfig.priceDecimal,
@@ -597,9 +604,9 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
         ),
         // quantity text input
         Padding(
-          padding: EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5),
           child: TextField(
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [
               DecimalTextInputFormatter(
                   decimalRange: model.singlePairDecimalConfig.qtyDecimal,
@@ -640,7 +647,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
               padding: const EdgeInsets.only(right: 3.0),
               child: Text(
                 AppLocalizations.of(context).amount,
-                style: TextStyle(color: Colors.grey, fontSize: 12.0),
+                style: const TextStyle(color: Colors.grey, fontSize: 12.0),
               ),
             ),
             UIHelper.verticalSpaceSmall,
@@ -648,17 +655,29 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             Expanded(
               child: model.bidOrAsk == true
                   ? Text(
-                      "${NumberUtil().truncateDoubleWithoutRouding(model.transactionAmount, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}" +
+                      NumberUtil()
+                              .truncateDoubleWithoutRouding(
+                                  model.transactionAmount,
+                                  precision:
+                                      model.singlePairDecimalConfig.qtyDecimal)
+                              .toString() +
                           " " +
                           model.baseCoinName,
                       textAlign: TextAlign.end,
-                      style: TextStyle(color: Colors.grey, fontSize: 12.0))
+                      style:
+                          const TextStyle(color: Colors.grey, fontSize: 12.0))
                   : Text(
-                      "${NumberUtil().truncateDoubleWithoutRouding(model.transactionAmount, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}" +
+                      NumberUtil()
+                              .truncateDoubleWithoutRouding(
+                                  model.transactionAmount,
+                                  precision:
+                                      model.singlePairDecimalConfig.qtyDecimal)
+                              .toString() +
                           " " +
                           model.baseCoinName,
                       textAlign: TextAlign.end,
-                      style: TextStyle(color: Colors.grey, fontSize: 12.0)),
+                      style:
+                          const TextStyle(color: Colors.grey, fontSize: 12.0)),
             )
           ],
         ),
@@ -669,7 +688,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                 model.baseCoinExchangeBalance == null ||
                 model.baseCoinExchangeBalance.unlockedAmount == null ||
                 model.targetCoinExchangeBalance.unlockedAmount == null
-            ? Center(child: CupertinoActivityIndicator())
+            ? const Center(child: CupertinoActivityIndicator())
             : BalanceRowWidget(model: model),
         UIHelper.verticalSpaceSmall,
         // kanban gas fee
@@ -678,14 +697,17 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
           children: <Widget>[
             Text(
               AppLocalizations.of(context).kanbanGasFee,
-              style: new TextStyle(color: Colors.grey, fontSize: 12.0),
+              style: const TextStyle(color: Colors.grey, fontSize: 12.0),
             ),
             Padding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                   left: 5), // padding left to keep some space from the text
               child: Text(
-                '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 4).toString()}',
-                style: new TextStyle(color: Colors.grey, fontSize: 12.0),
+                NumberUtil()
+                    .truncateDoubleWithoutRouding(model.kanbanTransFee,
+                        precision: 4)
+                    .toString(),
+                style: const TextStyle(color: Colors.grey, fontSize: 12.0),
               ),
             )
           ],
@@ -697,9 +719,9 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
           children: <Widget>[
             Text(
               AppLocalizations.of(context).advance,
-              style: new TextStyle(color: Colors.grey, fontSize: 12.0),
+              style: const TextStyle(color: Colors.grey, fontSize: 12.0),
             ),
-            Container(
+            SizedBox(
               height: 20,
               child: Transform.scale(
                 alignment: Alignment.centerRight,
@@ -719,7 +741,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
         Visibility(
           visible: model.transFeeAdvance,
           child: Padding(
-            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+            padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
             child: Column(
               children: <Widget>[
                 // Kanban gas price
@@ -737,7 +759,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                             onChanged: (String amount) {
                               model.updateTransFee();
                             },
-                            keyboardType: TextInputType.numberWithOptions(
+                            keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true), // numnber keyboard
                             decoration: InputDecoration(
                                 focusedBorder: UnderlineInputBorder(
@@ -765,7 +787,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                       onChanged: (String amount) {
                         model.updateTransFee();
                       },
-                      keyboardType: TextInputType.numberWithOptions(
+                      keyboardType: const TextInputType.numberWithOptions(
                           decimal: true), // numnber keyboard
                       decoration: InputDecoration(
                           focusedBorder: UnderlineInputBorder(
@@ -784,18 +806,18 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
         ),
         UIHelper.verticalSpaceSmall,
         // buy sell button
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.width / 2.2,
           child: ElevatedButton(
               style: ButtonStyle(
-                shape: MaterialStateProperty.all(StadiumBorder(
+                shape: MaterialStateProperty.all(const StadiumBorder(
                   side: BorderSide(color: Colors.transparent, width: 2),
                 )),
                 padding: MaterialStateProperty.all(
-                    EdgeInsets.symmetric(horizontal: 12.0)),
+                    const EdgeInsets.symmetric(horizontal: 12.0)),
                 backgroundColor: model.bidOrAsk
-                    ? MaterialStateProperty.all(Color(0xFF0da88b))
-                    : MaterialStateProperty.all(Color(0xFFe2103c)),
+                    ? MaterialStateProperty.all(const Color(0xFF0da88b))
+                    : MaterialStateProperty.all(const Color(0xFFe2103c)),
               ),
               onPressed: () {
                 model.checkPass(context);
@@ -854,14 +876,26 @@ class BalanceRowWidget extends StatelessWidget {
                     ?
                     // ?  model.baseCoinExchangeBalance.unlockAmount == null?textDemoWidget():
                     Text(
-                        "${NumberUtil().truncateDoubleWithoutRouding(model.baseCoinExchangeBalance.unlockedAmount, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}" +
+                        NumberUtil()
+                                .truncateDoubleWithoutRouding(
+                                    model
+                                        .baseCoinExchangeBalance.unlockedAmount,
+                                    precision: model
+                                        .singlePairDecimalConfig.qtyDecimal)
+                                .toString() +
                             " " +
                             model.baseCoinName,
                         style: TextStyle(color: primaryColor, fontSize: 13.0))
                     :
                     // ?  model.targetCoinExchangeBalance.unlockAmount == null?textDemoWidget():
                     Text(
-                        "${NumberUtil().truncateDoubleWithoutRouding(model.targetCoinExchangeBalance.unlockedAmount, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}" +
+                        NumberUtil()
+                                .truncateDoubleWithoutRouding(
+                                    model.targetCoinExchangeBalance
+                                        .unlockedAmount,
+                                    precision: model
+                                        .singlePairDecimalConfig.qtyDecimal)
+                                .toString() +
                             " " +
                             model.targetCoinName,
                         style: TextStyle(color: primaryColor, fontSize: 13.0)),

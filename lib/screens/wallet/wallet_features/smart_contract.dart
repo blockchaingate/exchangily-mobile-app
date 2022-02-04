@@ -41,7 +41,7 @@ class _SmartContractState extends State<SmartContract> {
   var functionHex;
   var abi;
 
-  DialogService _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   var fabUtils = FabUtils();
@@ -64,16 +64,16 @@ class _SmartContractState extends State<SmartContract> {
   // here we are creating the list needed for the DropDownButton
   Future getDropDownMenuItems(abis) async {
     // var smartContractABI = await getSmartContractABI('');
-    List<DropdownMenuItem<String>> items = new List();
+    List<DropdownMenuItem<String>> items = [];
     for (var abi in abis) {
       // here we are creating the drop down menu items, you can customize the item right here
       // but I'll just use a simple text for this
       if (abi['type'] == 'function') {
-        items.add(new DropdownMenuItem(
+        items.add(DropdownMenuItem(
             value: abi['name'],
-            child: new Text(
+            child: Text(
               abi['name'],
-              style: TextStyle(color: Colors.white70),
+              style: const TextStyle(color: Colors.white70),
             )));
       }
     }
@@ -91,7 +91,7 @@ class _SmartContractState extends State<SmartContract> {
         _inputs = item['inputs'];
         abi = item;
         for (var j = 0; j < _inputs.length; j++) {
-          _inputs[j]['controller'] = new TextEditingController();
+          _inputs[j]['controller'] = TextEditingController();
         }
         if (item['stateMutability'] == 'payable') {
           _payable = true;
@@ -119,9 +119,9 @@ class _SmartContractState extends State<SmartContract> {
     }
 
     setState(() => {
-          this._smartContractName = smartContractABI['Name'],
-          this._dropDownMenuItems = funcs,
-          this._currentFunction = _currentFunc
+          _smartContractName = smartContractABI['Name'],
+          _dropDownMenuItems = funcs,
+          _currentFunction = _currentFunc
         });
   }
 
@@ -130,10 +130,10 @@ class _SmartContractState extends State<SmartContract> {
     //onSmartContractAddressChanged(myController.value.text);
     return Scaffold(
         appBar: CupertinoNavigationBar(
-          padding: EdgeInsetsDirectional.only(start: 0),
+          padding: const EdgeInsetsDirectional.only(start: 0),
           leading: CupertinoButton(
-            padding: EdgeInsets.all(0),
-            child: Icon(
+            padding: const EdgeInsets.all(0),
+            child: const Icon(
               Icons.arrow_back,
               color: Colors.white,
             ),
@@ -145,70 +145,70 @@ class _SmartContractState extends State<SmartContract> {
           ),
           middle: Text(
             AppLocalizations.of(context).smartContract,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
-          backgroundColor: Color(0XFF1f2233),
+          backgroundColor: const Color(0XFF1f2233),
         ),
-        backgroundColor: Color(0xFF1F2233),
+        backgroundColor: const Color(0xFF1F2233),
         body: Container(
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
             child: ListView(
               children: <Widget>[
                 Text(AppLocalizations.of(context).smartContractAddress,
-                    style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
-                SizedBox(height: 10),
+                    style: const TextStyle(color: Colors.grey, fontSize: 18.0)),
+                const SizedBox(height: 10),
                 TextField(
                   decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: new BorderSide(
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
                             color: Color(0XFF871fff), width: 1.0)),
                     hintText: AppLocalizations.of(context).enterAddress,
-                    hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+                    hintStyle: const TextStyle(fontSize: 20.0, color: Colors.grey),
                   ),
                   controller: smartContractAddressController,
-                  style: TextStyle(fontSize: 16.0, color: Colors.white),
+                  style: const TextStyle(fontSize: 16.0, color: Colors.white),
                   onChanged: (text) {
                     onSmartContractAddressChanged(text);
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(AppLocalizations.of(context).smartContractName,
-                    style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
-                SizedBox(height: 10),
-                Text("$_smartContractName",
-                    style: new TextStyle(color: Colors.white, fontSize: 18.0)),
-                SizedBox(height: 20),
+                    style: const TextStyle(color: Colors.grey, fontSize: 18.0)),
+                const SizedBox(height: 10),
+                Text(_smartContractName,
+                    style: const TextStyle(color: Colors.white, fontSize: 18.0)),
+                const SizedBox(height: 20),
                 Text(AppLocalizations.of(context).function,
-                    style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
-                SizedBox(height: 10),
-                new DropdownButton(
+                    style: const TextStyle(color: Colors.grey, fontSize: 18.0)),
+                const SizedBox(height: 10),
+                DropdownButton(
                   isExpanded: true,
                   value: _currentFunction,
                   items: _dropDownMenuItems,
                   onChanged: changedDropDownItem,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Column(
                   children: <Widget>[
                     for (var input in inputs)
                       Column(
                         children: <Widget>[
                           Text(input['name'],
-                              style: new TextStyle(
+                              style: const TextStyle(
                                   color: Colors.grey, fontSize: 18.0)),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           TextField(
                             controller: input['controller'],
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               enabledBorder: OutlineInputBorder(
-                                  borderSide: new BorderSide(
+                                  borderSide: BorderSide(
                                       color: Color(0XFF871fff), width: 1.0)),
                               hintText: '',
                               hintStyle:
                                   TextStyle(fontSize: 20.0, color: Colors.grey),
                             ),
                             style:
-                                TextStyle(fontSize: 16.0, color: Colors.white),
+                                const TextStyle(fontSize: 16.0, color: Colors.white),
                           ),
                         ],
                       ),
@@ -216,29 +216,29 @@ class _SmartContractState extends State<SmartContract> {
                       Column(
                         children: <Widget>[
                           Text(AppLocalizations.of(context).payableValue,
-                              style: new TextStyle(
+                              style: const TextStyle(
                                   color: Colors.grey, fontSize: 18.0)),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           TextField(
                             controller: payableController,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               enabledBorder: OutlineInputBorder(
-                                  borderSide: new BorderSide(
+                                  borderSide: BorderSide(
                                       color: Color(0XFF871fff), width: 1.0)),
                               hintText: '',
                               hintStyle:
                                   TextStyle(fontSize: 20.0, color: Colors.grey),
                             ),
                             style:
-                                TextStyle(fontSize: 16.0, color: Colors.white),
+                                const TextStyle(fontSize: 16.0, color: Colors.white),
                           ),
                         ],
                       )
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 MaterialButton(
-                  padding: EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15),
                   color: globals.primaryColor,
                   textColor: Colors.white,
                   onPressed: () async {
@@ -293,7 +293,7 @@ class _SmartContractState extends State<SmartContract> {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote);
     if (res.confirmed) {
       log.w('Pass matched');
-      log.w('${res.returnedText}');
+      log.w(res.returnedText);
       String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
 

@@ -26,7 +26,7 @@ class _MainNavCircleState extends State<MainNavCircle> {
       onWillPop: () async => false,
       child: Scaffold(
         body: Container(
-          decoration: BoxDecoration(color: Colors.white),
+          decoration: const BoxDecoration(color: Colors.white),
           child: Center(
             child: _getPage(currentPage),
           ),
@@ -57,7 +57,7 @@ class _MainNavCircleState extends State<MainNavCircle> {
         // ),
         drawer: Drawer(
           child: ListView(
-            children: <Widget>[Text("Hello"), Text("World")],
+            children: const <Widget>[Text("Hello"), Text("World")],
           ),
         ),
       ),
@@ -67,15 +67,15 @@ class _MainNavCircleState extends State<MainNavCircle> {
   _getPage(int page) {
     switch (page) {
       case 0:
-        return WalletDashboardView();
+        return const WalletDashboardView();
       case 1:
-        return MarketsView();
+        return const MarketsView();
       case 2:
-        return CampaignInstructionScreen();
+        return const CampaignInstructionScreen();
       case 3:
-        return SettingsView();
+        return const SettingsView();
       default:
-        return WalletDashboardView();
+        return const WalletDashboardView();
     }
   }
 }

@@ -27,7 +27,7 @@ import 'package:exchangilymobileapp/utils/string_util.dart';
 // {"success":true,"data":{"transactionID":"7f9d1b3fad00afa85076d28d46fd3457f66300989086b95c73ed84e9b3906de8"}}
 class MoveToExchangeScreen extends StatelessWidget {
   final WalletInfo walletInfo;
-  MoveToExchangeScreen({Key key, this.walletInfo}) : super(key: key);
+  const MoveToExchangeScreen({Key key, this.walletInfo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +40,10 @@ class MoveToExchangeScreen extends StatelessWidget {
       },
       builder: (context, MoveToExchangeViewModel model, child) => Scaffold(
         appBar: CupertinoNavigationBar(
-          padding: EdgeInsetsDirectional.only(start: 0),
+          padding: const EdgeInsetsDirectional.only(start: 0),
           leading: CupertinoButton(
-            padding: EdgeInsets.all(0),
-            child: Icon(
+            padding: const EdgeInsets.all(0),
+            child: const Icon(
               Icons.arrow_back,
               color: Colors.white,
             ),
@@ -57,17 +57,17 @@ class MoveToExchangeScreen extends StatelessWidget {
             '${AppLocalizations.of(context).move}  ${model.specialTicker}  ${AppLocalizations.of(context).toExchange}',
             style: Theme.of(context).textTheme.headline5,
           ),
-          backgroundColor: Color(0XFF1f2233),
+          backgroundColor: const Color(0XFF1f2233),
         ),
-        backgroundColor: Color(0xFF1F2233),
+        backgroundColor: const Color(0xFF1F2233),
         body: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: ListView(
             // mainAxisAlignment: MainAxisAlignment.center,
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               TextField(
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [
                   DecimalTextInputFormatter(
                       decimalRange: model.decimalLimit,
@@ -82,11 +82,11 @@ class MoveToExchangeScreen extends StatelessWidget {
                           ': ' +
                           model.decimalLimit.toString(),
                       style: Theme.of(context).textTheme.headline6),
-                  enabledBorder: OutlineInputBorder(
+                  enabledBorder: const OutlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0XFF871fff), width: 1.0)),
                   hintText: AppLocalizations.of(context).enterAmount,
-                  hintStyle: TextStyle(fontSize: 14.0, color: Colors.grey),
+                  hintStyle: const TextStyle(fontSize: 14.0, color: Colors.grey),
                 ),
                 controller: model.amountController,
                 style: Theme.of(context).textTheme.headline5.copyWith(
@@ -113,10 +113,10 @@ class MoveToExchangeScreen extends StatelessWidget {
                                   '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()}',
                               style: Theme.of(context).textTheme.subtitle2),
                       Padding(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 3,
                         ),
-                        child: Text('${model.specialTicker}'.toUpperCase(),
+                        child: Text(model.specialTicker.toUpperCase(),
                             style: Theme.of(context).textTheme.subtitle2),
                       )
                     ],
@@ -125,15 +125,16 @@ class MoveToExchangeScreen extends StatelessWidget {
                       ? OutlinedButton(
                           style: ButtonStyle(
                             minimumSize:
-                                MaterialStateProperty.all(Size.square(20)),
+                                MaterialStateProperty.all(const Size.square(20)),
                             padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(
+                                const EdgeInsets.symmetric(
                                     vertical: 2, horizontal: 5)),
                             backgroundColor: MaterialStateProperty.all(green),
                           ),
                           onPressed: () {
-                            if (walletInfo.availableBalance != 0.0)
+                            if (walletInfo.availableBalance != 0.0) {
                               model.fillMaxAmount();
+                            }
                           },
                           child: Text(
                             AppLocalizations.of(context).maxAmount,
@@ -153,7 +154,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                     walletInfo.tickerName == 'TRX' ||
                             walletInfo.tickerName == 'USDTX'
                         ? Container(
-                            padding: EdgeInsets.only(top: 10, bottom: 0),
+                            padding: const EdgeInsets.only(top: 10, bottom: 0),
                             alignment: Alignment.topLeft,
                             child: walletInfo.tickerName == 'TRX'
                                 ? Text(
@@ -185,7 +186,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                                         .textTheme
                                                         .headline5),
                                                 Padding(
-                                                  padding: EdgeInsets.only(
+                                                  padding: const EdgeInsets.only(
                                                       left:
                                                           5), // padding left to keep some space from the text
                                                   child: Text(
@@ -210,7 +211,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                           .textTheme
                                           .headline5),
                                   Padding(
-                                    padding: EdgeInsets.only(
+                                    padding: const EdgeInsets.only(
                                         left:
                                             5), // padding left to keep some space from the text
                                     child: Text(
@@ -234,7 +235,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                                 .textTheme
                                                 .headline5),
                                         Padding(
-                                          padding: EdgeInsets.only(
+                                          padding: const EdgeInsets.only(
                                               left:
                                                   5), // padding left to keep some space from the text
                                           child: Text(
@@ -255,7 +256,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                         Text(AppLocalizations.of(context).kanbanGasFee,
                             style: Theme.of(context).textTheme.headline5),
                         Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left:
                                   5), // padding left to keep some space from the text
                           child: Text(
@@ -316,14 +317,14 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         model.updateTransFee();
                                       },
                                       keyboardType:
-                                          TextInputType.numberWithOptions(
+                                          const TextInputType.numberWithOptions(
                                               decimal:
                                                   true), // numnber keyboard
                                       decoration: InputDecoration(
                                           focusedBorder: UnderlineInputBorder(
                                               borderSide: BorderSide(
                                                   color: globals.primaryColor)),
-                                          enabledBorder: UnderlineInputBorder(
+                                          enabledBorder: const UnderlineInputBorder(
                                               borderSide: BorderSide(
                                                   color: globals.grey)),
                                           hintText: '0.00000',
@@ -362,14 +363,14 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         model.updateTransFee();
                                       },
                                       keyboardType:
-                                          TextInputType.numberWithOptions(
+                                          const TextInputType.numberWithOptions(
                                               decimal:
                                                   true), // numnber keyboard
                                       decoration: InputDecoration(
                                           focusedBorder: UnderlineInputBorder(
                                               borderSide: BorderSide(
                                                   color: globals.primaryColor)),
-                                          enabledBorder: UnderlineInputBorder(
+                                          enabledBorder: const UnderlineInputBorder(
                                               borderSide: BorderSide(
                                                   color: globals.grey)),
                                           hintText: '0.00000',
@@ -410,13 +411,13 @@ class MoveToExchangeScreen extends StatelessWidget {
                                       model.updateTransFee();
                                     },
                                     keyboardType:
-                                        TextInputType.numberWithOptions(
+                                        const TextInputType.numberWithOptions(
                                             decimal: true), // numnber keyboard
                                     decoration: InputDecoration(
                                         focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: globals.primaryColor)),
-                                        enabledBorder: UnderlineInputBorder(
+                                        enabledBorder: const UnderlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: globals.grey)),
                                         hintText: '0.00000',
@@ -451,13 +452,13 @@ class MoveToExchangeScreen extends StatelessWidget {
                                   onChanged: (String amount) {
                                     model.updateTransFee();
                                   },
-                                  keyboardType: TextInputType.numberWithOptions(
+                                  keyboardType: const TextInputType.numberWithOptions(
                                       decimal: true), // numnber keyboard
                                   decoration: InputDecoration(
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
                                               color: globals.primaryColor)),
-                                      enabledBorder: UnderlineInputBorder(
+                                      enabledBorder: const UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: globals.grey)),
                                       hintText: '0.00000',
@@ -490,13 +491,13 @@ class MoveToExchangeScreen extends StatelessWidget {
                                 onChanged: (String amount) {
                                   model.updateTransFee();
                                 },
-                                keyboardType: TextInputType.numberWithOptions(
+                                keyboardType: const TextInputType.numberWithOptions(
                                     decimal: true), // numnber keyboard
                                 decoration: InputDecoration(
                                     focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
                                             color: globals.primaryColor)),
-                                    enabledBorder: UnderlineInputBorder(
+                                    enabledBorder: const UnderlineInputBorder(
                                         borderSide:
                                             BorderSide(color: globals.grey)),
                                     hintText: '0.00000',
@@ -566,9 +567,9 @@ class MoveToExchangeScreen extends StatelessWidget {
                           ),
                         ),
                         !model.isShowDetailsMessage
-                            ? Icon(Icons.arrow_drop_down,
+                            ? const Icon(Icons.arrow_drop_down,
                                 color: Colors.red, size: 18)
-                            : Icon(Icons.arrow_drop_up,
+                            : const Icon(Icons.arrow_drop_up,
                                 color: Colors.red, size: 18)
                       ],
                     )
@@ -586,15 +587,16 @@ class MoveToExchangeScreen extends StatelessWidget {
               UIHelper.verticalSpaceSmall,
               // Confirm Button
               MaterialButton(
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 color: globals.primaryColor,
                 textColor: Colors.white,
                 onPressed: () {
-                  if (model.isValidAmount && model.amount != 0.0)
+                  if (model.isValidAmount && model.amount != 0.0) {
                     model.checkPass();
+                  }
                 },
                 child: model.isBusy
-                    ? SizedBox(
+                    ? const SizedBox(
                         width: 20,
                         height: 20,
                         child: CircularProgressIndicator(

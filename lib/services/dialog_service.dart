@@ -18,7 +18,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/logger.dart';
 
 class DialogService {
-  GlobalKey<NavigatorState> _dialogNavigationKey = GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> _dialogNavigationKey = GlobalKey<NavigatorState>();
   Function(DialogRequest) _showDialogListener;
   Function(DialogRequest) _showOrderUpdateDialogListener;
   Function(DialogRequest) _showBasicDialogListener;

@@ -21,7 +21,7 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: 250,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: Colors.white,
             boxShadow: [BoxShadow(blurRadius: 15, color: Colors.black12)]));
   }

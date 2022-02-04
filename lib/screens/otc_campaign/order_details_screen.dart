@@ -28,7 +28,7 @@ class CampaignOrderDetailsScreen extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(10.0),
             child: Column(
               // mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -56,7 +56,7 @@ class CampaignOrderDetailsScreen extends StatelessWidget {
                 ),
                 UIHelper.verticalSpaceSmall,
                 orderInfoList != null
-                    ? Container(
+                    ? SizedBox(
                         height: MediaQuery.of(context).size.height - 150,
                         child: ListView.builder(
                           scrollDirection: Axis.vertical,
@@ -64,7 +64,7 @@ class CampaignOrderDetailsScreen extends StatelessWidget {
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             return Container(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               color: evenOrOddColor(index),
                               child: Row(
                                 mainAxisAlignment:

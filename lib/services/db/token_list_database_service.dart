@@ -20,7 +20,7 @@ import 'package:path/path.dart';
 class TokenListDatabaseService {
   final log = getLogger('TokenListDatabaseService');
 
-  static final _databaseName = 'token_list_database.db';
+  static const _databaseName = 'token_list_database.db';
   final String tableName = 'token_list';
   // database table and column names
   final String columnId = 'id';
@@ -33,7 +33,7 @@ class TokenListDatabaseService {
   final String columnMinWithdraw = 'minWithdraw';
   final String columnFeeWithdraw = 'feeWithdraw';
 
-  static final _databaseVersion = 5;
+  static const _databaseVersion = 5;
   static Future<Database> _database;
   String path = '';
 
@@ -183,7 +183,7 @@ class TokenListDatabaseService {
     final Database db = await _database;
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
-    if (res.length > 0) {
+    if (res.isNotEmpty) {
       return TokenModel.fromJson((res.first));
     }
     return null;

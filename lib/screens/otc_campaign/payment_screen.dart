@@ -32,19 +32,19 @@ class CampaignPaymentScreen extends StatelessWidget {
               // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 model.isConfirming
-                    ? Container(
+                    ? SizedBox(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height - 400,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[CircularProgressIndicator()],
+                          children: const <Widget>[CircularProgressIndicator()],
                         ),
                       )
                     :
                     // 1st container row Amount and payment type
                     Container(
                         width: MediaQuery.of(context).size.width - 70,
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +83,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                               borderSide: BorderSide(
                                                   width: 1,
                                                   color: globals.primaryColor)),
-                                          enabledBorder: OutlineInputBorder(
+                                          enabledBorder: const OutlineInputBorder(
                                               borderRadius: BorderRadius.zero,
                                               borderSide: BorderSide(
                                                   width: .5,
@@ -123,7 +123,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                             Text(AppLocalizations.of(context)
                                                 .tokenQuantity),
                                             model.busy && model.isTokenCalc
-                                                ? SizedBox(
+                                                ? const SizedBox(
                                                     width: 10,
                                                     height: 10,
                                                     child:
@@ -142,12 +142,12 @@ class CampaignPaymentScreen extends StatelessWidget {
                                               .textTheme
                                               .headline6
                                               .copyWith(color: globals.white54),
-                                          border: OutlineInputBorder(
+                                          border: const OutlineInputBorder(
                                               gapPadding: 1,
                                               borderSide: BorderSide(
                                                   color: globals.white))),
                                       keyboardType:
-                                          TextInputType.numberWithOptions(
+                                          const TextInputType.numberWithOptions(
                                               decimal: true),
                                       cursorColor: globals.primaryColor,
                                     ),
@@ -236,7 +236,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                             model.transportationFee == 0.0
                                 ? Container()
                                 : Container(
-                                    margin: EdgeInsets.all(3),
+                                    margin: const EdgeInsets.all(3),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -246,7 +246,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                         UIHelper.horizontalSpaceSmall,
                                         Text(
                                             model.transportationFee.toString() +
-                                                '\ ETH'),
+                                                ' ETH'),
                                       ],
                                     )),
 
@@ -258,7 +258,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                               child: Visibility(
                                 visible: model.groupValue == 'USD',
                                 child: Container(
-                                  padding: EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -289,7 +289,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                               textAlign: TextAlign.start,
                                             ),
                                           ),
-                                          Expanded(
+                                          const Expanded(
                                             flex: 1,
                                             child: Text('Key Bank',
                                                 textAlign: TextAlign.start),
@@ -306,7 +306,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                 AppLocalizations.of(context)
                                                     .routingNumber),
                                           ),
-                                          Expanded(
+                                          const Expanded(
                                             flex: 1,
                                             child: Text('041001039'),
                                           )
@@ -323,7 +323,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                         .bankAccount +
                                                     ' #'),
                                           ),
-                                          Expanded(
+                                          const Expanded(
                                             flex: 1,
                                             child: Text('350211024087'),
                                           )
@@ -343,7 +343,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                               child: Visibility(
                                 visible: model.groupValue == 'USDT',
                                 child: Container(
-                                  padding: EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -433,7 +433,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                         padding:
                                             const EdgeInsets.only(right: 5.0),
                                         child: RaisedButton(
-                                          padding: EdgeInsets.all(0),
+                                          padding: const EdgeInsets.all(0),
                                           shape: StadiumBorder(
                                               side: BorderSide(
                                                   color: globals.primaryColor,
@@ -457,7 +457,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       flex: 4,
                                       child: model.busy
                                           ? RaisedButton(
-                                              padding: EdgeInsets.all(0),
+                                              padding: const EdgeInsets.all(0),
                                               child: Text(
                                                   AppLocalizations.of(context)
                                                       .confirm,
@@ -466,7 +466,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                       .headline5),
                                               onPressed: () {})
                                           : RaisedButton(
-                                              padding: EdgeInsets.all(0),
+                                              padding: const EdgeInsets.all(0),
                                               child: Text(
                                                   AppLocalizations.of(context)
                                                       .confirm,
@@ -500,11 +500,11 @@ class CampaignPaymentScreen extends StatelessWidget {
                 // 2nd contianer row Order info
 
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
                   decoration: BoxDecoration(
                       color: globals.walletCardColor,
-                      borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                  padding: EdgeInsets.all(10.0),
+                      borderRadius: const BorderRadius.all(Radius.circular(5.0))),
+                  padding: const EdgeInsets.all(10.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
@@ -551,7 +551,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                 style: Theme.of(context).textTheme.bodyText2,
                               ))
                           : model.orderInfoList != null
-                              ? Container(
+                              ? SizedBox(
                                   height: model.orderInfoContainerHeight,
                                   child: ListView.builder(
                                     scrollDirection: Axis.vertical,
@@ -559,7 +559,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                     shrinkWrap: true,
                                     itemBuilder: (context, index) {
                                       return Container(
-                                        padding: EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.all(8.0),
                                         color: model.evenOrOddColor(index),
                                         child: InkWell(
                                           onTap: () {
@@ -607,7 +607,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .bodyText1),
-                                                    Icon(Icons.info_outline,
+                                                    const Icon(Icons.info_outline,
                                                         size: 8,
                                                         color: globals.grey),
                                                   ],

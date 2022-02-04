@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-final double largeSize = 700;
+const double largeSize = 700;
 
 
 //check is phone or tablet

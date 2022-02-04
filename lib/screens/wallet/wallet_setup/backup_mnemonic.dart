@@ -49,7 +49,7 @@ class _BackupMnemonicWalletScreenState
     return WillPopScope(
       onWillPop: () async {
         navigationService.navigateTo(WalletSetupViewRoute);
-        return new Future(() => false);
+        return Future(() => false);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -61,7 +61,7 @@ class _BackupMnemonicWalletScreenState
           actions: <Widget>[
             // action button
             IconButton(
-                icon: Icon(
+                icon: const Icon(
                   MdiIcons.helpCircleOutline,
                   size: 18,
                 ),
@@ -80,7 +80,7 @@ class _BackupMnemonicWalletScreenState
                               // textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline3,
                             )),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Container(
                                 // padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: Text(
@@ -95,14 +95,14 @@ class _BackupMnemonicWalletScreenState
           ],
         ),
         body: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: ListView(
             // mainAxisSize: MainAxisSize.min,
             // crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               UIHelper.verticalSpaceMedium,
               Container(
-                padding: EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
                 decoration: BoxDecoration(
                     color: globals.primaryColor,
                     borderRadius: BorderRadius.circular(30)
@@ -112,15 +112,15 @@ class _BackupMnemonicWalletScreenState
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       MdiIcons.information,
                       color: globals.white,
                       size: 25,
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Text(
                       AppLocalizations.of(context).important,
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1,
@@ -129,7 +129,7 @@ class _BackupMnemonicWalletScreenState
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
@@ -143,22 +143,22 @@ class _BackupMnemonicWalletScreenState
               ),
               UIHelper.verticalSpaceSmall,
               Container(
-                margin: EdgeInsets.symmetric(
+                margin: const EdgeInsets.symmetric(
                   vertical: 10,
                 ),
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
                 child: _buttonGrid(),
               ),
               // UIHelper.verticalSpaceSmall,
               Center(
                 child: Container(
-                  padding: EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15),
                   child: MaterialButton(
                     color: primaryColor,
                     child: Text(
                       AppLocalizations.of(context).confirm,
                       // style: Theme.of(context).textTheme.headline4,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1,
                           fontSize: 16),
@@ -179,7 +179,7 @@ class _BackupMnemonicWalletScreenState
   }
 
   Widget _buttonGrid() => GridView.extent(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       maxCrossAxisExtent: 125,
       padding: const EdgeInsets.all(2),
       mainAxisSpacing: 20,
@@ -193,7 +193,7 @@ class _BackupMnemonicWalletScreenState
         return Container(
             child: TextField(
           textAlign: TextAlign.center,
-          textAlignVertical: TextAlignVertical(y: 0.8),
+          textAlignVertical: const TextAlignVertical(y: 0.8),
           enableInteractiveSelection: false, // readonly
           // enabled: false, // if false use cant see the selection border around
           readOnly: true,
@@ -202,12 +202,12 @@ class _BackupMnemonicWalletScreenState
             // alignLabelWithHint: true,
             fillColor: globals.primaryColor,
             filled: true,
-            hintText: '$singleWord',
+            hintText: singleWord,
             hintMaxLines: 1,
             hintStyle:
-                TextStyle(color: globals.white, fontWeight: FontWeight.w600),
+                const TextStyle(color: globals.white, fontWeight: FontWeight.w600),
             focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: globals.white, width: 2),
+                borderSide: const BorderSide(color: globals.white, width: 2),
                 borderRadius: BorderRadius.circular(30.0)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),

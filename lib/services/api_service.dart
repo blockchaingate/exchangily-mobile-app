@@ -75,7 +75,7 @@ class ApiService {
 
 // Get issue tokens
 
-  Future<List<CustomTokenModel>> getIssueTokens() async {
+  Future<List<CustomTokenModel>> getCustomTokens() async {
     String url = baseBlockchainGateV2Url +
         GetIsueTokenApiRoute +
         '/' +
@@ -210,7 +210,7 @@ class ApiService {
           var data = json['data'] as List;
 
           int index = 1;
-          data.forEach((element) {
+          for (var element in data) {
             var tag = element['action'] as String;
             var ticker = element['coin'] as String;
             var timestamp = element['timestamp'];
@@ -218,10 +218,10 @@ class ApiService {
             var kanbanTxStatus;
             var kanbanTxId;
             var tickerTxId;
-            var chainName;
+            String chainName;
             List transactionsInside = element['transactions'] as List;
             // It has only 2 objects inside
-            transactionsInside.forEach((element) {
+            for (var element in transactionsInside) {
               String chain = element['chain'];
               if (chain == 'KANBAN') {
                 kanbanTxStatus = element['status'];
@@ -240,10 +240,11 @@ class ApiService {
               else {
                 tickerChainTxStatus = element['status'];
                 chainName = chain;
-                if (element['transactionId'] != null)
+                if (element['transactionId'] != null) {
                   tickerTxId = element['transactionId'];
+                }
               }
-            });
+            }
 
             var date =
                 DateTime.fromMillisecondsSinceEpoch(timestamp * 1000).toLocal();
@@ -253,7 +254,7 @@ class ApiService {
 
             //  print(
             // 'tag $tag -- ticker $ticker -- date ${date.toLocal()} - amount ${double.parse(amount)}');
-            TransactionHistory tx = new TransactionHistory(
+            TransactionHistory tx = TransactionHistory(
                 id: index,
                 tag: tag,
                 chainName: chainName,
@@ -267,7 +268,7 @@ class ApiService {
 
             transactionHistory.add(tx);
             index++;
-          });
+          }
         }
       }
       return transactionHistory;
@@ -300,7 +301,7 @@ class ApiService {
           //   log.e('getTransactionHistoryEvents json ${json['data']}');
           var data = json['data'] as List;
 
-          data.forEach((element) {
+          for (var element in data) {
             var holder = LightningRemitHistoryModel.fromJson(element);
             print(holder.toJson());
             var timestamp = holder.time;
@@ -310,7 +311,7 @@ class ApiService {
             String filteredDate =
                 date.toString().substring(0, date.toString().length - 4);
 
-            TransactionHistory tx = new TransactionHistory(
+            TransactionHistory tx = TransactionHistory(
                 tickerChainTxStatus: holder.status.toString() ?? '',
                 tag: holder.type ?? '',
                 tickerChainTxId: holder.txid ?? '',
@@ -319,11 +320,11 @@ class ApiService {
                 quantity: holder.amount ?? 0.0);
 
             transactionHistory.add(tx);
-          });
+          }
 
-          transactionHistory.forEach((element) {
+          for (var element in transactionHistory) {
             log.e('getTransactionHistoryEvents length ${element.toJson()}');
-          });
+          }
         }
       }
       return transactionHistory;
@@ -385,8 +386,9 @@ class ApiService {
                     Get All coin exchange balance
 ----------------------------------------------------------------------*/
   Future<List<ExchangeBalanceModel>> getAssetsBalance(String exgAddress) async {
-    if (exgAddress.isEmpty)
+    if (exgAddress.isEmpty) {
       exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+    }
     ExchangeBalanceModelList exchangeBalanceList;
     String url =
         configService.getKanbanBaseUrl() + AssetsBalanceApiRoute + exgAddress;
@@ -498,10 +500,8 @@ class ApiService {
 ----------------------------------------------------------------------*/
 
   Future getFreeFab(String address) async {
-    var ipAddress;
-    if (address == null) {
-      address = '';
-    }
+    String ipAddress;
+    address ??= '';
     await NetworkInterface.list(type: InternetAddressType.IPv4)
         .then((networkData) => ipAddress = networkData[0].addresses[0].address);
 
@@ -623,10 +623,10 @@ class ApiService {
         var jsonList = jsonDecode(response.body)['data'] as List;
         //  log.i('json list getWalletBalance $jsonList');
         List newList = [];
-        jsonList.forEach((element) {
+        for (var element in jsonList) {
           if (element['balance'] == -1) element['balance'] = 0.0;
           if (element['balance'] != null) newList.add(element);
-        });
+        }
         log.i('newList getWalletBalance $newList');
         balanceList = WalletBalanceList.fromJson(newList);
       } else {
@@ -949,13 +949,13 @@ class ApiService {
     var url = ethBaseUrl + 'sendsignedtransaction';
     var data = {'signedtx': txHex};
     var errMsg = '';
-    var txHash;
+    String txHash;
     try {
       var response =
           await client.post(url, headers: {"responseType": "text"}, body: data);
       txHash = response.body;
 
-      if (txHash.indexOf('txerError') >= 0) {
+      if (txHash.contains('txerError')) {
         errMsg = txHash;
         txHash = '';
       }

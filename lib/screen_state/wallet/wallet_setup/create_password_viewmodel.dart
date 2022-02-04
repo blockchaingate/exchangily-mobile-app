@@ -81,10 +81,11 @@ class CreatePasswordViewModel extends BaseViewModel {
     password = pass;
     var res = RegexValidator(pattern).isValid(password);
     checkPasswordConditions = res;
-    if (confirmPassTextController.text.isNotEmpty)
+    if (confirmPassTextController.text.isNotEmpty) {
       password == confirmPassword
           ? passwordMatch = true
           : passwordMatch = false;
+    }
     if (passwordMatch) errorMessage = '';
     setBusy(false);
     return checkPasswordConditions;
@@ -103,7 +104,7 @@ class CreatePasswordViewModel extends BaseViewModel {
 
   Future validatePassword() async {
     setBusy(true);
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = RegExp(pattern);
     String pass = passTextController.text;
     String confirmPass = confirmPassTextController.text;
     if (pass.isEmpty) {

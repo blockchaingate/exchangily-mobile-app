@@ -23,15 +23,16 @@ import 'package:exchangilymobileapp/localizations.dart';
 
 class OrderUpdateDialogManager extends StatefulWidget {
   final Widget child;
-  OrderUpdateDialogManager({Key key, this.child}) : super(key: key);
+  const OrderUpdateDialogManager({Key key, this.child}) : super(key: key);
 
+  @override
   _OrderUpdateDialogManagerState createState() =>
       _OrderUpdateDialogManagerState();
 }
 
 class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
   final log = getLogger('OrderUpdateDialogManager');
-  DialogService _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
   TextEditingController controller = TextEditingController();
 
   @override
@@ -69,7 +70,7 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
         content: Column(
           children: <Widget>[
             TextField(
-              style: TextStyle(color: globals.white),
+              style: const TextStyle(color: globals.white),
               controller: controller,
               obscureText: true,
               decoration: InputDecoration(

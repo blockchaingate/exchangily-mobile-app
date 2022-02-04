@@ -21,10 +21,10 @@ class AnnouncementListScreenState extends BaseState {
     setBusy(true);
     prefs = await SharedPreferences.getInstance();
     List tempdata = prefs.getStringList('announceData');
-    tempdata.forEach((element) {
+    for (var element in tempdata) {
       announceList.add(jsonDecode(element));
       print('jsonData $announceList');
-    });
+    }
     print("announceList from list page state: ");
     print(announceList.toString());
     setBusy(false);
@@ -41,11 +41,11 @@ class AnnouncementListScreenState extends BaseState {
     //save cache
     List<String> jsonData = [];
     int readedNum = 0;
-    announceList.forEach((element) {
+    for (var element in announceList) {
       element["isRead"] == false ? readedNum++ : readedNum = readedNum;
       jsonData.add(jsonEncode(element));
       print('jsonData $jsonData');
-    });
+    }
     setunReadAnnouncement(readedNum);
     print("check status: " + prefs.containsKey('announceData').toString());
     prefs.setStringList('announceData', jsonData);

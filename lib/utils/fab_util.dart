@@ -120,7 +120,7 @@ class FabUtils {
         var balanceHex = json['executionResult']['output'];
 
         //  print('balanceHex===' + balanceHex);
-        final abiCode = """
+        const abiCode = """
       [
       {
         "constant": false,
@@ -373,10 +373,11 @@ class FabUtils {
       await tokenListDatabaseService
           .getContractAddressByTickerName(coinName)
           .then((value) {
-        if (!value.startsWith('0x'))
+        if (!value.startsWith('0x')) {
           smartContractAddress = '0x' + value;
-        else
+        } else {
           smartContractAddress = value;
+        }
       });
       print('official smart contract address $smartContractAddress');
     }

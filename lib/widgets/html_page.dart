@@ -9,7 +9,7 @@ class HtmlPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
 
       appBar: AppBar(
         title: Text(
@@ -26,23 +26,23 @@ class HtmlPage extends StatelessWidget {
           style: {
             "html": Style(
               backgroundColor: Colors.black12,
-              color: Color(0xfff2f2f2)
+              color: const Color(0xfff2f2f2)
             ),
 //            "h1": Style(
 //              textAlign: TextAlign.center,
 //            ),
             "table": Style(
-              backgroundColor: Color.fromARGB(0x50, 0xee, 0xee, 0xee),
+              backgroundColor: const Color.fromARGB(0x50, 0xee, 0xee, 0xee),
             ),
             "tr": Style(
-              border: Border(bottom: BorderSide(color: Colors.grey)),
+              border: const Border(bottom: BorderSide(color: Colors.grey)),
             ),
             "th": Style(
-              padding: EdgeInsets.all(6),
+              padding: const EdgeInsets.all(6),
               backgroundColor: Colors.grey,
             ),
             "td": Style(
-              padding: EdgeInsets.all(6),
+              padding: const EdgeInsets.all(6),
             ),
             "var": Style(fontFamily: 'serif'),
           },

@@ -31,12 +31,12 @@ class ImportWalletView extends StatelessWidget {
             centerTitle: true,
             title: Text(
               AppLocalizations.of(context).importWallet,
-              style: TextStyle(fontSize: 14),
+              style: const TextStyle(fontSize: 14),
             ),
             backgroundColor: globals.secondaryColor),
         body: Container(
           alignment: Alignment.center,
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: ListView(
             children: <Widget>[
               VerifyMnemonicWalletView(
@@ -44,7 +44,7 @@ class ImportWalletView extends StatelessWidget {
                 count: model.count,
               ),
               Container(
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 child: RaisedButton(
                   child: Text(
                     AppLocalizations.of(context).confirm,

@@ -99,7 +99,7 @@ class CampaignLoginScreenState extends BaseState {
             ),
           ),
           keyboardType: TextInputType.emailAddress,
-          style: TextStyle(
+          style: const TextStyle(
             color: globals.white,
           ),
           controller: passwordResetEmailTextController,
@@ -209,7 +209,7 @@ class CampaignLoginScreenState extends BaseState {
     } else if (passwordTextController.text.isEmpty) {
       setErrorMessage(AppLocalizations.of(context).pleaseFillYourPassword);
     } else {
-      user = new User(
+      user = User(
           email: emailTextController.text,
           password: passwordTextController.text);
       login(user);

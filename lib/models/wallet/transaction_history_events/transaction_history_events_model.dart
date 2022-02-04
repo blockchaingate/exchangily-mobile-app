@@ -51,9 +51,9 @@ class TransactionHistoryEventsList {
 
   factory TransactionHistoryEventsList.fromJson(List<dynamic> parsedJson) {
     List<TransactionHistoryEvents> transactions =
-        new List<TransactionHistoryEvents>();
+        <TransactionHistoryEvents>[];
     transactions =
         parsedJson.map((i) => TransactionHistoryEvents.fromJson(i)).toList();
-    return new TransactionHistoryEventsList(transactions: transactions);
+    return TransactionHistoryEventsList(transactions: transactions);
   }
 }

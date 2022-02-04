@@ -2,7 +2,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
+import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -12,7 +12,7 @@ import 'my_orders_viewmodel.dart';
 class MyOrdersView extends StatelessWidget {
   final String tickerName;
 
-  MyOrdersView({Key key, this.tickerName}) : super(key: key);
+  const MyOrdersView({Key key, this.tickerName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,17 +39,17 @@ class MyOrdersView extends StatelessWidget {
                 model.isFutureError
                     ? Container(
                         color: primaryColor.withAlpha(150),
-                        padding: EdgeInsets.all(25),
+                        padding: const EdgeInsets.all(25),
                         alignment: Alignment.center,
                         child: Column(
                           children: [
                             Text(
                               AppLocalizations.of(context).serverError +
                                   ': ${model.errorMessage}',
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                             IconButton(
-                              icon: Icon(Icons.replay),
+                              icon: const Icon(Icons.replay),
                               color: white,
                               onPressed: () {
                                 model.isFutureError = false;
@@ -122,13 +122,13 @@ class MyOrdersView extends StatelessWidget {
                               Column(
                                 children: <Widget>[
                                   TabBar(
-                                    labelPadding: EdgeInsets.all(3),
+                                    labelPadding: const EdgeInsets.all(3),
                                     onTap: (int i) {},
                                     indicatorSize: TabBarIndicatorSize
                                         .tab, // model.showOrdersInTabView(i);
                                     indicator: BoxDecoration(
                                       color: Colors.redAccent,
-                                      gradient: LinearGradient(colors: [
+                                      gradient: const LinearGradient(colors: [
                                         Colors.redAccent,
                                         Colors.orangeAccent
                                       ]),
@@ -172,9 +172,9 @@ class MyOrdersView extends StatelessWidget {
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.40,
-                                      margin: EdgeInsets.all(5),
+                                      margin: const EdgeInsets.all(5),
                                       child: model.isBusy
-                                          ? ShimmerLayout(
+                                          ? const ShimmerLayout(
                                               layoutType: 'marketTrades')
                                           : TabBarView(
                                               children: model.myOrdersTabBarView
@@ -196,7 +196,7 @@ class MyOrdersView extends StatelessWidget {
   Container priceFieldsHeadersRow(BuildContext context) {
     return Container(
       color: walletCardColor,
-      padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
       child: Row(children: <Widget>[
         // Expanded(
         //   flex: 1,
@@ -239,28 +239,28 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
 
   @override
   Widget build(BuildContext context, MyOrdersViewModel model) {
-    model.refreshController = new RefreshController();
+    model.refreshController = RefreshController();
     return SmartRefresher(
       enablePullUp: true,
       header: Theme.of(context).platform == TargetPlatform.iOS
-          ? ClassicHeader()
-          : MaterialClassicHeader(),
+          ? const ClassicHeader()
+          : const MaterialClassicHeader(),
       enablePullDown: true,
       footer: CustomFooter(
         builder: (BuildContext context, LoadStatus mode) {
           Widget body;
           if (mode == LoadStatus.idle) {
-            body = Text("pull up load");
+            body = const Text("pull up load");
           } else if (mode == LoadStatus.loading) {
-            body = CupertinoActivityIndicator();
+            body = const CupertinoActivityIndicator();
           } else if (mode == LoadStatus.failed) {
-            body = Text("Load Failed!Click retry!");
+            body = const Text("Load Failed!Click retry!");
           } else if (mode == LoadStatus.canLoading) {
             body = Text(AppLocalizations.of(context).releaseToLoadMore);
           } else {
-            body = Text("No more Data");
+            body = const Text("No more Data");
           }
-          return Container(
+          return SizedBox(
             height: 55.0,
             child: Center(child: body),
           );
@@ -328,10 +328,10 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                                 //   model.busy(model.onClickOrderHash) &&
                                 orders[index].orderHash ==
                                     model.onClickOrderHash
-                            ? CupertinoActivityIndicator()
+                            ? const CupertinoActivityIndicator()
                             : IconButton(
                                 color: red,
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.close,
                                   size: 16,
                                 ),
@@ -348,7 +348,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                         : IconButton(
                             disabledColor:
                                 Theme.of(context).disabledColor.withAlpha(50),
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.close,
                               size: 16,
                             ),

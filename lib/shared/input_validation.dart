@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class InputValidation extends StatefulWidget {
-  InputValidation(
+  const InputValidation(
       {@required this.title,
       this.inputDecoration,
       @required this.inputFormatter,
@@ -43,7 +43,7 @@ class InputValidation extends StatefulWidget {
 }
 
 class _InputValidationState extends State<InputValidation> {
-  FocusNode _focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode();
   String _value = '';
 
   void _submit() async {

@@ -5,7 +5,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class YoutubePage extends StatefulWidget {
   final Map videoObj;
 
-  YoutubePage({@required this.videoObj});
+  const YoutubePage({@required this.videoObj});
 
   @override
   _YoutubePageState createState() => _YoutubePageState();
@@ -34,7 +34,7 @@ class _YoutubePageState extends State<YoutubePage> {
         appBar: AppBar(title: Text(widget.videoObj["title"])),
         body: ListView(
           children: [
-            Container(
+            SizedBox(
               width: double.infinity,
               child: AspectRatio(
                 aspectRatio: 16 / 9,
@@ -44,9 +44,9 @@ class _YoutubePageState extends State<YoutubePage> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
                   widget.videoObj["title"],
                   style: Theme.of(context)
@@ -54,11 +54,11 @@ class _YoutubePageState extends State<YoutubePage> {
                       .headline1
                       .copyWith(fontWeight: FontWeight.bold),
                 )),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(widget.videoObj["desc"],
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                     )))
           ],

@@ -15,7 +15,7 @@ class MarketTradesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(5.0),
         child: Column(
           children: [
             Container(
@@ -57,8 +57,8 @@ class MarketTradesView extends StatelessWidget {
                     return Container(
                       color:
                           marketTrades[index].bidOrAsk ? buyOrders : sellOrders,
-                      padding: EdgeInsets.all(4.0),
-                      margin: EdgeInsets.only(bottom: 1.0),
+                      padding: const EdgeInsets.all(4.0),
+                      margin: const EdgeInsets.only(bottom: 1.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[

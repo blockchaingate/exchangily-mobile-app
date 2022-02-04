@@ -29,12 +29,12 @@ class PairPriceView extends StatelessWidget {
 
   Container buildContainer(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(top: 10),
       child: Column(
         children: <Widget>[
           // Price Row
           Container(
-            margin: EdgeInsets.only(bottom: 5),
+            margin: const EdgeInsets.only(bottom: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -77,7 +77,7 @@ class PairPriceView extends StatelessWidget {
           ),
           // Change Price Value Row
           Container(
-            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
             color: isBusy ? Colors.transparent : walletCardColor,
 
             // color: Colors.redAccent,

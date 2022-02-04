@@ -19,7 +19,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   String title;
   Color color;
 
-  CustomAppBar({this.color, this.title})
+  CustomAppBar({@required this.color, @required this.title})
       : assert(title != null),
         assert(color != null);
 
@@ -28,11 +28,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Container(
       height: _height,
       alignment: Alignment.center,
-      padding: EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: 20.0),
       decoration: BoxDecoration(color: color),
       child: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
             color: Colors.white,
             letterSpacing: 2,
             fontSize: 30,

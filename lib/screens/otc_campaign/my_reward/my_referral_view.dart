@@ -35,7 +35,7 @@ class MyReferralView extends StatelessWidget {
             UIHelper.verticalSpaceMedium,
 
             Expanded(
-              child: Container(
+              child: SizedBox(
                 height: UIHelper.getScreenFullHeight(context),
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -46,7 +46,7 @@ class MyReferralView extends StatelessWidget {
                       elevation: 2,
                       color: globals.walletCardColor,
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 10.0),
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
                         child: Row(
                           children: <Widget>[
                             UIHelper.horizontalSpaceSmall,

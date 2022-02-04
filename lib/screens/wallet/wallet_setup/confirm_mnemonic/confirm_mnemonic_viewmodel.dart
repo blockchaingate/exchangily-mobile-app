@@ -64,12 +64,12 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
     tappedMnemonicList.clear();
 
     lastIndexList = [];
-    tapTextControllerList.forEach((single) {
+    for (var single in tapTextControllerList) {
       if (single.text.contains(')')) {
         int s = single.text.indexOf(' ') + 1;
         single.text = single.text.substring(s, single.text.length);
       }
-    });
+    }
 
     setBusy(false);
   }
@@ -156,10 +156,11 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
   selectConfirmMethod(String verifyMethod) {
     setBusy(true);
 
-    if (verifyMethod == 'tap')
+    if (verifyMethod == 'tap') {
       isTap = true;
-    else
+    } else {
       isTap = false;
+    }
 
     setBusy(false);
   }

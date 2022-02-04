@@ -27,10 +27,10 @@ class CoreWalletModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this.id;
-    data['mnemonic'] = this.mnemonic;
-    data['walletBalancesBody'] = this.walletBalancesBody;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['mnemonic'] = mnemonic;
+    data['walletBalancesBody'] = walletBalancesBody;
 
     return data;
   }

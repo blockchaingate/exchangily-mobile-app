@@ -20,14 +20,14 @@ import 'package:path/path.dart';
 class UserSettingsDatabaseService {
   final log = getLogger('UserSettingsDatabaseService');
 
-  static final _databaseName = 'user_settings_database.db';
+  static const _databaseName = 'user_settings_database.db';
   final String tableName = 'user_settings';
   // database table and column names
   final String columnId = 'id';
   final String columnLanguage = 'language';
   final String columnTheme = 'theme';
 
-  static final _databaseVersion = 4;
+  static const _databaseVersion = 4;
   static Future<Database> _database;
   String path = '';
 
@@ -97,7 +97,7 @@ class UserSettingsDatabaseService {
     final Database db = await _database;
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
-    if (res.length > 0) {
+    if (res.isNotEmpty) {
       return UserSettings.fromJson((res.first));
     }
     return null;
@@ -109,7 +109,7 @@ class UserSettingsDatabaseService {
     if (db == null) return "en";
     List<Map> res = await db.query(tableName);
     log.w('res --- $res');
-    if (res.length > 0) {
+    if (res.isNotEmpty) {
       return UserSettings.fromJson((res.first)).language;
     }
     return null;

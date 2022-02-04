@@ -66,7 +66,7 @@ class RedepositViewModel extends FutureViewModel {
 
   Future getErrDeposit() async {
     setBusy(true);
-    var address = await this.sharedService.getExgAddressFromWalletDatabase();
+    var address = await sharedService.getExgAddressFromWalletDatabase();
     await walletService.getErrDeposit(address).then((errDepositData) async {
       debugPrint(
           'redeposit res length ${errDepositData.length} ---data $errDepositData');
@@ -77,17 +77,18 @@ class RedepositViewModel extends FutureViewModel {
 
         String tickerNameByCointype = newCoinTypeMap[coinType];
         print('tickerNameByCointype $tickerNameByCointype');
-        if (tickerNameByCointype == null)
+        if (tickerNameByCointype == null) {
           await tokenListDatabaseService.getAll().then((tokenList) {
             if (tokenList != null) {
               tickerNameByCointype = tokenList
                   .firstWhere((element) => element.coinType == coinType)
                   .tickerName;
-              if (tickerNameByCointype == walletInfo.tickerName)
+              if (tickerNameByCointype == walletInfo.tickerName) {
                 errDepositList.add(item);
+              }
             }
           });
-        else if (tickerNameByCointype == walletInfo.tickerName) {
+        } else if (tickerNameByCointype == walletInfo.tickerName) {
           errDepositList.add(item);
           log.e(
               'in else if -- coin type $coinType --  tickerNameByCointype $tickerNameByCointype');
@@ -105,9 +106,9 @@ class RedepositViewModel extends FutureViewModel {
 
     log.w('errDepositList=== $errDepositList');
     // if there is only one redeposit entry
-    if (errDepositList != null && errDepositList.length > 0) {
-      this.errDepositList = errDepositList;
-      this.errDepositTransactionID = errDepositList[0]["transactionID"];
+    if (errDepositList != null && errDepositList.isNotEmpty) {
+      errDepositList = errDepositList;
+      errDepositTransactionID = errDepositList[0]["transactionID"];
       this.kanbanTransFee = kanbanTransFee;
     }
     await getSingleWalletBalance();
@@ -148,8 +149,8 @@ class RedepositViewModel extends FutureViewModel {
 
     if (errDepositItem == null) {
       sharedService.showInfoFlushbar(
-          '${AppLocalizations.of(context).redepositError}',
-          '${AppLocalizations.of(context).redepositItemNotSelected}',
+          AppLocalizations.of(context).redepositError,
+          AppLocalizations.of(context).redepositItemNotSelected,
           Icons.cancel,
           red,
           context);
@@ -206,7 +207,7 @@ class RedepositViewModel extends FutureViewModel {
       var signedMess = await CoinUtils().signedMessage(
           originalMessage, seed, walletInfo.tickerName, walletInfo.tokenType);
 
-      var txKanbanHex = await this.getTxKanbanHex(amountInBigIntByApi,
+      var txKanbanHex = await getTxKanbanHex(amountInBigIntByApi,
           keyPairKanban, nonce, coinType, transactionID, signedMess,
           chainType: walletInfo.tokenType);
 
@@ -252,7 +253,7 @@ class RedepositViewModel extends FutureViewModel {
 
   getTxKanbanHex(
       amountInLink, keyPairKanban, nonce, coinType, txHash, signedMess,
-      {String chainType: ''}) async {
+      {String chainType = ''}) async {
     var abiHex;
     String addressInKanban = keyPairKanban['address'];
     log.w('transactionID for submitredeposit:' + txHash);
@@ -262,13 +263,14 @@ class RedepositViewModel extends FutureViewModel {
     bool isSpecial = false;
     int specialCoinType;
     coinName = newCoinTypeMap[coinType];
-    if (coinName == null)
+    if (coinName == null) {
       await tokenListDatabaseService
           .getTickerNameByCoinType(coinType)
           .then((ticker) {
         coinName = ticker;
         log.w('submit redeposit ticker $ticker');
       });
+    }
     for (var i = 0; i < Constants.specialTokens.length; i++) {
       if (coinName == Constants.specialTokens[i]) {
         isSpecial = true;

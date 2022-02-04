@@ -32,11 +32,11 @@ class MarketsView extends StatelessWidget {
         builder: (context, model, _) => WillPopScope(
               onWillPop: () async {
                 model.onBackButtonPressed();
-                return new Future(() => false);
+                return Future(() => false);
               },
               child: Scaffold(
                 body: Container(
-                  margin: EdgeInsets.only(top: 5.0),
+                  margin: const EdgeInsets.only(top: 5.0),
                   //   color: Theme.of(context).tra,
                   child: Column(
                     children: [

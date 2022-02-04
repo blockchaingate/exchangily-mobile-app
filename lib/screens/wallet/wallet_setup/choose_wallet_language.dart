@@ -32,8 +32,8 @@ class ChooseWalletLanguageView extends StatelessWidget {
       },
       builder: (context, model, child) => Container(
         padding: orientation == Orientation.portrait
-            ? EdgeInsets.all(40)
-            : EdgeInsets.all(80),
+            ? const EdgeInsets.all(40)
+            : const EdgeInsets.all(80),
         color: globals.walletCardColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -41,21 +41,21 @@ class ChooseWalletLanguageView extends StatelessWidget {
             // Logo Container
             Container(
               height: orientation == Orientation.portrait ? 50 : 20,
-              margin: EdgeInsets.only(bottom: 10),
+              margin: const EdgeInsets.only(bottom: 10),
               child: Image.asset('assets/images/start-page/logo.png'),
             ),
             // Middle Graphics Container
             Container(
               width: orientation == Orientation.portrait ? 300 : 300,
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Image.asset('assets/images/start-page/middle-design.png'),
             ),
             // Language Text and Icon Container
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
               child: Row(
                 children: <Widget>[
-                  Expanded(
+                  const Expanded(
                     flex: 1,
                     child: Icon(
                       Icons.language,
@@ -84,7 +84,7 @@ class ChooseWalletLanguageView extends StatelessWidget {
                       ),
                     ),
                   )
-                : Container(
+                : SizedBox(
                     // width: 225,
                     height: 120,
                     child: Column(
@@ -98,7 +98,7 @@ class ChooseWalletLanguageView extends StatelessWidget {
                             ),
                             onPressed: () {
                               model.setLangauge('en');
-                              AppLocalizations.load(Locale('en', 'US'));
+                              AppLocalizations.load(const Locale('en', 'US'));
                               Navigator.of(context).pushNamed('/walletSetup');
                             },
                           ),
@@ -112,7 +112,7 @@ class ChooseWalletLanguageView extends StatelessWidget {
                                 style: Theme.of(context).textTheme.headline4),
                             onPressed: () {
                               model.setLangauge('zh');
-                              AppLocalizations.load(Locale('zh', 'ZH'));
+                              AppLocalizations.load(const Locale('zh', 'ZH'));
                               Navigator.of(context).pushNamed('/walletSetup');
                             },
                           )

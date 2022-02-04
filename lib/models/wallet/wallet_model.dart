@@ -50,15 +50,15 @@ class WalletInfo {
       double inExchange
       //PairDecimalConfig pairDecimalConfig
       }) {
-    this._id = id;
-    this._tickerName = tickerName;
-    this._tokenType = tokenType;
-    this._address = address;
-    this._lockedBalance = lockedBalance ?? 0.0;
-    this._availableBalance = availableBalance ?? 0.0;
-    this._usdValue = usdValue ?? 0.0;
-    this._name = name;
-    this._inExchange = inExchange ?? 0.0;
+    _id = id;
+    _tickerName = tickerName;
+    _tokenType = tokenType;
+    _address = address;
+    _lockedBalance = lockedBalance ?? 0.0;
+    _availableBalance = availableBalance ?? 0.0;
+    _usdValue = usdValue ?? 0.0;
+    _name = name;
+    _inExchange = inExchange ?? 0.0;
     // this._pairDecimalConfig = pairDecimalConfig ?? new PairDecimalConfig();
   }
 
@@ -72,7 +72,7 @@ class WalletInfo {
     // }
     double ab = json['availableBalance'] as double;
 
-    return new WalletInfo(
+    return WalletInfo(
       id: json['id'] as int,
       tickerName: json['tickerName'] as String,
       tokenType: json['tokenType'] as String,
@@ -91,16 +91,16 @@ class WalletInfo {
   // To json
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this._id;
-    data['tickerName'] = this._tickerName;
-    data['tokenType'] = this._tokenType;
-    data['address'] = this._address;
-    data['lockedBalance'] = this._lockedBalance;
-    data['availableBalance'] = this._availableBalance;
-    data['usdValue'] = this._usdValue;
-    data['name'] = this._name;
-    data['inExchange'] = this._inExchange;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = _id;
+    data['tickerName'] = _tickerName;
+    data['tokenType'] = _tokenType;
+    data['address'] = _address;
+    data['lockedBalance'] = _lockedBalance;
+    data['availableBalance'] = _availableBalance;
+    data['usdValue'] = _usdValue;
+    data['name'] = _name;
+    data['inExchange'] = _inExchange;
     // if (this._pairDecimalConfig != null) {
     //   data['pairDecimalConfig'] = this._pairDecimalConfig.toJson();
     // }
@@ -110,59 +110,61 @@ class WalletInfo {
   int get id => _id;
 
   set id(int id) {
-    this._id = id;
+    _id = id;
   }
 
   String get tickerName => _tickerName;
 
   set tickerName(String tickerName) {
-    this._tickerName = tickerName;
+    _tickerName = tickerName;
   }
 
   String get tokenType => _tokenType;
 
   set tokenType(String tokenType) {
-    this._tokenType = tokenType;
+    _tokenType = tokenType;
   }
 
   String get address => _address;
 
   set address(String address) {
-    this._address = address;
+    _address = address;
   }
 
   double get lockedBalance => _lockedBalance;
   set lockedBalance(double lockedBalance) {
-    this._lockedBalance = lockedBalance;
+    _lockedBalance = lockedBalance;
   }
 
   double get availableBalance => _availableBalance;
 
   set availableBalance(double availableBalance) {
-    if (availableBalance.isNegative)
-      this._availableBalance = 0.0;
-    else
-      this._availableBalance = availableBalance;
+    if (availableBalance.isNegative) {
+      _availableBalance = 0.0;
+    } else {
+      _availableBalance = availableBalance;
+    }
   }
 
   double get usdValue => _usdValue;
 
   set usdValue(double usdValue) {
-    if (usdValue.isNegative)
-      this._usdValue = 0.0;
-    else
-      this._usdValue = usdValue;
+    if (usdValue.isNegative) {
+      _usdValue = 0.0;
+    } else {
+      _usdValue = usdValue;
+    }
   }
 
   String get name => _name;
 
   set name(String name) {
-    this._name = name;
+    _name = name;
   }
 
   double get inExchange => _inExchange;
   set inExchange(double inExchange) {
-    this._inExchange = inExchange;
+    _inExchange = inExchange;
   }
 
   // PairDecimalConfig get pairDecimalConfig => _pairDecimalConfig;
@@ -182,6 +184,6 @@ class WalletInfoList {
   factory WalletInfoList.fromJson(List<dynamic> parsedJson) {
     List<WalletInfo> wallets = [];
     wallets = parsedJson.map((i) => WalletInfo.fromJson(i)).toList();
-    return new WalletInfoList(wallets: wallets);
+    return WalletInfoList(wallets: wallets);
   }
 }

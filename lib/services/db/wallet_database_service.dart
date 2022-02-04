@@ -21,7 +21,7 @@ import 'package:path/path.dart';
 class WalletDatabaseService {
   final log = getLogger('WalletDatabaseService');
 
-  static final _databaseName = 'wallet_database.db';
+  static const _databaseName = 'wallet_database.db';
   final String tableName = 'wallet';
   // database table and column names
   final String columnId = 'id';
@@ -34,7 +34,7 @@ class WalletDatabaseService {
   final String columnUsdValue = 'usdValue';
   final String columnInExchange = 'inExchange';
 
-  static final _databaseVersion = 3;
+  static const _databaseVersion = 3;
   static Future<Database> _database;
   String path = '';
 
@@ -101,7 +101,7 @@ class WalletDatabaseService {
     List<Map> res =
         await db.query(tableName, where: 'name= ?', whereArgs: [name]);
     log.w('ID - $name --- $res');
-    if (res.length > 0) {
+    if (res.isNotEmpty) {
       return WalletInfo.fromJson((res.first));
     }
     return null;
@@ -113,7 +113,7 @@ class WalletDatabaseService {
     List<Map> res = await db
         .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);
     log.w('tickerName - $tickerName --res - $res');
-    if (res.length > 0) {
+    if (res.isNotEmpty) {
       return WalletInfo.fromJson((res.first));
     }
     return null;
@@ -124,7 +124,7 @@ class WalletDatabaseService {
     final Database db = await _database;
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     // log.w('ID - $id --- $res');
-    if (res.length > 0) {
+    if (res.isNotEmpty) {
       return WalletInfo.fromJson((res.first));
     }
     return null;

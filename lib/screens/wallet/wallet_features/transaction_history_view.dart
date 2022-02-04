@@ -13,7 +13,7 @@ import 'package:stacked/stacked.dart';
 
 class TransactionHistoryView extends StatelessWidget {
   final WalletInfo walletInfo;
-  TransactionHistoryView({Key key, this.walletInfo}) : super(key: key);
+  const TransactionHistoryView({Key key, this.walletInfo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +33,9 @@ class TransactionHistoryView extends StatelessWidget {
                   Navigator.of(context, rootNavigator: true).pop();
                   model.isDialogUp = false;
                   print('isDialogUp in if ${model.isDialogUp}');
-                } else
+                } else {
                   Navigator.of(context).pop();
+                }
 
                 return Future.value(false);
               },
@@ -42,12 +43,12 @@ class TransactionHistoryView extends StatelessWidget {
                 appBar: AppBar(
                   actions: [
                     IconButton(
-                        icon: Icon(Icons.refresh),
+                        icon: const Icon(Icons.refresh),
                         onPressed: () => model.reloadTransactions())
                   ],
                   leading: Container(
                       child: IconButton(
-                          icon: Icon(Icons.arrow_back),
+                          icon: const Icon(Icons.arrow_back),
                           onPressed: () => Navigator.of(context).pop())),
                   centerTitle: true,
                   // actions: [
@@ -61,18 +62,18 @@ class TransactionHistoryView extends StatelessWidget {
                   backgroundColor: secondaryColor,
                 ),
                 body: !model.dataReady || model.isBusy
-                    ? Container(
+                    ? SizedBox(
                         width: double.infinity,
                         height: 300,
                         child: model.sharedService.loadingIndicator())
                     : model.transactionHistoryToShowInView.isEmpty
                         ? Container(
-                            margin: EdgeInsets.only(top: 20),
+                            margin: const EdgeInsets.only(top: 20),
                             child: Center(
                                 child: Icon(Icons.insert_drive_file,
                                     color: white)))
                         : Container(
-                            padding: EdgeInsets.all(4.0),
+                            padding: const EdgeInsets.all(4.0),
                             child: Column(
                               children: <Widget>[
                                 //  IconButton(icon:Icon(Icons.ac_unit,color:colors.white),onPressed: ()=> model.test(),),
@@ -106,7 +107,7 @@ class TransactionHistoryView extends StatelessWidget {
                                     Expanded(
                                       flex: 1,
                                       child: Container(
-                                        margin: EdgeInsets.only(left: 10.0),
+                                        margin: const EdgeInsets.only(left: 10.0),
                                         child: Text(
                                             AppLocalizations.of(context).status,
                                             textAlign: TextAlign.left,
@@ -127,7 +128,7 @@ class TransactionHistoryView extends StatelessWidget {
                                   ],
                                 ),
                                 model.isBusy
-                                    ? CircularProgressIndicator()
+                                    ? const CircularProgressIndicator()
                                     : Expanded(
                                         child: ListView.builder(
                                             scrollDirection: Axis.vertical,

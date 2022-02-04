@@ -26,7 +26,7 @@ class TeamRewardDetailsView extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: Container(
-              margin: EdgeInsets.all(4.0),
+              margin: const EdgeInsets.all(4.0),
               child: Column(
                 children: <Widget>[
                   // Static lables row
@@ -78,7 +78,7 @@ class TeamRewardDetailsView extends StatelessWidget {
                             style: Theme.of(context).textTheme.headline5,
                           ))
                       : team != null
-                          ? Container(
+                          ? SizedBox(
                               height: UIHelper.getScreenFullHeight(context),
                               child: ListView.builder(
                                 shrinkWrap: true,
@@ -95,7 +95,7 @@ class TeamRewardDetailsView extends StatelessWidget {
                                       elevation: 5,
                                       color: globals.walletCardColor,
                                       child: Container(
-                                        padding: EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                             vertical: 15.0),
                                         child: Row(
                                           children: <Widget>[
@@ -151,7 +151,7 @@ class TeamRewardDetailsView extends StatelessWidget {
                                                       const EdgeInsets.only(
                                                           right: 3.0),
                                                   child: Text(
-                                                      '${team[index]['percentage'].toStringAsFixed(3)}\%',
+                                                      '${team[index]['percentage'].toStringAsFixed(3)}%',
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .headline5),

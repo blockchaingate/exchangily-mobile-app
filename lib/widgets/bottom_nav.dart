@@ -30,7 +30,7 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final double paddingValue = 4; // change space between icon and title text
-    final double iconSize = 25; // change icon size
+    const double iconSize = 25; // change icon size
     int _selectedIndex = count;
 
     return BottomNavigationBar(
@@ -96,37 +96,42 @@ class BottomNavBar extends StatelessWidget {
 
         switch (idx) {
           case 0:
-            if (currentRouteName != 'WalletDashboardScreen')
+            if (currentRouteName != 'WalletDashboardScreen') {
               navigationService
                   .navigateUsingPushReplacementNamed(DashboardViewRoute);
+            }
             break;
 
           case 1:
-            if (currentRouteName != 'MarketsView')
+            if (currentRouteName != 'MarketsView') {
               navigationService.navigateUsingPushReplacementNamed(
                   MarketsViewRoute,
                   arguments: false);
+            }
             break;
           case 2:
-            if (currentRouteName != 'LightningRemitView')
+            if (currentRouteName != 'LightningRemitView') {
               navigationService
                   .navigateUsingPushReplacementNamed(LightningRemitViewRoute);
+            }
             break;
           // case 2:
           // if (currentRouteName != 'OtcScreen')
           //   Navigator.pushNamed(context, '/otc');
           //   break;
           case 3:
-            if (currentRouteName != 'CampaignInstructionScreen')
+            if (currentRouteName != 'CampaignInstructionScreen') {
               navigationService
                   .navigateUsingPushReplacementNamed(InstructionsViewRoute);
+            }
             break;
           case 4:
-            if (currentRouteName != 'SettingsScreen')
+            if (currentRouteName != 'SettingsScreen') {
               navigationService
                   .navigateUsingpopAndPushedNamed(SettingViewRoute);
-            else if (ModalRoute.of(context).settings.name == 'SettingsScreen')
+            } else if (ModalRoute.of(context).settings.name == 'SettingsScreen') {
               return null;
+            }
             break;
         }
       },

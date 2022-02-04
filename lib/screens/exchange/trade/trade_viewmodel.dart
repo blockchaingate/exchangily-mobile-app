@@ -35,7 +35,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   SharedService sharedService = locator<SharedService>();
 
   ApiService apiService = locator<ApiService>();
-  TradeService _tradeService = locator<TradeService>();
+  final TradeService _tradeService = locator<TradeService>();
   WalletService walletService = locator<WalletService>();
   ConfigService configService = locator<ConfigService>();
   List<PairDecimalConfig> pairDecimalConfigList = [];
@@ -50,14 +50,14 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   bool get hasStreamMarketTrades => dataReady(_marketTradesStreamKey);
   bool get hasStreamOrderbook => dataReady(_orderbookStreamKey);
 
-  Price currentPairPrice = new Price();
+  Price currentPairPrice = Price();
   List<dynamic> ordersViewTabBody = [];
 
   List<Price> pairPriceList = [];
   List<List<Price>> marketPairsTabBar = [];
 
   List myExchangeAssets = [];
-  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
+  PairDecimalConfig singlePairDecimalConfig = PairDecimalConfig();
   bool isDisposing = false;
   double usdValue = 0.0;
   String pairSymbolWithSlash = '';
@@ -247,7 +247,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     double prevPrice = 0;
 
     // for each
-    passedOrders.forEach((currentOrder) {
+    for (var currentOrder in passedOrders) {
       print('single order ${currentOrder.toJson()}');
       int index = 0;
       double aggrQty = 0;
@@ -270,7 +270,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
         log.w('price NOT matched so prevprice: $prevPrice');
         result.add(currentOrder);
       }
-    });
+    }
     return result;
   }
 
@@ -343,8 +343,9 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     // If the subscription is paused more than once,
     // an equal number of resumes must be performed to resume the stream
     log.e(getSubscriptionForKey(key).isPaused);
-    if (!getSubscriptionForKey(key).isPaused)
+    if (!getSubscriptionForKey(key).isPaused) {
       getSubscriptionForKey(key).pause();
+    }
     log.i(getSubscriptionForKey(key).isPaused);
   }
 

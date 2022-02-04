@@ -89,9 +89,9 @@ class WalletFeaturesViewModel extends BaseViewModel {
     if (favCoinsJson.isNotEmpty) {
       favWalletCoins =
           (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
-      favWalletCoins.forEach((favTickerName) {
+      for (var favTickerName in favWalletCoins) {
         if (favTickerName == tickerName) {}
-      });
+      }
       if (favWalletCoins.contains(tickerName)) {
         favWalletCoins
             .removeWhere((favTickerName) => favTickerName == tickerName);
@@ -135,20 +135,22 @@ class WalletFeaturesViewModel extends BaseViewModel {
   }
 
   Future getErrDeposit() async {
-    var address = await this.sharedService.getExgAddressFromWalletDatabase();
+    var address = await sharedService.getExgAddressFromWalletDatabase();
     await walletService.getErrDeposit(address).then((result) async {
       if (result != null) {
         for (var i = 0; i < result.length; i++) {
           var item = result[i];
           var coinType = item['coinType'];
           String tickerNameByCointype = newCoinTypeMap[coinType];
-          if (tickerNameByCointype == null)
+          if (tickerNameByCointype == null) {
             await tokenListDatabaseService.getAll().then((tokenList) {
-              if (tokenList != null)
+              if (tokenList != null) {
                 tickerNameByCointype = tokenList
                     .firstWhere((element) => element.coinType == coinType)
                     .tickerName;
+              }
             });
+          }
           log.w('tickerNameByCointype $tickerNameByCointype');
           if (tickerNameByCointype == walletInfo.tickerName) {
             setBusy(true);
@@ -181,10 +183,11 @@ class WalletFeaturesViewModel extends BaseViewModel {
       var lockedBalance = walletBalance[0].lockBalance;
       walletInfo.lockedBalance = lockedBalance;
       unconfirmedBalance = walletBalance[0].unconfirmedBalance;
-      if (!specialTicker.contains('('))
+      if (!specialTicker.contains('(')) {
         walletInfo.inExchange = walletBalance[0].unlockedExchangeBalance;
-      else
+      } else {
         await getExchangeBalForSpecialTokens();
+      }
       double currentUsdValue = walletBalance[0].usdValue.usd;
       log.e(
           'market price $currentUsdValue -- available bal $availableBalance -- inExchange ${walletInfo.inExchange} -- locked bal $lockedBalance');
@@ -236,8 +239,9 @@ class WalletFeaturesViewModel extends BaseViewModel {
       tickerName = 'USDT';
     } else if (walletInfo.tickerName == 'USDTX') {
       tickerName = 'USDT';
-    } else
+    } else {
       tickerName = walletInfo.tickerName;
+    }
     await apiService.getSingleCoinExchangeBalance(tickerName).then((res) {
       if (res != null) {
         walletInfo.inExchange = res.unlockedAmount;

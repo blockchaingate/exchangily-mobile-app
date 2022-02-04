@@ -16,19 +16,19 @@ class AppUpdateModel {
     if (json['link'] != null) {
       link = [];
       json['link'].forEach((v) {
-        link.add(new Link.fromJson(v));
+        link.add(Link.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['os'] = this.os;
-    data['version'] = this.version;
-    data['forceUpdate'] = this.forceUpdate;
-    data['app'] = this.app;
-    if (this.link != null) {
-      data['link'] = this.link.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['os'] = os;
+    data['version'] = version;
+    data['forceUpdate'] = forceUpdate;
+    data['app'] = app;
+    if (link != null) {
+      data['link'] = link.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -48,10 +48,10 @@ class Link {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['link'] = this.link;
-    data['ready'] = this.ready;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['link'] = link;
+    data['ready'] = ready;
     return data;
   }
 }

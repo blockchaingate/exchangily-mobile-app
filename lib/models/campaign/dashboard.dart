@@ -14,11 +14,11 @@ class CampaignDashboard {
     refferals = json['refferals'];
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['level'] = this.level;
-    data['totalInvestment'] = this.totalInvestment;
-    data['totalReward'] = this.totalReward;
-    data['refferals'] = this.refferals;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['level'] = level;
+    data['totalInvestment'] = totalInvestment;
+    data['totalReward'] = totalReward;
+    data['refferals'] = refferals;
     return data;
   }
 }

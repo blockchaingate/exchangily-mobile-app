@@ -62,14 +62,14 @@ generateTrxAddress(String mnemonic) {
   List<int> updatedHash = [];
   //  var addressHex = Uint8List.fromList(hash);
   int i = 1;
-  last20Bytes.forEach((f) {
+  for (var f in last20Bytes) {
     if (i == 1) {
       updatedHash.add(65);
       i++;
     }
     updatedHash.add(f);
     i++;
-  });
+  }
   //print('updatedHash $updatedHash');
   // take 0x41 or 65 + (hash[12:32] means take last 20 bytes from addressHex and discard first 12)
   // to do sha256 twice and get 4 bytes checksum

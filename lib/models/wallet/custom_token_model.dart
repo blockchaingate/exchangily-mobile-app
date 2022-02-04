@@ -38,17 +38,17 @@ class CustomTokenModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['owner'] = this.owner;
-    data['name'] = this.name;
-    data['symbol'] = this.symbol;
-    data['logo'] = this.logo;
-    data['totalSupply'] = this.totalSupply;
-    data['txid'] = this.txid;
-    data['tokenId'] = this.tokenId;
-    data['status'] = this.status;
-    data['decimals'] = this.decimal;
-    data['balance'] = this.balance;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['owner'] = owner;
+    data['name'] = name;
+    data['symbol'] = symbol;
+    data['logo'] = logo;
+    data['totalSupply'] = totalSupply;
+    data['txid'] = txid;
+    data['tokenId'] = tokenId;
+    data['status'] = status;
+    data['decimals'] = decimal;
+    data['balance'] = balance;
     return data;
   }
 }

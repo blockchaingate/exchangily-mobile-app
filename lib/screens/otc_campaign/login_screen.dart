@@ -34,8 +34,8 @@ class CampaignLoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                margin: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                margin: const EdgeInsets.all(10.0),
                 color: globals.walletCardColor,
                 child: Column(
                   children: <Widget>[
@@ -58,7 +58,7 @@ class CampaignLoginScreen extends StatelessWidget {
                             child: TextField(
                               textAlign: TextAlign.center,
                               textAlignVertical: TextAlignVertical.center,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   isDense: true,
                                   suffixIcon: Icon(
                                     Icons.email,
@@ -100,7 +100,7 @@ class CampaignLoginScreen extends StatelessWidget {
                                             model.isPasswordTextVisible = false;
                                             model.setBusy(false);
                                           },
-                                          icon: Icon(Icons.remove_red_eye))),
+                                          icon: const Icon(Icons.remove_red_eye))),
                                   controller: model.passwordTextController,
                                   obscureText: false,
                                   keyboardType: TextInputType.visiblePassword,
@@ -120,7 +120,7 @@ class CampaignLoginScreen extends StatelessWidget {
                                             model.isPasswordTextVisible = true;
                                             model.setBusy(false);
                                           },
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Icons.remove_red_eye,
                                             color: globals.grey,
                                           ))),
@@ -134,7 +134,7 @@ class CampaignLoginScreen extends StatelessWidget {
                     InkWell(
                       child: Text(
                         AppLocalizations.of(context).forgotPassword + '?',
-                        style: TextStyle(
+                        style: const TextStyle(
                             decoration: TextDecoration.underline,
                             color: globals.white),
                       ),
@@ -155,7 +155,7 @@ class CampaignLoginScreen extends StatelessWidget {
                         visible: errorMessage != null &&
                             errorMessage != '' &&
                             !model.hasErrorMessage,
-                        child: Text(errorMessage == null ? '' : errorMessage,
+                        child: Text(errorMessage ?? '',
                             style: Theme.of(context).textTheme.bodyText2)),
                     UIHelper.verticalSpaceSmall,
                     // Button row
@@ -180,9 +180,9 @@ class CampaignLoginScreen extends StatelessWidget {
                         // ),
                         Expanded(
                           child: Container(
-                            margin: EdgeInsets.only(right: 5),
+                            margin: const EdgeInsets.only(right: 5),
                             child: RaisedButton(
-                              padding: EdgeInsets.all(2.0),
+                              padding: const EdgeInsets.all(2.0),
                               elevation: 5,
                               focusElevation: 5,
                               child: Text(AppLocalizations.of(context).register,
@@ -196,7 +196,7 @@ class CampaignLoginScreen extends StatelessWidget {
                         ),
                         Expanded(
                           child: RaisedButton(
-                            padding: EdgeInsets.all(2.0),
+                            padding: const EdgeInsets.all(2.0),
                             elevation: 5,
                             shape: StadiumBorder(
                                 side: BorderSide(

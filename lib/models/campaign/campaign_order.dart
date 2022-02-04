@@ -31,42 +31,42 @@ class CampaignOrder {
       double price,
       double payableAmount}) {
     // this._orderId = orderId ?? '';
-    this._memberId = memberId;
+    _memberId = memberId;
     //  this._orderNumber = orderNumber ?? '';
-    this._walletAdd = walletAdd; // Wallet EXG addres=s
+    _walletAdd = walletAdd; // Wallet EXG addres=s
     //  this._status = status ?? '';
-    this._txId = txId;
-    this._quantity = quantity;
-    this._paymentType = paymentType;
+    _txId = txId;
+    _quantity = quantity;
+    _paymentType = paymentType;
     //  this._note = note ?? '';
     //  this._officialNote = officialNote ?? '';
     //  this._active = active ?? false;
     //  this._createdTime = createdTime ?? '';
-    this._price = price;
-    this._payableAmount = payableAmount;
+    _price = price;
+    _payableAmount = payableAmount;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     //  data['orderId'] = this._orderId;
-    data['memberId'] = this._memberId;
+    data['memberId'] = _memberId;
     // data['orderNumber'] = this._orderNumber;
-    data['walletAdd'] = this._walletAdd;
+    data['walletAdd'] = _walletAdd;
     //  data['status'] = this._status;
-    data['txId'] = this._txId;
-    data['quantity'] = this._quantity;
-    data['paymentType'] = this._paymentType;
+    data['txId'] = _txId;
+    data['quantity'] = _quantity;
+    data['paymentType'] = _paymentType;
     // data['note'] = this._note;
     // data['officialNote'] = this._officialNote;
     // data['active'] = this._active;
     // data['createdTime'] = this._createdTime;
-    data['price'] = this._price;
-    data['payableAmount'] = this._payableAmount;
+    data['price'] = _price;
+    data['payableAmount'] = _payableAmount;
     return data;
   }
 
   factory CampaignOrder.fromJson(Map<String, dynamic> json) {
-    return new CampaignOrder(
+    return CampaignOrder(
         //  orderId: json['orderId'],
         memberId: json['memberId'],
         //  orderNumber: json['orderNumber'],
@@ -90,7 +90,7 @@ class CampaignOrder {
 
   String get memberId => _memberId;
   set memberId(String memberId) {
-    this._memberId = memberId;
+    _memberId = memberId;
   }
 
   // String get orderNumber => _orderNumber;
@@ -100,7 +100,7 @@ class CampaignOrder {
 
   String get walletAdd => _walletAdd;
   set walletAdd(String walletAdd) {
-    this._walletAdd = walletAdd;
+    _walletAdd = walletAdd;
   }
 
   // String get status => _status;
@@ -110,17 +110,17 @@ class CampaignOrder {
 
   String get txId => _txId;
   set txId(String txId) {
-    this._txId = txId;
+    _txId = txId;
   }
 
   double get quantity => _quantity;
   set quantity(double quantity) {
-    this._quantity = quantity;
+    _quantity = quantity;
   }
 
   String get paymentType => _paymentType;
   set paymentType(String paymentType) {
-    this._paymentType = paymentType;
+    _paymentType = paymentType;
   }
 
   // String get note => _note;
@@ -145,11 +145,11 @@ class CampaignOrder {
 
   double get price => _price;
   set price(double price) {
-    this._price = price;
+    _price = price;
   }
 
   double get payableAmount => _payableAmount;
   set payableAmount(double payableAmount) {
-    this._payableAmount = payableAmount;
+    _payableAmount = payableAmount;
   }
 }

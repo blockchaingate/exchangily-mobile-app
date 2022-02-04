@@ -81,9 +81,6 @@ class WalletDashboardViewModel extends BaseViewModel {
   final userDatabaseService = locator<UserSettingsDatabaseService>();
 
   BuildContext context;
-  // List<WalletInfo> walletInfo;
-  // List<WalletInfo> walletInfoCopy = [];
-  // List<WalletInfo> favWalletInfoList = [];
 
   List<WalletBalance> wallets = [];
   List<WalletBalance> walletsCopy = [];
@@ -123,7 +120,6 @@ class WalletDashboardViewModel extends BaseViewModel {
   List announceList;
   GlobalKey globalKeyOne;
   GlobalKey globalKeyTwo;
-  double totalBalanceContainerWidth = 100.0;
 
   bool _isShowCaseView = false;
   get isShowCaseView => _isShowCaseView;
@@ -146,6 +142,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   List<CustomTokenModel> issueTokens = [];
   List<CustomTokenModel> selectedCustomTokens = [];
   var receiverWalletAddressTextController = TextEditingController();
+  int swiperWidgetIndex = 0;
 
 /*----------------------------------------------------------------------
                     INIT
@@ -157,10 +154,8 @@ class WalletDashboardViewModel extends BaseViewModel {
     sharedService.context = context;
     await refreshBalancesV2();
 
-    totalBalanceContainerWidth = 270.0;
     checkAnnouncement();
     showDialogWarning();
-    //  getDecimalPairConfig();
     getConfirmDepositStatus();
     buildFavCoinListV1();
 
@@ -171,7 +166,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     walletService.storeTokenListInDB();
 
     setBusy(false);
-    issueTokens = await apiService.getIssueTokens();
+    issueTokens = await apiService.getCustomTokens();
     await getBalanceForSelectedCustomTokens();
   }
 
@@ -193,25 +188,27 @@ class WalletDashboardViewModel extends BaseViewModel {
     String tokenType = walletService.getTokenType(coinType);
 
     // get wallet address
-    if (tickerName == 'ETH' || tokenType == 'ETH')
+    if (tickerName == 'ETH' || tokenType == 'ETH') {
       walletAddress = await walletService
           .getAddressFromCoreWalletDatabaseByTickerName('ETH');
-    else if (tickerName == 'FAB' || tokenType == 'FAB')
+    } else if (tickerName == 'FAB' || tokenType == 'FAB') {
       walletAddress = await walletService
           .getAddressFromCoreWalletDatabaseByTickerName('FAB');
-    else if (tickerName == 'TRX' ||
+    } else if (tickerName == 'TRX' ||
         tickerName == 'TRON' ||
         tokenType == 'TRON' ||
-        tokenType == 'TRX')
+        tokenType == 'TRX') {
       walletAddress = await walletService
           .getAddressFromCoreWalletDatabaseByTickerName('TRX');
-    else
+    } else {
       walletAddress = await coreWalletDatabaseService
           .getWalletAddressByTickerName(tickerName);
+    }
     String coinName = '';
     for (var i = 0; i < walletService.coinTickerAndNameList.length; i++) {
-      if (walletService.coinTickerAndNameList.containsKey(wallet.coin))
+      if (walletService.coinTickerAndNameList.containsKey(wallet.coin)) {
         coinName = walletService.coinTickerAndNameList[wallet.coin];
+      }
       break;
     }
 
@@ -270,7 +267,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
       log.w(
           'selectedCustomTokens length ${selectedCustomTokens.length} --selectedCustomTokens last item ${selectedCustomTokens.last.toJson()}');
-      selectedCustomTokens.forEach((token) async {
+      for (var token in selectedCustomTokens) {
         log.w('token before adding balance ${token.toJson()}');
         var balance = await fabUtils.getFabTokenBalanceForABI(
             Constants.CustomTokenSignatureAbi,
@@ -281,7 +278,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         token.balance = balance;
         setBusyForObject(selectedCustomTokens, false);
         log.i('token after adding balance ${token.toJson()}');
-      });
+      }
     }
     log.w('Selected custom token list => Finished');
   }
@@ -297,8 +294,8 @@ class WalletDashboardViewModel extends BaseViewModel {
     // and show added checkmark infront of those tokens
     // as well as remove button which will remove the token from the list
 
-    var isMatched;
-    if (issueTokens.isNotEmpty)
+    String isMatched;
+    if (issueTokens.isNotEmpty) {
       showModalBottomSheet(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -309,8 +306,9 @@ class WalletDashboardViewModel extends BaseViewModel {
                 child: StatefulBuilder(
                     builder: (BuildContext context, StateSetter setState) {
                   return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 7, vertical: 15),
-                    padding: EdgeInsets.all(5),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 7, vertical: 15),
+                    padding: const EdgeInsets.all(5),
                     //  height: 500,
                     child: ListView.builder(
                         itemCount: issueTokens.length,
@@ -322,6 +320,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                     issueTokens[index].tokenId)
                                 .symbol;
 
+                            // ignore: avoid_print
                             print(
                                 '${issueTokens[index].symbol} -- is in the selectedCustomTokens list ? $isMatched match found -- with token id ${issueTokens[index].tokenId}');
                           } catch (err) {
@@ -329,146 +328,161 @@ class WalletDashboardViewModel extends BaseViewModel {
                             log.w(
                                 'no match found for ${issueTokens[index].symbol} with token id ${issueTokens[index].tokenId}');
                           }
-                          return Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          issueTokens[index]
-                                              .symbol
-                                              .toUpperCase(),
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              color: white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold)),
-                                      Text(issueTokens[index].name,
-                                          style: TextStyle(
-                                            color: primaryColor,
-                                            fontSize: 12,
-                                          ))
-                                    ],
-                                  ),
-                                ),
-                                // Total supply
-                                Expanded(
-                                  flex: 3,
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 3.0),
-                                        child: Text(
-                                            AppLocalizations.of(context)
-                                                .totalSupply,
-                                            style: TextStyle(
-                                                color: primaryColor,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold)),
-                                      ),
-                                      Text(issueTokens[index].totalSupply,
-                                          style: TextStyle(
-                                              color: grey, fontSize: 12))
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: OutlinedButton(
-                                    style: ButtonStyle(
-                                      side: MaterialStateProperty.all(
-                                          (BorderSide(
-                                              color: primaryColor, width: 1))),
-                                      shape: MaterialStateProperty.all(
-                                          StadiumBorder(
-                                        side: BorderSide(
-                                            color: primaryColor, width: 1),
-                                      )),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
+                          return Container(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(right: 2.0),
+                                              const EdgeInsets.only(top: 10.0),
                                           child: Text(
-                                              isMatched == null
-                                                  ? AppLocalizations.of(context)
-                                                      .add
-                                                  : AppLocalizations.of(context)
-                                                      .remove,
-                                              textAlign: TextAlign.center,
+                                              issueTokens[index]
+                                                  .symbol
+                                                  .toUpperCase(),
+                                              textAlign: TextAlign.start,
                                               style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: isMatched == null
-                                                      ? green
-                                                      : red)),
+                                                  color: white,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold)),
                                         ),
-                                        Icon(
-                                          isMatched == null
-                                              ? Icons.add_box_rounded
-                                              : Icons.cancel_outlined,
-                                          color:
-                                              isMatched == null ? green : red,
-                                          size: 14,
-                                        )
+                                        Text(issueTokens[index].name,
+                                            style: const TextStyle(
+                                              color: primaryColor,
+                                              fontSize: 12,
+                                            ))
                                       ],
                                     ),
-                                    onPressed: () {
-                                      int tokenIndexToRemove =
-                                          selectedCustomTokens.indexWhere(
-                                              (element) =>
-                                                  element.tokenId ==
-                                                  issueTokens[index].tokenId);
-                                      setBusyForObject(
-                                          selectedCustomTokens, true);
-
-                                      if (tokenIndexToRemove.isNegative) {
-                                        setState(() => selectedCustomTokens
-                                            .add(issueTokens[index]));
-                                      } else {
-                                        if (selectedCustomTokens.isNotEmpty) {
-                                          log.w(
-                                              'last item ${selectedCustomTokens.last.toJson()}');
-                                        }
-                                        log.i(
-                                            'selectedCustomTokens - length before removing token ${selectedCustomTokens.length}');
-                                        setState(() => selectedCustomTokens
-                                            .removeAt(tokenIndexToRemove));
-
-                                        log.e(
-                                            'selectedCustomTokens - length --selectedCustomTokens.length => removed token ${issueTokens[index].symbol}');
-                                      }
-                                      setBusyForObject(
-                                          selectedCustomTokens, false);
-
-                                      log.i(
-                                          'customTokens - length ${selectedCustomTokens.length}');
-                                      var jsonString = [];
-                                      jsonString = selectedCustomTokens
-                                          .map((cToken) =>
-                                              jsonEncode(cToken.toJson()))
-                                          .toList();
-                                      storageService.customTokens = '';
-                                      storageService.customTokens =
-                                          jsonString.toString();
-                                    },
                                   ),
-                                ),
-                              ]);
+                                  // Total supply
+                                  Expanded(
+                                    flex: 3,
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 3.0),
+                                          child: Text(
+                                              AppLocalizations.of(context)
+                                                  .totalSupply,
+                                              style: const TextStyle(
+                                                  color: primaryColor,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
+                                        Text(issueTokens[index].totalSupply,
+                                            style: TextStyle(
+                                                color: grey, fontSize: 12))
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: OutlinedButton(
+                                      style: ButtonStyle(
+                                        side: MaterialStateProperty.all(
+                                            (const BorderSide(
+                                                color: primaryColor,
+                                                width: 1))),
+                                        shape: MaterialStateProperty.all(
+                                            const StadiumBorder(
+                                          side: BorderSide(
+                                              color: primaryColor, width: 1),
+                                        )),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 2.0),
+                                            child: Text(
+                                                isMatched == null
+                                                    ? AppLocalizations.of(
+                                                            context)
+                                                        .add
+                                                    : AppLocalizations.of(
+                                                            context)
+                                                        .remove,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 12, color: white
+                                                    // isMatched == null
+                                                    //     ? green
+                                                    //     : red
+                                                    )),
+                                          ),
+                                          Icon(
+                                            isMatched == null
+                                                ? Icons.add_box_rounded
+                                                : Icons.cancel_outlined,
+                                            color:
+                                                isMatched == null ? green : red,
+                                            size: 14,
+                                          )
+                                        ],
+                                      ),
+                                      onPressed: () {
+                                        int tokenIndexToRemove =
+                                            selectedCustomTokens.indexWhere(
+                                                (element) =>
+                                                    element.tokenId ==
+                                                    issueTokens[index].tokenId);
+                                        setBusyForObject(
+                                            selectedCustomTokens, true);
+
+                                        if (tokenIndexToRemove.isNegative) {
+                                          setState(() => selectedCustomTokens
+                                              .add(issueTokens[index]));
+                                        } else {
+                                          if (selectedCustomTokens.isNotEmpty) {
+                                            log.w(
+                                                'last item ${selectedCustomTokens.last.toJson()}');
+                                          }
+                                          log.i(
+                                              'selectedCustomTokens - length before removing token ${selectedCustomTokens.length}');
+                                          setState(() => selectedCustomTokens
+                                              .removeAt(tokenIndexToRemove));
+
+                                          log.e(
+                                              'selectedCustomTokens - length --selectedCustomTokens.length => removed token ${issueTokens[index].symbol}');
+                                        }
+                                        setBusyForObject(
+                                            selectedCustomTokens, false);
+
+                                        log.i(
+                                            'customTokens - length ${selectedCustomTokens.length}');
+                                        var jsonString = [];
+                                        jsonString = selectedCustomTokens
+                                            .map((cToken) =>
+                                                jsonEncode(cToken.toJson()))
+                                            .toList();
+                                        storageService.customTokens = '';
+                                        storageService.customTokens =
+                                            jsonString.toString();
+                                      },
+                                    ),
+                                  ),
+                                ]),
+                          );
                         }),
                   );
                 }),
               ));
-    else
+    } else {
       log.e('Issue token list empty');
+    }
   }
 // Todo: add decimalLimit property in the wallet info and
 // Todo: fill it in the refresh balance from local stored decimal data
@@ -476,15 +490,15 @@ class WalletDashboardViewModel extends BaseViewModel {
   storeWalletDecimalData() async {
     walletDecimalList = [];
     await apiService.getTokenList().then((token) {
-      token.forEach((token) {
+      for (var token in token) {
         walletDecimalList.add({token.tickerName: token.decimal});
-      });
+      }
     });
 
     await apiService.getTokenListUpdates().then((token) {
-      token.forEach((token) async {
+      for (var token in token) {
         walletDecimalList.add({token.tickerName: token.decimal});
-      });
+      }
     });
 
     log.i('walletDecimalList $walletDecimalList');
@@ -536,10 +550,11 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   updateTabSelection(int tabIndex) {
     setBusy(true);
-    if (tabIndex == 0)
+    if (tabIndex == 0) {
       isShowFavCoins = false;
-    else
+    } else {
       isShowFavCoins = true;
+    }
 
     currentTabSelection = tabIndex;
     storageService.isFavCoinTabSelected = isShowFavCoins ? true : false;
@@ -702,7 +717,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     String wallet =
         await walletService.getAddressFromCoreWalletDatabaseByTickerName('TRX');
     if (wallet != null) {
-      log.w('${wallet} TRX present');
+      log.w('$wallet TRX present');
       isUpdateWallet = false;
     } else {
       isUpdateWallet = true;
@@ -727,10 +742,10 @@ class WalletDashboardViewModel extends BaseViewModel {
                 data: ThemeData.dark(),
                 child: CupertinoAlertDialog(
                   title: Container(
-                    margin: EdgeInsets.only(bottom: 5.0),
+                    margin: const EdgeInsets.only(bottom: 5.0),
                     child: Center(
                         child: Text(
-                      '${AppLocalizations.of(context).appUpdateNotice}',
+                      AppLocalizations.of(context).appUpdateNotice,
                       style: Theme.of(context).textTheme.headline4.copyWith(
                           color: primaryColor, fontWeight: FontWeight.w500),
                     )),
@@ -742,19 +757,19 @@ class WalletDashboardViewModel extends BaseViewModel {
                             updateWallet();
                           },
                           child: Text(AppLocalizations.of(context).updateNow))),
-                  actions: <Widget>[],
+                  actions: const <Widget>[],
                 ))
             : AlertDialog(
                 titlePadding: EdgeInsets.zero,
-                contentPadding: EdgeInsets.all(5.0),
+                contentPadding: const EdgeInsets.all(5.0),
                 elevation: 5,
                 backgroundColor: walletCardColor.withOpacity(0.85),
                 title: Container(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   color: secondaryColor.withOpacity(0.5),
                   child: Center(
-                      child: Text(
-                          '${AppLocalizations.of(context).appUpdateNotice}')),
+                      child:
+                          Text(AppLocalizations.of(context).appUpdateNotice)),
                 ),
                 titleTextStyle: Theme.of(context)
                     .textTheme
@@ -762,7 +777,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                     .copyWith(fontWeight: FontWeight.bold),
                 contentTextStyle: TextStyle(color: grey),
                 content: Container(
-                  padding: EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.all(5.0),
                   child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -803,7 +818,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       if (res.confirmed) {
         mnemonic = res.returnedText;
         var address = TronAddressUtil.generateTrxAddress(mnemonic);
-        WalletInfo wi = new WalletInfo(
+        WalletInfo wi = WalletInfo(
             id: null,
             tickerName: 'TRX',
             tokenType: '',
@@ -835,8 +850,9 @@ class WalletDashboardViewModel extends BaseViewModel {
     final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
     var lang = await userSettingsDatabaseService.getLanguage();
     // lang = storageService.language;
-    if (lang == '' || lang == null)
+    if (lang == '' || lang == null) {
       lang = Platform.localeName.substring(0, 2) ?? 'en';
+    }
     setlangGlobal(lang);
     // log.w('langGlobal: ' + getlangGlobal());
 
@@ -863,10 +879,10 @@ class WalletDashboardViewModel extends BaseViewModel {
         //   e = json.decode(e);
         // });
 
-        tempdata.forEach((element) {
+        for (var element in tempdata) {
           tempAnnounceData.add(jsonDecode(element));
           //   print('tempAnnounceData $tempAnnounceData');
-        });
+        }
         // log.i("announceData from prefs: ");
 
         // print(tempAnnounceData);
@@ -924,11 +940,11 @@ class WalletDashboardViewModel extends BaseViewModel {
         // prefs.setString('announceData', tempAnnounceData.toString());
         List<String> jsonData = [];
         int readedNum = 0;
-        tempAnnounceData.forEach((element) {
+        for (var element in tempAnnounceData) {
           element["isRead"] == false ? readedNum++ : readedNum = readedNum;
           jsonData.add(jsonEncode(element));
           //   print('jsonData $jsonData');
-        });
+        }
         setunReadAnnouncement(readedNum);
         unreadMsgNum = readedNum;
         // print("check status: " + prefs.containsKey('announceData').toString());
@@ -940,7 +956,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
         tempAnnounceData = announceContent;
 
-        if (tempAnnounceData.length != 0) {
+        if (tempAnnounceData.isNotEmpty) {
           tempAnnounceData.asMap().entries.map((announ) {
             int idx = announ.key;
             var val = announ.value;
@@ -953,11 +969,11 @@ class WalletDashboardViewModel extends BaseViewModel {
           prefs.remove("announceData");
           List<String> jsonData = [];
           int readedNum = 0;
-          tempAnnounceData.forEach((element) {
+          for (var element in tempAnnounceData) {
             element["isRead"] == false ? readedNum++ : readedNum = readedNum;
             jsonData.add(jsonEncode(element));
             //    print('jsonData $jsonData');
-          });
+          }
           setunReadAnnouncement(readedNum);
           unreadMsgNum = readedNum;
           // print(
@@ -1006,10 +1022,11 @@ class WalletDashboardViewModel extends BaseViewModel {
     // if (!isBusy) setBusyForObject(isShowCaseView, true);
     _isShowCaseView = storageService.isShowCaseView;
     // if (!isBusy) setBusyForObject(isShowCaseView, false);
-    if (isShowCaseView && !isBusy)
+    if (isShowCaseView && !isBusy) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ShowCaseWidget.of(ctx).startShowCase([globalKeyOne, globalKeyTwo]);
       });
+    }
   }
 
   updateShowCaseViewStatus() {
@@ -1040,7 +1057,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusy(true);
 
     print('length ${walletsCopy.length} -- value $value');
-    for (var i = 0; i < walletsCopy.length; i++)
+    for (var i = 0; i < walletsCopy.length; i++) {
       if (walletsCopy[i].coin.toUpperCase() == value.toUpperCase()) {
         setBusy(true);
         wallets = [];
@@ -1055,6 +1072,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       } else {
         wallets = walletsCopy;
       }
+    }
 
     setBusy(false);
   }
@@ -1120,21 +1138,22 @@ class WalletDashboardViewModel extends BaseViewModel {
               context: context,
               builder: (context) {
                 return Center(
-                  child: Container(
+                  child: SizedBox(
                     height: 250,
                     child: ListView(
                       children: [
                         AlertDialog(
-                          titlePadding: EdgeInsets.symmetric(vertical: 0),
-                          actionsPadding: EdgeInsets.all(0),
+                          titlePadding: const EdgeInsets.symmetric(vertical: 0),
+                          actionsPadding: const EdgeInsets.all(0),
                           elevation: 5,
                           titleTextStyle: Theme.of(context).textTheme.headline4,
                           contentTextStyle: TextStyle(color: grey),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 10),
                           backgroundColor: walletCardColor.withOpacity(0.95),
                           title: Container(
                             color: primaryColor,
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             child: Text(
                               AppLocalizations.of(context).question,
                               textAlign: TextAlign.center,
@@ -1182,7 +1201,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                           ),
                           actions: [
                             Container(
-                                margin: EdgeInsetsDirectional.only(bottom: 10),
+                                margin: const EdgeInsetsDirectional.only(
+                                    bottom: 10),
                                 child: StatefulBuilder(builder:
                                     (BuildContext context,
                                         StateSetter setState) {
@@ -1196,13 +1216,13 @@ class WalletDashboardViewModel extends BaseViewModel {
                                             backgroundColor:
                                                 MaterialStateProperty.all(grey),
                                             padding: MaterialStateProperty.all(
-                                                EdgeInsets.all(0)),
+                                                const EdgeInsets.all(0)),
                                           ),
                                           child: Center(
                                             child: Text(
                                               AppLocalizations.of(context)
                                                   .cancel,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 12),
                                             ),
@@ -1223,13 +1243,13 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                 MaterialStateProperty.all(
                                                     primaryColor),
                                             padding: MaterialStateProperty.all(
-                                                EdgeInsets.all(0)),
+                                                const EdgeInsets.all(0)),
                                           ),
                                           child: Center(
                                             child: Text(
                                               AppLocalizations.of(context)
                                                   .confirm,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 12),
                                             ),
@@ -1358,8 +1378,9 @@ class WalletDashboardViewModel extends BaseViewModel {
     var tlb = 0.0;
     var teb = 0.0;
     for (var i = 0; i < wallets.length; i++) {
-      if (!wallets[i].balance.isNegative)
+      if (!wallets[i].balance.isNegative) {
         twb += wallets[i].balance * wallets[i].usdValue.usd;
+      }
       tlb += wallets[i].lockBalance * wallets[i].usdValue.usd;
       teb += wallets[i].unlockedExchangeBalance * wallets[i].usdValue.usd;
     }
@@ -1402,27 +1423,31 @@ class WalletDashboardViewModel extends BaseViewModel {
           var item = result[i];
           var coinType = item['coinType'];
           String tickerNameByCointype = newCoinTypeMap[coinType];
-          if (tickerNameByCointype == null)
+          if (tickerNameByCointype == null) {
             await tokenListDatabaseService.getAll().then((tokenList) {
-              if (tokenList != null)
+              if (tokenList != null) {
                 tickerNameByCointype = tokenList
                     .firstWhere((element) => element.coinType == coinType)
                     .tickerName;
+              }
             });
+          }
           log.w('tickerNameByCointype $tickerNameByCointype');
           if (tickerNameByCointype != null &&
-              !pendingDepositCoins.contains(tickerNameByCointype))
+              !pendingDepositCoins.contains(tickerNameByCointype)) {
             pendingDepositCoins.add(tickerNameByCointype);
+          }
         }
         var json = jsonEncode(pendingDepositCoins);
         var listCoinsToString = jsonDecode(json);
         String holder = listCoinsToString.toString();
         String f = holder.substring(1, holder.length - 1);
-        if (pendingDepositCoins.isNotEmpty)
+        if (pendingDepositCoins.isNotEmpty) {
           showSimpleNotification(
               Text('${AppLocalizations.of(context).requireRedeposit}: $f'),
               position: NotificationPosition.bottom,
               background: primaryColor);
+        }
       }
     }).catchError((err) {
       log.e('getConfirmDepositStatus Catch $err');
@@ -1534,7 +1559,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       finalWbb = walletBalancesBodyFromDB['walletBalancesBody'];
     }
     walletBalancesApiRes =
-        await this.apiService.getWalletBalance(jsonDecode(finalWbb));
+        await apiService.getWalletBalance(jsonDecode(finalWbb));
     log.w('walletBalances LENGTH ${walletBalancesApiRes.length}');
 
     wallets = walletBalancesApiRes;
@@ -1545,12 +1570,12 @@ class WalletDashboardViewModel extends BaseViewModel {
     await checkToUpdateWallet();
     moveTronUsdt();
     moveTron();
-    // get exg address to get free fab
     await getGas();
+
     // check gas and fab balance if 0 then ask for free fab
     if (gasAmount == 0.0 && fabBalance == 0.0 && totalWalletBalance.isEmpty) {
-      String address = await walletService
-          .getAddressFromCoreWalletDatabaseByTickerName('FAB');
+      String address =
+          await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
       if (storageService.isShowCaseView != null) {
         if (storageService.isShowCaseView) {
           storageService.isShowCaseView = true;
@@ -1568,14 +1593,6 @@ class WalletDashboardViewModel extends BaseViewModel {
       log.i('Fab or gas balance available already');
       // storageService.isShowCaseView = false;
     }
-
-    // else {
-    //   walletBalancesApiRes = [];
-    //   log.e('Core wallet db empty');
-    //   // navigationService
-    //   //     .navigateUsingPushNamedAndRemoveUntil(WalletSetupViewRoute);
-    // }
-
     return walletBalancesApiRes;
   }
 

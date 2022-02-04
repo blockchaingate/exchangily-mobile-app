@@ -11,6 +11,7 @@ import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart' as StringUtil;
 import 'package:flutter/material.dart';
+import 'package:protobuf/protobuf.dart';
 import 'package:web3dart/crypto.dart' as CryptoWeb3;
 import 'package:crypto/crypto.dart' as CryptoHash;
 // import 'trx_generate_address_util.dart' as TrxUtil;
@@ -47,7 +48,7 @@ Future generateTrxTransactionContract(
 
   // print('original amount - $amount and int64 res $bigIntAmountToInt64');
 
-  var trans;
+  GeneratedMessage trans;
 
   if (isTrxUsdt) {
     // get trx-usdt contract address
@@ -62,13 +63,13 @@ Future generateTrxTransactionContract(
           //   print('token from token database ${token.toJson()}');
         } else {
           await apiService.getTokenListUpdates().then((tokenList) {
-            tokenList.forEach((token) {
+            for (var token in tokenList) {
               if (token.tickerName == 'USDTX') {
                 contractAddress = token.contract;
                 decimal = token.decimal;
                 //  print('token from api ${token.toJson()}');
               }
-            });
+            }
           });
         }
       });
@@ -140,7 +141,7 @@ Future generateTrxTransactionContract(
 
   //print('PARAMETER $parameter');
 
-  Tron.Transaction_Contract contract = new Tron.Transaction_Contract();
+  Tron.Transaction_Contract contract = Tron.Transaction_Contract();
   contract.parameter = parameter;
 
   contract.type = transferContractType;
@@ -182,9 +183,9 @@ _generateTrxRawTransaction(
 // txRaw.SetTimestamp(time.Now().UnixNano() / 1000000)
 
   var refBlockHash;
-  var refBlockBytes;
-  var expiration;
-  var timestamp;
+  List<int> refBlockBytes;
+  Int64 expiration;
+  Int64 timestamp;
 
 // block_header: {
 // raw_data: {
@@ -255,9 +256,10 @@ _generateTrxRawTransaction(
   // print('txBufferHex $rawTxBufferHex');
 
   var broadcastTronTransactionRes;
-  if (isBroadcast)
+  if (isBroadcast) {
     broadcastTronTransactionRes =
         await broadcastTronTransaction(rawTxBufferHex);
+  }
 
   return {
     "broadcastTronTransactionRes": broadcastTronTransactionRes,

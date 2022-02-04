@@ -50,7 +50,7 @@ class LightningRemitViewmodel extends FutureViewModel {
   BuildContext context;
   double quantity = 0.0;
   List<Map<String, dynamic>> coins = [];
-  GlobalKey globalKey = new GlobalKey();
+  GlobalKey globalKey = GlobalKey();
   ScrollController scrollController;
   bool isExchangeBalanceEmpty = false;
   String barcodeRes = '';
@@ -91,10 +91,10 @@ class LightningRemitViewmodel extends FutureViewModel {
                   After Future Data is ready
 ----------------------------------------------------------------------*/
   @override
-  void onData(data) {
+  void onData(data) async {
     setBusyForObject(exchangeBalances, true);
     exchangeBalances = data;
-    exchangeBalances.forEach((element) async {
+    for (var element in exchangeBalances) {
       print(element.toJson());
       if (element.ticker.isEmpty) {
         await tokenListDatabaseService
@@ -112,7 +112,7 @@ class LightningRemitViewmodel extends FutureViewModel {
 //element.ticker =tradeService.setTickerNameByType(element.coinType);
         print('exchanageBalanceModel tickerName ${element.ticker}');
       }
-    });
+    }
     setBusyForObject(exchangeBalances, false);
 
     setBusyForObject(tickerName, true);
@@ -179,10 +179,10 @@ class LightningRemitViewmodel extends FutureViewModel {
         builder: (context1) => Container(
           width: double.infinity,
           height: 100,
-          margin: EdgeInsets.symmetric(horizontal: 10.0),
+          margin: const EdgeInsets.symmetric(horizontal: 10.0),
           decoration: BoxDecoration(
             color: grey.withAlpha(300),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
             // boxShadow: [
             //   BoxShadow(
             //       blurRadius: 3, color: Colors.grey[600], spreadRadius: 2)
@@ -200,8 +200,8 @@ class LightningRemitViewmodel extends FutureViewModel {
                   decoration: BoxDecoration(
                     // color: grey.withAlpha(300),
                     borderRadius: index == 0
-                        ? BorderRadius.vertical(top: Radius.circular(10))
-                        : BorderRadius.all(Radius.zero),
+                        ? const BorderRadius.vertical(top: Radius.circular(10))
+                        : const BorderRadius.all(Radius.zero),
                     // boxShadow: [
                     //   BoxShadow(
                     //       blurRadius: 3, color: Colors.grey[600], spreadRadius: 2)
@@ -230,7 +230,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                           Text(
                               exchangeBalances[index].unlockedAmount.toString(),
                               style: Theme.of(context).textTheme.headline5),
-                          Divider(
+                          const Divider(
                             color: Colors.white,
                             height: 1,
                           )
@@ -314,8 +314,9 @@ class LightningRemitViewmodel extends FutureViewModel {
   updateSelectedTickernameIOS(int index, double updatedQuantity) {
     setBusy(true);
     print('INDEX ${index + 1} ---- coins length ${exchangeBalances.length}');
-    if (index + 1 <= exchangeBalances.length)
+    if (index + 1 <= exchangeBalances.length) {
       tickerName = exchangeBalances.elementAt(index).ticker;
+    }
     quantity = updatedQuantity;
     print('IOS tickerName $tickerName --- quantity $quantity');
     setBusy(false);
@@ -334,8 +335,9 @@ class LightningRemitViewmodel extends FutureViewModel {
     setBusyForObject(exchangeBalances, true);
     await apiService.getSingleCoinExchangeBalance(tickerName).then((res) {
       exchangeBalances.firstWhere((element) {
-        if (element.ticker == tickerName)
+        if (element.ticker == tickerName) {
           element.unlockedAmount = res.unlockedAmount;
+        }
         log.w('udpated balance check ${element.unlockedAmount}');
         return true;
       });
@@ -359,8 +361,7 @@ class LightningRemitViewmodel extends FutureViewModel {
             ? CupertinoAlertDialog(
                 title: Container(
                   child: Center(
-                      child: Text(
-                          '${AppLocalizations.of(context).receiveAddress}')),
+                      child: Text(AppLocalizations.of(context).receiveAddress)),
                 ),
                 content: Column(
                   children: [
@@ -388,7 +389,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                     ),
                     // UIHelper.verticalSpaceLarge,
                     Container(
-                        margin: EdgeInsets.only(top: 10.0),
+                        margin: const EdgeInsets.only(top: 10.0),
                         width: 250,
                         height: 250,
                         child: Center(
@@ -419,12 +420,13 @@ class LightningRemitViewmodel extends FutureViewModel {
                 actions: <Widget>[
                   // QR image share button
                   Container(
-                    margin: EdgeInsets.all(5),
+                    margin: const EdgeInsets.all(5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         CupertinoButton(
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(4)),
                             child: Center(
                                 child: Text(
                               AppLocalizations.of(context).share,
@@ -440,7 +442,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                                 String filePath =
                                     "${dir.path}/$receiveFileName";
                                 File file = File(filePath);
-                                Future.delayed(new Duration(milliseconds: 30),
+                                Future.delayed(const Duration(milliseconds: 30),
                                     () {
                                   sharedService
                                       .capturePng(globalKey: globalKey)
@@ -454,8 +456,9 @@ class LightningRemitViewmodel extends FutureViewModel {
                               });
                             }),
                         CupertinoButton(
-                          padding: EdgeInsets.only(left: 5),
-                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          padding: const EdgeInsets.only(left: 5),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(4)),
                           child: Text(
                             AppLocalizations.of(context).close,
                             style: Theme.of(context).textTheme.headline5,
@@ -474,15 +477,14 @@ class LightningRemitViewmodel extends FutureViewModel {
                 titlePadding: EdgeInsets.zero,
                 contentPadding: EdgeInsets.zero,
                 insetPadding:
-                    EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                    const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
                 elevation: 5,
                 backgroundColor: walletCardColor.withOpacity(0.85),
                 title: Container(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   color: secondaryColor.withOpacity(0.5),
                   child: Center(
-                      child: Text(
-                          '${AppLocalizations.of(context).receiveAddress}')),
+                      child: Text(AppLocalizations.of(context).receiveAddress)),
                 ),
                 titleTextStyle: Theme.of(context)
                     .textTheme
@@ -516,7 +518,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                     ),
                     // UIHelper.verticalSpaceLarge,
                     Container(
-                        margin: EdgeInsets.only(top: 10.0),
+                        margin: const EdgeInsets.only(top: 10.0),
                         width: 250,
                         height: 250,
                         child: Center(
@@ -548,7 +550,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                   // QR image share button
 
                   Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: RaisedButton(
                         child: Text(AppLocalizations.of(context).share,
                             style: Theme.of(context).textTheme.headline6),
@@ -559,7 +561,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                             String filePath = "${dir.path}/$receiveFileName";
                             File file = File(filePath);
 
-                            Future.delayed(new Duration(milliseconds: 30), () {
+                            Future.delayed(const Duration(milliseconds: 30), () {
                               sharedService
                                   .capturePng(globalKey: globalKey)
                                   .then((byteData) {
@@ -642,7 +644,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                   position: NotificationPosition.bottom,
                   background: primaryColor);
               String date = DateTime.now().toString();
-              TransactionHistory transactionHistory = new TransactionHistory(
+              TransactionHistory transactionHistory = TransactionHistory(
                   id: null,
                   tickerName: tickerName,
                   address: '',
@@ -653,7 +655,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                   quantity: amount,
                   tag: 'bindpay');
               walletService.insertTransactionInDatabase(transactionHistory);
-              Future.delayed(Duration(seconds: 3), () async {
+              Future.delayed(const Duration(seconds: 3), () async {
                 await refreshBalance();
                 log.i('balance updated');
               });
@@ -699,7 +701,7 @@ class LightningRemitViewmodel extends FutureViewModel {
   }
 
   copyAddress(String txId) {
-    Clipboard.setData(new ClipboardData(text: txId));
+    Clipboard.setData(ClipboardData(text: txId));
     showSimpleNotification(
         Center(
             child: Text(AppLocalizations.of(context).copiedSuccessfully,

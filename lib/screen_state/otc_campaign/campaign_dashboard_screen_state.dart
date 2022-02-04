@@ -26,7 +26,7 @@ class CampaignDashboardScreenState extends BaseState {
   SharedService sharedService = locator<SharedService>();
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
-  ApiService _apiService = locator<ApiService>();
+  final ApiService _apiService = locator<ApiService>();
   CampaignUserData campaignUserData;
   String campaignName = '';
 
@@ -64,7 +64,7 @@ class CampaignDashboardScreenState extends BaseState {
         .then((token) async {
       if (token != '' || token != null) {
         await campaignService.getUserDataFromDatabase().then((res) {
-          campaignUserData = new CampaignUserData();
+          campaignUserData = CampaignUserData();
           campaignUserData = res;
         });
         await myProfile(token);
@@ -88,7 +88,7 @@ class CampaignDashboardScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   tokenCheckTimer() {
-    Timer.periodic(Duration(minutes: 5), (t) async {
+    Timer.periodic(const Duration(minutes: 5), (t) async {
       await campaignService
           .getSavedLoginTokenFromLocalStorage()
           .then((token) async {
@@ -151,7 +151,7 @@ class CampaignDashboardScreenState extends BaseState {
 
   myProfile(String token) async {
     setBusy(true);
-    memberProfile = new MemberProfile();
+    memberProfile = MemberProfile();
     await campaignService.getMemberProfile(token).then((member) {
       if (member != null) {
         String level = member.membership;

@@ -54,8 +54,9 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
       // bool canCheckBiometrics = await localAuthService.canCheckBiometrics();
       if (!storageService.isCameraOpen) {
         if (!localAuthService.authInProgress &&
-            storageService.hasAppGoneInTheBackgroundKey)
+            storageService.hasAppGoneInTheBackgroundKey) {
           await localAuthService.authenticateApp();
+        }
       }
     }
     storageService.hasAppGoneInTheBackgroundKey = false;
@@ -125,15 +126,15 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
         'ELFUSDT',
         'HOTUSDT'
       ];
-      priceList.prices.forEach((t) {
-        coinsToRemove.forEach((coin) {
+      for (var t in priceList.prices) {
+        for (var coin in coinsToRemove) {
           if (t.symbol.contains(coin)) log.i(t.toJson());
-        });
-      });
+        }
+      }
 
-      coinsToRemove.forEach((coin) {
+      for (var coin in coinsToRemove) {
         priceList.prices.removeWhere((item) => item.symbol.contains(coin));
-      });
+      }
       log.e(' priceList.prices length after ${priceList.prices.length}');
       pairPriceList = priceList.prices;
 

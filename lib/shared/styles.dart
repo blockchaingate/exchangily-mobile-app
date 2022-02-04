@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 
 class Styles {
   static TextStyle textStyleParaGraph(BuildContext context) {
-    return TextStyle(
+    return const TextStyle(
         fontFamily: '',
         fontSize: FontSizes.medium,
         fontWeight: FontWeight.w200,

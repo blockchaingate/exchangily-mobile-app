@@ -76,32 +76,37 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     String fabAddress =
         await walletService.getAddressFromCoreWalletDatabaseByTickerName('FAB');
     txHistoryEvents = await apiService.getTransactionHistoryEvents(fabAddress);
-    if (txHistoryEvents.isNotEmpty)
-      txHistoryEvents.forEach((element) {
-        if (element.tickerName == tickerName)
+    if (txHistoryEvents.isNotEmpty) {
+      for (var element in txHistoryEvents) {
+        if (element.tickerName == tickerName) {
           transactionHistoryToShowInView.add(element);
-        else if (element.tickerName.toUpperCase() == 'ETH_DSC' &&
-            tickerName == 'DSCE')
+        } else if (element.tickerName.toUpperCase() == 'ETH_DSC' &&
+            tickerName == 'DSCE') {
           transactionHistoryToShowInView.add(element);
-        else if (element.tickerName.toUpperCase() == 'ETH_BST' &&
-            tickerName == 'BSTE')
+        } else if (element.tickerName.toUpperCase() == 'ETH_BST' &&
+            tickerName == 'BSTE') {
           transactionHistoryToShowInView.add(element);
-        else if (element.tickerName.toUpperCase() == 'ETH_FAB' &&
-            tickerName == 'FABE')
+        } else if (element.tickerName.toUpperCase() == 'ETH_FAB' &&
+            tickerName == 'FABE') {
           transactionHistoryToShowInView.add(element);
-        else if (element.tickerName.toUpperCase() == 'ETH_EXG' &&
+        } else if (element.tickerName.toUpperCase() == 'ETH_EXG' &&
             tickerName == 'EXGE') {
           // element.tickerName = 'EXG(ERC20)';
           transactionHistoryToShowInView.add(element);
         } else if (element.tickerName.toUpperCase() == 'TRON_USDT' &&
-            tickerName == 'USDTX') transactionHistoryToShowInView.add(element);
-      });
+            tickerName == 'USDTX') {
+          transactionHistoryToShowInView.add(element);
+        }
+      }
+    }
 
-    if (txHistoryFromDb != null || txHistoryFromDb.isNotEmpty)
-      txHistoryFromDb.forEach((t) async {
-        if (t.tag == 'send' && t.tickerName == tickerName)
+    if (txHistoryFromDb != null || txHistoryFromDb.isNotEmpty) {
+      for (var t in txHistoryFromDb) {
+        if (t.tag == 'send' && t.tickerName == tickerName) {
           transactionHistoryToShowInView.add(t);
-      });
+        }
+      }
+    }
     transactionHistoryToShowInView.sort(
         (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)));
 
@@ -148,17 +153,17 @@ class TransactionHistoryViewmodel extends FutureViewModel {
           .getSinglePairDecimalConfig(tickerName)
           .then((decimalConfig) => decimalConfig = decimalConfig);
 
-      transactionHistoryToShowInView.forEach((t) async {
+      for (var t in transactionHistoryToShowInView) {
         log.e(t.toJson);
         if (t.tag.startsWith('sent')) {
           await walletService.checkTxStatus(t);
         }
-      });
+      }
       transactionHistoryToShowInView.sort(
           (a, b) => DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
-      transactionHistoryToShowInView.forEach((t) {
+      for (var t in transactionHistoryToShowInView) {
         log.w(t.toJson);
-      });
+      }
       setBusy(false);
     }).catchError((onError) {
       setBusy(false);
@@ -170,7 +175,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                   Copy Address
 ----------------------------------------------------------------------*/
   copyAddress(String txId) {
-    Clipboard.setData(new ClipboardData(text: txId));
+    Clipboard.setData(ClipboardData(text: txId));
     showSimpleNotification(
         Center(
             child: Text(AppLocalizations.of(context).copiedSuccessfully,
@@ -326,14 +331,14 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                     ),
                     actions: <Widget>[
                       Container(
-                        margin: EdgeInsets.all(5),
+                        margin: const EdgeInsets.all(5),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             CupertinoButton(
-                              padding: EdgeInsets.only(left: 5),
+                              padding: const EdgeInsets.only(left: 5),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(4)),
+                                  const BorderRadius.all(Radius.circular(4)),
                               child: Text(
                                 AppLocalizations.of(context).close,
                                 style: Theme.of(context)
@@ -353,15 +358,15 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                 )
               : AlertDialog(
                   titlePadding: EdgeInsets.zero,
-                  contentPadding: EdgeInsets.all(5.0),
+                  contentPadding: const EdgeInsets.all(5.0),
                   elevation: 5,
                   backgroundColor: walletCardColor.withOpacity(0.85),
                   title: Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
                     color: secondaryColor.withOpacity(0.5),
                     child: Center(
                         child: Text(
-                            '${AppLocalizations.of(context).transactionDetails}')),
+                            AppLocalizations.of(context).transactionDetails)),
                   ),
                   titleTextStyle: Theme.of(context)
                       .textTheme

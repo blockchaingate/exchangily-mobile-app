@@ -20,7 +20,7 @@ import 'package:path/path.dart';
 class TransactionHistoryDatabaseService {
   final log = getLogger('TransactionHistoryDatabaseService');
 
-  static final _databaseName = 'transaction_history_database.db';
+  static const _databaseName = 'transaction_history_database.db';
   final String tableName = 'transaction_history';
   // database table and column names
   final String columnId = 'id';
@@ -36,7 +36,7 @@ class TransactionHistoryDatabaseService {
   final String columnTag = 'tag';
   final String columnChainName = 'chainName';
 
-  static final _databaseVersion = 7;
+  static const _databaseVersion = 7;
   static Future<Database> _database;
   String path = '';
 
@@ -142,7 +142,7 @@ class TransactionHistoryDatabaseService {
     final Database db = await _database;
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
-    if (res.length > 0) {
+    if (res.isNotEmpty) {
       return TransactionHistory.fromJson((res.first));
     }
     return null;
@@ -154,7 +154,7 @@ class TransactionHistoryDatabaseService {
     List<Map> res = await db.query(tableName,
         where: 'tickerChainTxId= ?', whereArgs: [tickerChainTxId]);
     log.w('tickerChainTxId - $tickerChainTxId --- $res');
-    if (res.length > 0) {
+    if (res.isNotEmpty) {
       return TransactionHistory.fromJson((res.first));
     }
     return null;

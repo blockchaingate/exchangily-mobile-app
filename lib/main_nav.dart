@@ -13,7 +13,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'constants/colors.dart';
 
 class MainNav extends StatefulWidget {
-  MainNav({this.currentPage = 0});
+  const MainNav({this.currentPage = 0});
   final int currentPage;
 
   @override
@@ -35,16 +35,16 @@ class _MainNavState extends State<MainNav> {
         if (_page == 0) {
           sharedService.context = context;
           await sharedService.closeApp();
-          return new Future(() => false);
+          return Future(() => false);
         }
         onPageChanged(0);
         navigateToPage(0);
-        return new Future(() => false);
+        return Future(() => false);
       },
       child: Scaffold(
         body: PageView(
-          physics: new NeverScrollableScrollPhysics(),
-          children: <Widget>[
+          physics: const NeverScrollableScrollPhysics(),
+          children: const <Widget>[
             WalletDashboardView(),
             MarketsView(),
             CampaignInstructionScreen(),
@@ -65,9 +65,7 @@ class _MainNavState extends State<MainNav> {
           items: [
             BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.wallet, size: iconSize),
-              title: Padding(
-                  padding: EdgeInsets.only(top: paddingValue),
-                  child: Text(AppLocalizations.of(context).wallet)),
+              label: AppLocalizations.of(context).wallet,
             ),
             // BottomNavigationBarItem(
             //     icon: Icon(FontAwesomeIcons.chartBar, size: iconSize),
@@ -76,9 +74,7 @@ class _MainNavState extends State<MainNav> {
             //         child: Text(AppLocalizations.of(context).market))),
             BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.coins, size: iconSize),
-                title: Padding(
-                    padding: EdgeInsets.only(top: paddingValue),
-                    child: Text(AppLocalizations.of(context).trade))),
+                label: AppLocalizations.of(context).trade),
             // BottomNavigationBarItem(
             //     icon: Icon(Icons.branding_watermark, size: iconSize),
             //     title: Padding(
@@ -86,15 +82,11 @@ class _MainNavState extends State<MainNav> {
             //         child: Text('OTC'))),
             BottomNavigationBarItem(
                 icon: Icon(Icons.event, size: iconSize),
-                title: Padding(
-                    padding: EdgeInsets.only(top: paddingValue),
-                    child: Text(AppLocalizations.of(context).event))),
+                label: AppLocalizations.of(context).event),
 
             BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.cog, size: iconSize),
-                title: Padding(
-                    padding: EdgeInsets.only(top: paddingValue),
-                    child: Text(AppLocalizations.of(context).settings))),
+                label: AppLocalizations.of(context).settings),
           ],
           onTap: navigateToPage,
           currentIndex: _page,
@@ -109,16 +101,16 @@ class _MainNavState extends State<MainNav> {
 
   void onPageChanged(int page) {
     setState(() {
-      this._page = page;
+      _page = page;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _pageController = new PageController(initialPage: widget.currentPage);
+    _pageController = PageController(initialPage: widget.currentPage);
     setState(() {
-      this._page = widget.currentPage;
+      _page = widget.currentPage;
       // print("current page: ${widget.currentPage}");
       // print("_page: ${this._page}");
     });

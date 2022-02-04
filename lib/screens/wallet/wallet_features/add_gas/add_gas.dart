@@ -32,10 +32,10 @@ class AddGas extends StatelessWidget {
         viewModelBuilder: () => AddGasViewModel(),
         builder: (context, AddGasViewModel model, _) => Scaffold(
             appBar: CupertinoNavigationBar(
-              padding: EdgeInsetsDirectional.only(start: 0),
+              padding: const EdgeInsetsDirectional.only(start: 0),
               leading: CupertinoButton(
-                padding: EdgeInsets.all(0),
-                child: Icon(
+                padding: const EdgeInsets.all(0),
+                child: const Icon(
                   Icons.arrow_back,
                   color: Colors.white,
                 ),
@@ -47,35 +47,35 @@ class AddGas extends StatelessWidget {
               ),
               middle: Text(
                 AppLocalizations.of(context).addGas,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
-              backgroundColor: Color(0XFF1f2233),
+              backgroundColor: const Color(0XFF1f2233),
             ),
-            backgroundColor: Color(0xFF1F2233),
+            backgroundColor: const Color(0xFF1F2233),
             body: Container(
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                 child: ListView(
                   // crossAxisAlignment: CrossAxisAlignment.center,
                   // mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                        padding: EdgeInsets.all(30),
+                        padding: const EdgeInsets.all(30),
                         decoration: BoxDecoration(
                             shape: BoxShape.circle, color: primaryColor),
                         child: Image.asset("assets/images/img/gas.png",
                             width: 100, height: 100)),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     TextField(
                       inputFormatters: [
                         DecimalTextInputFormatter(
                             decimalRange: 6, activatedNegativeValues: false)
                       ],
                       keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       onChanged: (v) => model.updateTransFee(),
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: new BorderSide(
+                        enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
                                 color: Color(0XFF871fff), width: 1.0)),
                         hintText:
                             AppLocalizations.of(context).enterAmount + '(FAB)',
@@ -95,10 +95,10 @@ class AddGas extends StatelessWidget {
                         child: Text(
                             '${AppLocalizations.of(context).gas} ${AppLocalizations.of(context).balance}',
                             style:
-                                TextStyle(fontSize: 12.0, color: Colors.white)),
+                                const TextStyle(fontSize: 12.0, color: Colors.white)),
                       ),
                       Text(model.gasBalance.toString(),
-                          style: TextStyle(fontSize: 12.0, color: Colors.white))
+                          style: const TextStyle(fontSize: 12.0, color: Colors.white))
                     ]),
                     UIHelper.verticalSpaceSmall,
                     Row(children: [
@@ -108,10 +108,10 @@ class AddGas extends StatelessWidget {
                         child: Text(
                             'FAB ${AppLocalizations.of(context).balance}',
                             style:
-                                TextStyle(fontSize: 12.0, color: Colors.white)),
+                                const TextStyle(fontSize: 12.0, color: Colors.white)),
                       ),
                       Text(model.fabBalance.toString(),
-                          style: TextStyle(fontSize: 12.0, color: Colors.white))
+                          style: const TextStyle(fontSize: 12.0, color: Colors.white))
                     ]),
                     UIHelper.verticalSpaceSmall,
                     // Gas Fee
@@ -121,10 +121,10 @@ class AddGas extends StatelessWidget {
                             left: 2.0, right: 4.0, top: 2.0),
                         child: Text(AppLocalizations.of(context).gasFee,
                             style:
-                                TextStyle(fontSize: 12.0, color: Colors.white)),
+                                const TextStyle(fontSize: 12.0, color: Colors.white)),
                       ),
                       Text(model.transFee.toString() + ' FAB',
-                          style: TextStyle(fontSize: 13.0, color: Colors.white))
+                          style: const TextStyle(fontSize: 13.0, color: Colors.white))
                     ]),
                     // Slider
                     Slider(
@@ -178,7 +178,7 @@ class AddGas extends StatelessWidget {
                                         //   model.updateTransFee();
                                       },
                                       keyboardType:
-                                          TextInputType.numberWithOptions(
+                                          const TextInputType.numberWithOptions(
                                               decimal:
                                                   true), // numnber keyboard
                                       decoration: InputDecoration(
@@ -222,7 +222,7 @@ class AddGas extends StatelessWidget {
                                         // updateTransFee();
                                       },
                                       keyboardType:
-                                          TextInputType.numberWithOptions(
+                                          const TextInputType.numberWithOptions(
                                               decimal:
                                                   true), // numnber keyboard
                                       decoration: InputDecoration(
@@ -246,7 +246,7 @@ class AddGas extends StatelessWidget {
                             ],
                           )
                         : Container(),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     Row(
                       children: <Widget>[
                         Flexible(
@@ -257,13 +257,13 @@ class AddGas extends StatelessWidget {
                                 Navigator.pop(context);
                               },
                               child: Text(AppLocalizations.of(context).cancel,
-                                  style: TextStyle(color: Colors.white))),
+                                  style: const TextStyle(color: Colors.white))),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Flexible(
                           child: OutlineButton(
                             borderSide: BorderSide(color: primaryColor),
-                            padding: EdgeInsets.all(15),
+                            padding: const EdgeInsets.all(15),
                             color: primaryColor,
                             textColor: Colors.white,
                             onPressed: () async {

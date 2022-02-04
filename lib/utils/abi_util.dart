@@ -34,8 +34,9 @@ class AbiUtils {
     if (isSpecialDeposit) {
       var hexaDecimalCoinType = fix8LengthCoinType(coinType.toRadixString(16));
       abiHex += specialFixLength(hexaDecimalCoinType, 64, chain);
-    } else
+    } else {
       abiHex += fixLength(coinType.toRadixString(16), 64);
+    }
 
     var amountHex = amountInLink.toRadixString(16);
     abiHex += fixLength(trimHexPrefix(amountHex), 64);
@@ -202,9 +203,9 @@ class AbiUtils {
       list.add('');
     }
 
-    list..add(transaction.value.getInWei);
+    list.add(transaction.value.getInWei);
     list.add('');
-    list..add(transaction.data);
+    list.add(transaction.data);
 
     if (signature != null) {
       list
@@ -231,7 +232,7 @@ class AbiUtils {
 
     abiHex = trimHexPrefix(abiHex);
     //var ethClient = new Web3Client(apiUrl, httpClient);
-    var credentials = new EthPrivateKey.fromHex(privateKey);
+    var credentials = EthPrivateKey.fromHex(privateKey);
 
     var transaction = Transaction(
         to: EthereumAddress.fromHex(coinPoolAddress),

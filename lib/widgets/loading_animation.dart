@@ -4,7 +4,7 @@ import '../shared/globals.dart' as globals;
 
 class LoadingGif extends StatelessWidget {
   final double size;
-  LoadingGif({this.size: 60});
+  const LoadingGif({this.size = 60});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class LoadingGif extends StatelessWidget {
           width: size,
           height: size,
         ),
-        SizedBox(height: 3),
+        const SizedBox(height: 3),
         Text(
           AppLocalizations.of(context).loading,
           style: TextStyle(color: globals.primaryColor),

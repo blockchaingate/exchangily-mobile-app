@@ -20,7 +20,7 @@ class VerifyMnemonicWalletView extends StatelessWidget {
   final String validationMessage;
   final int count;
 
-  VerifyMnemonicWalletView(
+  const VerifyMnemonicWalletView(
       {@required this.mnemonicTextController,
       this.validationMessage,
       this.count});
@@ -29,7 +29,7 @@ class VerifyMnemonicWalletView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -44,7 +44,7 @@ class VerifyMnemonicWalletView extends StatelessWidget {
             ],
           ),
           Container(
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
               child: GridView.extent(
                   maxCrossAxisExtent: 125,
                   padding: const EdgeInsets.all(2),

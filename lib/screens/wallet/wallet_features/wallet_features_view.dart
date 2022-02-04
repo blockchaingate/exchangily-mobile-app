@@ -45,7 +45,7 @@ class WalletFeaturesView extends StatelessWidget {
           children: <Widget>[
             Container(
               height: 225,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage(
                           'assets/images/wallet-page/background.png'),
@@ -53,7 +53,7 @@ class WalletFeaturesView extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Container(
+                  SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 60,
                     child: Stack(
@@ -70,7 +70,7 @@ class WalletFeaturesView extends StatelessWidget {
                         Align(
                             alignment: Alignment.centerLeft,
                             child: IconButton(
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.arrow_back,
                                   color: Colors.white,
                                 ),
@@ -100,17 +100,17 @@ class WalletFeaturesView extends StatelessWidget {
                   ),
                   Container(
                       padding:
-                          EdgeInsets.symmetric(vertical: 0, horizontal: 25),
+                          const EdgeInsets.symmetric(vertical: 0, horizontal: 25),
                       height: 153,
-                      alignment: FractionalOffset(0.0, 2.0),
+                      alignment: const FractionalOffset(0.0, 2.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Container(
-                            padding: EdgeInsets.only(left: 5),
+                            padding: const EdgeInsets.only(left: 5),
                             child: Row(
                               children: <Widget>[
-                                Text('${model.specialTicker}',
+                                Text(model.specialTicker,
                                     style:
                                         Theme.of(context).textTheme.subtitle1),
                                 Icon(
@@ -118,7 +118,7 @@ class WalletFeaturesView extends StatelessWidget {
                                   size: 17,
                                   color: white,
                                 ),
-                                Text('${walletInfo.name ?? ''}',
+                                Text(walletInfo.name ?? '',
                                     style:
                                         Theme.of(context).textTheme.subtitle1)
                               ],
@@ -143,7 +143,7 @@ class WalletFeaturesView extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -151,12 +151,12 @@ class WalletFeaturesView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Container(
+                      SizedBox(
                         width: model.containerWidth,
                         height: model.containerHeight,
                         child: _featuresCard(context, 0, model),
                       ),
-                      Container(
+                      SizedBox(
                           width: model.containerWidth,
                           height: model.containerHeight,
                           child: _featuresCard(context, 1, model))
@@ -166,12 +166,12 @@ class WalletFeaturesView extends StatelessWidget {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Container(
+                        SizedBox(
                           width: model.containerWidth,
                           height: model.containerHeight,
                           child: _featuresCard(context, 2, model),
                         ),
-                        Container(
+                        SizedBox(
                           width: model.containerWidth,
                           height: model.containerHeight,
                           child: _featuresCard(context, 3, model),
@@ -183,7 +183,7 @@ class WalletFeaturesView extends StatelessWidget {
                     children: [
                       model.errDepositItem != null
                           ? Container(
-                              margin: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                 horizontal: 30,
                               ),
                               width: MediaQuery.of(context).size.width,
@@ -192,7 +192,7 @@ class WalletFeaturesView extends StatelessWidget {
                           : Container(),
                       walletInfo.tickerName == 'FAB'
                           ? Container(
-                              margin: EdgeInsets.symmetric(horizontal: 30),
+                              margin: const EdgeInsets.symmetric(horizontal: 30),
                               width: MediaQuery.of(context).size.width,
                               child: _featuresCard(context, 5, model),
                             )
@@ -202,8 +202,8 @@ class WalletFeaturesView extends StatelessWidget {
 
                   // Transaction History Column
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 12.0),
-                    padding: EdgeInsets.symmetric(
+                    margin: const EdgeInsets.symmetric(horizontal: 12.0),
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 20.0,
                     ),
                     child: Card(
@@ -213,12 +213,12 @@ class WalletFeaturesView extends StatelessWidget {
                         splashColor: primaryColor.withAlpha(30),
                         onTap: () {
                           var route = model.features[6].route;
-                          Navigator.pushNamed(context, '$route',
+                          Navigator.pushNamed(context, route,
                               arguments: walletInfo);
                         },
                         child: Container(
                           padding:
-                              EdgeInsets.symmetric(vertical: 9, horizontal: 6),
+                              const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -230,7 +230,7 @@ class WalletFeaturesView extends StatelessWidget {
                                         BoxShadow(
                                             color: model.features[6].shadowColor
                                                 .withOpacity(0.2),
-                                            offset: Offset(0, 2),
+                                            offset: const Offset(0, 2),
                                             blurRadius: 10,
                                             spreadRadius: 3)
                                       ]),
@@ -272,12 +272,12 @@ class WalletFeaturesView extends StatelessWidget {
         elevation: model.elevation,
         color: walletCardColor,
         child: Container(
-          padding: EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -329,7 +329,7 @@ class WalletFeaturesView extends StatelessWidget {
               // Middle column row containes wallet balance and in exchange text
               Container(
                 color: primaryColor.withAlpha(27),
-                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -345,7 +345,7 @@ class WalletFeaturesView extends StatelessWidget {
               model.walletInfo.tickerName == 'FAB'
                   ? Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                          const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -360,7 +360,7 @@ class WalletFeaturesView extends StatelessWidget {
                   : Container(),
               // row contains wallet balance and exchange balance
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -383,7 +383,7 @@ class WalletFeaturesView extends StatelessWidget {
               model.walletInfo.lockedBalance != 0.0
                   ? Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+                          const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -425,7 +425,7 @@ class WalletFeaturesView extends StatelessWidget {
                 }
               : null,
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 2),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -435,10 +435,10 @@ class WalletFeaturesView extends StatelessWidget {
                         color: walletCardColor,
                         borderRadius: BorderRadius.circular(50),
                         boxShadow: [
-                          new BoxShadow(
+                          BoxShadow(
                               color: model.features[index].shadowColor
                                   .withOpacity(0.5),
-                              offset: new Offset(0, 9),
+                              offset: const Offset(0, 9),
                               blurRadius: 10,
                               spreadRadius: 3)
                         ]),

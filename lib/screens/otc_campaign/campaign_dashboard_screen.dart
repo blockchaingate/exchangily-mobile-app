@@ -12,7 +12,7 @@ import '../../shared/globals.dart' as globals;
 class CampaignDashboardScreen extends StatelessWidget {
   CampaignDashboardScreen({Key key}) : super(key: key);
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return BaseScreen<CampaignDashboardScreenState>(
@@ -24,7 +24,7 @@ class CampaignDashboardScreen extends StatelessWidget {
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async {
           model.onBackButtonPressed();
-          return new Future(() => false);
+          return Future(() => false);
         },
         child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -53,9 +53,9 @@ class CampaignDashboardScreen extends StatelessWidget {
                       color: globals.white54,
                     ),
                     title: model.campaignUserData == null
-                        ? Text('')
+                        ? const Text('')
                         : Text(
-                            '${model.campaignUserData.email}',
+                            model.campaignUserData.email,
                             style: Theme.of(context).textTheme.headline5,
                           ),
                   ),
@@ -82,7 +82,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 .copyWith(
                                     color: globals.primaryColor,
                                     decoration: TextDecoration.underline))
-                        : Text(''),
+                        : const Text(''),
                     trailing: Icon(Icons.share, color: globals.white54),
                     onTap: () {
                       Share.share(
@@ -91,7 +91,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                   ),
                   UIHelper.divider,
                   ListTile(
-                    trailing: Icon(
+                    trailing: const Icon(
                       Icons.clear_all,
                       color: globals.red,
                     ),
@@ -110,7 +110,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     Scaffold body Container
 -------------------------------------------------------------------------------------*/
             body: Container(
-              margin: EdgeInsets.all(10.0),
+              margin: const EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
                   UIHelper.verticalSpaceMedium,
@@ -126,7 +126,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                               padding: const EdgeInsets.only(top: 5.0),
                               child: IconButton(
                                   alignment: Alignment.centerLeft,
-                                  padding: EdgeInsets.only(right: 10),
+                                  padding: const EdgeInsets.only(right: 10),
                                   iconSize: 28,
                                   icon: Icon(
                                     Icons.menu,
@@ -139,7 +139,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             title: Padding(
                               padding: const EdgeInsets.only(top: 2.0),
                               child: model.campaignUserData == null
-                                  ? Text('')
+                                  ? const Text('')
                                   : Text(
                                       '${AppLocalizations.of(context).welcome} ${model.campaignUserData.email}',
                                       style: Theme.of(context)
@@ -165,7 +165,7 @@ class CampaignDashboardScreen extends StatelessWidget {
 -------------------------------------------------------------------------------------*/
                   Container(
                     color: globals.walletCardColor,
-                    padding: EdgeInsets.only(top: 5.0),
+                    padding: const EdgeInsets.only(top: 5.0),
                     child: Column(
                       children: <Widget>[
                         ListTile(
@@ -180,7 +180,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                           ),
                           title: Text(
                             AppLocalizations.of(context).myTotalAssets,
-                            style: TextStyle(letterSpacing: 1.1),
+                            style: const TextStyle(letterSpacing: 1.1),
                           ),
                           subtitle: Column(
                             children: <Widget>[
@@ -249,7 +249,7 @@ class CampaignDashboardScreen extends StatelessWidget {
 
                         Container(
                           color: globals.primaryColor.withAlpha(155),
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 18.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -392,9 +392,9 @@ class CampaignDashboardScreen extends StatelessWidget {
                                               .textTheme
                                               .headline5),
                                       model.memberProfile == null
-                                          ? Text('')
+                                          ? const Text('')
                                           : Text(
-                                              '${model.memberProfile.totalQuantities.toString()}',
+                                              model.memberProfile.totalQuantities.toString(),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5
@@ -462,14 +462,15 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   Team container with list tiles
 -------------------------------------------------------------------------------------*/
                   Container(
-                    margin: EdgeInsets.only(bottom: 5.0),
+                    margin: const EdgeInsets.only(bottom: 5.0),
                     child: Column(
                       children: <Widget>[
                         ListTile(
                             onTap: () {
-                              if (!model.busy)
+                              if (!model.busy) {
                                 model.navigateByRouteName(
                                     '/teamRewardDetails', model.team);
+                              }
                             },
                             dense: false,
                             leading: Padding(
@@ -670,10 +671,10 @@ class CampaignDashboardScreen extends StatelessWidget {
               ),
             ),
             floatingActionButton: Container(
-                margin: EdgeInsets.only(right: 10.0),
+                margin: const EdgeInsets.only(right: 10.0),
                 width: MediaQuery.of(context).size.width - 50,
                 child: RaisedButton(
-                    padding: EdgeInsets.all(0),
+                    padding: const EdgeInsets.all(0),
                     onPressed: () {
                       Navigator.pushNamed(context, '/campaignPayment');
                     },

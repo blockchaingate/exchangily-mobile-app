@@ -10,14 +10,14 @@ class NetworkStausView extends StatelessWidget {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: Container(
-          padding: EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.only(bottom: 10),
           child: Image.asset(
             'assets/images/wallet-page/exg.png',
             width: 50,
           )),
       body: Container(
         color: primaryColor.withOpacity(.4),
-        padding: EdgeInsets.all(50),
+        padding: const EdgeInsets.all(50),
         child: Center(
           child: Text(
             AppLocalizations.of(context).noInternetWarning,

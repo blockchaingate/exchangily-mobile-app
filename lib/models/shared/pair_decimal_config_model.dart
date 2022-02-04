@@ -10,17 +10,17 @@ class PairDecimalConfig {
     int priceDecimal,
     int qtyDecimal,
   }) {
-    this._priceDecimal = priceDecimal ?? 4;
-    this._qtyDecimal = qtyDecimal ?? 6;
+    _priceDecimal = priceDecimal ?? 4;
+    _qtyDecimal = qtyDecimal ?? 6;
 
-    this._name = name;
+    _name = name;
   }
 
   Map<String, dynamic> toJson() =>
       {'name': _name, 'priceDecimal': _priceDecimal, 'qtyDecimal': _qtyDecimal};
 
   factory PairDecimalConfig.fromJson(Map<String, dynamic> json) {
-    return new PairDecimalConfig(
+    return PairDecimalConfig(
         name: json['name'],
         priceDecimal: json['priceDecimal'],
         qtyDecimal: json['qtyDecimal']);
@@ -28,19 +28,19 @@ class PairDecimalConfig {
 
   int get priceDecimal => _priceDecimal;
   set priceDecimal(int priceDecimal) {
-    this._priceDecimal = priceDecimal;
+    _priceDecimal = priceDecimal;
   }
 
   int get qtyDecimal => _qtyDecimal;
 
   set qtyDecimal(int qtyDecimal) {
-    this._qtyDecimal = qtyDecimal;
+    _qtyDecimal = qtyDecimal;
   }
 
   String get name => _name;
 
   set name(String name) {
-    this._name = name;
+    _name = name;
   }
 }
 
@@ -49,8 +49,8 @@ class PairDecimalConfigList {
   PairDecimalConfigList({this.pairList});
 
   factory PairDecimalConfigList.fromJson(List<dynamic> parsedJson) {
-    List<PairDecimalConfig> pairList = new List<PairDecimalConfig>();
+    List<PairDecimalConfig> pairList = <PairDecimalConfig>[];
     pairList = parsedJson.map((i) => PairDecimalConfig.fromJson(i)).toList();
-    return new PairDecimalConfigList(pairList: pairList);
+    return PairDecimalConfigList(pairList: pairList);
   }
 }

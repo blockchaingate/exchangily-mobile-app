@@ -13,7 +13,7 @@ class MarketPairsTabView extends StatelessWidget {
   final List priceList;
   final bool isBusy;
   final bool hideSlider;
-  MarketPairsTabView(
+  const MarketPairsTabView(
       {Key key,
       this.marketPairsTabBarView,
       this.priceList,
@@ -41,7 +41,7 @@ class MarketPairsTabView extends StatelessWidget {
                       (BuildContext context, bool innerBoxIsScrolled) {
                     return <Widget>[
                       model.busy
-                          ? SliverToBoxAdapter(child: LoadingGif())
+                          ? const SliverToBoxAdapter(child: LoadingGif())
                           : SliverToBoxAdapter(
                               child: Offstage(
                                 offstage: hideSlider,
@@ -50,7 +50,7 @@ class MarketPairsTabView extends StatelessWidget {
                                     Carousel(
                                         imageData: model.images,
                                         lang: model.lang),
-                                    SizedBox(height: 5),
+                                    const SizedBox(height: 5),
                                   ],
                                 ),
                               ),
@@ -59,22 +59,22 @@ class MarketPairsTabView extends StatelessWidget {
                         child: Offstage(
                           offstage: isBusy,
                           child: Container(
-                            margin: EdgeInsets.fromLTRB(10, 0, 10, 5),
+                            margin: const EdgeInsets.fromLTRB(10, 0, 10, 5),
                             height: 40,
                             child: Row(
                               children: [
                                 for (var pair in priceList)
                                   Expanded(
                                     child: Card(
-                                      color: Color(0xff851fff),
-                                      margin: EdgeInsets.all(2),
+                                      color: const Color(0xff851fff),
+                                      margin: const EdgeInsets.all(2),
                                       elevation: 3,
                                       child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(pair.symbol.toString(),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     color: Colors.white,
                                                     fontWeight:
                                                         FontWeight.bold)),
@@ -84,7 +84,7 @@ class MarketPairsTabView extends StatelessWidget {
                                                         pair.price,
                                                         precision: 2)
                                                     .toString(),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   color: Colors.white,
                                                 ))
                                           ]),
@@ -98,8 +98,8 @@ class MarketPairsTabView extends StatelessWidget {
                       SliverPersistentHeader(
                         delegate: _SliverAppBarDelegate(
                           TabBar(
-                              unselectedLabelColor: Color(0xffaaaaaa),
-                              unselectedLabelStyle: TextStyle(fontSize: 14),
+                              unselectedLabelColor: const Color(0xffaaaaaa),
+                              unselectedLabelStyle: const TextStyle(fontSize: 14),
                               indicatorSize: TabBarIndicatorSize.tab,
                               indicator: BoxDecoration(
                                   gradient: LinearGradient(
@@ -110,7 +110,7 @@ class MarketPairsTabView extends StatelessWidget {
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter),
                                   shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.only(
+                                  borderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(5),
                                       topRight: Radius.circular(5)),
                                   color: Colors.redAccent),
@@ -120,7 +120,7 @@ class MarketPairsTabView extends StatelessWidget {
                                       child: Align(
                                     alignment: Alignment.center,
                                     child: Text(tab,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w500,
                                         )),
@@ -133,12 +133,12 @@ class MarketPairsTabView extends StatelessWidget {
                   },
                   body: isBusy
                       ? Container(
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).colorScheme.secondary,
                           child: Center(
                             child: model.sharedService.loadingIndicator(),
                           ))
                       : Container(
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).colorScheme.secondary,
                           child: TabBarView(
                               children: marketPairsTabBarView.map((pairList) {
                             return Container(
@@ -227,14 +227,14 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Column(
       children: [
-        new Container(
+        Container(
           height: _tabBar.preferredSize.height - 10,
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: PreferredSize(
               child: _tabBar,
               preferredSize: Size(MediaQuery.of(context).size.width,
                   _tabBar.preferredSize.height - 10)),
-          color: Color(0xff202138),
+          color: const Color(0xff202138),
         ),
         // new SizedBox(
         //   height: 20,

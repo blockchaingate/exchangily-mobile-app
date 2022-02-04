@@ -28,7 +28,7 @@ class CustomHttpUtil {
       }
     } finally {}
 
-    HttpClient httpClient = new HttpClient(context: securityContext);
+    HttpClient httpClient = HttpClient(context: securityContext);
 
     return httpClient;
   }

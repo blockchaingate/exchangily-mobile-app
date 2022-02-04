@@ -20,7 +20,7 @@ import 'package:path/path.dart';
 class CampaignOrderDatabaseService {
   final log = getLogger('TransactionHistoryDatabaseService');
 
-  static final _databaseName = 'campaign_order_database.db';
+  static const _databaseName = 'campaign_order_database.db';
   final String tableName = 'campaign_order';
   // database table and column names
   final String columnId = 'id';
@@ -28,7 +28,7 @@ class CampaignOrderDatabaseService {
   final String columnAmount = 'amount';
   final String columnStatus = 'status';
 
-  static final _databaseVersion = 1;
+  static const _databaseVersion = 1;
   static Future<Database> _database;
   String path = '';
 
@@ -98,7 +98,7 @@ class CampaignOrderDatabaseService {
     final Database db = await _database;
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
-    if (res.length > 0) {
+    if (res.isNotEmpty) {
       return TransactionHistory.fromJson((res.first));
     }
     return null;

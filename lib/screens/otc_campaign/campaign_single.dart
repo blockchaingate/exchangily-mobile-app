@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:gradient_text/gradient_text.dart';
 
 class CampaignSingle extends StatelessWidget {
-  CampaignSingle(this.eventID);
+  const CampaignSingle(this.eventID);
   final String eventID;
   @override
   Widget build(BuildContext context) {
@@ -20,10 +20,10 @@ class CampaignSingle extends StatelessWidget {
         },
         builder: (context, model, child) => Scaffold(
               body: model.busy
-                  ? LoadingGif()
+                  ? const LoadingGif()
                   : model.hasApiError
                       ? Container(
-                          child: Center(
+                          child: const Center(
                             child: Text("Connection Error"),
                           ),
                         )
@@ -57,7 +57,7 @@ class CampaignSingle extends StatelessWidget {
                                       fit: BoxFit.contain,
                                     )),
                                     child: Container(
-                                        margin: EdgeInsets.only(top: 100),
+                                        margin: const EdgeInsets.only(top: 100),
                                         height: 150,
                                         width:
                                             MediaQuery.of(context).size.width -
@@ -71,21 +71,21 @@ class CampaignSingle extends StatelessWidget {
                                                       .width -
                                                   60,
                                               constraints:
-                                                  BoxConstraints(maxHeight: 30),
+                                                  const BoxConstraints(maxHeight: 30),
                                               child: FittedBox(
                                                 fit: BoxFit.contain,
                                                 child: Text(
                                                   model.campaignInfoSingle[model
                                                           .lang]["title"]["up"]
                                                       .toUpperCase(),
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       color: Colors.white),
                                                 ),
                                               ),
                                             ),
-                                            Container(
+                                            SizedBox(
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width -
@@ -97,12 +97,12 @@ class CampaignSingle extends StatelessWidget {
                                                       model.campaignInfoSingle[
                                                               model.lang]
                                                           ["title"]["main"],
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           color: Colors.white,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           letterSpacing: 1),
-                                                      gradient: LinearGradient(
+                                                      gradient: const LinearGradient(
                                                           colors: [
                                                             Color(0xffffffff),
                                                             Color(0xffb7ccfe),
@@ -115,11 +115,11 @@ class CampaignSingle extends StatelessWidget {
                                                       textAlign:
                                                           TextAlign.center)),
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 10,
                                             ),
                                             Container(
-                                              padding: EdgeInsets.symmetric(
+                                              padding: const EdgeInsets.symmetric(
                                                   horizontal: 30, vertical: 7),
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
@@ -132,17 +132,17 @@ class CampaignSingle extends StatelessWidget {
                                                   Container(
                                                     width: 8,
                                                     height: 8,
-                                                    decoration: BoxDecoration(
+                                                    decoration: const BoxDecoration(
                                                         color:
                                                             Color(0xff000066),
                                                         shape: BoxShape.circle),
                                                   ),
-                                                  SizedBox(width: 5),
+                                                  const SizedBox(width: 5),
                                                   Text(
                                                     model.campaignInfoSingle[
                                                             model.lang]["title"]
                                                         ["label"],
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         color:
                                                             Color(0xff000066),
                                                         fontWeight:
@@ -150,11 +150,11 @@ class CampaignSingle extends StatelessWidget {
                                                         letterSpacing: 1,
                                                         fontSize: 16),
                                                   ),
-                                                  SizedBox(width: 5),
+                                                  const SizedBox(width: 5),
                                                   Container(
                                                     width: 8,
                                                     height: 8,
-                                                    decoration: BoxDecoration(
+                                                    decoration: const BoxDecoration(
                                                         color:
                                                             Color(0xff000066),
                                                         shape: BoxShape.circle),
@@ -169,7 +169,7 @@ class CampaignSingle extends StatelessWidget {
                                     top: 5,
                                     left: 5,
                                     child: IconButton(
-                                        icon: Icon(Icons.close,
+                                        icon: const Icon(Icons.close,
                                             color: Colors.white),
                                         onPressed: () {
                                           Navigator.pop(context);
@@ -179,7 +179,7 @@ class CampaignSingle extends StatelessWidget {
                                     top: 5,
                                     right: 5,
                                     child: IconButton(
-                                        icon: Icon(Icons.share,
+                                        icon: const Icon(Icons.share,
                                             color: Colors.white),
                                         onPressed: () {
                                           Navigator.push(context, MaterialPageRoute(builder: (context)=>Share()));
@@ -190,22 +190,22 @@ class CampaignSingle extends StatelessWidget {
                               //title area
                               Container(
                                 height: 60,
-                                margin: EdgeInsets.symmetric(horizontal: 30),
+                                margin: const EdgeInsets.symmetric(horizontal: 30),
                                 // padding: EdgeInsets.symmetric(horizontal:10),
                                 child: Stack(children: [
                                   Container(
-                                    margin: EdgeInsetsDirectional.only(top: 8),
-                                    padding: EdgeInsets.only(
+                                    margin: const EdgeInsetsDirectional.only(top: 8),
+                                    padding: const EdgeInsets.only(
                                       top: 10,
                                     ),
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color: Color(0xff3d3da1),
                                     ),
                                     child: Center(
                                       child: Text(
                                         model.campaignInfoSingle[model.lang]
                                             ["title"]["leading"],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 16,
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
@@ -214,8 +214,8 @@ class CampaignSingle extends StatelessWidget {
                                   ),
                                   Container(
                                     padding:
-                                        EdgeInsets.only(left: 20, right: 20),
-                                    child: CustomSeparator(
+                                        const EdgeInsets.only(left: 20, right: 20),
+                                    child: const CustomSeparator(
                                       color: Color(0xff353487),
                                       height: 20,
                                     ),
@@ -226,9 +226,9 @@ class CampaignSingle extends StatelessWidget {
                               EventMainContent(
                                   model.campaignInfoSingle[model.lang]["body"]),
 
-                              SizedBox(height: 50),
+                              const SizedBox(height: 50),
 
-                              SizedBox(height: 50),
+                              const SizedBox(height: 50),
                             ],
                           ),
                         ),

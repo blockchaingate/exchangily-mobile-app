@@ -22,23 +22,23 @@ class Banner {
 
   Banner.fromJson(Map<String, dynamic> json) {
     if (json['title'] != null) {
-      title = new List<Desc>();
+      title = <Desc>[];
       json['title'].forEach((v) {
-        title.add(new Desc.fromJson(v));
+        title.add(Desc.fromJson(v));
       });
     }
     if (json['subtitle'] != null) {
-      subtitle = new List<Desc>();
+      subtitle = <Desc>[];
       json['subtitle'].forEach((v) {
-        subtitle.add(new Desc.fromJson(v));
+        subtitle.add(Desc.fromJson(v));
       });
     }
     sId = json['_id'];
     appId = json['appId'];
     if (json['desc'] != null) {
-      desc = new List<Desc>();
+      desc = <Desc>[];
       json['desc'].forEach((v) {
-        desc.add(new Desc.fromJson(v));
+        desc.add(Desc.fromJson(v));
       });
     }
     imageUrl = json['imageUrl'];
@@ -48,22 +48,22 @@ class Banner {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.title != null) {
-      data['title'] = this.title.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (title != null) {
+      data['title'] = title.map((v) => v.toJson()).toList();
     }
-    if (this.subtitle != null) {
-      data['subtitle'] = this.subtitle.map((v) => v.toJson()).toList();
+    if (subtitle != null) {
+      data['subtitle'] = subtitle.map((v) => v.toJson()).toList();
     }
-    data['_id'] = this.sId;
-    data['appId'] = this.appId;
-    if (this.desc != null) {
-      data['desc'] = this.desc.map((v) => v.toJson()).toList();
+    data['_id'] = sId;
+    data['appId'] = appId;
+    if (desc != null) {
+      data['desc'] = desc.map((v) => v.toJson()).toList();
     }
-    data['imageUrl'] = this.imageUrl;
-    data['imageAlt'] = this.imageAlt;
-    data['sequence'] = this.sequence;
-    data['dateCreated'] = this.dateCreated;
+    data['imageUrl'] = imageUrl;
+    data['imageAlt'] = imageAlt;
+    data['sequence'] = sequence;
+    data['dateCreated'] = dateCreated;
     return data;
   }
 }
@@ -80,9 +80,9 @@ class Desc {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['lan'] = this.lan;
-    data['text'] = this.text;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['lan'] = lan;
+    data['text'] = text;
     return data;
   }
 }

@@ -8,7 +8,7 @@ import '../../../shared/globals.dart' as globals;
 
 class MarketOverview extends StatefulWidget {
   final List<Price> data;
-  MarketOverview({Key key, this.data}) : super(key: key);
+  const MarketOverview({Key key, this.data}) : super(key: key);
   @override
   MarketOverviewState createState() => MarketOverviewState();
 }
@@ -23,7 +23,7 @@ class MarketOverviewState extends State<MarketOverview> {
   @override
   void initState() {
     super.initState();
-    this.updatePrices(widget.data);
+    updatePrices(widget.data);
   }
 
   void updatePrices(List<Price> prices) {
@@ -50,12 +50,12 @@ class MarketOverviewState extends State<MarketOverview> {
     }
 
     setState(() => {
-          this.btcUsdtPrice = btcUsdtP,
-          this.btcUsdtChange = btcUsdtC,
-          this.exgUsdtPrice = exgUsdtP,
-          this.exgUsdtChange = exgUsdtC,
-          this.fabUsdtPrice = fabUsdtP,
-          this.fabUsdtChange = fabUsdtC
+          btcUsdtPrice = btcUsdtP,
+          btcUsdtChange = btcUsdtC,
+          exgUsdtPrice = exgUsdtP,
+          exgUsdtChange = exgUsdtC,
+          fabUsdtPrice = fabUsdtP,
+          fabUsdtChange = fabUsdtC
         });
   }
 
@@ -64,8 +64,8 @@ class MarketOverviewState extends State<MarketOverview> {
     return Container(
       color: globals.walletCardColor,
       child: Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.symmetric(horizontal: 30),
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(horizontal: 30),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

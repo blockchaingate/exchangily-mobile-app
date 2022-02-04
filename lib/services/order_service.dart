@@ -16,10 +16,10 @@ class OrderService with ReactiveServiceMixin {
   List<OrderModel> _orders = [];
   List<OrderModel> get orders => _orders;
 
-  RxValue<List<OrderModel>> _singlePairOrders = RxValue<List<OrderModel>>([]);
+  final RxValue<List<OrderModel>> _singlePairOrders = RxValue<List<OrderModel>>([]);
   List<OrderModel> get singlePairOrders => _singlePairOrders.value;
 
-  RxValue<bool> _isShowAllOrders = RxValue<bool>(false);
+  final RxValue<bool> _isShowAllOrders = RxValue<bool>(false);
   bool get isShowAllOrders => _isShowAllOrders.value;
 
   OrderService() {
@@ -38,7 +38,7 @@ class OrderService with ReactiveServiceMixin {
     double prevPrice = 0;
 
     // for each
-    passedOrders.forEach((currentOrder) {
+    for (var currentOrder in passedOrders) {
       log.i('single order in agrregation ${currentOrder.toJson()}');
       //  int index = 0;
       //   double aggrQty = 0;
@@ -61,7 +61,7 @@ class OrderService with ReactiveServiceMixin {
         log.w('price NOT matched so prevprice: $prevPrice');
         result.add(currentOrder);
       }
-    });
+    }
     return result;
   }
 /*-------------------------------------------------------------------------------------

@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/globals.dart' as globals;
 
 class AnnouncementList extends StatelessWidget {
-  AnnouncementList();
+  const AnnouncementList();
   // AnnouncementList(this.model.announceList);
   // final List model.announceList;
 
@@ -36,16 +36,16 @@ class AnnouncementList extends StatelessWidget {
               centerTitle: true,
             ),
             body: model.busy
-                ? LoadingGif()
+                ? const LoadingGif()
                 : Container(
-                    child: model.announceList.length < 1
-                        ? Center(
+                    child: model.announceList.isEmpty
+                        ? const Center(
                             child: Text(
                             "No Announcement",
                             style: TextStyle(color: Colors.white),
                           ))
                         : ListView.builder(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             itemCount: model.announceList.length,
                             itemBuilder: (context, index) {
                               // print("index: " + index.toString());
@@ -74,7 +74,7 @@ class AnnouncementList extends StatelessWidget {
                                               });
                                     },
                                     child: Container(
-                                      padding: EdgeInsets.all(10),
+                                      padding: const EdgeInsets.all(10),
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
@@ -95,11 +95,11 @@ class AnnouncementList extends StatelessWidget {
                                                   ? Container(
                                                       width: 10,
                                                       height: 10,
-                                                      decoration: BoxDecoration(
+                                                      decoration: const BoxDecoration(
                                                           shape:
                                                               BoxShape.circle,
                                                           color: Colors.red),
-                                                      child: Center(),
+                                                      child: const Center(),
                                                     )
                                                   : Container(),
                                               Offstage(
@@ -110,7 +110,7 @@ class AnnouncementList extends StatelessWidget {
                                                       model.announceList[index]
                                                               ['isRead'] ==
                                                           false),
-                                                  child: SizedBox(width: 5)),
+                                                  child: const SizedBox(width: 5)),
                                               Text(
                                                   model.announceList[index]
                                                       ["category"],
@@ -118,13 +118,13 @@ class AnnouncementList extends StatelessWidget {
                                                   // model.announceList[index]
                                                   //         ['isRead']
                                                   //     .toString(),
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     color: Colors.white,
                                                   )),
                                               // ['isRead']
                                             ],
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 10,
                                           ),
                                           Text(

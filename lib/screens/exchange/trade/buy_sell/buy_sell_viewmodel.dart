@@ -87,7 +87,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   double kanbanTransFee = 0.0;
   bool transFeeAdvance = false;
 
-  DialogService _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
   double currentPrice = 0;
   double currentQuantity = 0;
   double sliderValue = 10.0;
@@ -115,8 +115,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
   bool _isOrderbookLoaded = false;
   bool get isOrderbookLoaded => _isOrderbookLoaded;
-  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
-  Orderbook orderbook = new Orderbook();
+  PairDecimalConfig singlePairDecimalConfig = PairDecimalConfig();
+  Orderbook orderbook = Orderbook();
   final coinUtils = CoinUtils();
   final abiUtils = AbiUtils();
 
@@ -206,7 +206,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   void getOrderbookLoadedStatus() {
     int counter = 0;
 
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       log.i('getOrderbookLoadedStatus timer started');
       _isOrderbookLoaded = tradeService.isOrderbookLoaded;
       if (_isOrderbookLoaded) {
@@ -245,10 +245,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
       List res = await walletService.getAllExchangeBalances(exgAddress);
 
-      targetCoinExchangeBalance = new ExchangeBalanceModel();
-      baseCoinExchangeBalance = new ExchangeBalanceModel();
+      targetCoinExchangeBalance = ExchangeBalanceModel();
+      baseCoinExchangeBalance = ExchangeBalanceModel();
 
-      res.forEach((coin) {
+      for (var coin in res) {
         if (coin['coin'] == baseCoin) {
           log.w('baseCoin ExchangeBalance $coin');
           baseCoinExchangeBalance.unlockedAmount = coin['amount'];
@@ -271,7 +271,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
         //     targetCoinExchangeBalance.unlockedAmount = 0.0;
         //   targetCoinExchangeBalance.lockedAmount = 0.0;
         // }
-      });
+      }
     }
     tradeService.setBalanceRefresh(false);
   }
@@ -280,10 +280,11 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
                         Showcase Feature
 ----------------------------------------------------------------------*/
   showcaseEvent(BuildContext test) async {
-    if (!storageService.isShowCaseView)
+    if (!storageService.isShowCaseView) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ShowCaseWidget.of(test).startShowCase([globalKeyOne, globalKeyTwo]);
       });
+    }
   }
 
   fillPriceAndQuantityTextFields(p, q) {
@@ -496,12 +497,12 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       targetCoin = tmp;
     }
     // quantity = NumberUtil().roundDownLastDigit(quantity);
-    var orderHash = this.generateOrderHash(bidOrAsk, orderType, baseCoin,
+    var orderHash = generateOrderHash(bidOrAsk, orderType, baseCoin,
         targetCoin, quantity, price, timeBeforeExpiration);
 
     var qtyBigInt = NumberUtil.toBigInt(quantity);
     // this.toBitInt(quantity);
-    var priceBigInt = this.toBitInt(price);
+    var priceBigInt = toBitInt(price);
 
     print('qtyBigInt==' + qtyBigInt);
     print('priceBigInt==' + priceBigInt);
@@ -604,7 +605,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
           //   getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
           //   // isReloadMyOrders = true;
           // });
-          Timer.periodic(Duration(seconds: 3), (timer) async {
+          Timer.periodic(const Duration(seconds: 3), (timer) async {
             var res =
                 await tradeService.getTxStatus(resKanban["transactionHash"]);
             if (res != null) {
@@ -616,7 +617,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
                 isReloadMyOrders = true;
                 getSingleCoinExchangeBalanceFromAll(
                     targetCoinName, baseCoinName);
-                Future.delayed(new Duration(milliseconds: 500), () {
+                Future.delayed(const Duration(milliseconds: 500), () {
                   setBusy(true);
                   isReloadMyOrders = false;
                   log.e('isReloadMyOrders $isReloadMyOrders');

@@ -44,7 +44,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
   final log = getLogger('TradeService');
-  ApiService _api = locator<ApiService>();
+  final ApiService _api = locator<ApiService>();
   ConfigService configService = locator<ConfigService>();
 
   LocalStorageService storageService = locator<LocalStorageService>();
@@ -54,58 +54,41 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   /// To check if orderbook has loaded in orderbook viewmodel
   /// and then use this in buysellview to display price and quantity values
   /// in the textfields
-  RxValue<bool> _isOrderbookLoaded = RxValue<bool>(false);
+  final RxValue<bool> _isOrderbookLoaded = RxValue<bool>(false);
   bool get isOrderbookLoaded => _isOrderbookLoaded.value;
 
-  RxValue<double> _price = RxValue<double>(0.0);
+  final RxValue<double> _price = RxValue<double>(0.0);
   double get price => _price.value;
 
-  RxValue<double> _quantity = RxValue<double>(0.0);
+  final RxValue<double> _quantity = RxValue<double>(0.0);
   double get quantity => _quantity.value;
 
-  RxValue<String> _interval = RxValue<String>('24h');
+  final RxValue<String> _interval = RxValue<String>('24h');
   String get interval => _interval.value;
 
-  RxValue<bool> _isTradingChartModelBusy = RxValue<bool>(false);
+  final RxValue<bool> _isTradingChartModelBusy = RxValue<bool>(false);
   bool get isTradingChartModelBusy => _isTradingChartModelBusy.value;
 
   Stream tickerStream;
   Stream allPriceStream;
 
-  RxValue<bool> _isRefreshBalance = RxValue<bool>(false);
+  final RxValue<bool> _isRefreshBalance = RxValue<bool>(false);
   bool get isRefreshBalance => _isRefreshBalance.value;
 
-  @override
-  void start() {
-    super.start();
-    // log.w('starting service');
-    // start subscription again
-  }
 
-  @override
-  void stop() async {
-    super.stop();
-    //log.w('stopping service');
-
-    //     _streamSubscription = allPriceStream.listen((event) { });
-    //     _streamSubscription.cancel();
-    //  // await getAllPriceChannel().sink.close();
-    //     log.w('all price closed');
-    //   // cancel stream subscription
-  }
 
   String setTickerNameByType(type) {
     String res = '';
     //return
     //  await tokenListDatabaseService.getTickerNameByCoinType(type).then((token) {
-    storageService.tokenList.forEach((element) {
+    for (var element in storageService.tokenList) {
       var json = jsonDecode(element);
       TokenModel token = TokenModel.fromJson(json);
       if (token.coinType == type) {
         print(token.tickerName);
         res = token.tickerName;
       }
-    });
+    }
 
     return res;
   }

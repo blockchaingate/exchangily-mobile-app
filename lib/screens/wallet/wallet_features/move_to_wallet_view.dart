@@ -26,7 +26,7 @@ import 'package:flutter/gestures.dart';
 
 class MoveToWalletScreen extends StatelessWidget {
   final WalletInfo walletInfo;
-  MoveToWalletScreen({Key key, this.walletInfo}) : super(key: key);
+  const MoveToWalletScreen({Key key, this.walletInfo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,17 +44,18 @@ class MoveToWalletScreen extends StatelessWidget {
             Navigator.of(context, rootNavigator: true).pop();
             model.isAlert = false;
             print('i Alert in if ${model.isAlert}');
-          } else
+          } else {
             Navigator.of(context).pop();
+          }
 
           return Future.value(false);
         },
         child: Scaffold(
             appBar: CupertinoNavigationBar(
-              padding: EdgeInsetsDirectional.only(start: 0),
+              padding: const EdgeInsetsDirectional.only(start: 0),
               leading: CupertinoButton(
-                padding: EdgeInsets.all(0),
-                child: Icon(
+                padding: const EdgeInsets.all(0),
+                child: const Icon(
                   Icons.arrow_back,
                   color: Colors.white,
                 ),
@@ -67,12 +68,12 @@ class MoveToWalletScreen extends StatelessWidget {
               middle: Text(
                   '${AppLocalizations.of(context).move}  ${model.specialTickerForTxHistory}  ${AppLocalizations.of(context).toWallet}',
                   style: Theme.of(context).textTheme.headline5),
-              backgroundColor: Color(0XFF1f2233),
+              backgroundColor: const Color(0XFF1f2233),
             ),
-            backgroundColor: Color(0xFF1F2233),
+            backgroundColor: const Color(0xFF1F2233),
             body: SingleChildScrollView(
               child: Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,7 +83,7 @@ class MoveToWalletScreen extends StatelessWidget {
                             model.updateTransFee();
                           },
                           keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
+                              const TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
                             DecimalTextInputFormatter(
                                 decimalRange: model.token.decimal,
@@ -132,8 +133,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: new BorderSide(
+                              enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
                                       color: Color(0XFF871fff), width: 1.0)),
                               hintText:
                                   AppLocalizations.of(context).enterAmount,
@@ -155,7 +156,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                   ' ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, precision: model.decimalLimit).toString()}',
                               style: Theme.of(context).textTheme.subtitle2),
                           Padding(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 3,
                             ),
                             child: walletInfo.tickerName == 'USDTX'
@@ -163,7 +164,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.subtitle2)
                                 : Text(
-                                    '${model.specialTickerForTxHistory}'
+                                    model.specialTickerForTxHistory
                                         .toUpperCase(),
                                     style:
                                         Theme.of(context).textTheme.subtitle2),
@@ -306,11 +307,11 @@ class MoveToWalletScreen extends StatelessWidget {
                               style: Theme.of(context).textTheme.headline6),
                           UIHelper.horizontalSpaceSmall,
                           Padding(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                                 left:
                                     5), // padding left to keep some space from the text
                             child: model.isBusy
-                                ? Text('..')
+                                ? const Text('..')
                                 : Text(
                                     '${model.token.feeWithdraw} ${model.specialTickerForTxHistory.contains('(') ? model.specialTickerForTxHistory.split('(')[0] : model.specialTickerForTxHistory}',
                                     style:
@@ -324,7 +325,7 @@ class MoveToWalletScreen extends StatelessWidget {
                           Text(AppLocalizations.of(context).kanbanGasFee,
                               style: Theme.of(context).textTheme.headline6),
                           Padding(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                                 left:
                                     5), // padding left to keep some space from the text
                             child: Text(
@@ -377,7 +378,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                       flex: 5,
                                       child: Padding(
                                           padding:
-                                              EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                              const EdgeInsets.fromLTRB(20, 0, 0, 0),
                                           child: TextField(
                                               controller: model
                                                   .kanbanGasPriceTextController,
@@ -385,7 +386,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                 model.updateTransFee();
                                               },
                                               keyboardType:
-                                                  TextInputType.numberWithOptions(
+                                                  const TextInputType.numberWithOptions(
                                                       decimal:
                                                           true), // numnber keyboard
                                               decoration: InputDecoration(
@@ -393,7 +394,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                       borderSide: BorderSide(
                                                           color: globals
                                                               .primaryColor)),
-                                                  enabledBorder: UnderlineInputBorder(
+                                                  enabledBorder: const UnderlineInputBorder(
                                                       borderSide: BorderSide(
                                                           color: globals.grey)),
                                                   hintText: '0.00000',
@@ -429,7 +430,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                       flex: 5,
                                       child: Padding(
                                           padding:
-                                              EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                              const EdgeInsets.fromLTRB(20, 0, 0, 0),
                                           child: TextField(
                                               controller: model
                                                   .kanbanGasLimitTextController,
@@ -444,7 +445,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                           borderSide: BorderSide(
                                                               color: globals
                                                                   .primaryColor)),
-                                                  enabledBorder: UnderlineInputBorder(
+                                                  enabledBorder: const UnderlineInputBorder(
                                                       borderSide: BorderSide(
                                                           color: globals.grey)),
                                                   hintText: '0.00000',
@@ -588,7 +589,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    model.message != null ? model.message : '',
+                                    model.message ?? '',
                                     style:
                                         Theme.of(context).textTheme.headline6,
                                   ),
@@ -635,9 +636,9 @@ class MoveToWalletScreen extends StatelessWidget {
                                   ),
                                 ),
                                 !model.isShowDetailsMessage
-                                    ? Icon(Icons.arrow_drop_down,
+                                    ? const Icon(Icons.arrow_drop_down,
                                         color: Colors.red, size: 20)
-                                    : Icon(Icons.arrow_drop_up,
+                                    : const Icon(Icons.arrow_drop_up,
                                         color: Colors.red, size: 20)
                               ],
                             )
@@ -652,14 +653,14 @@ class MoveToWalletScreen extends StatelessWidget {
                       UIHelper.verticalSpaceMedium,
                       // Confirm Button
                       MaterialButton(
-                        padding: EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(15),
                         color: globals.primaryColor,
                         textColor: Colors.white,
                         onPressed: () {
                           model.checkPass();
                         },
                         child: model.isBusy
-                            ? SizedBox(
+                            ? const SizedBox(
                                 width: 20,
                                 height: 20,
                                 child: CircularProgressIndicator(
