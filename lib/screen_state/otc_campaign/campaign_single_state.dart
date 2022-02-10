@@ -30,7 +30,7 @@ class CampaignSingleScreenState extends BaseState {
     setBusy(true);
     log.e(busy);
 
-    print("eventID: " + eventID);
+    debugPrint("eventID: " + eventID);
 
     //get campaign info in selected language
     lang = localStorageService.language;
@@ -42,7 +42,7 @@ class CampaignSingleScreenState extends BaseState {
     if (eventContent == "error") {
       hasApiError = true;
     } else {
-      print(eventContent.toString());
+      debugPrint(eventContent.toString());
       campaignInfoSingle = eventContent;
     }
 

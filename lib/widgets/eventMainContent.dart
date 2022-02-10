@@ -114,8 +114,8 @@ class ContentRowList extends StatelessWidget {
           const SizedBox(height: 15),
           Column(
             children: text.asMap().entries.map((e) {
-              print("event runtimeType: ");
-              print(e.value.runtimeType.toString());
+              debugPrint("event runtimeType: ");
+              debugPrint(e.value.runtimeType.toString());
               String type = e.value.runtimeType.toString();
               //map list under list
               if (type.startsWith("List")) {
@@ -213,7 +213,8 @@ class ContentForm extends StatelessWidget {
       fit: FlexFit.tight,
       child: Container(
         decoration: BoxDecoration(
-            color: const Color(0xff000066), borderRadius: BorderRadius.circular(5)),
+            color: const Color(0xff000066),
+            borderRadius: BorderRadius.circular(5)),
         child: Column(
             // mainAxisAlignment: MainAxisAlignment.start,
             // crossAxisAlignment: CrossAxisAlignment.start,

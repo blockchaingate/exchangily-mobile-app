@@ -13,7 +13,7 @@ class CampaignLoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('ERROR MSG FROM ROUTE $errorMessage');
+    debugPrint('ERROR MSG FROM ROUTE $errorMessage');
     return BaseScreen<CampaignLoginScreenState>(
       onModelReady: (model) async {
         model.context = context;
@@ -34,7 +34,8 @@ class CampaignLoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
                 margin: const EdgeInsets.all(10.0),
                 color: globals.walletCardColor,
                 child: Column(
@@ -100,7 +101,8 @@ class CampaignLoginScreen extends StatelessWidget {
                                             model.isPasswordTextVisible = false;
                                             model.setBusy(false);
                                           },
-                                          icon: const Icon(Icons.remove_red_eye))),
+                                          icon: const Icon(
+                                              Icons.remove_red_eye))),
                                   controller: model.passwordTextController,
                                   obscureText: false,
                                   keyboardType: TextInputType.visiblePassword,

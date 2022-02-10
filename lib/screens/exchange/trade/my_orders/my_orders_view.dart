@@ -23,7 +23,7 @@ class MyOrdersView extends StatelessWidget {
         fireOnModelReadyOnce: true,
         viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
         onModelReady: (model) {
-          print('in init MyOrdersView');
+          debugPrint('in init MyOrdersView');
           model.context = context;
 
           model.refreshController = _refreshController;
@@ -31,7 +31,7 @@ class MyOrdersView extends StatelessWidget {
         },
         onDispose: () {
           _refreshController.dispose();
-          print('_refreshController disposed in my orders view');
+          debugPrint('_refreshController disposed in my orders view');
         },
         builder: (context, MyOrdersViewModel model, _) => Container(
             child:
@@ -53,7 +53,7 @@ class MyOrdersView extends StatelessWidget {
                               color: white,
                               onPressed: () {
                                 model.isFutureError = false;
-                                print(
+                                debugPrint(
                                     'Running futures to run again to reset the hasError and try to get the data so that user can see the data with view instead of error screen');
                                 model.swapSources(false);
                               },
@@ -83,7 +83,7 @@ class MyOrdersView extends StatelessWidget {
                               //         color: white,
                               //         onPressed: () {
                               //           model.isFutureError = false;
-                              //           print(
+                              //           debugPrint(
                               //               'Running futures to run again to reset the hasError and try to get the data so that user can see the data with view instead of error screen');
                               //           model.swapSources1();
                               //         },
@@ -108,7 +108,7 @@ class MyOrdersView extends StatelessWidget {
                                         activeColor: primaryColor,
                                         value: model.isShowAllOrders,
                                         onChanged: (bool v) {
-                                          print('switch value $v');
+                                          debugPrint('switch value $v');
 
                                           model.swapSources(v);
                                         }),
@@ -336,10 +336,10 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                                   size: 16,
                                 ),
                                 onPressed: () {
-                                  print(index);
-                                  print(orders.indexOf(order));
+                                  debugPrint(index);
+                                  debugPrint(orders.indexOf(order));
                                   if (index == orders.indexOf(order)) {
-                                    print(
+                                    debugPrint(
                                         'inside if ${index == orders.indexOf(order)}');
 
                                     model.checkPass(context, order.orderHash);
@@ -353,7 +353,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                               size: 16,
                             ),
                             onPressed: () {
-                              print('cancelled orders');
+                              debugPrint('cancelled orders');
                             }))
               ],
             );

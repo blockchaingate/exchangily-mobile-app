@@ -61,7 +61,7 @@ Future<void> main() async {
       },
     );
   } catch (err) {
-    print('main.dart (Catch) Locator setup has failed $err');
+    debugPrint('main.dart (Catch) Locator setup has failed $err');
   }
 }
 
@@ -99,8 +99,8 @@ class MyApp extends StatelessWidget {
                         child: Text(
                           // 'v ',
                           'v: ${packageInfo.version}.${packageInfo.buildNumber}',
-                          style:
-                              const TextStyle(fontSize: 10, color: Color(0x44ffffff)),
+                          style: const TextStyle(
+                              fontSize: 10, color: Color(0x44ffffff)),
                         ),
                       ),
                     ))
@@ -178,7 +178,9 @@ class MyApp extends StatelessWidget {
                   headline6: TextStyle(
                       fontSize: 10.5,
                       color: globals.white,
-                      fontWeight: FontWeight.w500)), colorScheme: ColorScheme.fromSwatch().copyWith(secondary: globals.secondaryColor),
+                      fontWeight: FontWeight.w500)),
+              colorScheme: ColorScheme.fromSwatch()
+                  .copyWith(secondary: globals.secondaryColor),
             ),
             // Removed the home and scaffold because initial route has set
             initialRoute: '/',

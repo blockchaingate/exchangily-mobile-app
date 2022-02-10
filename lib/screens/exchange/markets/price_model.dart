@@ -49,15 +49,15 @@ class Price {
     var open = json['o'].toDouble() ?? 0.0;
     var close = json['c'].toDouble() ?? 0.0;
     // double cv = ((close - open) / open) * 100;
-    // if (!cv.isNaN) print('cv $cv');
+    // if (!cv.isNaN) debugPrint('cv $cv');
     // if (!cv.isNaN)
-    //   print(
+    //   debugPrint(
     //       'SYMBOL $symbol changePercentage ${(close - open) / open} -- open $open -- close $close');
     double changePercentage = ((close - open) / open) * 100;
     if (changePercentage.isInfinite || changePercentage.isNaN) {
       changePercentage = 0.0;
     }
-    //print('changePercentage $changePercentage -- open $open -- close $close');
+    //debugPrint('changePercentage $changePercentage -- open $open -- close $close');
     return Price(
         changeValue: close - open,
         change: changePercentage,

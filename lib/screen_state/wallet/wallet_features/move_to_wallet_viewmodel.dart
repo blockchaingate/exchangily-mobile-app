@@ -195,8 +195,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
               padding: const EdgeInsets.all(10.0),
               color: secondaryColor.withOpacity(0.5),
               child: Center(
-                  child: Text(
-                      AppLocalizations.of(context).withdrawPopupNote)),
+                  child: Text(AppLocalizations.of(context).withdrawPopupNote)),
             ),
             titleTextStyle: headText5,
             contentTextStyle: TextStyle(color: grey),
@@ -653,7 +652,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
                         children: [
                           CupertinoButton(
                             padding: const EdgeInsets.only(left: 5),
-                            borderRadius: const BorderRadius.all(Radius.circular(4)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(4)),
                             child: Text(
                               AppLocalizations.of(context).close,
                               textAlign: TextAlign.center,
@@ -678,8 +678,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                 title: Container(
                   padding: const EdgeInsets.all(10.0),
                   color: secondaryColor.withOpacity(0.5),
-                  child: Center(
-                      child: Text(AppLocalizations.of(context).note)),
+                  child: Center(child: Text(AppLocalizations.of(context).note)),
                 ),
                 titleTextStyle: headText4.copyWith(fontWeight: FontWeight.bold),
                 contentTextStyle: TextStyle(color: grey),
@@ -793,7 +792,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       } else {
         await coinService.getSingleTokenData(ticker).then((resFromApi) {
           if (resFromApi != null) {
-            print('token from api res ${resFromApi.toJson()}');
+            debugPrint('token from api res ${resFromApi.toJson()}');
             token = resFromApi;
             if (_groupValue == 'ETH') ercChainToken = token;
             if (_groupValue == 'TRX' || _groupValue == 'FAB') {
@@ -955,7 +954,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
     };
     var tokenBalance;
     var url = fabBaseUrl + 'callcontract';
-    print(
+    debugPrint(
         'Fab_util -- address $address getFabTokenBalanceForABI balance by address url -- $url -- body $body');
 
     var response = await client.post(url, body: body);
@@ -970,14 +969,14 @@ class MoveToWalletViewmodel extends BaseViewModel {
     //   tokenBalance = ((unlockInt) / BigInt.parse(pow(10, decimal).toString()));
     // } else {
     tokenBalance = bigNum2Double(unlockInt);
-    //   // print('tokenBalance for EXG==');
-    //   // print(tokenBalance);
+    //   // debugPrint('tokenBalance for EXG==');
+    //   // debugPrint(tokenBalance);
     // }
 
     // }
 
     fabChainBalance = tokenBalance;
-    print('$tickerName fab chain balance $fabChainBalance');
+    debugPrint('$tickerName fab chain balance $fabChainBalance');
     setBusy(false);
   }
 
@@ -1029,7 +1028,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
   radioButtonSelection(value) async {
     setBusy(true);
-    print(value);
+    debugPrint(value);
     _groupValue = value;
     if (value == 'FAB') {
       isShowFabChainBalance = true;
@@ -1141,8 +1140,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (isWithdrawChoice) if (!isShowTrxTsWalletBalance &&
           isShowFabChainBalance &&
           amount > fabChainBalance) {
-        sharedService.alertDialog(AppLocalizations.of(context).notice,
-            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart + ' ' + fabChainBalance.toString() + '. ' + AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
+        sharedService.alertDialog(
+            AppLocalizations.of(context).notice,
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                ' ' +
+                fabChainBalance.toString() +
+                '. ' +
+                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
 
         setBusy(false);
@@ -1154,8 +1158,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (isWithdrawChoice) if (!isShowTrxTsWalletBalance &&
           !isShowFabChainBalance &&
           amount > ethChainBalance) {
-        sharedService.alertDialog(AppLocalizations.of(context).notice,
-            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart + ' ' + ethChainBalance.toString() + '. ' + AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
+        sharedService.alertDialog(
+            AppLocalizations.of(context).notice,
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                ' ' +
+                ethChainBalance.toString() +
+                '. ' +
+                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
 
         setBusy(false);
@@ -1164,8 +1173,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (isWithdrawChoice) if (isShowTrxTsWalletBalance &&
           !isShowFabChainBalance &&
           amount > trxTsWalletBalance) {
-        sharedService.alertDialog(AppLocalizations.of(context).notice,
-            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart + ' ' + trxTsWalletBalance.toString() + '. ' + AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
+        sharedService.alertDialog(
+            AppLocalizations.of(context).notice,
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                ' ' +
+                trxTsWalletBalance.toString() +
+                '. ' +
+                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
         setBusy(false);
         return;
@@ -1308,10 +1322,10 @@ class MoveToWalletViewmodel extends BaseViewModel {
           });
         }
       } else if (!res.confirmed && res.returnedText == 'Closed') {
-        print('else if close button pressed');
+        debugPrint('else if close button pressed');
         isSubmittingTx = false;
       } else {
-        print('else');
+        debugPrint('else');
         if (res.returnedText != 'Closed') {
           showNotification(context);
           isSubmittingTx = false;
@@ -1349,7 +1363,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
     var kanbanGasLimitBig = BigInt.from(kanbanGasLimit);
     var kanbanTransFeeDouble =
         bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
-    print('Update trans fee $kanbanTransFeeDouble');
+    debugPrint('Update trans fee $kanbanTransFeeDouble');
 
     kanbanTransFee = kanbanTransFeeDouble;
     setBusy(false);

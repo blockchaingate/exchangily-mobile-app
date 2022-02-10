@@ -253,7 +253,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
           log.w('baseCoin ExchangeBalance $coin');
           baseCoinExchangeBalance.unlockedAmount = coin['amount'];
           baseCoinExchangeBalance.lockedAmount = coin['lockedAmount'];
-          print(
+          debugPrint(
               'exchangeBalance using all coins for loop ${baseCoinExchangeBalance.toJson()}');
         }
         // else{
@@ -264,7 +264,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
           log.w('targetCoin ExchangeBalance $coin');
           targetCoinExchangeBalance.unlockedAmount = coin['amount'];
           targetCoinExchangeBalance.lockedAmount = coin['lockedAmount'];
-          print(
+          debugPrint(
               'exchangeBalance using all coins for loop ${targetCoinExchangeBalance.toJson()}');
         }
         // else{
@@ -497,15 +497,15 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       targetCoin = tmp;
     }
     // quantity = NumberUtil().roundDownLastDigit(quantity);
-    var orderHash = generateOrderHash(bidOrAsk, orderType, baseCoin,
-        targetCoin, quantity, price, timeBeforeExpiration);
+    var orderHash = generateOrderHash(bidOrAsk, orderType, baseCoin, targetCoin,
+        quantity, price, timeBeforeExpiration);
 
     var qtyBigInt = NumberUtil.toBigInt(quantity);
     // this.toBitInt(quantity);
     var priceBigInt = toBitInt(price);
 
-    print('qtyBigInt==' + qtyBigInt);
-    print('priceBigInt==' + priceBigInt);
+    debugPrint('qtyBigInt==' + qtyBigInt);
+    debugPrint('priceBigInt==' + priceBigInt);
 
     var abiHex = abiUtils.getCreateOrderFuncABI(
         false,
@@ -706,7 +706,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
         setBusy(false);
         return;
       } else {
-        print('going to place order');
+        debugPrint('going to place order');
         await placeBuySellOrder();
       }
     }

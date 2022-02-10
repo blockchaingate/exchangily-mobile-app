@@ -26,7 +26,8 @@ class ExchangeBalanceModel {
     String tickerName = '';
     if (type != null) {
       tickerName = coinList.newCoinTypeMap[type];
-      print('Ticker Name -- $tickerName --- coin type ${json['coinType']}');
+      debugPrint(
+          'Ticker Name -- $tickerName --- coin type ${json['coinType']}');
     }
 
     return ExchangeBalanceModel(

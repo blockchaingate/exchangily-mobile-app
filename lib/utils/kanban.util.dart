@@ -47,7 +47,7 @@ class KanbanUtils {
     ConfigService configService = locator<ConfigService>();
     var url =
         configService.getKanbanBaseUrl() + 'exchangily/getExchangeAddress';
-    print('URL getExchangilyAddress $url');
+    debugPrint('URL getExchangilyAddress $url');
 
     var response = await client.get(url);
     return response.body;
@@ -72,11 +72,11 @@ class KanbanUtils {
         kanbanApiRoute +
         getTransactionCountApiRoute +
         address;
-    print('URL getNonce $url');
+    debugPrint('URL getNonce $url');
 
     var response = await client.get(url);
     var json = jsonDecode(response.body);
-    print('getNonce json $json');
+    debugPrint('getNonce json $json');
     return json["transactionCount"];
   }
 
@@ -84,30 +84,30 @@ class KanbanUtils {
       String rawTransaction, String rawKanbanTransaction) async {
     ConfigService configService = locator<ConfigService>();
     var url = configService.getKanbanBaseUrl() + submitDepositApiRoute;
-    print('submitDeposit url $url');
+    debugPrint('submitDeposit url $url');
     final sharedService = locator<SharedService>();
     var versionInfo = await sharedService.getLocalAppVersion();
-    print('getAppVersion $versionInfo');
+    debugPrint('getAppVersion $versionInfo');
     String versionName = versionInfo['name'];
     String buildNumber = versionInfo['buildNumber'];
     String fullVersion = versionName + '+' + buildNumber;
-    print('fullVersion $fullVersion');
+    debugPrint('fullVersion $fullVersion');
     var body = {
       'app': Constants.appName,
       'version': fullVersion,
       'rawTransaction': rawTransaction,
       'rawKanbanTransaction': rawKanbanTransaction
     };
-    print('body $body');
+    debugPrint('body $body');
 
     try {
       var response = await client.post(url, body: body);
-      print("Kanban_util submitDeposit response body:");
-      print(response.body.toString());
+      debugPrint("Kanban_util submitDeposit response body:");
+      debugPrint(response.body.toString());
       Map<String, dynamic> res = jsonDecode(response.body);
       return res;
     } catch (err) {
-      print('Catch submitDeposit in kanban util $err');
+      debugPrint('Catch submitDeposit in kanban util $err');
       throw Exception(err);
     }
   }
@@ -115,14 +115,14 @@ class KanbanUtils {
   Future getKanbanErrDeposit(String address) async {
     ConfigService configService = locator<ConfigService>();
     var url = configService.getKanbanBaseUrl() + depositerrApiRoute + address;
-    print('kanbanUtil getKanbanErrDeposit $url');
+    debugPrint('kanbanUtil getKanbanErrDeposit $url');
     try {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
-      // print('Kanban.util-getKanbanErrDeposit $json');
+      // debugPrint('Kanban.util-getKanbanErrDeposit $json');
       return json;
     } catch (err) {
-      print(
+      debugPrint(
           'Catch getKanbanErrDeposit in kanban util $err'); // Error thrown here will go to onError in them view model
       throw Exception(err);
     }
@@ -135,22 +135,22 @@ class KanbanUtils {
 
     final sharedService = locator<SharedService>();
     var versionInfo = await sharedService.getLocalAppVersion();
-    print('getAppVersion $versionInfo');
+    debugPrint('getAppVersion $versionInfo');
     String versionName = versionInfo['name'];
     String buildNumber = versionInfo['buildNumber'];
     String fullVersion = versionName + '+' + buildNumber;
-    print('fullVersion $fullVersion');
+    debugPrint('fullVersion $fullVersion');
     var body = {
       'app': Constants.appName,
       'version': fullVersion,
       'rawKanbanTransaction': rawKanbanTransaction
     };
-    print('URL submitReDeposit $url -- body $body');
+    debugPrint('URL submitReDeposit $url -- body $body');
 
     try {
       var response = await client.post(url, body: body);
-      //print('response from sendKanbanRawTransaction=');
-      // print(response.body);
+      //debugPrint('response from sendKanbanRawTransaction=');
+      // debugPrint(response.body);
       Map<String, dynamic> res = jsonDecode(response.body);
       return res;
     } catch (e) {
@@ -164,26 +164,27 @@ class KanbanUtils {
     ConfigService configService = locator<ConfigService>();
     var url =
         configService.getKanbanBaseUrl() + kanbanApiRoute + sendRawTxApiRoute;
-    print('URL sendKanbanRawTransaction $url');
+    debugPrint('URL sendKanbanRawTransaction $url');
 
     final sharedService = locator<SharedService>();
     var versionInfo = await sharedService.getLocalAppVersion();
     String versionName = versionInfo['name'];
     String buildNumber = versionInfo['buildNumber'];
     String fullVersion = versionName + '+' + buildNumber;
-    print('fullVersion $fullVersion');
+    debugPrint('fullVersion $fullVersion');
     var body = {
       'app': 'exchangily',
       'version': fullVersion,
       'signedTransactionData': rawKanbanTransaction
     };
 
-    print('body $body');
+    debugPrint('body $body');
     try {
       var response = await client.post(url, body: body);
-      print('response from sendKanbanRawTransaction=');
-      print(response.body);
-      if (response.body.contains('TS crosschain withdraw verification failed')) {
+      debugPrint('response from sendKanbanRawTransaction=');
+      debugPrint(response.body);
+      if (response.body
+          .contains('TS crosschain withdraw verification failed')) {
         return {'success': false, 'data': response.body};
       }
       Map<String, dynamic> res = jsonDecode(response.body);

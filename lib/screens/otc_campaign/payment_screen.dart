@@ -83,11 +83,13 @@ class CampaignPaymentScreen extends StatelessWidget {
                                               borderSide: BorderSide(
                                                   width: 1,
                                                   color: globals.primaryColor)),
-                                          enabledBorder: const OutlineInputBorder(
-                                              borderRadius: BorderRadius.zero,
-                                              borderSide: BorderSide(
-                                                  width: .5,
-                                                  color: globals.grey)),
+                                          enabledBorder:
+                                              const OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.zero,
+                                                  borderSide: BorderSide(
+                                                      width: .5,
+                                                      color: globals.grey)),
                                           isDense: true,
                                           prefix: Padding(
                                             padding: const EdgeInsets.only(
@@ -484,7 +486,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                 //   model.getCampaignOrdeList();
                                                 // } else {
                                                 //   model.getExgWalletAddr();
-                                                //   print(
+                                                //   debugPrint(
                                                 //       'Exg wallet address was missing, so getting it now');
                                                 // }
                                               },
@@ -503,7 +505,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 5.0),
                   decoration: BoxDecoration(
                       color: globals.walletCardColor,
-                      borderRadius: const BorderRadius.all(Radius.circular(5.0))),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(5.0))),
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -607,7 +610,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .bodyText1),
-                                                    const Icon(Icons.info_outline,
+                                                    const Icon(
+                                                        Icons.info_outline,
                                                         size: 8,
                                                         color: globals.grey),
                                                   ],

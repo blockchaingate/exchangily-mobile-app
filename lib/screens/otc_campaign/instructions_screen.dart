@@ -55,7 +55,7 @@ class CampaignInstructionScreen extends StatelessWidget {
               //             color: primaryColor, fontWeight: FontWeight.bold)),
               //     onPressed: () {
               //       model.busy
-              //           ? print('loading...')
+              //           ? debugPrint('loading...')
               //           : Navigator.pushNamed(context, '/campaignLogin');
               //     },
               //   ),
@@ -122,7 +122,8 @@ class CampaignInstructionScreen extends StatelessWidget {
                                   ),
                             )
                           : ListView.builder(
-                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
+                              padding:
+                                  const EdgeInsets.fromLTRB(10, 10, 10, 60),
                               itemCount: model.campaignInfoList.length,
                               itemBuilder: (context, index) {
                                 if (model.campaignInfoList[index]["status"] ==
@@ -149,7 +150,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                                   .campaignInfoList[
                                                               index]["id"])));
                                             } else {
-                                              print("Event type: " +
+                                              debugPrint("Event type: " +
                                                   model.campaignInfoList[index]
                                                       ["type"]);
 
@@ -239,7 +240,8 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                   ),
                                                 ),
                                                 Container(
-                                                  padding: const EdgeInsets.all(10),
+                                                  padding:
+                                                      const EdgeInsets.all(10),
                                                   child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
@@ -281,7 +283,8 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                                       [
                                                                       "endDate"] ??
                                                               '',
-                                                          style: const TextStyle(
+                                                          style:
+                                                              const TextStyle(
                                                             color: Colors.white,
                                                           )),
                                                       const SizedBox(
@@ -298,7 +301,8 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                           maxLines: 4,
                                                           overflow: TextOverflow
                                                               .ellipsis,
-                                                          style: const TextStyle(
+                                                          style:
+                                                              const TextStyle(
                                                             color: Color(
                                                                 0xffeeeeee),
                                                           )),

@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:hex/hex.dart';
 import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
-import 'package:bs58check/bs58check.dart' as Base58;
+import 'package:bs58check/bs58check.dart' as base_58;
 /*
 toBitInt(num, [zeroLength]) {
   var numString = num.toString();
@@ -60,7 +60,7 @@ sliceAbiHex(abiHex) {
   List<String> slice64CharsList = [];
   debugPrint('First abiHex 10 char $first10Char');
   int condition = ((abiHexString.length - first10Char.length) / 64).round();
-  print('CONDITION $condition');
+  debugPrint('CONDITION $condition');
   for (var i = 0; i < condition; i++) {
     String t = abiHexString.substring(10);
     int start = i * 64;
@@ -110,14 +110,14 @@ number2Buffer(numVal) {
   } else if (neg) {
     buffer.add(top | 0x80);
   }
-  print('string_util number2Buffer $buffer');
+  debugPrint('string_util number2Buffer $buffer');
   return buffer;
 }
 
 // Convert fab to hex
 
 String convertFabAddressToHex(String fabAddress) {
-  var decoded = Base58.decode(fabAddress);
+  var decoded = base_58.decode(fabAddress);
   String hexString = HEX.encode(decoded);
   return hexString;
 }

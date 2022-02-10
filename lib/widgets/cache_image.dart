@@ -23,10 +23,13 @@ class _CacheImageState extends State<CacheImage> {
     //check if it is a online image
     bool isurl = widget.url.startsWith("http") ? true : false;
     //check if it is an assets image
-    bool isasset =
-        isurl ? false : widget.url.startsWith("assets") ? true : false;
+    bool isasset = isurl
+        ? false
+        : widget.url.startsWith("assets")
+            ? true
+            : false;
 
-    // print("Image status: isurl: $isurl  isasset: $isasset url: widget.url");
+    // debugPrint("Image status: isurl: $isurl  isasset: $isasset url: widget.url");
 
     return isurl
         ? CachedNetworkImage(

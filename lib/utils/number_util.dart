@@ -15,7 +15,7 @@ class NumberUtil {
       decimalLength = stringNumber.split('.')[1].length;
       return decimalLength;
     } catch (err) {
-      print('getDecimalLength no decimal found: error $err');
+      debugPrint('getDecimalLength no decimal found: error $err');
       return decimalLength;
     }
   }
@@ -107,10 +107,10 @@ class NumberUtil {
       if (numStringArray.length == 2) {
         var decimalPart = numStringArray[1];
         if (decimalPart.length > decimalLength) {
-          print('toBigInt func: decimalPart before: $decimalPart');
-          print('toBigInt func: decimalLength: $decimalLength');
+          debugPrint('toBigInt func: decimalPart before: $decimalPart');
+          debugPrint('toBigInt func: decimalLength: $decimalLength');
           decimalPart = decimalPart.substring(0, decimalLength);
-          print('toBigInt func: decimalPart after: $decimalPart');
+          debugPrint('toBigInt func: decimalPart after: $decimalPart');
         }
         decimalLength -= decimalPart.length;
         val += decimalPart;
@@ -125,7 +125,7 @@ class NumberUtil {
       }
     }
 
-    print('toBigInt value: $val');
+    debugPrint('toBigInt value: $val');
     return val;
   }
 

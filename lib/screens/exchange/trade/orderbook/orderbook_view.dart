@@ -174,18 +174,18 @@ class OrderBookView extends StatelessWidget {
   Column buildVerticalOrderbookColumn(List<OrderType> orderArray,
       final bool bidOrAsk, deciamlConfig, TradeService tradeService) {
     // List<OrderType> sellOrders = [];
-    print('OrderArray $bidOrAsk length before ${orderArray.length}');
+    debugPrint('OrderArray $bidOrAsk length before ${orderArray.length}');
     if (orderArray.length > 7) orderArray = orderArray.sublist(0, 7);
     if (!bidOrAsk) orderArray = orderArray.reversed.toList();
 
-    print('OrderArray $bidOrAsk length after ${orderArray.length}');
+    debugPrint('OrderArray $bidOrAsk length after ${orderArray.length}');
     return Column(
       //   mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         for (var order in orderArray)
           InkWell(
             onTap: () {
-              print(
+              debugPrint(
                   'trying filling values ${order.price} --  ${order.quantity}');
               tradeService.setPriceQuantityValues(order.price, order.quantity);
               // model.fillTextFields(order.price, order.quantity);
@@ -212,8 +212,8 @@ class OrderBookView extends StatelessWidget {
                             color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
                             fontSize: 13.0)),
                     Container(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 2),
                         color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                         child: Text(
                             order.quantity

@@ -37,11 +37,11 @@
 //     exgWidgets = [];
 
 //     for (var price in prices) {
-//       print('price ${price.price}');
+//       debugPrint('price ${price.price}');
 //       if (price.symbol.endsWith("USDT")) {
 //         setState(() {
 //           price.high = double.parse(price.high.toStringAsFixed(2));
-//           print('hight ${price.high}');
+//           debugPrint('hight ${price.high}');
 //         });
 //         usdtWidgets.add(DetailPair(price.symbol.replaceAll('USDT', '/USDT'),
 //             price.volume, price.price, price.change, price.low, price.high));

@@ -151,8 +151,8 @@ class SendViewModel extends BaseViewModel {
       feeUnit = 'BTC';
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       var gasPriceReal = await walletService.getEthGasPrice();
-      print('gasPriceReal======');
-      print(gasPriceReal);
+      debugPrint('gasPriceReal======');
+      debugPrint(gasPriceReal);
       gasPriceTextController.text = gasPriceReal.toString();
       gasLimitTextController.text =
           environment["chains"]["ETH"]["gasLimit"].toString();
@@ -182,7 +182,7 @@ class SendViewModel extends BaseViewModel {
     //         .cast<CustomTokenModel>();
     CustomTokenModel customTokenModel =
         CustomTokenModel.fromJson(jsonDecode(storageService.customTokenData));
-    print(customTokenModel.toJson());
+    debugPrint(customTokenModel.toJson());
   }
 
   bool isTrx() {
@@ -615,7 +615,7 @@ class SendViewModel extends BaseViewModel {
     txHash = '';
     errorMessage = '';
     if (amountController.text == '') {
-      print('amount empty');
+      debugPrint('amount empty');
       sharedService.alertDialog(AppLocalizations.of(context).amountMissing,
           AppLocalizations.of(context).invalidAmount,
           isWarning: false);
@@ -631,14 +631,14 @@ class SendViewModel extends BaseViewModel {
     satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
     //await refreshBalance();
     if (toAddress == '') {
-      print('address empty');
+      debugPrint('address empty');
       sharedService.alertDialog(AppLocalizations.of(context).emptyAddress,
           AppLocalizations.of(context).pleaseEnterAnAddress,
           isWarning: false);
       return;
     }
     if ((isTrx()) && !toAddress.startsWith('T')) {
-      print('invalid tron address');
+      debugPrint('invalid tron address');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAddress,
           AppLocalizations.of(context).pleaseCorrectTheFormatOfReceiveAddress,
           isWarning: false);
@@ -702,7 +702,7 @@ class SendViewModel extends BaseViewModel {
     //     amount = NumberUtil().roundDownLastDigit(amount);
     // }
 
-    print('else');
+    debugPrint('else');
     FocusScope.of(context).requestFocus(FocusNode());
 
     sendTransaction();
