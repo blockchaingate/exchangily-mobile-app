@@ -34,8 +34,8 @@ class UserSettingsDatabaseService {
   Future<Database> initDb() async {
     // try {
     //   await _database.then((res) {
-    //     print(res.isOpen);
-    //     print(res);
+    //     debugPrint(res.isOpen);
+    //     debugPrint(res);
     //   });
     //   return _database;
     // } catch (err) {

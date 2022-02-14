@@ -33,8 +33,8 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
               UIHelper.verticalSpaceLarge,
               UIHelper.verticalSpaceMedium,
               Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0, vertical: 5.0),
                   margin: const EdgeInsets.all(10.0),
                   color: globals.walletCardColor,
                   child: Column(
@@ -80,7 +80,8 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                     ),
                                     decoration: InputDecoration(
                                         suffixIcon: IconButton(
-                                          icon: const Icon(Icons.enhanced_encryption),
+                                          icon: const Icon(
+                                              Icons.enhanced_encryption),
                                           iconSize: 16,
                                           tooltip: AppLocalizations.of(context)
                                               .showPassword,
@@ -105,7 +106,8 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                     ),
                                     decoration: InputDecoration(
                                         suffixIcon: IconButton(
-                                          icon: const Icon(Icons.remove_red_eye),
+                                          icon:
+                                              const Icon(Icons.remove_red_eye),
                                           iconSize: 16,
                                           tooltip: AppLocalizations.of(context)
                                               .showPassword,
@@ -171,7 +173,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                               flex: 2,
                               child: TextField(
                                 onChanged: (value) {
-                                  print(value);
+                                  debugPrint(value);
                                 },
                                 controller:
                                     model.exgWalletAddressTextController,
@@ -180,7 +182,8 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                 ),
                                 decoration: InputDecoration(
                                     suffixIcon: IconButton(
-                                      icon: const Icon(Icons.account_balance_wallet),
+                                      icon: const Icon(
+                                          Icons.account_balance_wallet),
                                       iconSize: 16,
                                       onPressed: () {
                                         model.pasteClipboardText();
@@ -200,7 +203,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                               flex: 2,
                               child: TextField(
                                 onChanged: (value) {
-                                  print(value);
+                                  debugPrint(value);
                                 },
                                 controller: model.referralCodeTextController,
                                 style: TextStyle(

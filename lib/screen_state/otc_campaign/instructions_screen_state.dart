@@ -63,7 +63,7 @@ class CampaignInstructionsScreenState extends BaseState {
     } else {
       // lang = localStorageService.language;
       await userSettingsDatabaseService.getLanguage().then((value) {
-        print('value $value');
+        debugPrint('value $value');
         lang = value;
       });
       if (lang == '' || lang == null) lang = 'en';
@@ -78,7 +78,7 @@ class CampaignInstructionsScreenState extends BaseState {
         hasApiError = true;
       } else {
         log.i("no issue");
-        print(eventContent.toString());
+        debugPrint(eventContent.toString());
         campaignInfoList = eventContent;
       }
 

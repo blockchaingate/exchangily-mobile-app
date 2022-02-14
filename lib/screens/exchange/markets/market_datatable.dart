@@ -76,8 +76,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
-                // print("Sort Datatable");
-                // print("columnIndex: " + columnIndex.toString());
+                // debugPrint("Sort Datatable");
+                // debugPrint("columnIndex: " + columnIndex.toString());
                 setState(() {
                   if (columnIndex == _sortColumnIndex) {
                     _sortAsc = _sortNameAsc = sortAscending;
@@ -104,8 +104,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
-                // print("Sort Datatable");
-                // print("columnIndex: " + columnIndex.toString());
+                // debugPrint("Sort Datatable");
+                // debugPrint("columnIndex: " + columnIndex.toString());
                 setState(() {
                   if (columnIndex == _sortColumnIndex) {
                     _sortAsc = _sortPriceAsc = sortAscending;

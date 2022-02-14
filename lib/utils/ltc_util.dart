@@ -2,26 +2,23 @@ import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:http/src/response.dart';
-
+import 'package:flutter/widgets.dart';
 import 'custom_http_util.dart';
 
 final String ltcBaseUrl = environment["endpoints"]["ltc"];
 
 // Main net config
-BitcoinFlutter.NetworkType liteCoinMainnetNetwork =
-    BitcoinFlutter.NetworkType(
-        messagePrefix: '\x19Litecoin Signed Message:\n',
-        bip32: BitcoinFlutter.Bip32Type(
-            public: 0x019da462, private: 0x019d9cfe),
-        pubKeyHash: 0x30,
-        scriptHash: 0x32,
-        wif: 0xb0);
+BitcoinFlutter.NetworkType liteCoinMainnetNetwork = BitcoinFlutter.NetworkType(
+    messagePrefix: '\x19Litecoin Signed Message:\n',
+    bip32: BitcoinFlutter.Bip32Type(public: 0x019da462, private: 0x019d9cfe),
+    pubKeyHash: 0x30,
+    scriptHash: 0x32,
+    wif: 0xb0);
 
 // test net config
 final liteCoinTestnetNetwork = BitcoinFlutter.NetworkType(
     messagePrefix: '\x19Litecoin Signed Message:\n',
-    bip32:
-        BitcoinFlutter.Bip32Type(public: 0x0436f6e1, private: 0x0436ef7d),
+    bip32: BitcoinFlutter.Bip32Type(public: 0x0436f6e1, private: 0x0436ef7d),
     pubKeyHash: 0x6f,
     scriptHash: 0x3a,
     wif: 0xef);
@@ -37,7 +34,7 @@ generateLtcAddress(root, {index = 0}) async {
           network: environment["chains"]["LTC"]["network"])
       .data
       .address;
-  print('ticker: LTC --  address1: $address');
+  debugPrint('ticker: LTC --  address1: $address');
   return address;
 }
 
@@ -67,11 +64,11 @@ class LtcUtils {
 // getLtcBalanceByAddress
   Future getLtcBalanceByAddress(String address) async {
     var url = ltcBaseUrl + 'getbalance/' + address;
-    print('ltc_util- getLtcBalanceByAddress url $url');
+    debugPrint('ltc_util- getLtcBalanceByAddress url $url');
     var btcBalance = 0.0;
     try {
       var response = await httpClient.get(url);
-      print(response);
+      debugPrint(response.toString());
       btcBalance = double.parse(response.body) / 1e8;
     } catch (e) {}
     return {'balance': btcBalance, 'lockbalance': 0.0};

@@ -169,7 +169,7 @@ class CampaignDashboardScreenState extends BaseState {
 
         myInvestmentValueWithoutRewards =
             NumberUtil.currencyFormat(member.totalValue, 2);
-        print('TOKENS ${member.totalQuantities}');
+        debugPrint('TOKENS ${member.totalQuantities}');
         memberProfile = member;
       } else {
         log.w(' In myProfile else');

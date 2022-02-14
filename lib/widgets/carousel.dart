@@ -28,9 +28,8 @@ class Carousel extends StatelessWidget {
                 autoplay: imageData.length > 1 ? true : false,
                 autoplayDelay: 7000,
                 // duration: 600,
-                pagination: SwiperPagination(builder:
-                    SwiperCustomPagination(builder:
-                        (BuildContext context, SwiperPluginConfig config) {
+                pagination: SwiperPagination(builder: SwiperCustomPagination(
+                    builder: (BuildContext context, SwiperPluginConfig config) {
                   return const DotSwiperPaginationBuilder(
                           color: Colors.white38,
                           activeColor: Colors.white,
@@ -52,7 +51,7 @@ class Carousel extends StatelessWidget {
                           fit: BoxFit.fill,
                         ),
                         onTap: () {
-                          // print("Event type: " + imageData[index]["type"]);
+                          // debugPrint("Event type: " + imageData[index]["type"]);
 
                           if (!imageData[index].containsKey("type")) {
                             imageData[index].containsKey("route") &&

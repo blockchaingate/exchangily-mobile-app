@@ -129,7 +129,7 @@ class CampaignPaymentScreenState extends BaseState {
 
   radioButtonSelection(value) async {
     setBusy(true);
-    print(value);
+    debugPrint(value);
     orderInfoContainerHeight = 510;
     transportationFee = 0.0;
     _groupValue = value;

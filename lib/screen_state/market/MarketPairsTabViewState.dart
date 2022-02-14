@@ -34,16 +34,16 @@ class MarketPairsTabViewState extends BaseState {
 
     await userSettingsDatabaseService.getById(1).then((value) {
       if (value != null) {
-        print('111 ${value.toJson()}');
+        debugPrint('111 ${value.toJson()}');
         lang = value.language;
       }
     });
-    print('lang $lang --');
+    debugPrint('lang $lang --');
     if (lang == null) {
       lang = Platform.localeName.substring(0, 2);
-      print('local lang ${Platform.localeName.substring(0, 2)}');
+      debugPrint('local lang ${Platform.localeName.substring(0, 2)}');
     }
-    print('-- lang $lang');
+    debugPrint('-- lang $lang');
     //  lang = localStorageService.language;
     log.w("Slider from api: $result");
 

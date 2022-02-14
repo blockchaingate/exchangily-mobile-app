@@ -63,10 +63,10 @@ class BuySellView extends StatelessWidget {
             backgroundColor: const Color(0xFF1F2233),
             body: ShowCaseWidget(
               onStart: (index, key) {
-                print('onStart: $index, $key');
+                debugPrint('onStart: $index, $key');
               },
               onComplete: (index, key) {
-                print('onComplete: $index, $key');
+                debugPrint('onComplete: $index, $key');
                 model.storageService.isShowCaseView = false;
               },
               builder: Builder(
@@ -450,17 +450,18 @@ class BuySellView extends StatelessWidget {
 Column buildVerticalOrderbookColumn(
     List<OrderType> orderArray, final bool bidOrAsk, BuySellViewModel model) {
   // List<OrderType> sellOrders = [];
-  print('OrderArray $bidOrAsk length before ${orderArray.length}');
+  debugPrint('OrderArray $bidOrAsk length before ${orderArray.length}');
   if (orderArray.length > 7) orderArray = orderArray.sublist(0, 7);
   if (!bidOrAsk) orderArray = orderArray.reversed.toList();
 
-  print('OrderArray $bidOrAsk length after ${orderArray.length}');
+  debugPrint('OrderArray $bidOrAsk length after ${orderArray.length}');
   return Column(
     children: <Widget>[
       for (var order in orderArray)
         InkWell(
           onTap: () {
-            print('trying filling values ${order.price} --  ${order.quantity}');
+            debugPrint(
+                'trying filling values ${order.price} --  ${order.quantity}');
 
             model.fillPriceAndQuantityTextFields(order.price, order.quantity);
             // model.setBusy(true);
@@ -513,7 +514,7 @@ Column buildVerticalOrderbookColumn(
 
 // Widget orderDetail(List<OrderType> orderArray, final bool bidOrAsk, model) {
 //   // List<OrderType> sellOrders = [];
-//   print('OrderArray length before ${orderArray.length}');
+//   debugPrint('OrderArray length before ${orderArray.length}');
 //   orderArray = (orderArray.length > 7)
 //       ? orderArray = (orderArray.sublist(0, 7))
 //       : orderArray;
@@ -521,7 +522,7 @@ Column buildVerticalOrderbookColumn(
 //   //   sellOrders = orderArray.reversed.toList();
 //   //   orderArray = sellOrders;
 //   // }
-//   print('OrderArray length after ${orderArray.length}');
+//   debugPrint('OrderArray length after ${orderArray.length}');
 //   return Column(
 //     mainAxisAlignment: MainAxisAlignment.spaceAround,
 //     children: <Widget>[

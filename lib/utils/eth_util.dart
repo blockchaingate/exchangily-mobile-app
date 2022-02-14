@@ -22,6 +22,7 @@ import '../environments/environment.dart';
 import 'dart:async';
 import 'package:web3dart/web3dart.dart';
 import 'dart:convert';
+import 'package:flutter/widgets.dart';
 
 import 'custom_http_util.dart';
 
@@ -37,7 +38,7 @@ class EthUtils {
     var url = ethBaseUrl + 'getconfirmationcount/' + txid;
 
     var response = await client.get(url);
-    print(response.body);
+    debugPrint(response.body);
     return response.body;
   }
 
@@ -77,7 +78,7 @@ class EthUtils {
     var smartContractAddress =
         environment["addresses"]["smartContract"][coinName];
     if (smartContractAddress == null) {
-      print('$coinName contract is null so fetching from token database');
+      debugPrint('$coinName contract is null so fetching from token database');
       await tokenListDatabaseService
           .getContractAddressByTickerName(coinName)
           .then((String value) {
@@ -87,7 +88,7 @@ class EthUtils {
     }
     var url =
         ethBaseUrl + 'callcontract/' + smartContractAddress + '/' + address;
-    print('eth_util - getEthTokenBalanceByAddress - $url ');
+    debugPrint('eth_util - getEthTokenBalanceByAddress - $url ');
 
     var tokenBalanceIe18 = 0.0;
     var balanceIe8 = 0.0;

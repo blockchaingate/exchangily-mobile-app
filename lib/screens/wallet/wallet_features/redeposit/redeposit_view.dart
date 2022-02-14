@@ -82,7 +82,7 @@ class Redeposit extends StatelessWidget {
                                     onChanged: (val) {
                                       model.setBusy(true);
                                       model.errDepositTransactionID = val;
-                                      print('valllll=' +
+                                      debugPrint('valllll=' +
                                           model.errDepositTransactionID);
                                       model.setBusy(false);
                                     },
@@ -203,10 +203,9 @@ class Redeposit extends StatelessWidget {
                                         onChanged: (String amount) {
                                           model.updateTransFee();
                                         },
-                                        keyboardType:
-                                            const TextInputType.numberWithOptions(
-                                                decimal:
-                                                    true), // numnber keyboard
+                                        keyboardType: const TextInputType
+                                                .numberWithOptions(
+                                            decimal: true), // numnber keyboard
                                         decoration: InputDecoration(
                                             focusedBorder: UnderlineInputBorder(
                                                 borderSide: BorderSide(

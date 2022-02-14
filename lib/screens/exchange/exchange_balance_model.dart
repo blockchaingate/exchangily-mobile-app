@@ -2,6 +2,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
+import 'package:flutter/widgets.dart';
 import '../../environments/coins.dart' as coinList;
 
 class ExchangeBalanceModel {
@@ -26,7 +27,8 @@ class ExchangeBalanceModel {
     String tickerName = '';
     if (type != null) {
       tickerName = coinList.newCoinTypeMap[type];
-      print('Ticker Name -- $tickerName --- coin type ${json['coinType']}');
+      debugPrint(
+          'Ticker Name -- $tickerName --- coin type ${json['coinType']}');
     }
 
     return ExchangeBalanceModel(

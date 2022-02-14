@@ -68,7 +68,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
     //   log.w(
     //       'market view model starting service ${streamSubscription.isPaused}');
     // else {
-    //   print(streamSubscription);
+    //   debugPrint(streamSubscription);
     // }
   }
 
@@ -79,14 +79,14 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
     storageService.hasAppGoneInTheBackgroundKey = true;
     //var isEmptyValue = await stream.isEmpty.then((value) => value);
     //log.e('is empty $isEmptyValue -- is broadcasr ${stream.isBroadcast}');
-    // print(streamSubscription);
+    // debugPrint(streamSubscription);
     // // if (streamSubscription != null && !streamSubscription.isPaused)
     // streamSubscription.pause();
 
     // if (streamSubscription != null)
     //   log.w('mvm all price closed ${streamSubscription.isPaused}');
     // else {
-    //   print(streamSubscription);
+    //   debugPrint(streamSubscription);
     // }
     // cancel stream subscription
   }
@@ -139,12 +139,12 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
       pairPriceList = priceList.prices;
 
       // pairPriceList.forEach((element) {
-      //   //  print(element.toJson());
+      //   //  debugPrint(element.toJson());
       //   if (element.change.isNaN) element.change = 0.0;
       // });
     } catch (err) {
       log.e('transformData Catch error $err');
-      print('Cancelling Stream Subsciption');
+      debugPrint('Cancelling Stream Subsciption');
       streamSubscription.cancel();
     }
   }

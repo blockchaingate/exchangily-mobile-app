@@ -85,7 +85,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
   updateFavWalletCoinsList(String tickerName) {
     List<String> favWalletCoins = [];
     String favCoinsJson = storageService.favWalletCoins;
-    print(favCoinsJson);
+    debugPrint(favCoinsJson);
     if (favCoinsJson.isNotEmpty) {
       favWalletCoins =
           (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();

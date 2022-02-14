@@ -25,7 +25,7 @@ import "package:hex/hex.dart";
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'dart:math';
-
+import 'package:flutter/widgets.dart';
 import 'custom_http_util.dart';
 
 final String fabBaseUrl = environment["endpoints"]["fab"];
@@ -87,7 +87,7 @@ class FabUtils {
     var url = fabBaseUrl + fabTransactionJsonApiRoute + txid;
 
     var response = await client.get(url);
-    print(url);
+    debugPrint(url);
     log.w(response.body);
     return response.body;
   }
@@ -119,7 +119,7 @@ class FabUtils {
           json['executionResult']['output'] != null) {
         var balanceHex = json['executionResult']['output'];
 
-        //  print('balanceHex===' + balanceHex);
+        //  debugPrint('balanceHex===' + balanceHex);
         const abiCode = """
       [
       {
@@ -278,16 +278,16 @@ class FabUtils {
     /*
   var bytes = hex.decode(address);
 
-  print('bytes=');
+  debugPrint('bytes=');
   var digest1 = sha256.convert(bytes).toString();
-  print('digest1==' + digest1);
+  debugPrint('digest1==' + digest1);
   var bytes1 = hex.decode(digest1);
   var digest2 = sha256.convert(bytes1).toString();
-  print('digest2=' + digest2);
+  debugPrint('digest2=' + digest2);
   var checksum = digest2.substring(0,8);
-  print('checksum=' + checksum);
+  debugPrint('checksum=' + checksum);
   // address = address + checksum;
-  print('address before encode=' + address);
+  debugPrint('address before encode=' + address);
 
    */
     address = bs58check.encode(HEX.decode(address));
@@ -295,9 +295,9 @@ class FabUtils {
 
     /*
   var decoded = bs58check.decode('mvLuZXGYMxpRM65kgzbfoKqs3FPcisM6ri');
-  print(decoded);
-  print(HEX.encode(decoded));
-  print(bs58check.encode(decoded));
+  debugPrint(decoded);
+  debugPrint(HEX.encode(decoded));
+  debugPrint(bs58check.encode(decoded));
   */
     return address;
   }
@@ -314,9 +314,9 @@ class FabUtils {
 /*
   miuFiyLJPcg1i586vhj9JWvHa6bfttDJnd
   var decoded = bs58check.decode('mvLuZXGYMxpRM65kgzbfoKqs3FPcisM6ri');
-  print(decoded);
-  print(HEX.encode(decoded));
-  print(bs58check.encode(decoded));
+  debugPrint(decoded);
+  debugPrint(HEX.encode(decoded));
+  debugPrint(bs58check.encode(decoded));
   */
 
   Future getFabTokenBalanceForABI(
@@ -347,11 +347,11 @@ class FabUtils {
             ((unlockInt) / BigInt.parse(pow(10, decimal).toString()));
       } else {
         tokenBalance = bigNum2Double(unlockInt);
-        // print('tokenBalance for EXG==');
-        // print(tokenBalance);
+        // debugPrint('tokenBalance for EXG==');
+        // debugPrint(tokenBalance);
       }
 
-      //print('tokenBalance===' + tokenBalance.toString());
+      //debugPrint('tokenBalance===' + tokenBalance.toString());
     } catch (e) {}
     return tokenBalance;
   }
@@ -369,7 +369,7 @@ class FabUtils {
     var smartContractAddress =
         environment["addresses"]["smartContract"][coinName];
     if (smartContractAddress == null) {
-      print('$coinName contract is null so fetching from token database');
+      debugPrint('$coinName contract is null so fetching from token database');
       await tokenListDatabaseService
           .getContractAddressByTickerName(coinName)
           .then((value) {
@@ -379,7 +379,7 @@ class FabUtils {
           smartContractAddress = value;
         }
       });
-      print('official smart contract address $smartContractAddress');
+      debugPrint('official smart contract address $smartContractAddress');
     }
     var tokenBalance = 0.0;
     var tokenLockedBalance = 0.0;
@@ -396,8 +396,8 @@ class FabUtils {
           balanceInfoABI, smartContractAddress, address, 6);
     }
 
-    // print('address=' + address.toString());
-    // print('tokenLockedBalance=' + tokenLockedBalance.toString());
+    // debugPrint('address=' + address.toString());
+    // debugPrint('tokenLockedBalance=' + tokenLockedBalance.toString());
     return {'balance': tokenBalance, 'lockbalance': tokenLockedBalance};
   }
 }

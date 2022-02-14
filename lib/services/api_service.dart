@@ -28,7 +28,7 @@ import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/string_util.dart' as stringUtils;
+import '../utils/string_util.dart' as string_utils;
 import 'package:exchangilymobileapp/logger.dart';
 import '../environments/environment.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -130,11 +130,11 @@ class ApiService {
   Future getTronUsdtTsWalletBalance(
       String officialTrxAddress, String smartContractAddress) async {
     String officialTrxAddressToHex =
-        stringUtils.convertFabAddressToHex(officialTrxAddress);
+        string_utils.convertFabAddressToHex(officialTrxAddress);
     var abiHex =
-        stringUtils.fixLength(officialTrxAddressToHex.substring(2), 64);
-    print('addressToHex $officialTrxAddress');
-    print('abi hex $abiHex');
+        string_utils.fixLength(officialTrxAddressToHex.substring(2), 64);
+    debugPrint('addressToHex $officialTrxAddress');
+    debugPrint('abi hex $abiHex');
     var body = {
       "contract_address": smartContractAddress,
       "function_selector": 'balanceOf(address)',
@@ -151,13 +151,13 @@ class ApiService {
       if (json != null) {
         log.e('getTronUsdtTsWalletBalance $json}');
         var balanceInHex = json["constant_result"][0];
-        print('balanceInHex $balanceInHex');
+        debugPrint('balanceInHex $balanceInHex');
         // var hexToBytesBalance =
         //     stringUtils.hexToUint8List(balanceInHex[0]);
-        //       print('hexToBytesBalance $hexToBytesBalance');
+        //       debugPrint('hexToBytesBalance $hexToBytesBalance');
         var res = int.parse(balanceInHex, radix: 16);
         //stringUtils.uint8ListToHex(hexToBytesBalance);
-        print('res $res');
+        debugPrint('res $res');
         return res;
       }
     } catch (err) {
@@ -252,7 +252,7 @@ class ApiService {
                 date.toString().substring(0, date.toString().length - 4);
             var amount = element['quantity'].toString();
 
-            //  print(
+            //  debugPrint(
             // 'tag $tag -- ticker $ticker -- date ${date.toLocal()} - amount ${double.parse(amount)}');
             TransactionHistory tx = TransactionHistory(
                 id: index,
@@ -303,7 +303,7 @@ class ApiService {
 
           for (var element in data) {
             var holder = LightningRemitHistoryModel.fromJson(element);
-            print(holder.toJson());
+            debugPrint(holder.toJson().toString());
             var timestamp = holder.time;
 
             var date =
@@ -528,8 +528,9 @@ class ApiService {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
       log.w(' getEthGasPrice $json');
-      print((BigInt.parse(json['gasprice']) / BigInt.parse('1000000000'))
-          .toDouble());
+      debugPrint((BigInt.parse(json['gasprice']) / BigInt.parse('1000000000'))
+          .toDouble()
+          .toString());
       ethGasPrice =
           (BigInt.parse(json['gasprice']) / BigInt.parse('1000000000'))
               .toDouble()
@@ -545,8 +546,8 @@ class ApiService {
     if (ethGasPrice > environment['chains']['ETH']['gasPriceMax']) {
       ethGasPrice = environment['chains']['ETH']['gasPriceMax'];
     }
-    print('ethGasPrice=====');
-    print(ethGasPrice);
+    debugPrint('ethGasPrice=====');
+    debugPrint(ethGasPrice.toString());
     return ethGasPrice;
   }
 /*----------------------------------------------------------------------
@@ -730,7 +731,7 @@ class ApiService {
       var jsonList = jsonDecode(res.body) as List;
       log.i('jsonList $jsonList');
       OrderList orderList = OrderList.fromJson(jsonList);
-      print('after order list ${orderList.orders.length}');
+      debugPrint('after order list ${orderList.orders.length}');
       //  throw Exception('Catch Exception');
       //return jsonList;
       return orderList.orders;
@@ -756,7 +757,7 @@ class ApiService {
     log.i('getMyOrdersByTickerName url $url');
     try {
       final res = await client.get(url);
-      print('after res ${res.body}');
+      debugPrint('after res ${res.body}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }
@@ -934,7 +935,7 @@ class ApiService {
 
   // Get Fab Transaction
   Future getFabTransactionJson(String txid) async {
-    txid = stringUtils.trimHexPrefix(txid);
+    txid = string_utils.trimHexPrefix(txid);
     var url = fabBaseUrl + 'gettransactionjson/' + txid;
     var json;
     try {
@@ -1050,7 +1051,7 @@ class ApiService {
           configService.getKanbanBaseUrl() + "kanban/getCampaigns");
       log.w('getEvents ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
-        print("success");
+        debugPrint("success");
         return jsonDecode(res.body);
       } else {
         log.e("error: " + res.body);
@@ -1064,7 +1065,7 @@ class ApiService {
 
   //get a single event detailed information
   Future postEventSingle(id) async {
-    print("Calling api: getEventSingle");
+    debugPrint("Calling api: getEventSingle");
     try {
       final res = await client.post(
         // "http://192.168.0.12:4000/kanban/getCampaignSingle",
@@ -1078,10 +1079,10 @@ class ApiService {
       );
       log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
-        print("success");
+        debugPrint("success");
         return jsonDecode(res.body);
       } else {
-        print("error");
+        debugPrint("error");
         return ["error"];
       }
     } catch (e) {

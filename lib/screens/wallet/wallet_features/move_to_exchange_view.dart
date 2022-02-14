@@ -67,7 +67,8 @@ class MoveToExchangeScreen extends StatelessWidget {
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               TextField(
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [
                   DecimalTextInputFormatter(
                       decimalRange: model.decimalLimit,
@@ -86,7 +87,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                       borderSide:
                           BorderSide(color: Color(0XFF871fff), width: 1.0)),
                   hintText: AppLocalizations.of(context).enterAmount,
-                  hintStyle: const TextStyle(fontSize: 14.0, color: Colors.grey),
+                  hintStyle:
+                      const TextStyle(fontSize: 14.0, color: Colors.grey),
                 ),
                 controller: model.amountController,
                 style: Theme.of(context).textTheme.headline5.copyWith(
@@ -124,8 +126,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                   model.tokenType.isNotEmpty
                       ? OutlinedButton(
                           style: ButtonStyle(
-                            minimumSize:
-                                MaterialStateProperty.all(const Size.square(20)),
+                            minimumSize: MaterialStateProperty.all(
+                                const Size.square(20)),
                             padding: MaterialStateProperty.all(
                                 const EdgeInsets.symmetric(
                                     vertical: 2, horizontal: 5)),
@@ -186,7 +188,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                                                         .textTheme
                                                         .headline5),
                                                 Padding(
-                                                  padding: const EdgeInsets.only(
+                                                  padding: const EdgeInsets
+                                                          .only(
                                                       left:
                                                           5), // padding left to keep some space from the text
                                                   child: Text(
@@ -324,9 +327,10 @@ class MoveToExchangeScreen extends StatelessWidget {
                                           focusedBorder: UnderlineInputBorder(
                                               borderSide: BorderSide(
                                                   color: globals.primaryColor)),
-                                          enabledBorder: const UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: globals.grey)),
+                                          enabledBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: globals.grey)),
                                           hintText: '0.00000',
                                           hintStyle: Theme.of(context)
                                               .textTheme
@@ -370,9 +374,10 @@ class MoveToExchangeScreen extends StatelessWidget {
                                           focusedBorder: UnderlineInputBorder(
                                               borderSide: BorderSide(
                                                   color: globals.primaryColor)),
-                                          enabledBorder: const UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: globals.grey)),
+                                          enabledBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: globals.grey)),
                                           hintText: '0.00000',
                                           hintStyle: Theme.of(context)
                                               .textTheme
@@ -417,9 +422,10 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: globals.primaryColor)),
-                                        enabledBorder: const UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: globals.grey)),
+                                        enabledBorder:
+                                            const UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: globals.grey)),
                                         hintText: '0.00000',
                                         hintStyle: Theme.of(context)
                                             .textTheme
@@ -452,8 +458,9 @@ class MoveToExchangeScreen extends StatelessWidget {
                                   onChanged: (String amount) {
                                     model.updateTransFee();
                                   },
-                                  keyboardType: const TextInputType.numberWithOptions(
-                                      decimal: true), // numnber keyboard
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true), // numnber keyboard
                                   decoration: InputDecoration(
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
@@ -491,8 +498,9 @@ class MoveToExchangeScreen extends StatelessWidget {
                                 onChanged: (String amount) {
                                   model.updateTransFee();
                                 },
-                                keyboardType: const TextInputType.numberWithOptions(
-                                    decimal: true), // numnber keyboard
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true), // numnber keyboard
                                 decoration: InputDecoration(
                                     focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
@@ -534,9 +542,9 @@ class MoveToExchangeScreen extends StatelessWidget {
                                     color: globals.primaryColor),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    print('1');
-                                    print(model.message);
-                                    print('2');
+                                    debugPrint('1');
+                                    debugPrint(model.message);
+                                    debugPrint('2');
                                     model
                                         .copyAndShowNotification(model.message);
                                   }),

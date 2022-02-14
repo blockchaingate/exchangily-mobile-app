@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/services/db/token_list_database_service.dart
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
+import 'package:flutter/widgets.dart';
 import './eth_util.dart';
 
 //import '../packages/bip32/bip32_base.dart' as bip32;
@@ -36,10 +37,10 @@ import "package:pointycastle/digests/sha256.dart";
 import "package:pointycastle/signers/ecdsa_signer.dart";
 import 'package:pointycastle/macs/hmac.dart';
 import 'varuint.dart';
-import '../environments/coins.dart' as coinList;
+import '../environments/coins.dart' as coin_list;
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
-    as TronAddressUtil;
-import 'package:web3dart/crypto.dart' as CryptoWeb3;
+    as tron_address_util;
+import 'package:web3dart/crypto.dart' as crypto_web3;
 import 'package:exchangilymobileapp/constants/constants.dart';
 
 final ECDomainParameters _params = ECCurve_secp256k1();
@@ -60,55 +61,56 @@ class CoinUtils {
   ) {
     // const a = "0x15TRON Signed Message:\n";
     // var aToAscii = ascii.encode(a);
-    // print('aToAscii $aToAscii');
-    //print('part1HexPrefix $part1PrefixBytes');
+    // debugPrint('aToAscii $aToAscii');
+    //debugPrint('part1HexPrefix $part1PrefixBytes');
     //Uint8List prefixBytes = CryptoWeb3.hexToBytes(messagePrefix);
 // Uint8List bytePrefixIntToUintList = CryptoWeb3.(
 //   bytePrefixToInt);
 
     // const intBytePrefix = 0x15;
     // Uint8List part1PrefixBytes = utf8.encode(intBytePrefix.toString());
-    // print('intBytePrefixToHex ${uint8ListToHex(part1PrefixBytes)}');
+    // debugPrint('intBytePrefixToHex ${uint8ListToHex(part1PrefixBytes)}');
 
     const messagePrefix = '\u0015TRON Signed Message:\n';
     final prefixBytes = ascii.encode(messagePrefix);
-    print(
-        'part2PrefixBytes ascii bytes to hex-- ${CryptoWeb3.bytesToHex(prefixBytes)}');
+    debugPrint(
+        'part2PrefixBytes ascii bytes to hex-- ${crypto_web3.bytesToHex(prefixBytes)}');
 
     //final prefixBytes = part1PrefixBytes + part2PrefixBytes;
-    print(
-        'final prefixBytes bytes ascii bytes to hex-- ${CryptoWeb3.bytesToHex(prefixBytes)}');
+    debugPrint(
+        'final prefixBytes bytes ascii bytes to hex-- ${crypto_web3.bytesToHex(prefixBytes)}');
 
-    print('hash $originalMessage --  hash length ${originalMessage.length}');
+    debugPrint(
+        'hash $originalMessage --  hash length ${originalMessage.length}');
 
     Uint8List originalMessageWithPrefix = Uint8List.fromList(prefixBytes +
         //CryptoWeb3.hexToBytes(originalMessage));
         ascii.encode(originalMessage));
-    print(
-        'originalMessageWithPrefix ${CryptoWeb3.bytesToHex(originalMessageWithPrefix)}');
+    debugPrint(
+        'originalMessageWithPrefix ${crypto_web3.bytesToHex(originalMessageWithPrefix)}');
 
     var hashedOriginalMessageWithPrefix =
-        CryptoWeb3.keccak256(originalMessageWithPrefix);
+        crypto_web3.keccak256(originalMessageWithPrefix);
 
-    print(
-        'hashedOriginalMessageWithPrefix ${CryptoWeb3.bytesToHex(hashedOriginalMessageWithPrefix)}');
+    debugPrint(
+        'hashedOriginalMessageWithPrefix ${crypto_web3.bytesToHex(hashedOriginalMessageWithPrefix)}');
 
     var signature = sign(hashedOriginalMessageWithPrefix, privateKey);
 
-    print('signature v ${signature.v}');
+    debugPrint('signature v ${signature.v}');
 
     final chainIdV = signature.v + 27;
 
-    print('chainIdV $chainIdV');
+    debugPrint('chainIdV $chainIdV');
 
-    signature = CryptoWeb3.MsgSignature(signature.r, signature.s, chainIdV);
+    signature = crypto_web3.MsgSignature(signature.r, signature.s, chainIdV);
 
-    final r = _padTo32(CryptoWeb3.intToBytes(signature.r));
-    final s = _padTo32(CryptoWeb3.intToBytes(signature.s));
-    var v = CryptoWeb3.intToBytes(BigInt.from(signature.v));
+    final r = _padTo32(crypto_web3.intToBytes(signature.r));
+    final s = _padTo32(crypto_web3.intToBytes(signature.s));
+    var v = crypto_web3.intToBytes(BigInt.from(signature.v));
 
     var rsv = r + s + v;
-    print('rsv  $rsv');
+    debugPrint('rsv  $rsv');
     return rsv;
   }
 
@@ -119,27 +121,27 @@ class CoinUtils {
     Uint8List hash,
     Uint8List privateKey,
   ) {
-    print('sign trx');
+    debugPrint('sign trx');
 
     var signature = sign(hash, privateKey);
 
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
     // be aware that signature.v already is recovery + 27
 
-    print('signature v ${signature.v}');
+    debugPrint('signature v ${signature.v}');
 
     final chainIdV = signature.v;
 
-    print('chainIdV $chainIdV');
+    debugPrint('chainIdV $chainIdV');
     //final chainIdV = signature.v;
-    signature = CryptoWeb3.MsgSignature(signature.r, signature.s, chainIdV);
+    signature = crypto_web3.MsgSignature(signature.r, signature.s, chainIdV);
 
-    //print('chainIdVchainIdVchainIdV==' + chainIdV.toString());
-    //print('signature.v====');
-    //print(signature.v);
-    final r = _padTo32(CryptoWeb3.intToBytes(signature.r));
-    final s = _padTo32(CryptoWeb3.intToBytes(signature.s));
-    var v = CryptoWeb3.intToBytes(BigInt.from(signature.v));
+    //debugPrint('chainIdVchainIdVchainIdV==' + chainIdV.toString());
+    //debugPrint('signature.v====');
+    //debugPrint(signature.v);
+    final r = _padTo32(crypto_web3.intToBytes(signature.r));
+    final s = _padTo32(crypto_web3.intToBytes(signature.s));
+    var v = crypto_web3.intToBytes(BigInt.from(signature.v));
 
     if (signature.v == 0) {
       v = Uint8List.fromList([0].toList());
@@ -147,7 +149,7 @@ class CoinUtils {
     List<Uint8List> rsvList = [];
     var res = r + s + v;
     rsvList.add(Uint8List.fromList(res));
-    print('rsv list $rsvList');
+    debugPrint('rsv list $rsvList');
     return rsvList;
   }
 
@@ -179,10 +181,10 @@ class CoinUtils {
         locator<TokenListDatabaseService>();
     int coinType = 0;
     MapEntry<int, String> hardCodedCoinList;
-    bool isOldToken = coinList.newCoinTypeMap.containsValue(coinName);
-    print('is old token value $isOldToken');
+    bool isOldToken = coin_list.newCoinTypeMap.containsValue(coinName);
+    debugPrint('is old token value $isOldToken');
     if (isOldToken) {
-      hardCodedCoinList = coinList.newCoinTypeMap.entries
+      hardCodedCoinList = coin_list.newCoinTypeMap.entries
           .firstWhere((coinTypeMap) => coinTypeMap.value == coinName);
     }
     // var coins =
@@ -194,7 +196,7 @@ class CoinUtils {
           .getCoinTypeByTickerName(coinName)
           .then((value) => coinType = value);
     }
-    print('ticker $coinName -- coin type $coinType');
+    debugPrint('ticker $coinName -- coin type $coinType');
     return coinType;
   }
 
@@ -211,33 +213,33 @@ class CoinUtils {
 
 /*
 Future signedBitcoinMessage(String originalMessage, String wif) async {
-  print('originalMessage=');
-  print(originalMessage);
+  debugPrint('originalMessage=');
+  debugPrint(originalMessage);
   var hdWallet = Wallet.fromWIF(wif);
   var compressed = false;
   var sigwitType;
   var signedMess = await hdWallet.sign(originalMessage);
   var recovery = 0;
   var r = encodeSignature(signedMess, recovery, compressed, sigwitType);
-  print('r=');
-  print(r);
-  print('signedMess=');
-  print(signedMess);
+  debugPrint('r=');
+  debugPrint(r);
+  debugPrint('signedMess=');
+  debugPrint(signedMess);
   return signedMess;
 }
 */
 
-  CryptoWeb3.MsgSignature sign(Uint8List messageHash, Uint8List privateKey) {
+  crypto_web3.MsgSignature sign(Uint8List messageHash, Uint8List privateKey) {
     final digest = SHA256Digest();
     final signer = ECDSASigner(null, HMac(digest, 64));
-    final key = ECPrivateKey(CryptoWeb3.bytesToInt(privateKey), _params);
+    final key = ECPrivateKey(crypto_web3.bytesToInt(privateKey), _params);
 
     signer.init(true, PrivateKeyParameter(key));
     var sig = signer.generateSignature(messageHash) as ECSignature;
 
-    print('sig =============');
-    print(sig.r.toString());
-    print(sig.s.toString());
+    debugPrint('sig =============');
+    debugPrint(sig.r.toString());
+    debugPrint(sig.s.toString());
     /*
 	This is necessary because if a message can be signed by (r, s), it can also
 	be signed by (r, -s (mod N)) which N being the order of the elliptic function
@@ -253,8 +255,8 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     }
 
     final publicKey =
-        CryptoWeb3.bytesToInt(CryptoWeb3.privateKeyBytesToPublic(privateKey));
-    print("publicKey: " + publicKey.toString());
+        crypto_web3.bytesToInt(crypto_web3.privateKeyBytesToPublic(privateKey));
+    debugPrint("publicKey: " + publicKey.toString());
 
     //Implementation for calculating v naively taken from there, I don't understand
     //any of this.
@@ -268,13 +270,13 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       }
     }
 
-    print('recId====' + recId.toString());
+    debugPrint('recId====' + recId.toString());
     if (recId == -1) {
       throw Exception(
           'Could not construct a recoverable key. This should never happen');
     }
 
-    return CryptoWeb3.MsgSignature(sig.r, sig.s, recId);
+    return crypto_web3.MsgSignature(sig.r, sig.s, recId);
   }
 
   BigInt _recoverFromSignature(
@@ -292,7 +294,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     final R = _decompressKey(x, (recId & 1) == 1, params.curve);
     if (!(R * n).isInfinity) return null;
 
-    final e = CryptoWeb3.bytesToInt(msg);
+    final e = crypto_web3.bytesToInt(msg);
 
     final eInv = (BigInt.zero - e) % n;
     final rInv = sig.r.modInverse(n);
@@ -302,7 +304,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     final q = (params.G * eInvrInv) + (R * srInv);
 
     final bytes = q.getEncoded(false);
-    return CryptoWeb3.bytesToInt(bytes.sublist(1));
+    return crypto_web3.bytesToInt(bytes.sublist(1));
   }
 
   Uint8List uint8ListFromList(List<int> data) {
@@ -314,7 +316,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
   ECPoint _decompressKey(BigInt xBN, bool yBit, ECCurve c) {
     List<int> x9IntegerToBytes(BigInt s, int qLength) {
       //https://github.com/bcgit/bc-java/blob/master/core/src/main/java/org/bouncycastle/asn1/x9/X9IntegerConverter.java#L45
-      final bytes = CryptoWeb3.intToBytes(s);
+      final bytes = crypto_web3.intToBytes(s);
 
       if (qLength < bytes.length) {
         return bytes.sublist(0, bytes.length - qLength);
@@ -347,13 +349,13 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 
   Future<Uint8List> signBtcMessageWith(originalMessage, Uint8List privateKey,
       {int chainId, var network}) async {
-    print('signBtcMessageWith begin');
+    debugPrint('signBtcMessageWith begin');
     Uint8List messageHash = magicHash(originalMessage, network);
 
-    print('network=');
-    print(network);
-    print('messageHash=');
-    print(messageHash);
+    debugPrint('network=');
+    debugPrint(network);
+    debugPrint('messageHash=');
+    debugPrint(messageHash.toString());
     var signature = sign(messageHash, privateKey);
 
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
@@ -364,35 +366,35 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       chainId != null ? (signature.v - 27 + (chainId * 2 + 35)) : signature.v;
   */
 
-    //print('signature.vsignature.vsignature.v=' + signature.v.toString());
+    //debugPrint('signature.vsignature.vsignature.v=' + signature.v.toString());
     final chainIdV = signature.v;
-    signature = CryptoWeb3.MsgSignature(signature.r, signature.s, chainIdV);
+    signature = crypto_web3.MsgSignature(signature.r, signature.s, chainIdV);
 
-    //print('chainIdVchainIdVchainIdV==' + chainIdV.toString());
-    //print('signature.v====');
-    //print(signature.v);
-    final r = _padTo32(CryptoWeb3.intToBytes(signature.r));
-    final s = _padTo32(CryptoWeb3.intToBytes(signature.s));
-    var v = CryptoWeb3.intToBytes(BigInt.from(signature.v));
+    //debugPrint('chainIdVchainIdVchainIdV==' + chainIdV.toString());
+    //debugPrint('signature.v====');
+    //debugPrint(signature.v);
+    final r = _padTo32(crypto_web3.intToBytes(signature.r));
+    final s = _padTo32(crypto_web3.intToBytes(signature.s));
+    var v = crypto_web3.intToBytes(BigInt.from(signature.v));
 
     if (signature.v == 0) {
       v = Uint8List.fromList([0].toList());
     }
-    //print('vvvv=');
-    //print(v);
+    //debugPrint('vvvv=');
+    //debugPrint(v);
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L63
     return uint8ListFromList(r + s + v);
   }
 
   Future<Uint8List> signDogeMessageWith(originalMessage, Uint8List privateKey,
       {int chainId, var network}) async {
-    print('signDogeMessageWith');
+    debugPrint('signDogeMessageWith');
     Uint8List messageHash = magicHashDoge(originalMessage, network);
     //messageHash.insert(1, 25);
-    print('network=');
-    print(network);
-    print('messageHash=');
-    print(messageHash);
+    debugPrint('network=');
+    debugPrint(network);
+    debugPrint('messageHash=');
+    debugPrint(messageHash.toString());
     var signature = sign(messageHash, privateKey);
 
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
@@ -403,22 +405,22 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       chainId != null ? (signature.v - 27 + (chainId * 2 + 35)) : signature.v;
   */
 
-    //print('signature.vsignature.vsignature.v=' + signature.v.toString());
+    //debugPrint('signature.vsignature.vsignature.v=' + signature.v.toString());
     final chainIdV = signature.v;
-    signature = CryptoWeb3.MsgSignature(signature.r, signature.s, chainIdV);
+    signature = crypto_web3.MsgSignature(signature.r, signature.s, chainIdV);
 
-    //print('chainIdVchainIdVchainIdV==' + chainIdV.toString());
-    //print('signature.v====');
-    //print(signature.v);
-    final r = _padTo32(CryptoWeb3.intToBytes(signature.r));
-    final s = _padTo32(CryptoWeb3.intToBytes(signature.s));
-    var v = CryptoWeb3.intToBytes(BigInt.from(signature.v));
+    //debugPrint('chainIdVchainIdVchainIdV==' + chainIdV.toString());
+    //debugPrint('signature.v====');
+    //debugPrint(signature.v);
+    final r = _padTo32(crypto_web3.intToBytes(signature.r));
+    final s = _padTo32(crypto_web3.intToBytes(signature.s));
+    var v = crypto_web3.intToBytes(BigInt.from(signature.v));
 
     if (signature.v == 0) {
       v = Uint8List.fromList([0].toList());
     }
-    //print('vvvv=');
-    //print(v);
+    //debugPrint('vvvv=');
+    //debugPrint(v);
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L63
     return uint8ListFromList(r + s + v);
   }
@@ -434,12 +436,12 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 
     //final signature = await credential.signToSignature(concat, chainId: chainId);
 
-    var signature = sign(CryptoWeb3.keccak256(concat), privateKey);
+    var signature = sign(crypto_web3.keccak256(concat), privateKey);
 
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
     // be aware that signature.v already is recovery + 27
-    print('signature.v=======' + signature.v.toString());
-    print('chainId=' + chainId.toString());
+    debugPrint('signature.v=======' + signature.v.toString());
+    debugPrint('chainId=' + chainId.toString());
 
     /*
   final chainIdV =
@@ -447,12 +449,12 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 
    */
     final chainIdV = signature.v + 27;
-    print('chainIdV=' + chainIdV.toString());
-    signature = CryptoWeb3.MsgSignature(signature.r, signature.s, chainIdV);
+    debugPrint('chainIdV=' + chainIdV.toString());
+    signature = crypto_web3.MsgSignature(signature.r, signature.s, chainIdV);
 
-    final r = _padTo32(CryptoWeb3.intToBytes(signature.r));
-    final s = _padTo32(CryptoWeb3.intToBytes(signature.s));
-    final v = CryptoWeb3.intToBytes(BigInt.from(signature.v));
+    final r = _padTo32(crypto_web3.intToBytes(signature.r));
+    final s = _padTo32(crypto_web3.intToBytes(signature.s));
+    final v = crypto_web3.intToBytes(BigInt.from(signature.v));
 
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L63
     return uint8ListFromList(r + s + v);
@@ -462,11 +464,11 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
   Uint8List magicHash(String message, [NetworkType network]) {
     network = network ?? bitcoin;
     Uint8List messagePrefix = utf8.encode(network.messagePrefix);
-    print('messagePrefix===');
-    print(messagePrefix);
+    debugPrint('messagePrefix===');
+    debugPrint(messagePrefix.toString());
     int messageVISize = encodingLength(message.length);
-    print('messageVISize===');
-    print(messageVISize);
+    debugPrint('messageVISize===');
+    debugPrint(messageVISize.toString());
     int length = messagePrefix.length + messageVISize + message.length;
     Uint8List buffer = Uint8List(length);
     buffer.setRange(0, messagePrefix.length, messagePrefix);
@@ -508,7 +510,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 
     var signedMess;
     if (coinName == 'TRX' || tokenType == 'TRX' || tokenType == 'TRON') {
-      var privateKey = TronAddressUtil.generateTrxPrivKeyBySeed(seed);
+      var privateKey = tron_address_util.generateTrxPrivKeyBySeed(seed);
       //var bytes = CryptoWeb3.hexToBytes(originalMessage);
 
       signedMess = signTrxMessage(originalMessage, privateKey);
@@ -519,7 +521,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       r = ss.substring(0, 64);
       s = ss.substring(64, 128);
       v = ss.substring(128);
-      print('r: $r --  s: $s -- v: $v');
+      debugPrint('r: $r --  s: $s -- v: $v');
 
       return {'r': r, 's': s, 'v': v};
     }
@@ -536,7 +538,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 
       var chainId = environment["chains"]["ETH"]["chainId"];
       // chainId = 0;
-      print('chainId==' + chainId.toString());
+      debugPrint('chainId==' + chainId.toString());
 
       // var signedMessOrig = await credentials
       //    .signPersonalMessage(stringToUint8List(originalMessage), chainId: chainId);
@@ -547,12 +549,12 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       String ss = HEX.encode(signedMess);
       //String ss2 = HEX.encode(signedMessOrig);
 
-      //print('ss='+ss);
-      //print('ss2='+ss2);
+      //debugPrint('ss='+ss);
+      //debugPrint('ss2='+ss2);
       r = ss.substring(0, 64);
       s = ss.substring(64, 128);
       v = ss.substring(128);
-      print('v=' + v);
+      debugPrint('v=' + v);
     } else if (coinName == 'FAB' ||
         coinName == 'BTC' ||
         coinName == 'LTC' ||
@@ -626,9 +628,9 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     var s1 = sss.substring(64, 128);
 
     if (r == r1) {
-      print('signiture is right');
+      debugPrint('signiture is right');
     } else {
-      print('signiture is wrong');
+      debugPrint('signiture is wrong');
     }
     */
       //amount=0.01
@@ -645,19 +647,22 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     if (tokenType == 'FAB') {
       String fabTokensOfficialAddress =
           environment['addresses']['exchangilyOfficial'][0]['address'];
-      print('fabTokensOfficialAddress $fabTokensOfficialAddress for $coinName');
+      debugPrint(
+          'fabTokensOfficialAddress $fabTokensOfficialAddress for $coinName');
       return fabTokensOfficialAddress;
     }
     if (tokenType == 'TRX' || tokenType == 'TRON') {
       String trxTokensOfficialAddress =
           environment['addresses']['exchangilyOfficial'][9]['address'];
-      print('TRXTokensOfficialAddress $trxTokensOfficialAddress for $coinName');
+      debugPrint(
+          'TRXTokensOfficialAddress $trxTokensOfficialAddress for $coinName');
       return trxTokensOfficialAddress;
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       var ethTokenOfficialAddress =
           environment['addresses']['exchangilyOfficial'][3]['address'];
 
-      print('ethTokenOfficialAddress $ethTokenOfficialAddress for $coinName');
+      debugPrint(
+          'ethTokenOfficialAddress $ethTokenOfficialAddress for $coinName');
       return ethTokenOfficialAddress;
     } else {
       var address = environment['addresses']['exchangilyOfficial']
@@ -665,7 +670,8 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
           .toList();
       String majorsOfficialAddress =
           (address as List).isNotEmpty ? address[0]['address'] : '';
-      print('majors official address $majorsOfficialAddress for $coinName');
+      debugPrint(
+          'majors official address $majorsOfficialAddress for $coinName');
       return majorsOfficialAddress;
     }
   }

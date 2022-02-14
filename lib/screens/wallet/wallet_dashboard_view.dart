@@ -63,7 +63,7 @@ class WalletDashboardView extends StatelessWidget {
         },
         onDispose: () {
           _refreshController.dispose();
-          print('_refreshController disposed in wallet dashboard view');
+          debugPrint('_refreshController disposed in wallet dashboard view');
         },
         builder: (context, WalletDashboardViewModel model, child) {
           // var connectionStatus = Provider.of<ConnectivityStatus>(context);
@@ -85,10 +85,10 @@ class WalletDashboardView extends StatelessWidget {
                 },
                 child: ShowCaseWidget(
                   onStart: (index, key) {
-                    print('onStart: $index, $key');
+                    debugPrint('onStart: $index, $key');
                   },
                   onComplete: (index, key) {
-                    print('onComplete: $index, $key');
+                    debugPrint('onComplete: $index, $key');
                   },
                   onFinish: () {
                     model.storageService.isShowCaseView = false;
@@ -347,14 +347,14 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
                       onTap: () {
                         if (!model.hasApiError) {
                           Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const AnnouncementList()))
-                              .then((value) {
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const AnnouncementList())).then((value) {
                             model.updateAnnce();
                           });
                         } else {
-                          print("API has error");
+                          debugPrint("API has error");
                         }
                       },
                       child: const SizedBox(
@@ -444,7 +444,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                   InkWell(
                     onTap: () {
                       model.isShowFavCoins
-                          ? print('...')
+                          ? debugPrint('...')
                           : model.hideSmallAmountAssets();
                     },
                     child: Row(
@@ -627,7 +627,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
             //         leading: Container(),
             //         flexibleSpace: LayoutBuilder(builder:
             //             (BuildContext context, BoxConstraints constraints) {
-            //           // print('constraints=' + constraints.toString());
+            //           // debugPrint('constraints=' + constraints.toString());
             //           top = constraints.biggest.height;
             //           return FlexibleSpaceBar(
             //             centerTitle: true,
@@ -1292,8 +1292,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
   @override
   Widget builder(
       BuildContext context, WalletDashboardViewModel model, Widget child) {
-    print('fav list length before');
-    print(model.favWallets.length);
+    debugPrint('fav list length before');
+    debugPrint(model.favWallets.length.toString());
     return model.busy(model.favWallets)
         ? model.sharedService.loadingIndicator()
         : Container(

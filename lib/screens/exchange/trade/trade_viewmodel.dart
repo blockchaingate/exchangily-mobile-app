@@ -175,7 +175,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 
   // @override
   // void dispose() {
-  //   print('dispose $streamsMap');
+  //   debugPrint('dispose $streamsMap');
   //   streamsMap.forEach((key, value) {
   //     //  value.dispose();
   //     getSubscriptionForKey(key).cancel().then((x) {
@@ -241,14 +241,14 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 
   List<Orderbook> orderAggregation(List<Orderbook> passedOrders) {
     List<Orderbook> result = [];
-    print('passed orders length ${passedOrders.length}');
+    debugPrint('passed orders length ${passedOrders.length}');
     double prevQuantity = 0.0;
     List<int> indexArray = [];
     double prevPrice = 0;
 
     // for each
     for (var currentOrder in passedOrders) {
-      print('single order ${currentOrder.toJson()}');
+      debugPrint('single order ${currentOrder.toJson()}');
       int index = 0;
       double aggrQty = 0;
       index = passedOrders.indexOf(currentOrder);
@@ -306,7 +306,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 
   /// Switch Streams
   void switchStreams(int index) async {
-    print('Pause/Resume streams $index');
+    debugPrint('Pause/Resume streams $index');
 
     if (index == 0) {
       pauseStream(_marketTradesStreamKey);

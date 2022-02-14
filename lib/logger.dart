@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 
 Logger getLogger(String className) {
@@ -25,7 +26,7 @@ class SimpleLogPrinter extends LogPrinter {
   List<String> log(LogEvent event) {
     var color = PrettyPrinter.levelColors[event.level];
     var emoji = PrettyPrinter.levelEmojis[event.level];
-    print(color('$emoji $className - ${event.message}'));
+    debugPrint(color('$emoji $className - ${event.message}'));
     return [];
   }
 }

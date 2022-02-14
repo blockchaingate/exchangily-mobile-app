@@ -33,15 +33,15 @@ class LightningRemitView extends StatelessWidget {
           body: GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
-              print('Close keyboard');
+              debugPrint('Close keyboard');
               // persistentBottomSheetController.closed
-              //     .then((value) => print(value));
+              //     .then((value) => debugPrint(value));
               if (model.isShowBottomSheet) {
                 Navigator.pop(context);
                 model.setBusy(true);
                 model.isShowBottomSheet = false;
                 model.setBusy(false);
-                print('Close bottom sheet');
+                debugPrint('Close bottom sheet');
               }
             },
             child: Container(
@@ -204,8 +204,8 @@ class LightningRemitView extends StatelessWidget {
 
                       UIHelper.verticalSpaceSmall,
                       TextField(
-                          keyboardType:
-                              const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
                           decoration: InputDecoration(
                               enabledBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
@@ -233,7 +233,7 @@ class LightningRemitView extends StatelessWidget {
                                 textColor: Colors.white,
                                 onPressed: () {
                                   model.isBusy
-                                      ? print('busy')
+                                      ? debugPrint('busy')
                                       : model.transfer();
                                 },
                                 child: Text(AppLocalizations.of(context).send,
@@ -256,7 +256,7 @@ class LightningRemitView extends StatelessWidget {
                               textColor: Colors.white,
                               onPressed: () {
                                 model.isBusy
-                                    ? print('busy')
+                                    ? debugPrint('busy')
                                     : model.showBarcode();
                               },
                               child: Text(AppLocalizations.of(context).receive,
@@ -383,8 +383,8 @@ class TxHistoryView extends StatelessWidget {
                   Card(
                     elevation: 4,
                     child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 4.0),
                       color: walletCardColor,
                       child: Row(
                         children: <Widget>[
@@ -433,8 +433,7 @@ class TxHistoryView extends StatelessWidget {
                                       child: RichText(
                                         overflow: TextOverflow.ellipsis,
                                         text: TextSpan(
-                                            text:
-                                                transaction.tickerChainTxId,
+                                            text: transaction.tickerChainTxId,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2

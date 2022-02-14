@@ -2,7 +2,7 @@
 
 // class InfoPageService {
 //   void forwardPage(Map pageInfoOgj) {
-//     print("Event type: " + pageInfoOgj["type"]);
+//     debugPrint("Event type: " + pageInfoOgj["type"]);
 
 //     switch (pageInfoOgj["type"]) {
 //       case "flutterPage":

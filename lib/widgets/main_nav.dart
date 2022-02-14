@@ -111,8 +111,8 @@ class _MainNavState extends State<MainNav> {
     setState(() {
       _page = widget.currentPage;
       // keep this for future testing
-      // print("current page: ${widget.currentPage}");
-      // print("_page: ${this._page}");
+      // debugPrint("current page: ${widget.currentPage}");
+      // debugPrint("_page: ${this._page}");
     });
   }
 

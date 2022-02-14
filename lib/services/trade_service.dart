@@ -22,6 +22,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_mo
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/stoppable_service.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
+import 'package:flutter/widgets.dart';
 import 'package:observable_ish/observable_ish.dart';
 import 'package:stacked/stacked.dart';
 import 'package:web_socket_channel/io.dart';
@@ -75,8 +76,6 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   final RxValue<bool> _isRefreshBalance = RxValue<bool>(false);
   bool get isRefreshBalance => _isRefreshBalance.value;
 
-
-
   String setTickerNameByType(type) {
     String res = '';
     //return
@@ -85,7 +84,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
       var json = jsonDecode(element);
       TokenModel token = TokenModel.fromJson(json);
       if (token.coinType == type) {
-        print(token.tickerName);
+        debugPrint(token.tickerName);
         res = token.tickerName;
       }
     }
@@ -306,7 +305,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     var data = await _api.getCoinCurrencyUsdPrice();
 
     currentUsdValue = data['data'][name.toUpperCase()]['USD'];
-    print('Current market price $currentUsdValue');
+    debugPrint('Current market price $currentUsdValue');
     return currentUsdValue;
   }
 
@@ -331,7 +330,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     try {
       var data = await _api.getMyOrdersPagedByFabHexAddressAndTickerName(
           exgAddress, tickerName);
-      print(data);
+      debugPrint(data);
       if (data != null) {
         orderList = OrderList.fromJson(data);
         return orderList.orders;

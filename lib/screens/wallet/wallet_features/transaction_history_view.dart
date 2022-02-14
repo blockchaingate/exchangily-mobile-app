@@ -28,11 +28,11 @@ class TransactionHistoryView extends StatelessWidget {
         builder: (context, TransactionHistoryViewmodel model, child) =>
             WillPopScope(
               onWillPop: () async {
-                print('isDialogUp ${model.isDialogUp}');
+                debugPrint('isDialogUp ${model.isDialogUp}');
                 if (model.isDialogUp) {
                   Navigator.of(context, rootNavigator: true).pop();
                   model.isDialogUp = false;
-                  print('isDialogUp in if ${model.isDialogUp}');
+                  debugPrint('isDialogUp in if ${model.isDialogUp}');
                 } else {
                   Navigator.of(context).pop();
                 }
@@ -107,7 +107,8 @@ class TransactionHistoryView extends StatelessWidget {
                                     Expanded(
                                       flex: 1,
                                       child: Container(
-                                        margin: const EdgeInsets.only(left: 10.0),
+                                        margin:
+                                            const EdgeInsets.only(left: 10.0),
                                         child: Text(
                                             AppLocalizations.of(context).status,
                                             textAlign: TextAlign.left,

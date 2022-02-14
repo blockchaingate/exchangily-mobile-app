@@ -140,10 +140,10 @@ class _DialogManagerState extends State<DialogManager> {
           _dialogService.dialogComplete(
               DialogResponse(returnedText: 'Closed', confirmed: false));
           controller.text = '';
-          print('popping');
+          debugPrint('popping');
           //if (!Platform.isIOS)
           Navigator.of(context).pop();
-          print('popped');
+          debugPrint('popped');
         },
         // content: Column(
         //   children: <Widget>[
@@ -186,10 +186,10 @@ class _DialogManagerState extends State<DialogManager> {
           _dialogService.dialogComplete(
               DialogResponse(returnedText: 'Closed', confirmed: false));
           controller.text = '';
-          print('popping');
+          debugPrint('popping');
           //if (!Platform.isIOS)
           Navigator.of(context).pop();
-          print('popped');
+          debugPrint('popped');
         },
         content: Column(
           children: <Widget>[

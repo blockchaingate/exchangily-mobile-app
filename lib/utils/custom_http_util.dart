@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:exchangilymobileapp/constants/constants.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 
@@ -17,13 +18,14 @@ class CustomHttpUtil {
         Uint8List bytes = utf8.encode(cert);
         securityContext.setTrustedCertificatesBytes(bytes);
       }
-      print('certicate added');
+      debugPrint('certicate added');
     } on TlsException catch (e) {
       if (e?.osError?.message != null &&
           e.osError.message.contains('CERT_ALREADY_IN_HASH_TABLE')) {
-        print('createHttpClient() - cert already trusted! Skipping.');
+        debugPrint('createHttpClient() - cert already trusted! Skipping.');
       } else {
-        print('createHttpClient().setTrustedCertificateBytes EXCEPTION: $e');
+        debugPrint(
+            'createHttpClient().setTrustedCertificateBytes EXCEPTION: $e');
         rethrow;
       }
     } finally {}

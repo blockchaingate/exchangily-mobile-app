@@ -43,7 +43,7 @@ import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
-    as TronAddressUtil;
+    as tron_address_util;
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
@@ -181,7 +181,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     String tickerName = wallet.coin.toUpperCase();
     String walletAddress = '';
     var alltokens = await tokenListDatabaseService.getAll();
-    print(alltokens.length);
+    debugPrint(alltokens.length.toString());
     int coinType = await coinUtils.getCoinTypeIdByName(tickerName);
 
     // use coin type to get the token type
@@ -321,7 +321,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                 .symbol;
 
                             // ignore: avoid_print
-                            print(
+                            debugPrint(
                                 '${issueTokens[index].symbol} -- is in the selectedCustomTokens list ? $isMatched match found -- with token id ${issueTokens[index].tokenId}');
                           } catch (err) {
                             isMatched = null;
@@ -524,7 +524,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                 walletsScrollController.position.maxScrollExtent &&
             !walletsScrollController.position.outOfRange) {
           setBusy(true);
-          print('bottom');
+          debugPrint('bottom');
 
           isBottomOfTheList = true;
           isTopOfTheList = false;
@@ -535,14 +535,14 @@ class WalletDashboardViewModel extends BaseViewModel {
                 walletsScrollController.position.minScrollExtent &&
             !walletsScrollController.position.outOfRange) {
           setBusy(true);
-          print('top');
+          debugPrint('top');
           isTopOfTheList = true;
           isBottomOfTheList = false;
           minusHeight = 25;
           setBusy(false);
         }
         if (walletsScrollController.position.outOfRange) {
-          print('bot in');
+          debugPrint('bot in');
         }
       }
     });
@@ -558,7 +558,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     currentTabSelection = tabIndex;
     storageService.isFavCoinTabSelected = isShowFavCoins ? true : false;
-    print(
+    debugPrint(
         'current tab sel $currentTabSelection -- isShowFavCoins $isShowFavCoins');
     setBusy(false);
   }
@@ -570,10 +570,11 @@ class WalletDashboardViewModel extends BaseViewModel {
   searchFavCoinsByTickerName(String value) async {
     setBusyForObject(favWallets, true);
     var favWalletInfoListCopy = favWallets;
-    print('length ${favWallets.length} -- value $value');
+    debugPrint('length ${favWallets.length} -- value $value');
     try {
       for (var i = 0; i < favWalletInfoListCopy.length; i++) {
-        print('favWalletInfoList ${favWallets[i].coin == value.toUpperCase()}');
+        debugPrint(
+            'favWalletInfoList ${favWallets[i].coin == value.toUpperCase()}');
         if (favWalletInfoListCopy[i].coin == value.toUpperCase()) {
           favWallets = [];
           log.i('favWalletInfoListCopy ${favWalletInfoListCopy[i].toJson()}');
@@ -589,7 +590,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       // tabBarViewHeight = MediaQuery.of(context).viewInsets.bottom == 0
       //     ? MediaQuery.of(context).size.height / 2 - 250
       //     : MediaQuery.of(context).size.height / 2;
-      print('favWalletInfoList length ${favWallets.length}');
+      debugPrint('favWalletInfoList length ${favWallets.length}');
     } catch (err) {
       setBusyForObject(favWallets, false);
       log.e('searchFavCoinsByTickerName CATCH');
@@ -817,7 +818,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         .then((res) async {
       if (res.confirmed) {
         mnemonic = res.returnedText;
-        var address = TronAddressUtil.generateTrxAddress(mnemonic);
+        var address = tron_address_util.generateTrxAddress(mnemonic);
         WalletInfo wi = WalletInfo(
             id: null,
             tickerName: 'TRX',
@@ -881,25 +882,25 @@ class WalletDashboardViewModel extends BaseViewModel {
 
         for (var element in tempdata) {
           tempAnnounceData.add(jsonDecode(element));
-          //   print('tempAnnounceData $tempAnnounceData');
+          //   debugPrint('tempAnnounceData $tempAnnounceData');
         }
         // log.i("announceData from prefs: ");
 
-        // print(tempAnnounceData);
+        // debugPrint(tempAnnounceData);
         // log.i("prefs 0: ");
-        // print(tempAnnounceData[0].toString());
+        // debugPrint(tempAnnounceData[0].toString());
         // log.i("prefs 0 id: ");
-        // print(tempAnnounceData[0]['_id']);
+        // debugPrint(tempAnnounceData[0]['_id']);
 
         // tempAnnounceData = tempdata;
         if (announceContent.length != 0) {
           //   log.i("Data from api: ");
-          // print(announceContent);
+          // debugPrint(announceContent);
           // log.i("Data 0: ");
-          // print(announceContent[0].toString());
+          // debugPrint(announceContent[0].toString());
           // log.w("Going to map!!");
           announceContent.map((annNew) {
-            //    print("Start map");
+            //    debugPrint("Start map");
             bool hasId = false;
             // log.i("annNew['_id']: " + annNew['_id']);
             tempAnnounceData.asMap().entries.map((tempAnn) {
@@ -912,8 +913,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                 hasId = true;
                 final differ = JsonDiffer.fromJson(val, annNew);
                 DiffNode diff = differ.diff();
-                // print(diff.changed);
-                // print("Lenght: " + diff.changed.toString().length.toString());
+                // debugPrint(diff.changed);
+                // debugPrint("Lenght: " + diff.changed.toString().length.toString());
 
                 if (diff.changed != null &&
                     diff.changed.toString().length > 3) {
@@ -943,11 +944,11 @@ class WalletDashboardViewModel extends BaseViewModel {
         for (var element in tempAnnounceData) {
           element["isRead"] == false ? readedNum++ : readedNum = readedNum;
           jsonData.add(jsonEncode(element));
-          //   print('jsonData $jsonData');
+          //   debugPrint('jsonData $jsonData');
         }
         setunReadAnnouncement(readedNum);
         unreadMsgNum = readedNum;
-        // print("check status: " + prefs.containsKey('announceData').toString());
+        // debugPrint("check status: " + prefs.containsKey('announceData').toString());
         prefs.setStringList('announceData', jsonData);
 
         announceList = tempAnnounceData;
@@ -972,17 +973,17 @@ class WalletDashboardViewModel extends BaseViewModel {
           for (var element in tempAnnounceData) {
             element["isRead"] == false ? readedNum++ : readedNum = readedNum;
             jsonData.add(jsonEncode(element));
-            //    print('jsonData $jsonData');
+            //    debugPrint('jsonData $jsonData');
           }
           setunReadAnnouncement(readedNum);
           unreadMsgNum = readedNum;
-          // print(
+          // debugPrint(
           //     "check status: " + prefs.containsKey('announceData').toString());
           prefs.setStringList('announceData', jsonData);
-          //     print("prefs saved");
-          // print("check status saved: " +
+          //     debugPrint("prefs saved");
+          // debugPrint("check status saved: " +
           //     prefs.containsKey('announceData').toString());
-          // print("prefs announcement data: " + prefs.getString('announceData'));
+          // debugPrint("prefs announcement data: " + prefs.getString('announceData'));
         }
         // tempAnnounceData.map((announ) {
         //   // announ.add["isRead"] = false;
@@ -1008,7 +1009,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusy(true);
     unreadMsgNum = getunReadAnnouncement();
 
-    print("Update unread annmoucement number:" + unreadMsgNum.toString());
+    debugPrint("Update unread annmoucement number:" + unreadMsgNum.toString());
     (context as Element).markNeedsBuild();
     setBusy(false);
   }
@@ -1056,7 +1057,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   searchCoinsByTickerName(String value) async {
     setBusy(true);
 
-    print('length ${walletsCopy.length} -- value $value');
+    debugPrint('length ${walletsCopy.length} -- value $value');
     for (var i = 0; i < walletsCopy.length; i++) {
       if (walletsCopy[i].coin.toUpperCase() == value.toUpperCase()) {
         setBusy(true);
@@ -1065,7 +1066,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         //     NumberUtil.currencyFormat(walletInfoCopy[i].usdValue, 2);
         // formattedUsdValueList.add(holder);
         wallets.add(walletsCopy[i]);
-        // print(
+        // debugPrint(
         //     'matched wallet ${walletInfoCopy[i].toJson()} --  wallet info length ${walletInfo.length}');
         setBusy(false);
         break;
@@ -1078,7 +1079,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   }
 
   bool isFirstCharacterMatched(String value, int index) {
-    print(
+    debugPrint(
         'value 1st char ${value[0]} == first chracter ${wallets[index].coin[0]}');
     log.w(value.startsWith(wallets[index].coin[0]));
     return value.startsWith(wallets[index].coin[0]);
@@ -1133,7 +1134,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       if (res != null) {
         if (res['ok']) {
           isFreeFabNotUsed = res['ok'];
-          print(res['_body']['question']);
+          debugPrint(res['_body']['question']);
           showDialog(
               context: context,
               builder: (context) {
@@ -1331,9 +1332,9 @@ class WalletDashboardViewModel extends BaseViewModel {
                 );
               });
         } else {
-          print(isFreeFabNotUsed);
+          debugPrint(isFreeFabNotUsed.toString());
           isFreeFabNotUsed = res['ok'];
-          print(isFreeFabNotUsed);
+          debugPrint(isFreeFabNotUsed.toString());
 
           sharedService.sharedSimpleNotification(
               AppLocalizations.of(context).notice,
@@ -1351,9 +1352,9 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   // Hide Small Amount Assets
   hideSmallAmountAssets() {
-    // print("hideSmallAmountAssets function: $isHideSmallAmountAssets");
+    // debugPrint("hideSmallAmountAssets function: $isHideSmallAmountAssets");
     // wallets.forEach((w) => {
-    //       print(w.coin +
+    //       debugPrint(w.coin +
     //           " wallets.balance.isNegative: " +
     //           w.balance.isNegative.toString())
     //     });
@@ -1365,7 +1366,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     log.i(
         'hide small amounts func: isBusy $isBusy -- ishidesmallamounts object busy  ${busy(isHideSmallAmountAssets)}');
-    // print("end hideSmallAmountAssets function: $isHideSmallAmountAssets");
+    // debugPrint("end hideSmallAmountAssets function: $isHideSmallAmountAssets");
   }
 
 // Calculate Total Usd Balance of Coins

@@ -118,7 +118,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
         await walletService.getSingleCoinWalletDecimalLimit(tickerName);
     if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     setBusy(false);
-    // print(transactionHistoryToShowInView.first.toJson());
+    // debugPrint(transactionHistoryToShowInView.first.toJson());
   }
 
   reloadTransactions() async {

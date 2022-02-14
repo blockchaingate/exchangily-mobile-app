@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {
@@ -10,26 +11,26 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                 Local Storage Keys
 ----------------------------------------------------------------------*/
-  static const String NoticeDialogDisplayKey = 'isDialogDisplay';
-  static const String ShowCaseViewKey = 'isShowCaseView';
-  static const String AppLanguagesKey = 'languages';
-  static const String DarkModeKey = 'darkmode';
-  static const String HKServerKey = 'isHKServer';
-  static const String USServerKey = 'isUSServer';
-  static const String WalletBalancesBodyKey = 'walletBalancesBody';
-  static const String TokenListKey = 'tokenList';
-  static const String FavWalletCoinsKey = 'favWalletCoinsKey';
-  static const String FavCoinTabSelectedKey = 'favCoinTabSelectedKey';
-  static const String WalletDecimalListKey = 'walletDecimalListKey';
-  static const String InAppBiometricAuthKey = 'biometricAuthKey';
-  static const String CancelBiometricAuthKey = 'cancelbiometricAuthKey';
-  static const String PhoneProtectedKey = 'phoneProtectedKey';
-  static const String AppGoneInTheBackgroundKey = 'appGoneInTheBackgroundKey';
-  static const String WalletVerificationKey = 'walletVerificationKey';
-  static const String TestingLogStringListKey = 'testingLogStringListKey';
-  static const String CustomTokensKey = 'customTokensKey';
-  static const String CustomTokenDataKey = 'customTokenDataKey';
-  static const String CameraOpenKey = 'CameraOpenKey';
+  static const String noticeDialogDisplayKey = 'isDialogDisplay';
+  static const String showCaseViewKey = 'isShowCaseView';
+  static const String appLanguagesKey = 'languages';
+  static const String darkModeKey = 'darkmode';
+  static const String hKServerKey = 'isHKServer';
+  static const String uSServerKey = 'isUSServer';
+  static const String walletBalancesBodyKey = 'walletBalancesBody';
+  static const String tokenListKey = 'tokenList';
+  static const String favWalletCoinsKey = 'favWalletCoinsKey';
+  static const String favCoinTabSelectedKey = 'favCoinTabSelectedKey';
+  static const String walletDecimalListKey = 'walletDecimalListKey';
+  static const String inAppBiometricAuthKey = 'biometricAuthKey';
+  static const String cancelBiometricAuthKey = 'cancelbiometricAuthKey';
+  static const String phoneProtectedKey = 'phoneProtectedKey';
+  static const String appGoneInTheBackgroundKey = 'appGoneInTheBackgroundKey';
+  static const String walletVerificationKey = 'walletVerificationKey';
+  static const String testingLogStringListKey = 'testingLogStringListKey';
+  static const String customTokensKey = 'customTokensKey';
+  static const String customTokenDataKey = 'customTokenDataKey';
+  static const String cameraOpenKey = 'CameraOpenKey';
 
 /*----------------------------------------------------------------------
                   Instance
@@ -51,7 +52,8 @@ class LocalStorageService {
 ----------------------------------------------------------------------*/
 
   void _saveToDisk<T>(String key, T content) {
-    print('(TRACE) LocalStorageService:_saveToDisk. key: $key value: $content');
+    debugPrint(
+        '(TRACE) LocalStorageService:_saveToDisk. key: $key value: $content');
 
     if (content is String) {
       _preferences.setString(key, content);
@@ -93,138 +95,138 @@ class LocalStorageService {
 
   // is camera open
 
-  bool get isCameraOpen => _getFromDisk(CameraOpenKey) ?? false;
-  set isCameraOpen(bool value) => _saveToDisk(CameraOpenKey, value);
+  bool get isCameraOpen => _getFromDisk(cameraOpenKey) ?? false;
+  set isCameraOpen(bool value) => _saveToDisk(cameraOpenKey, value);
 
   // Custom token Data
 
-  String get customTokenData => _getFromDisk(CustomTokenDataKey) ?? '';
+  String get customTokenData => _getFromDisk(customTokenDataKey) ?? '';
 
-  set customTokenData(String value) => _saveToDisk(CustomTokenDataKey, value);
+  set customTokenData(String value) => _saveToDisk(customTokenDataKey, value);
 
   // Custom tokens
 
-  String get customTokens => _getFromDisk(CustomTokensKey) ?? '';
+  String get customTokens => _getFromDisk(customTokensKey) ?? '';
 
-  set customTokens(String value) => _saveToDisk(CustomTokensKey, value);
+  set customTokens(String value) => _saveToDisk(customTokensKey, value);
 
 /*----------------------------------------------------------------------
                 testing log string list
 ----------------------------------------------------------------------  */
   String get testingLogStringList =>
-      _getFromDisk(TestingLogStringListKey) ?? '';
+      _getFromDisk(testingLogStringListKey) ?? '';
 
   set testingLogStringList(String value) =>
-      _saveToDisk(TestingLogStringListKey, value);
+      _saveToDisk(testingLogStringListKey, value);
 
 /*----------------------------------------------------------------------
                 walelt verification
 ----------------------------------------------------------------------*/
-  bool get hasWalletVerified => _getFromDisk(WalletVerificationKey) ?? false;
+  bool get hasWalletVerified => _getFromDisk(walletVerificationKey) ?? false;
   set hasWalletVerified(bool value) =>
-      _saveToDisk(WalletVerificationKey, value);
+      _saveToDisk(walletVerificationKey, value);
 
 /*----------------------------------------------------------------------
                 Wallet Decimal List
 ----------------------------------------------------------------------  */
-  String get walletDecimalList => _getFromDisk(WalletDecimalListKey) ?? '';
+  String get walletDecimalList => _getFromDisk(walletDecimalListKey) ?? '';
 
   set walletDecimalList(String value) =>
-      _saveToDisk(WalletDecimalListKey, value);
+      _saveToDisk(walletDecimalListKey, value);
 
 /*----------------------------------------------------------------------
                   Languages getter/setter
 ----------------------------------------------------------------------*/
-  String get language => _getFromDisk(AppLanguagesKey);
-  set language(String appLanguage) => _saveToDisk(AppLanguagesKey, appLanguage);
+  String get language => _getFromDisk(appLanguagesKey);
+  set language(String appLanguage) => _saveToDisk(appLanguagesKey, appLanguage);
 
 /*----------------------------------------------------------------------
                 Dark mode getter/setter
 ----------------------------------------------------------------------*/
-  bool get isDarkMode => _getFromDisk(DarkModeKey) ?? false;
-  set isDarkMode(bool value) => _saveToDisk(DarkModeKey, value);
+  bool get isDarkMode => _getFromDisk(darkModeKey) ?? false;
+  set isDarkMode(bool value) => _saveToDisk(darkModeKey, value);
 
 /*----------------------------------------------------------------------
                 Biometric auth getter/setter
 ----------------------------------------------------------------------*/
   bool get hasAppGoneInTheBackgroundKey =>
-      _getFromDisk(AppGoneInTheBackgroundKey) ?? false;
+      _getFromDisk(appGoneInTheBackgroundKey) ?? false;
   set hasAppGoneInTheBackgroundKey(bool value) =>
-      _saveToDisk(AppGoneInTheBackgroundKey, value);
+      _saveToDisk(appGoneInTheBackgroundKey, value);
 
   bool get hasPhoneProtectionEnabled =>
-      _getFromDisk(PhoneProtectedKey) ?? false;
+      _getFromDisk(phoneProtectedKey) ?? false;
   set hasPhoneProtectionEnabled(bool value) =>
-      _saveToDisk(PhoneProtectedKey, value);
+      _saveToDisk(phoneProtectedKey, value);
 
   bool get hasInAppBiometricAuthEnabled =>
-      _getFromDisk(InAppBiometricAuthKey) ?? false;
+      _getFromDisk(inAppBiometricAuthKey) ?? false;
   set hasInAppBiometricAuthEnabled(bool value) =>
-      _saveToDisk(InAppBiometricAuthKey, value);
+      _saveToDisk(inAppBiometricAuthKey, value);
 
 // is cancel biometric authentication
   bool get hasCancelledBiometricAuth =>
-      _getFromDisk(CancelBiometricAuthKey) ?? false;
+      _getFromDisk(cancelBiometricAuthKey) ?? false;
   set hasCancelledBiometricAuth(bool value) =>
-      _saveToDisk(CancelBiometricAuthKey, value);
+      _saveToDisk(cancelBiometricAuthKey, value);
 
 /*----------------------------------------------------------------------
                 Notice Dialog getter/setter
 ----------------------------------------------------------------------  */
   bool get isNoticeDialogDisplay =>
-      _getFromDisk(NoticeDialogDisplayKey) ?? false;
+      _getFromDisk(noticeDialogDisplayKey) ?? false;
 
   set isNoticeDialogDisplay(bool value) =>
-      _saveToDisk(NoticeDialogDisplayKey, value);
+      _saveToDisk(noticeDialogDisplayKey, value);
 
 /*----------------------------------------------------------------------
                 Showcase View getter/setter
 ----------------------------------------------------------------------  */
-  bool get isShowCaseView => _getFromDisk(ShowCaseViewKey) ?? false;
+  bool get isShowCaseView => _getFromDisk(showCaseViewKey) ?? false;
 
-  set isShowCaseView(bool value) => _saveToDisk(ShowCaseViewKey, value);
+  set isShowCaseView(bool value) => _saveToDisk(showCaseViewKey, value);
 
 /*----------------------------------------------------------------------
                 Is HK server getter/setter
 ----------------------------------------------------------------------  */
-  bool get isHKServer => _getFromDisk(HKServerKey) ?? false;
+  bool get isHKServer => _getFromDisk(hKServerKey) ?? false;
 
-  set isHKServer(bool value) => _saveToDisk(HKServerKey, value);
+  set isHKServer(bool value) => _saveToDisk(hKServerKey, value);
 
 /*----------------------------------------------------------------------
                 Is USD server getter/setter
 ----------------------------------------------------------------------  */
-  bool get isUSServer => _getFromDisk(USServerKey) ?? false;
+  bool get isUSServer => _getFromDisk(uSServerKey) ?? false;
 
-  set isUSServer(bool value) => _saveToDisk(USServerKey, value);
+  set isUSServer(bool value) => _saveToDisk(uSServerKey, value);
 
 /*----------------------------------------------------------------------
                 Wallet balance body
 ----------------------------------------------------------------------  */
-  String get walletBalancesBody => _getFromDisk(WalletBalancesBodyKey) ?? '';
+  String get walletBalancesBody => _getFromDisk(walletBalancesBodyKey) ?? '';
 
   set walletBalancesBody(String value) =>
-      _saveToDisk(WalletBalancesBodyKey, value);
+      _saveToDisk(walletBalancesBodyKey, value);
 
 /*----------------------------------------------------------------------
                 Fav wallet coins
 ----------------------------------------------------------------------  */
-  String get favWalletCoins => _getFromDisk(FavWalletCoinsKey) ?? '';
+  String get favWalletCoins => _getFromDisk(favWalletCoinsKey) ?? '';
 
-  set favWalletCoins(String value) => _saveToDisk(FavWalletCoinsKey, value);
+  set favWalletCoins(String value) => _saveToDisk(favWalletCoinsKey, value);
 
 /*----------------------------------------------------------------------
                     Token List
 ----------------------------------------------------------------------  */
-  List<String> get tokenList => _getFromDisk(TokenListKey) ?? false;
+  List<String> get tokenList => _getFromDisk(tokenListKey) ?? false;
 
-  set tokenList(List<String> value) => _saveToDisk(TokenListKey, value);
+  set tokenList(List<String> value) => _saveToDisk(tokenListKey, value);
 
 /*----------------------------------------------------------------------
                 Showcase View getter/setter
 ----------------------------------------------------------------------  */
-  bool get isFavCoinTabSelected => _getFromDisk(FavCoinTabSelectedKey) ?? false;
+  bool get isFavCoinTabSelected => _getFromDisk(favCoinTabSelectedKey) ?? false;
 
   set isFavCoinTabSelected(bool value) =>
-      _saveToDisk(FavCoinTabSelectedKey, value);
+      _saveToDisk(favCoinTabSelectedKey, value);
 }

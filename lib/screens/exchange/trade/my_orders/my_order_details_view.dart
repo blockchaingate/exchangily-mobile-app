@@ -72,7 +72,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                                 size: 16,
                               ),
                               onPressed: () {
-                                print('closed orders');
+                                debugPrint('closed orders');
                               }))
                 ],
               );

@@ -52,13 +52,13 @@ class SettingsView extends StatelessWidget {
               // : model.isShowCaseOnce == false
               //     ? ShowCaseWidget(
               //         onStart: (index, key) {
-              //           print('onStart: $index, $key');
+              //           debugPrint('onStart: $index, $key');
               //         },
               //         onComplete: (index, key) {
-              //           print('onComplete: $index, $key');
+              //           debugPrint('onComplete: $index, $key');
               //         },
               //         onFinish: () async {
-              //           // print('FINISH, set isShowCaseOnce to true as we have shown user the showcase dialogs');
+              //           // debugPrint('FINISH, set isShowCaseOnce to true as we have shown user the showcase dialogs');
               //           // await model.getStoredDataByKeys('isShowCaseOnce',
               //           //     isSetData: true, value: true);
               //         },
@@ -95,7 +95,7 @@ class SettingsWidget extends StatelessWidget {
     GlobalKey _two = GlobalKey();
     model.one = _one;
     model.two = _two;
-    print('isShow _SettingsWidgetState ${model.isShowCaseOnce}');
+    debugPrint('isShow _SettingsWidgetState ${model.isShowCaseOnce}');
     model.showcaseEvent(context);
     // WidgetsBinding.instance
     //   .addPostFrameCallback((_) => widget.model.showcaseEvent(context));
@@ -526,7 +526,8 @@ class SettingsContainer extends StatelessWidget {
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     if (!isProduction)
-                      const Text(' Debug', style: TextStyle(color: Colors.white))
+                      const Text(' Debug',
+                          style: TextStyle(color: Colors.white))
                   ],
                 )),
               ),

@@ -84,11 +84,11 @@ class AddGasViewModel extends FutureViewModel {
     if (utxos != null) {
       utxos.forEach((utxo) {
         var utxoValue = utxo['value'];
-        print(utxoValue);
+        debugPrint(utxoValue);
         // double utxoValueDouble = bigNum2Double(utxo['value']);
-        // print('utxoValueDouble $utxoValueDouble');
+        // debugPrint('utxoValueDouble $utxoValueDouble');
         var t = Decimal.fromInt(utxoValue) / Decimal.parse('1e8');
-        //  print(' t ${t.toDouble()}');
+        //  debugPrint(' t ${t.toDouble()}');
         sumUtxos = sumUtxos + t.toDouble();
       });
     }
@@ -194,7 +194,7 @@ class AddGasViewModel extends FutureViewModel {
       return;
     }
 
-    print(contractInfo);
+    debugPrint(contractInfo);
 
     int utxosNeeded = 0;
 
@@ -229,11 +229,11 @@ class AddGasViewModel extends FutureViewModel {
 
     for (var utxo in utxos) {
       var utxoValue = utxo['value'];
-      print(utxoValue);
+      debugPrint(utxoValue);
       // double utxoValueDouble = bigNum2Double(utxo['value']);
-      // print('utxoValueDouble $utxoValueDouble');
+      // debugPrint('utxoValueDouble $utxoValueDouble');
       var t = Decimal.fromInt(utxoValue) / Decimal.parse('1e8');
-      //  print(' t ${t.toDouble()}');
+      //  debugPrint(' t ${t.toDouble()}');
       sumUtxos = sumUtxos + t.toDouble();
       if (totalAmount <= sumUtxos) {
         utxosNeeded = i;

@@ -158,9 +158,9 @@ class OrderList {
   factory OrderList.fromJson(List<dynamic> parsedJson) {
     List<OrderModel> orders = <OrderModel>[];
     for (var i in parsedJson) {
-      // print('raw orders ${i}');
+      // debugPrint('raw orders ${i}');
       OrderModel order = OrderModel.fromJson(i);
-      //  print('ready for ui orders ${order.toJson()}');
+      //  debugPrint('ready for ui orders ${order.toJson()}');
       orders.add(order);
     }
     return OrderList(orders: orders);

@@ -4,6 +4,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_mo
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
+import 'package:flutter/widgets.dart';
 import 'package:observable_ish/value/value.dart';
 import 'package:stacked/stacked.dart';
 
@@ -16,7 +17,8 @@ class OrderService with ReactiveServiceMixin {
   List<OrderModel> _orders = [];
   List<OrderModel> get orders => _orders;
 
-  final RxValue<List<OrderModel>> _singlePairOrders = RxValue<List<OrderModel>>([]);
+  final RxValue<List<OrderModel>> _singlePairOrders =
+      RxValue<List<OrderModel>>([]);
   List<OrderModel> get singlePairOrders => _singlePairOrders.value;
 
   final RxValue<bool> _isShowAllOrders = RxValue<bool>(false);
@@ -32,7 +34,7 @@ class OrderService with ReactiveServiceMixin {
 
   List<OrderModel> orderAggregation(List<OrderModel> passedOrders) {
     List<OrderModel> result = [];
-    print('passed orders length ${passedOrders.length}');
+    debugPrint('passed orders length ${passedOrders.length}');
     double prevQuantity = 0.0;
     List<int> indexArray = [];
     double prevPrice = 0;

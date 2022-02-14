@@ -1,5 +1,6 @@
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:flutter/widgets.dart';
 
 final dogeCoinTestnetNetwork = BitcoinFlutter.NetworkType(
     messagePrefix: 'Dogecoin Signed Message:\n',
@@ -15,8 +16,7 @@ final dogeCoinTestnetNetwork = BitcoinFlutter.NetworkType(
 
 final dogeCoinMainnetNetwork = BitcoinFlutter.NetworkType(
     messagePrefix: 'Dogecoin Signed Message:\n',
-    bip32:
-        BitcoinFlutter.Bip32Type(public: 0x02facafd, private: 0x02fac398),
+    bip32: BitcoinFlutter.Bip32Type(public: 0x02facafd, private: 0x02fac398),
     pubKeyHash: 0x1e,
     scriptHash: 0x16,
     wif: 0x9e);
@@ -31,7 +31,7 @@ generateDogeAddress(root, {index = 0}) async {
           network: environment["chains"]["DOGE"]["network"])
       .data
       .address;
-  print('ticker: Doge --  address: $address');
+  debugPrint('ticker: Doge --  address: $address');
   return address;
 }
 

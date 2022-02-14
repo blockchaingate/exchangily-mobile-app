@@ -81,7 +81,7 @@ class _SmartContractState extends State<SmartContract> {
   }
 
   void changedDropDownItem(String selectedFunction) {
-    print(
+    debugPrint(
         "Selected function $selectedFunction, we are going to refresh the UI");
     var _inputs;
     var _payable = false;
@@ -160,10 +160,11 @@ class _SmartContractState extends State<SmartContract> {
                 TextField(
                   decoration: InputDecoration(
                     enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(0XFF871fff), width: 1.0)),
+                        borderSide:
+                            BorderSide(color: Color(0XFF871fff), width: 1.0)),
                     hintText: AppLocalizations.of(context).enterAddress,
-                    hintStyle: const TextStyle(fontSize: 20.0, color: Colors.grey),
+                    hintStyle:
+                        const TextStyle(fontSize: 20.0, color: Colors.grey),
                   ),
                   controller: smartContractAddressController,
                   style: const TextStyle(fontSize: 16.0, color: Colors.white),
@@ -176,7 +177,8 @@ class _SmartContractState extends State<SmartContract> {
                     style: const TextStyle(color: Colors.grey, fontSize: 18.0)),
                 const SizedBox(height: 10),
                 Text(_smartContractName,
-                    style: const TextStyle(color: Colors.white, fontSize: 18.0)),
+                    style:
+                        const TextStyle(color: Colors.white, fontSize: 18.0)),
                 const SizedBox(height: 20),
                 Text(AppLocalizations.of(context).function,
                     style: const TextStyle(color: Colors.grey, fontSize: 18.0)),
@@ -207,8 +209,8 @@ class _SmartContractState extends State<SmartContract> {
                               hintStyle:
                                   TextStyle(fontSize: 20.0, color: Colors.grey),
                             ),
-                            style:
-                                const TextStyle(fontSize: 16.0, color: Colors.white),
+                            style: const TextStyle(
+                                fontSize: 16.0, color: Colors.white),
                           ),
                         ],
                       ),
@@ -229,8 +231,8 @@ class _SmartContractState extends State<SmartContract> {
                               hintStyle:
                                   TextStyle(fontSize: 20.0, color: Colors.grey),
                             ),
-                            style:
-                                const TextStyle(fontSize: 16.0, color: Colors.white),
+                            style: const TextStyle(
+                                fontSize: 16.0, color: Colors.white),
                           ),
                         ],
                       )
@@ -254,7 +256,7 @@ class _SmartContractState extends State<SmartContract> {
                     } else {
                       execContract();
                     }
-                    //   print(res);
+                    //   debugPrint(res);
                   },
                   child: Text(
                     AppLocalizations.of(context).confirm,

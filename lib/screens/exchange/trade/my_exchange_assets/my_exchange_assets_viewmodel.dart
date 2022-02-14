@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:flutter/widgets.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
@@ -37,7 +38,7 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
     setBusyForObject(exchangeBalance, true);
     exchangeBalances = data;
     for (var element in exchangeBalances) {
-      print(element.toJson());
+      debugPrint(element.toJson().toString());
       if (element.ticker.isEmpty) {
         await tokenListDatabaseService
             .getTickerNameByCoinType(element.coinType)
@@ -67,7 +68,7 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
     setBusy(true);
 
     await getSingleCoinExchangeBalance(tickerName).then((value) {
-      print('exchangeBalance using api ${value.toJson()}');
+      debugPrint('exchangeBalance using api ${value.toJson()}');
       exchangeBalance = value;
     });
     if (exchangeBalance.lockedAmount == null) {
@@ -77,7 +78,7 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
           log.w('singleCoinExchangeBalance $coin');
           exchangeBalance.unlockedAmount = coin['amount'];
           exchangeBalance.lockedAmount = coin['lockedAmount'];
-          print(
+          debugPrint(
               'exchangeBalance using all coins for loop ${exchangeBalance.toJson()}');
         }
       }

@@ -51,11 +51,11 @@ class VersionService {
 
     String version = packageInfo.version;
 
-    print('My os: $os, my version: $version ');
+    debugPrint('My os: $os, my version: $version ');
     try {
       String fullURL =
           url + "?version=" + version + "&os=" + os + "&app=" + app;
-      print("fullURL: " + fullURL);
+      debugPrint("fullURL: " + fullURL);
       var response = await client.get(fullURL);
       var json = jsonDecode(response.body);
       if (json != null) {
@@ -130,11 +130,11 @@ class VersionService {
           // PackageInfo packageInfo = await PackageInfo.fromPlatform();
           // String userVersion = (packageInfo.version).toString();
           Version currentVersion = Version.parse(res['userVersion']);
-          print("userVersion: " + res['userVersion']);
+          debugPrint("userVersion: " + res['userVersion']);
 
           Version latestVersion = Version.parse(res['data']['version']);
 
-          print("latestVersion: " + res['data']['version']);
+          debugPrint("latestVersion: " + res['data']['version']);
 
           if (res['status'] == 'good' && latestVersion > currentVersion) {
             _showMyDialog(res['data'], context, res['userVersion']);

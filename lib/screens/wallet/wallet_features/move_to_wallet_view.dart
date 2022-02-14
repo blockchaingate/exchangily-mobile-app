@@ -39,11 +39,11 @@ class MoveToWalletScreen extends StatelessWidget {
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async {
-          print('is Alert ${model.isAlert}');
+          debugPrint('is Alert ${model.isAlert}');
           if (model.isAlert) {
             Navigator.of(context, rootNavigator: true).pop();
             model.isAlert = false;
-            print('i Alert in if ${model.isAlert}');
+            debugPrint('i Alert in if ${model.isAlert}');
           } else {
             Navigator.of(context).pop();
           }
@@ -82,8 +82,8 @@ class MoveToWalletScreen extends StatelessWidget {
                           onChanged: (String amount) {
                             model.updateTransFee();
                           },
-                          keyboardType:
-                              const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
                           inputFormatters: [
                             DecimalTextInputFormatter(
                                 decimalRange: model.token.decimal,
@@ -377,23 +377,23 @@ class MoveToWalletScreen extends StatelessWidget {
                                   Expanded(
                                       flex: 5,
                                       child: Padding(
-                                          padding:
-                                              const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              20, 0, 0, 0),
                                           child: TextField(
                                               controller: model
                                                   .kanbanGasPriceTextController,
                                               onChanged: (String amount) {
                                                 model.updateTransFee();
                                               },
-                                              keyboardType:
-                                                  const TextInputType.numberWithOptions(
-                                                      decimal:
-                                                          true), // numnber keyboard
+                                              keyboardType: const TextInputType.numberWithOptions(
+                                                  decimal:
+                                                      true), // numnber keyboard
                                               decoration: InputDecoration(
-                                                  focusedBorder: UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: globals
-                                                              .primaryColor)),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: globals
+                                                                  .primaryColor)),
                                                   enabledBorder: const UnderlineInputBorder(
                                                       borderSide: BorderSide(
                                                           color: globals.grey)),
@@ -404,11 +404,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                       .copyWith(
                                                           fontWeight:
                                                               FontWeight.w300)),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5
-                                                  .copyWith(
-                                                      fontWeight: FontWeight.w300))))
+                                              style: Theme.of(context).textTheme.headline5.copyWith(fontWeight: FontWeight.w300))))
                                 ],
                               ),
                               // Kanban Gas Limit
@@ -429,8 +425,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                   Expanded(
                                       flex: 5,
                                       child: Padding(
-                                          padding:
-                                              const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              20, 0, 0, 0),
                                           child: TextField(
                                               controller: model
                                                   .kanbanGasLimitTextController,
@@ -440,11 +436,10 @@ class MoveToWalletScreen extends StatelessWidget {
                                               keyboardType: TextInputType
                                                   .number, // numnber keyboard
                                               decoration: InputDecoration(
-                                                  focusedBorder:
-                                                      UnderlineInputBorder(
-                                                          borderSide: BorderSide(
-                                                              color: globals
-                                                                  .primaryColor)),
+                                                  focusedBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: globals
+                                                              .primaryColor)),
                                                   enabledBorder: const UnderlineInputBorder(
                                                       borderSide: BorderSide(
                                                           color: globals.grey)),
@@ -459,8 +454,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   .textTheme
                                                   .headline5
                                                   .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w300)))),
+                                                      fontWeight: FontWeight.w300)))),
                                 ],
                               ),
                               UIHelper.verticalSpaceSmall,

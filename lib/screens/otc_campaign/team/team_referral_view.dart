@@ -15,7 +15,7 @@ class CampaignTeamReferralView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(
+    debugPrint(
         'rewardDetails $rewardDetails== members length ${rewardDetails['members'].length}');
     return BaseScreen<TeamRewardDetailsScreenState>(
       onModelReady: (model) async {

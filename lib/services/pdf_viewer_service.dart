@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PdfViewerService {
@@ -15,7 +16,7 @@ class PdfViewerService {
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    print('$path/assets/pdf/campaign/guide-en.pdf');
+    debugPrint('$path/assets/pdf/campaign/guide-en.pdf');
     return File('$path/assets/pdf/campaign/guide-en.pdf');
   }
 
@@ -32,7 +33,7 @@ class PdfViewerService {
   }
 
   void loadPdf() async {
-    print('in load');
+    debugPrint('in load');
     //await writeCounter(await fetchPost());
     await existsFile();
     path = (await _localFile).path;

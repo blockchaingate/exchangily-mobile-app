@@ -40,7 +40,7 @@ class BtcUtils {
 
     address = HEX.encode(bytes);
     address = address + checksum;
-    // print('address for exg=' + address);
+    // debugPrint('address for exg=' + address);
     return address;
   }
 

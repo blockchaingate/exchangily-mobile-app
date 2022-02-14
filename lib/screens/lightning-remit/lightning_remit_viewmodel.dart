@@ -75,7 +75,7 @@ class LightningRemitViewmodel extends FutureViewModel {
   }
 
   test() {
-    print(storageService.tokenList.length);
+    debugPrint(storageService.tokenList.length.toString());
   }
 /*----------------------------------------------------------------------
                           INIT
@@ -95,22 +95,22 @@ class LightningRemitViewmodel extends FutureViewModel {
     setBusyForObject(exchangeBalances, true);
     exchangeBalances = data;
     for (var element in exchangeBalances) {
-      print(element.toJson());
+      debugPrint(element.toJson().toString());
       if (element.ticker.isEmpty) {
         await tokenListDatabaseService
             .getTickerNameByCoinType(element.coinType)
             .then((ticker) {
           //storageService.tokenList.forEach((newToken){
-          print(ticker);
+          debugPrint(ticker);
           // var json = jsonDecode(newToken);
           // Token token = Token.fromJson(json);
-          // if (token.tokenType == element.coinType){ print(token.tickerName);
+          // if (token.tokenType == element.coinType){ debugPrint(token.tickerName);
           setBusy(true);
           element.ticker = ticker; //}
           setBusy(false);
         });
 //element.ticker =tradeService.setTickerNameByType(element.coinType);
-        print('exchanageBalanceModel tickerName ${element.ticker}');
+        debugPrint('exchanageBalanceModel tickerName ${element.ticker}');
       }
     }
     setBusyForObject(exchangeBalances, false);
@@ -170,7 +170,7 @@ class LightningRemitViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   coinListBottomSheet(BuildContext context1) {
     if (isShowBottomSheet) {
-      print('Bottom Sheet already visible');
+      debugPrint('Bottom Sheet already visible');
 
       navigationService.goBack();
     } else {
@@ -305,7 +305,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     setBusy(true);
     tickerName = name;
 
-    print('tickerName $tickerName');
+    debugPrint('tickerName $tickerName');
     setBusy(false);
     // if (isShowBottomSheet) navigationService.goBack();
     // changeBottomSheetStatus();
@@ -313,12 +313,13 @@ class LightningRemitViewmodel extends FutureViewModel {
 
   updateSelectedTickernameIOS(int index, double updatedQuantity) {
     setBusy(true);
-    print('INDEX ${index + 1} ---- coins length ${exchangeBalances.length}');
+    debugPrint(
+        'INDEX ${index + 1} ---- coins length ${exchangeBalances.length}');
     if (index + 1 <= exchangeBalances.length) {
       tickerName = exchangeBalances.elementAt(index).ticker;
     }
     quantity = updatedQuantity;
-    print('IOS tickerName $tickerName --- quantity $quantity');
+    debugPrint('IOS tickerName $tickerName --- quantity $quantity');
     setBusy(false);
     if (isShowBottomSheet) navigationService.goBack();
     changeBottomSheetStatus();
@@ -353,7 +354,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     setBusy(true);
 
     String kbAddress = walletService.toKbPaymentAddress(fabAddress);
-    print('KBADDRESS $kbAddress');
+    debugPrint('KBADDRESS $kbAddress');
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -561,7 +562,8 @@ class LightningRemitViewmodel extends FutureViewModel {
                             String filePath = "${dir.path}/$receiveFileName";
                             File file = File(filePath);
 
-                            Future.delayed(const Duration(milliseconds: 30), () {
+                            Future.delayed(const Duration(milliseconds: 30),
+                                () {
                               sharedService
                                   .capturePng(globalKey: globalKey)
                                   .then((byteData) {
@@ -600,7 +602,7 @@ class LightningRemitViewmodel extends FutureViewModel {
 
   transfer() async {
     setBusy(true);
-    print(walletService.isValidKbAddress(addressController.text));
+    debugPrint(walletService.isValidKbAddress(addressController.text));
     if (walletService.isValidKbAddress(addressController.text)) {
       if (amountController.text == '') {
         sharedService.alertDialog(AppLocalizations.of(context).validationError,
@@ -612,7 +614,7 @@ class LightningRemitViewmodel extends FutureViewModel {
       ExchangeBalanceModel _selectedExchangeBal = exchangeBalances
           .firstWhere((element) => element.ticker == tickerName);
       // int coinType = getCoinTypeIdByName(tickerName);
-      print(_selectedExchangeBal.coinType);
+      debugPrint(_selectedExchangeBal.coinType.toString());
       double amount = double.parse(amountController.text);
       double selectedCoinBalance = _selectedExchangeBal.unlockedAmount;
       if (selectedCoinBalance <= 0.0 || amount > selectedCoinBalance) {

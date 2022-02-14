@@ -98,7 +98,8 @@ class SharedService {
   getContractAddressFromDatabase(String tickerName) async {
     String smartContractAddress = '';
     if (smartContractAddress == null) {
-      print('$tickerName contract is null so fetching from token database');
+      debugPrint(
+          '$tickerName contract is null so fetching from token database');
       await tokenListDatabaseService
           .getContractAddressByTickerName(tickerName)
           .then((value) {
@@ -110,7 +111,7 @@ class SharedService {
           }
         }
       });
-      print('official smart contract address $smartContractAddress');
+      debugPrint('official smart contract address $smartContractAddress');
     }
     return smartContractAddress;
   }
@@ -183,7 +184,7 @@ class SharedService {
         }
       });
     }
-    print('returning result');
+    debugPrint('returning result');
     return result;
   }
 /*---------------------------------------------------
@@ -340,7 +341,7 @@ class SharedService {
   //                     ),
   //                     onPressed: () {
   //                       Navigator.of(context).pop(false);
-  //                       print('res -- False');
+  //                       debugPrint('res -- False');
   //                       return false;
   //                     },
   //                   ),
@@ -351,7 +352,7 @@ class SharedService {
   //                   style: TextStyle(color: white, fontSize: 14)),
   //               onPressed: () {
   //                 Navigator.of(context).pop(false);
-  //                 print('res -- True');
+  //                 debugPrint('res -- True');
   //                 return true;
   //               },
   //             )
@@ -467,7 +468,6 @@ class SharedService {
                               activeColor: globals.primaryColor,
                               onChanged: (bool value) async {
                                 setState(() => checkBoxValue = value);
-                                print(!checkBoxValue);
 
                                 /// user click on do not show which is negative means false
                                 /// so to make it work it needs to be opposite of the orginal value
@@ -507,8 +507,7 @@ class SharedService {
                                 color: globals.primaryColor),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                Clipboard.setData(
-                                    ClipboardData(text: message));
+                                Clipboard.setData(ClipboardData(text: message));
                               }),
                       ),
                     )
@@ -540,7 +539,7 @@ class SharedService {
                               if (path == '' || path == null) {
                                 Navigator.of(context).pop(false);
                               } else {
-                                print('PATH $path');
+                                debugPrint('PATH $path');
                                 Navigator.of(context).pop(false);
                                 navigationService
                                     .navigateUsingpopAndPushedNamed(path,
@@ -602,7 +601,7 @@ class SharedService {
 
     lang = storageService.language;
     if (lang == null || lang == '') {
-      print('language empty');
+      debugPrint('language empty');
     } else {
       Navigator.pushNamed(context, '/walletSetup');
     }

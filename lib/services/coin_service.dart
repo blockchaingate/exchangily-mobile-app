@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:flutter/widgets.dart';
 
 class CoinService {
   final log = getLogger('CoinService');
@@ -20,26 +21,30 @@ class CoinService {
     if (tokenType == 'FAB') {
       String fabTokensOfficialAddress =
           environment['addresses']['exchangilyOfficial'][0]['address'];
-      print('fabTokensOfficialAddress $fabTokensOfficialAddress for $coinName');
+      debugPrint(
+          'fabTokensOfficialAddress $fabTokensOfficialAddress for $coinName');
       return fabTokensOfficialAddress;
     }
     if (tokenType == 'TRX' || tokenType == 'TRON') {
       String trxTokensOfficialAddress =
           environment['addresses']['exchangilyOfficial'][9]['address'];
-      print('TRXTokensOfficialAddress $trxTokensOfficialAddress for $coinName');
+      debugPrint(
+          'TRXTokensOfficialAddress $trxTokensOfficialAddress for $coinName');
       return trxTokensOfficialAddress;
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       var ethTokenOfficialAddress =
           environment['addresses']['exchangilyOfficial'][3]['address'];
 
-      print('ethTokenOfficialAddress $ethTokenOfficialAddress for $coinName');
+      debugPrint(
+          'ethTokenOfficialAddress $ethTokenOfficialAddress for $coinName');
       return ethTokenOfficialAddress;
     } else {
       var address = environment['addresses']['exchangilyOfficial']
           .where((addr) => addr['name'] == coinName)
           .toList();
       String majorsOfficialAddress = address[0]['address'];
-      print('majors official address $majorsOfficialAddress for $coinName');
+      debugPrint(
+          'majors official address $majorsOfficialAddress for $coinName');
       return majorsOfficialAddress;
     }
   }
@@ -83,7 +88,7 @@ class CoinService {
     }
     // if res not found in local storage then call new token list api
     if (res == null) {
-      print('res $res -- coin type $coinType -- ticker $tickerName');
+      debugPrint('res $res -- coin type $coinType -- ticker $tickerName');
       await apiService.getTokenListUpdates().then((newTokens) {
         for (var j = 0; j < newTokens.length; j++) {
           if (newTokens[j].tickerName == tickerName) {
@@ -110,7 +115,8 @@ class CoinService {
     if (smartContractAddress == null) {
       // check local DB
       await getCoinTypeByTickerName(tickerName).then((value) => ct = value);
-      print('$tickerName contract is null so fetching from token database');
+      debugPrint(
+          '$tickerName contract is null so fetching from token database');
       await tokenListDatabaseService
           .getContractAddressByCoinType(ct)
           .then((value) {
@@ -136,7 +142,7 @@ class CoinService {
     //       }
     //     });
     //   });
-    print('official smart contract address $smartContractAddress');
+    debugPrint('official smart contract address $smartContractAddress');
     return smartContractAddress;
   }
 
@@ -148,7 +154,7 @@ class CoinService {
     int coinType = 0;
     MapEntry<int, String> hardCodedCoinList;
     bool isOldToken = newCoinTypeMap.containsValue(tickerName);
-    print('is old token value $isOldToken');
+    debugPrint('is old token value $isOldToken');
     if (isOldToken) {
       hardCodedCoinList = newCoinTypeMap.entries
           .firstWhere((coinTypeMap) => coinTypeMap.value == tickerName);
@@ -169,7 +175,7 @@ class CoinService {
       //     .getCoinTypeByTickerName(tickerName)
       //     .then((value) => coinType = value);
     }
-    print('ticker $tickerName -- coin type $coinType');
+    debugPrint('ticker $tickerName -- coin type $coinType');
     return coinType;
   }
 }

@@ -92,15 +92,15 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
         // (!tappedMnemonicList.contains(singleWord)) &&
         ) {
       if (!lastIndexList.contains(i)) {
-        print('lastIndexList $lastIndexList');
-        print('if : adding element ');
+        debugPrint('lastIndexList $lastIndexList');
+        debugPrint('if : adding element ');
         tappedMnemonicList.add(singleWord);
         tapTextControllerList[i].text =
             tappedMnemonicList.length.toString() + ') ' + singleWord;
         lastIndexList.add(i);
       }
       // else {
-      //   print('else : remove this element and number bracket');
+      //   debugPrint('else : remove this element and number bracket');
       //   tappedMnemonicList.removeLast();
       //   tapTextControllerList[i].text = singleWord;
       // }
@@ -172,8 +172,8 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
   verifyMnemonic(controller, context, count, routeName) {
     userTypedMnemonicList.clear();
 
-    print(routeName);
-    print(isTap);
+    debugPrint(routeName);
+    debugPrint(isTap.toString());
     if (routeName == 'import') isTap = false;
     for (var i = 0; i < count; i++) {
       String mnemonicWord = isTap ? controller[i] : controller[i].text;

@@ -60,8 +60,8 @@ class RedepositViewModel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   click(bigInt) {
     var b = Decimal.parse(bigInt) / Decimal.parse('1e18');
-    print('b $b');
-    print(NumberUtil().roundDownLastDigit(b.toDouble()));
+    debugPrint('b $b');
+    debugPrint(NumberUtil().roundDownLastDigit(b.toDouble()).toString());
   }
 
   Future getErrDeposit() async {
@@ -76,7 +76,7 @@ class RedepositViewModel extends FutureViewModel {
         var coinType = item['coinType'];
 
         String tickerNameByCointype = newCoinTypeMap[coinType];
-        print('tickerNameByCointype $tickerNameByCointype');
+        debugPrint('tickerNameByCointype $tickerNameByCointype');
         if (tickerNameByCointype == null) {
           await tokenListDatabaseService.getAll().then((tokenList) {
             if (tokenList != null) {
@@ -207,8 +207,8 @@ class RedepositViewModel extends FutureViewModel {
       var signedMess = await CoinUtils().signedMessage(
           originalMessage, seed, walletInfo.tickerName, walletInfo.tokenType);
 
-      var txKanbanHex = await getTxKanbanHex(amountInBigIntByApi,
-          keyPairKanban, nonce, coinType, transactionID, signedMess,
+      var txKanbanHex = await getTxKanbanHex(amountInBigIntByApi, keyPairKanban,
+          nonce, coinType, transactionID, signedMess,
           chainType: walletInfo.tokenType);
 
       var resRedeposit = await kanbanUtils.submitReDeposit(txKanbanHex);

@@ -10,7 +10,6 @@ class HtmlPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         title: Text(
           htmlData["title"],
@@ -25,9 +24,8 @@ class HtmlPage extends StatelessWidget {
           //Optional parameters:
           style: {
             "html": Style(
-              backgroundColor: Colors.black12,
-              color: const Color(0xfff2f2f2)
-            ),
+                backgroundColor: Colors.black12,
+                color: const Color(0xfff2f2f2)),
 //            "h1": Style(
 //              textAlign: TextAlign.center,
 //            ),
@@ -47,13 +45,13 @@ class HtmlPage extends StatelessWidget {
             "var": Style(fontFamily: 'serif'),
           },
           onLinkTap: (url) {
-            print("Opening $url...");
+            debugPrint("Opening $url...");
           },
           onImageTap: (src) {
-            print(src);
+            debugPrint(src);
           },
           onImageError: (exception, stackTrace) {
-            print(exception);
+            debugPrint(exception);
           },
         ),
       ),

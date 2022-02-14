@@ -15,8 +15,7 @@ class LifeCycleManager extends StatefulWidget {
 
 class _LifeCycleManagerState extends State<LifeCycleManager>
     with WidgetsBindingObserver {
-
-        List<StoppableService> services = [
+  List<StoppableService> services = [
     locator<TradeService>(),
     locator<MarketsViewModel>(),
     locator<TradeViewModel>()
@@ -36,8 +35,8 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('state = $state');
-     for (var service in services) {
+    debugPrint('state = $state');
+    for (var service in services) {
       if (state == AppLifecycleState.resumed) {
         service.start();
       } else {

@@ -47,13 +47,19 @@ class TxHisotryCardWidget extends StatelessWidget {
                           child: transaction.tickerName.contains('(')
                               ? Column(
                                   children: [
-                                    Text(
-                                        transaction.tickerName.split('(')[0],
+                                    Text(transaction.tickerName.split('(')[0],
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6),
                                     Text(
-                                        transaction.tickerName.split('(')[1].substring(0, transaction.tickerName.split('(')[1].length - 1),
+                                        transaction.tickerName
+                                            .split('(')[1]
+                                            .substring(
+                                                0,
+                                                transaction.tickerName
+                                                        .split('(')[1]
+                                                        .length -
+                                                    1),
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2),
@@ -316,7 +322,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       icon: Icon(Icons.more, color: white, size: 14),
                       onPressed: () {
-                        print('tx histoy ${transaction.toJson()}');
+                        debugPrint('tx histoy ${transaction.toJson()}');
                         model.showTxDetailDialog(transaction);
                       }),
                 ),

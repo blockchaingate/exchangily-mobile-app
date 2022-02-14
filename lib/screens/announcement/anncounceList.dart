@@ -25,7 +25,7 @@ class AnnouncementList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseScreen<AnnouncementListScreenState>(
         onModelReady: (model) async {
-          print("announceList page!!!!!");
+          debugPrint("announceList page!!!!!");
           model.context = context;
           await model.init();
         },
@@ -48,14 +48,14 @@ class AnnouncementList extends StatelessWidget {
                             padding: const EdgeInsets.all(10),
                             itemCount: model.announceList.length,
                             itemBuilder: (context, index) {
-                              // print("index: " + index.toString());
-                              // print(model.announceList[index].toString());
-                              // print("isRead: " +
+                              // debugPrint("index: " + index.toString());
+                              // debugPrint(model.announceList[index].toString());
+                              // debugPrint("isRead: " +
                               //     model.announceList[index]['isRead']
                               //         .toString());
                               // model.announceList[index].forEach((k,v){
-                              //   print("key: " +k);
-                              //   print("value: " +v.toString());
+                              //   debugPrint("key: " +k);
+                              //   debugPrint("value: " +v.toString());
                               // });
                               return Card(
                                   color: globals.walletCardColor,
@@ -95,10 +95,12 @@ class AnnouncementList extends StatelessWidget {
                                                   ? Container(
                                                       width: 10,
                                                       height: 10,
-                                                      decoration: const BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color: Colors.red),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color:
+                                                                  Colors.red),
                                                       child: const Center(),
                                                     )
                                                   : Container(),
@@ -110,7 +112,8 @@ class AnnouncementList extends StatelessWidget {
                                                       model.announceList[index]
                                                               ['isRead'] ==
                                                           false),
-                                                  child: const SizedBox(width: 5)),
+                                                  child:
+                                                      const SizedBox(width: 5)),
                                               Text(
                                                   model.announceList[index]
                                                       ["category"],

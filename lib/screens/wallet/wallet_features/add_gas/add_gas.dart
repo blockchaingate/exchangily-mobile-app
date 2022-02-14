@@ -94,11 +94,12 @@ class AddGas extends StatelessWidget {
                             left: 2.0, right: 4.0, top: 2.0),
                         child: Text(
                             '${AppLocalizations.of(context).gas} ${AppLocalizations.of(context).balance}',
-                            style:
-                                const TextStyle(fontSize: 12.0, color: Colors.white)),
+                            style: const TextStyle(
+                                fontSize: 12.0, color: Colors.white)),
                       ),
                       Text(model.gasBalance.toString(),
-                          style: const TextStyle(fontSize: 12.0, color: Colors.white))
+                          style: const TextStyle(
+                              fontSize: 12.0, color: Colors.white))
                     ]),
                     UIHelper.verticalSpaceSmall,
                     Row(children: [
@@ -107,11 +108,12 @@ class AddGas extends StatelessWidget {
                             left: 2.0, right: 4.0, top: 2.0),
                         child: Text(
                             'FAB ${AppLocalizations.of(context).balance}',
-                            style:
-                                const TextStyle(fontSize: 12.0, color: Colors.white)),
+                            style: const TextStyle(
+                                fontSize: 12.0, color: Colors.white)),
                       ),
                       Text(model.fabBalance.toString(),
-                          style: const TextStyle(fontSize: 12.0, color: Colors.white))
+                          style: const TextStyle(
+                              fontSize: 12.0, color: Colors.white))
                     ]),
                     UIHelper.verticalSpaceSmall,
                     // Gas Fee
@@ -120,11 +122,12 @@ class AddGas extends StatelessWidget {
                         padding: const EdgeInsets.only(
                             left: 2.0, right: 4.0, top: 2.0),
                         child: Text(AppLocalizations.of(context).gasFee,
-                            style:
-                                const TextStyle(fontSize: 12.0, color: Colors.white)),
+                            style: const TextStyle(
+                                fontSize: 12.0, color: Colors.white)),
                       ),
                       Text(model.transFee.toString() + ' FAB',
-                          style: const TextStyle(fontSize: 13.0, color: Colors.white))
+                          style: const TextStyle(
+                              fontSize: 13.0, color: Colors.white))
                     ]),
                     // Slider
                     Slider(
@@ -285,7 +288,7 @@ class AddGas extends StatelessWidget {
                                           red,
                                           context)
                                   : model.checkPass(amount, context);
-                              //   print(res);
+                              //   debugPrint(res);
                             },
                             child: Text(
                               AppLocalizations.of(context).confirm,

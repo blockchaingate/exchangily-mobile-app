@@ -14,6 +14,7 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/utils/exaddr.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:flutter/widgets.dart';
 import './string_util.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:hex/hex.dart';
@@ -111,7 +112,7 @@ class AbiUtils {
   specialFixLength(String hexaDecimalCoinType, int length, String chain) {
     var retStr = '';
     int hexaDecimalCoinTypeLength = hexaDecimalCoinType.length;
-    print('hexaDecimalCoinType $hexaDecimalCoinTypeLength');
+    debugPrint('hexaDecimalCoinType $hexaDecimalCoinTypeLength');
     int len2 = length - hexaDecimalCoinTypeLength;
     int finalLength = len2 - 4; // subtract chain hexa length
     if (finalLength > 0) {
@@ -136,7 +137,7 @@ class AbiUtils {
   }
 
   String fix8LengthCoinType(String coinType) {
-    print('fix8LengthCoinType $coinType');
+    debugPrint('fix8LengthCoinType $coinType');
     String result = '';
     const int reqLength = 8;
     int coinTypeLength = coinType.length;
@@ -148,7 +149,7 @@ class AbiUtils {
       }
       result += coinType;
     }
-    print('fix8LengthCoinType result $result');
+    debugPrint('fix8LengthCoinType result $result');
     return result;
   }
 
@@ -254,7 +255,7 @@ class AbiUtils {
     var encodeList =
         uint8ListFromList(rlp.encode(_encodeToRlp(transaction, signature)));
     var finalString = '0x' + HEX.encode(encodeList);
-    // print('finalString===' + finalString);
+    // debugPrint('finalString===' + finalString);
     return finalString;
     /*
   var signed = await ethClient.signTransaction(
