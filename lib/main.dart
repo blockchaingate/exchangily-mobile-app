@@ -47,7 +47,7 @@ Future<void> main() async {
   try {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     await serviceLocator();
-    Logger.level = Level.info;
+    Logger.level = Level.nothing;
     SystemChannels.textInput
         .invokeMethod('TextInput.hide'); // Hides keyboard initially
     // Force user to use only portrait mode until the development of other screen size design
@@ -134,11 +134,11 @@ class MyApp extends StatelessWidget {
               backgroundColor: globals.secondaryColor,
               cardColor: globals.walletCardColor,
               canvasColor: globals.secondaryColor,
-              buttonTheme: ButtonThemeData(
+              buttonTheme: const ButtonThemeData(
                   minWidth: double.infinity,
                   buttonColor: globals.primaryColor,
-                  padding: const EdgeInsets.all(15),
-                  shape: const StadiumBorder(),
+                  padding: EdgeInsets.all(15),
+                  shape: StadiumBorder(),
                   textTheme: ButtonTextTheme.primary),
               fontFamily: 'Roboto',
               textTheme: const TextTheme(

@@ -264,20 +264,21 @@ class WalletDashboardViewModel extends BaseViewModel {
               .customTokens;
 
       selectedCustomTokens = customTokensFromStorage;
-
-      log.w(
-          'selectedCustomTokens length ${selectedCustomTokens.length} --selectedCustomTokens last item ${selectedCustomTokens.last.toJson()}');
-      for (var token in selectedCustomTokens) {
-        log.w('token before adding balance ${token.toJson()}');
-        var balance = await fabUtils.getFabTokenBalanceForABI(
-            Constants.CustomTokenSignatureAbi,
-            token.tokenId,
-            fabAddress,
-            token.decimal);
-        setBusyForObject(selectedCustomTokens, true);
-        token.balance = balance;
-        setBusyForObject(selectedCustomTokens, false);
-        log.i('token after adding balance ${token.toJson()}');
+      if (selectedCustomTokens.isNotEmpty) {
+        log.w(
+            'selectedCustomTokens length ${selectedCustomTokens.length} --selectedCustomTokens last item ${selectedCustomTokens.last.toJson()}');
+        for (var token in selectedCustomTokens) {
+          log.w('token before adding balance ${token.toJson()}');
+          var balance = await fabUtils.getFabTokenBalanceForABI(
+              Constants.CustomTokenSignatureAbi,
+              token.tokenId,
+              fabAddress,
+              token.decimal);
+          setBusyForObject(selectedCustomTokens, true);
+          token.balance = balance;
+          setBusyForObject(selectedCustomTokens, false);
+          log.i('token after adding balance ${token.toJson()}');
+        }
       }
     }
     log.w('Selected custom token list => Finished');

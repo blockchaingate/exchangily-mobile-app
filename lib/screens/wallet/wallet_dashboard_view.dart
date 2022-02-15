@@ -16,7 +16,6 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/constants/ui_var.dart';
-import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
@@ -25,9 +24,7 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmod
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features_view.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
-import 'package:exchangilymobileapp/utils/wallet/total_balance_widget.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
-import 'package:exchangilymobileapp/widgets/network_status.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -37,7 +34,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
-import '../../shared/globals.dart' as globals;
 import 'wallet_features/gas.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
@@ -77,83 +73,95 @@ class WalletDashboardView extends StatelessWidget {
               return Future(() => false);
             },
             child: Scaffold(
-              key: key,
-              endDrawerEnableOpenDragGesture: true,
-              body: GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
-                child: ShowCaseWidget(
-                  onStart: (index, key) {
-                    debugPrint('onStart: $index, $key');
+                key: key,
+                endDrawerEnableOpenDragGesture: true,
+                body: GestureDetector(
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
                   },
-                  onComplete: (index, key) {
-                    debugPrint('onComplete: $index, $key');
-                  },
-                  onFinish: () {
-                    model.storageService.isShowCaseView = false;
+                  child: ShowCaseWidget(
+                    onStart: (index, key) {
+                      debugPrint('onStart: $index, $key');
+                    },
+                    onComplete: (index, key) {
+                      debugPrint('onComplete: $index, $key');
+                    },
+                    onFinish: () {
+                      model.storageService.isShowCaseView = false;
 
-                    model.updateShowCaseViewStatus();
-                  },
-                  builder: Builder(
-                    builder: (context) => mainWidgets(model, context),
+                      model.updateShowCaseViewStatus();
+                    },
+                    builder: Builder(
+                      builder: (context) => mainWidgets(model, context),
+                    ),
                   ),
                 ),
-              ),
-              bottomNavigationBar: BottomNavBar(count: 0),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerFloat,
-              floatingActionButton: model.busy(model.selectedCustomTokens)
-                  ? Container()
-                  : Container(
-                      decoration: BoxDecoration(
-                        color: model.currentTabSelection == 2
-                            ? primaryColor
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(35),
-                      ),
-                      width: 120,
-                      child: model.currentTabSelection == 2
-                          ? IconButton(
-                              iconSize: model.selectedCustomTokens.isNotEmpty
-                                  ? 20
-                                  : 26,
-                              icon: Row(
-                                children: [
-                                  Icon(
-                                    model.selectedCustomTokens.isNotEmpty
-                                        ? Icons.mode_edit_outline_outlined
-                                        : Icons.add,
-                                    color: model.selectedCustomTokens.isNotEmpty
-                                        ? yellow
-                                        : green,
-                                  ),
-                                  Expanded(
-                                    child: model.selectedCustomTokens.isNotEmpty
-                                        ? Text(
-                                            ' ' +
-                                                AppLocalizations.of(context)
-                                                    .editTokenList,
-                                            style: TextStyle(
-                                                color: white,
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        : Text(
-                                            ' ' +
-                                                AppLocalizations.of(context)
-                                                    .addToken,
-                                            style: TextStyle(
-                                                color: white, fontSize: 10)),
-                                  ),
-                                ],
+                bottomNavigationBar: BottomNavBar(count: 0),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
+                floatingActionButton: model.busy(model.selectedCustomTokens)
+                    ? Container()
+                    : Visibility(
+                        visible: model.currentTabSelection == 2,
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: model.currentTabSelection == 2
+                                  ? primaryColor
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(35),
+                            ),
+                            width: model.selectedCustomTokens.isNotEmpty
+                                ? 140
+                                : 120,
+                            child: GestureDetector(
+                              onTap: () => model.showCustomTokensBottomSheet(),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    UIHelper.horizontalSpaceSmall,
+                                    Icon(
+                                      model.selectedCustomTokens.isNotEmpty
+                                          ? Icons.mode_edit_outline_outlined
+                                          : FontAwesomeIcons.plus,
+                                      size:
+                                          model.selectedCustomTokens.isNotEmpty
+                                              ? 16
+                                              : 14,
+                                      color:
+                                          model.selectedCustomTokens.isNotEmpty
+                                              ? yellow
+                                              : green,
+                                    ),
+                                    Expanded(
+                                      child: model
+                                              .selectedCustomTokens.isNotEmpty
+                                          ? Text(
+                                              ' ' +
+                                                  AppLocalizations.of(context)
+                                                      .editTokenList,
+                                              style: const TextStyle(
+                                                  color: white,
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          : Text(
+                                              ' ' +
+                                                  AppLocalizations.of(context)
+                                                      .addToken,
+                                              style: const TextStyle(
+                                                  color: white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold)),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              onPressed: () =>
-                                  model.showCustomTokensBottomSheet(),
-                            )
-                          : Container(),
-                    ),
-            ),
+                            )),
+                      )),
           );
         });
   }
@@ -362,7 +370,7 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
                           height: 40,
                           // decoration: BoxDecoration(
                           //   shape: BoxShape.circle,
-                          //   color: globals.iconBackgroundColor,
+                          //   color: iconBackgroundColor,
                           // ),
                           child: Icon(
                             Icons.mail,
@@ -450,17 +458,16 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                     child: Row(
                       children: <Widget>[
                         model.isHideSmallAmountAssets
-                            ? Icon(
+                            ? const Icon(
                                 Icons.money_off,
                                 semanticLabel: 'Show all Amount Assets',
-                                color: globals.primaryColor,
+                                color: primaryColor,
                               )
                             : Icon(
                                 Icons.attach_money,
                                 semanticLabel: 'Hide Small Amount Assets',
-                                color: model.isShowFavCoins
-                                    ? grey
-                                    : globals.primaryColor,
+                                color:
+                                    model.isShowFavCoins ? grey : primaryColor,
                               ),
                         Container(
                           padding: const EdgeInsets.only(left: 5),
@@ -495,7 +502,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                 : Container(
                     margin: const EdgeInsets.symmetric(vertical: 5.0),
                     decoration: BoxDecoration(
-                        color: globals.primaryColor,
+                        color: primaryColor,
                         borderRadius: BorderRadius.circular(30)),
                     child: SizedBox(
                       width: 120,
@@ -505,7 +512,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                               padding: MaterialStateProperty.all(
                                   const EdgeInsets.all(0))),
                           onPressed: () => model.getFreeFab(),
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.add,
                             size: 18,
                             color: white,
@@ -525,8 +532,8 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
         child:
             // model.isBusy
             // ? Shimmer.fromColors(
-            //     baseColor: globals.primaryColor,
-            //     highlightColor: globals.grey,
+            //     baseColor: primaryColor,
+            //     highlightColor: grey,
             //     child: Row(
             //       children: <Widget>[
             //         Padding(
@@ -534,7 +541,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
             //           child: Icon(
             //             Icons.donut_large,
             //             size: 18,
-            //             color: globals.primaryColor,
+            //             color: primaryColor,
             //           ),
             //         ),
             //         UIHelper.horizontalSpaceSmall,
@@ -549,7 +556,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
             //         MaterialButton(
             //           minWidth: 70.0,
             //           height: 24,
-            //           color: globals.green,
+            //           color: green,
             //           padding: EdgeInsets.all(0),
             //           onPressed: () {},
             //           child: Text(
@@ -574,7 +581,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                   height: 30,
                   child: TextField(
                     enabled: model.isShowFavCoins ? false : true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: primaryColor, width: 1),
                         ),
@@ -610,7 +617,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
 
 //coin list
 Widget coinList(WalletDashboardViewModel model, BuildContext context) {
-  var top = 0.0;
+  // final tabController = TabController(length: 3, vsync: this, initialIndex: 1);
   return DefaultTabController(
       length: 3,
       initialIndex: model.currentTabSelection,
@@ -660,6 +667,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                 pinned: true,
                 delegate: _SliverAppBarDelegate(
                   TabBar(
+                      // controller: ,
                       // labelPadding: EdgeInsets.only(bottom: 14, top: 14),
                       onTap: (int tabIndex) {
                         model.updateTabSelection(tabIndex);
@@ -723,6 +731,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
 
               // Favorite tab
               FavTab(),
+              // custom tokens tab
               model.busy(model.selectedCustomTokens)
                   ? model.sharedService.loadingIndicator()
                   : model.selectedCustomTokens.isEmpty
@@ -747,27 +756,45 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                             UIHelper.verticalSpaceSmall,
                             // symbol balance action text row
                             Container(
-                              color: globals.white,
+                              color: white,
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 5),
                               child: Row(
                                 children: [
-                                  Text(AppLocalizations.of(context).logo),
+                                  Text(
+                                    AppLocalizations.of(context).logo,
+                                    style: const TextStyle(
+                                        color: black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
                                   UIHelper.horizontalSpaceMedium,
                                   Expanded(
                                       flex: 1,
                                       child: Text(
-                                          AppLocalizations.of(context).symbol)),
+                                          AppLocalizations.of(context).symbol,
+                                          style: const TextStyle(
+                                              color: black,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600))),
                                   Expanded(
                                       flex: 3,
                                       child: Text(
                                         AppLocalizations.of(context).balance,
+                                        style: const TextStyle(
+                                            color: black,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600),
                                         textAlign: TextAlign.center,
                                       )),
                                   Expanded(
                                       flex: 1,
                                       child: Text(
-                                          AppLocalizations.of(context).action))
+                                          AppLocalizations.of(context).action,
+                                          style: const TextStyle(
+                                              color: black,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600)))
                                 ],
                               ),
                             ),
@@ -832,8 +859,11 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                   Text(
                                                     customToken.symbol
                                                         .toUpperCase(),
-                                                    style:
-                                                        TextStyle(color: grey),
+                                                    style: const TextStyle(
+                                                        color: grey,
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400),
                                                   ),
                                                   // Text(
                                                   //   customToken.name,
@@ -853,7 +883,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                   : Text(
                                                       customToken.balance
                                                           .toString(),
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           color: white),
                                                       textAlign:
                                                           TextAlign.center,
@@ -898,7 +928,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                                 AppLocalizations.of(
                                                                         context)
                                                                     .receive,
-                                                                style: TextStyle(
+                                                                style: const TextStyle(
                                                                     fontSize:
                                                                         10,
                                                                     color:
@@ -921,7 +951,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                       },
                                                       icon: Column(
                                                         children: [
-                                                          Icon(
+                                                          const Icon(
                                                             Icons.send_rounded,
                                                             color: primaryColor,
                                                           ),
@@ -930,7 +960,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                                 AppLocalizations.of(
                                                                         context)
                                                                     .send,
-                                                                style: TextStyle(
+                                                                style: const TextStyle(
                                                                     fontSize:
                                                                         10,
                                                                     color:
@@ -1055,12 +1085,12 @@ Widget _coinDetailsCard(
               Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                      color: globals.walletCardColor,
+                      color: walletCardColor,
                       borderRadius: BorderRadius.circular(50),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
-                            color: globals.fabLogoColor,
-                            offset: const Offset(1.0, 5.0),
+                            color: fabLogoColor,
+                            offset: Offset(1.0, 5.0),
                             blurRadius: 10.0,
                             spreadRadius: 1.0),
                       ]),
@@ -1093,8 +1123,8 @@ Widget _coinDetailsCard(
                           model.isBusy
                               ? SizedBox(
                                   child: Shimmer.fromColors(
-                                  baseColor: globals.red,
-                                  highlightColor: globals.white,
+                                  baseColor: red,
+                                  highlightColor: white,
                                   child: Text(
                                     wallets[index].balance.toStringAsFixed(2),
                                     style:
@@ -1131,8 +1161,8 @@ Widget _coinDetailsCard(
                           model.isBusy
                               ? SizedBox(
                                   child: Shimmer.fromColors(
-                                  baseColor: globals.red,
-                                  highlightColor: globals.white,
+                                  baseColor: red,
+                                  highlightColor: white,
                                   child: Text('${wallets[index].lockBalance}',
                                       style: Theme.of(context)
                                           .textTheme
@@ -1171,8 +1201,8 @@ Widget _coinDetailsCard(
                           model.isBusy
                               ? SizedBox(
                                   child: Shimmer.fromColors(
-                                  baseColor: globals.primaryColor,
-                                  highlightColor: globals.white,
+                                  baseColor: primaryColor,
+                                  highlightColor: white,
                                   child: Text(
                                     wallets[index]
                                         .unlockedExchangeBalance
@@ -1215,7 +1245,7 @@ Widget _coinDetailsCard(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           UIHelper.horizontalSpaceSmall,
-                          Text('\$', style: TextStyle(color: globals.green)),
+                          Text('\$', style: TextStyle(color: green)),
                           Expanded(
                             child: Text(
                               NumberUtil()
@@ -1226,7 +1256,7 @@ Widget _coinDetailsCard(
                                           model.wallets[index].usdValue.usd,
                                       precision: 2)
                                   .toString(),
-                              style: TextStyle(color: globals.green),
+                              style: TextStyle(color: green),
                             ),
                           )
                         ],
@@ -1257,7 +1287,7 @@ Widget _coinDetailsCard(
                                     ),
                                     const Icon(
                                       Icons.arrow_upward,
-                                      color: globals.red,
+                                      color: red,
                                       size: 16,
                                     ),
                                   ],
@@ -1356,7 +1386,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                           }
 
                           return Card(
-                            color: globals.walletCardColor,
+                            color: walletCardColor,
                             elevation: model.elevation,
                             child: InkWell(
                               splashColor: Colors.blue.withAlpha(30),
@@ -1377,14 +1407,13 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                     Container(
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                            color: globals.walletCardColor,
+                                            color: walletCardColor,
                                             borderRadius:
                                                 BorderRadius.circular(50),
-                                            boxShadow: [
+                                            boxShadow: const [
                                               BoxShadow(
-                                                  color: globals.fabLogoColor,
-                                                  offset:
-                                                      const Offset(1.0, 5.0),
+                                                  color: fabLogoColor,
+                                                  offset: Offset(1.0, 5.0),
                                                   blurRadius: 10.0,
                                                   spreadRadius: 1.0),
                                             ]),
@@ -1429,9 +1458,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                     ? SizedBox(
                                                         child:
                                                             Shimmer.fromColors(
-                                                        baseColor: globals.red,
-                                                        highlightColor:
-                                                            globals.white,
+                                                        baseColor: red,
+                                                        highlightColor: white,
                                                         child: Text(
                                                           model
                                                               .favWallets[index]
@@ -1491,9 +1519,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                     ? SizedBox(
                                                         child:
                                                             Shimmer.fromColors(
-                                                        baseColor: globals.red,
-                                                        highlightColor:
-                                                            globals.white,
+                                                        baseColor: red,
+                                                        highlightColor: white,
                                                         child: Text(
                                                             '${model.favWallets[index].lockBalance}',
                                                             style: Theme.of(
@@ -1554,10 +1581,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                     ? SizedBox(
                                                         child:
                                                             Shimmer.fromColors(
-                                                        baseColor: globals
-                                                            .primaryColor,
-                                                        highlightColor:
-                                                            globals.white,
+                                                        baseColor: primaryColor,
+                                                        highlightColor: white,
                                                         child: Text(
                                                           model
                                                               .favWallets[index]
@@ -1594,8 +1619,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                                 .textTheme
                                                                 .headline6
                                                                 .copyWith(
-                                                                    color: globals
-                                                                        .primaryColor)),
+                                                                    color:
+                                                                        primaryColor)),
                                                       ),
                                               ],
                                             ),
@@ -1615,15 +1640,12 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                     children: [
                                                       Text('\$',
                                                           style: TextStyle(
-                                                              color: globals
-                                                                  .green)),
+                                                              color: green)),
                                                       Expanded(
                                                         child:
                                                             Shimmer.fromColors(
-                                                          baseColor:
-                                                              globals.grey,
-                                                          highlightColor:
-                                                              globals.white,
+                                                          baseColor: grey,
+                                                          highlightColor: white,
                                                           child: Text(
                                                             NumberUtil()
                                                                 .truncateDoubleWithoutRouding(
@@ -1640,8 +1662,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                                         2)
                                                                 .toString(),
                                                             style: TextStyle(
-                                                                color: globals
-                                                                    .green),
+                                                                color: green),
                                                           ),
                                                         ),
                                                       ),
@@ -1651,16 +1672,14 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                     children: [
                                                       Text('\$',
                                                           style: TextStyle(
-                                                              color: globals
-                                                                  .green)),
+                                                              color: green)),
                                                       Expanded(
                                                         child: Text(
                                                             '${NumberUtil().truncateDoubleWithoutRouding(model.wallets[index].balance * model.wallets[index].usdValue.usd, precision: 2).toString()} USD',
                                                             textAlign:
                                                                 TextAlign.start,
                                                             style: TextStyle(
-                                                                color: globals
-                                                                    .green)),
+                                                                color: green)),
                                                       ),
                                                     ],
                                                   ),
@@ -1701,8 +1720,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                                 Icon(
                                                                     Icons
                                                                         .arrow_downward,
-                                                                    color: globals
-                                                                        .green,
+                                                                    color:
+                                                                        green,
                                                                     size: 16),
                                                               ],
                                                             ))
@@ -1730,8 +1749,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                                 Icon(
                                                                     Icons
                                                                         .arrow_downward,
-                                                                    color: globals
-                                                                        .green,
+                                                                    color:
+                                                                        green,
                                                                     size: 16),
                                                               ],
                                                             )),
@@ -1764,7 +1783,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                           ),
                                                           const Icon(
                                                             Icons.arrow_upward,
-                                                            color: globals.red,
+                                                            color: red,
                                                             size: 16,
                                                           ),
                                                         ],
@@ -1813,9 +1832,7 @@ class TotalBalanceWidget extends StatelessWidget {
             left: 30,
             child: Card(
               elevation: model.elevation,
-              color: isProduction
-                  ? globals.secondaryColor
-                  : globals.red.withAlpha(200),
+              color: isProduction ? secondaryColor : red.withAlpha(200),
               child: Container(
                 //duration: Duration(milliseconds: 250),
                 width: 350,
@@ -1838,8 +1855,7 @@ class TotalBalanceWidget extends StatelessWidget {
                           'assets/images/wallet-page/dollar-sign.png',
                           width: 30,
                           height: 30,
-                          color: globals
-                              .iconBackgroundColor, // image background color
+                          color: iconBackgroundColor, // image background color
                           fit: BoxFit.contain,
                         )),
                     Expanded(
@@ -1854,8 +1870,8 @@ class TotalBalanceWidget extends StatelessWidget {
                                   .copyWith(fontWeight: FontWeight.w400)),
                           model.isBusy
                               ? Shimmer.fromColors(
-                                  baseColor: globals.primaryColor,
-                                  highlightColor: globals.white,
+                                  baseColor: primaryColor,
+                                  highlightColor: white,
                                   child: Text(
                                     '${model.totalUsdBalance} USD',
                                     style:
@@ -1922,7 +1938,7 @@ class TotalBalanceWidget2 extends StatelessWidget {
                             //         model.announceList.length < 1
                             //     ?
                             Container(
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                     color: iconBackgroundColor,
                                     shape: BoxShape.circle),
                                 width: 30,
@@ -1954,8 +1970,8 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                               color: white)),
                                 ),
                                 Shimmer.fromColors(
-                                    baseColor: globals.primaryColor,
-                                    highlightColor: globals.white,
+                                    baseColor: primaryColor,
+                                    highlightColor: white,
                                     child: Text(
                                       model.totalExchangeBalance + ' USD',
                                       style:
@@ -2017,9 +2033,7 @@ class TotalBalanceWidget3 extends StatelessWidget {
             left: 30,
             child: Card(
               elevation: model.elevation,
-              color: isProduction
-                  ? globals.secondaryColor
-                  : globals.red.withAlpha(200),
+              color: isProduction ? secondaryColor : red.withAlpha(200),
               child: Container(
                 //duration: Duration(milliseconds: 250),
                 width: 350,
@@ -2090,7 +2104,7 @@ class DepositWidget extends StatelessWidget {
                 !model.isBusy
             ? Showcase(
                 key: model.globalKeyTwo,
-                descTextStyle: TextStyle(fontSize: 9, color: black),
+                descTextStyle: const TextStyle(fontSize: 9, color: black),
                 description:
                     AppLocalizations.of(context).walletDashboardInstruction2,
                 child: buildPaddingDeposit(context),
@@ -2110,7 +2124,7 @@ class DepositWidget extends StatelessWidget {
               style:
                   Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 8),
             ),
-            Icon(Icons.arrow_downward, color: globals.green, size: 16),
+            Icon(Icons.arrow_downward, color: green, size: 16),
           ],
         ));
   }
