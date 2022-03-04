@@ -263,7 +263,7 @@ class SharedService {
                 width: 25,
                 height: 25,
                 child: const CupertinoActivityIndicator())
-            : SizedBox(
+            : const SizedBox(
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(

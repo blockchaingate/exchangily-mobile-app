@@ -147,9 +147,8 @@ class WalletSetupView extends StatelessWidget {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(right: 4),
+                                          const Padding(
+                                            padding: EdgeInsets.only(right: 4),
                                             child: Icon(
                                               Icons.lock_open_outlined,
                                               color: white,

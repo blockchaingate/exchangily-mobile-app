@@ -1,41 +1,33 @@
-import 'package:exchangilymobileapp/service_locator.dart';
-
 import 'package:exchangilymobileapp/utils/string_util.dart';
-import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:flutter/widgets.dart';
-import '../../environments/coins.dart' as coinList;
+import '../../environments/coins.dart' as coin_list;
 
 class ExchangeBalanceModel {
-  String _ticker;
-  int _coinType;
-  double _unlockedAmount;
-  double _lockedAmount;
+  String ticker;
+  int coinType;
+  double unlockedAmount;
+  double lockedAmount;
 
   ExchangeBalanceModel(
-      {String ticker,
-      int coinType,
-      double unlockedAmount,
-      double lockedAmount}) {
-    _ticker = ticker ?? '';
-    _coinType = coinType ?? 0;
-    _unlockedAmount = unlockedAmount ?? 0.0;
-    _lockedAmount = lockedAmount ?? 0.0;
-  }
+      {this.ticker, this.coinType, this.unlockedAmount, this.lockedAmount});
 
   factory ExchangeBalanceModel.fromJson(Map<String, dynamic> json) {
     var type = json['coinType'];
+
     String tickerName = '';
     if (type != null) {
-      tickerName = coinList.newCoinTypeMap[type];
+      tickerName = coin_list.newCoinTypeMap[type];
       debugPrint(
-          'Ticker Name -- $tickerName --- coin type ${json['coinType']}');
+          'ExchangeBalanceModel - Ticker Name -- $tickerName --- coin type ${json['coinType']}');
     }
 
-    return ExchangeBalanceModel(
-        ticker: tickerName,
+    ExchangeBalanceModel exchangeBalanceModel = ExchangeBalanceModel(
+        ticker: tickerName ?? '',
         coinType: json['coinType'],
         unlockedAmount: bigNum2Double(json['unlockedAmount']).toDouble(),
         lockedAmount: bigNum2Double(json['lockedAmount']).toDouble());
+
+    return exchangeBalanceModel;
   }
 
   Map<String, dynamic> toJson() {
@@ -46,26 +38,6 @@ class ExchangeBalanceModel {
     data['lockedAmount'] = lockedAmount;
 
     return data;
-  }
-
-  String get ticker => _ticker;
-  set ticker(String ticker) {
-    _ticker = ticker;
-  }
-
-  int get coinType => _coinType;
-  set coinType(int coinType) {
-    _coinType = coinType;
-  }
-
-  double get unlockedAmount => _unlockedAmount;
-  set unlockedAmount(double unlockedAmount) {
-    _unlockedAmount = unlockedAmount;
-  }
-
-  double get lockedAmount => _lockedAmount;
-  set lockedAmount(double lockedAmount) {
-    _lockedAmount = lockedAmount;
   }
 }
 

@@ -46,7 +46,7 @@ toKbpayAddress(address) {
   var decoded = decodeAddress(address);
 
   debugPrint('decoded=');
-  debugPrint(decoded);
+  debugPrint(decoded.toString());
   if (decoded['format'] == Format['Kbpay']) {
     return address;
   }
@@ -141,7 +141,7 @@ encodeAsLegacy(decoded) {
 
 encodeAsKbpay(decoded) {
   debugPrint('decoded=');
-  debugPrint(decoded);
+  debugPrint(decoded.toString());
   var versionByte =
       VERSION_BYTE[Format['Kbpay']][decoded['network']][decoded['type']];
 

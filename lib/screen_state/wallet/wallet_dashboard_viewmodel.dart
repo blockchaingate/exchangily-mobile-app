@@ -351,7 +351,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                   .symbol
                                                   .toUpperCase(),
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: white,
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.bold)),
@@ -381,7 +381,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                   fontWeight: FontWeight.bold)),
                                         ),
                                         Text(issueTokens[index].totalSupply,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 color: grey, fontSize: 12))
                                       ],
                                     ),
@@ -417,7 +417,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                             context)
                                                         .remove,
                                                 textAlign: TextAlign.center,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 12, color: white
                                                     // isMatched == null
                                                     //     ? green
@@ -777,7 +777,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                     .textTheme
                     .headline4
                     .copyWith(fontWeight: FontWeight.bold),
-                contentTextStyle: TextStyle(color: grey),
+                contentTextStyle: const TextStyle(color: grey),
                 content: Container(
                   padding: const EdgeInsets.all(5.0),
                   child: Column(
@@ -1149,7 +1149,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                           actionsPadding: const EdgeInsets.all(0),
                           elevation: 5,
                           titleTextStyle: Theme.of(context).textTheme.headline4,
-                          contentTextStyle: TextStyle(color: grey),
+                          contentTextStyle: const TextStyle(color: grey),
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 10),
                           backgroundColor: walletCardColor.withOpacity(0.95),
@@ -1176,10 +1176,10 @@ class WalletDashboardViewModel extends BaseViewModel {
                               UIHelper.verticalSpaceSmall,
                               TextField(
                                 minLines: 1,
-                                style: TextStyle(color: white),
+                                style: const TextStyle(color: white),
                                 controller: freeFabAnswerTextController,
                                 obscureText: false,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide:
                                           BorderSide(color: white, width: 1)),
