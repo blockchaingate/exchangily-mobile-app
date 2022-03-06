@@ -181,7 +181,7 @@ class LightningRemitViewmodel extends FutureViewModel {
         context: context1,
         builder: (context1) => Container(
           width: double.infinity,
-          height: 100,
+          height: 140,
           margin: const EdgeInsets.symmetric(horizontal: 10.0),
           decoration: BoxDecoration(
             color: grey.withAlpha(300),
@@ -222,17 +222,17 @@ class LightningRemitViewmodel extends FutureViewModel {
                       //     coins[index]['quantity'].toDouble());
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(exchangeBalances[index].ticker,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headline5),
+                              style: Theme.of(context).textTheme.headline4),
                           UIHelper.horizontalSpaceSmall,
                           Text(
                               exchangeBalances[index].unlockedAmount.toString(),
-                              style: Theme.of(context).textTheme.headline5),
+                              style: Theme.of(context).textTheme.headline4),
                           const Divider(
                             color: Colors.white,
                             height: 1,
