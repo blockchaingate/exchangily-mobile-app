@@ -300,12 +300,8 @@ class WalletSetupViewmodel extends BaseViewModel {
     // IF THERE IS NO OLD DATA IN STORAGE BUT NEW CORE WALLET DATA IS PRESENT IN DATABASE
     // THEN VERIFY AGAIN IF STORED DATA IS NOT PREVIOUSLY VERIFIED
     else if (coreWalletDbData != null || coreWalletDbData.isNotEmpty) {
-      if (storageService.hasWalletVerified) {
-        await verifyWallet();
-      } else {
-        isVerifying = false;
-        goToWalletDashboard();
-      }
+      isVerifying = false;
+      goToWalletDashboard();
     }
     hasVerificationStarted = false;
     setBusy(false);
