@@ -123,7 +123,7 @@ class LightningRemitViewmodel extends FutureViewModel {
       quantity = exchangeBalances[0].unlockedAmount;
     }
     setBusyForObject(tickerName, false);
-    log.e('tickerName $tickerName');
+    log.i('onData :tickerName $tickerName');
     setBusy(false);
   }
 

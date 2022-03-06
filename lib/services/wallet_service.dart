@@ -744,10 +744,12 @@ class WalletService {
       await walletDatabaseService.initDb();
       var fabWallet = await walletDatabaseService.getWalletBytickerName('FAB');
       var trxWallet = await walletDatabaseService.getWalletBytickerName('TRX');
-      walletBalancesBodyFromStorage = {
-        "fabAddress": fabWallet.address,
-        "trxAddress": trxWallet.address
-      };
+      if (fabWallet != null && trxWallet != null) {
+        walletBalancesBodyFromStorage = {
+          "fabAddress": fabWallet.address,
+          "trxAddress": trxWallet.address
+        };
+      }
     }
 
     // Compare the address if matched then don't notify otherwise raise flag
