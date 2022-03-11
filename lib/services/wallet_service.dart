@@ -13,6 +13,7 @@ import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
@@ -76,6 +77,7 @@ class WalletService {
       locator<TransactionHistoryDatabaseService>();
   final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   final walletDatabaseService = locator<WalletDatabaseService>();
+  final coinService = locator<CoinService>();
 
   double currentTickerUsdValue;
   var txids = [];
@@ -213,7 +215,7 @@ class WalletService {
   }
 
 // coin type(int) to token type(String)
-  String getTokenType(int coinType) {
+  String getChainNameByTokenType(int coinType) {
     String tokenType = '';
 // 0001 = BTC
 // 0002 = FAB
@@ -222,6 +224,7 @@ class WalletService {
 // 0005 - LTC
 // 0006 - DOGE
 // 0007 = TRON
+// 0009 = POLYGON
 
 // CEL
 // cointype 196612
@@ -250,6 +253,8 @@ class WalletService {
       tokenType = 'DOGE';
     } else if (firstHalf == '0007' && secondHalf != '0000') {
       tokenType = 'TRX';
+    } else if (firstHalf == '0009' && secondHalf != '0000') {
+      tokenType = 'POLYGON';
     }
     log.i('hexCoinType $hexCoinType - tokenType $tokenType');
     return tokenType;
@@ -1321,34 +1326,34 @@ class WalletService {
       addressInWallet = btcUtils.btcToBase58Address(addressInWallet);
     }
     int coinType;
-    await coinUtils
-        .getCoinTypeIdByName(coinName)
+    await coinService
+        .getCoinTypeByTickerName(coinName)
         .then((value) => coinType = value);
     log.i('cointype $coinType');
 
     int sepcialcoinType;
     var abiHex;
     if (coinName == 'DSCE' || coinName == 'DSC') {
-      sepcialcoinType = await coinUtils.getCoinTypeIdByName('DSC');
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('DSC');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'BSTE' || coinName == 'BST') {
-      sepcialcoinType = await coinUtils.getCoinTypeIdByName('BST');
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('BST');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'EXGE' || coinName == 'EXG') {
-      sepcialcoinType = await coinUtils.getCoinTypeIdByName('EXG');
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('EXG');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'FABE' ||
         (coinName == 'FAB' && tokenType == 'ETH')) {
-      sepcialcoinType = await coinUtils.getCoinTypeIdByName('FAB');
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('FAB');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType);
@@ -1411,15 +1416,15 @@ class WalletService {
     addressInWallet = btcUtils.btcToBase58Address(addressInWallet);
 
     int coinType;
-    await coinUtils
-        .getCoinTypeIdByName(coinName)
+    await coinService
+        .getCoinTypeByTickerName(coinName)
         .then((value) => coinType = value);
     log.i('cointype $coinType');
 
     int sepcialcoinType;
     var abiHex;
     if (coinName == 'USDTX') {
-      sepcialcoinType = await coinUtils.getCoinTypeIdByName('USDT');
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType);
@@ -1499,7 +1504,8 @@ class WalletService {
 
 // code  from depositDo
 
-    var coinType = await coinUtils.getCoinTypeIdByName(walletInfo.tickerName);
+    var coinType =
+        await coinService.getCoinTypeByTickerName(walletInfo.tickerName);
     log.i('coin type $coinType');
 
     var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
@@ -1525,7 +1531,7 @@ class WalletService {
     int sepcialcoinType;
     var abiHex;
     if (walletInfo.tickerName == 'USDTX') {
-      sepcialcoinType = await coinUtils.getCoinTypeIdByName('USDT');
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
       abiHex = abiUtils.getDepositFuncABI(
           sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
           chain: walletInfo.tokenType, isSpecialDeposit: true);
@@ -1632,7 +1638,7 @@ class WalletService {
       }
     }
 
-    var coinType = await coinUtils.getCoinTypeIdByName(coinName);
+    var coinType = await coinService.getCoinTypeByTickerName(coinName);
     log.i('coin type $coinType');
     if (coinType == 0) {
       errRes['data'] = 'invalid coinType for ' + coinName;
@@ -1664,8 +1670,8 @@ class WalletService {
       if (coinName == specialTokenTicker) isSpecial = true;
     }
     if (isSpecial) {
-      specialCoinType = await coinUtils
-          .getCoinTypeIdByName(coinName.substring(0, coinName.length - 1));
+      specialCoinType = await coinService
+          .getCoinTypeByTickerName(coinName.substring(0, coinName.length - 1));
     }
 
     var coinTypeUsed = isSpecial ? specialCoinType : coinType;

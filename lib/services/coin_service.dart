@@ -167,7 +167,7 @@ class CoinService {
       await apiService.getTokenListUpdates().then((tokens) {
         for (var token in tokens) {
           //    await tokenListDatabaseService.insert(token);
-          if (token.tickerName == tickerName) coinType = token.decimal;
+          if (token.tickerName == tickerName) coinType = token.coinType;
         }
       });
 

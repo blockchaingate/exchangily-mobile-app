@@ -484,6 +484,11 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                                     .copyWith(wordSpacing: 1.25),
                           ),
                         ),
+                        Center(
+                            child: TextButton(
+                                onPressed: () => model.walletService
+                                    .getChainNameByTokenType(589825),
+                                child: Text('test'))),
                         // InkWell(
                         //   onTap: () => model.switchSeatch(),
                         //   child: model.openSearch
@@ -2058,32 +2063,34 @@ class AddGasRow extends StatelessWidget {
     var end = Offset.zero;
     var tween = Tween(begin: begin, end: end);
 
-    if (model.isShowCaseView && model.gasAmount < 0.5 && !model.isBusy) {
-      model.showcaseEvent(context);
-    }
-    return model.isShowCaseView || model.gasAmount < 0.5
-        ? SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Showcase(
-                  key: model.globalKeyOne,
-                  //  titleTextStyle:TextStyle(decoration:T ),
-                  title: AppLocalizations.of(context).note + ':',
-                  description:
-                      AppLocalizations.of(context).walletDashboardInstruction1,
-                  child: TweenAnimationBuilder(
-                      duration: const Duration(milliseconds: 500),
-                      tween: tween,
-                      builder: (_, Offset offset, __) {
-                        return Container(
-                            child: (Gas(gasAmount: model.gasAmount)));
-                      }),
-                ),
-              ],
-            ),
-          )
-        : Gas(gasAmount: model.gasAmount);
+    // if (model.isShowCaseView && model.gasAmount < 0.5 && !model.isBusy) {
+    //   model.showcaseEvent(context);
+    // }
+    return
+        // model.isShowCaseView || model.gasAmount < 0.5
+        //     ? SafeArea(
+        //         child: Column(
+        //           crossAxisAlignment: CrossAxisAlignment.start,
+        //           children: [
+        //             Showcase(
+        //               key: model.globalKeyOne,
+        //               //  titleTextStyle:TextStyle(decoration:T ),
+        //               title: AppLocalizations.of(context).note + ':',
+        //               description:
+        //                   AppLocalizations.of(context).walletDashboardInstruction1,
+        //               child: TweenAnimationBuilder(
+        //                   duration: const Duration(milliseconds: 500),
+        //                   tween: tween,
+        //                   builder: (_, Offset offset, __) {
+        //                     return Container(
+        //                         child: (Gas(gasAmount: model.gasAmount)));
+        //                   }),
+        //             ),
+        //           ],
+        //         ),
+        //       )
+        //     :
+        Gas(gasAmount: model.gasAmount);
   }
 }
 

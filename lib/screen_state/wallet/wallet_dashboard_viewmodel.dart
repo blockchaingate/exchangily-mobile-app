@@ -28,6 +28,7 @@ import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
@@ -79,6 +80,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   var storageService = locator<LocalStorageService>();
   final dialogService = locator<DialogService>();
   final userDatabaseService = locator<UserSettingsDatabaseService>();
+  final coinService = locator<CoinService>();
 
   BuildContext context;
 
@@ -177,18 +179,17 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     // take the tickername and then get the coin type
     // either from token or token updates api/local storage
-    CoinUtils coinUtils = CoinUtils();
+
     String tickerName = wallet.coin.toUpperCase();
     String walletAddress = '';
-    var alltokens = await tokenListDatabaseService.getAll();
-    debugPrint(alltokens.length.toString());
-    int coinType = await coinUtils.getCoinTypeIdByName(tickerName);
+
+    int coinType = await coinService.getCoinTypeByTickerName(tickerName);
 
     // use coin type to get the token type
-    String tokenType = walletService.getTokenType(coinType);
+    String tokenType = walletService.getChainNameByTokenType(coinType);
 
     // get wallet address
-    if (tickerName == 'ETH' || tokenType == 'ETH') {
+    if (tickerName == 'ETH' || tokenType == 'ETH' || tokenType == 'POLYGON') {
       walletAddress = await walletService
           .getAddressFromCoreWalletDatabaseByTickerName('ETH');
     } else if (tickerName == 'FAB' || tokenType == 'FAB') {
@@ -238,7 +239,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     navigationService.navigateTo(routeName, arguments: walletInfo);
   }
 
-// TODO add decimalLimit property in the wallet info and fill it in the refresh balance from local stored decimal data
 // Send custom token
   sendCustomToken(CustomTokenModel customTokenModel) async {
     var exgAddress = await sharedService.getExgAddressFromWalletDatabase();
@@ -1547,7 +1547,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     // get the walletbalancebody from the DB
     var walletBalancesBodyFromDB =
         await coreWalletDatabaseService.getWalletBalancesBody();
-    var finalWbb;
+    var finalWbb = '';
     if (walletBalancesBodyFromDB == null) {
       finalWbb = storageService.walletBalancesBody;
       var walletCoreModel = CoreWalletModel(
@@ -1559,6 +1559,12 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     if (walletBalancesBodyFromDB != null) {
       finalWbb = walletBalancesBodyFromDB['walletBalancesBody'];
+    }
+    if (finalWbb == null || finalWbb == '') {
+      storageService.hasWalletVerified = false;
+      navigationService
+          .navigateUsingPushNamedAndRemoveUntil(WalletSetupViewRoute);
+      return [];
     }
     walletBalancesApiRes =
         await apiService.getWalletBalance(jsonDecode(finalWbb));

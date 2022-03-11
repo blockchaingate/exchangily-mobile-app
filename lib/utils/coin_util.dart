@@ -172,34 +172,6 @@ class CoinUtils {
     return SHA256Digest().process(_tmp);
   }
 
-/*----------------------------------------------------------------------
-                Get Coin Type Id By Name
-----------------------------------------------------------------------*/
-
-  Future<int> getCoinTypeIdByName(String coinName) async {
-    TokenListDatabaseService tokenListDatabaseService =
-        locator<TokenListDatabaseService>();
-    int coinType = 0;
-    MapEntry<int, String> hardCodedCoinList;
-    bool isOldToken = coin_list.newCoinTypeMap.containsValue(coinName);
-    debugPrint('is old token value $isOldToken');
-    if (isOldToken) {
-      hardCodedCoinList = coin_list.newCoinTypeMap.entries
-          .firstWhere((coinTypeMap) => coinTypeMap.value == coinName);
-    }
-    // var coins =
-    //     coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
-    if (hardCodedCoinList != null) {
-      coinType = hardCodedCoinList.key;
-    } else {
-      await tokenListDatabaseService
-          .getCoinTypeByTickerName(coinName)
-          .then((value) => coinType = value);
-    }
-    debugPrint('ticker $coinName -- coin type $coinType');
-    return coinType;
-  }
-
   encodeSignature(signature, recovery, compressed, segwitType) {
     if (segwitType != null) {
       recovery += 8;
