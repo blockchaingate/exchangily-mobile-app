@@ -484,11 +484,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                                     .copyWith(wordSpacing: 1.25),
                           ),
                         ),
-                        Center(
-                            child: TextButton(
-                                onPressed: () => model.walletService
-                                    .getChainNameByTokenType(589825),
-                                child: Text('test'))),
+
                         // InkWell(
                         //   onTap: () => model.switchSeatch(),
                         //   child: model.openSearch

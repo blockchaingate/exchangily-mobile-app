@@ -268,8 +268,10 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                                     transactionHistory.kanbanTxId.isEmpty
                                         ? Container()
                                         : CupertinoButton(
-                                            child: Icon(FontAwesomeIcons.copy,
-                                                color: white, size: 16),
+                                            child: const Icon(
+                                                FontAwesomeIcons.copy,
+                                                color: white,
+                                                size: 16),
                                             onPressed: () => copyAddress(
                                                 transactionHistory.kanbanTxId),
                                           )
@@ -319,7 +321,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                               transactionHistory.tickerChainTxId.isEmpty
                                   ? Container()
                                   : CupertinoButton(
-                                      child: Icon(FontAwesomeIcons.copy,
+                                      child: const Icon(FontAwesomeIcons.copy,
                                           color: white, size: 16),
                                       onPressed: () => copyAddress(
                                           transactionHistory.tickerChainTxId),
@@ -344,7 +346,9 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyText2
-                                    .copyWith(fontWeight: FontWeight.bold),
+                                    .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: primaryColor),
                               ),
                               onPressed: () {
                                 Navigator.of(context).pop(true);
@@ -372,7 +376,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                       .textTheme
                       .headline4
                       .copyWith(fontWeight: FontWeight.bold),
-                  contentTextStyle: TextStyle(color: grey),
+                  contentTextStyle: const TextStyle(color: grey),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -421,7 +425,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                                 transactionHistory.kanbanTxId.isEmpty
                                     ? Container()
                                     : IconButton(
-                                        icon: Icon(Icons.copy_outlined,
+                                        icon: const Icon(Icons.copy_outlined,
                                             color: white, size: 16),
                                         onPressed: () => copyAddress(
                                             transactionHistory.kanbanTxId),
@@ -470,7 +474,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.copy_outlined,
+                            icon: const Icon(Icons.copy_outlined,
                                 color: white, size: 16),
                             onPressed: () =>
                                 copyAddress(transactionHistory.tickerChainTxId),

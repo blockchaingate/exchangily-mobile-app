@@ -73,8 +73,8 @@ class TxHisotryCardWidget extends StatelessWidget {
                       // icon
                       transaction.tag.toUpperCase() ==
                               model.deposit.toUpperCase()
-                          ? Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
+                          ? const Padding(
+                              padding: EdgeInsets.only(left: 10.0),
                               child: Icon(
                                 Icons.arrow_downward,
                                 size: 16,
@@ -83,16 +83,16 @@ class TxHisotryCardWidget extends StatelessWidget {
                             )
                           : transaction.tag.toUpperCase() ==
                                   model.send.toUpperCase()
-                              ? Padding(
-                                  padding: const EdgeInsets.only(left: 13.0),
+                              ? const Padding(
+                                  padding: EdgeInsets.only(left: 13.0),
                                   child: Icon(
                                     FontAwesomeIcons.arrowRight,
                                     size: 11,
                                     color: sellPrice,
                                   ),
                                 )
-                              : Padding(
-                                  padding: const EdgeInsets.only(left: 10.0),
+                              : const Padding(
+                                  padding: EdgeInsets.only(left: 10.0),
                                   child: Icon(
                                     Icons.arrow_upward,
                                     size: 16,
@@ -263,7 +263,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                                 text: TextSpan(
                                     text:
                                         AppLocalizations.of(context).redeposit,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 12,
                                         decoration: TextDecoration.underline,
                                         color: red),
@@ -320,7 +320,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: IconButton(
                       padding: EdgeInsets.zero,
-                      icon: Icon(Icons.more, color: white, size: 14),
+                      icon: const Icon(Icons.more, color: white, size: 14),
                       onPressed: () {
                         debugPrint('tx histoy ${transaction.toJson()}');
                         model.showTxDetailDialog(transaction);

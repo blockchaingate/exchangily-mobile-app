@@ -98,16 +98,17 @@ class MoveToWalletViewmodel extends BaseViewModel {
     _groupValue = 'ETH';
     if (walletInfo.tickerName == 'ETH' || walletInfo.tokenType == 'ETH') {
       radioButtonSelection('ETH');
-    }
-
-    if (walletInfo.tickerName == 'FAB' || walletInfo.tokenType == 'FAB') {
+    } else if (walletInfo.tickerName == 'FAB' ||
+        walletInfo.tokenType == 'FAB') {
       isShowFabChainBalance = true;
       radioButtonSelection('FAB');
-    }
-    if (walletInfo.tickerName == 'USDTX' || walletInfo.tickerName == 'TRX') {
+    } else if (walletInfo.tickerName == 'USDTX' ||
+        walletInfo.tickerName == 'TRX') {
       isShowTrxTsWalletBalance = true;
 
       radioButtonSelection('TRX');
+    } else if (walletInfo.tickerName == "BTC") {
+      setWithdrawLimit("BTC");
     }
     specialTickerForTxHistory =
         walletService.updateSpecialTokensTickerNameForTxHistory(
