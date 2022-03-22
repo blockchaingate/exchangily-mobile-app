@@ -768,7 +768,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                               width: 25,
                                               height: 25,
                                               margin: const EdgeInsets.only(
-                                                  left: 5),
+                                                  left: 10),
                                               decoration: BoxDecoration(
                                                   image: DecorationImage(
                                                       image: NetworkImage(
@@ -785,33 +785,18 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                             // Symbol and name
                                             Expanded(
                                               flex: 1,
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  // UIHelper
-                                                  //     .verticalSpaceSmall,
-                                                  Text(
-                                                    customToken.symbol
-                                                        .toUpperCase(),
-                                                    style: const TextStyle(
-                                                        color: grey,
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                  // Text(
-                                                  //   customToken.name,
-                                                  //   style:
-                                                  //       TextStyle(color: white),
-                                                  // ),
-                                                ],
+                                              child: Text(
+                                                customToken.symbol
+                                                    .toUpperCase(),
+                                                style: const TextStyle(
+                                                    color: grey,
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w500),
                                               ),
                                             ),
-
+                                            UIHelper.horizontalSpaceMedium,
+                                            UIHelper.horizontalSpaceSmall,
                                             // Balance
                                             Expanded(
                                               flex: 2,
@@ -823,11 +808,8 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                           .toString(),
                                                       style: const TextStyle(
                                                           color: white),
-                                                      textAlign:
-                                                          TextAlign.right,
                                                     ),
                                             ),
-                                            UIHelper.horizontalSpaceSmall,
                                             //  Action
                                             Container(
                                               padding:
@@ -949,16 +931,19 @@ ListView buildListView(WalletDashboardViewModel model) {
     itemCount: model.wallets.length,
     itemBuilder: (BuildContext context, int index) {
       var name = model.wallets[index].coin.toLowerCase();
-      var usdVal = model.wallets[index].usdValue;
+      var usdBalance = (!model.wallets[index].balance.isNegative
+              ? model.wallets[index].balance
+              : 0.0) *
+          model.wallets[index].usdValue.usd;
 
       return Visibility(
         // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
-        visible: usdVal.usd >= 0 && !model.isHideSmallAmountAssets,
+        visible: usdBalance >= 0 && !model.isHideSmallAmountAssets,
         child: _coinDetailsCard(
             name, index, model.wallets, model.elevation, context, model),
         // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
         replacement: Visibility(
-            visible: model.isHideSmallAmountAssets && usdVal.usd != 0,
+            visible: model.isHideSmallAmountAssets && usdBalance != 0,
             child: _coinDetailsCard(
                 name, index, model.wallets, model.elevation, context, model)),
       );

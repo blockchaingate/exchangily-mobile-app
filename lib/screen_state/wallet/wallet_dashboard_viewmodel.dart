@@ -429,14 +429,14 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                     //     : red
                                                     )),
                                           ),
-                                          Icon(
-                                            isMatched == null
-                                                ? Icons.add_box_rounded
-                                                : Icons.cancel_outlined,
-                                            color:
-                                                isMatched == null ? green : red,
-                                            size: 14,
-                                          )
+                                          // Icon(
+                                          //   isMatched == null
+                                          //       ? Icons.add_box_rounded
+                                          //       : Icons.cancel_outlined,
+                                          //   color:
+                                          //       isMatched == null ? green : red,
+                                          //   size: 14,
+                                          // )
                                         ],
                                       ),
                                       onPressed: () {
