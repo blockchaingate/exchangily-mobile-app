@@ -141,7 +141,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   String totalLockedBalance = '';
 
   String totalExchangeBalance = '';
-  List<CustomTokenModel> issueTokens = [];
+  List<CustomTokenModel> customTokens = [];
   List<CustomTokenModel> selectedCustomTokens = [];
   var receiverWalletAddressTextController = TextEditingController();
   int swiperWidgetIndex = 0;
@@ -168,7 +168,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     walletService.storeTokenListInDB();
 
     setBusy(false);
-    issueTokens = await apiService.getCustomTokens();
+    customTokens = await apiService.getCustomTokens();
     await getBalanceForSelectedCustomTokens();
   }
 
@@ -240,7 +240,8 @@ class WalletDashboardViewModel extends BaseViewModel {
   }
 
 // Send custom token
-  sendCustomToken(CustomTokenModel customTokenModel) async {
+  routeCustomToken(CustomTokenModel customTokenModel,
+      {bool isSend = true}) async {
     var exgAddress = await sharedService.getExgAddressFromWalletDatabase();
 
     var wallet = WalletInfo(
@@ -249,12 +250,15 @@ class WalletDashboardViewModel extends BaseViewModel {
         address: exgAddress,
         availableBalance: customTokenModel.balance);
     storageService.customTokenData = jsonEncode(customTokenModel.toJson());
-    navigationService.navigateTo(SendViewRoute, arguments: wallet);
+    navigationService.navigateTo(
+        isSend ? SendViewRoute : TransactionHistoryViewRoute,
+        arguments: wallet);
   }
 
 // get balance for Selected custom tokens
 
   Future getBalanceForSelectedCustomTokens() async {
+    setBusy(true);
     String fabAddress = await sharedService.getExgAddressFromWalletDatabase();
     selectedCustomTokens.clear();
     String selectedCustomTokensJson = storageService.customTokens;
@@ -282,6 +286,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       }
     }
     log.w('Selected custom token list => Finished');
+    setBusy(false);
   }
 
   //switchSearch
@@ -296,7 +301,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     // as well as remove button which will remove the token from the list
 
     String isMatched;
-    if (issueTokens.isNotEmpty) {
+    if (customTokens.isNotEmpty) {
       showModalBottomSheet(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -312,22 +317,22 @@ class WalletDashboardViewModel extends BaseViewModel {
                     padding: const EdgeInsets.all(5),
                     //  height: 500,
                     child: ListView.builder(
-                        itemCount: issueTokens.length,
+                        itemCount: customTokens.length,
                         itemBuilder: (context, index) {
                           try {
                             isMatched = selectedCustomTokens
                                 .firstWhere((element) =>
                                     element.tokenId ==
-                                    issueTokens[index].tokenId)
+                                    customTokens[index].tokenId)
                                 .symbol;
 
                             // ignore: avoid_print
                             debugPrint(
-                                '${issueTokens[index].symbol} -- is in the selectedCustomTokens list ? $isMatched match found -- with token id ${issueTokens[index].tokenId}');
+                                '${customTokens[index].symbol} -- is in the selectedCustomTokens list ? $isMatched match found -- with token id ${customTokens[index].tokenId}');
                           } catch (err) {
                             isMatched = null;
                             log.w(
-                                'no match found for ${issueTokens[index].symbol} with token id ${issueTokens[index].tokenId}');
+                                'no match found for ${customTokens[index].symbol} with token id ${customTokens[index].tokenId}');
                           }
                           return Container(
                             padding: const EdgeInsets.only(bottom: 10),
@@ -347,7 +352,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                           padding:
                                               const EdgeInsets.only(top: 10.0),
                                           child: Text(
-                                              issueTokens[index]
+                                              customTokens[index]
                                                   .symbol
                                                   .toUpperCase(),
                                               textAlign: TextAlign.start,
@@ -356,7 +361,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.bold)),
                                         ),
-                                        Text(issueTokens[index].name,
+                                        Text(customTokens[index].name,
                                             style: const TextStyle(
                                               color: primaryColor,
                                               fontSize: 12,
@@ -380,7 +385,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.bold)),
                                         ),
-                                        Text(issueTokens[index].totalSupply,
+                                        Text(customTokens[index].totalSupply,
                                             style: const TextStyle(
                                                 color: grey, fontSize: 12))
                                       ],
@@ -439,13 +444,14 @@ class WalletDashboardViewModel extends BaseViewModel {
                                             selectedCustomTokens.indexWhere(
                                                 (element) =>
                                                     element.tokenId ==
-                                                    issueTokens[index].tokenId);
+                                                    customTokens[index]
+                                                        .tokenId);
                                         setBusyForObject(
                                             selectedCustomTokens, true);
 
                                         if (tokenIndexToRemove.isNegative) {
                                           setState(() => selectedCustomTokens
-                                              .add(issueTokens[index]));
+                                              .add(customTokens[index]));
                                         } else {
                                           if (selectedCustomTokens.isNotEmpty) {
                                             log.w(
@@ -457,7 +463,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                               .removeAt(tokenIndexToRemove));
 
                                           log.e(
-                                              'selectedCustomTokens - length --selectedCustomTokens.length => removed token ${issueTokens[index].symbol}');
+                                              'selectedCustomTokens - length --selectedCustomTokens.length => removed token ${customTokens[index].symbol}');
                                         }
                                         setBusyForObject(
                                             selectedCustomTokens, false);
@@ -1135,7 +1141,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       if (res != null) {
         if (res['ok']) {
           isFreeFabNotUsed = res['ok'];
-          debugPrint(res['_body']['question']);
+          debugPrint(res['_body']['question'].toString());
           showDialog(
               context: context,
               builder: (context) {
@@ -1203,6 +1209,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                           ),
                           actions: [
                             Container(
+                                alignment: Alignment.center,
                                 margin: const EdgeInsetsDirectional.only(
                                     bottom: 10),
                                 child: StatefulBuilder(builder:
@@ -1210,6 +1217,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                                         StateSetter setState) {
                                   return Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       // Cancel
@@ -1581,7 +1590,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     await getGas();
 
     // check gas and fab balance if 0 then ask for free fab
-    if (gasAmount == 0.0 && fabBalance == 0.0 && totalWalletBalance.isEmpty) {
+    if (gasAmount == 0.0 && fabBalance == 0.0) {
       String address =
           await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
       if (storageService.isShowCaseView != null) {

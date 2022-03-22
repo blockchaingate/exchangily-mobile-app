@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
@@ -5,12 +6,14 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -45,7 +48,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   List<TransactionHistory> transactionHistoryToShowInView = [];
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-
+  final storageService = locator<LocalStorageService>();
   final walletService = locator<WalletService>();
   final apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
@@ -56,6 +59,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   bool isChinese = false;
   bool isDialogUp = false;
   int decimalLimit = 0;
+  bool isCustomToken = false;
+  // CustomTokenModel customToken = CustomTokenModel();
 
   @override
   Future futureToRun() async =>
@@ -114,11 +119,27 @@ class TransactionHistoryViewmodel extends FutureViewModel {
       if (value == 'zh') isChinese = true;
     });
 
-    decimalLimit =
-        await walletService.getSingleCoinWalletDecimalLimit(tickerName);
-    if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
-    setBusy(false);
+    String customTokenStringData = storageService.customTokenData;
+
+    try {
+      if (customTokenStringData.isNotEmpty) {
+        CustomTokenModel customToken =
+            CustomTokenModel.fromJson(jsonDecode(customTokenStringData));
+
+        decimalLimit = customToken.decimal;
+        isCustomToken = true;
+        // customToken = customToken;
+      }
+    } catch (err) {
+      log.e('custom token CATCH $err');
+    }
+    if (!isCustomToken) {
+      decimalLimit =
+          await walletService.getSingleCoinWalletDecimalLimit(tickerName);
+      if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
+    }
     // debugPrint(transactionHistoryToShowInView.first.toJson());
+    setBusy(false);
   }
 
   reloadTransactions() async {

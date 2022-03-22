@@ -29,7 +29,7 @@ class LocalStorageService {
   static const String walletVerificationKey = 'walletVerificationKey';
   static const String testingLogStringListKey = 'testingLogStringListKey';
   static const String customTokensKey = 'customTokensKey';
-  static const String customTokenDataKey = 'customTokenDataKey';
+  static const String singleCustomTokenDataKey = 'customTokenDataKey';
   static const String cameraOpenKey = 'CameraOpenKey';
 
 /*----------------------------------------------------------------------
@@ -100,9 +100,10 @@ class LocalStorageService {
 
   // Custom token Data
 
-  String get customTokenData => _getFromDisk(customTokenDataKey) ?? '';
+  String get customTokenData => _getFromDisk(singleCustomTokenDataKey) ?? '';
 
-  set customTokenData(String value) => _saveToDisk(customTokenDataKey, value);
+  set customTokenData(String value) =>
+      _saveToDisk(singleCustomTokenDataKey, value);
 
   // Custom tokens
 

@@ -330,7 +330,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     try {
       var data = await _api.getMyOrdersPagedByFabHexAddressAndTickerName(
           exgAddress, tickerName);
-      debugPrint(data);
+      debugPrint(data.toString());
       if (data != null) {
         orderList = OrderList.fromJson(data);
         return orderList.orders;

@@ -7,7 +7,6 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transact
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -65,7 +64,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                                             .subtitle2),
                                   ],
                                 )
-                              : Text(transaction.tickerName,
+                              : Text(transaction.tickerName.toUpperCase(),
                                   style: Theme.of(context).textTheme.subtitle2),
                         ),
                       ),
@@ -134,7 +133,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                         ),
                     ]),
               ),
-// UIHelper.horizontalSpaceSmall,
+              UIHelper.horizontalSpaceSmall,
               // DATE
               Expanded(
                 flex: 1,

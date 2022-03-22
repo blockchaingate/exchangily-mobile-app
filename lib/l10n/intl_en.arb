@@ -324,7 +324,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "taphereToCopyTxId": "Tap here to copy txId",
+    "taphereToCopyTxId": "Tap here to copy txid",
     "@taphereToCopyTxId": {
         "description": "taphereToCopyTxId",
         "type": "text",

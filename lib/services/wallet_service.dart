@@ -2628,7 +2628,7 @@ class WalletService {
           getTransFeeOnly);
 
       debugPrint('res1 in here=');
-      debugPrint(res1);
+      debugPrint(res1.toString());
       log.w('res1: $res1');
 
       if (getTransFeeOnly) {

@@ -101,15 +101,14 @@ class LightningRemitViewmodel extends FutureViewModel {
             .getSingleTokenData('', coinType: element.coinType)
             .then((token) {
           //storageService.tokenList.forEach((newToken){
-          debugPrint(token.toJson().toString());
+
           // var json = jsonDecode(newToken);
           // Token token = Token.fromJson(json);
           // if (token.tokenType == element.coinType){ debugPrint(token.tickerName);
           if (token == null) {
             element.ticker = element.coinType.toString();
           }
-          element.ticker = token.coinName; //}
-          setBusy(false);
+          element.ticker = token.tickerName; //}
         });
 //element.ticker =tradeService.setTickerNameByType(element.coinType);
         debugPrint('exchanageBalanceModel tickerName ${element.ticker}');

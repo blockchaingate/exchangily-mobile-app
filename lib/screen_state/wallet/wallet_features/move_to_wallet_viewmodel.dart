@@ -1029,7 +1029,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
   radioButtonSelection(value) async {
     setBusy(true);
-    debugPrint(value);
+    debugPrint(value.toString());
     _groupValue = value;
     if (value == 'FAB') {
       isShowFabChainBalance = true;

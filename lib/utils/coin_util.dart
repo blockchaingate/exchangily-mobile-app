@@ -325,7 +325,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     Uint8List messageHash = magicHash(originalMessage, network);
 
     debugPrint('network=');
-    debugPrint(network);
+    debugPrint(network.toString());
     debugPrint('messageHash=');
     debugPrint(messageHash.toString());
     var signature = sign(messageHash, privateKey);

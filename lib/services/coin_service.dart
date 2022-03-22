@@ -69,8 +69,7 @@ class CoinService {
       await getCoinTypeByTickerName(tickerName)
           .then((value) => coinType = value);
     }
-    // if res not found in local storage then call old token list api
-    //  if (res == null || res == 0) {
+
     try {
       log.i('res $res -- coin type $coinType -- ticker $tickerName');
       await apiService.getTokenList().then((tokens) {
@@ -86,12 +85,12 @@ class CoinService {
     } catch (err) {
       log.e('getSingleTokenData old token Catch 1 : $err');
     }
-    // if res not found in local storage then call new token list api
+
     if (res == null) {
       debugPrint('res $res -- coin type $coinType -- ticker $tickerName');
       await apiService.getTokenListUpdates().then((newTokens) {
         for (var j = 0; j < newTokens.length; j++) {
-          if (newTokens[j].tickerName == tickerName) {
+          if (newTokens[j].coinType == coinType) {
             res = newTokens[j];
             log.i('getSingleTokenData new tokens list:  res ${res.toJson()}');
             break;

@@ -352,7 +352,9 @@ class FabUtils {
       }
 
       //debugPrint('tokenBalance===' + tokenBalance.toString());
-    } catch (e) {}
+    } catch (err) {
+      log.e('getFabTokenBalanceForABI func - CATCH $err');
+    }
     return tokenBalance;
   }
 

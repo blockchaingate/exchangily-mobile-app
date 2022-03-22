@@ -104,63 +104,60 @@ class WalletDashboardView extends StatelessWidget {
                     : Visibility(
                         visible: model.currentTabSelection == 2,
                         child: Container(
-                            decoration: BoxDecoration(
-                              color: model.currentTabSelection == 2
-                                  ? primaryColor
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(35),
-                            ),
-                            width: model.selectedCustomTokens.isNotEmpty
-                                ? 140
-                                : 120,
-                            child: GestureDetector(
-                              onTap: () => model.showCustomTokensBottomSheet(),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    UIHelper.horizontalSpaceSmall,
-                                    Icon(
-                                      model.selectedCustomTokens.isNotEmpty
-                                          ? Icons.mode_edit_outline_outlined
-                                          : FontAwesomeIcons.plus,
-                                      size:
-                                          model.selectedCustomTokens.isNotEmpty
-                                              ? 16
-                                              : 14,
-                                      color:
-                                          model.selectedCustomTokens.isNotEmpty
-                                              ? yellow
-                                              : green,
-                                    ),
-                                    Expanded(
-                                      child: model
-                                              .selectedCustomTokens.isNotEmpty
-                                          ? Text(
-                                              ' ' +
-                                                  AppLocalizations.of(context)
-                                                      .editTokenList,
-                                              style: const TextStyle(
-                                                  color: white,
-                                                  fontSize: 11,
-                                                  fontWeight: FontWeight.bold),
-                                            )
-                                          : Text(
-                                              ' ' +
-                                                  AppLocalizations.of(context)
-                                                      .addToken,
-                                              style: const TextStyle(
-                                                  color: white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold)),
-                                    ),
-                                  ],
-                                ),
+                          decoration: BoxDecoration(
+                            color: model.currentTabSelection == 2
+                                ? primaryColor
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(35),
+                          ),
+                          width:
+                              model.selectedCustomTokens.isNotEmpty ? 140 : 120,
+                          child: GestureDetector(
+                            onTap: () => model.showCustomTokensBottomSheet(),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  UIHelper.horizontalSpaceSmall,
+                                  Icon(
+                                    model.selectedCustomTokens.isNotEmpty
+                                        ? Icons.mode_edit_outline_outlined
+                                        : FontAwesomeIcons.plus,
+                                    size: model.selectedCustomTokens.isNotEmpty
+                                        ? 16
+                                        : 14,
+                                    color: model.selectedCustomTokens.isNotEmpty
+                                        ? yellow
+                                        : green,
+                                  ),
+                                  Expanded(
+                                    child: model.selectedCustomTokens.isNotEmpty
+                                        ? Text(
+                                            ' ' +
+                                                AppLocalizations.of(context)
+                                                    .editTokenList,
+                                            style: const TextStyle(
+                                                color: white,
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.bold),
+                                          )
+                                        : Text(
+                                            ' ' +
+                                                AppLocalizations.of(context)
+                                                    .addToken,
+                                            style: const TextStyle(
+                                                color: white,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
                               ),
-                            )),
+                            ),
+                          ),
+                        ),
                       )),
           );
         });
@@ -413,11 +410,13 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
               onPressed: () {
                 if (model.currentTabSelection == 0) {
                   model.refreshBalancesV2();
+                  debugPrint('getting wallet coins balance');
                 } else {
                   model.getBalanceForSelectedCustomTokens();
+                  debugPrint('getting custom token balance');
                 }
               },
-              icon: model.isBusy
+              icon: model.isBusy || model.busy(model.selectedCustomTokens)
                   ? Container(
                       margin: const EdgeInsets.only(left: 3.0),
                       child: model.sharedService.loadingIndicator(),
@@ -446,55 +445,42 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
             Container(
               margin:
                   const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  InkWell(
-                    onTap: () {
-                      model.isShowFavCoins
-                          ? debugPrint('...')
-                          : model.hideSmallAmountAssets();
-                    },
-                    child: Row(
-                      children: <Widget>[
-                        model.isHideSmallAmountAssets
-                            ? const Icon(
-                                Icons.money_off,
-                                semanticLabel: 'Show all Amount Assets',
-                                color: primaryColor,
-                              )
-                            : Icon(
-                                Icons.attach_money,
-                                semanticLabel: 'Hide Small Amount Assets',
-                                color:
-                                    model.isShowFavCoins ? grey : primaryColor,
-                              ),
-                        Container(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: Text(
-                            AppLocalizations.of(context).hideSmallAmountAssets,
-                            style: model.isShowFavCoins
-                                ? Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(wordSpacing: 1.25, color: grey)
-                                : Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(wordSpacing: 1.25),
+              child: InkWell(
+                onTap: () {
+                  model.isShowFavCoins
+                      ? debugPrint('...')
+                      : model.hideSmallAmountAssets();
+                },
+                child: Row(
+                  children: <Widget>[
+                    model.isHideSmallAmountAssets
+                        ? const Icon(
+                            Icons.money_off,
+                            semanticLabel: 'Show all Amount Assets',
+                            color: primaryColor,
+                          )
+                        : Icon(
+                            Icons.attach_money,
+                            semanticLabel: 'Hide Small Amount Assets',
+                            color: model.isShowFavCoins ? grey : primaryColor,
                           ),
-                        ),
-
-                        // InkWell(
-                        //   onTap: () => model.switchSeatch(),
-                        //   child: model.openSearch
-                        //       ? Icon(Icons.search)
-                        //       : Icon(Icons.close),
-                        // )
-                      ],
+                    Container(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Text(
+                        AppLocalizations.of(context).hideSmallAmountAssets,
+                        style: model.isShowFavCoins
+                            ? Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(wordSpacing: 1.25, color: grey)
+                            : Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(wordSpacing: 1.25),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             //Add free FAB container
@@ -523,84 +509,35 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                             style: Theme.of(context).textTheme.headline6,
                           )),
                     )),
-            UIHelper.horizontalSpaceMedium,
           ],
         ),
       ),
       // Gas Container
       Container(
         margin: const EdgeInsets.only(left: 8.0),
-        child:
-            // model.isBusy
-            // ? Shimmer.fromColors(
-            //     baseColor: primaryColor,
-            //     highlightColor: grey,
-            //     child: Row(
-            //       children: <Widget>[
-            //         Padding(
-            //           padding: const EdgeInsets.only(left: 5.0),
-            //           child: Icon(
-            //             Icons.donut_large,
-            //             size: 18,
-            //             color: primaryColor,
-            //           ),
-            //         ),
-            //         UIHelper.horizontalSpaceSmall,
-            //         Text(
-            //           "${AppLocalizations.of(context).gas}: ${NumberUtil().truncateDoubleWithoutRouding(model.gasAmount, precision: 6).toString()}",
-            //           style: Theme.of(context)
-            //               .textTheme
-            //               .headline5
-            //               .copyWith(wordSpacing: 1.25),
-            //         ),
-            //         UIHelper.horizontalSpaceSmall,
-            //         MaterialButton(
-            //           minWidth: 70.0,
-            //           height: 24,
-            //           color: green,
-            //           padding: EdgeInsets.all(0),
-            //           onPressed: () {},
-            //           child: Text(
-            //             AppLocalizations.of(context).addGas,
-            //             style: Theme.of(context)
-            //                 .textTheme
-            //                 .headline6
-            //                 .copyWith(color: black),
-            //           ),
-            //         ),
-            //       ],
-            //     )):
-            Row(
-          children: [
-            // AddGasRow(model: model),
-            // UIHelper.horizontalSpaceSmall,
-            Expanded(
-              child: GestureDetector(
-                onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-                child: Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  height: 30,
-                  child: TextField(
-                    enabled: model.isShowFavCoins ? false : true,
-                    decoration: const InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: primaryColor, width: 1),
-                        ),
-                        // helperText: 'Search',
-                        // helperStyle:
-                        //     Theme.of(context).textTheme.bodyText1,
-                        suffixIcon: Icon(Icons.search, color: white)),
-                    controller: model.searchCoinTextController,
-                    onChanged: (String value) {
-                      model.isShowFavCoins
-                          ? model.searchFavCoinsByTickerName(value)
-                          : model.searchCoinsByTickerName(value);
-                    },
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+          child: Container(
+            margin: const EdgeInsets.only(top: 5),
+            height: 30,
+            child: TextField(
+              enabled: model.isShowFavCoins ? false : true,
+              decoration: const InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: primaryColor, width: 1),
                   ),
-                ),
-              ),
-            )
-          ],
+                  // helperText: 'Search',
+                  // helperStyle:
+                  //     Theme.of(context).textTheme.bodyText1,
+                  suffixIcon: Icon(Icons.search, color: white)),
+              controller: model.searchCoinTextController,
+              onChanged: (String value) {
+                model.isShowFavCoins
+                    ? model.searchFavCoinsByTickerName(value)
+                    : model.searchCoinsByTickerName(value);
+              },
+            ),
+          ),
         ),
       ),
 
@@ -779,14 +716,14 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w600))),
                                   Expanded(
-                                      flex: 3,
+                                      flex: 2,
                                       child: Text(
                                         AppLocalizations.of(context).balance,
                                         style: const TextStyle(
                                             color: black,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600),
-                                        textAlign: TextAlign.center,
+                                        //  textAlign: TextAlign.center,
                                       )),
                                   Expanded(
                                       flex: 1,
@@ -803,7 +740,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                             Expanded(
                               child: Container(
                                 margin: const EdgeInsets.symmetric(
-                                    horizontal: 5, vertical: 10),
+                                    horizontal: 3, vertical: 10),
                                 child: ListView.builder(
                                     padding: const EdgeInsets.only(top: 0),
                                     shrinkWrap: true,
@@ -815,7 +752,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                           model.selectedCustomTokens[index];
                                       return Container(
                                         margin: const EdgeInsets.symmetric(
-                                            vertical: 5, horizontal: 1),
+                                            vertical: 4, horizontal: 1),
                                         decoration: BoxDecoration(
                                             color: walletCardColor,
                                             borderRadius:
@@ -844,7 +781,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                           10.0)),
                                             ),
                                             UIHelper.horizontalSpaceMedium,
-                                            UIHelper.horizontalSpaceSmall,
+
                                             // Symbol and name
                                             Expanded(
                                               flex: 1,
@@ -864,7 +801,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                         color: grey,
                                                         fontSize: 12,
                                                         fontWeight:
-                                                            FontWeight.w400),
+                                                            FontWeight.w500),
                                                   ),
                                                   // Text(
                                                   //   customToken.name,
@@ -874,7 +811,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                 ],
                                               ),
                                             ),
-                                            UIHelper.horizontalSpaceSmall,
+
                                             // Balance
                                             Expanded(
                                               flex: 2,
@@ -887,23 +824,22 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                       style: const TextStyle(
                                                           color: white),
                                                       textAlign:
-                                                          TextAlign.center,
+                                                          TextAlign.right,
                                                     ),
                                             ),
-
-                                            // Send Action
+                                            UIHelper.horizontalSpaceSmall,
+                                            //  Action
                                             Container(
                                               padding:
                                                   const EdgeInsets.only(top: 5),
                                               child: Row(
+                                                mainAxisSize: MainAxisSize.min,
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.end,
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
+                                                    CrossAxisAlignment.end,
                                                 children: [
                                                   Container(
-                                                    margin:
-                                                        const EdgeInsets.all(2),
                                                     child: IconButton(
                                                       padding:
                                                           EdgeInsetsDirectional
@@ -940,14 +876,12 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                     ),
                                                   ),
                                                   Container(
-                                                    margin:
-                                                        const EdgeInsets.all(2),
                                                     child: IconButton(
                                                       padding:
                                                           EdgeInsetsDirectional
                                                               .zero,
                                                       onPressed: () {
-                                                        model.sendCustomToken(
+                                                        model.routeCustomToken(
                                                             customToken);
                                                       },
                                                       icon: Column(
@@ -968,6 +902,26 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                                         white)),
                                                           ),
                                                         ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 5.0),
+                                                    child: IconButton(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .zero,
+                                                      onPressed: () {
+                                                        model.routeCustomToken(
+                                                            customToken,
+                                                            isSend: false);
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.history_rounded,
+                                                        color: yellow,
+                                                        size: 24,
                                                       ),
                                                     ),
                                                   )

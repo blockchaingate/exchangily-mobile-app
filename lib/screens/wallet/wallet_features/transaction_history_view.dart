@@ -6,8 +6,6 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transact
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history/transaction_history_card_widget.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 
-import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -69,11 +67,11 @@ class TransactionHistoryView extends StatelessWidget {
                     : model.transactionHistoryToShowInView.isEmpty
                         ? Container(
                             margin: const EdgeInsets.only(top: 20),
-                            child: Center(
+                            child: const Center(
                                 child: Icon(Icons.insert_drive_file,
                                     color: white)))
                         : Container(
-                            padding: const EdgeInsets.all(4.0),
+                            padding: const EdgeInsets.all(3.0),
                             child: Column(
                               children: <Widget>[
                                 //  IconButton(icon:Icon(Icons.ac_unit,color:colors.white),onPressed: ()=> model.test(),),

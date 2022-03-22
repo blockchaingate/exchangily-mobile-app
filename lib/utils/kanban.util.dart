@@ -182,7 +182,7 @@ class KanbanUtils {
     try {
       var response = await client.post(url, body: body);
       debugPrint('response from sendKanbanRawTransaction=');
-      debugPrint(response.body);
+      debugPrint(response.body.toString());
       if (response.body
           .contains('TS crosschain withdraw verification failed')) {
         return {'success': false, 'data': response.body};
