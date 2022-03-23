@@ -13,6 +13,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
@@ -58,7 +59,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   double chainBalance = 0.0;
   String fabAddress = '';
   bool isValidAmount = true;
-
+  var walletUtil = WalletUtil();
   // Init
   void initState() async {
     setBusy(true);
@@ -69,7 +70,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     setFee();
     await getGas();
     //  }
-    specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
+    specialTicker = walletUtil.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)['tickerName'];
     await refreshBalance();
 

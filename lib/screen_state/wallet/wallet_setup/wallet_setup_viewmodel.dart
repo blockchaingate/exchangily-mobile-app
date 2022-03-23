@@ -28,6 +28,7 @@ import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/version_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import '../../../localizations.dart';
@@ -65,7 +66,7 @@ class WalletSetupViewmodel extends BaseViewModel {
   bool isVerifying = false;
   bool hasVerificationStarted = false;
   bool isHideIcon = true;
-
+  var walletUtil = WalletUtil();
   // init
   init() async {
     sharedService.context = context;
@@ -209,7 +210,7 @@ class WalletSetupViewmodel extends BaseViewModel {
           buttonTitle: AppLocalizations.of(context).confirm);
       if (res.confirmed) {
         var walletVerificationRes =
-            await walletService.verifyWalletAddresses(res.returnedText);
+            await walletUtil.verifyWalletAddresses(res.returnedText);
         isWalletVerifySuccess = walletVerificationRes['fabAddressCheck'] &&
             walletVerificationRes['trxAddressCheck'];
         isHideIcon = false;

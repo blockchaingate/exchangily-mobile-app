@@ -29,6 +29,7 @@ import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -84,117 +85,6 @@ class WalletService {
   var httpClient = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
   double coinUsdBalance;
 
-  Map<String, String> coinTickerAndNameList = {
-    'BTC': 'Bitcoin',
-    'ETH': 'Ethereum',
-    'FAB': 'Fast Access Blockchain',
-    'USDT': 'USDT',
-    'EXG': 'Exchangily',
-    'DUSD': 'DUSD',
-    'TRX': 'Tron',
-    'BCH': 'Bitcoin Cash',
-    'LTC': 'Litecoin',
-    'DOGE': 'Dogecoin',
-    'INB': 'Insight chain',
-    'DRGN': 'Dragonchain',
-    'HOT': 'Holo',
-    'CEL': 'Celsius',
-    'MATIC': 'Matic Network',
-    'IOST': 'IOST',
-    'MANA': 'Decentraland',
-    'WAX': 'Wax',
-    'ELF': 'aelf',
-    'GNO': 'Gnosis',
-    'POWR': 'Power Ledger',
-    'WINGS': 'Wings',
-    'MTL': 'Metal',
-    'KNC': 'Kyber Network',
-    'GVT': 'Genesis Vision'
-  };
-  List<String> coinTickers = [
-    'BTC',
-    'ETH',
-    'FAB',
-    'EXG',
-    'USDT',
-    'DUSD',
-    'TRX',
-    'BCH',
-    'LTC',
-    'DOGE',
-    'INB',
-    'DRGN',
-    'HOT',
-    'CEL',
-    'MATIC',
-    'IOST',
-    'MANA',
-    'WAX',
-    'ELF',
-    'GNO',
-    'POWR',
-    'WINGS',
-    'MTL',
-    'KNC',
-    'GVT'
-  ];
-
-  List<String> tokenType = [
-    '',
-    '',
-    '',
-    'FAB',
-    'ETH',
-    'FAB',
-    '',
-    '',
-    '',
-    '',
-    'ETH',
-    'ETH',
-    'ETH',
-    'ETH',
-    'ETH',
-    'ETH',
-    'ETH',
-    'ETH',
-    'ETH',
-    'ETH',
-    'ETH',
-    'ETH',
-    'ETH',
-    'ETH',
-    'ETH'
-  ];
-
-  List<String> coinNames = [
-    'Bitcoin',
-    'Ethereum',
-    'Fabcoin',
-    'Exchangily',
-    'Tether',
-    'DUSD',
-    'Tron',
-    'Bitcoin Cash',
-    'Litecoin',
-    'Dogecoin',
-    'Insight chain',
-    'Dragonchain',
-    'Holo',
-    'Celsius',
-    'Matic Network',
-    'IOST',
-    'Decentraland',
-    'Wax',
-    'aelf',
-    'Gnosis',
-    'Power Ledger',
-    'Wings',
-    'Metal',
-    'Kyber Network',
-    'Genesis Vision'
-  ];
-
   Completer<DialogResponse> _completer;
   final fabUtils = FabUtils();
   final btcUtils = BtcUtils();
@@ -203,6 +93,7 @@ class WalletService {
   final ethUtils = EthUtils();
   final kanbanUtils = KanbanUtils();
   final ltcUtils = LtcUtils();
+  var walletUtil = WalletUtil();
 
   Future<String> getAddressFromCoreWalletDatabaseByTickerName(
       String tickerName) async {
@@ -212,52 +103,6 @@ class WalletService {
         .getWalletAddressByTickerName(tickerName);
 
     return address;
-  }
-
-// coin type(int) to token type(String)
-  String getChainNameByTokenType(int coinType) {
-    String tokenType = '';
-// 0001 = BTC
-// 0002 = FAB
-// 0003 = ETH
-// 0004 - BCH
-// 0005 - LTC
-// 0006 - DOGE
-// 0007 = TRON
-// 0009 = POLYGON
-
-// CEL
-// cointype 196612
-// converts to 00030004
-// so we know that this is an eth token since 0003 = eth chain and 4 !=0
-
-    String hexCoinType =
-        abiUtils.fix8LengthCoinType(coinType.toRadixString(16));
-    String firstHalf = hexCoinType.substring(0, 4);
-    String secondHalf = hexCoinType.substring(4, 8);
-
-    log.i('hexCoinType $hexCoinType - ');
-    if (secondHalf == '0000') {
-      tokenType = '';
-    } else if (firstHalf == '0001' && secondHalf != '0000') {
-      tokenType = 'BTC';
-    } else if (firstHalf == '0002' && secondHalf != '0000') {
-      tokenType = 'FAB';
-    } else if (firstHalf == '0003' && secondHalf != '0000') {
-      tokenType = 'ETH';
-    } else if (firstHalf == '0004' && secondHalf != '0000') {
-      tokenType = 'BCH';
-    } else if (firstHalf == '0005' && secondHalf != '0000') {
-      tokenType = 'LTC';
-    } else if (firstHalf == '0006' && secondHalf != '0000') {
-      tokenType = 'DOGE';
-    } else if (firstHalf == '0007' && secondHalf != '0000') {
-      tokenType = 'TRX';
-    } else if (firstHalf == '0009' && secondHalf != '0000') {
-      tokenType = 'POLYGON';
-    }
-    log.i('hexCoinType $hexCoinType - tokenType $tokenType');
-    return tokenType;
   }
 
   storeTokenListInDB() async {
@@ -360,38 +205,6 @@ class WalletService {
       throw Exception(err);
     });
     return isValidAmount;
-  }
-
-/*----------------------------------------------------------------------
-                Update special tokens tickername in UI
-----------------------------------------------------------------------*/
-  updateSpecialTokensTickerNameForTxHistory(String tickerName) {
-    String logoTicker = '';
-    if (tickerName.toUpperCase() == 'ETH_BST' ||
-        tickerName.toUpperCase() == 'BSTE') {
-      tickerName = 'BST(ERC20)';
-      logoTicker = 'BSTE';
-    } else if (tickerName.toUpperCase() == 'ETH_DSC' ||
-        tickerName.toUpperCase() == 'DSCE') {
-      tickerName = 'DSC(ERC20)';
-      logoTicker = 'DSCE';
-    } else if (tickerName.toUpperCase() == 'ETH_EXG' ||
-        tickerName.toUpperCase() == 'EXGE') {
-      tickerName = 'EXG(ERC20)';
-      logoTicker = 'EXGE';
-    } else if (tickerName.toUpperCase() == 'ETH_FAB' ||
-        tickerName.toUpperCase() == 'FABE') {
-      tickerName = 'FAB(ERC20)';
-      logoTicker = 'FABE';
-    } else if (tickerName.toUpperCase() == 'TRON_USDT' ||
-        tickerName.toUpperCase() == 'USDTX') {
-      tickerName = 'USDT(TRC20)';
-      logoTicker = 'USDTX';
-    } else if (tickerName.toUpperCase() == 'USDT') {
-      tickerName = 'USDT(ERC20)';
-      logoTicker = 'USDT';
-    } else {}
-    return {"tickerName": tickerName, "logoTicker": logoTicker};
   }
 
 /*----------------------------------------------------------------------
@@ -647,10 +460,10 @@ class WalletService {
   Future getCoinAddresses(String mnemonic) async {
     var seed = generateSeed(mnemonic);
     var root = bip32.BIP32.fromSeed(seed);
-    for (int i = 0; i < coinTickers.length; i++) {
-      var tickerName = coinTickers[i];
+    for (int i = 0; i < walletUtil.coinTickers.length; i++) {
+      var tickerName = walletUtil.coinTickers[i];
       var addr = await coinUtils.getAddressForCoin(root, tickerName,
-          tokenType: tokenType[i]);
+          tokenType: walletUtil.tokenType[i]);
       log.w('name $tickerName - address $addr');
       return addr;
     }
@@ -727,92 +540,6 @@ class WalletService {
     //   }
     // }
     //  return currentUsdValue;
-  }
-
-  // verify wallet address
-  Future<Map<String, bool>> verifyWalletAddresses(String mnemonic) async {
-    Map<String, bool> res = {
-      "fabAddressCheck": false,
-      "trxAddressCheck": false
-    };
-
-    // create wallet address and assign to walletcoremodel object
-    CoreWalletModel walletDataFromCreateOfflineWalletV1 =
-        await createOfflineWalletsV1(mnemonic, '', isVerifying: true);
-
-    // get the walletbalancebody from the DB
-    var walletBalancesBodyFromStorage;
-    if (storageService.walletBalancesBody.isNotEmpty) {
-      walletBalancesBodyFromStorage =
-          jsonDecode(storageService.walletBalancesBody);
-    } else {
-      await walletDatabaseService.initDb();
-      var fabWallet = await walletDatabaseService.getWalletBytickerName('FAB');
-      var trxWallet = await walletDatabaseService.getWalletBytickerName('TRX');
-      if (fabWallet != null && trxWallet != null) {
-        walletBalancesBodyFromStorage = {
-          "fabAddress": fabWallet.address,
-          "trxAddress": trxWallet.address
-        };
-      }
-    }
-
-    // Compare the address if matched then don't notify otherwise raise flag
-
-    String fabAddressFromCreate = jsonDecode(
-        walletDataFromCreateOfflineWalletV1.walletBalancesBody)['fabAddress'];
-    String trxAddressFromCreate = jsonDecode(
-        walletDataFromCreateOfflineWalletV1.walletBalancesBody)['trxAddress'];
-
-    String fabAddressFromStorage = '';
-    String trxAddressFromStorage = '';
-
-    String fabAddressFromCoreWalletDb = '';
-    String trxAddressFromCoreWalletDb = '';
-    if (walletBalancesBodyFromStorage != null) {
-      fabAddressFromStorage = walletBalancesBodyFromStorage['fabAddress'];
-
-      trxAddressFromStorage = walletBalancesBodyFromStorage['trxAddress'];
-    } else if (await coreWalletDatabaseService.getWalletBalancesBody() !=
-        null) {
-      fabAddressFromCoreWalletDb =
-          await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
-      trxAddressFromCoreWalletDb =
-          await coreWalletDatabaseService.getWalletAddressByTickerName('TRX');
-    }
-    log.i(
-        'fabAddressFromCreate $fabAddressFromCreate -- fabAddressFromStorage $fabAddressFromStorage -- fabAddressFromCoreWalletDb $fabAddressFromCoreWalletDb');
-    var fabAddressFromStorageToCompare = fabAddressFromStorage.isEmpty
-        ? fabAddressFromCoreWalletDb
-        : fabAddressFromStorage;
-    var trxAddressFromStorageToCompare = trxAddressFromStorage.isEmpty
-        ? trxAddressFromCoreWalletDb
-        : trxAddressFromStorage;
-    if (fabAddressFromCreate == fabAddressFromStorageToCompare) {
-      res["fabAddressCheck"] = true;
-      log.w('FabVerification passed $res');
-      if (trxAddressFromCreate == trxAddressFromStorageToCompare) {
-        res["trxAddressCheck"] = true;
-        log.i('Trx Verification passed $res');
-        // need to store the wallet balance body in the
-        // new single db especially for older apps where
-        // there is no concept of walletBalancesBody or
-        // app before new wallet balance api
-        var walletCoreModel = CoreWalletModel(
-          id: 1,
-          walletBalancesBody:
-              walletDataFromCreateOfflineWalletV1.walletBalancesBody,
-        );
-        // store in single core database
-        await coreWalletDatabaseService.update(walletCoreModel);
-      } else {
-        res["trxAddressCheck"] = false;
-      }
-    } else {
-      res["fabAddressCheck"] = false;
-      log.e('Verification FAILED: did not check TRX $res');
-    }
-    return res;
   }
 
 /*----------------------------------------------------------------------
@@ -936,10 +663,10 @@ class WalletService {
     String trxAddress = generateTrxAddress(mnemonic);
 
     try {
-      for (int i = 0; i < coinTickers.length; i++) {
-        String tickerName = coinTickers[i];
-        String name = coinNames[i];
-        String token = tokenType[i];
+      for (int i = 0; i < walletUtil.coinTickers.length; i++) {
+        String tickerName = walletUtil.coinTickers[i];
+        String name = walletUtil.coinNames[i];
+        String token = walletUtil.tokenType[i];
         String addr = '';
         if (tickerName == 'BCH') {
           addr = bchAddress;

@@ -562,34 +562,6 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
       child: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
-            // MediaQuery.of(context).size.width < largeSize
-            //     ? SliverAppBar(
-            //         elevation: 0,
-            //         backgroundColor: secondaryColor,
-            //         expandedHeight: 120.0,
-            //         floating: false,
-            //         pinned: true,
-            //         leading: Container(),
-            //         flexibleSpace: LayoutBuilder(builder:
-            //             (BuildContext context, BoxConstraints constraints) {
-            //           // debugPrint('constraints=' + constraints.toString());
-            //           top = constraints.biggest.height;
-            //           return FlexibleSpaceBar(
-            //             centerTitle: true,
-            //             titlePadding: EdgeInsets.all(0),
-            //             title: AnimatedOpacity(
-            //               duration: Duration(milliseconds: 50),
-            //               opacity: top ==
-            //                       MediaQuery.of(context).padding.top +
-            //                           kToolbarHeight
-            //                   ? 1.0
-            //                   : 0.0,
-            //               child: TotalBalanceWidget(model: model),
-            //             ),
-            //             background: topWidget(model, context),
-            //           );
-            //         }))
-            //     : SliverToBoxAdapter(),
             SliverToBoxAdapter(
               child: SizedBox(
                   // color: Colors.lightBlue,
@@ -955,53 +927,18 @@ ListView buildListView(WalletDashboardViewModel model) {
                                                 Coin Details Wallet Card
   ----------------------------------------------------------------------------------------------------------------------------------------------*/
 
-Widget _coinDetailsCard(
-    String tickerName,
-    // double available,
-    // double locked,
-    // double assetsInExchange,
-    // double usdValue,
-    index,
-    List<WalletBalance> wallets,
-    elevation,
-    context,
-    WalletDashboardViewModel model) {
+Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
+    elevation, context, WalletDashboardViewModel model) {
   String logoTicker = '';
-  if (tickerName.toUpperCase() == 'BSTE') {
-    tickerName = 'BST(ERC20)';
-    logoTicker = 'BSTE';
-  } else if (tickerName.toUpperCase() == 'DSCE') {
-    tickerName = 'DSC(ERC20)';
-    logoTicker = 'DSCE';
-  } else if (tickerName.toUpperCase() == 'EXGE') {
-    tickerName = 'EXG(ERC20)';
-    logoTicker = 'EXGE';
-  } else if (tickerName.toUpperCase() == 'FABE') {
-    tickerName = 'FAB(ERC20)';
-    logoTicker = 'FABE';
-  } else if (tickerName.toUpperCase() == 'USDTX') {
-    tickerName = 'USDT(TRC20)';
-    logoTicker = 'USDTX';
-  } else if (tickerName.toUpperCase() == 'USDT') {
-    tickerName = 'USDT(ERC20)';
-    logoTicker = 'USDT';
-  } else if (tickerName.toUpperCase() == 'USDC') {
-    tickerName = 'USDC(erc20)';
-    logoTicker = 'USDC';
-  } else if (tickerName.toUpperCase() == 'USDCX') {
-    tickerName = 'USDC(trc20)';
-    logoTicker = 'USDC';
-  } else {
-    logoTicker = tickerName;
-  }
-//  tickerName = model.walletService
-//         .updateSpecialTokensTickerNameForTxHistory(tickerName)['tickerName'];
-//     logoTicker = model.walletService
-//         .updateSpecialTokensTickerNameForTxHistory(tickerName)['logoTicker'];
+  var specialTokenData = {};
+  specialTokenData =
+      model.walletUtil.updateSpecialTokensTickerNameForTxHistory(tickerName);
+  tickerName = specialTokenData['tickerName'];
+  logoTicker = specialTokenData['logoTicker'];
   if (model.isHideSmallAmountAssets &&
       (model.wallets[index].balance * model.wallets[index].usdValue.usd)
               .toInt() <
-          1) {
+          0.1) {
     return Container();
   } else {
     return Card(

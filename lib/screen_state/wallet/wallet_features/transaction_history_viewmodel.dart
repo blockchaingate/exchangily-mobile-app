@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   bool isDialogUp = false;
   int decimalLimit = 0;
   bool isCustomToken = false;
-  // CustomTokenModel customToken = CustomTokenModel();
+  var walletUtil = WalletUtil();
 
   @override
   Future futureToRun() async =>
@@ -156,7 +157,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                   Update special tokens ticker
 ----------------------------------------------------------------------*/
   updateTickers(String ticker) {
-    return walletService
+    return walletUtil
         .updateSpecialTokensTickerNameForTxHistory(ticker)['tickerName'];
   }
 

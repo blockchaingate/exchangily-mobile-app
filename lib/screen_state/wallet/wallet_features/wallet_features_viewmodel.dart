@@ -25,6 +25,7 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
@@ -52,11 +53,12 @@ class WalletFeaturesViewModel extends BaseViewModel {
   bool isFavorite = false;
   int decimalLimit = 8;
   double unconfirmedBalance = 0.0;
+  var walletUtil = WalletUtil();
 
   init() async {
     getWalletFeatures();
     getErrDeposit();
-    specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
+    specialTicker = walletUtil.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)["tickerName"];
     log.i('wi object to check name ${walletInfo.toJson()}');
     refreshBalance();

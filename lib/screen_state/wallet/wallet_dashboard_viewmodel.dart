@@ -45,6 +45,7 @@ import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
     as tron_address_util;
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
@@ -145,6 +146,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   List<CustomTokenModel> selectedCustomTokens = [];
   var receiverWalletAddressTextController = TextEditingController();
   int swiperWidgetIndex = 0;
+  var walletUtil = WalletUtil();
 
 /*----------------------------------------------------------------------
                     INIT
@@ -186,7 +188,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     int coinType = await coinService.getCoinTypeByTickerName(tickerName);
 
     // use coin type to get the token type
-    String tokenType = walletService.getChainNameByTokenType(coinType);
+    String tokenType = walletUtil.getChainNameByTokenType(coinType);
 
     // get wallet address
     if (tickerName == 'ETH' || tokenType == 'ETH' || tokenType == 'POLYGON') {
@@ -206,9 +208,9 @@ class WalletDashboardViewModel extends BaseViewModel {
           .getWalletAddressByTickerName(tickerName);
     }
     String coinName = '';
-    for (var i = 0; i < walletService.coinTickerAndNameList.length; i++) {
-      if (walletService.coinTickerAndNameList.containsKey(wallet.coin)) {
-        coinName = walletService.coinTickerAndNameList[wallet.coin];
+    for (var i = 0; i < walletUtil.coinTickerAndNameList.length; i++) {
+      if (walletUtil.coinTickerAndNameList.containsKey(wallet.coin)) {
+        coinName = walletUtil.coinTickerAndNameList[wallet.coin];
       }
       break;
     }

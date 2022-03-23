@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
@@ -74,6 +75,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   TokenModel mainChainToken = TokenModel();
   bool isSubmittingTx = false;
   var tokenType;
+  var walletUtil = WalletUtil();
 
 /*---------------------------------------------------
                       INIT
@@ -111,7 +113,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       setWithdrawLimit("BTC");
     }
     specialTickerForTxHistory =
-        walletService.updateSpecialTokensTickerNameForTxHistory(
+        walletUtil.updateSpecialTokensTickerNameForTxHistory(
             walletInfo.tickerName)['tickerName'];
     await checkGasBalance();
     await getSingleCoinExchangeBal();
