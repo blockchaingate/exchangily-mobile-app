@@ -124,7 +124,8 @@ class SendViewModel extends BaseViewModel {
     }
     if (!isCustomToken) {
       await refreshBalance();
-      await walletService.getSingleCoinWalletDecimalLimit(coinName);
+      decimalLimit =
+          await walletService.getSingleCoinWalletDecimalLimit(coinName);
       if (decimalLimit == null || decimalLimit == 0) {
         decimalLimit = 8;
       }

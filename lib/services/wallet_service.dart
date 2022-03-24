@@ -2606,7 +2606,6 @@ class WalletService {
 
       contractAddress = string_utils.trimHexPrefix(contractAddress);
 
-      log.i(coin);
       var contractInfo = await getFabSmartContract(
           contractAddress, fxnCallHex, gasLimit, gasPrice);
       if (addressList != null && addressList.isNotEmpty) {
