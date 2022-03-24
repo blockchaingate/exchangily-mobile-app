@@ -149,39 +149,7 @@ class WalletSetupViewmodel extends BaseViewModel {
     setBusyForObject(isDeleting, true);
     log.w('deleting wallet');
     try {
-      await walletDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('wallet database deleted!!'))
-          .catchError((err) => log.e('wallet database CATCH $err'));
-
-      await transactionHistoryDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('trnasaction history database deleted!!'))
-          .catchError((err) => log.e('tx history database CATCH $err'));
-
-      await _vaultService
-          .deleteEncryptedData()
-          .whenComplete(() => log.e('encrypted data deleted!!'))
-          .catchError((err) => log.e('delete encrypted CATCH $err'));
-
-      await coreWalletDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('coreWalletDatabaseService data deleted!!'))
-          .catchError((err) => log.e('coreWalletDatabaseService  CATCH $err'));
-
-      await tokenListDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('Token list database deleted!!'))
-          .catchError((err) => log.e('token list database CATCH $err'));
-
-      await userSettingsDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('User settings database deleted!!'))
-          .catchError((err) => log.e('user setting database CATCH $err'));
-
-      storageService.walletBalancesBody = '';
-      storageService.isShowCaseView = true;
-      storageService.clearStorage();
+      await walletUtil.deleteWallet();
 
       setBusyForObject(isDeleting, false);
     } catch (err) {
