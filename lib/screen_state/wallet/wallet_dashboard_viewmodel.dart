@@ -95,8 +95,6 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   double gasAmount = 0;
   String exgAddress = '';
-  //String wallets;
-  bool isHideSmallAmountAssets = false;
 
   bool isConfirmDeposit = false;
 
@@ -147,6 +145,8 @@ class WalletDashboardViewModel extends BaseViewModel {
   var receiverWalletAddressTextController = TextEditingController();
   int swiperWidgetIndex = 0;
   var walletUtil = WalletUtil();
+  bool isHideSearch = false;
+  bool isHideSmallAssetsButton = false;
 
 /*----------------------------------------------------------------------
                     INIT
@@ -156,22 +156,18 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusy(true);
 
     sharedService.context = context;
-    await refreshBalancesV2();
+    //currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
 
-    checkAnnouncement();
+    await refreshBalancesV2();
     showDialogWarning();
     getConfirmDepositStatus();
-    buildFavCoinListV1();
 
-    currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
-    // walletsScrollController.addListener(_scrollListener());
-    //   await storeWalletDecimalData();
-    //refreshController = new RefreshController();
+    checkAnnouncement();
+
     walletService.storeTokenListInDB();
-
-    setBusy(false);
     customTokens = await apiService.getCustomTokens();
     await getBalanceForSelectedCustomTokens();
+    setBusy(false);
   }
 
   // get wallet info object with address using single wallet balance
@@ -260,7 +256,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 // get balance for Selected custom tokens
 
   Future getBalanceForSelectedCustomTokens() async {
-    setBusy(true);
+    setBusyForObject(selectedCustomTokens, true);
     String fabAddress = await sharedService.getExgAddressFromWalletDatabase();
     selectedCustomTokens.clear();
     String selectedCustomTokensJson = storageService.customTokens;
@@ -280,15 +276,15 @@ class WalletDashboardViewModel extends BaseViewModel {
               token.tokenId,
               fabAddress,
               token.decimal);
-          setBusyForObject(selectedCustomTokens, true);
+
           token.balance = balance;
-          setBusyForObject(selectedCustomTokens, false);
+
           log.i('token after adding balance ${token.toJson()}');
         }
       }
     }
     log.w('Selected custom token list => Finished');
-    setBusy(false);
+    setBusyForObject(selectedCustomTokens, false);
   }
 
   //switchSearch
@@ -557,18 +553,29 @@ class WalletDashboardViewModel extends BaseViewModel {
     });
   }
 
-  updateTabSelection(int tabIndex) {
+  updateTabSelection(int tabIndex) async {
     setBusy(true);
+    currentTabSelection = tabIndex;
+    isHideSmallAssetsButton = true;
+    isHideSearch = true;
+
     if (tabIndex == 0) {
-      isShowFavCoins = false;
-    } else {
+      await init();
+      isHideSmallAssetsButton = false;
+      isHideSearch = false;
+    } else if (tabIndex == 1) {
       isShowFavCoins = true;
+    } else if (tabIndex == 2) {
+      await getBalanceForSelectedCustomTokens();
     }
 
-    currentTabSelection = tabIndex;
+    if (tabIndex != 1) {
+      isShowFavCoins = false;
+    }
     storageService.isFavCoinTabSelected = isShowFavCoins ? true : false;
     debugPrint(
         'current tab sel $currentTabSelection -- isShowFavCoins $isShowFavCoins');
+
     setBusy(false);
   }
 
@@ -620,7 +627,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     if (favCoinsJson != null && favCoinsJson != '') {
       List<String> favWalletCoins =
           (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
-
+      currentTabSelection = 1;
       var wallets = await refreshBalancesV2();
 
       for (var i = 0; i < favWalletCoins.length; i++) {
@@ -1362,7 +1369,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     refreshController.refreshCompleted();
   }
 
-  // Hide Small Amount Assets
   hideSmallAmountAssets() {
     // debugPrint("hideSmallAmountAssets function: $isHideSmallAmountAssets");
     // wallets.forEach((w) => {
@@ -1370,18 +1376,17 @@ class WalletDashboardViewModel extends BaseViewModel {
     //           " wallets.balance.isNegative: " +
     //           w.balance.isNegative.toString())
     //     });
-    setBusyForObject(isHideSmallAmountAssets, true);
+    setBusyForObject(isHideSmallAssetsButton, true);
     log.i(
-        'hide small amounts func: isBusy $isBusy -- ishidesmallamounts object busy  ${busy(isHideSmallAmountAssets)}');
-    isHideSmallAmountAssets = !isHideSmallAmountAssets;
-    setBusyForObject(isHideSmallAmountAssets, false);
+        'hide small amounts func: isBusy $isBusy -- ishidesmallamounts object busy  ${busy(isHideSmallAssetsButton)}');
+    isHideSmallAssetsButton = !isHideSmallAssetsButton;
+    setBusyForObject(isHideSmallAssetsButton, false);
 
     log.i(
-        'hide small amounts func: isBusy $isBusy -- ishidesmallamounts object busy  ${busy(isHideSmallAmountAssets)}');
+        'hide small amounts func: isBusy $isBusy -- ishidesmallamounts object busy  ${busy(isHideSmallAssetsButton)}');
     // debugPrint("end hideSmallAmountAssets function: $isHideSmallAmountAssets");
   }
 
-// Calculate Total Usd Balance of Coins
   calcTotalBal() {
     totalUsdBalance = '';
     totalWalletBalance = '';
@@ -1406,10 +1411,6 @@ class WalletDashboardViewModel extends BaseViewModel {
         'Total usd balance $totalUsdBalance -- totalWalletBalance $totalWalletBalance --totalLockedBalance $totalLockedBalance ');
   }
 
-/*---------------------------------------------------
-                      Get gas
---------------------------------------------------- */
-
   getGas() async {
     String address =
         await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
@@ -1421,10 +1422,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     return gasAmount;
   }
 
-/*----------------------------------------------------------------------
-                      Get Confirm deposit err
-----------------------------------------------------------------------*/
-// mpvWdFb91gYN1Q1UBfhMEmGn1Amw3BNthZ
   getConfirmDepositStatus() async {
     String address =
         await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
@@ -1466,9 +1463,6 @@ class WalletDashboardViewModel extends BaseViewModel {
       log.e('getConfirmDepositStatus Catch $err');
     });
   }
-/*----------------------------------------------------------------------
-                      Show dialog warning
-----------------------------------------------------------------------*/
 
   showDialogWarning() {
     log.w('in showDialogWarning isConfirmDeposit $isConfirmDeposit');
@@ -1501,10 +1495,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     storageService.favWalletCoins = json.encode(favWalletCoins);
   }
 
-/*----------------------------------------------------------------------
-                      Build coin list
-----------------------------------------------------------------------*/
-
   buildNewWalletObject(
       TokenModel newToken, WalletBalance newTokenWalletBalance) async {
     String newCoinAddress = '';
@@ -1528,29 +1518,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     wallets.add(wb);
     log.e('new coin ${wb.coin} added ${wb.toJson()} in wallet info object');
   }
-
-/*----------------------------------------------------------------------
-                      Assign New Token Address
-----------------------------------------------------------------------*/
-  // String assignNewTokenAddress(TokenModel newToken) {
-  //   String newCoinAddress = '';
-  //   walletInfo.firstWhere((wallet) {
-  //     if (wallet.tickerName == newToken.chainName) {
-  //       if (newToken.chainName == 'FAB')
-  //         newCoinAddress = fabUtils.fabToExgAddress(wallet.address);
-  //       else
-  //         newCoinAddress = wallet.address;
-  //       log.w('new token ${newToken.tickerName} address $newCoinAddress');
-  //       return true;
-  //     }
-  //     return false;
-  //   });
-  //   return newCoinAddress;
-  // }
-
-/*-------------------------------------------------------------------------------------
-                          Refresh Balances
--------------------------------------------------------------------------------------*/
 
   Future<List<WalletBalance>> refreshBalancesV2() async {
     setBusy(true);
@@ -1583,35 +1550,38 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     wallets = walletBalancesApiRes;
     walletsCopy = wallets;
-    setBusy(false);
-    calcTotalBal();
 
-    await checkToUpdateWallet();
-    moveTronUsdt();
-    moveTron();
-    await getGas();
+    if (currentTabSelection == 0) {
+      calcTotalBal();
 
-    // check gas and fab balance if 0 then ask for free fab
-    if (gasAmount == 0.0 && fabBalance == 0.0) {
-      String address =
-          await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
-      if (storageService.isShowCaseView != null) {
-        if (storageService.isShowCaseView) {
+      await checkToUpdateWallet();
+      moveTronUsdt();
+      moveTron();
+      await getGas();
+
+      // check gas and fab balance if 0 then ask for free fab
+      if (gasAmount == 0.0 && fabBalance == 0.0) {
+        String address =
+            await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
+        if (storageService.isShowCaseView != null) {
+          if (storageService.isShowCaseView) {
+            storageService.isShowCaseView = true;
+            _isShowCaseView = true;
+          }
+        } else {
           storageService.isShowCaseView = true;
           _isShowCaseView = true;
         }
+        var res = await apiService.getFreeFab(address);
+        if (res != null) {
+          isFreeFabNotUsed = res['ok'];
+        }
       } else {
-        storageService.isShowCaseView = true;
-        _isShowCaseView = true;
+        log.i('Fab or gas balance available already');
+        // storageService.isShowCaseView = false;
       }
-      var res = await apiService.getFreeFab(address);
-      if (res != null) {
-        isFreeFabNotUsed = res['ok'];
-      }
-    } else {
-      log.i('Fab or gas balance available already');
-      // storageService.isShowCaseView = false;
     }
+    setBusy(false);
     return walletBalancesApiRes;
   }
 
