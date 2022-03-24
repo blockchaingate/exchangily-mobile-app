@@ -95,6 +95,7 @@ class SendViewModel extends BaseViewModel {
   double chainBalance = 0.0;
   bool isCustomToken = false;
   CustomTokenModel customToken = CustomTokenModel();
+
   // Init State
   initState() async {
     setBusy(true);
@@ -124,7 +125,8 @@ class SendViewModel extends BaseViewModel {
     }
     if (!isCustomToken) {
       await refreshBalance();
-      await walletService.getSingleCoinWalletDecimalLimit(coinName);
+      decimalLimit =
+          await walletService.getSingleCoinWalletDecimalLimit(coinName);
       if (decimalLimit == null || decimalLimit == 0) {
         decimalLimit = 8;
       }
