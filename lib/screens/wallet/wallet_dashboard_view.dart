@@ -92,7 +92,51 @@ class WalletDashboardView extends StatelessWidget {
                       model.updateShowCaseViewStatus();
                     },
                     builder: Builder(
-                      builder: (context) => mainWidgets(model, context),
+                      builder: (context) {
+                        return Column(
+                          children: <Widget>[
+                            LayoutBuilder(builder:
+                                (BuildContext ctx, BoxConstraints constraints) {
+                              if (constraints.maxWidth < largeSize) {
+                                return Container(
+                                  height: MediaQuery.of(context).padding.top,
+                                );
+                              } else {
+                                return Column(
+                                  children: <Widget>[
+                                    topWidget(model, context),
+                                    amountAndGas(model, context),
+                                  ],
+                                );
+                              }
+                            }),
+                            Expanded(
+                              child: LayoutBuilder(builder: (BuildContext ctx,
+                                  BoxConstraints constraints) {
+                                if (constraints.maxWidth < largeSize) {
+                                  return coinList(model, ctx);
+                                } else {
+                                  return Row(
+                                    children: [
+                                      SizedBox(
+                                          width: 300,
+                                          height: double.infinity,
+                                          child: coinList(model, ctx)),
+                                      Expanded(
+                                        child: model.wallets == null
+                                            ? Container()
+                                            : WalletFeaturesView(
+                                                walletInfo:
+                                                    model.rightWalletInfo),
+                                      )
+                                    ],
+                                  );
+                                }
+                              }),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -190,60 +234,6 @@ class WalletDashboardView extends StatelessWidget {
       },
     );
   }
-}
-
-Widget mainWidgets(WalletDashboardViewModel model, BuildContext context) {
-  return Column(
-    children: <Widget>[
-      LayoutBuilder(builder: (BuildContext ctx, BoxConstraints constraints) {
-        if (constraints.maxWidth < largeSize) {
-          return Container(
-            height: MediaQuery.of(context).padding.top,
-          );
-        } else {
-          return Container(
-            child: Column(
-              children: <Widget>[
-                topWidget(model, context),
-                amountAndGas(model, context),
-              ],
-            ),
-          );
-        }
-      }),
-
-      /*------------------------------------------------------------------------------
-                                        Build Wallet List Container
-        -------------------------------------------------------------------------------*/
-      //   !Platform.isAndroid
-      //      ?
-      Expanded(
-        child: LayoutBuilder(
-            builder: (BuildContext ctx, BoxConstraints constraints) {
-          if (constraints.maxWidth < largeSize) {
-            return coinList(model, ctx);
-          } else {
-            return Container(
-              // color: Colors.amber,
-              child: Row(
-                children: [
-                  SizedBox(
-                      width: 300,
-                      height: double.infinity,
-                      child: coinList(model, ctx)),
-                  Expanded(
-                    child: model.wallets == null
-                        ? Container()
-                        : WalletFeaturesView(walletInfo: model.rightWalletInfo),
-                  )
-                ],
-              ),
-            );
-          }
-        }),
-      ),
-    ],
-  );
 }
 
 /*-------------------------------------------------------------------------------------
@@ -447,15 +437,13 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                   const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
               child: InkWell(
                 onTap: () {
-                  model.isShowFavCoins ||
-                          model.isHideSearch ||
-                          model.isHideSmallAssetsButton
-                      ? debugPrint('...')
+                  model.isShowFavCoins || model.isHideSearch
+                      ? debugPrint('...just printing...')
                       : model.hideSmallAmountAssets();
                 },
                 child: Row(
                   children: <Widget>[
-                    model.isHideSmallAssetsButton
+                    !model.isHideSmallAssetsButton
                         ? const Icon(
                             Icons.money_off,
                             semanticLabel: 'Show all Amount Assets',
@@ -464,19 +452,18 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                         : Icon(
                             Icons.attach_money,
                             semanticLabel: 'Hide Small Amount Assets',
-                            color: model.isShowFavCoins ||
-                                    model.isHideSearch ||
-                                    model.isHideSmallAssetsButton
+                            color: model.isShowFavCoins || model.isHideSearch
                                 ? grey
                                 : primaryColor,
                           ),
                     Container(
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
-                        AppLocalizations.of(context).hideSmallAmountAssets,
-                        style: model.isShowFavCoins ||
-                                model.isHideSearch ||
-                                model.isHideSmallAssetsButton
+                        !model.isHideSmallAssetsButton
+                            ? AppLocalizations.of(context).hideSmallAmountAssets
+                            : AppLocalizations.of(context)
+                                .showSmallAmountAssets,
+                        style: model.isShowFavCoins || model.isHideSearch
                             ? Theme.of(context)
                                 .textTheme
                                 .headline5
@@ -557,17 +544,15 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
 
       UIHelper.verticalSpaceSmall,
       model.isUpdateWallet
-          ? Container(
-              child: TextButton(
+          ? TextButton(
               child: Text(AppLocalizations.of(context).updateWallet),
               onPressed: () => model.updateWallet(),
-            ))
+            )
           : Container(),
     ],
   );
 }
 
-//coin list
 Widget coinList(WalletDashboardViewModel model, BuildContext context) {
   // final tabController = TabController(length: 3, vsync: this, initialIndex: 1);
   return DefaultTabController(
@@ -923,17 +908,19 @@ ListView buildListView(WalletDashboardViewModel model) {
               : 0.0) *
           model.wallets[index].usdValue.usd;
 
-      return Visibility(
-        // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
-        visible: usdBalance >= 0 && !model.isHideSmallAssetsButton,
-        child: _coinDetailsCard(
-            name, index, model.wallets, model.elevation, context, model),
-        // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
-        replacement: Visibility(
-            visible: model.isHideSmallAssetsButton && usdBalance != 0,
-            child: _coinDetailsCard(
-                name, index, model.wallets, model.elevation, context, model)),
-      );
+      return _coinDetailsCard(
+          name, index, model.wallets, model.elevation, context, model);
+      // Visibility(
+      //   // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
+      //   visible: usdBalance >= 0 && !model.isHideSmallAssetsButton,
+      //   child: _coinDetailsCard(
+      //       name, index, model.wallets, model.elevation, context, model),
+      //   // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
+      //   replacement: Visibility(
+      //       visible: model.isHideSmallAssetsButton && usdBalance != 0,
+      //       child: _coinDetailsCard(
+      //           name, index, model.wallets, model.elevation, context, model)),
+      // );
     },
   );
 }

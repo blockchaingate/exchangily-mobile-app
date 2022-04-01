@@ -1986,6 +1986,11 @@ class AppLocalizations {
     return Intl.message('Favorite Tokens',
         name: 'favoriteTokens', desc: 'favoriteTokens');
   }
+
+  String get showSmallAmountAssets {
+    return Intl.message('Show Small Amount Assets',
+        name: 'showSmallAmountAssets', desc: 'show_small_amount_assets');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
