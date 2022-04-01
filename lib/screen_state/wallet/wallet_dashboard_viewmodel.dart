@@ -1544,7 +1544,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     walletBalancesApiRes =
         await apiService.getWalletBalance(jsonDecode(finalWbb));
-    log.w('walletBalances LENGTH ${walletBalancesApiRes.length}');
+    log.w('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
 
     wallets = walletBalancesApiRes;
     walletsCopy = wallets;
