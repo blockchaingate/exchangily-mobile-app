@@ -14,7 +14,7 @@
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 
 import '../environments/environment.dart';
@@ -366,8 +366,8 @@ class FabUtils {
   }
 
   Future getFabTokenBalanceByAddress(String address, String coinName) async {
-    TokenListDatabaseService tokenListDatabaseService =
-        locator<TokenListDatabaseService>();
+    TokenInfoDatabaseService tokenListDatabaseService =
+        locator<TokenInfoDatabaseService>();
     var smartContractAddress =
         environment["addresses"]["smartContract"][coinName];
     if (smartContractAddress == null) {

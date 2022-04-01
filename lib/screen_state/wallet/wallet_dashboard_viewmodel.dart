@@ -30,7 +30,7 @@ import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -75,8 +75,8 @@ class WalletDashboardViewModel extends BaseViewModel {
       locator<DecimalConfigDatabaseService>();
   ApiService apiService = locator<ApiService>();
 
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   var coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   var storageService = locator<LocalStorageService>();
   final dialogService = locator<DialogService>();
@@ -164,7 +164,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     checkAnnouncement();
 
-    walletService.storeTokenListInDB();
+    walletService.storeTokenListUpdatesInDB();
     customTokens = await apiService.getCustomTokens();
     await getBalanceForSelectedCustomTokens();
     setBusy(false);
@@ -187,7 +187,10 @@ class WalletDashboardViewModel extends BaseViewModel {
     String tokenType = walletUtil.getChainNameByTokenType(coinType);
 
     // get wallet address
-    if (tickerName == 'ETH' || tokenType == 'ETH' || tokenType == 'POLYGON') {
+    if (tickerName == 'ETH' ||
+        tokenType == 'ETH' ||
+        tickerName == 'MATICM' ||
+        tokenType == 'POLYGON') {
       walletAddress = await walletService
           .getAddressFromCoreWalletDatabaseByTickerName('ETH');
     } else if (tickerName == 'FAB' || tokenType == 'FAB') {

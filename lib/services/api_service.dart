@@ -391,7 +391,7 @@ class ApiService {
     }
     ExchangeBalanceModelList exchangeBalanceList;
     String url =
-        configService.getKanbanBaseUrl() + AssetsBalanceApiRoute + exgAddress;
+        configService.getKanbanBaseUrl() + assetsBalanceApiRoute + exgAddress;
     log.i('get assets balance url $url');
     try {
       final res = await client.get(url);
@@ -415,7 +415,7 @@ class ApiService {
     String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
     //  String exgAddress = await getExchangilyAddress();
     String url = configService.getKanbanBaseUrl() +
-        GetSingleCoinExchangeBalApiRoute +
+        getSingleCoinExchangeBalApiRoute +
         exgAddress +
         '/' +
         tickerName;
@@ -708,7 +708,7 @@ class ApiService {
   // Get Orders by address
   Future getOrdersTest(String exgAddress) async {
     String url =
-        configService.getKanbanBaseUrl() + OrdersByAddrApiRoute + exgAddress;
+        configService.getKanbanBaseUrl() + ordersByAddrApiRoute + exgAddress;
     log.w('get my orders url $url');
     try {
       throw Exception('Catch Exception');
@@ -723,7 +723,7 @@ class ApiService {
   Future getMyOrders(String exgAddress) async {
     try {
       String url = configService.getKanbanBaseUrl() +
-          GetOrdersByAddrApiRoute +
+          getOrdersByAddrApiRoute +
           exgAddress;
       log.w('get my orders url $url');
       var res = await client.get(url);
@@ -745,7 +745,7 @@ class ApiService {
   Future getMyOrdersPagedByFabHexAddressAndTickerName(
       String exgAddress, String tickerName) async {
     String url = configService.getKanbanBaseUrl() +
-        GetOrdersByTickerApiRoute +
+        getOrdersByTickerApiRoute +
         exgAddress +
         '/' +
         tickerName;
@@ -769,7 +769,7 @@ class ApiService {
 
   // Get FabUtxos
   Future getFabUtxos(String address) async {
-    var url = fabBaseUrl + GetUtxosApiRoute + address;
+    var url = fabBaseUrl + getUtxosApiRoute + address;
     log.w(url);
     var json;
     try {
@@ -784,7 +784,7 @@ class ApiService {
 
   // Get LtcUtxos
   Future getLtcUtxos(String address) async {
-    var url = ltcBaseUrl + GetUtxosApiRoute + address;
+    var url = ltcBaseUrl + getUtxosApiRoute + address;
     log.w(url);
 
     try {
@@ -798,7 +798,7 @@ class ApiService {
   }
 
   Future getBchUtxos(String address) async {
-    var url = bchBaseUrl + GetUtxosApiRoute + address;
+    var url = bchBaseUrl + getUtxosApiRoute + address;
     log.w(url);
 
     try {
@@ -813,7 +813,7 @@ class ApiService {
 
   // Get DogeUtxos
   Future getDogeUtxos(String address) async {
-    var url = dogeBaseUrl + GetUtxosApiRoute + address;
+    var url = dogeBaseUrl + getUtxosApiRoute + address;
     log.w(url);
 
     try {
@@ -943,38 +943,6 @@ class ApiService {
       json = jsonDecode(response.body);
     } catch (e) {}
     return json;
-  }
-
-  // Eth Post
-  Future postEthTx(String txHex) async {
-    var url = ethBaseUrl + 'sendsignedtransaction';
-    var data = {'signedtx': txHex};
-    var errMsg = '';
-    String txHash;
-    try {
-      var response =
-          await client.post(url, headers: {"responseType": "text"}, body: data);
-      txHash = response.body;
-
-      if (txHash.contains('txerError')) {
-        errMsg = txHash;
-        txHash = '';
-      }
-    } catch (e) {
-      errMsg = 'connection error';
-    }
-    return {'txHash': txHash, 'errMsg': errMsg};
-  }
-
-  // Eth Nonce
-  Future getEthNonce(String address) async {
-    var url = ethBaseUrl + GetNonceApiRoute + address + '/latest';
-    var nonce = 0;
-    try {
-      var response = await client.get(url);
-      nonce = int.parse(response.body);
-    } catch (e) {}
-    return nonce;
   }
 
 /*----------------------------------------------------------------------

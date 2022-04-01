@@ -19,7 +19,7 @@ import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/utils/eth_util.dart';
 import 'dart:convert';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
@@ -33,7 +33,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   WalletService walletService = locator<WalletService>();
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
-  final tokenListDatabaseService = locator<TokenListDatabaseService>();
+  final tokenListDatabaseService = locator<TokenInfoDatabaseService>();
   final coinService = locator<CoinService>();
 
   WalletInfo walletInfo;

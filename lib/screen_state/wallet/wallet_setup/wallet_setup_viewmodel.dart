@@ -16,7 +16,7 @@ import 'dart:async';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -45,8 +45,8 @@ class WalletSetupViewmodel extends BaseViewModel {
   final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
 
   UserSettingsDatabaseService userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();
@@ -149,7 +149,7 @@ class WalletSetupViewmodel extends BaseViewModel {
     setBusyForObject(isDeleting, true);
     log.w('deleting wallet');
     try {
-      await walletUtil.deleteWallet();
+      await walletService.deleteWallet();
 
       setBusyForObject(isDeleting, false);
     } catch (err) {
@@ -178,7 +178,7 @@ class WalletSetupViewmodel extends BaseViewModel {
           buttonTitle: AppLocalizations.of(context).confirm);
       if (res.confirmed) {
         var walletVerificationRes =
-            await walletUtil.verifyWalletAddresses(res.returnedText);
+            await walletService.verifyWalletAddresses(res.returnedText);
         isWalletVerifySuccess = walletVerificationRes['fabAddressCheck'] &&
             walletVerificationRes['trxAddressCheck'];
         isHideIcon = false;
@@ -302,6 +302,6 @@ class WalletSetupViewmodel extends BaseViewModel {
     }
     setBusy(false);
 
-    walletService.storeTokenListInDB();
+    walletService.storeTokenListUpdatesInDB();
   }
 }

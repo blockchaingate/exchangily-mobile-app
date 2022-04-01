@@ -27,7 +27,7 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 
@@ -38,8 +38,8 @@ class LightningRemitViewmodel extends FutureViewModel {
   final addressController = TextEditingController();
   ApiService apiService = locator<ApiService>();
   NavigationService navigationService = locator<NavigationService>();
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   SharedService sharedService = locator<SharedService>();
   DialogService dialogService = locator<DialogService>();
   LocalStorageService storageService = locator<LocalStorageService>();

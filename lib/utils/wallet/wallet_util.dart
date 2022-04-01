@@ -1,36 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
 import 'package:exchangilymobileapp/environments/coins.dart' as coin_list;
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
-import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
-import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
-import 'package:exchangilymobileapp/services/local_storage_service.dart';
-import 'package:exchangilymobileapp/services/vault_service.dart';
-import 'package:exchangilymobileapp/services/version_service.dart';
-import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/utils/abi_util.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class WalletUtil {
   final log = getLogger('WalletUtil');
 
-  final walletDatabaseService = locator<WalletDatabaseService>();
-  final versionService = locator<VersionService>();
-  final storageService = locator<LocalStorageService>();
-  final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
-  final transactionHistoryDatabaseService =
-      locator<TransactionHistoryDatabaseService>();
-  final tokenListDatabaseService = locator<TokenListDatabaseService>();
-  final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
-  final _vaultService = locator<VaultService>();
-  final walletService = locator<WalletService>();
+  final tokenListDatabaseService = locator<TokenInfoDatabaseService>();
+
   var abiUtils = AbiUtils();
 
   Map<String, String> coinTickerAndNameList = {
@@ -176,6 +156,9 @@ class WalletUtil {
     } else if (tickerName.toUpperCase() == 'USDCX') {
       tickerName = 'USDC(trc20)';
       logoTicker = 'USDC';
+    } else if (tickerName.toUpperCase() == 'MATICM') {
+      tickerName = 'MATIC(POLYGON)';
+      logoTicker = 'MATICM';
     } else {
       logoTicker = tickerName;
     }
@@ -183,61 +166,8 @@ class WalletUtil {
   }
 
 // Delete wallet
-  Future deleteWallet() async {
-    log.w('deleting wallet');
-    try {
-      await walletDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('wallet database deleted!!'))
-          .catchError((err) => log.e('wallet database CATCH $err'));
 
-      await transactionHistoryDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('trnasaction history database deleted!!'))
-          .catchError((err) => log.e('tx history database CATCH $err'));
-
-      await _vaultService
-          .deleteEncryptedData()
-          .whenComplete(() => log.e('encrypted data deleted!!'))
-          .catchError((err) => log.e('delete encrypted CATCH $err'));
-
-      await coreWalletDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('coreWalletDatabaseService data deleted!!'))
-          .catchError((err) => log.e('coreWalletDatabaseService  CATCH $err'));
-
-      await tokenListDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('Token list database deleted!!'))
-          .catchError((err) => log.e('token list database CATCH $err'));
-
-      await userSettingsDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('User settings database deleted!!'))
-          .catchError((err) => log.e('user setting database CATCH $err'));
-
-      storageService.walletBalancesBody = '';
-      storageService.isShowCaseView = true;
-      storageService.clearStorage();
-      debugPrint(
-          'Checking has verified key value after clearing local storage : ${storageService.hasWalletVerified.toString()}');
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      log.e('before wallet removal, local storage has ${prefs.getKeys()}');
-      prefs.clear();
-      try {
-        await _deleteCacheDir();
-        await _deleteAppDir();
-      } catch (err) {
-        log.e('delete cache dir err $err');
-      }
-    } catch (err) {
-      log.e('deleteWallet CATCH -- wallet delete failed: $err');
-      throw Exception(['Wallet deletion failed $err']);
-    }
-  }
-
-  Future<void> _deleteCacheDir() async {
+  Future<void> deleteCacheDir() async {
     final cacheDir = await getTemporaryDirectory();
 
     if (cacheDir.existsSync()) {
@@ -245,99 +175,12 @@ class WalletUtil {
     }
   }
 
-  Future<void> _deleteAppDir() async {
+  Future<void> deleteAppDir() async {
     final appDir = await getApplicationSupportDirectory();
 
     if (appDir.existsSync()) {
       appDir.deleteSync(recursive: true);
     }
-  }
-
-  // verify wallet address
-  Future<Map<String, bool>> verifyWalletAddresses(String mnemonic) async {
-    Map<String, bool> res = {
-      "fabAddressCheck": false,
-      "trxAddressCheck": false
-    };
-
-    // create wallet address and assign to walletcoremodel object
-    CoreWalletModel walletDataFromCreateOfflineWalletV1 = await walletService
-        .createOfflineWalletsV1(mnemonic, '', isVerifying: true);
-
-    // get the walletbalancebody from the DB
-    var walletBalancesBodyFromStorage;
-    if (storageService.walletBalancesBody.isNotEmpty) {
-      walletBalancesBodyFromStorage =
-          jsonDecode(storageService.walletBalancesBody);
-    } else {
-      await walletDatabaseService.initDb();
-      var fabWallet = await walletDatabaseService.getWalletBytickerName('FAB');
-      var trxWallet = await walletDatabaseService.getWalletBytickerName('TRX');
-      if (fabWallet != null && trxWallet != null) {
-        walletBalancesBodyFromStorage = {
-          "fabAddress": fabWallet.address,
-          "trxAddress": trxWallet.address
-        };
-      }
-    }
-
-    // Compare the address if matched then don't notify otherwise raise flag
-
-    String fabAddressFromCreate = jsonDecode(
-        walletDataFromCreateOfflineWalletV1.walletBalancesBody)['fabAddress'];
-    String trxAddressFromCreate = jsonDecode(
-        walletDataFromCreateOfflineWalletV1.walletBalancesBody)['trxAddress'];
-
-    String fabAddressFromStorage = '';
-    String trxAddressFromStorage = '';
-
-    String fabAddressFromCoreWalletDb = '';
-    String trxAddressFromCoreWalletDb = '';
-
-    if (walletBalancesBodyFromStorage != null) {
-      fabAddressFromStorage = walletBalancesBodyFromStorage['fabAddress'];
-
-      trxAddressFromStorage = walletBalancesBodyFromStorage['trxAddress'];
-    } else if (await coreWalletDatabaseService.getWalletBalancesBody() !=
-        null) {
-      fabAddressFromCoreWalletDb =
-          await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
-      trxAddressFromCoreWalletDb =
-          await coreWalletDatabaseService.getWalletAddressByTickerName('TRX');
-    }
-    log.i(
-        'fabAddressFromCreate $fabAddressFromCreate -- fabAddressFromStorage $fabAddressFromStorage -- fabAddressFromCoreWalletDb $fabAddressFromCoreWalletDb');
-    var fabAddressFromStorageToCompare = fabAddressFromStorage.isEmpty
-        ? fabAddressFromCoreWalletDb
-        : fabAddressFromStorage;
-    var trxAddressFromStorageToCompare = trxAddressFromStorage.isEmpty
-        ? trxAddressFromCoreWalletDb
-        : trxAddressFromStorage;
-    if (fabAddressFromCreate == fabAddressFromStorageToCompare) {
-      res["fabAddressCheck"] = true;
-      log.w('FabVerification passed $res');
-      if (trxAddressFromCreate == trxAddressFromStorageToCompare) {
-        res["trxAddressCheck"] = true;
-        log.i('Trx Verification passed $res');
-        // need to store the wallet balance body in the
-        // new single db especially for older apps where
-        // there is no concept of walletBalancesBody or
-        // app before new wallet balance api
-        var walletCoreModel = CoreWalletModel(
-          id: 1,
-          walletBalancesBody:
-              walletDataFromCreateOfflineWalletV1.walletBalancesBody,
-        );
-        // store in single core database
-        await coreWalletDatabaseService.update(walletCoreModel);
-      } else {
-        res["trxAddressCheck"] = false;
-      }
-    } else {
-      res["fabAddressCheck"] = false;
-      log.e('Verification FAILED: did not check TRX $res');
-    }
-    return res;
   }
 
   /*----------------------------------------------------------------------

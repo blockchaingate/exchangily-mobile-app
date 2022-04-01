@@ -32,6 +32,15 @@ Map devConfig = {
       "gasLimit": 21000,
       "gasLimitToken": 70000
     },
+    "MATIC": {
+      "chain": 'testnet',
+      "networkId": 80001,
+      "chainId": 80001,
+      "gasPrice": 5,
+      "gasPriceMax": 100,
+      "gasLimit": 21000,
+      "gasLimitToken": 70000
+    },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
       "satoshisPerBytes": 100,
@@ -64,7 +73,8 @@ Map devConfig = {
     'doge': 'https://dogetest.fabcoinapi.com/',
     'fab': 'https://fabtest.fabcoinapi.com/',
     'eth': 'https://ethtest.fabcoinapi.com/',
-    'campaign': 'https://test.blockchaingate.com/v2/'
+    'campaign': 'https://test.blockchaingate.com/v2/',
+    'maticm': 'https://rpc-mumbai.matic.today'
   },
   "addresses": {
     "smartContract": {
@@ -89,7 +99,8 @@ Map devConfig = {
       "MTL": '0x1c9b5afa112b42b12fb06b62e5f1e159af49dfa7',
       "KNC": '0x3aad796ceb3a1063f727c6d0c698e37053292d10',
       "GVT": '0x3e610d9fb322063e50d185e2cc1b45f007e7180c',
-      "DRGN": '0xbbdd7a557a0d8a9bf166dcc2730ae3ccec7df05c'
+      "DRGN": '0xbbdd7a557a0d8a9bf166dcc2730ae3ccec7df05c',
+      "MATICUSDT": "0x26CbCDe3842D9A9170d47F122F69D993a00676ED"
     },
     'exchangilyOfficial': [
       {'name': 'EXG', 'address': '0xed76be271bb47a6df055bbc2039733c26fdecc82'},
@@ -169,6 +180,15 @@ Map productionConfig = {
       "gasLimit": 21000,
       "gasLimitToken": 70000
     },
+    "MATICM": {
+      "chain": "mainnet",
+      "networkId": 137,
+      "chainId": 137,
+      "gasPrice": 5,
+      "gasPriceMax": 200,
+      "gasLimit": 21000,
+      "gasLimitToken": 70000
+    },
     "FAB": {
       "chain": {
         "name": 'mainnet',
@@ -202,7 +222,8 @@ Map productionConfig = {
     'fab': 'https://fabprod.fabcoinapi.com/',
     'eth': 'https://ethprod.fabcoinapi.com/',
     'trx': 'https://api.trongrid.io/',
-    'campaign': 'https://api.blockchaingate.com/v2/'
+    'campaign': 'https://api.blockchaingate.com/v2/',
+    'maticm': 'https://polygon-rpc.com'
   },
   'addresses': {
     "smartContract": {
@@ -228,7 +249,8 @@ Map productionConfig = {
       "KNC": '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
       "GVT": '0x103c3A209da59d3E7C4A89307e66521e081CFDF0',
       "DRGN": '0x419c4db4b9e25d6db2ad9691ccb832c8d9fda05e',
-      "CNB": "ceb9a838c3f3ee6e3168c06734f9188f2693999f"
+      "CNB": "ceb9a838c3f3ee6e3168c06734f9188f2693999f",
+      "MATICUSDT": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
     },
     'exchangilyOfficial': [
       {'name': 'EXG', 'address': '0xa7c8257b0571dc3d3c96b24b668c6569391b3ac9'},

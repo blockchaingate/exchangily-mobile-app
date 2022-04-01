@@ -42,7 +42,7 @@ import '../../logger.dart';
 import '../../service_locator.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import "package:hex/hex.dart";
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 
 class SettingsViewmodel extends BaseViewModel {
   bool isVisible = false;
@@ -53,8 +53,8 @@ class SettingsViewmodel extends BaseViewModel {
   final _vaultService = locator<VaultService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
 
   SharedService sharedService = locator<SharedService>();
   final storageService = locator<LocalStorageService>();
@@ -289,7 +289,7 @@ class SettingsViewmodel extends BaseViewModel {
         setBusy(true);
         isDeleting = true;
         log.w('deleting wallet');
-        await walletUtil.deleteWallet();
+        await walletService.deleteWallet();
 
         Navigator.pushNamed(context, '/');
       } else if (res.returnedText == 'Closed' && !res.confirmed) {

@@ -12,52 +12,81 @@
 */
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
+import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:keccak/keccak.dart';
 import 'package:hex/hex.dart';
 import 'dart:typed_data';
-import '../environments/environment.dart';
 import 'dart:async';
 import 'package:web3dart/web3dart.dart';
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
 
-import 'custom_http_util.dart';
+class MaticUtils {
+  final log = getLogger('MaticUtils');
 
-class EthUtils {
   var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
-
+  var maticmBaseUrl = 'https://rpc-mumbai.matic.today';
   // Eth Post
-  Future postEthTx(String txHex) async {
-    var url = ethBaseUrl + 'sendsignedtransaction';
-    var data = {'signedtx': txHex};
+  Future postTx(String txHex) async {
+    var body = {
+      "jsonrpc": "2.0",
+      "method": "eth_sendRawTransaction",
+      "params": [txHex],
+      "id": 1
+    };
     var errMsg = '';
     String txHash;
     try {
-      var response =
-          await client.post(url, headers: {"responseType": "text"}, body: data);
-      txHash = response.body;
+      var response = await client.post(maticmBaseUrl,
+          headers: {"responseType": "text"}, body: jsonEncode(body));
+      var json = jsonDecode(response.body);
+      log.w('json $json');
+      txHash = json["result"];
 
       if (txHash.contains('txerError')) {
         errMsg = txHash;
         txHash = '';
       }
     } catch (e) {
+      debugPrint('ETHUtils - postMaticmFunc: Catch $e');
       errMsg = 'connection error';
     }
     return {'txHash': txHash, 'errMsg': errMsg};
   }
 
-  // Eth Nonce
-  Future getEthNonce(String address) async {
-    var url = ethBaseUrl + getNonceApiRoute + address + '/latest';
-    var nonce = 0;
+// Request
+//curl -X POST --data '{"jsonrpc":"2.0","method":"eth_getTransactionCount","params":["0x407d73d8a49eeb85d32cf465507dd71d507100c1","latest"],"id":1}'
+
+// Result
+// {
+//   "id":1,
+//   "jsonrpc": "2.0",
+//   "result": "0x1" // 1
+// }
+
+  Future getNonce(String address) async {
+    var body = {
+      "jsonrpc": "2.0",
+      "method": "eth_getTransactionCount",
+      "params": ["0x02c55515e62a0b25d2447c6d70369186b8f10359", "latest"],
+      "id": 1
+    };
+    int nonce = 0;
     try {
-      var response = await client.get(url);
-      nonce = int.parse(response.body);
-    } catch (e) {}
+      var response = await client.post(maticmBaseUrl, body: jsonEncode(body));
+      log.w('getnonce func- response: ${response.body}');
+      var json = jsonDecode(response.body);
+      log.w('json $json');
+      nonce = int.parse(json['result']);
+    } catch (e) {
+      log.e('getNonce func- Catch $e');
+    }
+    log.w('res nonce $nonce');
     return nonce;
   }
 

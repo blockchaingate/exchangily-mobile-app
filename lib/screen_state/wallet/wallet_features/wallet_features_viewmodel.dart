@@ -19,7 +19,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -40,7 +40,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
   SharedService sharedService = locator<SharedService>();
   NavigationService navigationService = locator<NavigationService>();
   DialogService dialogService = locator<DialogService>();
-  final tokenListDatabaseService = locator<TokenListDatabaseService>();
+  final tokenListDatabaseService = locator<TokenInfoDatabaseService>();
 
   final double elevation = 5;
   double containerWidth = 150;

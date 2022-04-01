@@ -197,7 +197,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel tickerDataChannel(String pair, {String interval = '24'}) {
     var wsStringUrl = configService.getKanbanBaseWSUrl() +
-        TickerWSRoute +
+        tickerWSRoute +
         pair +
         '@' +
         interval;
@@ -233,7 +233,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
   IOWebSocketChannel getAllPriceChannel() {
-    var wsStringUrl = configService.getKanbanBaseWSUrl() + AllPricesWSRoute;
+    var wsStringUrl = configService.getKanbanBaseWSUrl() + allPricesWSRoute;
     log.e('getAllPriceChannelUrl $wsStringUrl');
 
     IOWebSocketChannel channel = IOWebSocketChannel.connect(wsStringUrl);
@@ -260,7 +260,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel marketTradesChannel(String pair) {
     try {
-      var wsString = configService.getKanbanBaseWSUrl() + TradesWSRoute + pair;
+      var wsString = configService.getKanbanBaseWSUrl() + tradesWSRoute + pair;
       log.i('marketTradesChannel URL $wsString');
       IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
       return channel;
@@ -288,7 +288,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel orderbookChannel(String pair) {
     try {
-      var wsString = configService.getKanbanBaseWSUrl() + OrdersWSRoute + pair;
+      var wsString = configService.getKanbanBaseWSUrl() + ordersWSRoute + pair;
       log.i('ordersChannel Url $wsString');
       // if not put the IOWebSoketChannel.connect to variable channel and
       // directly returns it then in the multiple stream it doesn't work

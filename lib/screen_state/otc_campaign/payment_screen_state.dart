@@ -15,7 +15,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -38,8 +38,8 @@ class CampaignPaymentScreenState extends BaseState {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   CampaignService campaignService = locator<CampaignService>();
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
   final ApiService _apiService = locator<ApiService>();

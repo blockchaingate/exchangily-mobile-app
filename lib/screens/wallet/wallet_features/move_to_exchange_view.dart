@@ -324,9 +324,11 @@ class MoveToExchangeScreen extends StatelessWidget {
                                               decimal:
                                                   true), // numnber keyboard
                                       decoration: InputDecoration(
-                                          focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: globals.primaryColor)),
+                                          focusedBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                      color: globals
+                                                          .primaryColor)),
                                           enabledBorder:
                                               const UnderlineInputBorder(
                                                   borderSide: BorderSide(
@@ -371,9 +373,11 @@ class MoveToExchangeScreen extends StatelessWidget {
                                               decimal:
                                                   true), // numnber keyboard
                                       decoration: InputDecoration(
-                                          focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: globals.primaryColor)),
+                                          focusedBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                      color: globals
+                                                          .primaryColor)),
                                           enabledBorder:
                                               const UnderlineInputBorder(
                                                   borderSide: BorderSide(
@@ -419,9 +423,11 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         const TextInputType.numberWithOptions(
                                             decimal: true), // numnber keyboard
                                     decoration: InputDecoration(
-                                        focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: globals.primaryColor)),
+                                        focusedBorder:
+                                            const UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: globals
+                                                        .primaryColor)),
                                         enabledBorder:
                                             const UnderlineInputBorder(
                                                 borderSide: BorderSide(
@@ -462,8 +468,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                                       const TextInputType.numberWithOptions(
                                           decimal: true), // numnber keyboard
                                   decoration: InputDecoration(
-                                      focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
+                                      focusedBorder: const UnderlineInputBorder(
+                                          borderSide: const BorderSide(
                                               color: globals.primaryColor)),
                                       enabledBorder: const UnderlineInputBorder(
                                           borderSide:
@@ -502,7 +508,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                     const TextInputType.numberWithOptions(
                                         decimal: true), // numnber keyboard
                                 decoration: InputDecoration(
-                                    focusedBorder: UnderlineInputBorder(
+                                    focusedBorder: const UnderlineInputBorder(
                                         borderSide: BorderSide(
                                             color: globals.primaryColor)),
                                     enabledBorder: const UnderlineInputBorder(
@@ -531,13 +537,14 @@ class MoveToExchangeScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(model.message, style: TextStyle(color: grey)),
+                          Text(model.message,
+                              style: const TextStyle(color: grey)),
                           UIHelper.verticalSpaceSmall,
                           RichText(
                             text: TextSpan(
                                 text: AppLocalizations.of(context)
                                     .taphereToCopyTxId,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     decoration: TextDecoration.underline,
                                     color: globals.primaryColor),
                                 recognizer: TapGestureRecognizer()

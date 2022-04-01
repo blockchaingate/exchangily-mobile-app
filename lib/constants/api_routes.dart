@@ -96,8 +96,8 @@ const String RedepositCheckStatusApiRoute = 'checkstatus/';
 const String WithdrawTxStatusApiRoute = 'withdrawrequestsbyaddress/';
 const String DepositTxStatusApiRoute = 'getdepositrequestsbyaddress/';
 
-const String GetUtxosApiRoute = 'getutxos/';
-const String GetNonceApiRoute = 'getnonce/';
+const String getUtxosApiRoute = 'getutxos/';
+const String getNonceApiRoute = 'getnonce/';
 const String PostRawTxApiRoute = 'postrawtransaction';
 const String GetTokenListUpdatesApiRoute = 'tokenListUpdates';
 
@@ -136,27 +136,28 @@ final String bchBaseUrl = environment["endpoints"]["bch"];
 final String dogeBaseUrl = environment["endpoints"]["doge"];
 final String fabBaseUrl = environment["endpoints"]["fab"];
 final String ethBaseUrl = environment["endpoints"]["eth"];
+final String maticmBaseUrl = environment["endpoints"]["maticm"];
 final String eventsUrl = environment["eventInfo"];
 
 const String txStatusStatusRoute = 'kanban/explorer/getTransactionStatus';
 
 // Websockets
 
-const String AllPricesWSRoute = 'allPrices';
-const String TradesWSRoute = 'trades@';
-const String OrdersWSRoute = 'orders@';
-const String TickerWSRoute = 'ticker@';
+const String allPricesWSRoute = 'allPrices';
+const String tradesWSRoute = 'trades@';
+const String ordersWSRoute = 'orders@';
+const String tickerWSRoute = 'ticker@';
 
 // My Orders
 
-const String GetOrdersByAddrApiRoute = 'ordersbyaddresspaged/';
-const String GetOrdersByTickerApiRoute = 'getordersbytickernamepaged/';
+const String getOrdersByAddrApiRoute = 'ordersbyaddresspaged/';
+const String getOrdersByTickerApiRoute = 'getordersbytickernamepaged/';
 
 // Exchange Balance
 
 /// https://kanbantest.fabcoinapi.com/exchangily/getBalance/
 /// 0xb754f9c8b706c59646a4e97601a0ad81067e1cf9/HOT
-const String GetSingleCoinExchangeBalApiRoute = 'exchangily/getBalance/';
-const String AssetsBalanceApiRoute = 'exchangily/getBalances/';
+const String getSingleCoinExchangeBalApiRoute = 'exchangily/getBalance/';
+const String assetsBalanceApiRoute = 'exchangily/getBalances/';
 
-const String OrdersByAddrApiRoute = 'ordersbyaddress/';
+const String ordersByAddrApiRoute = 'ordersbyaddress/';

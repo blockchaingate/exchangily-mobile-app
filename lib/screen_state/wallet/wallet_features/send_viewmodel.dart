@@ -23,7 +23,7 @@ import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -52,8 +52,8 @@ class SendViewModel extends BaseViewModel {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
 
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   final storageService = locator<LocalStorageService>();
   final navigationService = locator<NavigationService>();
 
@@ -100,13 +100,20 @@ class SendViewModel extends BaseViewModel {
   initState() async {
     setBusy(true);
     sharedService.context = context;
-    walletInfo.tickerName == 'USDTX'
-        ? tickerName = 'USDT(TRC20)'
-        : tickerName = walletInfo.tickerName;
-    if (walletInfo.tokenType == 'TRON') walletInfo.tokenType = "TRX";
+
+    if (walletInfo.tickerName == 'USDTX') {
+      tickerName = 'USDT(TRC20)';
+    } else if (walletInfo.tickerName == 'MATICM') {
+      tickerName = 'MATIC';
+    } else {
+      tickerName = walletInfo.tickerName;
+    }
+    if (walletInfo.tokenType == 'TRON') {
+      walletInfo.tokenType = "TRX";
+    }
     tokenType = walletInfo.tokenType;
-    String coinName = walletInfo.tickerName;
-    await setFee(coinName);
+
+    await setFee(walletInfo.tickerName);
     fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
 
     String customTokenStringData = storageService.customTokenData;
@@ -125,8 +132,10 @@ class SendViewModel extends BaseViewModel {
     }
     if (!isCustomToken) {
       await refreshBalance();
-      decimalLimit =
-          await walletService.getSingleCoinWalletDecimalLimit(coinName);
+      decimalLimit = await walletService.getSingleCoinWalletDecimalLimit(
+          walletInfo.tickerName == 'MATICM'
+              ? tickerName
+              : walletInfo.tickerName);
       if (decimalLimit == null || decimalLimit == 0) {
         decimalLimit = 8;
       }
@@ -172,6 +181,12 @@ class SendViewModel extends BaseViewModel {
       satoshisPerByteTextController.text =
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
       feeUnit = 'BTC';
+    } else if (coinName == 'MATICM') {
+      gasPriceTextController.text =
+          environment["chains"]["MATIC"]["gasPrice"].toString();
+      gasLimitTextController.text =
+          environment["chains"]["MATIC"]["gasLimit"].toString();
+      feeUnit = 'MATIC';
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       var gasPriceReal = await walletService.getEthGasPrice();
       debugPrint('gasPriceReal======');

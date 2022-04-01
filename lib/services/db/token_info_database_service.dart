@@ -17,8 +17,8 @@ import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class TokenListDatabaseService {
-  final log = getLogger('TokenListDatabaseService');
+class TokenInfoDatabaseService {
+  final log = getLogger('TokenInfoDatabaseService');
 
   static const _databaseName = 'token_list_database.db';
   final String tableName = 'token_list';
