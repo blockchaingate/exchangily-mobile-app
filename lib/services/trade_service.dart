@@ -373,8 +373,8 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
         exgPairsList.add(pair);
       }
     }
-    marketPairsGroupList.add(usdtPairsList);
     marketPairsGroupList.add(dusdPairsList);
+    marketPairsGroupList.add(usdtPairsList);
     marketPairsGroupList.add(btcPairsList);
     marketPairsGroupList.add(ethPairsList);
     marketPairsGroupList.add(exgPairsList);
