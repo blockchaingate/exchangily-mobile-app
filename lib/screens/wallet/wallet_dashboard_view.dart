@@ -1000,7 +1000,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                             spreadRadius: 1.0),
                       ]),
                   child: Image.network(
-                    '$WalletCoinsLogoUrl${logoTicker.toLowerCase()}.png',
+                    '$walletCoinsLogoUrl${logoTicker.toLowerCase()}.png',
                     errorBuilder: (BuildContext context, Object exception,
                         StackTrace stackTrace) {
                       return Text(logoTicker.toString(),
@@ -1326,7 +1326,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                               spreadRadius: 1.0),
                                         ]),
                                     child: Image.network(
-                                        '$WalletCoinsLogoUrl${logoTicker.toLowerCase()}.png'),
+                                        '$walletCoinsLogoUrl${logoTicker.toLowerCase()}.png'),
                                     //asset('assets/images/wallet-page/$tickerName.png'),
                                     width: 35,
                                     height: 35),

@@ -52,7 +52,7 @@ class FabUtils {
 
   // Fab Post Tx
   Future postFabTx(String txHex) async {
-    var url = fabBaseUrl + PostRawTxApiRoute;
+    var url = fabBaseUrl + postRawTxApiRoute;
     final sharedService = locator<SharedService>();
     var txHash = '';
     var errMsg = '';

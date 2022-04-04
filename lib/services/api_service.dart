@@ -77,9 +77,9 @@ class ApiService {
 
   Future<List<CustomTokenModel>> getCustomTokens() async {
     String url = baseBlockchainGateV2Url +
-        GetIsueTokenApiRoute +
+        getIsueTokenApiRoute +
         '/' +
-        GetWithoutLogoApiRoute;
+        getWithoutLogoApiRoute;
     log.i('getIssueTokens url $url');
     try {
       var response = await client.get(url);
@@ -194,7 +194,7 @@ class ApiService {
     List<TransactionHistory> transactionHistory = [];
 
     String url =
-        configService.getKanbanBaseUrl() + WithDrawDepositTxHistoryApiRoute;
+        configService.getKanbanBaseUrl() + withDrawDepositTxHistoryApiRoute;
     Map<String, dynamic> body = {"fabAddress": fabAddress};
 
     log.i('getTransactionHistoryEvents url $url -- body $body');
@@ -286,7 +286,7 @@ class ApiService {
     List<TransactionHistory> transactionHistory = [];
 
     String url =
-        configService.getKanbanBaseUrl() + LightningRemitTxHHistoryApiRoute;
+        configService.getKanbanBaseUrl() + lightningRemitTxHHistoryApiRoute;
     Map<String, dynamic> body = {"fabAddress": fabAddress};
 
     log.i('getLightningRemitHistoryEvents url $url -- body $body');
@@ -339,10 +339,10 @@ class ApiService {
 ----------------------------------------------------------------------*/
 
   getBanner() async {
-    log.i('getBanner url $BannerApiUrl');
+    log.i('getBanner url $bannerApiUrl');
 
     try {
-      var response = await client.get(BannerApiUrl);
+      var response = await client.get(bannerApiUrl);
       var json = jsonDecode(response.body);
       if (json != null) {
         log.e('getBanner $json}');
@@ -365,7 +365,7 @@ class ApiService {
     String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
     //  String exgAddress = await getExchangilyAddress();
     String url = configService.getKanbanBaseUrl() +
-        WithdrawTxStatusApiRoute +
+        withdrawTxStatusApiRoute +
         exgAddress;
     log.e('withdrawTxStatus url $url');
 
@@ -440,7 +440,7 @@ class ApiService {
 ----------------------------------------------------------------------*/
 
   Future<List<TokenModel>> getTokenListUpdates() async {
-    String url = configService.getKanbanBaseUrl() + GetTokenListUpdatesApiRoute;
+    String url = configService.getKanbanBaseUrl() + getTokenListUpdatesApiRoute;
     log.i('getTokenListUpdates url $url');
     try {
       var response = await client.get(url);
@@ -461,7 +461,7 @@ class ApiService {
 ----------------------------------------------------------------------*/
 
   Future<List<TokenModel>> getTokenList() async {
-    String url = configService.getKanbanBaseUrl() + GetTokenListApiRoute;
+    String url = configService.getKanbanBaseUrl() + getTokenListApiRoute;
     log.i('getTokenList url $url');
     try {
       var response = await client.get(url);
@@ -573,7 +573,7 @@ class ApiService {
 
   Future<List<WalletBalance>> getSingleWalletBalance(String fabAddress,
       String tickerName, String thirdPartyChainAddress) async {
-    String url = configService.getKanbanBaseUrl() + SingleWalletBalanceApiRoute;
+    String url = configService.getKanbanBaseUrl() + singleWalletBalanceApiRoute;
     log.i('getWalletBalance URL $url');
     var body = {
       "fabAddress": fabAddress,
@@ -828,7 +828,7 @@ class ApiService {
 
   // Post Btc Transaction
   Future postBtcTx(String txHex) async {
-    var url = btcBaseUrl + PostRawTxApiRoute;
+    var url = btcBaseUrl + postRawTxApiRoute;
     var json;
     var txHash = '';
     var errMsg = '';
@@ -854,7 +854,7 @@ class ApiService {
 
   // Post Ltc Transaction
   Future postLtcTx(String txHex) async {
-    var url = ltcBaseUrl + PostRawTxApiRoute;
+    var url = ltcBaseUrl + postRawTxApiRoute;
     var json;
     var txHash = '';
     var errMsg = '';
@@ -881,7 +881,7 @@ class ApiService {
 
   // Post Bch Transaction
   Future postBchTx(String txHex) async {
-    var url = bchBaseUrl + PostRawTxApiRoute;
+    var url = bchBaseUrl + postRawTxApiRoute;
     var json;
     var txHash = '';
     var errMsg = '';
@@ -908,7 +908,7 @@ class ApiService {
 
   // Post Ltc Transaction
   Future postDogeTx(String txHex) async {
-    var url = dogeBaseUrl + PostRawTxApiRoute;
+    var url = dogeBaseUrl + postRawTxApiRoute;
     var json;
     var txHash = '';
     var errMsg = '';
@@ -982,7 +982,7 @@ class ApiService {
 ----------------------------------------------------------------------*/
   Future<List<PairDecimalConfig>> getPairDecimalConfig() async {
     List<PairDecimalConfig> result = [];
-    var url = configService.getKanbanBaseUrl() + GetDecimalPairConfigApiRoute;
+    var url = configService.getKanbanBaseUrl() + getDecimalPairConfigApiRoute;
     log.e('getPairDecimalConfig $url');
     try {
       var response = await client.get(url);

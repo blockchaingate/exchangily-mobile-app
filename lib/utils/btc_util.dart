@@ -46,7 +46,7 @@ class BtcUtils {
 
   // Get BtcUtxos
   Future getBtcUtxos(String address) async {
-    var url = btcBaseUrl + GetUtxosApiRoute + address;
+    var url = btcBaseUrl + getUtxosApiRoute + address;
     log.w(url);
     var json;
     try {
@@ -58,7 +58,7 @@ class BtcUtils {
 
   //  Post Tx
   Future postFabTx(String txHex) async {
-    var url = fabBaseUrl + PostRawTxApiRoute;
+    var url = fabBaseUrl + postRawTxApiRoute;
     var txHash = '';
     var errMsg = '';
     if (txHex != '') {
