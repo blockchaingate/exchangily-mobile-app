@@ -2219,5 +2219,11 @@
       "description": "favoriteTokens",
       "type": "text",
       "placeholders": {}
+    },
+    "showSmallAmountAssets": "Show Small Amount Assets",
+    "@showSmallAmountAssets": {
+      "description": "show_small_amount_assets",
+      "type": "text",
+      "placeholders": {}
     }
 }
