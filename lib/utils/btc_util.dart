@@ -58,7 +58,7 @@ class BtcUtils {
 
   //  Post Tx
   Future postFabTx(String txHex) async {
-    var url = fabBaseUrl + PostRawTxApiRoute;
+    var url = fabBaseUrl + postRawTxApiRoute;
     var txHash = '';
     var errMsg = '';
     if (txHex != '') {

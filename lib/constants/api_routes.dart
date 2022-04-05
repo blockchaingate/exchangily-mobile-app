@@ -51,8 +51,8 @@ const String broadcasrTronTransactionUrl =
 const String getTronLatestBlockUrl = tronBaseApiUrl + 'wallet/getnowblock';
 
 const String walletBalancesApiRoute = 'walletBalances';
-const String SingleWalletBalanceApiRoute = 'singleCoinWalletBalance';
-const String WalletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";
+const String singleWalletBalanceApiRoute = 'singleCoinWalletBalance';
+const String walletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";
 
 // Transaction history explorer URL's for prod
 const String ExchangilyExplorerUrl =
@@ -83,23 +83,23 @@ const String CoinCurrencyUsdValueApiRoute = 'USDvalues';
 const String GetAppVersionRoute = 'getappversion';
 
 // Get Token List, Decimal config, checkstatus
-const String GetTokenListApiRoute = 'exchangily/getTokenList';
-const String GetDecimalPairConfigApiRoute = 'kanban/getpairconfig';
+const String getTokenListApiRoute = 'exchangily/getTokenList';
+const String getDecimalPairConfigApiRoute = 'kanban/getpairconfig';
 //final String pairDecimalConfigRoute = 'kanban/getpairconfig';
-const String WithDrawDepositTxHistoryApiRoute = 'getTransactionHistoryEvents';
+const String withDrawDepositTxHistoryApiRoute = 'getTransactionHistoryEvents';
 // route for getting history for withdraw and deposits
-const String LightningRemitTxHHistoryApiRoute = 'getTransferHistoryEvents';
+const String lightningRemitTxHHistoryApiRoute = 'getTransferHistoryEvents';
 // route for bindpay transfers
 
-const String RedepositCheckStatusApiRoute = 'checkstatus/';
+const String redepositCheckStatusApiRoute = 'checkstatus/';
 // Add wallet Hex Fab address or kanban address in the end
-const String WithdrawTxStatusApiRoute = 'withdrawrequestsbyaddress/';
-const String DepositTxStatusApiRoute = 'getdepositrequestsbyaddress/';
+const String withdrawTxStatusApiRoute = 'withdrawrequestsbyaddress/';
+const String depositTxStatusApiRoute = 'getdepositrequestsbyaddress/';
 
 const String getUtxosApiRoute = 'getutxos/';
 const String getNonceApiRoute = 'getnonce/';
-const String PostRawTxApiRoute = 'postrawtransaction';
-const String GetTokenListUpdatesApiRoute = 'tokenListUpdates';
+const String postRawTxApiRoute = 'postrawtransaction';
+const String getTokenListUpdatesApiRoute = 'tokenListUpdates';
 
 // wallet custom issue token feature url and routes
 
@@ -111,16 +111,16 @@ const String GetTokenListUpdatesApiRoute = 'tokenListUpdates';
 
 // get token's logo
 //https://test.blockchaingate.com/v2/issuetoken/ca83824ad8abcc4d03a9d2209bcd8efddff2615c/logo
-const String GetIsueTokenApiRoute = 'issuetoken';
-const String GetWithoutLogoApiRoute = 'withoutLogo';
-const String GetLogoApiRoute = 'withoutLogo';
+const String getIsueTokenApiRoute = 'issuetoken';
+const String getWithoutLogoApiRoute = 'withoutLogo';
+const String getLogoApiRoute = 'withoutLogo';
 
 /*----------------------------------------------------------------------
                             Exchange
 ----------------------------------------------------------------------*/
 
 // banner
-const String BannerApiUrl =
+const String bannerApiUrl =
     'https://api.blockchaingate.com/v2/banners/app/5b6a8688905612106e976a69';
 
 // /ordersbyaddresspaged/:address/:start?/:count?/:status?

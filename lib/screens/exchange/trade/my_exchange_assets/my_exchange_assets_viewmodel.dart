@@ -23,7 +23,7 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
   List<ExchangeBalanceModel> exchangeBalances = [];
   var storageService = locator<LocalStorageService>();
 
-  String logoUrl = WalletCoinsLogoUrl;
+  String logoUrl = walletCoinsLogoUrl;
   @override
   Future futureToRun() async {
     log.e('In get exchange assets');

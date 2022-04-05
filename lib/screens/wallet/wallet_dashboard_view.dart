@@ -302,8 +302,6 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
             //     ));
             // titleWidget = AppLocalizations.of(context).totalExchangeBalance;
             return TotalBalanceWidget2(model: model, index: index);
-          } else {
-            return TotalBalanceWidget3(model: model, index: index);
           }
 
           // return TotalBalanceCardWidget(
@@ -311,7 +309,7 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
           //   title: titleWidget,
           // );
         },
-        itemCount: 3,
+        itemCount: 2,
         itemWidth: 500,
         itemHeight: 180.0,
         layout: SwiperLayout.TINDER,
@@ -457,6 +455,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                                 : primaryColor,
                           ),
                     Container(
+                      width: 100,
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
                         !model.isHideSmallAssetsButton
@@ -480,7 +479,9 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
             ),
             //Add free FAB container
             !model.isFreeFabNotUsed
-                ? Container()
+                ? model.isBusy
+                    ? Container()
+                    : Expanded(child: Gas(gasAmount: model.gasAmount))
                 : Container(
                     margin: const EdgeInsets.symmetric(vertical: 5.0),
                     decoration: BoxDecoration(
@@ -974,7 +975,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                             spreadRadius: 1.0),
                       ]),
                   child: Image.network(
-                    '$WalletCoinsLogoUrl${logoTicker.toLowerCase()}.png',
+                    '$walletCoinsLogoUrl${logoTicker.toLowerCase()}.png',
                     errorBuilder: (BuildContext context, Object exception,
                         StackTrace stackTrace) {
                       return Text(logoTicker.toString(),
@@ -1300,7 +1301,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                               spreadRadius: 1.0),
                                         ]),
                                     child: Image.network(
-                                        '$WalletCoinsLogoUrl${logoTicker.toLowerCase()}.png'),
+                                        '$walletCoinsLogoUrl${logoTicker.toLowerCase()}.png'),
                                     //asset('assets/images/wallet-page/$tickerName.png'),
                                     width: 35,
                                     height: 35),

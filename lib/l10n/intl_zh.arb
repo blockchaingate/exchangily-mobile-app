@@ -2285,5 +2285,11 @@
     "description": "favoriteTokens",
     "type": "text",
     "placeholders": {}
+  },
+  "showSmallAmountAssets": "显示小型资产",
+  "@showSmallAmountAssets": {
+    "description": "show_small_amount_assets",
+    "type": "text",
+    "placeholders": {}
   }
 }
