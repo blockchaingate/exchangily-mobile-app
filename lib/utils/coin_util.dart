@@ -37,7 +37,6 @@ import "package:pointycastle/digests/sha256.dart";
 import "package:pointycastle/signers/ecdsa_signer.dart";
 import 'package:pointycastle/macs/hmac.dart';
 import 'varuint.dart';
-import '../environments/coins.dart' as coin_list;
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
     as tron_address_util;
 import 'package:web3dart/crypto.dart' as crypto_web3;
@@ -152,20 +151,6 @@ class CoinUtils {
     debugPrint('rsv list $rsvList');
     return rsvList;
   }
-
-/*----------------------------------------------------------------------
-                Convert Decimal to Hex
-----------------------------------------------------------------------*/
-
-  int convertDecimalToHex(int coinType) {
-    var x = coinType.toRadixString(16);
-    log.e('basecoin $coinType --  Hex == $x');
-    return int.parse(x);
-  }
-
-/*----------------------------------------------------------------------
-                Hash 256
-----------------------------------------------------------------------*/
 
   Uint8List hash256(Uint8List buffer) {
     Uint8List _tmp = SHA256Digest().process(buffer);

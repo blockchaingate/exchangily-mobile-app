@@ -30,6 +30,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
+import 'package:exchangilymobileapp/utils/coin_utils/matic_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
@@ -86,6 +87,7 @@ class SendViewModel extends BaseViewModel {
   String tokenType = '';
   final coinUtils = CoinUtils();
   final fabUtils = FabUtils();
+  final maticUtils = MaticUtils();
   int decimalLimit = 8;
   // double gasAmount = 0.0;
   String fabAddress = '';
@@ -863,12 +865,19 @@ class SendViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
+    gasPrice = int.tryParse(gasPriceTextController.text);
+    gasLimit = int.tryParse(gasLimitTextController.text);
+    satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
+    var customGasPrice;
+    if (walletInfo.tickerName == 'MATICM') {
+      customGasPrice = await maticUtils.gasFee();
+      log.i('updateTransFee: matic customGasPrice $customGasPrice');
 
-    var gasPrice = int.tryParse(gasPriceTextController.text);
-    var gasLimit = int.tryParse(gasLimitTextController.text);
-    var satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
+      customGasPrice = int.parse(customGasPrice.toString().split('.')[0]) + 1;
+    }
+
     var options = {
-      "gasPrice": gasPrice,
+      "gasPrice": walletInfo.tickerName == 'MATICM' ? customGasPrice : gasPrice,
       "gasLimit": gasLimit,
       "satoshisPerBytes": satoshisPerBytes,
       "tokenType": walletInfo.tokenType,

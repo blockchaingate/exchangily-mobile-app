@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:keccak/keccak.dart';
 import 'package:hex/hex.dart';
@@ -30,8 +31,32 @@ class MaticUtils {
   final log = getLogger('MaticUtils');
 
   var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
-  var maticmBaseUrl = 'https://rpc-mumbai.matic.today';
-  // Eth Post
+  String result;
+  Future<double> gasFee() async {
+    var body = {
+      "jsonrpc": "2.0",
+      "method": "eth_gasPrice",
+      "params": [],
+      "id": 73
+    };
+    log.i('gasFee url $maticmBaseUrl');
+    try {
+      var response = await client.post(maticmBaseUrl,
+          headers: {"responseType": "text"}, body: jsonEncode(body));
+      var json = jsonDecode(response.body);
+      log.w('json $json');
+      result = json["result"];
+      int gasInWei = int.parse(result);
+      log.w('gasInWei $gasInWei');
+      var fee = NumberUtil.weiToGwei(gasInWei);
+      log.i('feeInGwei $fee');
+      return fee;
+    } catch (err) {
+      log.e('gasFee: CATCH $err');
+      throw Exception(err);
+    }
+  }
+
   Future postTx(String txHex) async {
     var body = {
       "jsonrpc": "2.0",

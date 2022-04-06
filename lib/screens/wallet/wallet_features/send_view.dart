@@ -22,6 +22,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
+import 'package:web3dart/web3dart.dart';
 
 class SendWalletView extends StatelessWidget {
   final WalletInfo walletInfo;
@@ -904,6 +905,19 @@ class SendWalletView extends StatelessWidget {
                   ),
                 ),
               ),
+              // floatingActionButton: TextButton(
+              //   child: Text('Click'),
+              //   onPressed: () {
+              //     int gasLimit = 21000;
+              //     var gasPrice = 6.7415494;
+              //     var b = BigInt.parse('0x1dfd14000');
+              //     var transFeeDouble = (b *
+              //             BigInt.parse(gasLimit.toString()) /
+              //             BigInt.parse('1000000000'))
+              //         .toDouble();
+              //     debugPrint(transFeeDouble.toString());
+              //   },
+              // ),
             ),
           );
         });

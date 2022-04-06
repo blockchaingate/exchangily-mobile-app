@@ -49,8 +49,6 @@ class ApiService {
   WalletDatabaseService walletDatabaseService =
       locator<WalletDatabaseService>();
 
-// Post app update
-
   postAppUpdate() async {
     String url = postAppUpdateVersionUrl;
     log.i('postAppUpdate url $url');
