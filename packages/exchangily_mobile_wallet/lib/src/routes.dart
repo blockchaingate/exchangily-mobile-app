@@ -11,7 +11,7 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/constants/route_names.dart';
+import 'package:exchangily_mobile_wallet/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
@@ -83,7 +83,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ImportWalletView());
 
       case BackupMnemonicViewRoute:
-        return MaterialPageRoute(builder: (_) => const BackupMnemonicWalletScreen());
+        return MaterialPageRoute(
+            builder: (_) => const BackupMnemonicWalletScreen());
 
       case ConfirmMnemonicViewRoute:
         return MaterialPageRoute(

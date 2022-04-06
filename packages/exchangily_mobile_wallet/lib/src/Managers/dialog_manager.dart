@@ -11,23 +11,16 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/constants/constants.dart';
-import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/dialog/dialog_request.dart';
-import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
-import 'package:exchangilymobileapp/services/dialog_service.dart';
-import 'package:exchangilymobileapp/services/vault_service.dart';
-import 'package:flutter/material.dart';
-import 'package:overlay_support/overlay_support.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangily_mobile_wallet/src/logger.dart';
+import 'package:exchangily_mobile_wallet/src/service_locator.dart';
+import 'package:exchangily_mobile_wallet/src/services/dialog_service.dart';
+import 'package:exchangily_mobile_wallet/src/services/vault_service.dart';
+import 'package:exchangily_mobile_wallet/src/views/models/dialog/dialog_request.dart';
+import 'package:flutter/widgets.dart';
 
 class DialogManager extends StatefulWidget {
   final Widget child;
-  const DialogManager({Key key, this.child}) : super(key: key);
+  const DialogManager({Key? key, required this.child}) : super(key: key);
 
   @override
   _DialogManagerState createState() => _DialogManagerState();
