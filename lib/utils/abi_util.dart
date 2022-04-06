@@ -14,6 +14,7 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/utils/exaddr.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:flutter/widgets.dart';
 import './string_util.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:hex/hex.dart';

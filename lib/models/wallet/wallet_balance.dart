@@ -1,5 +1,3 @@
-import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
 class UsdValue {
@@ -10,7 +8,11 @@ class UsdValue {
   }
 
   factory UsdValue.fromJson(Map<String, dynamic> json) {
-    return UsdValue(usd: json['USD'].toDouble());
+    double jsonUsd = json['USD'].toDouble();
+    if (jsonUsd.isNegative) {
+      jsonUsd = 0.0;
+    }
+    return UsdValue(usd: jsonUsd);
   }
 
   Map<String, dynamic> toJson() {

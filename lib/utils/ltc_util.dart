@@ -1,9 +1,8 @@
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 
 import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/src/response.dart';
-
+import 'package:flutter/widgets.dart';
 import 'custom_http_util.dart';
 
 final String ltcBaseUrl = environment["endpoints"]["ltc"];
@@ -69,7 +68,7 @@ class LtcUtils {
     var btcBalance = 0.0;
     try {
       var response = await httpClient.get(url);
-      debugPrint(response.body);
+      debugPrint(response.toString());
       btcBalance = double.parse(response.body) / 1e8;
     } catch (e) {}
     return {'balance': btcBalance, 'lockbalance': 0.0};

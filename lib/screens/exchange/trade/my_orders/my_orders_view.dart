@@ -336,8 +336,8 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                                   size: 16,
                                 ),
                                 onPressed: () {
-                                  debugPrint(index);
-                                  debugPrint(orders.indexOf(order));
+                                  debugPrint(index.toString());
+                                  debugPrint(orders.indexOf(order).toString());
                                   if (index == orders.indexOf(order)) {
                                     debugPrint(
                                         'inside if ${index == orders.indexOf(order)}');

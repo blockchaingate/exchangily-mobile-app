@@ -16,7 +16,7 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
-
+import 'package:flutter/widgets.dart';
 import 'dart:convert';
 
 import 'custom_http_util.dart';
@@ -182,7 +182,7 @@ class KanbanUtils {
     try {
       var response = await client.post(url, body: body);
       debugPrint('response from sendKanbanRawTransaction=');
-      debugPrint(response.body);
+      debugPrint(response.body.toString());
       if (response.body
           .contains('TS crosschain withdraw verification failed')) {
         return {'success': false, 'data': response.body};

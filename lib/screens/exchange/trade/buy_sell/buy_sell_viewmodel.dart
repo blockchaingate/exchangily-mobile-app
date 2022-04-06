@@ -27,6 +27,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_m
 
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
@@ -70,6 +71,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
+  final coinService = locator<CoinService>();
 
   NavigationService navigationService = locator<NavigationService>();
 
@@ -482,13 +484,13 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     var timeBeforeExpiration = 423434342432;
     var orderType = 1;
     int baseCoin = 0;
-    await coinUtils
-        .getCoinTypeIdByName(baseCoinName)
+    await coinService
+        .getCoinTypeByTickerName(baseCoinName)
         .then((value) => baseCoin = value);
     log.e('basecoin Hex ==' + baseCoin.toRadixString(16));
     int targetCoin = 0;
-    await coinUtils
-        .getCoinTypeIdByName(targetCoinName)
+    await coinService
+        .getCoinTypeByTickerName(targetCoinName)
         .then((value) => targetCoin = value);
 
     if (!bidOrAsk) {

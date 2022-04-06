@@ -16,6 +16,7 @@ import 'dart:io';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
+import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
@@ -64,6 +65,8 @@ class SettingsViewmodel extends BaseViewModel {
       locator<UserSettingsDatabaseService>();
   ConfigService configService = locator<ConfigService>();
   final authService = locator<LocalAuthService>();
+  final coinService = locator<CoinService>();
+
   final Map<String, String> languages = {'en': 'English', 'zh': '简体中文'};
   String selectedLanguage;
   // bool result = false;
@@ -201,8 +204,8 @@ class SettingsViewmodel extends BaseViewModel {
 // Not in use
   convertDecimalToHex() async {
     int baseCoin = 0;
-    await coinUtils
-        .getCoinTypeIdByName('USDT')
+    await coinService
+        .getCoinTypeByTickerName('USDT')
         .then((value) => baseCoin = value);
     var x = baseCoin.toRadixString(16);
     var t = HEX.encode([baseCoin]);

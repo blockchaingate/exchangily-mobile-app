@@ -4,10 +4,8 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -44,262 +42,288 @@ class LightningRemitView extends StatelessWidget {
                 debugPrint('Close bottom sheet');
               }
             },
-            child: Container(
-              color: secondaryColor,
-              margin: const EdgeInsets.only(top: 40),
-              child: Stack(children: [
-                Container(
-                  margin: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Platform.isIOS
-                          ? CoinListBottomSheetFloatingActionButton(
-                              model: model)
-                          : Container(
-                              height: 55,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4.0),
-                                border: Border.all(
-                                    color: model.exchangeBalances.isEmpty
-                                        ? Colors.transparent
-                                        : primaryColor,
-                                    style: BorderStyle.solid,
-                                    width: 0.50),
-                              ),
-                              child: DropdownButton(
-                                  underline: const SizedBox.shrink(),
-                                  elevation: 5,
-                                  isExpanded: true,
-                                  icon: const Padding(
-                                    padding: EdgeInsets.only(right: 8.0),
-                                    child: Icon(Icons.arrow_drop_down),
-                                  ),
-                                  iconEnabledColor: primaryColor,
-                                  iconDisabledColor:
-                                      model.exchangeBalances.isEmpty
-                                          ? secondaryColor
-                                          : grey,
-                                  iconSize: 30,
-                                  hint: Padding(
-                                    padding: model.exchangeBalances.isEmpty
-                                        ? const EdgeInsets.all(0)
-                                        : const EdgeInsets.only(left: 10.0),
-                                    child: model.exchangeBalances.isEmpty
-                                        ? ListTile(
-                                            dense: true,
-                                            leading: Icon(
-                                              Icons.account_balance_wallet,
-                                              color: red,
-                                              size: 18,
-                                            ),
-                                            title: Text(
-                                                AppLocalizations.of(context)
-                                                    .noCoinBalance,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText2),
-                                            subtitle: Text(
-                                                AppLocalizations.of(context)
-                                                    .transferFundsToExchangeUsingDepositButton,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2))
-                                        : Text(
-                                            AppLocalizations.of(context)
-                                                .selectCoin,
-                                            textAlign: TextAlign.start,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5,
-                                          ),
-                                  ),
-                                  value: model.tickerName,
-                                  onChanged: (newValue) {
-                                    model.updateSelectedTickername(newValue);
-                                  },
-                                  items: model.exchangeBalances.map(
-                                    (coin) {
-                                      return DropdownMenuItem(
-                                        child: Padding(
+            child: model.busy(model.exchangeBalances) || model.isBusy
+                ? model.sharedService.loadingIndicator()
+                : Container(
+                    color: secondaryColor,
+                    margin: const EdgeInsets.only(top: 40),
+                    child: Stack(children: [
+                      Container(
+                        margin: const EdgeInsets.all(10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Platform.isIOS
+                                ? CoinListBottomSheetFloatingActionButton(
+                                    model: model)
+                                : Container(
+                                    height: 55,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4.0),
+                                      border: Border.all(
+                                          color: model.exchangeBalances.isEmpty
+                                              ? Colors.transparent
+                                              : primaryColor,
+                                          style: BorderStyle.solid,
+                                          width: 0.50),
+                                    ),
+                                    child: DropdownButton(
+                                        underline: const SizedBox.shrink(),
+                                        elevation: 5,
+                                        isExpanded: true,
+                                        icon: const Padding(
+                                          padding: EdgeInsets.only(right: 8.0),
+                                          child: Icon(Icons.arrow_drop_down),
+                                        ),
+                                        iconEnabledColor: primaryColor,
+                                        iconDisabledColor:
+                                            model.exchangeBalances.isEmpty
+                                                ? secondaryColor
+                                                : grey,
+                                        iconSize: 30,
+                                        hint: Padding(
                                           padding:
-                                              const EdgeInsets.only(left: 10.0),
-                                          child: Row(
-                                            children: [
-                                              Text(coin.ticker.toString(),
-                                                  textAlign: TextAlign.center,
+                                              model.exchangeBalances.isEmpty
+                                                  ? const EdgeInsets.all(0)
+                                                  : const EdgeInsets.only(
+                                                      left: 10.0),
+                                          child: model.exchangeBalances.isEmpty
+                                              ? ListTile(
+                                                  dense: true,
+                                                  leading: const Icon(
+                                                    Icons
+                                                        .account_balance_wallet,
+                                                    color: red,
+                                                    size: 18,
+                                                  ),
+                                                  title: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .noCoinBalance,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyText2),
+                                                  subtitle: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .transferFundsToExchangeUsingDepositButton,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .subtitle2))
+                                              : Text(
+                                                  AppLocalizations.of(context)
+                                                      .selectCoin,
+                                                  textAlign: TextAlign.start,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline5
-                                                      .copyWith(
-                                                          fontWeight:
-                                                              FontWeight.bold)),
-                                              UIHelper.horizontalSpaceSmall,
-                                              Text(
-                                                coin.unlockedAmount.toString(),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5
-                                                    .copyWith(
-                                                        color: grey,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                              )
-                                            ],
-                                          ),
+                                                      .headline5,
+                                                ),
                                         ),
-                                        value: coin.ticker,
-                                      );
-                                    },
-                                  ).toList()),
-                            ),
+                                        value: model.tickerName,
+                                        onChanged: (newValue) {
+                                          model.updateSelectedTickername(
+                                              newValue);
+                                        },
+                                        items: model.exchangeBalances.map(
+                                          (coin) {
+                                            return DropdownMenuItem(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10.0),
+                                                child: Row(
+                                                  children: [
+                                                    Text(coin.ticker.toString(),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline5
+                                                            .copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                    UIHelper
+                                                        .horizontalSpaceSmall,
+                                                    Text(
+                                                      coin.unlockedAmount
+                                                          .toString(),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline5
+                                                          .copyWith(
+                                                              color: grey,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              value: coin.ticker,
+                                            );
+                                          },
+                                        ).toList()),
+                                  ),
 
 /*----------------------------------------------------------------------------------------------------
                                         Receiver Address textfield
 ----------------------------------------------------------------------------------------------------*/
 
-                      UIHelper.verticalSpaceSmall,
-                      TextField(
-                          keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                              prefixIcon: IconButton(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  alignment: Alignment.centerLeft,
-                                  tooltip:
-                                      AppLocalizations.of(context).scanBarCode,
-                                  icon: Icon(
-                                    Icons.camera_alt,
-                                    color: white,
-                                    size: 18,
-                                  ),
-                                  onPressed: () {
-                                    model.scanBarcode();
-                                    FocusScope.of(context)
-                                        .requestFocus(FocusNode());
-                                  }),
-                              suffixIcon: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  icon: Icon(
-                                    Icons.content_paste,
-                                    color: green,
-                                    size: 18,
-                                  ),
-                                  onPressed: () => model.contentPaste()),
-                              enabledBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(0XFF871fff), width: 0.5)),
-                              hintText: AppLocalizations.of(context)
-                                  .receiverWalletAddress,
-                              hintStyle: Theme.of(context).textTheme.headline5),
-                          controller: model.addressController,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline5
-                              .copyWith(fontWeight: FontWeight.bold)),
+                            UIHelper.verticalSpaceSmall,
+                            TextField(
+                                keyboardType: TextInputType.text,
+                                decoration: InputDecoration(
+                                    prefixIcon: IconButton(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        alignment: Alignment.centerLeft,
+                                        tooltip: AppLocalizations.of(context)
+                                            .scanBarCode,
+                                        icon: Icon(
+                                          Icons.camera_alt,
+                                          color: white,
+                                          size: 18,
+                                        ),
+                                        onPressed: () {
+                                          model.scanBarcode();
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
+                                        }),
+                                    suffixIcon: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: Icon(
+                                          Icons.content_paste,
+                                          color: green,
+                                          size: 18,
+                                        ),
+                                        onPressed: () => model.contentPaste()),
+                                    enabledBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0XFF871fff),
+                                            width: 0.5)),
+                                    hintText: AppLocalizations.of(context)
+                                        .receiverWalletAddress,
+                                    hintStyle:
+                                        Theme.of(context).textTheme.headline5),
+                                controller: model.addressController,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.bold)),
 
 /*----------------------------------------------------------------------------------------------------
                                         Transfer amount textfield
 ----------------------------------------------------------------------------------------------------*/
 
-                      UIHelper.verticalSpaceSmall,
-                      TextField(
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
-                          decoration: InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(0XFF871fff), width: 0.5)),
-                              hintText:
-                                  AppLocalizations.of(context).enterAmount,
-                              hintStyle: Theme.of(context).textTheme.headline5),
-                          controller: model.amountController,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline5
-                              .copyWith(fontWeight: FontWeight.bold)),
-                      UIHelper.verticalSpaceMedium,
+                            UIHelper.verticalSpaceSmall,
+                            TextField(
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
+                                decoration: InputDecoration(
+                                    enabledBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0XFF871fff),
+                                            width: 0.5)),
+                                    hintText: AppLocalizations.of(context)
+                                        .enterAmount,
+                                    hintStyle:
+                                        Theme.of(context).textTheme.headline5),
+                                controller: model.amountController,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.bold)),
+                            UIHelper.verticalSpaceMedium,
 /*----------------------------------------------------------------------------------------------------
                                         Transfer - Receive Button Row
 ----------------------------------------------------------------------------------------------------*/
 
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              decoration:
-                                  model.sharedService.gradientBoxDecoration(),
-                              child: FlatButton(
-                                textColor: Colors.white,
-                                onPressed: () {
-                                  model.isBusy
-                                      ? debugPrint('busy')
-                                      : model.transfer();
-                                },
-                                child: Text(AppLocalizations.of(context).send,
-                                    style:
-                                        Theme.of(context).textTheme.headline4),
-                              ),
-                            ),
-                          ),
-                          UIHelper.horizontalSpaceSmall,
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    decoration: model.sharedService
+                                        .gradientBoxDecoration(),
+                                    child: FlatButton(
+                                      textColor: Colors.white,
+                                      onPressed: () {
+                                        model.isBusy
+                                            ? debugPrint('busy')
+                                            : model.transfer();
+                                      },
+                                      child: Text(
+                                          AppLocalizations.of(context).send,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4),
+                                    ),
+                                  ),
+                                ),
+                                UIHelper.horizontalSpaceSmall,
 
 /*----------------------------------------------------------------------------------------------------
                                             Receive Button
 ----------------------------------------------------------------------------------------------------*/
 
-                          Expanded(
-                            child: OutlineButton(
-                              borderSide: BorderSide(color: primaryColor),
-                              padding: const EdgeInsets.all(15),
-                              color: primaryColor,
-                              textColor: Colors.white,
-                              onPressed: () {
-                                model.isBusy
-                                    ? debugPrint('busy')
-                                    : model.showBarcode();
-                              },
-                              child: Text(AppLocalizations.of(context).receive,
-                                  style: Theme.of(context).textTheme.headline4),
+                                Expanded(
+                                  child: OutlineButton(
+                                    borderSide: BorderSide(color: primaryColor),
+                                    padding: const EdgeInsets.all(15),
+                                    color: primaryColor,
+                                    textColor: Colors.white,
+                                    onPressed: () {
+                                      model.isBusy
+                                          ? debugPrint('busy')
+                                          : model.showBarcode();
+                                    },
+                                    child: Text(
+                                        AppLocalizations.of(context).receive,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline4),
+                                  ),
+                                ),
+                                IconButton(
+                                  //  borderSide: BorderSide(color: primaryColor),
+                                  padding: const EdgeInsets.all(15),
+                                  color: primaryColor,
+                                  // textColor: Colors.white,
+                                  onPressed: () async {
+                                    await model
+                                        .getLightningRemitTransactionHistory();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => TxHistoryView(
+                                                transactionHistory:
+                                                    model.transactionHistory,
+                                                model: model)));
+                                  },
+                                  icon: Icon(Icons.history,
+                                      color: white, size: 24),
+                                  // child: Text('History',
+                                  //     style: Theme.of(context).textTheme.headline4),
+                                ),
+                              ],
                             ),
-                          ),
-                          IconButton(
-                            //  borderSide: BorderSide(color: primaryColor),
-                            padding: const EdgeInsets.all(15),
-                            color: primaryColor,
-                            // textColor: Colors.white,
-                            onPressed: () async {
-                              await model.getLightningRemitTransactionHistory();
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => TxHistoryView(
-                                          transactionHistory:
-                                              model.transactionHistory,
-                                          model: model)));
-                            },
-                            icon: Icon(Icons.history, color: white, size: 24),
-                            // child: Text('History',
-                            //     style: Theme.of(context).textTheme.headline4),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
 
 /*----------------------------------------------------------------------------------------------------
                                         Stack loading container
 ----------------------------------------------------------------------------------------------------*/
 
-                model.isBusy
-                    ? Align(
-                        alignment: Alignment.center,
-                        child: model.sharedService
-                            .stackFullScreenLoadingIndicator())
-                    : Container()
-              ]),
-            ),
+                      model.isBusy
+                          ? Align(
+                              alignment: Alignment.center,
+                              child: model.sharedService
+                                  .stackFullScreenLoadingIndicator())
+                          : Container()
+                    ]),
+                  ),
           ),
           bottomNavigationBar: BottomNavBar(count: 2),
         ),

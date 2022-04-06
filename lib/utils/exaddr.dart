@@ -1,5 +1,6 @@
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'dart:typed_data';
+import 'package:flutter/widgets.dart';
 
 var Format = {'Legacy': 'legacy', 'Kbpay': 'kbpay'};
 
@@ -45,7 +46,7 @@ toKbpayAddress(address) {
   var decoded = decodeAddress(address);
 
   debugPrint('decoded=');
-  debugPrint(decoded);
+  debugPrint(decoded.toString());
   if (decoded['format'] == Format['Kbpay']) {
     return address;
   }
@@ -77,7 +78,7 @@ decodeBase58Address(address) {
     debugPrint('address=' + address);
     var payload = bs58check.decode(address);
     debugPrint('payload=');
-    debugPrint(payload);
+    debugPrint(payload.toString());
     if (payload.length != BASE_58_CHECK_PAYLOAD_LENGTH) {
       return '';
     }
@@ -85,7 +86,7 @@ decodeBase58Address(address) {
     var hash = payload.sublist(1);
 
     debugPrint('versionByte===');
-    debugPrint(versionByte);
+    debugPrint(versionByte.toString());
     if (versionByte ==
         VERSION_BYTE[Format['Legacy']][Network['Mainnet']][Type['P2PKH']]) {
       return {
@@ -140,7 +141,7 @@ encodeAsLegacy(decoded) {
 
 encodeAsKbpay(decoded) {
   debugPrint('decoded=');
-  debugPrint(decoded);
+  debugPrint(decoded.toString());
   var versionByte =
       VERSION_BYTE[Format['Kbpay']][decoded['network']][decoded['type']];
 
@@ -151,7 +152,7 @@ encodeAsKbpay(decoded) {
     buffer[i + 1] = decoded['hash'][i];
   }
   debugPrint('buffer in encodeAsKbpay=');
-  debugPrint(buffer);
+  debugPrint(buffer.toString());
   return bs58check.encode(buffer);
 }
 

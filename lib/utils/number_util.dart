@@ -2,9 +2,9 @@ import 'dart:math';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/widgets.dart';
 
 class NumberUtil {
-  static const int DEFAULT_DECIMAL_DIGITS = 2;
   int maxDecimalDigits;
   final log = getLogger('NumberUtil');
 

@@ -186,11 +186,11 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
             width: 200,
             child: OutlinedButton(
               style: ButtonStyle(
-                shape: MaterialStateProperty.all(StadiumBorder(
+                shape: MaterialStateProperty.all(const StadiumBorder(
                   side: BorderSide(color: primaryColor, width: 2),
                 )),
                 side: MaterialStateProperty.all(
-                    BorderSide(color: primaryColor, width: 0.5)),
+                    const BorderSide(color: primaryColor, width: 0.5)),
                 padding: MaterialStateProperty.all(
                     const EdgeInsets.symmetric(vertical: 0, horizontal: 5)),
               ),
@@ -240,7 +240,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
     Flushbar(
       backgroundColor: globals.secondaryColor.withOpacity(0.75),
       message: AppLocalizations.of(context).addressCopied,
-      icon: Icon(
+      icon: const Icon(
         Icons.done,
         size: 24,
         color: globals.primaryColor,

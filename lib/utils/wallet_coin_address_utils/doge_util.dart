@@ -1,5 +1,6 @@
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:flutter/widgets.dart';
 
 final dogeCoinTestnetNetwork = BitcoinFlutter.NetworkType(
     messagePrefix: 'Dogecoin Signed Message:\n',

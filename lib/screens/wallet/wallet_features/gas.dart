@@ -25,27 +25,32 @@ class Gas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       // mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 5.0),
-          child: Container(
-              decoration: BoxDecoration(
-                  color: globals.iconBackgroundColor, shape: BoxShape.circle),
-              width: 30,
-              height: 30,
-              child: Icon(
-                Icons.local_gas_station,
-                color: isProduction
-                    ? globals.secondaryColor
-                    : globals.red.withAlpha(200),
-              )),
-        ),
-        // UIHelper.horizontalSpaceSmall,
-        Text(
-          "${AppLocalizations.of(context).gas}: ${NumberUtil().truncateDoubleWithoutRouding(gasAmount, precision: 6)}",
-          style: Theme.of(context).textTheme.headline2,
+        Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 5.0),
+              child: Container(
+                  decoration: const BoxDecoration(
+                      color: globals.iconBackgroundColor,
+                      shape: BoxShape.circle),
+                  width: 25,
+                  height: 25,
+                  child: Icon(
+                    Icons.local_gas_station,
+                    color: isProduction
+                        ? globals.secondaryColor
+                        : globals.red.withAlpha(200),
+                  )),
+            ),
+            UIHelper.horizontalSpaceSmall,
+            Text(
+              "${AppLocalizations.of(context).gas}: ${NumberUtil().truncateDoubleWithoutRouding(gasAmount, precision: 6)}",
+              style: Theme.of(context).textTheme.headline5,
+            ),
+          ],
         ),
         // UIHelper.horizontalSpaceSmall,
         MaterialButton(

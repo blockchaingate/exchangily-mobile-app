@@ -9,6 +9,7 @@ import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart
 
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -44,7 +45,7 @@ class LightningRemitViewmodel extends FutureViewModel {
   LocalStorageService storageService = locator<LocalStorageService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-
+  final coinService = locator<CoinService>();
   WalletService walletService = locator<WalletService>();
   String tickerName = '';
   BuildContext context;
@@ -74,9 +75,6 @@ class LightningRemitViewmodel extends FutureViewModel {
     //apiService.getTokenList();
   }
 
-  test() {
-    debugPrint(storageService.tokenList.length);
-  }
 /*----------------------------------------------------------------------
                           INIT
 ----------------------------------------------------------------------*/
@@ -93,21 +91,24 @@ class LightningRemitViewmodel extends FutureViewModel {
   @override
   void onData(data) async {
     setBusyForObject(exchangeBalances, true);
+    setBusy(true);
+    if (data == null) return;
     exchangeBalances = data;
     for (var element in exchangeBalances) {
-      debugPrint(element.toJson());
+      debugPrint(element.toJson().toString());
       if (element.ticker.isEmpty) {
-        await tokenListDatabaseService
-            .getTickerNameByCoinType(element.coinType)
-            .then((ticker) {
+        await coinService
+            .getSingleTokenData('', coinType: element.coinType)
+            .then((token) {
           //storageService.tokenList.forEach((newToken){
-          debugPrint(ticker);
+
           // var json = jsonDecode(newToken);
           // Token token = Token.fromJson(json);
           // if (token.tokenType == element.coinType){ debugPrint(token.tickerName);
-          setBusy(true);
-          element.ticker = ticker; //}
-          setBusy(false);
+          if (token == null) {
+            element.ticker = element.coinType.toString();
+          }
+          element.ticker = token.tickerName; //}
         });
 //element.ticker =tradeService.setTickerNameByType(element.coinType);
         debugPrint('exchanageBalanceModel tickerName ${element.ticker}');
@@ -121,7 +122,8 @@ class LightningRemitViewmodel extends FutureViewModel {
       quantity = exchangeBalances[0].unlockedAmount;
     }
     setBusyForObject(tickerName, false);
-    log.e('tickerName $tickerName');
+    log.i('onData :tickerName $tickerName');
+    setBusy(false);
   }
 
   // get all LightningRemit transactions
@@ -178,7 +180,7 @@ class LightningRemitViewmodel extends FutureViewModel {
         context: context1,
         builder: (context1) => Container(
           width: double.infinity,
-          height: 100,
+          height: 140,
           margin: const EdgeInsets.symmetric(horizontal: 10.0),
           decoration: BoxDecoration(
             color: grey.withAlpha(300),
@@ -219,17 +221,17 @@ class LightningRemitViewmodel extends FutureViewModel {
                       //     coins[index]['quantity'].toDouble());
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(exchangeBalances[index].ticker,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headline5),
+                              style: Theme.of(context).textTheme.headline4),
                           UIHelper.horizontalSpaceSmall,
                           Text(
                               exchangeBalances[index].unlockedAmount.toString(),
-                              style: Theme.of(context).textTheme.headline5),
+                              style: Theme.of(context).textTheme.headline4),
                           const Divider(
                             color: Colors.white,
                             height: 1,
@@ -326,10 +328,6 @@ class LightningRemitViewmodel extends FutureViewModel {
   }
 
 /*----------------------------------------------------------------------
-              Show dialog popup for receive address and barcode
-----------------------------------------------------------------------*/
-
-/*----------------------------------------------------------------------
                     Refresh Balance
 ----------------------------------------------------------------------*/
   refreshBalance() async {
@@ -360,11 +358,10 @@ class LightningRemitViewmodel extends FutureViewModel {
       builder: (BuildContext context) {
         return Platform.isIOS
             ? CupertinoAlertDialog(
-                title: Container(
-                  child: Center(
-                      child: Text(AppLocalizations.of(context).receiveAddress)),
-                ),
+                title: Center(
+                    child: Text(AppLocalizations.of(context).receiveAddress)),
                 content: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
                       children: [
@@ -377,7 +374,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                               style: Theme.of(context).textTheme.headline6),
                         ),
                         CupertinoButton(
-                            child: Icon(
+                            child: const Icon(
                               FontAwesomeIcons.copy,
                               //  CupertinoIcons.,
                               color: primaryColor,
@@ -394,26 +391,22 @@ class LightningRemitViewmodel extends FutureViewModel {
                         width: 250,
                         height: 250,
                         child: Center(
-                          child: Container(
-                            child: RepaintBoundary(
-                              key: globalKey,
-                              child: QrImage(
-                                  backgroundColor: white,
-                                  data: kbAddress,
-                                  version: QrVersions.auto,
-                                  size: 300,
-                                  gapless: true,
-                                  errorStateBuilder: (context, err) {
-                                    return Container(
-                                      child: Center(
-                                        child: Text(
-                                            AppLocalizations.of(context)
-                                                .somethingWentWrong,
-                                            textAlign: TextAlign.center),
-                                      ),
-                                    );
-                                  }),
-                            ),
+                          child: RepaintBoundary(
+                            key: globalKey,
+                            child: QrImage(
+                                backgroundColor: white,
+                                data: kbAddress,
+                                version: QrVersions.auto,
+                                size: 300,
+                                gapless: true,
+                                errorStateBuilder: (context, err) {
+                                  return Center(
+                                    child: Text(
+                                        AppLocalizations.of(context)
+                                            .somethingWentWrong,
+                                        textAlign: TextAlign.center),
+                                  );
+                                }),
                           ),
                         )),
                   ],
@@ -474,121 +467,122 @@ class LightningRemitViewmodel extends FutureViewModel {
                 ],
               )
             // Android Alert Dialog
-            : AlertDialog(
-                titlePadding: EdgeInsets.zero,
-                contentPadding: EdgeInsets.zero,
-                insetPadding:
-                    const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-                elevation: 5,
-                backgroundColor: walletCardColor.withOpacity(0.85),
-                title: Container(
-                  padding: const EdgeInsets.all(10.0),
-                  color: secondaryColor.withOpacity(0.5),
-                  child: Center(
-                      child: Text(AppLocalizations.of(context).receiveAddress)),
-                ),
-                titleTextStyle: Theme.of(context)
-                    .textTheme
-                    .headline4
-                    .copyWith(fontWeight: FontWeight.bold),
-                contentTextStyle: TextStyle(color: grey),
-                content: Column(
-                  children: [
-                    UIHelper.verticalSpaceLarge,
-                    Row(
-                      children: [
-                        UIHelper.horizontalSpaceSmall,
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                                // add here cupertino widget to check in these small widgets first then the entire app
-                                kbAddress,
-                                style: Theme.of(context).textTheme.headline6),
-                          ),
-                        ),
-                        IconButton(
-                            icon: Icon(
-                              Icons.content_copy,
-                              color: primaryColor,
-                              size: 16,
+            : Center(
+                child: AlertDialog(
+                  alignment: Alignment.center,
+                  buttonPadding: const EdgeInsets.all(0),
+                  titlePadding: const EdgeInsets.symmetric(vertical: 0),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                  elevation: 5,
+                  backgroundColor: walletCardColor.withOpacity(0.85),
+                  title: Container(
+                    padding: const EdgeInsets.all(10.0),
+                    color: secondaryColor.withOpacity(0.5),
+                    child: Center(
+                        child:
+                            Text(AppLocalizations.of(context).receiveAddress)),
+                  ),
+                  titleTextStyle: Theme.of(context)
+                      .textTheme
+                      .headline4
+                      .copyWith(fontWeight: FontWeight.bold),
+                  contentTextStyle: const TextStyle(color: grey),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          UIHelper.horizontalSpaceSmall,
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                  // add here cupertino widget to check in these small widgets first then the entire app
+                                  kbAddress,
+                                  style: Theme.of(context).textTheme.headline6),
                             ),
-                            onPressed: () {
-                              sharedService.copyAddress(context, kbAddress)();
-                            })
-                      ],
-                    ),
-                    // UIHelper.verticalSpaceLarge,
-                    Container(
-                        margin: const EdgeInsets.only(top: 10.0),
-                        width: 250,
-                        height: 250,
-                        child: Center(
-                          child: Container(
+                          ),
+                          IconButton(
+                              icon: const Icon(
+                                Icons.content_copy,
+                                color: primaryColor,
+                                size: 16,
+                              ),
+                              onPressed: () {
+                                sharedService.copyAddress(context, kbAddress)();
+                              })
+                        ],
+                      ),
+                      // UIHelper.verticalSpaceLarge,
+                      Container(
+                          margin: const EdgeInsets.only(top: 10.0),
+                          width: 250,
+                          height: 250,
+                          child: Center(
                             child: RepaintBoundary(
                               key: globalKey,
                               child: QrImage(
                                   backgroundColor: white,
                                   data: kbAddress,
                                   version: QrVersions.auto,
-                                  size: 300,
+                                  size: 250,
                                   gapless: true,
                                   errorStateBuilder: (context, err) {
-                                    return Container(
-                                      child: Center(
-                                        child: Text(
-                                            AppLocalizations.of(context)
-                                                .somethingWentWrong,
-                                            textAlign: TextAlign.center),
-                                      ),
+                                    return Center(
+                                      child: Text(
+                                          AppLocalizations.of(context)
+                                              .somethingWentWrong,
+                                          textAlign: TextAlign.center),
                                     );
                                   }),
                             ),
-                          ),
-                        )),
-                  ],
-                ),
-                actions: <Widget>[
-                  // QR image share button
+                          )),
+                      UIHelper.verticalSpaceSmall,
+                      Container(
+                        padding: const EdgeInsets.all(10.0),
+                        child: RaisedButton(
+                            child: Text(AppLocalizations.of(context).share,
+                                style: Theme.of(context).textTheme.headline6),
+                            onPressed: () {
+                              String receiveFileName =
+                                  'Lightning-remit-kanban-receive-address.png';
+                              getApplicationDocumentsDirectory().then((dir) {
+                                String filePath =
+                                    "${dir.path}/$receiveFileName";
+                                File file = File(filePath);
 
-                  Container(
-                    padding: const EdgeInsets.all(10.0),
-                    child: RaisedButton(
-                        child: Text(AppLocalizations.of(context).share,
-                            style: Theme.of(context).textTheme.headline6),
-                        onPressed: () {
-                          String receiveFileName =
-                              'Lightning-remit-kanban-receive-address.png';
-                          getApplicationDocumentsDirectory().then((dir) {
-                            String filePath = "${dir.path}/$receiveFileName";
-                            File file = File(filePath);
-
-                            Future.delayed(const Duration(milliseconds: 30),
-                                () {
-                              sharedService
-                                  .capturePng(globalKey: globalKey)
-                                  .then((byteData) {
-                                file.writeAsBytes(byteData).then((onFile) {
-                                  Share.shareFiles([onFile.path],
-                                      text: kbAddress);
+                                Future.delayed(const Duration(milliseconds: 30),
+                                    () {
+                                  sharedService
+                                      .capturePng(globalKey: globalKey)
+                                      .then((byteData) {
+                                    file.writeAsBytes(byteData).then((onFile) {
+                                      Share.shareFiles([onFile.path],
+                                          text: kbAddress);
+                                    });
+                                  });
                                 });
                               });
-                            });
-                          });
-                        }),
+                            }),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: OutlineButton(
+                          borderSide: const BorderSide(color: primaryColor),
+                          color: primaryColor,
+                          textColor: Colors.white,
+                          child: Text(
+                            AppLocalizations.of(context).close,
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop(false);
+                          },
+                        ),
+                      ),
+                      UIHelper.verticalSpaceSmall,
+                    ],
                   ),
-                  OutlineButton(
-                    borderSide: BorderSide(color: primaryColor),
-                    color: primaryColor,
-                    textColor: Colors.white,
-                    child: Text(
-                      AppLocalizations.of(context).close,
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                  ),
-                ],
+                ),
               );
       },
     );
@@ -602,7 +596,6 @@ class LightningRemitViewmodel extends FutureViewModel {
 
   transfer() async {
     setBusy(true);
-    debugPrint(walletService.isValidKbAddress(addressController.text));
     if (walletService.isValidKbAddress(addressController.text)) {
       if (amountController.text == '') {
         sharedService.alertDialog(AppLocalizations.of(context).validationError,
@@ -614,7 +607,7 @@ class LightningRemitViewmodel extends FutureViewModel {
       ExchangeBalanceModel _selectedExchangeBal = exchangeBalances
           .firstWhere((element) => element.ticker == tickerName);
       // int coinType = getCoinTypeIdByName(tickerName);
-      debugPrint(_selectedExchangeBal.coinType);
+      debugPrint(_selectedExchangeBal.coinType.toString());
       double amount = double.parse(amountController.text);
       double selectedCoinBalance = _selectedExchangeBal.unlockedAmount;
       if (selectedCoinBalance <= 0.0 || amount > selectedCoinBalance) {

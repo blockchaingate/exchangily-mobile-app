@@ -263,7 +263,7 @@ class SharedService {
                 width: 25,
                 height: 25,
                 child: const CupertinoActivityIndicator())
-            : SizedBox(
+            : const SizedBox(
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
@@ -468,7 +468,6 @@ class SharedService {
                               activeColor: globals.primaryColor,
                               onChanged: (bool value) async {
                                 setState(() => checkBoxValue = value);
-                                debugPrint(!checkBoxValue);
 
                                 /// user click on do not show which is negative means false
                                 /// so to make it work it needs to be opposite of the orginal value

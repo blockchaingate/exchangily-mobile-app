@@ -14,6 +14,7 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_viewmodel.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
@@ -44,7 +45,7 @@ class WalletSetupView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               // Logo Container
-              // UIHelper.verticalSpaceLarge,
+              UIHelper.verticalSpaceLarge,
               // UIHelper.verticalSpaceLarge,
               Column(
                 children: [
@@ -102,7 +103,8 @@ class WalletSetupView extends StatelessWidget {
                             ),
                             model.isVerifying
                                 ? Text(
-                                    AppLocalizations.of(context).verifyingWallet,
+                                    AppLocalizations.of(context)
+                                        .verifyingWallet,
                                     style:
                                         Theme.of(context).textTheme.bodyText1,
                                   )
@@ -145,9 +147,8 @@ class WalletSetupView extends StatelessWidget {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(right: 4),
+                                          const Padding(
+                                            padding: EdgeInsets.only(right: 4),
                                             child: Icon(
                                               Icons.lock_open_outlined,
                                               color: white,
@@ -174,7 +175,8 @@ class WalletSetupView extends StatelessWidget {
                                   ? Row(children: <Widget>[
                                       Expanded(
                                         child: Container(
-                                          margin: const EdgeInsets.only(right: 5),
+                                          margin:
+                                              const EdgeInsets.only(right: 5),
                                           child: ElevatedButton(
                                             style: ButtonStyle(
                                               elevation:
@@ -183,7 +185,7 @@ class WalletSetupView extends StatelessWidget {
                                                   MaterialStateProperty.all(
                                                       white),
                                               shape: MaterialStateProperty.all(
-                                                StadiumBorder(
+                                                const StadiumBorder(
                                                     side: BorderSide(
                                                         color: primaryColor,
                                                         width: 2)),
@@ -211,7 +213,7 @@ class WalletSetupView extends StatelessWidget {
                                               elevation:
                                                   MaterialStateProperty.all(5),
                                               shape: MaterialStateProperty.all(
-                                                StadiumBorder(
+                                                const StadiumBorder(
                                                     side: BorderSide(
                                                         color: primaryColor,
                                                         width: 2)),

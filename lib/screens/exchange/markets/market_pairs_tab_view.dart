@@ -24,7 +24,7 @@ class MarketPairsTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> tabNames = [
       // 'FAV.',
-      'USDT', 'DUSD', 'BTC', 'ETH', 'EXG'
+      'DUSD', 'USDT', 'BTC', 'ETH', 'EXG'
     ];
 
     return BaseScreen<MarketPairsTabViewState>(
@@ -99,9 +99,10 @@ class MarketPairsTabView extends StatelessWidget {
                         delegate: _SliverAppBarDelegate(
                           TabBar(
                               unselectedLabelColor: const Color(0xffaaaaaa),
-                              unselectedLabelStyle: const TextStyle(fontSize: 14),
+                              unselectedLabelStyle:
+                                  const TextStyle(fontSize: 14),
                               indicatorSize: TabBarIndicatorSize.tab,
-                              indicator: BoxDecoration(
+                              indicator: const BoxDecoration(
                                   gradient: LinearGradient(
                                       colors: [
                                         globals.walletCardColor,
@@ -110,7 +111,7 @@ class MarketPairsTabView extends StatelessWidget {
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter),
                                   shape: BoxShape.rectangle,
-                                  borderRadius: const BorderRadius.only(
+                                  borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(5),
                                       topRight: Radius.circular(5)),
                                   color: Colors.redAccent),

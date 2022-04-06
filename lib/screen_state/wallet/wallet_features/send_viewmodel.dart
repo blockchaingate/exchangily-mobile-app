@@ -33,9 +33,9 @@ import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
-    as TronAddressUtil;
+    as tron_address_util;
 import 'package:exchangilymobileapp/utils/tron_util/trx_transaction_util.dart'
-    as TronTransactionUtil;
+    as tron_transaction_util;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
@@ -93,7 +93,8 @@ class SendViewModel extends BaseViewModel {
   double unconfirmedBalance = 0.0;
   bool isValidAmount = true;
   double chainBalance = 0.0;
-
+  bool isCustomToken = false;
+  CustomTokenModel customToken = CustomTokenModel();
   // Init State
   initState() async {
     setBusy(true);
@@ -106,11 +107,32 @@ class SendViewModel extends BaseViewModel {
     String coinName = walletInfo.tickerName;
     await setFee(coinName);
     fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
-    if (storageService.customTokenData.isEmpty) await refreshBalance();
-    decimalLimit =
-        await walletService.getSingleCoinWalletDecimalLimit(coinName);
-    decimalLimit ??= 8;
-    if (tokenType.isNotEmpty) await getNativeChainTickerBalance();
+
+    String customTokenStringData = storageService.customTokenData;
+
+    try {
+      if (customTokenStringData.isNotEmpty) {
+        customToken =
+            CustomTokenModel.fromJson(jsonDecode(customTokenStringData));
+
+        decimalLimit = customToken.decimal;
+        isCustomToken = true;
+        customToken = customToken;
+      }
+    } catch (err) {
+      log.e('custom token CATCH $err');
+    }
+    if (!isCustomToken) {
+      await refreshBalance();
+      decimalLimit =
+          await walletService.getSingleCoinWalletDecimalLimit(coinName);
+      if (decimalLimit == null || decimalLimit == 0) {
+        decimalLimit = 8;
+      }
+    }
+    if (tokenType.isNotEmpty && !isCustomToken) {
+      await getNativeChainTickerBalance();
+    }
     setBusy(false);
   }
 
@@ -152,7 +174,7 @@ class SendViewModel extends BaseViewModel {
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       var gasPriceReal = await walletService.getEthGasPrice();
       debugPrint('gasPriceReal======');
-      debugPrint(gasPriceReal);
+      debugPrint(gasPriceReal.toString());
       gasPriceTextController.text = gasPriceReal.toString();
       gasLimitTextController.text =
           environment["chains"]["ETH"]["gasLimit"].toString();
@@ -182,7 +204,7 @@ class SendViewModel extends BaseViewModel {
     //         .cast<CustomTokenModel>();
     CustomTokenModel customTokenModel =
         CustomTokenModel.fromJson(jsonDecode(storageService.customTokenData));
-    debugPrint(customTokenModel.toJson());
+    debugPrint(customTokenModel.toJson().toString());
   }
 
   bool isTrx() {
@@ -201,6 +223,12 @@ class SendViewModel extends BaseViewModel {
     setBusy(true);
 
     if (amountController.text.isEmpty) {
+      transFee = 0.0;
+      setBusy(false);
+      return 0.0;
+    }
+
+    if (amountController.text.startsWith('.')) {
       transFee = 0.0;
       setBusy(false);
       return 0.0;
@@ -329,20 +357,11 @@ class SendViewModel extends BaseViewModel {
           (tickerName != '') &&
           (tokenType != null) &&
           (tokenType != '')) {
-        int decimal;
-
         String contractAddr = '';
 
-        if (storageService.customTokenData.isNotEmpty) {
-          try {
-            CustomTokenModel customTokenModel = CustomTokenModel.fromJson(
-                jsonDecode(storageService.customTokenData));
-            contractAddr = customTokenModel.tokenId;
-            decimalLimit = customTokenModel.decimal;
-          } catch (err) {
-            log.e(
-                'Send transaction func: custom token from storage failed conversion');
-          }
+        if (isCustomToken) {
+          contractAddr = customToken.tokenId;
+          decimalLimit = customToken.decimal;
         } else {
           contractAddr = environment["addresses"]["smartContract"][tickerName];
         }
@@ -352,7 +371,7 @@ class SendViewModel extends BaseViewModel {
               .getByTickerName(tickerName)
               .then((token) {
             contractAddr = token.contract;
-            decimal = token.decimal;
+            decimalLimit = token.decimal;
             log.i('send token address ${token.toJson()}');
           });
         }
@@ -363,7 +382,7 @@ class SendViewModel extends BaseViewModel {
           'gasPrice': gasPrice,
           'gasLimit': gasLimit,
           'satoshisPerBytes': satoshisPerBytes,
-          'decimal': decimal
+          'decimal': decimalLimit
         };
       } else {
         options = {
@@ -384,8 +403,9 @@ class SendViewModel extends BaseViewModel {
       // TRON Transaction
       if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
         log.i('sending tron ${walletInfo.tickerName}');
-        var privateKey = TronAddressUtil.generateTrxPrivKey(mnemonic);
-        await TronTransactionUtil.generateTrxTransactionContract(
+        var privateKey = tron_address_util.generateTrxPrivKey(mnemonic);
+        await tron_transaction_util
+            .generateTrxTransactionContract(
                 privateKey: privateKey,
                 fromAddr: walletInfo.address,
                 toAddr: toAddress,
@@ -413,7 +433,7 @@ class SendViewModel extends BaseViewModel {
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
             Future.delayed(const Duration(milliseconds: 3), () {
-              refreshBalance();
+              if (!isCustomToken) refreshBalance();
             });
           } else if (res['broadcastTronTransactionRes']['result'] == 'false') {
             String errMsg =
@@ -469,7 +489,7 @@ class SendViewModel extends BaseViewModel {
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
             Future.delayed(const Duration(milliseconds: 30), () {
-              refreshBalance();
+              if (!isCustomToken) refreshBalance();
             });
             return txHash;
           } else if (txHash == '' && errorMessage == '') {

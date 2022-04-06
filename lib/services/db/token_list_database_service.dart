@@ -169,12 +169,14 @@ class TokenListDatabaseService {
     List<Map> res = await db.query(tableName,
         distinct: true, where: 'type= ?', whereArgs: [coinType], limit: 1);
     log.w('Name - $coinType - res-- $res');
-    String ticker = TokenModel.fromJson(res.first).tickerName;
+    String ticker = '';
+    if (res != null || res.isNotEmpty) {
+      ticker = TokenModel.fromJson(res.first).tickerName;
+    }
     log.i('ticker $ticker');
 
-    if (res.isNotEmpty) return TokenModel.fromJson(res.first).tickerName;
+    return ticker;
 
-    return null;
     // return TransactionHistory.fromJson((res.first));
   }
 

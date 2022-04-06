@@ -324,7 +324,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "taphereToCopyTxId": "Tap here to copy txId",
+    "taphereToCopyTxId": "Tap here to copy txid",
     "@taphereToCopyTxId": {
         "description": "taphereToCopyTxId",
         "type": "text",
@@ -2217,6 +2217,12 @@
     "favoriteTokens": "Favorite Tokens",
     "@favoriteTokens": {
       "description": "favoriteTokens",
+      "type": "text",
+      "placeholders": {}
+    },
+    "showSmallAmountAssets": "Show Small Amount Assets",
+    "@showSmallAmountAssets": {
+      "description": "show_small_amount_assets",
       "type": "text",
       "placeholders": {}
     }

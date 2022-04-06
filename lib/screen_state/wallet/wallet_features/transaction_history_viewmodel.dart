@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
@@ -5,12 +6,14 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -45,7 +48,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   List<TransactionHistory> transactionHistoryToShowInView = [];
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-
+  final storageService = locator<LocalStorageService>();
   final walletService = locator<WalletService>();
   final apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
@@ -56,6 +59,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   bool isChinese = false;
   bool isDialogUp = false;
   int decimalLimit = 0;
+  bool isCustomToken = false;
+  // CustomTokenModel customToken = CustomTokenModel();
 
   @override
   Future futureToRun() async =>
@@ -114,11 +119,27 @@ class TransactionHistoryViewmodel extends FutureViewModel {
       if (value == 'zh') isChinese = true;
     });
 
-    decimalLimit =
-        await walletService.getSingleCoinWalletDecimalLimit(tickerName);
-    if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
-    setBusy(false);
+    String customTokenStringData = storageService.customTokenData;
+
+    try {
+      if (customTokenStringData.isNotEmpty) {
+        CustomTokenModel customToken =
+            CustomTokenModel.fromJson(jsonDecode(customTokenStringData));
+
+        decimalLimit = customToken.decimal;
+        isCustomToken = true;
+        // customToken = customToken;
+      }
+    } catch (err) {
+      log.e('custom token CATCH $err');
+    }
+    if (!isCustomToken) {
+      decimalLimit =
+          await walletService.getSingleCoinWalletDecimalLimit(tickerName);
+      if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
+    }
     // debugPrint(transactionHistoryToShowInView.first.toJson());
+    setBusy(false);
   }
 
   reloadTransactions() async {
@@ -268,8 +289,10 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                                     transactionHistory.kanbanTxId.isEmpty
                                         ? Container()
                                         : CupertinoButton(
-                                            child: Icon(FontAwesomeIcons.copy,
-                                                color: white, size: 16),
+                                            child: const Icon(
+                                                FontAwesomeIcons.copy,
+                                                color: white,
+                                                size: 16),
                                             onPressed: () => copyAddress(
                                                 transactionHistory.kanbanTxId),
                                           )
@@ -319,7 +342,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                               transactionHistory.tickerChainTxId.isEmpty
                                   ? Container()
                                   : CupertinoButton(
-                                      child: Icon(FontAwesomeIcons.copy,
+                                      child: const Icon(FontAwesomeIcons.copy,
                                           color: white, size: 16),
                                       onPressed: () => copyAddress(
                                           transactionHistory.tickerChainTxId),
@@ -344,7 +367,9 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyText2
-                                    .copyWith(fontWeight: FontWeight.bold),
+                                    .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: primaryColor),
                               ),
                               onPressed: () {
                                 Navigator.of(context).pop(true);
@@ -372,7 +397,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                       .textTheme
                       .headline4
                       .copyWith(fontWeight: FontWeight.bold),
-                  contentTextStyle: TextStyle(color: grey),
+                  contentTextStyle: const TextStyle(color: grey),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -421,7 +446,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                                 transactionHistory.kanbanTxId.isEmpty
                                     ? Container()
                                     : IconButton(
-                                        icon: Icon(Icons.copy_outlined,
+                                        icon: const Icon(Icons.copy_outlined,
                                             color: white, size: 16),
                                         onPressed: () => copyAddress(
                                             transactionHistory.kanbanTxId),
@@ -470,7 +495,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.copy_outlined,
+                            icon: const Icon(Icons.copy_outlined,
                                 color: white, size: 16),
                             onPressed: () =>
                                 copyAddress(transactionHistory.tickerChainTxId),

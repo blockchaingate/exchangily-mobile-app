@@ -87,8 +87,9 @@ class WalletFeaturesView extends StatelessWidget {
                             child: IconButton(
                               padding: EdgeInsets.zero,
                               icon: model.isFavorite
-                                  ? Icon(Icons.star, color: white, size: 22)
-                                  : Icon(Icons.star_border_outlined,
+                                  ? const Icon(Icons.star,
+                                      color: white, size: 22)
+                                  : const Icon(Icons.star_border_outlined,
                                       color: yellow, size: 22),
                               onPressed: () => model.updateFavWalletCoinsList(
                                   model.walletInfo.tickerName),
@@ -99,9 +100,9 @@ class WalletFeaturesView extends StatelessWidget {
                     ),
                   ),
                   Container(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 0, horizontal: 25),
-                      height: 153,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 25),
+                      height: 159,
                       alignment: const FractionalOffset(0.0, 2.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -113,7 +114,7 @@ class WalletFeaturesView extends StatelessWidget {
                                 Text(model.specialTicker,
                                     style:
                                         Theme.of(context).textTheme.subtitle1),
-                                Icon(
+                                const Icon(
                                   Icons.arrow_forward,
                                   size: 17,
                                   color: white,
@@ -192,7 +193,8 @@ class WalletFeaturesView extends StatelessWidget {
                           : Container(),
                       walletInfo.tickerName == 'FAB'
                           ? Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 30),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 30),
                               width: MediaQuery.of(context).size.width,
                               child: _featuresCard(context, 5, model),
                             )
@@ -217,8 +219,8 @@ class WalletFeaturesView extends StatelessWidget {
                               arguments: walletInfo);
                         },
                         child: Container(
-                          padding:
-                              const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 9, horizontal: 6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -277,7 +279,8 @@ class WalletFeaturesView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -302,8 +305,8 @@ class WalletFeaturesView extends StatelessWidget {
                             ? SizedBox(
                                 height: 20,
                                 child: model.sharedService.loadingIndicator())
-                            : Center(
-                                child: Icon(
+                            : const Center(
+                                child: const Icon(
                                   Icons.refresh,
                                   color: white,
                                   size: 18,
@@ -329,7 +332,8 @@ class WalletFeaturesView extends StatelessWidget {
               // Middle column row containes wallet balance and in exchange text
               Container(
                 color: primaryColor.withAlpha(27),
-                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -344,8 +348,8 @@ class WalletFeaturesView extends StatelessWidget {
               // Middle column row containes unconfirmed wallet balance.
               model.walletInfo.tickerName == 'FAB'
                   ? Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5.0, vertical: 5.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -360,7 +364,8 @@ class WalletFeaturesView extends StatelessWidget {
                   : Container(),
               // row contains wallet balance and exchange balance
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -382,8 +387,8 @@ class WalletFeaturesView extends StatelessWidget {
               // Last container locked wallet balance
               model.walletInfo.lockedBalance != 0.0
                   ? Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5.0, vertical: 2.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[

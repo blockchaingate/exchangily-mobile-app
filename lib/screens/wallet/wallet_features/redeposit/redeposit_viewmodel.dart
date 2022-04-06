@@ -11,6 +11,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -33,6 +34,7 @@ class RedepositViewModel extends FutureViewModel {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   final tokenListDatabaseService = locator<TokenListDatabaseService>();
+  final coinService = locator<CoinService>();
   final apiService = locator<ApiService>();
 
   final kanbanGasPriceTextController = TextEditingController();
@@ -61,7 +63,7 @@ class RedepositViewModel extends FutureViewModel {
   click(bigInt) {
     var b = Decimal.parse(bigInt) / Decimal.parse('1e18');
     debugPrint('b $b');
-    debugPrint(NumberUtil().roundDownLastDigit(b.toDouble()));
+    debugPrint(NumberUtil().roundDownLastDigit(b.toDouble()).toString());
   }
 
   Future getErrDeposit() async {
@@ -279,8 +281,8 @@ class RedepositViewModel extends FutureViewModel {
     }
 
     if (isSpecial) {
-      specialCoinType = await CoinUtils()
-          .getCoinTypeIdByName(coinName.substring(0, coinName.length - 1));
+      specialCoinType = await coinService
+          .getCoinTypeByTickerName(coinName.substring(0, coinName.length - 1));
     }
     abiHex = abiUtils.getDepositFuncABI(isSpecial ? specialCoinType : coinType,
         txHash, amountInLink, addressInKanban, signedMess,

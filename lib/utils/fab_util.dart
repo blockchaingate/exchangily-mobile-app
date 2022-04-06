@@ -25,7 +25,7 @@ import "package:hex/hex.dart";
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'dart:math';
-
+import 'package:flutter/widgets.dart';
 import 'custom_http_util.dart';
 
 final String fabBaseUrl = environment["endpoints"]["fab"];
@@ -52,7 +52,7 @@ class FabUtils {
 
   // Fab Post Tx
   Future postFabTx(String txHex) async {
-    var url = fabBaseUrl + PostRawTxApiRoute;
+    var url = fabBaseUrl + postRawTxApiRoute;
     final sharedService = locator<SharedService>();
     var txHash = '';
     var errMsg = '';
@@ -352,7 +352,9 @@ class FabUtils {
       }
 
       //debugPrint('tokenBalance===' + tokenBalance.toString());
-    } catch (e) {}
+    } catch (err) {
+      log.e('getFabTokenBalanceForABI func - CATCH $err');
+    }
     return tokenBalance;
   }
 

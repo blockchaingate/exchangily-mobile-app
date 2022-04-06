@@ -543,7 +543,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     debugPrint('1');
-                                    debugPrint(model.message);
+                                    debugPrint(model.message.toString());
                                     debugPrint('2');
                                     model
                                         .copyAndShowNotification(model.message);

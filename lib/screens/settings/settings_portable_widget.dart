@@ -219,7 +219,7 @@ class SettingsPortableContainer extends StatelessWidget {
                             model.isShowCaseOnce =
                                 model.storageService.isShowCaseView;
                             model.setBusy(false);
-                            debugPrint(model.isShowCaseOnce);
+                            debugPrint(model.isShowCaseOnce.toString());
                           }),
                     ),
                   ),
