@@ -163,21 +163,22 @@ class WalletFeaturesView extends StatelessWidget {
                           child: _featuresCard(context, 1, model))
                     ],
                   ),
-
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        SizedBox(
-                          width: model.containerWidth,
-                          height: model.containerHeight,
-                          child: _featuresCard(context, 2, model),
-                        ),
-                        SizedBox(
-                          width: model.containerWidth,
-                          height: model.containerHeight,
-                          child: _featuresCard(context, 3, model),
-                        ),
-                      ]),
+                  model.walletInfo.tickerName == 'MATICM'
+                      ? Container()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                              SizedBox(
+                                width: model.containerWidth,
+                                height: model.containerHeight,
+                                child: _featuresCard(context, 2, model),
+                              ),
+                              SizedBox(
+                                width: model.containerWidth,
+                                height: model.containerHeight,
+                                child: _featuresCard(context, 3, model),
+                              ),
+                            ]),
                   Column(
                     //  mainAxisSize: MainAxisSize.max,
                     //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,

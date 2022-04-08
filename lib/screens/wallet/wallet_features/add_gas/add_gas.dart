@@ -60,7 +60,7 @@ class AddGas extends StatelessWidget {
                   children: <Widget>[
                     Container(
                         padding: const EdgeInsets.all(30),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             shape: BoxShape.circle, color: primaryColor),
                         child: Image.asset("assets/images/img/gas.png",
                             width: 100, height: 100)),
@@ -185,12 +185,14 @@ class AddGas extends StatelessWidget {
                                               decimal:
                                                   true), // numnber keyboard
                                       decoration: InputDecoration(
-                                          focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: primaryColor)),
-                                          enabledBorder: UnderlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: grey)),
+                                          focusedBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: primaryColor)),
+                                          enabledBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide:
+                                                      BorderSide(color: grey)),
                                           hintText: '0.00000',
                                           hintStyle: Theme.of(context)
                                               .textTheme
@@ -229,12 +231,14 @@ class AddGas extends StatelessWidget {
                                               decimal:
                                                   true), // numnber keyboard
                                       decoration: InputDecoration(
-                                          focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: primaryColor)),
-                                          enabledBorder: UnderlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: grey)),
+                                          focusedBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: primaryColor)),
+                                          enabledBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide:
+                                                      BorderSide(color: grey)),
                                           hintText: '0.00000',
                                           hintStyle: Theme.of(context)
                                               .textTheme
@@ -265,7 +269,7 @@ class AddGas extends StatelessWidget {
                         const SizedBox(width: 8),
                         Flexible(
                           child: OutlineButton(
-                            borderSide: BorderSide(color: primaryColor),
+                            borderSide: const BorderSide(color: primaryColor),
                             padding: const EdgeInsets.all(15),
                             color: primaryColor,
                             textColor: Colors.white,

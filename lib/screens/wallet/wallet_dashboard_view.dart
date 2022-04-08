@@ -455,7 +455,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                                 : primaryColor,
                           ),
                     Container(
-                      width: 100,
+                      width: 130,
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
                         !model.isHideSmallAssetsButton
@@ -477,38 +477,44 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                 ),
               ),
             ),
-            //Add free FAB container
-            !model.isFreeFabNotUsed
-                ? model.isBusy
-                    ? Container()
-                    : Expanded(child: Gas(gasAmount: model.gasAmount))
-                : Container(
-                    margin: const EdgeInsets.symmetric(vertical: 5.0),
-                    decoration: BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.circular(30)),
-                    child: SizedBox(
-                      width: 120,
-                      height: 20,
-                      child: OutlinedButton.icon(
-                          style: ButtonStyle(
-                              padding: MaterialStateProperty.all(
-                                  const EdgeInsets.all(0))),
-                          onPressed: () => model.getFreeFab(),
-                          icon: const Icon(
-                            Icons.add,
-                            size: 18,
-                            color: white,
-                          ),
-                          label: Text(
-                            AppLocalizations.of(context).getFree + ' FAB',
-                            style: Theme.of(context).textTheme.headline6,
+            SizedBox(
+              height: model.isFreeFabNotUsed ? 100 : 40,
+              child: Column(
+                children: [
+                  model.isBusy
+                      ? Container()
+                      : Expanded(child: Gas(gasAmount: model.gasAmount)),
+                  !model.isFreeFabNotUsed
+                      ? Container()
+                      : Container(
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          decoration: BoxDecoration(
+                              color: primaryColor,
+                              borderRadius: BorderRadius.circular(30)),
+                          child: SizedBox(
+                            width: 120,
+                            height: 20,
+                            child: OutlinedButton.icon(
+                                style: ButtonStyle(
+                                    padding: MaterialStateProperty.all(
+                                        const EdgeInsets.all(0))),
+                                onPressed: model.getFreeFab,
+                                icon: const Icon(
+                                  Icons.add,
+                                  size: 14,
+                                  color: white,
+                                ),
+                                label: Text(
+                                  AppLocalizations.of(context).getFree + ' FAB',
+                                  style: Theme.of(context).textTheme.headline6,
+                                )),
                           )),
-                    )),
+                ],
+              ),
+            ),
           ],
         ),
       ),
-      // Gas Container
       Container(
         margin: const EdgeInsets.only(left: 8.0),
         child: GestureDetector(
@@ -542,7 +548,6 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
           ),
         ),
       ),
-
       UIHelper.verticalSpaceSmall,
       model.isUpdateWallet
           ? TextButton(

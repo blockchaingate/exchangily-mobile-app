@@ -52,7 +52,7 @@ class Gas extends StatelessWidget {
             ),
           ],
         ),
-        // UIHelper.horizontalSpaceSmall,
+        UIHelper.horizontalSpaceSmall,
         MaterialButton(
           minWidth: 70.0,
           height: 24,

@@ -157,7 +157,7 @@ class WalletUtil {
       tickerName = 'USDC(trc20)';
       logoTicker = 'USDC';
     } else if (tickerName.toUpperCase() == 'MATICM') {
-      tickerName = 'MATIC(POLYGON)';
+      tickerName = 'MATIC';
       logoTicker = 'MATICM';
     } else {
       logoTicker = tickerName;
