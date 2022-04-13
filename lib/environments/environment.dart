@@ -1,4 +1,4 @@
-import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
+import 'package:bitcoin_flutter/bitcoin_flutter.dart' as bitcoin_flutter;
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
@@ -7,7 +7,7 @@ Map devConfig = {
   "decimal": {'priceDecimal': 6, 'volDecimal': 4},
   "chains": {
     "BTC": {
-      "network": BitcoinFlutter.testnet,
+      "network": bitcoin_flutter.testnet,
       "satoshisPerBytes": 100,
       "bytesPerInput": 152
     },
@@ -45,8 +45,8 @@ Map devConfig = {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
       "satoshisPerBytes": 100,
       "bytesPerInput": 148,
-      "gasPrice": 100,
-      "gasLimit": 800000
+      "gasPrice": 40,
+      "gasLimit": 100000
     },
     "KANBAN": {"chainId": 212, "gasPrice": 50000000, "gasLimit": 20000000}
   },
@@ -155,7 +155,7 @@ Map devConfig = {
 Map productionConfig = {
   "chains": {
     "BTC": {
-      "network": BitcoinFlutter.bitcoin,
+      "network": bitcoin_flutter.bitcoin,
       "satoshisPerBytes": 100,
       "bytesPerInput": 152
     },
@@ -196,9 +196,9 @@ Map productionConfig = {
         "chainId": 0,
       },
       "satoshisPerBytes": 100,
-      "bytesPerInput": 148,
-      "gasPrice": 100,
-      "gasLimit": 40000
+      "bytesPerInput": 152,
+      "gasPrice": 40,
+      "gasLimit": 100000
     },
     "KANBAN": {"chainId": 211, "gasPrice": 50000000, "gasLimit": 20000000}
   },

@@ -455,7 +455,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                                 : primaryColor,
                           ),
                     Container(
-                      width: 130,
+                      width: 110,
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
                         !model.isHideSmallAssetsButton
