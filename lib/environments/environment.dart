@@ -198,7 +198,7 @@ Map productionConfig = {
       "satoshisPerBytes": 100,
       "bytesPerInput": 148,
       "gasPrice": 100,
-      "gasLimit": 800000
+      "gasLimit": 40000
     },
     "KANBAN": {"chainId": 211, "gasPrice": 50000000, "gasLimit": 20000000}
   },

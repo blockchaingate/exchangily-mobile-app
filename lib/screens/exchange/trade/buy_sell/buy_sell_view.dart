@@ -284,7 +284,7 @@ class BuySellView extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border(
                   bottom: model.bidOrAsk
-                      ? BorderSide(width: 2.0, color: primaryColor)
+                      ? const BorderSide(width: 2.0, color: primaryColor)
                       : BorderSide.none),
             ),
             padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -586,7 +586,9 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [
               DecimalTextInputFormatter(
-                  decimalRange: model.singlePairDecimalConfig.priceDecimal,
+                  decimalRange: model.busy(model.singlePairDecimalConfig)
+                      ? 2
+                      : model.singlePairDecimalConfig.priceDecimal,
                   activatedNegativeValues: false)
             ],
             onTap: () {
@@ -610,7 +612,9 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [
               DecimalTextInputFormatter(
-                  decimalRange: model.singlePairDecimalConfig.qtyDecimal,
+                  decimalRange: model.busy(model.singlePairDecimalConfig)
+                      ? 4
+                      : model.singlePairDecimalConfig.qtyDecimal,
                   activatedNegativeValues: false)
             ],
             onTap: () {
@@ -763,10 +767,10 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true), // numnber keyboard
                             decoration: InputDecoration(
-                                focusedBorder: UnderlineInputBorder(
+                                focusedBorder: const UnderlineInputBorder(
                                     borderSide:
                                         BorderSide(color: primaryColor)),
-                                enabledBorder: UnderlineInputBorder(
+                                enabledBorder: const UnderlineInputBorder(
                                     borderSide: BorderSide(color: grey)),
                                 hintText: '0.00000',
                                 hintStyle:
@@ -791,9 +795,9 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                       keyboardType: const TextInputType.numberWithOptions(
                           decimal: true), // numnber keyboard
                       decoration: InputDecoration(
-                          focusedBorder: UnderlineInputBorder(
+                          focusedBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(color: primaryColor)),
-                          enabledBorder: UnderlineInputBorder(
+                          enabledBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(color: grey)),
                           hintText: '0.00000',
                           hintStyle: Theme.of(context).textTheme.headline6),
@@ -860,7 +864,7 @@ class BalanceRowWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(AppLocalizations.of(context).balance,
-            style: TextStyle(color: primaryColor, fontSize: 13.0)),
+            style: const TextStyle(color: primaryColor, fontSize: 13.0)),
         // First Check if Object is null
         // model.targetCoinExchangeBalance == null ||
         //         model.baseCoinExchangeBalance == null ||  model.baseCoinExchangeBalance.unlockedAmount == null
@@ -870,6 +874,8 @@ class BalanceRowWidget extends StatelessWidget {
 
         //     // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
 
+        // model.busy(model.targetCoinExchangeBalance) ||
+        //         model.busy(model.baseCoinExchangeBalance) ||
         model.isRefreshBalance
             ? model.refreshBalanceAfterCancellingOrder()
             : Container(
@@ -886,7 +892,8 @@ class BalanceRowWidget extends StatelessWidget {
                                 .toString() +
                             " " +
                             model.baseCoinName,
-                        style: TextStyle(color: primaryColor, fontSize: 13.0))
+                        style: const TextStyle(
+                            color: primaryColor, fontSize: 13.0))
                     :
                     // ?  model.targetCoinExchangeBalance.unlockAmount == null?textDemoWidget():
                     Text(
@@ -899,7 +906,8 @@ class BalanceRowWidget extends StatelessWidget {
                                 .toString() +
                             " " +
                             model.targetCoinName,
-                        style: TextStyle(color: primaryColor, fontSize: 13.0)),
+                        style: const TextStyle(
+                            color: primaryColor, fontSize: 13.0)),
               )
       ],
     );

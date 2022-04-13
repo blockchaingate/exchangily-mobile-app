@@ -7,7 +7,6 @@ import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/order_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -90,7 +89,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
     _orderCancelledText = AppLocalizations.of(context).orderCancelled;
     orderCancelledTextStyle =
-        Theme.of(context).textTheme.bodyText1.copyWith(color: colors.green);
+        Theme.of(context).textTheme.bodyText1.copyWith(color: colors.white);
     // _orderService.swapSources();
   }
 

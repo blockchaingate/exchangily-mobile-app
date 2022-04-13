@@ -83,7 +83,7 @@ class SharedService {
                     ShowNotification
 ----------------------------------------------------------------------*/
 
-  showNotification(context) {
+  inCorrectpasswordNotification(context) {
     showInfoFlushbar(
         AppLocalizations.of(context).passwordMismatch,
         AppLocalizations.of(context).pleaseProvideTheCorrectPassword,

@@ -558,7 +558,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     } else {
       log.e('Wrong pass');
       setBusy(false);
-      sharedService.showNotification(context);
+      sharedService.inCorrectpasswordNotification(context);
     }
     setBusy(false);
   }

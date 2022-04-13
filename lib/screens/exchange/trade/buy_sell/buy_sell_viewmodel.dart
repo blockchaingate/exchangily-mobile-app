@@ -28,7 +28,6 @@ import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_m
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -124,6 +123,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
   final kanbanUtils = KanbanUtils();
   double gasAmount = 0.0;
+  bool isFilled = false;
 
   @override
   Stream get stream =>
@@ -141,7 +141,15 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   @override
   void onData(data) {
     log.i('data ready $dataReady');
-    initialTextfieldsFill();
+    if (!isFilled) {
+      initialTextfieldsFill();
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -171,6 +179,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
     transFeeAdvance = false;
     await getGasBalance();
+
     setBusy(false);
   }
 
@@ -193,9 +202,6 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     return gasAmount;
   }
 
-// /*----------------------------------------------------------------------
-//                     Refresh balance after cancelling order
-// ----------------------------------------------------------------------*/
   Widget refreshBalanceAfterCancellingOrder() {
     getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
 
@@ -234,7 +240,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   Future getSingleCoinExchangeBalanceFromAll(
       String targetCoin, String baseCoin) async {
     log.e('In getSingleCoinExchangeBalanceFromAll');
-
+    // if (!isBusy) {
+    //   setBusyForObject(targetCoinExchangeBalance, true);
+    //   setBusyForObject(baseCoinExchangeBalance, true);
+    // }
     targetCoinExchangeBalance =
         await apiService.getSingleCoinExchangeBalance(targetCoin);
     log.i('targetCoin Balance using api ${targetCoinExchangeBalance.toJson()}');
@@ -276,6 +285,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       }
     }
     tradeService.setBalanceRefresh(false);
+    // setBusyForObject(targetCoinExchangeBalance, false);
+    // setBusyForObject(baseCoinExchangeBalance, false);
   }
 
   /*----------------------------------------------------------------------
@@ -311,6 +322,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     quantityTextController.text =
         orderbook.quantity.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
     quantity = orderbook.quantity;
+    isFilled = true;
     setBusy(false);
   }
 
@@ -344,7 +356,6 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
             Handle Text Change
 --------------------------------------------------- */
   void handleTextChanged(String name, String text) {
-    setBusy(true);
     if (name == 'price') {
       try {
         price = double.parse(text);
@@ -367,22 +378,18 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
         log.e('Handle text quantity changed $e');
       }
     }
-    setBusy(false);
   }
 
-/*----------------------------------------------------------------------
-                  Get Decimal Pair Configuration
-----------------------------------------------------------------------*/
   getDecimalPairConfig() async {
-    setBusy(true);
     String currentCoinName = targetCoinName + baseCoinName;
     await sharedService.getSinglePairDecimalConfig(currentCoinName).then((res) {
       log.w('Current coin $currentCoinName in get decimal config $res');
+      setBusyForObject(singlePairDecimalConfig, true);
       singlePairDecimalConfig = res;
+      setBusyForObject(singlePairDecimalConfig, false);
 
       log.e('Price and quantity decimal ${singlePairDecimalConfig.toJson()}');
     });
-    setBusy(false);
   }
 
 /*---------------------------------------------------
@@ -544,8 +551,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 /* ---------------------------------------------------
             Update Transfer Fee
 --------------------------------------------------- */
-  updateTransFee() async {
-    setBusy(true);
+  updateTransFee() {
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
     if (kanbanGasLimit != null && kanbanPrice != null) {
@@ -553,10 +559,11 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       var kanbanGasLimitBig = BigInt.from(kanbanGasLimit);
       var kanbanTransFeeDouble =
           bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
+      setBusyForObject(kanbanTransFee, true);
       kanbanTransFee = kanbanTransFeeDouble;
+      setBusyForObject(kanbanTransFee, false);
       log.w('fee $kanbanPrice $kanbanGasLimit $kanbanTransFeeDouble');
     }
-    setBusy(false);
   }
 
 /* ---------------------------------------------------
@@ -564,7 +571,9 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 --------------------------------------------------- */
   caculateTransactionAmount() {
     if (price != null && quantity != null && price >= 0 && quantity >= 0) {
+      setBusyForObject(transactionAmount, true);
       transactionAmount = quantity * price;
+      setBusyForObject(transactionAmount, false);
     }
     return transactionAmount;
   }
@@ -643,15 +652,12 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       } else {
         log.e('Wrong pass');
         setBusy(false);
-        showNotification(context);
+        sharedService.inCorrectpasswordNotification(context);
       }
     });
     setBusy(false);
   }
 
-/* ---------------------------------------------------
-            Check Pass
---------------------------------------------------- */
   checkPass(context) async {
     setBusy(true);
 
@@ -670,6 +676,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
           isWarning: false);
       return;
     }
+    await getGasBalance();
     if (gasAmount < kanbanTransFee) {
       setBusy(false);
       showSimpleNotification(
@@ -681,7 +688,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
                   .copyWith(fontWeight: FontWeight.w800)),
         ),
         background: sellPrice,
-        position: NotificationPosition.bottom,
+        position: NotificationPosition.top,
       );
 
       return;
@@ -717,10 +724,6 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     /// MyOrdersView(tickerName: tickerName);
     setBusy(false);
   }
-
-/* ---------------------------------------------------
-                  Slider Onchange
---------------------------------------------------- */
 
   sliderOnchange(double newValue) {
     setBusy(true);
@@ -782,17 +785,5 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
           'In sliderOnchange else where quantity $quantity or price $price is null/empty');
     }
     setBusy(false);
-  }
-
-/* ---------------------------------------------------
-            Show Notification
---------------------------------------------------- */
-  showNotification(context) {
-    sharedService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        globals.red,
-        context);
   }
 }
