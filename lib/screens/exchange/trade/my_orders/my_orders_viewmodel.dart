@@ -104,8 +104,6 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusy(false);
   }
 
-  // Pull to refresh
-
   void onRefresh() async {
     setBusy(true);
     log.e('in refreshing orders');
@@ -337,11 +335,13 @@ class MyOrdersViewModel extends ReactiveViewModel {
             }
 
             timer.cancel();
+            log.e('timer cancelled');
             showSimpleNotification(
                 Center(
                   child:
                       Text(orderCancelledText, style: orderCancelledTextStyle),
                 ),
+                background: colors.primaryColor,
                 position: NotificationPosition.bottom);
           }
         });

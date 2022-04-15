@@ -1075,7 +1075,7 @@ class WalletService {
         var newBal = BigInt.parse(res['balance']['FAB']);
         gasAmount = string_utils.bigNum2Double(newBal);
       }
-    }).timeout(const Duration(seconds: 25), onTimeout: () {
+    }).timeout(const Duration(seconds: 50), onTimeout: () {
       log.e('Timeout');
       gasAmount = 0.0;
     }).catchError((onError) {

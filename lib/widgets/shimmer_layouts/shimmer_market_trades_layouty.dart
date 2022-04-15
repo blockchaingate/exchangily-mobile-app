@@ -22,7 +22,7 @@ class ShimmerMarketTradesLayout extends StatelessWidget {
               height: height,
               width: width - 10,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(1),
+                borderRadius: BorderRadius.circular(5),
                 color: primaryColor.withAlpha(155),
               ),
             ),
