@@ -68,7 +68,7 @@ class SharedService {
     return showSimpleNotification(
         Text(firstCharToUppercase(content),
             textAlign: subtitle.isEmpty ? TextAlign.center : TextAlign.start,
-            style: headText3.copyWith(
+            style: headText4.copyWith(
                 color: isError ? red : green, fontWeight: FontWeight.w500)),
         position: NotificationPosition.top,
         background: white,

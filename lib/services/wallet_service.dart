@@ -558,7 +558,11 @@ class WalletService {
     final childNode = accountNode.derive(0);
     final address = childNode.toCashAddress();
     // final address = cashAddress.split(":")[1];
-    await getBchAddressDetails(address);
+    try {
+      await getBchAddressDetails(address);
+    } catch (err) {
+      log.e('CATCH get bch address details $err');
+    }
 
     return address;
   }
