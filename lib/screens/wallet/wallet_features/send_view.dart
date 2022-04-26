@@ -89,7 +89,8 @@ class SendWalletView extends StatelessWidget {
                                               borderSide: BorderSide(
                                                   color: grey, width: 0.5)),
                                           suffixIcon: IconButton(
-                                            icon: const Icon(Icons.content_paste),
+                                            icon:
+                                                const Icon(Icons.content_paste),
                                             onPressed: () async {
                                               await model.pasteClipBoardData();
                                             },
@@ -160,8 +161,9 @@ class SendWalletView extends StatelessWidget {
                                     model.amountAfterFee();
                                     //   model.checkAmount();
                                   },
-                                  keyboardType: const TextInputType.numberWithOptions(
-                                      decimal: true), // numnber keyboard
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true), // numnber keyboard
                                   decoration: InputDecoration(
                                       suffix: Text(
                                           AppLocalizations.of(context)
@@ -186,7 +188,8 @@ class SendWalletView extends StatelessWidget {
                                 ),
                                 // Wallet Balance
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -218,7 +221,8 @@ class SendWalletView extends StatelessWidget {
                                                                 //     horizontal: 20),
                                                                 children: [
                                                                   Container(
-                                                                      padding: const EdgeInsets.symmetric(
+                                                                      padding: const EdgeInsets
+                                                                              .symmetric(
                                                                           horizontal:
                                                                               10,
                                                                           vertical:
@@ -240,7 +244,8 @@ class SendWalletView extends StatelessWidget {
                                                                   UIHelper
                                                                       .verticalSpaceMedium,
                                                                   Container(
-                                                                      padding: const EdgeInsets.symmetric(
+                                                                      padding: const EdgeInsets
+                                                                              .symmetric(
                                                                           horizontal:
                                                                               20),
                                                                       child:
@@ -346,7 +351,8 @@ class SendWalletView extends StatelessWidget {
                                                             return ListView(
                                                               children: [
                                                                 Container(
-                                                                    padding: const EdgeInsets.symmetric(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
                                                                         horizontal:
                                                                             10,
                                                                         vertical:
@@ -368,7 +374,8 @@ class SendWalletView extends StatelessWidget {
                                                                 const SizedBox(
                                                                     height: 20),
                                                                 Container(
-                                                                    padding: const EdgeInsets.symmetric(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
                                                                         horizontal:
                                                                             20),
                                                                     child: Text(
@@ -383,7 +390,8 @@ class SendWalletView extends StatelessWidget {
                                                                 UIHelper
                                                                     .verticalSpaceMedium,
                                                                 Container(
-                                                                    padding: const EdgeInsets.symmetric(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
                                                                         horizontal:
                                                                             20),
                                                                     child: Text(
@@ -413,8 +421,7 @@ class SendWalletView extends StatelessWidget {
                                                             FontWeight.w400),
                                               ),
                                               Text(
-                                                model.tickerName
-                                                    .toUpperCase(),
+                                                model.tickerName.toUpperCase(),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline6,
@@ -470,7 +477,8 @@ class SendWalletView extends StatelessWidget {
                           child: walletInfo.tickerName == 'TRX' ||
                                   walletInfo.tickerName == 'USDTX'
                               ? Container(
-                                  padding: const EdgeInsets.only(top: 10, bottom: 0),
+                                  padding:
+                                      const EdgeInsets.only(top: 10, bottom: 0),
                                   alignment: Alignment.topLeft,
                                   child: walletInfo.tickerName == 'TRX'
                                       ? Text(
@@ -490,7 +498,8 @@ class SendWalletView extends StatelessWidget {
                                                     .textTheme
                                                     .headline6),
                                             Text(
-                                                'TRX' '${AppLocalizations.of(context).balance}: ${model.chainBalance} TRX',
+                                                'TRX'
+                                                '${AppLocalizations.of(context).balance}: ${model.chainBalance} TRX',
                                                 textAlign: TextAlign.left,
                                                 style: Theme.of(context)
                                                     .textTheme
@@ -501,8 +510,8 @@ class SendWalletView extends StatelessWidget {
                               : Column(
                                   children: <Widget>[
                                     Padding(
-                                      padding:
-                                          const EdgeInsets.only(top: 15, bottom: 10),
+                                      padding: const EdgeInsets.only(
+                                          top: 15, bottom: 10),
                                       child: Row(
                                         children: <Widget>[
                                           Text(
@@ -608,10 +617,9 @@ class SendWalletView extends StatelessWidget {
                                                                 decimal: true),
                                                             decoration: InputDecoration(
                                                                 focusedBorder: UnderlineInputBorder(
-                                                                    borderSide:
-                                                                        BorderSide(
-                                                                            color:
-                                                                                primaryColor)),
+                                                                    borderSide: BorderSide(
+                                                                        color:
+                                                                            primaryColor)),
                                                                 enabledBorder: UnderlineInputBorder(
                                                                     borderSide: BorderSide(
                                                                         width:
@@ -668,9 +676,9 @@ class SendWalletView extends StatelessWidget {
                                                           },
                                                           keyboardType:
                                                               const TextInputType
-                                                                  .numberWithOptions(
-                                                                      decimal:
-                                                                          true),
+                                                                      .numberWithOptions(
+                                                                  decimal:
+                                                                      true),
                                                           decoration: InputDecoration(
                                                               focusedBorder: UnderlineInputBorder(
                                                                   borderSide:
@@ -736,9 +744,9 @@ class SendWalletView extends StatelessWidget {
                                                           },
                                                           keyboardType:
                                                               const TextInputType
-                                                                  .numberWithOptions(
-                                                                      decimal:
-                                                                          true),
+                                                                      .numberWithOptions(
+                                                                  decimal:
+                                                                      true),
                                                           decoration: InputDecoration(
                                                               focusedBorder: UnderlineInputBorder(
                                                                   borderSide:
@@ -902,10 +910,12 @@ class SendWalletView extends StatelessWidget {
                   ),
                 ),
               ),
-              // floatingActionButton: TextButton(
-              //   child: Text('click'),
-              //   onPressed: () => model.test(),
-              // ),
+              floatingActionButton: TextButton(
+                child: Text('Click'),
+                onPressed: () {
+                  model.test();
+                },
+              ),
             ),
           );
         });

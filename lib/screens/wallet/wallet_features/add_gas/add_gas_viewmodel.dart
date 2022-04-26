@@ -208,7 +208,7 @@ class AddGasViewModel extends FutureViewModel {
     utxosNeeded = calculateUtxosNeeded(totalAmount, utxos);
     var fee = (utxosNeeded) * feePerInput + (2 * 34 + 10) * satoshisPerBytes;
     transFee = ((Decimal.parse(extraAmount.toString()) +
-            Decimal.parse(fee.toString()) / Decimal.parse('1e8')))
+            (Decimal.parse(fee.toString()) / Decimal.parse('1e8')).toDecimal()))
         .toDouble();
     totalAmount = totalAmount + transFee;
     utxosNeeded = calculateUtxosNeeded(totalAmount, utxos);

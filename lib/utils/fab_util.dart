@@ -11,11 +11,15 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/utils/btc_util.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 
 import '../environments/environment.dart';
 import './string_util.dart';
@@ -23,20 +27,172 @@ import 'dart:convert';
 import 'package:web3dart/web3dart.dart';
 import "package:hex/hex.dart";
 import 'package:bs58check/bs58check.dart' as bs58check;
+import 'package:bip32/bip32.dart' as bip32;
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'dart:math';
 import 'package:flutter/widgets.dart';
 import 'custom_http_util.dart';
+import 'package:bitcoin_flutter/bitcoin_flutter.dart' as bitcoin_flutter;
 
 final String fabBaseUrl = environment["endpoints"]["fab"];
 
 class FabUtils {
   var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
   final log = getLogger('fab_util');
+  final btcUtils = BtcUtils();
+  final apiService = locator<ApiService>();
 
-/*----------------------------------------------------------------------
-                    Post free fab
-----------------------------------------------------------------------*/
+  getFabTransactionHexV2(
+      seed,
+      addressIndexList,
+      toAddress,
+      Decimal amount,
+      Decimal extraTransactionFee,
+      int satoshisPerBytes,
+      addressList,
+      getTransFeeOnly) async {
+    final txb = bitcoin_flutter.TransactionBuilder(
+        network: environment["chains"]["BTC"]["network"]);
+    final root = bip32.BIP32.fromSeed(seed);
+    var totalInput = 0;
+    var amountInTx = BigInt.from(0);
+    var allTxids = [];
+    var changeAddress = '';
+    var finished = false;
+    var receivePrivateKeyArr = [];
+
+    var totalAmount = amount + extraTransactionFee;
+    Decimal calc = Decimal.parse(((2 * 34 + 10) * satoshisPerBytes).toString());
+    var amountNum =
+        NumberUtil.decimalLimiter(totalAmount.toString()).decimalOutput + calc;
+    //  BigInt.parse(NumberUtil.toBigInt(totalAmount, 8)).toInt();
+    //  amountNum += (2 * 34 + 10) * satoshisPerBytes;
+
+    var transFeeDouble = 0.0;
+    var bytesPerInput = environment["chains"]["FAB"]["bytesPerInput"];
+    var feePerInput = bytesPerInput * satoshisPerBytes;
+
+    for (var i = 0; i < addressIndexList.length; i++) {
+      var index = addressIndexList[i];
+      var fabCoinChild = root.derivePath("m/44'/" +
+          environment["CoinType"]["FAB"].toString() +
+          "'/0'/0/" +
+          index.toString());
+      var fromAddress = btcUtils.getBtcAddressForNode(fabCoinChild);
+      if (addressList != null && addressList.length > 0) {
+        fromAddress = addressList[i];
+      }
+      if (i == 0) {
+        changeAddress = fromAddress;
+      }
+      final privateKey = fabCoinChild.privateKey;
+      var utxos = await apiService.getFabUtxos(fromAddress);
+      if ((utxos != null) && (utxos.length > 0)) {
+        for (var j = 0; j < utxos.length; j++) {
+          var utxo = utxos[j];
+          var idx = utxo['idx'];
+          var txid = utxo['txid'];
+          var value = utxo['value'];
+          /*
+          var isLocked = await isFabTransactionLocked(txid, idx);
+          if (isLocked) {
+            continue;
+          }
+           */
+
+          var txidItem = {'txid': txid, 'idx': idx};
+          var txids;
+          var existed = false;
+          for (var iii = 0; iii < txids.length; iii++) {
+            var ttt = txids[iii];
+            if ((ttt['txid'] == txidItem['txid']) &&
+                (ttt['idx'] == txidItem['idx'])) {
+              existed = true;
+              break;
+            }
+          }
+
+          if (existed) {
+            continue;
+          }
+
+          allTxids.add(txidItem);
+
+          txb.addInput(txid, idx);
+          receivePrivateKeyArr.add(privateKey);
+          totalInput += value;
+
+          amountNum -= value;
+          amountNum += feePerInput;
+          if (amountNum <= Decimal.parse("0")) {
+            finished = true;
+            break;
+          }
+        }
+      }
+
+      if (!finished) {
+        return {
+          'txHex': '',
+          'errMsg': 'not enough fab coin to make the transaction.',
+          'transFee': transFeeDouble,
+          'amountInTx': amountInTx
+        };
+      }
+
+      var transFee = (receivePrivateKeyArr.length) * feePerInput +
+          (2 * 34 + 10) * satoshisPerBytes;
+
+      var output1 = (totalInput -
+              BigInt.parse(NumberUtil.toBigInt(amount + extraTransactionFee, 8))
+                  .toInt() -
+              transFee)
+          .round();
+
+// transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
+//               Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
+//           .toDouble();
+      transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
+              (Decimal.parse(transFee.toString()) / Decimal.parse('1e8'))
+                  .toDecimal()))
+          .toDouble();
+      if (getTransFeeOnly) {
+        return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
+      }
+      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      amountInTx = BigInt.from(output2);
+      if (output1 < 0 || output2 < 0) {
+        return {
+          'txHex': '',
+          'errMsg': 'output1 or output2 should be greater than 0.',
+          'transFee': transFeeDouble,
+          'amountInTx': amountInTx
+        };
+      }
+
+      txb.addOutput(changeAddress, output1);
+
+      txb.addOutput(toAddress, output2);
+
+      for (var i = 0; i < receivePrivateKeyArr.length; i++) {
+        var privateKey = receivePrivateKeyArr[i];
+        var alice = bitcoin_flutter.ECPair.fromPrivateKey(privateKey,
+            compressed: true, network: environment["chains"]["BTC"]["network"]);
+
+        txb.sign(vin: i, keyPair: alice);
+      }
+
+      var txHex = txb.build().toHex();
+
+      return {
+        'txHex': txHex,
+        'errMsg': '',
+        'transFee': transFeeDouble,
+        'amountInTx': amountInTx,
+        'txids': allTxids
+      };
+    }
+  }
 
   Future postFreeFab(data) async {
     try {

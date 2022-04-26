@@ -324,9 +324,11 @@ class MoveToExchangeScreen extends StatelessWidget {
                                               decimal:
                                                   true), // numnber keyboard
                                       decoration: InputDecoration(
-                                          focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: globals.primaryColor)),
+                                          focusedBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: globals
+                                                          .primaryColor)),
                                           enabledBorder:
                                               const UnderlineInputBorder(
                                                   borderSide: BorderSide(
@@ -371,9 +373,11 @@ class MoveToExchangeScreen extends StatelessWidget {
                                               decimal:
                                                   true), // numnber keyboard
                                       decoration: InputDecoration(
-                                          focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: globals.primaryColor)),
+                                          focusedBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: globals
+                                                          .primaryColor)),
                                           enabledBorder:
                                               const UnderlineInputBorder(
                                                   borderSide: BorderSide(
@@ -462,7 +466,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                       const TextInputType.numberWithOptions(
                                           decimal: true), // numnber keyboard
                                   decoration: InputDecoration(
-                                      focusedBorder: UnderlineInputBorder(
+                                      focusedBorder: const UnderlineInputBorder(
                                           borderSide: BorderSide(
                                               color: globals.primaryColor)),
                                       enabledBorder: const UnderlineInputBorder(
@@ -593,6 +597,35 @@ class MoveToExchangeScreen extends StatelessWidget {
                     )
                   : Container(),
               UIHelper.verticalSpaceSmall,
+
+// test code
+              Column(
+                children: [
+                  TextField(
+                    controller: model.tec1,
+                  ),
+                  TextButton(
+                      onPressed: () => model.t1(), child: Text('Test Me')),
+                  Text(
+                    model.oldIntOutputInBigInt.toString(),
+                    style: TextStyle(color: grey),
+                  ),
+                  Text(
+                    model.oldBigIntOutputInInt.toString(),
+                    style: TextStyle(color: white),
+                  ),
+                  Text(
+                    'New ',
+                    style: TextStyle(color: white),
+                  ),
+                  Text(
+                    model.newdoubleOutputInBigInt.toString(),
+                    style: TextStyle(color: green),
+                  )
+                ],
+              ),
+              UIHelper.divider,
+              UIHelper.verticalSpaceMedium,
               // Confirm Button
               MaterialButton(
                 padding: const EdgeInsets.all(15),

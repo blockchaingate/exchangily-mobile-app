@@ -16,6 +16,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
@@ -177,12 +178,15 @@ class SendViewModel extends BaseViewModel {
   }
 
   test() {
-    // CustomTokenModel customTokenModel =
-    //     (jsonDecode(storageService.customTokenData) as dynamic)
-    //         .cast<CustomTokenModel>();
-    CustomTokenModel customTokenModel =
-        CustomTokenModel.fromJson(jsonDecode(storageService.customTokenData));
-    debugPrint(customTokenModel.toJson().toString());
+    String value = '123456789123456789.123456789123456789';
+    // var o = NumberUtil.toBigInt(value);
+    // log.w('old $o');
+    var x = NumberUtil.decimalToRaw(value);
+    log.i('decimalToRaw $x');
+    BigInt b = BigInt.parse(x);
+    log.e('Big int from raw $b');
+    var p = NumberUtil.decimalToBigInt(value);
+    log.i('decimalToBigInt $p');
   }
 
   bool isTrx() {
@@ -205,9 +209,18 @@ class SendViewModel extends BaseViewModel {
       setBusy(false);
       return 0.0;
     }
-    amount = NumberUtil().truncateDoubleWithoutRouding(
-        double.parse(amountController.text),
-        precision: decimalLimit);
+
+    if (amountController.text.startsWith('.')) {
+      transFee = 0.0;
+      setBusy(false);
+      return 0.0;
+    }
+
+    amount = Decimal.parse(amountController.text).toDouble();
+    //  NumberUtil.rawToDecimal(amountController.text).toDouble();
+    // amount = NumberUtil().truncateDoubleWithoutRouding(
+    //     double.parse(amountController.text),
+    //     precision: decimalLimit);
 
     double finalAmount = 0.0;
     // update if transfee is 0
@@ -843,14 +856,14 @@ class SendViewModel extends BaseViewModel {
     var address = walletInfo.address;
 
     await walletService
-        .sendTransaction(
+        .sendTransactionV2(
             walletInfo.tickerName,
             Uint8List.fromList(
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             [0],
             [address],
             to,
-            amount,
+            Decimal.parse(amount.toString()),
             options,
             false)
         .then((ret) {

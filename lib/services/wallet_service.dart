@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bitbox/bitbox.dart' as Bitbox;
+import 'package:bitbox/bitbox.dart' as bitbox;
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -589,7 +589,7 @@ class WalletService {
   Future<String> generateBchAddress(String mnemonic) async {
     String tickerName = 'BCH';
     var bchSeed = generateSeed(mnemonic);
-    final masterNode = Bitbox.HDNode.fromSeed(bchSeed);
+    final masterNode = bitbox.HDNode.fromSeed(bchSeed);
     var coinType = environment["CoinType"][tickerName].toString();
     final accountDerivationPath = "m/44'/" + coinType + "'/0'/0";
     final accountNode = masterNode.derivePath(accountDerivationPath);
@@ -604,7 +604,7 @@ class WalletService {
 
   // get BCH address details
   Future getBchAddressDetails(String bchAddress) async {
-    final addressDetails = await Bitbox.Address.details(bchAddress);
+    final addressDetails = await bitbox.Address.details(bchAddress);
     log.e('Address $bchAddress -- address details $addressDetails');
     return addressDetails;
   }
@@ -1796,7 +1796,7 @@ class WalletService {
     var receivePrivateKeyArr = [];
 
     var totalAmount = amount + extraTransactionFee;
-    //var amountNum = totalAmount * 1e8;
+
     var amountNum = BigInt.parse(NumberUtil.toBigInt(totalAmount, 8)).toInt();
     amountNum += (2 * 34 + 10) * satoshisPerBytes;
 
@@ -1881,8 +1881,12 @@ class WalletService {
               transFee)
           .round();
 
+// transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
+//               Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
+//           .toDouble();
       transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
-              Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
+              (Decimal.parse(transFee.toString()) / Decimal.parse('1e8'))
+                  .toDecimal()))
           .toDouble();
       if (getTransFeeOnly) {
         return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
@@ -1985,9 +1989,867 @@ class WalletService {
     return resKanban;
   }
 
-/*----------------------------------------------------------------------
-                Send Transaction
-----------------------------------------------------------------------*/
+  Future sendTransactionV2(
+      String coin,
+      seed,
+      List addressIndexList,
+      List addressList,
+      String toAddress,
+      Decimal amount,
+      options,
+      bool doSubmit) async {
+    final root = bip32.BIP32.fromSeed(seed);
+    var totalInput = 0;
+    var finished = false;
+    var gasPrice = 0;
+    var gasLimit = 0;
+    var satoshisPerBytes = 0;
+    var bytesPerInput = 0;
+    var allTxids = [];
+    var getTransFeeOnly = false;
+    var txHex = '';
+    var txHash = '';
+    var errMsg = '';
+
+    var amountInTx = BigInt.from(0);
+    var transFeeDouble = 0.0;
+
+    var receivePrivateKeyArr = [];
+
+    var tokenType = options['tokenType'] ?? '';
+    var decimal = options['decimal'];
+    var contractAddress = options['contractAddress'] ?? '';
+    var changeAddress = '';
+
+    if (options != null) {
+      if (options["gasPrice"] != null) {
+        gasPrice = options["gasPrice"];
+      }
+      if (options["gasLimit"] != null) {
+        gasLimit = options["gasLimit"];
+      }
+      if (options["satoshisPerBytes"] != null) {
+        satoshisPerBytes = options["satoshisPerBytes"];
+      }
+      if (options["bytesPerInput"] != null) {
+        bytesPerInput = options["bytesPerInput"];
+      }
+      if (options["getTransFeeOnly"] != null) {
+        getTransFeeOnly = options["getTransFeeOnly"];
+      }
+    }
+    //debugPrint('tokenType=' + tokenType);
+
+    log.w(
+        'gasPrice= $gasPrice -- gasLimit =  $gasLimit -- satoshisPerBytes= $satoshisPerBytes');
+
+    // BTC
+    if (coin == 'BTC') {
+      if (bytesPerInput == 0) {
+        bytesPerInput = environment["chains"]["BTC"]["bytesPerInput"];
+      }
+      if (satoshisPerBytes == 0) {
+        satoshisPerBytes = environment["chains"]["BTC"]["satoshisPerBytes"];
+      }
+      var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      amountNum += (2 * 34 + 10) * satoshisPerBytes;
+      final txb = bitcoin_flutter.TransactionBuilder(
+          network: environment["chains"]["BTC"]["network"]);
+      // txb.setVersion(1);
+
+      for (var i = 0; i < addressIndexList.length; i++) {
+        var index = addressIndexList[i];
+        var bitCoinChild = root.derivePath("m/44'/" +
+            environment["CoinType"]["BTC"].toString() +
+            "'/0'/0/" +
+            index.toString());
+        var fromAddress = btcUtils.getBtcAddressForNode(bitCoinChild);
+        if (addressList.isNotEmpty) {
+          fromAddress = addressList[i];
+        }
+        if (i == 0) {
+          changeAddress = fromAddress;
+        }
+        final privateKey = bitCoinChild.privateKey;
+        var utxos = await btcUtils.getBtcUtxos(fromAddress);
+        //debugPrint('utxos=');
+        //debugPrint(utxos);
+        if ((utxos == null) || (utxos.length == 0)) {
+          continue;
+        }
+        for (var j = 0; j < utxos.length; j++) {
+          var tx = utxos[j];
+          if (tx['idx'] < 0) {
+            continue;
+          }
+          txb.addInput(tx['txid'], tx['idx']);
+          amountNum -= tx['value'];
+          amountNum += bytesPerInput * satoshisPerBytes;
+          totalInput += tx['value'];
+          receivePrivateKeyArr.add(privateKey);
+          if (amountNum <= 0) {
+            finished = true;
+            break;
+          }
+        }
+      }
+
+      if (!finished) {
+        txHex = '';
+        txHash = '';
+        errMsg = 'not enough fund.';
+        return {
+          'txHex': txHex,
+          'txHash': txHash,
+          'errMsg': errMsg,
+          'amountInTx': amountInTx
+        };
+      }
+
+      var transFee =
+          (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
+              (2 * 34 + 10) * satoshisPerBytes;
+
+      var output1 = (totalInput -
+              BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt() -
+              transFee)
+          .round();
+
+      if (output1 < 2730) {
+        transFee += output1;
+      }
+
+      transFeeDouble = transFee / 1e8;
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble
+        };
+      }
+
+      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+
+      if (output1 >= 2730) {
+        txb.addOutput(changeAddress, output1);
+      }
+
+      amountInTx = BigInt.from(output2);
+
+      txb.addOutput(toAddress, output2);
+      for (var i = 0; i < receivePrivateKeyArr.length; i++) {
+        var privateKey = receivePrivateKeyArr[i];
+        var alice = bitcoin_flutter.ECPair.fromPrivateKey(privateKey,
+            compressed: true, network: environment["chains"]["BTC"]["network"]);
+        txb.sign(vin: i, keyPair: alice);
+      }
+
+      var tx = txb.build();
+      txHex = tx.toHex();
+      if (doSubmit) {
+        var res = await apiService.postBtcTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+        return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
+      } else {
+        txHash = '0x' + tx.getId();
+      }
+    }
+
+    // BCH Transaction
+    else if (coin == 'BCH') {
+      if (bytesPerInput == 0) {
+        bytesPerInput = environment["chains"]["BCH"]["bytesPerInput"];
+      }
+      if (satoshisPerBytes == 0) {
+        satoshisPerBytes = environment["chains"]["BCH"]["satoshisPerBytes"];
+      }
+      var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      amountNum += (2 * 34 + 10) * satoshisPerBytes;
+
+      final txb = bitbox.Bitbox.transactionBuilder(
+          testnet: environment["chains"]["BCH"]["testnet"]);
+      final masterNode =
+          bitbox.HDNode.fromSeed(seed, environment["chains"]["BCH"]["testnet"]);
+      final childNode =
+          "m/44'/" + environment["CoinType"]["BCH"].toString() + "'/0'/0/0";
+      final accountNode = masterNode.derivePath(childNode);
+      final address = accountNode.toCashAddress();
+
+      final utxos = await apiService.getBchUtxos(address);
+
+      if ((utxos == null) || (utxos.length == 0)) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': 'not enough fund',
+          'amountInTx': amountInTx
+        };
+      }
+
+      final signatures = <Map>[];
+
+      for (var j = 0; j < utxos.length; j++) {
+        var tx = utxos[j];
+        if (tx['idx'] < 0) {
+          continue;
+        }
+        txb.addInput(tx['txid'], tx['idx']);
+
+        // add a signature to the list to be used later
+        signatures.add({
+          "vin": signatures.length,
+          "key_pair": accountNode.keyPair,
+          "original_amount": tx['value']
+        });
+
+        amountNum -= tx['value'];
+        amountNum += bytesPerInput * satoshisPerBytes;
+        totalInput += tx['value'];
+        if (amountNum <= 0) {
+          finished = true;
+          break;
+        }
+      }
+
+      if (!finished) {
+        return {'txHex': '', 'txHash': '', 'errMsg': 'not enough fund'};
+      }
+
+      var transFee = (signatures.length) * bytesPerInput * satoshisPerBytes +
+          (2 * 34 + 10) * satoshisPerBytes;
+      transFeeDouble = transFee / 1e8;
+
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble,
+          'amountInTx': amountInTx
+        };
+      }
+
+      var output1 = (totalInput -
+              BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt() -
+              transFee)
+          .round();
+      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+
+      amountInTx = BigInt.from(output2);
+      txb.addOutput(address, output1);
+      txb.addOutput(toAddress, output2);
+
+      for (var signature in signatures) {
+        txb.sign(signature["vin"], signature["key_pair"],
+            signature["original_amount"]);
+      }
+
+      final tx = txb.build();
+      txHex = tx.toHex();
+      if (doSubmit) {
+        var res = await apiService.postBchTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+        return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
+      } else {
+        txHash = '0x' + tx.getId();
+      }
+    }
+
+    // LTC Transaction
+    else if (coin == 'LTC') {
+      if (bytesPerInput == 0) {
+        bytesPerInput = environment["chains"]["LTC"]["bytesPerInput"];
+      }
+      if (satoshisPerBytes == 0) {
+        satoshisPerBytes = environment["chains"]["LTC"]["satoshisPerBytes"];
+      }
+      var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      amountNum += (2 * 34 + 10) * satoshisPerBytes;
+      final txb = bitcoin_flutter.TransactionBuilder(
+          network: environment["chains"]["LTC"]["network"]);
+
+      for (var i = 0; i < addressIndexList.length; i++) {
+        var index = addressIndexList[i];
+        var node = root.derivePath("m/44'/" +
+            environment["CoinType"]["LTC"].toString() +
+            "'/0'/0/" +
+            index.toString());
+        var fromAddress = ltcUtils.getLtcAddressForNode(node);
+        if (addressList.isNotEmpty) {
+          fromAddress = addressList[i];
+        }
+        if (i == 0) {
+          changeAddress = fromAddress;
+        }
+        final privateKey = node.privateKey;
+        var utxos = await apiService.getLtcUtxos(fromAddress);
+
+        if ((utxos == null) || (utxos.length == 0)) {
+          continue;
+        }
+        for (var j = 0; j < utxos.length; j++) {
+          var tx = utxos[j];
+          if (tx['idx'] < 0) {
+            continue;
+          }
+          txb.addInput(tx['txid'], tx['idx']);
+          amountNum -= tx['value'];
+          amountNum += bytesPerInput * satoshisPerBytes;
+          totalInput += tx['value'];
+          receivePrivateKeyArr.add(privateKey);
+          if (amountNum <= 0) {
+            finished = true;
+            break;
+          }
+        }
+      }
+
+      if (!finished) {
+        txHex = '';
+        txHash = '';
+        errMsg = 'not enough fund.';
+        return {
+          'txHex': txHex,
+          'txHash': txHash,
+          'errMsg': errMsg,
+          'amountInTx': amountInTx
+        };
+      }
+
+      var transFee =
+          (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
+              (2 * 34 + 10) * satoshisPerBytes;
+      transFeeDouble = transFee / 1e8;
+
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble
+        };
+      }
+
+      var output1 = (totalInput -
+              BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt() -
+              transFee)
+          .round();
+      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      amountInTx = BigInt.from(output2);
+      txb.addOutput(changeAddress, output1);
+      txb.addOutput(toAddress, output2);
+      for (var i = 0; i < receivePrivateKeyArr.length; i++) {
+        var privateKey = receivePrivateKeyArr[i];
+        var alice = bitcoin_flutter.ECPair.fromPrivateKey(privateKey,
+            compressed: true, network: environment["chains"]["LTC"]["network"]);
+        txb.sign(vin: i, keyPair: alice);
+      }
+
+      var tx = txb.build();
+      txHex = tx.toHex();
+      if (doSubmit) {
+        var res = await apiService.postLtcTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+        return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
+      } else {
+        txHash = '0x' + tx.getId();
+      }
+    }
+
+    // DOGE Transaction
+    else if (coin == 'DOGE') {
+      if (bytesPerInput == 0) {
+        bytesPerInput = environment["chains"]["DOGE"]["bytesPerInput"];
+      }
+      if (satoshisPerBytes == 0) {
+        satoshisPerBytes = environment["chains"]["DOGE"]["satoshisPerBytes"];
+      }
+      var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      amountNum += (2 * 34 + 10) * satoshisPerBytes;
+      final txb = bitcoin_flutter.TransactionBuilder(
+          network: environment["chains"]["DOGE"]["network"]);
+
+      for (var i = 0; i < addressIndexList.length; i++) {
+        var index = addressIndexList[i];
+        var node = root.derivePath("m/44'/" +
+            environment["CoinType"]["DOGE"].toString() +
+            "'/0'/0/" +
+            index.toString());
+        var fromAddress = getDogeAddressForNode(node);
+        debugPrint('fromAddress==' + fromAddress);
+        if (addressList.isNotEmpty) {
+          fromAddress = addressList[i];
+        }
+        if (i == 0) {
+          changeAddress = fromAddress;
+        }
+
+        final privateKey = node.privateKey;
+        var utxos = await apiService.getDogeUtxos(fromAddress);
+        //debugPrint('utxos=');
+        //debugPrint(utxos);
+        if ((utxos == null) || (utxos.length == 0)) {
+          continue;
+        }
+        for (var j = 0; j < utxos.length; j++) {
+          var tx = utxos[j];
+          if (tx['idx'] < 0) {
+            continue;
+          }
+          txb.addInput(tx['txid'], tx['idx']);
+          amountNum -= tx['value'];
+          amountNum += bytesPerInput * satoshisPerBytes;
+          totalInput += tx['value'];
+          receivePrivateKeyArr.add(privateKey);
+          if (amountNum <= 0) {
+            finished = true;
+            break;
+          }
+        }
+      }
+
+      if (!finished) {
+        txHex = '';
+        txHash = '';
+        errMsg = 'not enough fund.';
+        return {
+          'txHex': txHex,
+          'txHash': txHash,
+          'errMsg': errMsg,
+          'amountInTx': amountInTx
+        };
+      }
+
+      var transFee =
+          (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
+              (2 * 34 + 10) * satoshisPerBytes;
+      transFeeDouble = transFee / 1e8;
+
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble,
+          'amountInTx': amountInTx
+        };
+      }
+
+      var output1 = (totalInput -
+              BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt() -
+              transFee)
+          .round();
+      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      amountInTx = BigInt.from(output2);
+      txb.addOutput(changeAddress, output1);
+
+      txb.addOutput(toAddress, output2);
+
+      for (var i = 0; i < receivePrivateKeyArr.length; i++) {
+        var privateKey = receivePrivateKeyArr[i];
+        var alice = bitcoin_flutter.ECPair.fromPrivateKey(privateKey,
+            compressed: true,
+            network: environment["chains"]["DOGE"]["network"]);
+        txb.sign(vin: i, keyPair: alice);
+      }
+      var tx = txb.build();
+      txHex = tx.toHex();
+      if (doSubmit) {
+        var res = await apiService.postDogeTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+        return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
+      } else {
+        txHash = '0x' + tx.getId();
+      }
+    }
+    // Matic Transaction
+
+    else if (coin == 'MATICM') {
+      // Credentials fromHex = EthPrivateKey.fromHex("c87509a[...]dc0d3");
+
+      if (gasPrice == 0) {
+        gasPrice = environment["chains"]["MATIC"]["gasPrice"];
+      }
+      if (gasLimit == 0) {
+        gasLimit = environment["chains"]["MATIC"]["gasLimit"];
+      }
+      transFeeDouble = (BigInt.parse(gasPrice.toString()) *
+              BigInt.parse(gasLimit.toString()) /
+              BigInt.parse('1000000000'))
+          .toDouble();
+
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble
+        };
+      }
+
+      final chainId = environment["chains"]["MATIC"]["chainId"];
+      final ethCoinChild = root.derivePath(
+          "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
+      final privateKey = HEX.encode(ethCoinChild.privateKey);
+      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
+
+      Credentials credentials = EthPrivateKey.fromHex(privateKey);
+
+      final address = await credentials.extractAddress();
+      final addressHex = address.hex;
+      var maticUtils = MaticUtils();
+      final nonce = await maticUtils.getNonce(addressHex);
+
+      var apiUrl =
+          environment["chains"]["ETH"]["infura"]; //Replace with your API
+
+      var ethClient = Web3Client(apiUrl, httpClient);
+
+      amountInTx = amountSentInt;
+      final signed = await ethClient.signTransaction(
+          credentials,
+          Transaction(
+            nonce: nonce,
+            to: EthereumAddress.fromHex(toAddress),
+            gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+            maxGas: gasLimit,
+            value: EtherAmount.fromUnitAndValue(EtherUnit.wei, amountSentInt),
+          ),
+          chainId: chainId,
+          fetchChainIdFromNetworkId: false);
+
+      txHex = '0x' + HEX.encode(signed);
+
+      debugPrint('maticm txHex in ETH=' + txHex);
+      if (doSubmit) {
+        var res = await maticmUtils.postTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+      } else {
+        txHash = ethUtils.getTransactionHash(signed);
+      }
+    }
+
+    // ETH Transaction
+
+    else if (coin == 'ETH') {
+      // Credentials fromHex = EthPrivateKey.fromHex("c87509a[...]dc0d3");
+
+      if (gasPrice == 0) {
+        gasPrice = environment["chains"]["ETH"]["gasPrice"];
+      }
+      if (gasLimit == 0) {
+        gasLimit = environment["chains"]["ETH"]["gasLimit"];
+      }
+      transFeeDouble = (BigInt.parse(gasPrice.toString()) *
+              BigInt.parse(gasLimit.toString()) /
+              BigInt.parse('1000000000'))
+          .toDouble();
+
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble
+        };
+      }
+
+      final chainId = environment["chains"]["ETH"]["chainId"];
+      final ethCoinChild = root.derivePath(
+          "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
+      final privateKey = HEX.encode(ethCoinChild.privateKey);
+      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
+
+      Credentials credentials = EthPrivateKey.fromHex(privateKey);
+
+      final address = await credentials.extractAddress();
+      final addressHex = address.hex;
+      final nonce = await ethUtils.getEthNonce(addressHex);
+
+      var apiUrl =
+          environment["chains"]["ETH"]["infura"]; //Replace with your API
+      // client.Client httpClient;
+      var ethClient = Web3Client(apiUrl, httpClient);
+
+      amountInTx = amountSentInt;
+      final signed = await ethClient.signTransaction(
+          credentials,
+          Transaction(
+            nonce: nonce,
+            to: EthereumAddress.fromHex(toAddress),
+            gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+            maxGas: gasLimit,
+            value: EtherAmount.fromUnitAndValue(EtherUnit.wei, amountSentInt),
+          ),
+          chainId: chainId,
+          fetchChainIdFromNetworkId: false);
+
+      txHex = '0x' + HEX.encode(signed);
+
+      debugPrint('txHex in ETH=' + txHex);
+      if (doSubmit) {
+        var res = await ethUtils.postEthTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+      } else {
+        txHash = ethUtils.getTransactionHash(signed);
+      }
+    } else if (coin == 'FAB') {
+      if (bytesPerInput == 0) {
+        bytesPerInput = environment["chains"]["FAB"]["bytesPerInput"];
+      }
+      if (satoshisPerBytes == 0) {
+        satoshisPerBytes = environment["chains"]["FAB"]["satoshisPerBytes"];
+      }
+
+      var res1 = await fabUtils.getFabTransactionHexV2(
+          seed,
+          addressIndexList,
+          toAddress,
+          amount,
+          Decimal.zero,
+          satoshisPerBytes,
+          addressList,
+          getTransFeeOnly);
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': res1["transFee"],
+          'amountInTx': res1["amountInTx"]
+        };
+      }
+      txHex = res1['txHex'];
+      errMsg = res1['errMsg'];
+      allTxids = res1['txids'];
+      amountInTx = res1["amountInTx"];
+
+      if ((errMsg == '') && (txHex != '')) {
+        if (doSubmit) {
+          var res = await fabUtils.postFabTx(txHex);
+
+          txHash = res['txHash'];
+          errMsg = res['errMsg'];
+        } else {
+          var tx = bitcoin_flutter.Transaction.fromHex(txHex);
+          txHash = '0x' + tx.getId();
+        }
+      }
+    }
+
+    // Token FAB
+
+    else if (tokenType == 'FAB') {
+      if (bytesPerInput == 0) {
+        bytesPerInput = environment["chains"]["FAB"]["bytesPerInput"];
+      }
+      if (satoshisPerBytes == 0) {
+        satoshisPerBytes = environment["chains"]["FAB"]["satoshisPerBytes"];
+      }
+      if (gasPrice == 0) {
+        gasPrice = environment["chains"]["FAB"]["gasPrice"];
+      }
+      if (gasLimit == 0) {
+        gasLimit = environment["chains"]["FAB"]["gasLimit"];
+      }
+      var transferAbi = 'a9059cbb';
+      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, decimal));
+      // double 2.0 => 2000000000000000000 with default decimal limit 18
+      log.w('amountSentInt $amountSentInt');
+      BigInt amountBigInt = amount.toBigInt();
+      // double 2.0 => 2
+      log.i('amountBigInt $amountBigInt');
+      BigInt amountBigInt1 = NumberUtil.decimalToBigInt(amount.toString());
+      // double 2.0 => 200000000000000000000000000000 with default decimal limit 29
+      log.w('amountBigInt1 $amountBigInt1');
+      if (coin == 'DUSD') {
+        amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 6));
+      }
+
+      amountInTx = amountSentInt;
+      var amountSentHex = amountSentInt.toRadixString(16);
+
+      var fxnCallHex = transferAbi +
+          string_utils.fixLength(string_utils.trimHexPrefix(toAddress), 64) +
+          string_utils.fixLength(string_utils.trimHexPrefix(amountSentHex), 64);
+
+      contractAddress = string_utils.trimHexPrefix(contractAddress);
+
+      var contractInfo = await getFabSmartContract(
+          contractAddress, fxnCallHex, gasLimit, gasPrice);
+      if (addressList != null && addressList.isNotEmpty) {
+        addressList[0] =
+            await getAddressFromCoreWalletDatabaseByTickerName('FAB') !=
+                    addressList[0]
+                ? fabUtils.exgToFabAddress(addressList[0])
+                : addressList[0];
+      }
+//8f08d6e1b8978fdba995dc44f1f01a3a26fa572a78f6a0450fa9c547239201b7
+      var res1 = await getFabTransactionHex(
+          seed,
+          addressIndexList,
+          contractInfo['contract'],
+          0,
+          contractInfo['totalFee'],
+          satoshisPerBytes,
+          addressList,
+          getTransFeeOnly);
+
+      debugPrint('res1 in here=');
+      debugPrint(res1.toString());
+      log.w('res1: $res1');
+
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': res1["errMsg"] ?? '',
+          'amountSent': '',
+          'transFee': res1["transFee"],
+          'amountInTx': amountInTx
+        };
+      }
+
+      txHex = res1['txHex'];
+      errMsg = res1['errMsg'];
+      allTxids = res1['txids'];
+      if (txHex != null && txHex != '') {
+        if (doSubmit) {
+          var res = await fabUtils.postFabTx(txHex);
+          txHash = res['txHash'];
+          errMsg = res['errMsg'];
+        } else {
+          var tx = bitcoin_flutter.Transaction.fromHex(txHex);
+          txHash = '0x' + tx.getId();
+        }
+      }
+    }
+    // Token type ETH
+    else if (tokenType == 'ETH') {
+      if (gasPrice == 0) {
+        gasPrice = environment["chains"]["ETH"]["gasPrice"];
+      }
+      if (gasLimit == 0) {
+        gasLimit = environment["chains"]["ETH"]["gasLimitToken"];
+      }
+      transFeeDouble = (BigInt.parse(gasPrice.toString()) *
+              BigInt.parse(gasLimit.toString()) /
+              BigInt.parse('1000000000'))
+          .toDouble();
+      log.i('transFeeDouble===' + transFeeDouble.toString());
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble
+        };
+      }
+
+      final chainId = environment["chains"]["ETH"]["chainId"];
+      final ethCoinChild = root.derivePath(
+          "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
+      final privateKey = HEX.encode(ethCoinChild.privateKey);
+      Credentials credentials = EthPrivateKey.fromHex(privateKey);
+
+      final address = await credentials.extractAddress();
+      final addressHex = address.hex;
+      final nonce = await ethUtils.getEthNonce(addressHex);
+
+      //gasLimit = 100000;
+      BigInt convertedDecimalAmount;
+      if (coin == 'BNB' ||
+          coin == 'INB' ||
+          coin == 'REP' ||
+          coin == 'HOT' ||
+          coin == 'MATIC' ||
+          coin == 'IOST' ||
+          coin == 'MANA' ||
+          coin == 'ELF' ||
+          coin == 'GNO' ||
+          coin == 'WINGS' ||
+          coin == 'KNC' ||
+          coin == 'GVT' ||
+          coin == 'DRGN') {
+        convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount));
+        //   (BigInt.from(10).pow(18) * BigInt.from(amount));
+
+        //var amountSentInt = BigInt.parse(toBigInt(amount, 18));
+        log.e('amount send $convertedDecimalAmount');
+      } else if (coin == 'FUN' || coin == 'WAX' || coin == 'MTL') {
+        convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount, 8));
+        log.e('amount send $convertedDecimalAmount');
+      } else if (coin == 'POWR' || coin == 'USDT') {
+        convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount, 6));
+      } else if (coin == 'CEL') {
+        convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount, 4));
+      } else {
+        convertedDecimalAmount =
+            BigInt.parse(NumberUtil.toBigInt(amount, decimal));
+      }
+
+      amountInTx = convertedDecimalAmount;
+      var transferAbi = 'a9059cbb';
+      var fxnCallHex = transferAbi +
+          string_utils.fixLength(string_utils.trimHexPrefix(toAddress), 64) +
+          string_utils.fixLength(
+              string_utils
+                  .trimHexPrefix(convertedDecimalAmount.toRadixString(16)),
+              64);
+      var apiUrl =
+          environment["chains"]["ETH"]["infura"]; //Replace with your API
+      // client.Client httpClient;
+      var ethClient = Web3Client(apiUrl, httpClient);
+      debugPrint(
+          '5 $nonce -- $contractAddress -- ${EtherUnit.wei} -- $fxnCallHex');
+      final signed = await ethClient.signTransaction(
+          credentials,
+          Transaction(
+              nonce: nonce,
+              to: EthereumAddress.fromHex(contractAddress),
+              gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+              maxGas: gasLimit,
+              value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
+              data: Uint8List.fromList(string_utils.hex2Buffer(fxnCallHex))),
+          chainId: chainId,
+          fetchChainIdFromNetworkId: false);
+      log.w('signed=');
+      txHex = '0x' + HEX.encode(signed);
+
+      if (doSubmit) {
+        var res = await ethUtils.postEthTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+      } else {
+        txHash = ethUtils.getTransactionHash(signed);
+      }
+    }
+    return {
+      'txHex': txHex,
+      'txHash': txHash,
+      'errMsg': errMsg,
+      'amountSent': amount,
+      'transFee': transFeeDouble,
+      'amountInTx': amountInTx,
+      'txids': allTxids
+    };
+  }
+
   Future sendTransaction(
       String coin,
       seed,
@@ -2168,10 +3030,10 @@ class WalletService {
       var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
 
-      final txb = Bitbox.Bitbox.transactionBuilder(
+      final txb = bitbox.Bitbox.transactionBuilder(
           testnet: environment["chains"]["BCH"]["testnet"]);
       final masterNode =
-          Bitbox.HDNode.fromSeed(seed, environment["chains"]["BCH"]["testnet"]);
+          bitbox.HDNode.fromSeed(seed, environment["chains"]["BCH"]["testnet"]);
       final childNode =
           "m/44'/" + environment["CoinType"]["BCH"].toString() + "'/0'/0/0";
       final accountNode = masterNode.derivePath(childNode);

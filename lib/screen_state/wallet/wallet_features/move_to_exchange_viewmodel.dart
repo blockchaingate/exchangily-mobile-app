@@ -58,6 +58,13 @@ class MoveToExchangeViewModel extends BaseViewModel {
   double chainBalance = 0.0;
   String fabAddress = '';
   bool isValidAmount = true;
+  var walletUtil = WalletUtil();
+
+  final tec1 = TextEditingController();
+  var oldBigIntOutputInInt;
+  var oldIntOutputInBigInt;
+
+  var newdoubleOutputInBigInt;
 
   // Init
   void initState() async {
@@ -88,6 +95,67 @@ class MoveToExchangeViewModel extends BaseViewModel {
     fabAddress =
         await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
     if (tokenType.isNotEmpty) await getNativeChainTickerBalance();
+    setBusy(false);
+  }
+
+  t1() {
+    setBusy(true);
+    // old
+    try {
+      oldBigIntOutputInInt =
+          BigInt.parse(NumberUtil.toBigInt(tec1.text, 8)).toInt();
+      oldIntOutputInBigInt = BigInt.from(oldBigIntOutputInInt);
+      var amountNum = BigInt.parse(NumberUtil.toBigInt(tec1.text, 8)).toInt();
+      debugPrint('amountNum $amountNum');
+      var calc = (2 * 34 + 10) * 100;
+      debugPrint('old calc $calc');
+      amountNum += calc;
+      //1452464262667475564
+      //               7800
+      //1452464262667483364
+      debugPrint('amountNum + calc $amountNum');
+      var amountOldDouble = amountNum / 1e8;
+      log.i('amountOldDouble after calc $amountOldDouble');
+      // 14524642626.67475564
+    } catch (err) {
+      log.e('old way broke, $err');
+    }
+    // new
+    newdoubleOutputInBigInt = NumberUtil.decimalToBigInt(tec1.text);
+    var amountNum2 = NumberUtil.decimalToBigInt(tec1.text);
+    debugPrint('amountNum2 $amountNum2');
+    log.w(
+        'new bigint result to decimal ${NumberUtil.rawToDecimal(newdoubleOutputInBigInt.toString())}');
+    //  BigInt feeCalc= (NumberUtil.decimalToBigInt(2.toString()) *
+    //               NumberUtil.decimalToBigInt(34.toString()) +
+    //           NumberUtil.decimalToBigInt(10.toString())) *
+    //       NumberUtil.decimalToBigInt(100.toString());
+    var two = BigInt.from(2);
+    var threeFour = BigInt.from(34);
+    var ten = BigInt.from(10);
+    var hundred = BigInt.from(100);
+    // var m = two * threeFour;
+    // log.i('2*34 = $m');
+    // var p = m + ten;
+    // log.i('m+10 = $p');
+    var newCalc = (two * threeFour + ten) * hundred;
+
+    log.w('final new calc = $newCalc');
+    // var newCalcBigInt = NumberUtil.decimalToBigInt(newCalc.toString());
+    // debugPrint('new calc bigint $newCalcBigInt');
+    amountNum2 += newCalc;
+    log.e('amountnum2 +  finalRes = $amountNum2');
+    //1452464262667475564000000000000000000000
+    //           78000000000000000000000000000
+    //1452464262745475564000000000000000000000
+    // amountNum2 += (BigInt.parse(2.toString()) * BigInt.parse(34.toString()) +
+    //         BigInt.parse(10.toString())) *
+    //     BigInt.parse(100.toString());
+    debugPrint('amountNum2 $amountNum2');
+    log.w(
+        'new bigint result to decimal ${NumberUtil.rawToDecimal(amountNum2.toString())}');
+    // 14524642626.674755640000000000000000078
+    // 14524642626.67475564(old)
     setBusy(false);
   }
 

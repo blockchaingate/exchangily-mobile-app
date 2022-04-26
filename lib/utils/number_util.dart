@@ -1,12 +1,82 @@
 import 'dart:math';
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
 
+class NumberUtilRes {
+  String stringOutput;
+  Decimal decimalOutput;
+  NumberUtilRes({this.stringOutput, this.decimalOutput});
+}
+
 class NumberUtil {
-  int maxDecimalDigits;
   final log = getLogger('NumberUtil');
+
+  static final BigInt rawPerNano = BigInt.from(10).pow(29);
+  static const int maxDecimalDigits = 2; // Max digits after decimal
+
+  static NumberUtilRes decimalLimiter(String input,
+      {int maxDecimalDigits = maxDecimalDigits}) {
+    String decimalLimiterStringRes = "";
+    List<String> splitStr = input.split(".");
+    if (splitStr.length > 1) {
+      if (splitStr[1].length > maxDecimalDigits) {
+        splitStr[1] = splitStr[1].substring(0, maxDecimalDigits);
+        input = splitStr[0] + "." + splitStr[1];
+      }
+    }
+    for (int i = 0; i < input.length; i++) {
+      try {
+        if (input[i] == ".") {
+          decimalLimiterStringRes = decimalLimiterStringRes + input[i];
+        } else {
+          int.parse(input[i]);
+          decimalLimiterStringRes = decimalLimiterStringRes + input[i];
+        }
+      } catch (err) {
+        debugPrint('decimalLimiter Catch $err');
+      }
+    }
+    debugPrint('decimalLimiter res $decimalLimiterStringRes');
+    return NumberUtilRes(
+        stringOutput: decimalLimiterStringRes,
+        decimalOutput: Decimal.parse(decimalLimiterStringRes));
+  }
+
+  static String decimalToRaw(String amount) {
+    Decimal asDecimal = Decimal.parse(amount);
+    Decimal rawDecimal = Decimal.parse(rawPerNano.toString());
+    //100000000000000000000000000000
+
+    return (asDecimal * rawDecimal).toString();
+  }
+
+  static BigInt decimalToBigInt(String amount) {
+    Decimal asDecimal = Decimal.parse(amount);
+    Decimal rawDecimal = Decimal.parse(rawPerNano.toString());
+    //100000000000000000000000000000
+
+    return BigInt.parse((asDecimal * rawDecimal).toString());
+  }
+
+  static Decimal rawToDecimal(String raw) {
+    //  if (raw.isEmpty) raw = "1254000000000000000000000000000";
+    Decimal amount = Decimal.parse(raw.toString());
+    var x = Decimal.fromBigInt(rawPerNano);
+    Decimal result = (amount / x).toDecimal();
+
+    return result;
+  }
+
+  static BigInt additionBigInt(BigInt val1, BigInt val2) {
+    return val1 + val2;
+  }
+
+  static double divisionBigInt(BigInt val1, BigInt val2) {
+    return val1 / val2;
+  }
 
   static int getDecimalLength(double number) {
     String stringNumber = number.toString();
