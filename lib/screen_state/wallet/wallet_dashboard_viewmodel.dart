@@ -30,7 +30,7 @@ import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -45,6 +45,7 @@ import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
     as tron_address_util;
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
@@ -74,8 +75,8 @@ class WalletDashboardViewModel extends BaseViewModel {
       locator<DecimalConfigDatabaseService>();
   ApiService apiService = locator<ApiService>();
 
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   var coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   var storageService = locator<LocalStorageService>();
   final dialogService = locator<DialogService>();
@@ -94,8 +95,6 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   double gasAmount = 0;
   String exgAddress = '';
-  //String wallets;
-  bool isHideSmallAmountAssets = false;
 
   bool isConfirmDeposit = false;
 
@@ -141,10 +140,14 @@ class WalletDashboardViewModel extends BaseViewModel {
   String totalLockedBalance = '';
 
   String totalExchangeBalance = '';
-  List<CustomTokenModel> issueTokens = [];
+  List<CustomTokenModel> customTokens = [];
   List<CustomTokenModel> selectedCustomTokens = [];
   var receiverWalletAddressTextController = TextEditingController();
   int swiperWidgetIndex = 0;
+  var walletUtil = WalletUtil();
+  bool isHideSearch = false;
+  bool isHideSmallAssetsButton = false;
+  var coinsToHideList = ["USDTB"];
 
 /*----------------------------------------------------------------------
                     INIT
@@ -154,22 +157,18 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusy(true);
 
     sharedService.context = context;
-    await refreshBalancesV2();
+    //currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
 
-    checkAnnouncement();
+    await refreshBalancesV2();
     showDialogWarning();
     getConfirmDepositStatus();
-    buildFavCoinListV1();
 
-    currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
-    // walletsScrollController.addListener(_scrollListener());
-    //   await storeWalletDecimalData();
-    //refreshController = new RefreshController();
-    walletService.storeTokenListInDB();
+    checkAnnouncement();
 
-    setBusy(false);
-    issueTokens = await apiService.getCustomTokens();
+    walletService.storeTokenListUpdatesInDB();
+    customTokens = await apiService.getCustomTokens();
     await getBalanceForSelectedCustomTokens();
+    setBusy(false);
   }
 
   // get wallet info object with address using single wallet balance
@@ -186,10 +185,13 @@ class WalletDashboardViewModel extends BaseViewModel {
     int coinType = await coinService.getCoinTypeByTickerName(tickerName);
 
     // use coin type to get the token type
-    String tokenType = walletService.getChainNameByTokenType(coinType);
+    String tokenType = walletUtil.getChainNameByTokenType(coinType);
 
     // get wallet address
-    if (tickerName == 'ETH' || tokenType == 'ETH' || tokenType == 'POLYGON') {
+    if (tickerName == 'ETH' ||
+        tokenType == 'ETH' ||
+        tickerName == 'MATICM' ||
+        tokenType == 'POLYGON') {
       walletAddress = await walletService
           .getAddressFromCoreWalletDatabaseByTickerName('ETH');
     } else if (tickerName == 'FAB' || tokenType == 'FAB') {
@@ -206,9 +208,9 @@ class WalletDashboardViewModel extends BaseViewModel {
           .getWalletAddressByTickerName(tickerName);
     }
     String coinName = '';
-    for (var i = 0; i < walletService.coinTickerAndNameList.length; i++) {
-      if (walletService.coinTickerAndNameList.containsKey(wallet.coin)) {
-        coinName = walletService.coinTickerAndNameList[wallet.coin];
+    for (var i = 0; i < walletUtil.coinTickerAndNameList.length; i++) {
+      if (walletUtil.coinTickerAndNameList.containsKey(wallet.coin)) {
+        coinName = walletUtil.coinTickerAndNameList[wallet.coin];
       }
       break;
     }
@@ -240,7 +242,8 @@ class WalletDashboardViewModel extends BaseViewModel {
   }
 
 // Send custom token
-  sendCustomToken(CustomTokenModel customTokenModel) async {
+  routeCustomToken(CustomTokenModel customTokenModel,
+      {bool isSend = true}) async {
     var exgAddress = await sharedService.getExgAddressFromWalletDatabase();
 
     var wallet = WalletInfo(
@@ -249,12 +252,15 @@ class WalletDashboardViewModel extends BaseViewModel {
         address: exgAddress,
         availableBalance: customTokenModel.balance);
     storageService.customTokenData = jsonEncode(customTokenModel.toJson());
-    navigationService.navigateTo(SendViewRoute, arguments: wallet);
+    navigationService.navigateTo(
+        isSend ? SendViewRoute : TransactionHistoryViewRoute,
+        arguments: wallet);
   }
 
 // get balance for Selected custom tokens
 
   Future getBalanceForSelectedCustomTokens() async {
+    setBusyForObject(selectedCustomTokens, true);
     String fabAddress = await sharedService.getExgAddressFromWalletDatabase();
     selectedCustomTokens.clear();
     String selectedCustomTokensJson = storageService.customTokens;
@@ -274,14 +280,15 @@ class WalletDashboardViewModel extends BaseViewModel {
               token.tokenId,
               fabAddress,
               token.decimal);
-          setBusyForObject(selectedCustomTokens, true);
+
           token.balance = balance;
-          setBusyForObject(selectedCustomTokens, false);
+
           log.i('token after adding balance ${token.toJson()}');
         }
       }
     }
     log.w('Selected custom token list => Finished');
+    setBusyForObject(selectedCustomTokens, false);
   }
 
   //switchSearch
@@ -296,7 +303,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     // as well as remove button which will remove the token from the list
 
     String isMatched;
-    if (issueTokens.isNotEmpty) {
+    if (customTokens.isNotEmpty) {
       showModalBottomSheet(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -312,22 +319,22 @@ class WalletDashboardViewModel extends BaseViewModel {
                     padding: const EdgeInsets.all(5),
                     //  height: 500,
                     child: ListView.builder(
-                        itemCount: issueTokens.length,
+                        itemCount: customTokens.length,
                         itemBuilder: (context, index) {
                           try {
                             isMatched = selectedCustomTokens
                                 .firstWhere((element) =>
                                     element.tokenId ==
-                                    issueTokens[index].tokenId)
+                                    customTokens[index].tokenId)
                                 .symbol;
 
                             // ignore: avoid_print
                             debugPrint(
-                                '${issueTokens[index].symbol} -- is in the selectedCustomTokens list ? $isMatched match found -- with token id ${issueTokens[index].tokenId}');
+                                '${customTokens[index].symbol} -- is in the selectedCustomTokens list ? $isMatched match found -- with token id ${customTokens[index].tokenId}');
                           } catch (err) {
                             isMatched = null;
                             log.w(
-                                'no match found for ${issueTokens[index].symbol} with token id ${issueTokens[index].tokenId}');
+                                'no match found for ${customTokens[index].symbol} with token id ${customTokens[index].tokenId}');
                           }
                           return Container(
                             padding: const EdgeInsets.only(bottom: 10),
@@ -347,7 +354,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                           padding:
                                               const EdgeInsets.only(top: 10.0),
                                           child: Text(
-                                              issueTokens[index]
+                                              customTokens[index]
                                                   .symbol
                                                   .toUpperCase(),
                                               textAlign: TextAlign.start,
@@ -356,7 +363,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.bold)),
                                         ),
-                                        Text(issueTokens[index].name,
+                                        Text(customTokens[index].name,
                                             style: const TextStyle(
                                               color: primaryColor,
                                               fontSize: 12,
@@ -380,7 +387,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.bold)),
                                         ),
-                                        Text(issueTokens[index].totalSupply,
+                                        Text(customTokens[index].totalSupply,
                                             style: const TextStyle(
                                                 color: grey, fontSize: 12))
                                       ],
@@ -424,14 +431,14 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                     //     : red
                                                     )),
                                           ),
-                                          Icon(
-                                            isMatched == null
-                                                ? Icons.add_box_rounded
-                                                : Icons.cancel_outlined,
-                                            color:
-                                                isMatched == null ? green : red,
-                                            size: 14,
-                                          )
+                                          // Icon(
+                                          //   isMatched == null
+                                          //       ? Icons.add_box_rounded
+                                          //       : Icons.cancel_outlined,
+                                          //   color:
+                                          //       isMatched == null ? green : red,
+                                          //   size: 14,
+                                          // )
                                         ],
                                       ),
                                       onPressed: () {
@@ -439,13 +446,14 @@ class WalletDashboardViewModel extends BaseViewModel {
                                             selectedCustomTokens.indexWhere(
                                                 (element) =>
                                                     element.tokenId ==
-                                                    issueTokens[index].tokenId);
+                                                    customTokens[index]
+                                                        .tokenId);
                                         setBusyForObject(
                                             selectedCustomTokens, true);
 
                                         if (tokenIndexToRemove.isNegative) {
                                           setState(() => selectedCustomTokens
-                                              .add(issueTokens[index]));
+                                              .add(customTokens[index]));
                                         } else {
                                           if (selectedCustomTokens.isNotEmpty) {
                                             log.w(
@@ -457,7 +465,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                               .removeAt(tokenIndexToRemove));
 
                                           log.e(
-                                              'selectedCustomTokens - length --selectedCustomTokens.length => removed token ${issueTokens[index].symbol}');
+                                              'selectedCustomTokens - length --selectedCustomTokens.length => removed token ${customTokens[index].symbol}');
                                         }
                                         setBusyForObject(
                                             selectedCustomTokens, false);
@@ -549,18 +557,29 @@ class WalletDashboardViewModel extends BaseViewModel {
     });
   }
 
-  updateTabSelection(int tabIndex) {
+  updateTabSelection(int tabIndex) async {
     setBusy(true);
+    currentTabSelection = tabIndex;
+    isHideSmallAssetsButton = true;
+    isHideSearch = true;
+
     if (tabIndex == 0) {
-      isShowFavCoins = false;
-    } else {
+      await init();
+      isHideSmallAssetsButton = false;
+      isHideSearch = false;
+    } else if (tabIndex == 1) {
       isShowFavCoins = true;
+    } else if (tabIndex == 2) {
+      await getBalanceForSelectedCustomTokens();
     }
 
-    currentTabSelection = tabIndex;
+    if (tabIndex != 1) {
+      isShowFavCoins = false;
+    }
     storageService.isFavCoinTabSelected = isShowFavCoins ? true : false;
     debugPrint(
         'current tab sel $currentTabSelection -- isShowFavCoins $isShowFavCoins');
+
     setBusy(false);
   }
 
@@ -612,7 +631,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     if (favCoinsJson != null && favCoinsJson != '') {
       List<String> favWalletCoins =
           (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
-
+      currentTabSelection = 1;
       var wallets = await refreshBalancesV2();
 
       for (var i = 0; i < favWalletCoins.length; i++) {
@@ -1135,7 +1154,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       if (res != null) {
         if (res['ok']) {
           isFreeFabNotUsed = res['ok'];
-          debugPrint(res['_body']['question']);
+          debugPrint(res['_body']['question'].toString());
           showDialog(
               context: context,
               builder: (context) {
@@ -1203,6 +1222,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                           ),
                           actions: [
                             Container(
+                                alignment: Alignment.center,
                                 margin: const EdgeInsetsDirectional.only(
                                     bottom: 10),
                                 child: StatefulBuilder(builder:
@@ -1210,6 +1230,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                                         StateSetter setState) {
                                   return Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       // Cancel
@@ -1351,7 +1373,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     refreshController.refreshCompleted();
   }
 
-  // Hide Small Amount Assets
   hideSmallAmountAssets() {
     // debugPrint("hideSmallAmountAssets function: $isHideSmallAmountAssets");
     // wallets.forEach((w) => {
@@ -1359,18 +1380,17 @@ class WalletDashboardViewModel extends BaseViewModel {
     //           " wallets.balance.isNegative: " +
     //           w.balance.isNegative.toString())
     //     });
-    setBusyForObject(isHideSmallAmountAssets, true);
+    setBusyForObject(isHideSmallAssetsButton, true);
     log.i(
-        'hide small amounts func: isBusy $isBusy -- ishidesmallamounts object busy  ${busy(isHideSmallAmountAssets)}');
-    isHideSmallAmountAssets = !isHideSmallAmountAssets;
-    setBusyForObject(isHideSmallAmountAssets, false);
+        'hide small amounts func: isBusy $isBusy -- ishidesmallamounts object busy  ${busy(isHideSmallAssetsButton)}');
+    isHideSmallAssetsButton = !isHideSmallAssetsButton;
+    setBusyForObject(isHideSmallAssetsButton, false);
 
     log.i(
-        'hide small amounts func: isBusy $isBusy -- ishidesmallamounts object busy  ${busy(isHideSmallAmountAssets)}');
+        'hide small amounts func: isBusy $isBusy -- ishidesmallamounts object busy  ${busy(isHideSmallAssetsButton)}');
     // debugPrint("end hideSmallAmountAssets function: $isHideSmallAmountAssets");
   }
 
-// Calculate Total Usd Balance of Coins
   calcTotalBal() {
     totalUsdBalance = '';
     totalWalletBalance = '';
@@ -1395,10 +1415,6 @@ class WalletDashboardViewModel extends BaseViewModel {
         'Total usd balance $totalUsdBalance -- totalWalletBalance $totalWalletBalance --totalLockedBalance $totalLockedBalance ');
   }
 
-/*---------------------------------------------------
-                      Get gas
---------------------------------------------------- */
-
   getGas() async {
     String address =
         await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
@@ -1410,10 +1426,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     return gasAmount;
   }
 
-/*----------------------------------------------------------------------
-                      Get Confirm deposit err
-----------------------------------------------------------------------*/
-// mpvWdFb91gYN1Q1UBfhMEmGn1Amw3BNthZ
   getConfirmDepositStatus() async {
     String address =
         await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
@@ -1455,9 +1467,6 @@ class WalletDashboardViewModel extends BaseViewModel {
       log.e('getConfirmDepositStatus Catch $err');
     });
   }
-/*----------------------------------------------------------------------
-                      Show dialog warning
-----------------------------------------------------------------------*/
 
   showDialogWarning() {
     log.w('in showDialogWarning isConfirmDeposit $isConfirmDeposit');
@@ -1490,10 +1499,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     storageService.favWalletCoins = json.encode(favWalletCoins);
   }
 
-/*----------------------------------------------------------------------
-                      Build coin list
-----------------------------------------------------------------------*/
-
   buildNewWalletObject(
       TokenModel newToken, WalletBalance newTokenWalletBalance) async {
     String newCoinAddress = '';
@@ -1517,29 +1522,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     wallets.add(wb);
     log.e('new coin ${wb.coin} added ${wb.toJson()} in wallet info object');
   }
-
-/*----------------------------------------------------------------------
-                      Assign New Token Address
-----------------------------------------------------------------------*/
-  // String assignNewTokenAddress(TokenModel newToken) {
-  //   String newCoinAddress = '';
-  //   walletInfo.firstWhere((wallet) {
-  //     if (wallet.tickerName == newToken.chainName) {
-  //       if (newToken.chainName == 'FAB')
-  //         newCoinAddress = fabUtils.fabToExgAddress(wallet.address);
-  //       else
-  //         newCoinAddress = wallet.address;
-  //       log.w('new token ${newToken.tickerName} address $newCoinAddress');
-  //       return true;
-  //     }
-  //     return false;
-  //   });
-  //   return newCoinAddress;
-  // }
-
-/*-------------------------------------------------------------------------------------
-                          Refresh Balances
--------------------------------------------------------------------------------------*/
 
   Future<List<WalletBalance>> refreshBalancesV2() async {
     setBusy(true);
@@ -1568,39 +1550,46 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     walletBalancesApiRes =
         await apiService.getWalletBalance(jsonDecode(finalWbb));
-    log.w('walletBalances LENGTH ${walletBalancesApiRes.length}');
-
+    log.w('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
+    for (var coinToHideTicker in coinsToHideList) {
+      walletBalancesApiRes
+          .removeWhere((element) => element.coin == coinToHideTicker);
+    }
+    log.i('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
     wallets = walletBalancesApiRes;
     walletsCopy = wallets;
-    setBusy(false);
-    calcTotalBal();
 
-    await checkToUpdateWallet();
-    moveTronUsdt();
-    moveTron();
-    await getGas();
+    if (currentTabSelection == 0) {
+      calcTotalBal();
 
-    // check gas and fab balance if 0 then ask for free fab
-    if (gasAmount == 0.0 && fabBalance == 0.0 && totalWalletBalance.isEmpty) {
-      String address =
-          await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
-      if (storageService.isShowCaseView != null) {
-        if (storageService.isShowCaseView) {
+      await checkToUpdateWallet();
+      moveTronUsdt();
+      moveTron();
+      await getGas();
+
+      // check gas and fab balance if 0 then ask for free fab
+      if (gasAmount == 0.0 && fabBalance == 0.0) {
+        String address =
+            await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
+        if (storageService.isShowCaseView != null) {
+          if (storageService.isShowCaseView) {
+            storageService.isShowCaseView = true;
+            _isShowCaseView = true;
+          }
+        } else {
           storageService.isShowCaseView = true;
           _isShowCaseView = true;
         }
+        var res = await apiService.getFreeFab(address);
+        if (res != null) {
+          isFreeFabNotUsed = res['ok'];
+        }
       } else {
-        storageService.isShowCaseView = true;
-        _isShowCaseView = true;
+        log.i('Fab or gas balance available already');
+        // storageService.isShowCaseView = false;
       }
-      var res = await apiService.getFreeFab(address);
-      if (res != null) {
-        isFreeFabNotUsed = res['ok'];
-      }
-    } else {
-      log.i('Fab or gas balance available already');
-      // storageService.isShowCaseView = false;
     }
+    setBusy(false);
     return walletBalancesApiRes;
   }
 

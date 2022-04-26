@@ -48,7 +48,7 @@ class HtmlPage extends StatelessWidget {
             debugPrint("Opening $url...");
           },
           onImageTap: (src) {
-            debugPrint(src);
+            debugPrint(src.toString());
           },
           onImageError: (exception, stackTrace) {
             debugPrint(exception);

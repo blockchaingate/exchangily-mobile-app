@@ -15,8 +15,8 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -208,7 +208,7 @@ class FabUtils {
 
   // Fab Post Tx
   Future postFabTx(String txHex) async {
-    var url = fabBaseUrl + PostRawTxApiRoute;
+    var url = fabBaseUrl + postRawTxApiRoute;
     final sharedService = locator<SharedService>();
     var txHash = '';
     var errMsg = '';
@@ -508,7 +508,9 @@ class FabUtils {
       }
 
       //debugPrint('tokenBalance===' + tokenBalance.toString());
-    } catch (e) {}
+    } catch (err) {
+      log.e('getFabTokenBalanceForABI func - CATCH $err');
+    }
     return tokenBalance;
   }
 
@@ -520,8 +522,8 @@ class FabUtils {
   }
 
   Future getFabTokenBalanceByAddress(String address, String coinName) async {
-    TokenListDatabaseService tokenListDatabaseService =
-        locator<TokenListDatabaseService>();
+    TokenInfoDatabaseService tokenListDatabaseService =
+        locator<TokenInfoDatabaseService>();
     var smartContractAddress =
         environment["addresses"]["smartContract"][coinName];
     if (smartContractAddress == null) {

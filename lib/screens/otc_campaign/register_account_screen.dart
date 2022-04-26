@@ -173,7 +173,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                               flex: 2,
                               child: TextField(
                                 onChanged: (value) {
-                                  debugPrint(value);
+                                  debugPrint(value.toString());
                                 },
                                 controller:
                                     model.exgWalletAddressTextController,
@@ -203,7 +203,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                               flex: 2,
                               child: TextField(
                                 onChanged: (value) {
-                                  debugPrint(value);
+                                  debugPrint(value.toString());
                                 },
                                 controller: model.referralCodeTextController,
                                 style: TextStyle(

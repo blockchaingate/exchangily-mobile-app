@@ -13,12 +13,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '198'
+    flutterVersionCode = '206'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '2.1.45'
+    flutterVersionName = '2.1.50'
 }
 
 apply plugin: 'com.android.application'
@@ -33,7 +33,7 @@ def keystoreProperties = new Properties()
     }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -99,4 +99,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     implementation 'com.google.protobuf:protobuf-lite:3.0.1'
+    implementation 'androidx.multidex:multidex:2.0.1'  //with androidx libraries
 }

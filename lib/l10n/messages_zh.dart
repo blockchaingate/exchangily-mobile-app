@@ -297,6 +297,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "showDialogWarnings" : MessageLookupByLibrary.simpleMessage("显示警告信息"),
     "showOnlyCurrentPairOrders" : MessageLookupByLibrary.simpleMessage("只显示当前匹配订单"),
     "showPassword" : MessageLookupByLibrary.simpleMessage("显示密码"),
+    "showSmallAmountAssets" : MessageLookupByLibrary.simpleMessage("显示小型资产"),
     "signUp" : MessageLookupByLibrary.simpleMessage("注册"),
     "silver" : MessageLookupByLibrary.simpleMessage("白银"),
     "smartContract" : MessageLookupByLibrary.simpleMessage("智能合约"),

@@ -7,7 +7,6 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transact
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -65,7 +64,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                                             .subtitle2),
                                   ],
                                 )
-                              : Text(transaction.tickerName,
+                              : Text(transaction.tickerName.toUpperCase(),
                                   style: Theme.of(context).textTheme.subtitle2),
                         ),
                       ),
@@ -73,8 +72,8 @@ class TxHisotryCardWidget extends StatelessWidget {
                       // icon
                       transaction.tag.toUpperCase() ==
                               model.deposit.toUpperCase()
-                          ? Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
+                          ? const Padding(
+                              padding: EdgeInsets.only(left: 10.0),
                               child: Icon(
                                 Icons.arrow_downward,
                                 size: 16,
@@ -83,16 +82,16 @@ class TxHisotryCardWidget extends StatelessWidget {
                             )
                           : transaction.tag.toUpperCase() ==
                                   model.send.toUpperCase()
-                              ? Padding(
-                                  padding: const EdgeInsets.only(left: 13.0),
+                              ? const Padding(
+                                  padding: EdgeInsets.only(left: 13.0),
                                   child: Icon(
                                     FontAwesomeIcons.arrowRight,
                                     size: 11,
                                     color: sellPrice,
                                   ),
                                 )
-                              : Padding(
-                                  padding: const EdgeInsets.only(left: 10.0),
+                              : const Padding(
+                                  padding: EdgeInsets.only(left: 10.0),
                                   child: Icon(
                                     Icons.arrow_upward,
                                     size: 16,
@@ -134,7 +133,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                         ),
                     ]),
               ),
-// UIHelper.horizontalSpaceSmall,
+              UIHelper.horizontalSpaceSmall,
               // DATE
               Expanded(
                 flex: 1,
@@ -263,7 +262,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                                 text: TextSpan(
                                     text:
                                         AppLocalizations.of(context).redeposit,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 12,
                                         decoration: TextDecoration.underline,
                                         color: red),
@@ -320,7 +319,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: IconButton(
                       padding: EdgeInsets.zero,
-                      icon: Icon(Icons.more, color: white, size: 14),
+                      icon: const Icon(Icons.more, color: white, size: 14),
                       onPressed: () {
                         debugPrint('tx histoy ${transaction.toJson()}');
                         model.showTxDetailDialog(transaction);

@@ -24,13 +24,14 @@ import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
+import 'package:exchangilymobileapp/utils/coin_utils/matic_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
@@ -53,8 +54,8 @@ class SendViewModel extends BaseViewModel {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
 
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   final storageService = locator<LocalStorageService>();
   final navigationService = locator<NavigationService>();
 
@@ -87,6 +88,7 @@ class SendViewModel extends BaseViewModel {
   String tokenType = '';
   final coinUtils = CoinUtils();
   final fabUtils = FabUtils();
+  final maticUtils = MaticUtils();
   int decimalLimit = 8;
   // double gasAmount = 0.0;
   String fabAddress = '';
@@ -94,24 +96,56 @@ class SendViewModel extends BaseViewModel {
   double unconfirmedBalance = 0.0;
   bool isValidAmount = true;
   double chainBalance = 0.0;
+  bool isCustomToken = false;
+  CustomTokenModel customToken = CustomTokenModel();
 
   // Init State
   initState() async {
     setBusy(true);
     sharedService.context = context;
-    walletInfo.tickerName == 'USDTX'
-        ? tickerName = 'USDT(TRC20)'
-        : tickerName = walletInfo.tickerName;
-    if (walletInfo.tokenType == 'TRON') walletInfo.tokenType = "TRX";
+
+    if (walletInfo.tickerName == 'USDTX') {
+      tickerName = 'USDT(TRC20)';
+    } else if (walletInfo.tickerName == 'MATICM') {
+      tickerName = 'MATIC';
+    } else {
+      tickerName = walletInfo.tickerName;
+    }
+    if (walletInfo.tokenType == 'TRON') {
+      walletInfo.tokenType = "TRX";
+    }
     tokenType = walletInfo.tokenType;
-    String coinName = walletInfo.tickerName;
-    await setFee(coinName);
+
+    await setFee(walletInfo.tickerName);
     fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
-    if (storageService.customTokenData.isEmpty) await refreshBalance();
-    decimalLimit =
-        await walletService.getSingleCoinWalletDecimalLimit(coinName);
-    decimalLimit ??= 8;
-    if (tokenType.isNotEmpty) await getNativeChainTickerBalance();
+
+    String customTokenStringData = storageService.customTokenData;
+
+    try {
+      if (customTokenStringData.isNotEmpty) {
+        customToken =
+            CustomTokenModel.fromJson(jsonDecode(customTokenStringData));
+
+        decimalLimit = customToken.decimal;
+        isCustomToken = true;
+        customToken = customToken;
+      }
+    } catch (err) {
+      log.e('custom token CATCH $err');
+    }
+    if (!isCustomToken) {
+      await refreshBalance();
+      decimalLimit = await walletService.getSingleCoinWalletDecimalLimit(
+          walletInfo.tickerName == 'MATICM'
+              ? tickerName
+              : walletInfo.tickerName);
+      if (decimalLimit == null || decimalLimit == 0) {
+        decimalLimit = 8;
+      }
+    }
+    if (tokenType.isNotEmpty && !isCustomToken) {
+      await getNativeChainTickerBalance();
+    }
     setBusy(false);
   }
 
@@ -150,10 +184,16 @@ class SendViewModel extends BaseViewModel {
       satoshisPerByteTextController.text =
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
       feeUnit = 'BTC';
+    } else if (coinName == 'MATICM') {
+      gasPriceTextController.text =
+          environment["chains"]["MATIC"]["gasPrice"].toString();
+      gasLimitTextController.text =
+          environment["chains"]["MATIC"]["gasLimit"].toString();
+      feeUnit = 'MATIC';
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       var gasPriceReal = await walletService.getEthGasPrice();
       debugPrint('gasPriceReal======');
-      debugPrint(gasPriceReal);
+      debugPrint(gasPriceReal.toString());
       gasPriceTextController.text = gasPriceReal.toString();
       gasLimitTextController.text =
           environment["chains"]["ETH"]["gasLimit"].toString();
@@ -342,20 +382,11 @@ class SendViewModel extends BaseViewModel {
           (tickerName != '') &&
           (tokenType != null) &&
           (tokenType != '')) {
-        int decimal;
-
         String contractAddr = '';
 
-        if (storageService.customTokenData.isNotEmpty) {
-          try {
-            CustomTokenModel customTokenModel = CustomTokenModel.fromJson(
-                jsonDecode(storageService.customTokenData));
-            contractAddr = customTokenModel.tokenId;
-            decimalLimit = customTokenModel.decimal;
-          } catch (err) {
-            log.e(
-                'Send transaction func: custom token from storage failed conversion');
-          }
+        if (isCustomToken) {
+          contractAddr = customToken.tokenId;
+          decimalLimit = customToken.decimal;
         } else {
           contractAddr = environment["addresses"]["smartContract"][tickerName];
         }
@@ -365,7 +396,7 @@ class SendViewModel extends BaseViewModel {
               .getByTickerName(tickerName)
               .then((token) {
             contractAddr = token.contract;
-            decimal = token.decimal;
+            decimalLimit = token.decimal;
             log.i('send token address ${token.toJson()}');
           });
         }
@@ -376,7 +407,7 @@ class SendViewModel extends BaseViewModel {
           'gasPrice': gasPrice,
           'gasLimit': gasLimit,
           'satoshisPerBytes': satoshisPerBytes,
-          'decimal': decimal
+          'decimal': decimalLimit
         };
       } else {
         options = {
@@ -427,7 +458,7 @@ class SendViewModel extends BaseViewModel {
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
             Future.delayed(const Duration(milliseconds: 3), () {
-              refreshBalance();
+              if (!isCustomToken) refreshBalance();
             });
           } else if (res['broadcastTronTransactionRes']['result'] == 'false') {
             String errMsg =
@@ -483,7 +514,7 @@ class SendViewModel extends BaseViewModel {
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
             Future.delayed(const Duration(milliseconds: 30), () {
-              refreshBalance();
+              if (!isCustomToken) refreshBalance();
             });
             return txHash;
           } else if (txHash == '' && errorMessage == '') {
@@ -841,12 +872,19 @@ class SendViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
+    gasPrice = int.tryParse(gasPriceTextController.text);
+    gasLimit = int.tryParse(gasLimitTextController.text);
+    satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
+    var customGasPrice;
+    if (walletInfo.tickerName == 'MATICM') {
+      customGasPrice = await maticUtils.gasFee();
+      log.i('updateTransFee: matic customGasPrice $customGasPrice');
 
-    var gasPrice = int.tryParse(gasPriceTextController.text);
-    var gasLimit = int.tryParse(gasLimitTextController.text);
-    var satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
+      customGasPrice = int.parse(customGasPrice.toString().split('.')[0]) + 1;
+    }
+
     var options = {
-      "gasPrice": gasPrice,
+      "gasPrice": walletInfo.tickerName == 'MATICM' ? customGasPrice : gasPrice,
       "gasLimit": gasLimit,
       "satoshisPerBytes": satoshisPerBytes,
       "tokenType": walletInfo.tokenType,

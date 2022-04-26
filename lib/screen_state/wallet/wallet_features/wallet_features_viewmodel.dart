@@ -19,12 +19,13 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
@@ -39,7 +40,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
   SharedService sharedService = locator<SharedService>();
   NavigationService navigationService = locator<NavigationService>();
   DialogService dialogService = locator<DialogService>();
-  final tokenListDatabaseService = locator<TokenListDatabaseService>();
+  final tokenListDatabaseService = locator<TokenInfoDatabaseService>();
 
   final double elevation = 5;
   double containerWidth = 150;
@@ -52,11 +53,12 @@ class WalletFeaturesViewModel extends BaseViewModel {
   bool isFavorite = false;
   int decimalLimit = 8;
   double unconfirmedBalance = 0.0;
+  var walletUtil = WalletUtil();
 
   init() async {
     getWalletFeatures();
     getErrDeposit();
-    specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
+    specialTicker = walletUtil.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)["tickerName"];
     log.i('wi object to check name ${walletInfo.toJson()}');
     refreshBalance();
@@ -85,7 +87,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
   updateFavWalletCoinsList(String tickerName) {
     List<String> favWalletCoins = [];
     String favCoinsJson = storageService.favWalletCoins;
-    debugPrint(favCoinsJson);
+    debugPrint(favCoinsJson.toString());
     if (favCoinsJson.isNotEmpty) {
       favWalletCoins =
           (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();

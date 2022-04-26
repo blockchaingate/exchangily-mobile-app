@@ -20,6 +20,7 @@ const String payOrderApiRoute = ordersTextApiRoute + "/code/";
 /*----------------------------------------------------------------------
                         Wallet
 ----------------------------------------------------------------------*/
+const String maticGasFeeUrl = "https://gasstation-mumbai.matic.today/v2";
 const String exchangilyAppLatestApkUrl =
     'http://exchangily.com/download/latest.apk';
 // app update post
@@ -51,8 +52,8 @@ const String broadcasrTronTransactionUrl =
 const String getTronLatestBlockUrl = tronBaseApiUrl + 'wallet/getnowblock';
 
 const String walletBalancesApiRoute = 'walletBalances';
-const String SingleWalletBalanceApiRoute = 'singleCoinWalletBalance';
-const String WalletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";
+const String singleWalletBalanceApiRoute = 'singleCoinWalletBalance';
+const String walletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";
 
 // Transaction history explorer URL's for prod
 const String ExchangilyExplorerUrl =
@@ -83,23 +84,23 @@ const String CoinCurrencyUsdValueApiRoute = 'USDvalues';
 const String GetAppVersionRoute = 'getappversion';
 
 // Get Token List, Decimal config, checkstatus
-const String GetTokenListApiRoute = 'exchangily/getTokenList';
-const String GetDecimalPairConfigApiRoute = 'kanban/getpairconfig';
+const String getTokenListApiRoute = 'exchangily/getTokenList';
+const String getDecimalPairConfigApiRoute = 'kanban/getpairconfig';
 //final String pairDecimalConfigRoute = 'kanban/getpairconfig';
-const String WithDrawDepositTxHistoryApiRoute = 'getTransactionHistoryEvents';
+const String withDrawDepositTxHistoryApiRoute = 'getTransactionHistoryEvents';
 // route for getting history for withdraw and deposits
-const String LightningRemitTxHHistoryApiRoute = 'getTransferHistoryEvents';
+const String lightningRemitTxHHistoryApiRoute = 'getTransferHistoryEvents';
 // route for bindpay transfers
 
-const String RedepositCheckStatusApiRoute = 'checkstatus/';
+const String redepositCheckStatusApiRoute = 'checkstatus/';
 // Add wallet Hex Fab address or kanban address in the end
-const String WithdrawTxStatusApiRoute = 'withdrawrequestsbyaddress/';
-const String DepositTxStatusApiRoute = 'getdepositrequestsbyaddress/';
+const String withdrawTxStatusApiRoute = 'withdrawrequestsbyaddress/';
+const String depositTxStatusApiRoute = 'getdepositrequestsbyaddress/';
 
-const String GetUtxosApiRoute = 'getutxos/';
-const String GetNonceApiRoute = 'getnonce/';
-const String PostRawTxApiRoute = 'postrawtransaction';
-const String GetTokenListUpdatesApiRoute = 'tokenListUpdates';
+const String getUtxosApiRoute = 'getutxos/';
+const String getNonceApiRoute = 'getnonce/';
+const String postRawTxApiRoute = 'postrawtransaction';
+const String getTokenListUpdatesApiRoute = 'tokenListUpdates';
 
 // wallet custom issue token feature url and routes
 
@@ -111,16 +112,16 @@ const String GetTokenListUpdatesApiRoute = 'tokenListUpdates';
 
 // get token's logo
 //https://test.blockchaingate.com/v2/issuetoken/ca83824ad8abcc4d03a9d2209bcd8efddff2615c/logo
-const String GetIsueTokenApiRoute = 'issuetoken';
-const String GetWithoutLogoApiRoute = 'withoutLogo';
-const String GetLogoApiRoute = 'withoutLogo';
+const String getIsueTokenApiRoute = 'issuetoken';
+const String getWithoutLogoApiRoute = 'withoutLogo';
+const String getLogoApiRoute = 'withoutLogo';
 
 /*----------------------------------------------------------------------
                             Exchange
 ----------------------------------------------------------------------*/
 
 // banner
-const String BannerApiUrl =
+const String bannerApiUrl =
     'https://api.blockchaingate.com/v2/banners/app/5b6a8688905612106e976a69';
 
 // /ordersbyaddresspaged/:address/:start?/:count?/:status?
@@ -136,27 +137,28 @@ final String bchBaseUrl = environment["endpoints"]["bch"];
 final String dogeBaseUrl = environment["endpoints"]["doge"];
 final String fabBaseUrl = environment["endpoints"]["fab"];
 final String ethBaseUrl = environment["endpoints"]["eth"];
+final String maticmBaseUrl = environment["endpoints"]["maticm"];
 final String eventsUrl = environment["eventInfo"];
 
 const String txStatusStatusRoute = 'kanban/explorer/getTransactionStatus';
 
 // Websockets
 
-const String AllPricesWSRoute = 'allPrices';
-const String TradesWSRoute = 'trades@';
-const String OrdersWSRoute = 'orders@';
-const String TickerWSRoute = 'ticker@';
+const String allPricesWSRoute = 'allPrices';
+const String tradesWSRoute = 'trades@';
+const String ordersWSRoute = 'orders@';
+const String tickerWSRoute = 'ticker@';
 
 // My Orders
 
-const String GetOrdersByAddrApiRoute = 'ordersbyaddresspaged/';
-const String GetOrdersByTickerApiRoute = 'getordersbytickernamepaged/';
+const String getOrdersByAddrApiRoute = 'ordersbyaddresspaged/';
+const String getOrdersByTickerApiRoute = 'getordersbytickernamepaged/';
 
 // Exchange Balance
 
 /// https://kanbantest.fabcoinapi.com/exchangily/getBalance/
 /// 0xb754f9c8b706c59646a4e97601a0ad81067e1cf9/HOT
-const String GetSingleCoinExchangeBalApiRoute = 'exchangily/getBalance/';
-const String AssetsBalanceApiRoute = 'exchangily/getBalances/';
+const String getSingleCoinExchangeBalApiRoute = 'exchangily/getBalance/';
+const String assetsBalanceApiRoute = 'exchangily/getBalances/';
 
-const String OrdersByAddrApiRoute = 'ordersbyaddress/';
+const String ordersByAddrApiRoute = 'ordersbyaddress/';

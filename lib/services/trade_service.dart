@@ -120,15 +120,15 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     String url =
         configService.getKanbanBaseUrl() + txStatusStatusRoute + '/$txHash';
     log.e('getTxStatus url $url');
-
+    var res;
     var response = await client.get(url);
-    var json = jsonDecode(response.body);
-    if (json != null) {
+    if (response.body != null) {
+      res = jsonDecode(response.body);
       // json['message'] != null
 
-      log.w('getTxStatus json $json}');
+      log.w('getTxStatus json $res}');
     }
-    return json;
+    return res;
   }
 
 /*----------------------------------------------------------------------
@@ -197,7 +197,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel tickerDataChannel(String pair, {String interval = '24'}) {
     var wsStringUrl = configService.getKanbanBaseWSUrl() +
-        TickerWSRoute +
+        tickerWSRoute +
         pair +
         '@' +
         interval;
@@ -233,7 +233,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
   IOWebSocketChannel getAllPriceChannel() {
-    var wsStringUrl = configService.getKanbanBaseWSUrl() + AllPricesWSRoute;
+    var wsStringUrl = configService.getKanbanBaseWSUrl() + allPricesWSRoute;
     log.e('getAllPriceChannelUrl $wsStringUrl');
 
     IOWebSocketChannel channel = IOWebSocketChannel.connect(wsStringUrl);
@@ -260,7 +260,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel marketTradesChannel(String pair) {
     try {
-      var wsString = configService.getKanbanBaseWSUrl() + TradesWSRoute + pair;
+      var wsString = configService.getKanbanBaseWSUrl() + tradesWSRoute + pair;
       log.i('marketTradesChannel URL $wsString');
       IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
       return channel;
@@ -288,7 +288,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel orderbookChannel(String pair) {
     try {
-      var wsString = configService.getKanbanBaseWSUrl() + OrdersWSRoute + pair;
+      var wsString = configService.getKanbanBaseWSUrl() + ordersWSRoute + pair;
       log.i('ordersChannel Url $wsString');
       // if not put the IOWebSoketChannel.connect to variable channel and
       // directly returns it then in the multiple stream it doesn't work
@@ -330,7 +330,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     try {
       var data = await _api.getMyOrdersPagedByFabHexAddressAndTickerName(
           exgAddress, tickerName);
-      debugPrint(data);
+      debugPrint(data.toString());
       if (data != null) {
         orderList = OrderList.fromJson(data);
         return orderList.orders;
@@ -373,8 +373,8 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
         exgPairsList.add(pair);
       }
     }
-    marketPairsGroupList.add(usdtPairsList);
     marketPairsGroupList.add(dusdPairsList);
+    marketPairsGroupList.add(usdtPairsList);
     marketPairsGroupList.add(btcPairsList);
     marketPairsGroupList.add(ethPairsList);
     marketPairsGroupList.add(exgPairsList);

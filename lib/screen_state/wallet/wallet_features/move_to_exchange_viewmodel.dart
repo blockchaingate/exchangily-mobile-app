@@ -6,13 +6,14 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
@@ -26,8 +27,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
   WalletService walletService = locator<WalletService>();
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   CoreWalletDatabaseService coreWalletDatabaseService =
       locator<CoreWalletDatabaseService>();
   WalletInfo walletInfo;
@@ -75,8 +76,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
     tokenType = walletInfo.tokenType;
     setFee();
     await getGas();
-    //  }
-    specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
+
+    specialTicker = walletUtil.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)['tickerName'];
     await refreshBalance();
 
@@ -88,6 +89,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
       feeUnit = 'FAB';
     } else if (tokenType == 'FAB') {
       feeUnit = 'FAB';
+    } else if (coinName == 'MATICM' || tokenType == 'POLYGON') {
+      feeUnit = 'MATIC(POLYGON)';
     }
     decimalLimit =
         await walletService.getSingleCoinWalletDecimalLimit(coinName);
@@ -623,7 +626,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     } else {
       log.e('Wrong pass');
       setBusy(false);
-      sharedService.showNotification(context);
+      sharedService.inCorrectpasswordNotification(context);
     }
     setBusy(false);
   }

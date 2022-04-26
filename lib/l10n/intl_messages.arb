@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2022-01-27T09:49:57.401116",
+  "@@last_modified": "2022-04-05T09:19:30.406960",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -2271,6 +2271,12 @@
   "favoriteTokens": "Favorite Tokens",
   "@favoriteTokens": {
     "description": "favoriteTokens",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showSmallAmountAssets": "Show Small Amount Assets",
+  "@showSmallAmountAssets": {
+    "description": "show_small_amount_assets",
     "type": "text",
     "placeholders": {}
   }

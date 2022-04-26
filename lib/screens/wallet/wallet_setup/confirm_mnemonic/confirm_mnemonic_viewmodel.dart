@@ -172,7 +172,7 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
   verifyMnemonic(controller, context, count, routeName) {
     userTypedMnemonicList.clear();
 
-    debugPrint(routeName);
+    debugPrint(routeName.toString());
     debugPrint(isTap.toString());
     if (routeName == 'import') isTap = false;
     for (var i = 0; i < count; i++) {

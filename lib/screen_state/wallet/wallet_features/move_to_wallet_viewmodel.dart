@@ -16,9 +16,10 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/utils/eth_util.dart';
 import 'dart:convert';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
@@ -32,7 +33,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   WalletService walletService = locator<WalletService>();
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
-  final tokenListDatabaseService = locator<TokenListDatabaseService>();
+  final tokenListDatabaseService = locator<TokenInfoDatabaseService>();
   final coinService = locator<CoinService>();
 
   WalletInfo walletInfo;
@@ -74,6 +75,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   TokenModel mainChainToken = TokenModel();
   bool isSubmittingTx = false;
   var tokenType;
+  var walletUtil = WalletUtil();
 
 /*---------------------------------------------------
                       INIT
@@ -98,19 +100,20 @@ class MoveToWalletViewmodel extends BaseViewModel {
     _groupValue = 'ETH';
     if (walletInfo.tickerName == 'ETH' || walletInfo.tokenType == 'ETH') {
       radioButtonSelection('ETH');
-    }
-
-    if (walletInfo.tickerName == 'FAB' || walletInfo.tokenType == 'FAB') {
+    } else if (walletInfo.tickerName == 'FAB' ||
+        walletInfo.tokenType == 'FAB') {
       isShowFabChainBalance = true;
       radioButtonSelection('FAB');
-    }
-    if (walletInfo.tickerName == 'USDTX' || walletInfo.tickerName == 'TRX') {
+    } else if (walletInfo.tickerName == 'USDTX' ||
+        walletInfo.tickerName == 'TRX') {
       isShowTrxTsWalletBalance = true;
 
       radioButtonSelection('TRX');
+    } else if (walletInfo.tickerName == "BTC") {
+      setWithdrawLimit("BTC");
     }
     specialTickerForTxHistory =
-        walletService.updateSpecialTokensTickerNameForTxHistory(
+        walletUtil.updateSpecialTokensTickerNameForTxHistory(
             walletInfo.tickerName)['tickerName'];
     await checkGasBalance();
     await getSingleCoinExchangeBal();
@@ -1028,7 +1031,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
   radioButtonSelection(value) async {
     setBusy(true);
-    debugPrint(value);
+    debugPrint(value.toString());
     _groupValue = value;
     if (value == 'FAB') {
       isShowFabChainBalance = true;

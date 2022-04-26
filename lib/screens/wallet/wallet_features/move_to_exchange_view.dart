@@ -423,9 +423,11 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         const TextInputType.numberWithOptions(
                                             decimal: true), // numnber keyboard
                                     decoration: InputDecoration(
-                                        focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: globals.primaryColor)),
+                                        focusedBorder:
+                                            const UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: globals
+                                                        .primaryColor)),
                                         enabledBorder:
                                             const UnderlineInputBorder(
                                                 borderSide: BorderSide(
@@ -506,7 +508,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                     const TextInputType.numberWithOptions(
                                         decimal: true), // numnber keyboard
                                 decoration: InputDecoration(
-                                    focusedBorder: UnderlineInputBorder(
+                                    focusedBorder: const UnderlineInputBorder(
                                         borderSide: BorderSide(
                                             color: globals.primaryColor)),
                                     enabledBorder: const UnderlineInputBorder(
@@ -535,19 +537,20 @@ class MoveToExchangeScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(model.message, style: TextStyle(color: grey)),
+                          Text(model.message,
+                              style: const TextStyle(color: grey)),
                           UIHelper.verticalSpaceSmall,
                           RichText(
                             text: TextSpan(
                                 text: AppLocalizations.of(context)
                                     .taphereToCopyTxId,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     decoration: TextDecoration.underline,
                                     color: globals.primaryColor),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     debugPrint('1');
-                                    debugPrint(model.message);
+                                    debugPrint(model.message.toString());
                                     debugPrint('2');
                                     model
                                         .copyAndShowNotification(model.message);
@@ -605,16 +608,17 @@ class MoveToExchangeScreen extends StatelessWidget {
                     controller: model.tec1,
                   ),
                   TextButton(
-                      onPressed: () => model.t1(), child: Text('Test Me')),
+                      onPressed: () => model.t1(),
+                      child: const Text('Test Me')),
                   Text(
                     model.oldIntOutputInBigInt.toString(),
-                    style: TextStyle(color: grey),
+                    style: const TextStyle(color: grey),
                   ),
                   Text(
                     model.oldBigIntOutputInInt.toString(),
-                    style: TextStyle(color: white),
+                    style: const TextStyle(color: white),
                   ),
-                  Text(
+                  const Text(
                     'New ',
                     style: TextStyle(color: white),
                   ),

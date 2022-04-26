@@ -31,8 +31,10 @@ class AnnouncementList extends StatelessWidget {
         },
         builder: (context, model, child) => Scaffold(
             appBar: AppBar(
-              title:
-                  Text(getlangGlobal() == "en" ? 'Announcement List' : "公告列表"),
+              title: Text(
+                getlangGlobal() == "en" ? 'Announcements' : "公告列表",
+                style: const TextStyle(fontSize: 14),
+              ),
               centerTitle: true,
             ),
             body: model.busy

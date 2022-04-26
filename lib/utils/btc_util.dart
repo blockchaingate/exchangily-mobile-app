@@ -16,7 +16,7 @@ import 'dart:convert';
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:http/src/response.dart';
+import 'package:http/http.dart';
 import '../environments/environment.dart';
 
 import 'package:convert/convert.dart';
@@ -46,7 +46,7 @@ class BtcUtils {
 
   // Get BtcUtxos
   Future getBtcUtxos(String address) async {
-    var url = btcBaseUrl + GetUtxosApiRoute + address;
+    var url = btcBaseUrl + getUtxosApiRoute + address;
     log.w(url);
     var json;
     try {
@@ -58,7 +58,7 @@ class BtcUtils {
 
   //  Post Tx
   Future postFabTx(String txHex) async {
-    var url = fabBaseUrl + PostRawTxApiRoute;
+    var url = fabBaseUrl + postRawTxApiRoute;
     var txHash = '';
     var errMsg = '';
     if (txHex != '') {
