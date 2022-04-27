@@ -66,7 +66,8 @@ class CreatePasswordViewModel extends BaseViewModel {
       passwordMatch = false;
       password = '';
       confirmPassword = '';
-      errorMessage = AppLocalizations.of(context).somethingWentWrong;
+      errorMessage = onError.toString();
+      //AppLocalizations.of(context).somethingWentWrong;
       log.e(onError);
       setBusy(false);
     });

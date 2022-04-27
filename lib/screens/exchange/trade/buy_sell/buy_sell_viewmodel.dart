@@ -49,7 +49,6 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
 // import 'package:web_socket_channel/io.dart';
 
-import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:convert/convert.dart';
 import 'package:hex/hex.dart';
 import 'dart:core';
@@ -148,7 +147,6 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -240,10 +238,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   Future getSingleCoinExchangeBalanceFromAll(
       String targetCoin, String baseCoin) async {
     log.e('In getSingleCoinExchangeBalanceFromAll');
-    // if (!isBusy) {
-    //   setBusyForObject(targetCoinExchangeBalance, true);
-    //   setBusyForObject(baseCoinExchangeBalance, true);
-    // }
+
     targetCoinExchangeBalance =
         await apiService.getSingleCoinExchangeBalance(targetCoin);
     log.i('targetCoin Balance using api ${targetCoinExchangeBalance.toJson()}');
@@ -285,8 +280,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       }
     }
     tradeService.setBalanceRefresh(false);
-    // setBusyForObject(targetCoinExchangeBalance, false);
-    // setBusyForObject(baseCoinExchangeBalance, false);
+    setBusy(false);
   }
 
   /*----------------------------------------------------------------------
@@ -301,14 +295,16 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   }
 
   fillPriceAndQuantityTextFields(p, q) {
-    setBusy(true);
+    // setBusyForObject(priceTextController, true);
+    // setBusyForObject(quantityTextController, true);
     priceTextController.text =
         p.toStringAsFixed(singlePairDecimalConfig.priceDecimal);
     price = p;
     quantityTextController.text =
         q.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
     quantity = q;
-    setBusy(false);
+    // setBusyForObject(priceTextController, false);
+    // setBusyForObject(quantityTextController, false);
   }
 
   /*----------------------------------------------------------------------
@@ -454,7 +450,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
     // if needed convert the output byte array into hex string.
     var output = hex.encode(outputHashData);
-    setBusy(false);
+    // setBusy(false);
     return output;
   }
 
@@ -610,6 +606,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
                     style: Theme.of(context).textTheme.headline6),
               ],
             ),
+            background: primaryColor,
             position: NotificationPosition.bottom,
           );
           // Future.delayed(new Duration(seconds: 2), () {
@@ -623,7 +620,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
               log.i('RES $res');
               String status = res['status'];
               if (status == '0x1') {
-                setBusy(true);
+                setBusyForObject(targetCoinExchangeBalance, true);
+                setBusyForObject(targetCoinExchangeBalance, true);
                 log.e('isReloadMyOrders $isReloadMyOrders -- isBusy $isBusy');
                 isReloadMyOrders = true;
                 getSingleCoinExchangeBalanceFromAll(
@@ -634,11 +632,13 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
                   log.e('isReloadMyOrders $isReloadMyOrders');
                   setBusy(false);
                 });
-                setBusy(false);
+                setBusyForObject(targetCoinExchangeBalance, false);
+                setBusyForObject(targetCoinExchangeBalance, false);
               }
               log.e('isReloadMyOrders $isReloadMyOrders');
-              log.i('timer cancelled');
+
               timer.cancel();
+              log.i('timer cancelled');
             }
           });
         } else {
@@ -726,7 +726,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   }
 
   sliderOnchange(double newValue) {
-    setBusy(true);
+    //setBusy(true);
     log.i('new slider value $newValue');
     sliderValue = newValue;
     //if (sliderValue == 100) sliderValue = sliderValue - 0.001;

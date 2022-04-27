@@ -457,6 +457,7 @@ Column buildVerticalOrderbookColumn(
   debugPrint('OrderArray $bidOrAsk length after ${orderArray.length}');
   return Column(
     children: <Widget>[
+      // can try to use listview builder here
       for (var order in orderArray)
         InkWell(
           onTap: () {
@@ -880,9 +881,7 @@ class BalanceRowWidget extends StatelessWidget {
             ? model.refreshBalanceAfterCancellingOrder()
             : Container(
                 child: model.bidOrAsk
-                    ?
-                    // ?  model.baseCoinExchangeBalance.unlockAmount == null?textDemoWidget():
-                    Text(
+                    ? Text(
                         NumberUtil()
                                 .truncateDoubleWithoutRouding(
                                     model

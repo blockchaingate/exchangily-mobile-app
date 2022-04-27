@@ -8,7 +8,6 @@ import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OrderBookView extends StatelessWidget {

@@ -72,7 +72,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             ? Center(
                                 child: Text(
                                 AppLocalizations.of(context).passwordMatched,
-                                style: TextStyle(color: white),
+                                style: const TextStyle(color: white),
                               ))
                             : model.password.isEmpty ||
                                     model.confirmPassword.isEmpty
@@ -81,7 +81,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                     child: Text(
                                         AppLocalizations.of(context)
                                             .passwordDoesNotMatched,
-                                        style: TextStyle(color: grey)))
+                                        style: const TextStyle(color: grey)))
                         : const Text(''),
                     UIHelper.verticalSpaceSmall,
                     Center(
@@ -146,16 +146,16 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         obscureText: true,
         maxLength: 32,
         style: model.checkPasswordConditions
-            ? TextStyle(color: primaryColor, fontSize: 16)
-            : TextStyle(color: grey, fontSize: 16),
+            ? const TextStyle(color: primaryColor, fontSize: 16)
+            : const TextStyle(color: grey, fontSize: 16),
         decoration: InputDecoration(
             suffixIcon:
                 model.checkPasswordConditions && model.password.isNotEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.only(right: 0),
-                        child: Icon(Icons.check, color: primaryColor))
-                    : Padding(
-                        padding: const EdgeInsets.only(right: 0),
+                    ? const Padding(
+                        padding: EdgeInsets.only(right: 0),
+                        child: const Icon(Icons.check, color: primaryColor))
+                    : const Padding(
+                        padding: EdgeInsets.only(right: 0),
                         child: Icon(Icons.clear, color: grey)),
             labelText: AppLocalizations.of(context).enterPassword,
             prefixIcon: const Icon(Icons.lock_outline, color: Colors.white),
@@ -178,18 +178,18 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         obscureText: true,
         maxLength: 32,
         style: model.checkConfirmPasswordConditions
-            ? TextStyle(color: primaryColor, fontSize: 16)
-            : TextStyle(color: grey, fontSize: 16),
+            ? const TextStyle(color: primaryColor, fontSize: 16)
+            : const TextStyle(color: grey, fontSize: 16),
         decoration: InputDecoration(
             hintStyle: const TextStyle(color: Colors.white),
             suffixIcon: model.checkConfirmPasswordConditions &&
                     model.confirmPassword.isNotEmpty
-                ? Padding(
-                    padding: const EdgeInsets.only(right: 0),
-                    child: Icon(Icons.check, color: primaryColor))
-                : Padding(
-                    padding: const EdgeInsets.only(right: 0),
-                    child: Icon(Icons.clear, color: grey)),
+                ? const Padding(
+                    padding: EdgeInsets.only(right: 0),
+                    child: const Icon(Icons.check, color: primaryColor))
+                : const Padding(
+                    padding: EdgeInsets.only(right: 0),
+                    child: const Icon(Icons.clear, color: grey)),
             labelText: AppLocalizations.of(context).confirmPassword,
             prefixIcon: const Icon(Icons.lock, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headline5,
@@ -205,8 +205,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   Widget _buildCreateNewWalletButton(
       CreatePasswordViewModel model, BuildContext context) {
     return ButtonTheme(
-      shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       minWidth: double.infinity,
       child: MaterialButton(
         padding: const EdgeInsets.all(15),

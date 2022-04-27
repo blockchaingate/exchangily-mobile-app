@@ -558,7 +558,11 @@ class WalletService {
     final childNode = accountNode.derive(0);
     final address = childNode.toCashAddress();
     // final address = cashAddress.split(":")[1];
-    await getBchAddressDetails(address);
+    try {
+      await getBchAddressDetails(address);
+    } catch (err) {
+      log.e('CATCH get bch address details $err');
+    }
 
     return address;
   }
@@ -1075,7 +1079,7 @@ class WalletService {
         var newBal = BigInt.parse(res['balance']['FAB']);
         gasAmount = string_utils.bigNum2Double(newBal);
       }
-    }).timeout(const Duration(seconds: 25), onTimeout: () {
+    }).timeout(const Duration(seconds: 50), onTimeout: () {
       log.e('Timeout');
       gasAmount = 0.0;
     }).catchError((onError) {

@@ -121,12 +121,16 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
         configService.getKanbanBaseUrl() + txStatusStatusRoute + '/$txHash';
     log.e('getTxStatus url $url');
     var res;
-    var response = await client.get(url);
-    if (response.body != null) {
-      res = jsonDecode(response.body);
-      // json['message'] != null
+    try {
+      var response = await client.get(url);
+      if (response.body != null) {
+        res = jsonDecode(response.body);
+        // json['message'] != null
 
-      log.w('getTxStatus json $res}');
+        log.w('getTxStatus json $res}');
+      }
+    } catch (err) {
+      log.e('getTxStatus func: Catch err $err');
     }
     return res;
   }
