@@ -42,12 +42,18 @@ class CreatePasswordViewModel extends BaseViewModel {
       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[`~!@#\$%\^&*\(\)-_\+\=\{\[\}\]]).{8,}$';
 
   FocusNode passFocus = FocusNode();
+  FocusNode confirmPassFocus = FocusNode();
   TextEditingController passTextController = TextEditingController();
   TextEditingController confirmPassTextController = TextEditingController();
   WalletService walletService = locator<WalletService>();
   final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+  bool isShowPassword = false;
 
-  //                Create Offline Wallets
+  togglePassword() {
+    setBusyForObject(isShowPassword, true);
+    isShowPassword = !isShowPassword;
+    setBusyForObject(isShowPassword, false);
+  }
 
   Future createOfflineWallets() async {
     setBusy(true);

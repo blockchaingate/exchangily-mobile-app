@@ -150,12 +150,10 @@ class RedepositViewModel extends FutureViewModel {
     }
 
     if (errDepositItem == null) {
-      sharedService.showInfoFlushbar(
-          AppLocalizations.of(context).redepositError,
-          AppLocalizations.of(context).redepositItemNotSelected,
-          Icons.cancel,
-          red,
-          context);
+      sharedService.sharedSimpleNotification(
+        AppLocalizations.of(context).redepositError,
+        subtitle: AppLocalizations.of(context).redepositItemNotSelected,
+      );
     }
     log.w('errDepositItem $errDepositItem');
     // var errDepositAmount = double.parse(errDepositItem['amount']);
@@ -236,12 +234,10 @@ class RedepositViewModel extends FutureViewModel {
           resRedeposit['message'] != '') {
         errorMessage = resRedeposit['message'];
       } else {
-        sharedService.showInfoFlushbar(
-            AppLocalizations.of(context).redepositFailedError,
-            AppLocalizations.of(context).networkIssue,
-            Icons.cancel,
-            red,
-            context);
+        sharedService.sharedSimpleNotification(
+          AppLocalizations.of(context).redepositFailedError,
+          subtitle: AppLocalizations.of(context).networkIssue,
+        );
       }
       //  } // other coins redeposit else ends
     } else {
@@ -303,12 +299,10 @@ class RedepositViewModel extends FutureViewModel {
   }
 
   showNotification(context) {
-    sharedService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        red,
-        context);
+    sharedService.sharedSimpleNotification(
+      AppLocalizations.of(context).passwordMismatch,
+      subtitle: AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+    );
   }
 
   updateTransFee() async {

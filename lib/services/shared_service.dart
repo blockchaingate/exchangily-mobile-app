@@ -26,7 +26,7 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
-import 'package:flushbar/flushbar.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -84,12 +84,10 @@ class SharedService {
 ----------------------------------------------------------------------*/
 
   inCorrectpasswordNotification(context) {
-    showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        red,
-        context);
+    sharedSimpleNotification(
+      AppLocalizations.of(context).passwordMismatch,
+      subtitle: AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+    );
   }
 
 /*--------------------------------------------------------------------------
@@ -611,22 +609,22 @@ class SharedService {
                 Flushbar Notification bar
     -------------------------------------------------- */
 
-  void showInfoFlushbar(String title, String message, IconData iconData,
-      Color leftBarColor, BuildContext context) {
-    Flushbar(
-      backgroundColor: globals.primaryColor,
-      titleText: Text(title, style: Theme.of(context).textTheme.headline5),
-      messageText: Text(message, style: Theme.of(context).textTheme.headline6),
-      // icon: Icon(
-      //   iconData,
-      //   size: 24,
-      //   color: globals.primaryColor,
-      // ),
-      // leftBarIndicatorColor: leftBarColor,
-      duration: const Duration(seconds: 5),
-      isDismissible: true,
-    ).show(context);
-  }
+  // void showInfoFlushbar(String title, String message, IconData iconData,
+  //     Color leftBarColor, BuildContext context) {
+  //   Flushbar(
+  //     backgroundColor: globals.primaryColor,
+  //     titleText: Text(title, style: Theme.of(context).textTheme.headline5),
+  //     messageText: Text(message, style: Theme.of(context).textTheme.headline6),
+  //     // icon: Icon(
+  //     //   iconData,
+  //     //   size: 24,
+  //     //   color: globals.primaryColor,
+  //     // ),
+  //     // leftBarIndicatorColor: leftBarColor,
+  //     duration: const Duration(seconds: 5),
+  //     isDismissible: true,
+  //   ).show(context);
+  // }
 
 /* ---------------------------------------------------
                 Copy Address
@@ -634,17 +632,8 @@ class SharedService {
 
   copyAddress(context, text) {
     Clipboard.setData(ClipboardData(text: text));
-    Flushbar(
-      backgroundColor: globals.secondaryColor.withOpacity(0.75),
-      message: AppLocalizations.of(context).addressCopied,
-      icon: Icon(
-        Icons.done,
-        size: 24,
-        color: globals.primaryColor,
-      ),
-      leftBarIndicatorColor: globals.green,
-      duration: const Duration(seconds: 4),
-    ).show(context);
+    sharedSimpleNotification(AppLocalizations.of(context).addressCopied,
+        isError: false);
   }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------

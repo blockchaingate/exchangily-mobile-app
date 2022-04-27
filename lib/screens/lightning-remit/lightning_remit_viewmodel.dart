@@ -665,12 +665,11 @@ class LightningRemitViewmodel extends FutureViewModel {
           setBusy(false);
         } else {
           log.e('Wrong pass');
-          sharedService.showInfoFlushbar(
-              AppLocalizations.of(context).notice,
-              AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-              Icons.cancel,
-              red,
-              context);
+          sharedService.sharedSimpleNotification(
+            AppLocalizations.of(context).notice,
+            subtitle:
+                AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+          );
           setBusy(false);
         }
       }).catchError((error) {

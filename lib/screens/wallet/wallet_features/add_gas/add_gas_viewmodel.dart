@@ -7,7 +7,6 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -134,12 +133,10 @@ class AddGasViewModel extends FutureViewModel {
   checkPass(double amount, context) async {
     setBusy(true);
     if (isAmountInvalid) {
-      sharedService.showInfoFlushbar(
-          AppLocalizations.of(context).notice,
-          "FAB ${AppLocalizations.of(context).insufficientBalance}",
-          Icons.cancel,
-          red,
-          context);
+      sharedService.sharedSimpleNotification(
+        AppLocalizations.of(context).notice,
+        subtitle: "FAB ${AppLocalizations.of(context).insufficientBalance}",
+      );
       return;
     }
     var gasPrice = int.tryParse(gasPriceTextController.text);
@@ -262,11 +259,9 @@ class AddGasViewModel extends FutureViewModel {
   }
 
   wrongPasswordNotification(context) {
-    sharedService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        red,
-        context);
+    sharedService.sharedSimpleNotification(
+      AppLocalizations.of(context).passwordMismatch,
+      subtitle: AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+    );
   }
 }
