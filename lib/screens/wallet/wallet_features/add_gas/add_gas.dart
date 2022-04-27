@@ -283,14 +283,12 @@ class AddGas extends StatelessWidget {
                               model.amountController.text == '' ||
                                       amount == null
                                   ? model.sharedService
-                                      .showInfoFlushbar(
-                                          AppLocalizations.of(context)
-                                              .invalidAmount,
-                                          AppLocalizations.of(context)
-                                              .pleaseEnterValidNumber,
-                                          Icons.cancel,
-                                          red,
-                                          context)
+                                      .sharedSimpleNotification(
+                                      AppLocalizations.of(context)
+                                          .invalidAmount,
+                                      subtitle: AppLocalizations.of(context)
+                                          .pleaseEnterValidNumber,
+                                    )
                                   : model.checkPass(amount, context);
                               //   debugPrint(res);
                             },

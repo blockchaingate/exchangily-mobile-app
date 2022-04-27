@@ -118,22 +118,19 @@ class CampaignLoginScreenState extends BaseState {
                   if (message != '' && message != null) {
                     log.e('reset pass message $message');
 
-                    sharedService.showInfoFlushbar(
-                        AppLocalizations.of(context).passwordResetError,
-                        AppLocalizations.of(context).pleaseEnterTheCorrectEmail,
-                        Icons.cancel,
-                        globals.red,
-                        context);
+                    sharedService.sharedSimpleNotification(
+                      AppLocalizations.of(context).passwordResetError,
+                      subtitle: AppLocalizations.of(context)
+                          .pleaseEnterTheCorrectEmail,
+                    );
                   } else {
                     log.w('reset password success $res');
 
-                    sharedService.showInfoFlushbar(
+                    sharedService.sharedSimpleNotification(
                         AppLocalizations.of(context).passwordReset,
-                        AppLocalizations.of(context)
+                        subtitle: AppLocalizations.of(context)
                             .resetPasswordEmailInstruction,
-                        Icons.check,
-                        globals.green,
-                        context);
+                        isError: false);
                   }
                 }
               }).catchError((err) => log.e('reset password $err'));

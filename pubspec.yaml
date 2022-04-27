@@ -97,10 +97,10 @@ dependencies:
 
   # Flushbar instead of Snackbar for notifications
   #flushbar: ^1.9.0
-  flushbar:
-    git:
-      url: git://github.com/valterh4ck3r/flushbar
-      ref: master
+  # flushbar:
+  #   git:
+  #     url: git://github.com/valterh4ck3r/flushbar
+  #     ref: master
 
   # decimal
   decimal: ^2.2.0
