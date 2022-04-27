@@ -209,7 +209,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
               children: [
                 Padding(
                     padding: const EdgeInsets.only(right: 0),
-                    child: model.checkPasswordConditions &&
+                    child: model.checkConfirmPasswordConditions &&
                             model.password.isNotEmpty
                         ? const Icon(Icons.check, color: primaryColor)
                         : const Icon(Icons.clear, color: grey)),
