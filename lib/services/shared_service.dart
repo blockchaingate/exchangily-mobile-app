@@ -206,7 +206,7 @@ class SharedService {
       Get EXG Official address
 --------------------------------------------------- */
 
-  String getEXGOfficialAddress() {
+  String getExgOfficialAddress() {
     return environment['addresses']['exchangilyOfficial'][0]['address'];
   }
 

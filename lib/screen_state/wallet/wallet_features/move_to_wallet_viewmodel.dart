@@ -942,7 +942,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
   getFabChainBalance(String tickerName) async {
     setBusy(true);
-    var address = sharedService.getEXGOfficialAddress();
+    var address = sharedService.getExgOfficialAddress();
 
     String smartContractAddress;
     await coinService
