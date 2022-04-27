@@ -804,10 +804,12 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                       padding:
                                                           EdgeInsetsDirectional
                                                               .zero,
-                                                      onPressed: () {
+                                                      onPressed: () async {
                                                         var wi = WalletInfo(
-                                                            address: customToken
-                                                                .owner);
+                                                            address: await model
+                                                                .coreWalletDatabaseService
+                                                                .getWalletAddressByTickerName(
+                                                                    'FAB'));
                                                         model.navigationService
                                                             .navigateTo(
                                                                 ReceiveViewRoute,
