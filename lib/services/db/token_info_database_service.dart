@@ -38,7 +38,6 @@ class TokenInfoDatabaseService {
   String path = '';
 
   Future<Database> initDb() async {
-    //  deleteDb();
     if (_database != null) return _database;
     var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);

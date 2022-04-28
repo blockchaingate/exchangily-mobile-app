@@ -788,7 +788,16 @@ class WalletService {
               'createOfflineWalletsV1 walletCoreModel -- before inserting in the core wallet DB ${walletCoreModel.toJson()}');
 
           // store in single core database
-          await coreWalletDatabaseService.insert(walletCoreModel);
+          try {
+            await coreWalletDatabaseService.insert(walletCoreModel);
+          } catch (err) {
+            log.e('WALLET data insertion failed in corewalletDB');
+          } finally {
+            log.w(
+                'finally: deleting corewalletdb and trying to insert data once more');
+            await coreWalletDatabaseService.deleteDb();
+            await coreWalletDatabaseService.insert(walletCoreModel);
+          }
         }
       }
       return walletCoreModel;

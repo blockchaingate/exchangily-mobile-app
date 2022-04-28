@@ -195,7 +195,7 @@ class _DialogManagerState extends State<DialogManager> {
           children: <Widget>[
             TextField(
               autofocus: true,
-              style: TextStyle(color: white),
+              style: const TextStyle(color: white),
               controller: controller,
               obscureText: true,
               decoration: InputDecoration(
@@ -203,7 +203,7 @@ class _DialogManagerState extends State<DialogManager> {
                     .textTheme
                     .bodyText1
                     .copyWith(color: white),
-                icon: Icon(
+                icon: const Icon(
                   Icons.security,
                   color: primaryColor,
                 ),
@@ -240,9 +240,6 @@ class _DialogManagerState extends State<DialogManager> {
                 try {
                   var coreWalletDatabaseService =
                       locator<CoreWalletDatabaseService>();
-                  // todo: just check using new format first
-                  // todo:  then check with old format if new format
-                  /// todo: decryption is not available
 
                   encryptedMnemonic =
                       await coreWalletDatabaseService.getEncryptedMnemonic();

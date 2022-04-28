@@ -35,16 +35,6 @@ class CoreWalletDatabaseService {
   String path = '';
 
   Future<Database> initDb() async {
-    // try {
-    //   await _database.then((res) {
-    //     debugPrint(res.isOpen);
-    //     debugPrint(res);
-    //   });
-    //   return _database;
-    // } catch (err) {
-    //   log.e('initDb - corrupted db - deleting ');
-    //   await deleteDb();
-    // }
     if (_database != null) {
       log.i('init db -- ${_database.toString()}');
 
@@ -104,32 +94,20 @@ class CoreWalletDatabaseService {
 
 // Insert Data In The Database
   Future insert(CoreWalletModel walletCoreModel) async {
+    await initDb();
     final Database db = await _database;
-    // log.i('wallet core model ${walletCoreModel.toJson()}');
-    // if (walletCoreModel.mnemonic == null) {
-    //   walletCoreModel = CoreWalletModel(
-    //       id: 1,
-    //       mnemonic:
-    //           "sHHa+qlwgrFO4NsqOwAdnH7hawy5USQ/eC1kQOe/A1v/ywBCCfCr/f+1fXDMjO165GBxGTyWNrznLkdSN+j6QOib1eGfPK26B89sgbcdTK8=",
-    //       walletBalancesBody:
-    //           '{"btcAddress":"1QCm73M8DS2gzdMvypJDFc9zbtnSCmESZR","ethAddress":"0xe0dc9ba67a0d96f77a3242ef70fc8a51d444764c","fabAddress":"16RWDm7PvEog5j3T8i7eqGDPWZTLqaKuH2","ltcAddress":"LccFvYsqZ1P2Uh5eEXuDDb9zwruhb1vA7c","dogeAddress":"DABE1hjVrBNtwCz4TvdAirbSpPUACErPWs","bchAddress":"bitcoincash:qzv5jpn64yvzfef4w33pshf80tgapnxa9yep3qvvu8","trxAddress":"TW1LXBhCsCfKsqmxxj6qeFoKVMDDWbqcwz","showEXGAssets":"true"}');
-    // }
+    try {
+      int id = await db.insert(tableName, walletCoreModel.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
 
-    var dataToInsert = walletCoreModel.toJson();
-    // log.w('dataToInsert $dataToInsert');
-    await db
-        .insert
-        //  'INSERT INTO $tableName($columnId, $columnMnemonic, $columnWalletBalancesBody) VALUES(1, "1234", "456.789")')
-
-        (tableName, dataToInsert, conflictAlgorithm: ConflictAlgorithm.replace)
-        .then((resId) {
-      log.w('core wallet inserted Id $resId');
-    }).catchError((err) async {
+      log.w('core wallet inserted Id $id');
+      return id;
+    } catch (err) {
       log.e('Insert failed -Catch $err');
       await deleteDb();
       await initDb();
       await insert(walletCoreModel);
-    });
+    }
   }
 
   // Get encrypted mnemonic

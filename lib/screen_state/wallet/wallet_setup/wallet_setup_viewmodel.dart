@@ -98,8 +98,7 @@ class WalletSetupViewmodel extends BaseViewModel {
           .showVerifyDialog(
               title: AppLocalizations.of(context).existingWalletFound,
               secondaryButton: AppLocalizations.of(context).restore,
-              description:
-                  '${AppLocalizations.of(context).askWalletRestore} + ?',
+              description: '${AppLocalizations.of(context).askWalletRestore}?',
               buttonTitle: AppLocalizations.of(context)
                   .importWallet) // want to ask whether i should show Delete & Import
           .then((res) async {
@@ -159,7 +158,6 @@ class WalletSetupViewmodel extends BaseViewModel {
   }
 
   verifyWallet() async {
-    storageService.hasWalletVerified = true;
     var res = await dialogService.showVerifyDialog(
         title: AppLocalizations.of(context).walletUpdateNoticeTitle,
         secondaryButton: AppLocalizations.of(context).cancel,
@@ -179,6 +177,7 @@ class WalletSetupViewmodel extends BaseViewModel {
       if (res.confirmed) {
         var walletVerificationRes =
             await walletService.verifyWalletAddresses(res.returnedText);
+        storageService.hasWalletVerified = true;
         isWalletVerifySuccess = walletVerificationRes['fabAddressCheck'] &&
             walletVerificationRes['trxAddressCheck'];
         isHideIcon = false;
