@@ -1352,12 +1352,10 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
   showNotification(context) {
     setBusy(true);
-    sharedService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        red,
-        context);
+    sharedService.sharedSimpleNotification(
+      AppLocalizations.of(context).passwordMismatch,
+      subtitle: AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+    );
     setBusy(false);
   }
 

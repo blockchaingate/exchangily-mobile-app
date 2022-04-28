@@ -456,12 +456,11 @@ class CampaignPaymentScreenState extends BaseState {
                 Navigator.of(context, rootNavigator: true).pop();
                 updateOrderDescriptionController.text = '';
                 await getCampaignOrdeList();
-                sharedService.showInfoFlushbar(
+                sharedService.sharedSimpleNotification(
                     AppLocalizations.of(context).updateStatus,
-                    AppLocalizations.of(context).orderUpdateNotification,
-                    Icons.check,
-                    globals.green,
-                    context);
+                    subtitle:
+                        AppLocalizations.of(context).orderUpdateNotification,
+                    isError: false);
                 FocusScope.of(context).requestFocus(FocusNode());
                 setBusy(false);
               }
@@ -491,12 +490,11 @@ class CampaignPaymentScreenState extends BaseState {
               updateOrderDescriptionController.text = '';
               await getCampaignOrdeList();
               FocusScope.of(context).requestFocus(FocusNode());
-              sharedService.showInfoFlushbar(
+              sharedService.sharedSimpleNotification(
                   AppLocalizations.of(context).updateStatus,
-                  AppLocalizations.of(context).orderCancelledNotification,
-                  Icons.check,
-                  globals.green,
-                  context);
+                  subtitle:
+                      AppLocalizations.of(context).orderCancelledNotification,
+                  isError: false);
             },
             child: Text(
               AppLocalizations.of(context).cancelOrder,

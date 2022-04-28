@@ -1550,12 +1550,14 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     walletBalancesApiRes =
         await apiService.getWalletBalance(jsonDecode(finalWbb));
-    log.w('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
+    if (walletBalancesApiRes != null)
+      log.w('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
     for (var coinToHideTicker in coinsToHideList) {
       walletBalancesApiRes
           .removeWhere((element) => element.coin == coinToHideTicker);
     }
-    log.i('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
+    if (walletBalancesApiRes != null)
+      log.i('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
     wallets = walletBalancesApiRes;
     walletsCopy = wallets;
 

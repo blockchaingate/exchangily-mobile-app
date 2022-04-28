@@ -328,12 +328,10 @@ class _SmartContractState extends State<SmartContract> {
   }
 
   showNotification(context) {
-    sharedService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        globals.red,
-        context);
+    sharedService.sharedSimpleNotification(
+      AppLocalizations.of(context).passwordMismatch,
+      subtitle: AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+    );
   }
 
   execContract() async {
