@@ -65,7 +65,7 @@ class SendViewModel extends BaseViewModel {
   String errorMessage = '';
 
   String toAddress;
-  double amount = 0;
+  Decimal amount = Decimal.zero;
   int gasPrice = 0;
   int gasLimit = 0;
   int satoshisPerBytes = 0;
@@ -80,7 +80,7 @@ class SendViewModel extends BaseViewModel {
   final gasPriceTextController = TextEditingController();
   final gasLimitTextController = TextEditingController();
   final satoshisPerByteTextController = TextEditingController();
-  double transFee = 0.0;
+  Decimal transFee = Decimal.zero;
   bool transFeeAdvance = false;
   String feeUnit = '';
   String tickerName = '';
@@ -98,7 +98,7 @@ class SendViewModel extends BaseViewModel {
   double chainBalance = 0.0;
   bool isCustomToken = false;
   CustomTokenModel customToken = CustomTokenModel();
-
+  var decimalZero = Decimal.zero;
   // Init State
   initState() async {
     setBusy(true);
@@ -218,7 +218,10 @@ class SendViewModel extends BaseViewModel {
   }
 
   test() {
-    String value = '123456789123456789.123456789123456789';
+    String value = '123456789123456789123456789.123456789123456789123';
+    var tt = NumberUtil.truncateDecimal(Decimal.parse(value),
+        decimalPrecision: 21); // breaks at 21
+    log.w('truncate decimal $tt');
     // var o = NumberUtil.toBigInt(value);
     // log.w('old $o');
     var x = NumberUtil.decimalToRaw(value);
@@ -241,40 +244,40 @@ class SendViewModel extends BaseViewModel {
                   Amount After fee
 ----------------------------------------------------*/
 
-  Future<double> amountAfterFee({bool isMaxAmount = false}) async {
+  Future<Decimal> amountAfterFee({bool isMaxAmount = false}) async {
     setBusy(true);
 
     if (amountController.text.isEmpty) {
-      transFee = 0.0;
+      transFee = decimalZero;
       setBusy(false);
-      return 0.0;
+      return decimalZero;
     }
 
     if (amountController.text.startsWith('.')) {
-      transFee = 0.0;
+      transFee = decimalZero;
       setBusy(false);
-      return 0.0;
+      return decimalZero;
     }
 
-    amount = Decimal.parse(amountController.text).toDouble();
+    amount = Decimal.parse(amountController.text);
     //  NumberUtil.rawToDecimal(amountController.text).toDouble();
     // amount = NumberUtil().truncateDoubleWithoutRouding(
     //     double.parse(amountController.text),
     //     precision: decimalLimit);
 
-    double finalAmount = 0.0;
+    Decimal finalAmount = Decimal.zero;
     // update if transfee is 0
     if (!walletService.isTrx(walletInfo.tickerName)) await updateTransFee();
     // if tron coins then assign fee accordingly
     if (walletService.isTrx(walletInfo.tickerName)) {
       if (walletInfo.tickerName == 'USDTX') {
-        transFee = 15;
+        transFee = 15.toDecimal();
         finalAmount = amount;
       } else if (walletInfo.tickerName == 'TRX') {
-        transFee = 1.0;
+        transFee = Decimal.one;
         finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
       }
-      finalAmount <= walletInfo.availableBalance
+      finalAmount <= Decimal.parse(walletInfo.availableBalance.toString())
           ? isValidAmount = true
           : isValidAmount = false;
     } else {
@@ -291,15 +294,16 @@ class SendViewModel extends BaseViewModel {
         finalAmount = amount;
       }
 
-      finalAmount <= walletInfo.availableBalance
+      finalAmount <= Decimal.parse(walletInfo.availableBalance.toString())
           ? isValidAmount = true
           : isValidAmount = false;
     }
     log.i(
         'Func:amountAfterFee --  entered amount $amount + transaction fee $transFee = finalAmount $finalAmount after fee --  wallet bal ${walletInfo.availableBalance} -- isValidAmount $isValidAmount');
     setBusy(false);
-    return NumberUtil()
-        .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit);
+    return NumberUtil.decimalLimiter(finalAmount.toString(),
+            decimalPrecision: decimalLimit)
+        .decimalOutput;
   }
 
 /*---------------------------------------------------
@@ -308,17 +312,17 @@ class SendViewModel extends BaseViewModel {
   fillMaxAmount() async {
     setBusy(true);
 
-    amount = walletInfo.availableBalance;
+    amount = Decimal.parse(walletInfo.availableBalance.toString());
     amountController.text = amount.toString();
 
     await updateTransFee();
-    double finalAmount = 0.0;
+    Decimal finalAmount = decimalZero;
 
     finalAmount = await amountAfterFee(isMaxAmount: true);
-    if (transFee != 0.0) {
-      amountController.text = NumberUtil()
-          .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)
-          .toString();
+    if (transFee != decimalZero) {
+      amountController.text = NumberUtil.decimalLimiter(finalAmount.toString(),
+              decimalPrecision: decimalLimit)
+          .stringOutput;
     } else {
       sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).insufficientGasAmount);
@@ -434,7 +438,7 @@ class SendViewModel extends BaseViewModel {
                 privateKey: privateKey,
                 fromAddr: walletInfo.address,
                 toAddr: toAddress,
-                amount: amount,
+                amount: amount.toDouble(),
                 isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
                 tickerName: walletInfo.tickerName,
                 isBroadcast: true)
@@ -456,7 +460,7 @@ class SendViewModel extends BaseViewModel {
               '$t ${AppLocalizations.of(context).isOnItsWay}',
             );
             // add tx to db
-            addSendTransactionToDB(walletInfo, amount, txHash);
+            addSendTransactionToDB(walletInfo, amount.toDouble(), txHash);
             Future.delayed(const Duration(milliseconds: 3), () {
               if (!isCustomToken) refreshBalance();
             });
@@ -492,7 +496,7 @@ class SendViewModel extends BaseViewModel {
       } else {
         // Other coins transaction
         await walletService
-            .sendTransaction(
+            .sendTransactionV2(
                 tickerName, seed, [0], [], toAddress, amount, options, true)
             .then((res) async {
           log.w('Result $res');
@@ -512,7 +516,7 @@ class SendViewModel extends BaseViewModel {
             //   var allTxids = res["txids"];
             //  walletService.addTxids(allTxids);
             // add tx to db
-            addSendTransactionToDB(walletInfo, amount, txHash);
+            addSendTransactionToDB(walletInfo, amount.toDouble(), txHash);
             Future.delayed(const Duration(milliseconds: 30), () {
               if (!isCustomToken) refreshBalance();
             });
@@ -568,7 +572,7 @@ class SendViewModel extends BaseViewModel {
       return errorMessage =
           AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
     }
-    transFee = 0.0;
+    transFee = decimalZero;
     setBusy(false);
   }
 
@@ -699,7 +703,7 @@ class SendViewModel extends BaseViewModel {
         // tickerName == 'BTC'
         ) {
       await walletService
-          .hasSufficientWalletBalance(transFee, tokenType)
+          .hasSufficientWalletBalance(transFee.toDouble(), tokenType)
           .then((isValidNativeChainBal) {
         if (!isValidNativeChainBal) {
           log.e('not enough $tokenType balance to make tx');
@@ -717,7 +721,7 @@ class SendViewModel extends BaseViewModel {
       });
     }
 
-    if (transFee == 0.0 && !isTrx()) {
+    if (transFee == decimalZero && !isTrx()) {
       log.e('transfee $transFee not enough $tokenType balance to make tx');
       var coin =
           tokenType.isEmpty ? walletInfo.tickerName : walletInfo.tokenType;
@@ -769,7 +773,7 @@ class SendViewModel extends BaseViewModel {
         log.i('checkAmount ${walletInfo.tickerName}');
 
         await updateTransFee();
-        double totalAmount = 0.0;
+        Decimal totalAmount = decimalZero;
         // if token is empty then fee will use native coin so add amount and transfee
         if (tokenType.isEmpty) {
           totalAmount = amount + transFee;
@@ -778,13 +782,16 @@ class SendViewModel extends BaseViewModel {
           totalAmount = amount;
         }
         log.w('wallet bal ${walletInfo.availableBalance}');
-        if (totalAmount <= walletInfo.availableBalance && transFee != 0.0) {
+        if (totalAmount <=
+                Decimal.parse(walletInfo.availableBalance.toString()) &&
+            transFee != decimalZero) {
           checkSendAmount = true;
         } else {
           checkSendAmount = false;
         }
       } else if (walletInfo.tickerName == 'TRX') {
-        if (amount + 1 <= walletInfo.availableBalance) {
+        if (amount + Decimal.one <=
+            Decimal.parse(walletInfo.availableBalance.toString())) {
           checkSendAmount = true;
         } else {
           checkSendAmount = false;
@@ -794,7 +801,8 @@ class SendViewModel extends BaseViewModel {
 
         trxBalance = await getTrxBalance();
         log.w('checkAmount trx bal $trxBalance');
-        if (amount <= walletInfo.availableBalance && trxBalance >= 15) {
+        if (amount <= Decimal.parse(walletInfo.availableBalance.toString()) &&
+            trxBalance >= 15) {
           checkSendAmount = true;
         } else {
           checkSendAmount = false;
@@ -867,8 +875,8 @@ class SendViewModel extends BaseViewModel {
         tokenType: walletInfo.tokenType.toUpperCase());
     //amount = double.tryParse(amountController.text);
 
-    if (to == null || amount == null || amount <= 0) {
-      transFee = 0.0;
+    if (to == null || amount == null || amount <= decimalZero) {
+      transFee = decimalZero;
       setBusy(false);
       return;
     }
@@ -901,13 +909,13 @@ class SendViewModel extends BaseViewModel {
             [0],
             [address],
             to,
-            Decimal.parse(amount.toString()),
+            amount,
             options,
             false)
         .then((ret) {
       if (ret != null && ret['transFee'] != null) {
         log.w('trans fee res $ret');
-        transFee = ret['transFee'];
+        transFee = Decimal.parse(ret['transFee'].toString());
         // ! check if update fee return err message
         // * if true then assign the err message to the local var and display it in the
         if (ret['errMsg'].toString().isNotEmpty) {

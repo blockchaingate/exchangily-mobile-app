@@ -1031,7 +1031,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                           : NumberUtil()
                                               .truncateDoubleWithoutRouding(
                                                   model.wallets[index].balance,
-                                                  precision: 6)
+                                                  decimalPrecision: 6)
                                               .toString(),
                                       style: Theme.of(context)
                                           .textTheme
@@ -1070,7 +1070,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                               .truncateDoubleWithoutRouding(
                                                   model.wallets[index]
                                                       .lockBalance,
-                                                  precision: 6)
+                                                  decimalPrecision: 6)
                                               .toString(),
                                       style: Theme.of(context)
                                           .textTheme
@@ -1112,7 +1112,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                               .truncateDoubleWithoutRouding(
                                                   wallets[index]
                                                       .unlockedExchangeBalance,
-                                                  precision: 6)
+                                                  decimalPrecision: 6)
                                               .toString(),
                                       style: Theme.of(context)
                                           .textTheme
@@ -1147,7 +1147,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                               ? model.wallets[index].balance
                                               : 0.0) *
                                           model.wallets[index].usdValue.usd,
-                                      precision: 2)
+                                      decimalPrecision: 2)
                                   .toString(),
                               style: TextStyle(color: green),
                             ),
@@ -1353,7 +1353,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                                   .favWallets[
                                                                       index]
                                                                   .balance,
-                                                              precision: 6)
+                                                              decimalPrecision:
+                                                                  6)
                                                           .toString(),
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -1390,7 +1391,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                                   .favWallets[
                                                                       index]
                                                                   .lockBalance,
-                                                              precision: 6)
+                                                              decimalPrecision:
+                                                                  6)
                                                           .toString(),
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -1420,7 +1422,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                           model
                                                               .favWallets[index]
                                                               .unlockedExchangeBalance,
-                                                          precision: 6)
+                                                          decimalPrecision: 6)
                                                       .toString(),
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -1446,7 +1448,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                               style: TextStyle(color: green)),
                                           Expanded(
                                             child: Text(
-                                                '${NumberUtil().truncateDoubleWithoutRouding(model.favWallets[index].balance * model.favWallets[index].usdValue.usd, precision: 2).toString()} USD',
+                                                '${NumberUtil().truncateDoubleWithoutRouding(model.favWallets[index].balance * model.favWallets[index].usdValue.usd, decimalPrecision: 2).toString()} USD',
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(color: green)),
                                           ),

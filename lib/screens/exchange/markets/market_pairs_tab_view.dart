@@ -82,7 +82,7 @@ class MarketPairsTabView extends StatelessWidget {
                                                 NumberUtil()
                                                     .truncateDoubleWithoutRouding(
                                                         pair.price,
-                                                        precision: 2)
+                                                        decimalPrecision: 2)
                                                     .toString(),
                                                 style: const TextStyle(
                                                   color: Colors.white,

@@ -256,7 +256,7 @@ class OrderDetailsView extends StatelessWidget {
                       NumberUtil()
                           .truncateDoubleWithoutRouding(
                             orders[index].quantity,
-                            precision: decimalConfig.qtyDecimal,
+                            decimalPrecision: decimalConfig.qtyDecimal,
                           )
                           .toString(),
                       TextAlign.start,
@@ -281,7 +281,7 @@ class OrderDetailsView extends StatelessWidget {
                       NumberUtil()
                           .truncateDoubleWithoutRouding(
                             orders[index].quantity,
-                            precision: decimalConfig.qtyDecimal,
+                            decimalPrecision: decimalConfig.qtyDecimal,
                           )
                           .toString(),
                       TextAlign.end,

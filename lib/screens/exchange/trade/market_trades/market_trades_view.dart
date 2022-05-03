@@ -70,7 +70,8 @@ class MarketTradesView extends StatelessWidget {
                                   NumberUtil()
                                       .truncateDoubleWithoutRouding(
                                           marketTrades[index].price,
-                                          precision: decimalConfig.qtyDecimal)
+                                          decimalPrecision:
+                                              decimalConfig.qtyDecimal)
                                       .toString(),
                                   textAlign: TextAlign.right,
                                   style:
@@ -82,7 +83,8 @@ class MarketTradesView extends StatelessWidget {
                                   NumberUtil()
                                       .truncateDoubleWithoutRouding(
                                           marketTrades[index].quantity,
-                                          precision: decimalConfig.qtyDecimal)
+                                          decimalPrecision:
+                                              decimalConfig.qtyDecimal)
                                       .toString(),
                                   textAlign: TextAlign.right,
                                   style:

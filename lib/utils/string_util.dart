@@ -171,7 +171,7 @@ bigNum2Double(bigNum) {
       Decimal.parse(bigNum.toString()) / Decimal.parse('1000000000000000000');
   if (dec.toDouble() > 999999) {
     return double.parse(NumberUtil()
-        .truncateDoubleWithoutRouding(dec.toDouble(), precision: 8)
+        .truncateDoubleWithoutRouding(dec.toDouble(), decimalPrecision: 8)
         .toString());
   }
   var str = dec.toString();

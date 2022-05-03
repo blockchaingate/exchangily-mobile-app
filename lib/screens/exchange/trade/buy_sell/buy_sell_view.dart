@@ -495,7 +495,7 @@ Column buildVerticalOrderbookColumn(
                       child: Text(
                           NumberUtil()
                               .truncateDoubleWithoutRouding(order.quantity,
-                                  precision:
+                                  decimalPrecision:
                                       model.singlePairDecimalConfig.qtyDecimal)
                               .toString(),
                           style: const TextStyle(
@@ -636,7 +636,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
         Slider(
           divisions: 100,
           label:
-              '${NumberUtil().truncateDoubleWithoutRouding(model.sliderValue, precision: 2).toString()}%',
+              '${NumberUtil().truncateDoubleWithoutRouding(model.sliderValue, decimalPrecision: 2).toString()}%',
           activeColor: primaryColor,
           min: 0.0,
           max: 100.0,
@@ -664,7 +664,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                       NumberUtil()
                               .truncateDoubleWithoutRouding(
                                   model.transactionAmount,
-                                  precision:
+                                  decimalPrecision:
                                       model.singlePairDecimalConfig.qtyDecimal)
                               .toString() +
                           " " +
@@ -676,7 +676,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                       NumberUtil()
                               .truncateDoubleWithoutRouding(
                                   model.transactionAmount,
-                                  precision:
+                                  decimalPrecision:
                                       model.singlePairDecimalConfig.qtyDecimal)
                               .toString() +
                           " " +
@@ -711,7 +711,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
               child: Text(
                 NumberUtil()
                     .truncateDoubleWithoutRouding(model.kanbanTransFee,
-                        precision: 4)
+                        decimalPrecision: 4)
                     .toString(),
                 style: const TextStyle(color: Colors.grey, fontSize: 12.0),
               ),
@@ -886,7 +886,7 @@ class BalanceRowWidget extends StatelessWidget {
                                 .truncateDoubleWithoutRouding(
                                     model
                                         .baseCoinExchangeBalance.unlockedAmount,
-                                    precision: model
+                                    decimalPrecision: model
                                         .singlePairDecimalConfig.qtyDecimal)
                                 .toString() +
                             " " +
@@ -900,7 +900,7 @@ class BalanceRowWidget extends StatelessWidget {
                                 .truncateDoubleWithoutRouding(
                                     model.targetCoinExchangeBalance
                                         .unlockedAmount,
-                                    precision: model
+                                    decimalPrecision: model
                                         .singlePairDecimalConfig.qtyDecimal)
                                 .toString() +
                             " " +

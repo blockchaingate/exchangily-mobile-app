@@ -105,14 +105,14 @@ class MoveToExchangeScreen extends StatelessWidget {
                       model.busy(model.walletInfo)
                           ? Text(
                               AppLocalizations.of(context).walletbalance +
-                                  '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()}',
+                                  '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, decimalPrecision: model.decimalLimit).toString()}',
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle2
                                   .copyWith(color: yellow))
                           : Text(
                               AppLocalizations.of(context).walletbalance +
-                                  '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()}',
+                                  '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, decimalPrecision: model.decimalLimit).toString()}',
                               style: Theme.of(context).textTheme.subtitle2),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -193,7 +193,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                                       left:
                                                           5), // padding left to keep some space from the text
                                                   child: Text(
-                                                      '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, precision: 6).toString()} ${model.feeUnit}',
+                                                      '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, decimalPrecision: 6).toString()} ${model.feeUnit}',
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .headline6),
@@ -218,7 +218,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         left:
                                             5), // padding left to keep some space from the text
                                     child: Text(
-                                        '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 6).toString()} ${model.feeUnit}',
+                                        '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, decimalPrecision: 6).toString()} ${model.feeUnit}',
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6),
@@ -242,7 +242,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                               left:
                                                   5), // padding left to keep some space from the text
                                           child: Text(
-                                              '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, precision: 6).toString()} ${model.feeUnit}',
+                                              '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, decimalPrecision: 6).toString()} ${model.feeUnit}',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline6),
@@ -263,7 +263,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                               left:
                                   5), // padding left to keep some space from the text
                           child: Text(
-                              '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 6).toString()} GAS',
+                              '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, decimalPrecision: 6).toString()} GAS',
                               style: Theme.of(context).textTheme.headline6),
                         )
                       ],

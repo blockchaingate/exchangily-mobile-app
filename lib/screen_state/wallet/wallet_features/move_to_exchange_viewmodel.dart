@@ -197,7 +197,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     }
     amount = NumberUtil().truncateDoubleWithoutRouding(
         double.parse(amountController.text),
-        precision: decimalLimit);
+        decimalPrecision: decimalLimit);
     log.w('amountAfterFee func: amount $amount');
 
     double finalAmount = 0.0;
@@ -237,10 +237,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
         ? isValidAmount = true
         : isValidAmount = false;
     log.i(
-        'Func:amountAfterFee --trans fee $transFee  -- entered amount $amount = finalAmount $finalAmount -- decimal limit final amount ${NumberUtil().truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)} -- isValidAmount $isValidAmount');
+        'Func:amountAfterFee --trans fee $transFee  -- entered amount $amount = finalAmount $finalAmount -- decimal limit final amount ${NumberUtil().truncateDoubleWithoutRouding(finalAmount, decimalPrecision: decimalLimit)} -- isValidAmount $isValidAmount');
     setBusy(false);
-    return NumberUtil()
-        .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit);
+    return NumberUtil().truncateDoubleWithoutRouding(finalAmount,
+        decimalPrecision: decimalLimit);
   }
 
 /*---------------------------------------------------
@@ -260,7 +260,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (transFee != 0.0) {
       finalAmount = await amountAfterFee(isMaxAmount: true);
       amountController.text = NumberUtil()
-          .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)
+          .truncateDoubleWithoutRouding(finalAmount,
+              decimalPrecision: decimalLimit)
           .toString();
     } else {
       sharedService.sharedSimpleNotification(
@@ -704,7 +705,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       log.w('updateTransFee $ret');
       if (ret != null && ret['transFee'] != null) {
         transFee = NumberUtil()
-            .truncateDoubleWithoutRouding(ret['transFee'], precision: 8);
+            .truncateDoubleWithoutRouding(ret['transFee'], decimalPrecision: 8);
         log.i('transfee $transFee');
         kanbanTransFee = kanbanTransFeeDouble;
         setBusy(false);

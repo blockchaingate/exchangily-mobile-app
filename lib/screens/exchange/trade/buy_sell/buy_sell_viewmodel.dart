@@ -752,7 +752,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
         double formattedQuantity = NumberUtil().truncateDoubleWithoutRouding(
             quantity,
-            precision: singlePairDecimalConfig.qtyDecimal);
+            decimalPrecision: singlePairDecimalConfig.qtyDecimal);
         // double roundedQtyDouble = double.parse(roundedQtyString);
         // roundedQtyDouble = NumberUtil().roundDownLastDigit(roundedQtyDouble);
 
@@ -768,7 +768,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
         quantity = changeBalanceWithSlider / price;
         String roundedQtyString = NumberUtil()
             .truncateDoubleWithoutRouding(quantity,
-                precision: singlePairDecimalConfig.qtyDecimal)
+                decimalPrecision: singlePairDecimalConfig.qtyDecimal)
             .toString();
         double roundedQtyDouble = double.parse(roundedQtyString);
         roundedQtyDouble = NumberUtil().roundDownLastDigit(roundedQtyDouble);

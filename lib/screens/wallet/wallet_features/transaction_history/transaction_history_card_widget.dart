@@ -181,7 +181,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                     child: AutoSizeText(
                       NumberUtil()
                           .truncateDoubleWithoutRouding(transaction.quantity,
-                              precision: model.decimalLimit)
+                              decimalPrecision: model.decimalLimit)
                           .toString(),
                       textAlign: TextAlign.right,
                       style: Theme.of(context)

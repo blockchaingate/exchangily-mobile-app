@@ -54,7 +54,7 @@ class FabUtils {
     final txb = bitcoin_flutter.TransactionBuilder(
         network: environment["chains"]["BTC"]["network"]);
     final root = bip32.BIP32.fromSeed(seed);
-    var totalInput = 0;
+    var totalInput = Decimal.zero;
     var amountInTx = BigInt.from(0);
     var allTxids = [];
     var changeAddress = '';
@@ -62,9 +62,11 @@ class FabUtils {
     var receivePrivateKeyArr = [];
 
     var totalAmount = amount + extraTransactionFee;
-    Decimal calc = Decimal.parse(((2 * 34 + 10) * satoshisPerBytes).toString());
+
+    Decimal calc1 =
+        Decimal.parse(((2 * 34 + 10) * satoshisPerBytes).toString());
     var amountNum =
-        NumberUtil.decimalLimiter(totalAmount.toString()).decimalOutput + calc;
+        NumberUtil.decimalLimiter(totalAmount.toString()).decimalOutput + calc1;
     //  BigInt.parse(NumberUtil.toBigInt(totalAmount, 8)).toInt();
     //  amountNum += (2 * 34 + 10) * satoshisPerBytes;
 
@@ -101,7 +103,7 @@ class FabUtils {
            */
 
           var txidItem = {'txid': txid, 'idx': idx};
-          var txids;
+          var txids = [];
           var existed = false;
           for (var iii = 0; iii < txids.length; iii++) {
             var ttt = txids[iii];
@@ -120,11 +122,11 @@ class FabUtils {
 
           txb.addInput(txid, idx);
           receivePrivateKeyArr.add(privateKey);
-          totalInput += value;
+          totalInput += Decimal.fromInt(value);
 
-          amountNum -= value;
-          amountNum += feePerInput;
-          if (amountNum <= Decimal.parse("0")) {
+          amountNum -= Decimal.fromInt(value);
+          amountNum += Decimal.fromInt(feePerInput);
+          if (amountNum <= Decimal.zero) {
             finished = true;
             break;
           }
@@ -139,13 +141,14 @@ class FabUtils {
           'amountInTx': amountInTx
         };
       }
-
-      var transFee = (receivePrivateKeyArr.length) * feePerInput +
+      var calc2 = (receivePrivateKeyArr.length) * feePerInput +
           (2 * 34 + 10) * satoshisPerBytes;
+      Decimal transFee = Decimal.parse(calc2.toString());
 
       var output1 = (totalInput -
-              BigInt.parse(NumberUtil.toBigInt(amount + extraTransactionFee, 8))
-                  .toInt() -
+              (NumberUtil.decimalLimiter(totalAmount.toString(),
+                      decimalPrecision: 8)
+                  .decimalOutput) -
               transFee)
           .round();
 
@@ -159,9 +162,13 @@ class FabUtils {
       if (getTransFeeOnly) {
         return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
       }
-      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      var output2 =
+          NumberUtil.decimalLimiter(amount.toString(), decimalPrecision: 8)
+              .decimalOutput
+              .toBigInt()
+              .toInt();
       amountInTx = BigInt.from(output2);
-      if (output1 < 0 || output2 < 0) {
+      if (output1 < Decimal.zero || output2 < 0) {
         return {
           'txHex': '',
           'errMsg': 'output1 or output2 should be greater than 0.',
@@ -170,7 +177,7 @@ class FabUtils {
         };
       }
 
-      txb.addOutput(changeAddress, output1);
+      txb.addOutput(changeAddress, output1.toBigInt().toInt());
 
       txb.addOutput(toAddress, output2);
 

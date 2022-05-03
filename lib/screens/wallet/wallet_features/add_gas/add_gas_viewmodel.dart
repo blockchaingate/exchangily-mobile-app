@@ -123,7 +123,7 @@ class AddGasViewModel extends FutureViewModel {
       if (walletBalance != null) {
         fabBalance = NumberUtil().truncateDoubleWithoutRouding(
             walletBalance[0].balance,
-            precision: 6);
+            decimalPrecision: 6);
       }
     });
 
@@ -253,7 +253,8 @@ class AddGasViewModel extends FutureViewModel {
 
     var changeAmountWithSlider = (fabBalance - transFee) * sliderValue / 100;
     amountController.text = NumberUtil()
-        .truncateDoubleWithoutRouding(changeAmountWithSlider, precision: 6)
+        .truncateDoubleWithoutRouding(changeAmountWithSlider,
+            decimalPrecision: 6)
         .toString();
     setBusy(false);
   }

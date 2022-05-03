@@ -17,13 +17,27 @@ class NumberUtil {
   static final BigInt rawPerNano = BigInt.from(10).pow(29);
   static const int maxDecimalDigits = 2; // Max digits after decimal
 
+  static Decimal truncateDecimal(Decimal input,
+      {int decimalPrecision = maxDecimalDigits}) {
+    var p = pow(10, decimalPrecision);
+    var t = Decimal.fromInt(p);
+    var x = (input * t);
+    var trunc = x.truncate();
+    x = trunc;
+    var resInRational = x / t;
+    var res = resInRational.toDecimal();
+
+    debugPrint('res $res');
+    return res;
+  }
+
   static NumberUtilRes decimalLimiter(String input,
-      {int maxDecimalDigits = maxDecimalDigits}) {
+      {int decimalPrecision = maxDecimalDigits}) {
     String decimalLimiterStringRes = "";
     List<String> splitStr = input.split(".");
     if (splitStr.length > 1) {
-      if (splitStr[1].length > maxDecimalDigits) {
-        splitStr[1] = splitStr[1].substring(0, maxDecimalDigits);
+      if (splitStr[1].length > decimalPrecision) {
+        splitStr[1] = splitStr[1].substring(0, decimalPrecision);
         input = splitStr[0] + "." + splitStr[1];
       }
     }
@@ -90,7 +104,8 @@ class NumberUtil {
     }
   }
 
-  double truncateDoubleWithoutRouding(double input, {int precision = 2}) {
+  double truncateDoubleWithoutRouding(double input,
+      {int decimalPrecision = 2}) {
     double res = 0.0;
     bool isInputContainsE = input.toString().contains('e');
     if (!input.isNaN && !isInputContainsE) {
@@ -104,9 +119,9 @@ class NumberUtil {
       // we add +1 as we need 6 precisions
       // 2+6+1 = 9
       // 54.321299
-      if (decimalPart.length > precision) {
-        res = double.parse(
-            '$input'.substring(0, '$input'.indexOf('.') + precision + 1));
+      if (decimalPart.length > decimalPrecision) {
+        res = double.parse('$input'
+            .substring(0, '$input'.indexOf('.') + decimalPrecision + 1));
       } else {
         // String tail = '';
         // for (var i = 0; i < precision - decimalPart.length; i++) {
@@ -192,7 +207,7 @@ class NumberUtil {
         val += decimalPart;
       }
     }
-
+// can int.parse for every single digit in the val using forloop to avoid large number break
     var valInt = int.parse(val);
     val = valInt.toString();
     if (decimalLength > 0) {

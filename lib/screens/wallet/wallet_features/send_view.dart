@@ -10,19 +10,18 @@
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:exchangilymobileapp/utils/coin_utils/matic_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
-import 'package:web3dart/web3dart.dart';
 
 class SendWalletView extends StatelessWidget {
   final WalletInfo walletInfo;
@@ -64,12 +63,6 @@ class SendWalletView extends StatelessWidget {
                     child: Column(
                       // I was using ListView here earlier to solve keyboard overflow error
                       children: <Widget>[
-                        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-          
-                                      Receiver's Wallet Address Container
-          
-          --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
                         Container(
                           margin: const EdgeInsets.only(bottom: 10),
                           color: walletCardColor,
@@ -152,12 +145,8 @@ class SendWalletView extends StatelessWidget {
                                         decimalRange: model.decimalLimit,
                                         activatedNegativeValues: false)
                                   ],
-                                  onChanged: (String amount) {
-                                    // model.amount = double.parse(amount);
-
-                                    model.amountAfterFee();
-                                    //   model.checkAmount();
-                                  },
+                                  onChanged: (String amount) =>
+                                      model.amountAfterFee(),
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
                                           decimal: true), // numnber keyboard
@@ -271,7 +260,7 @@ class SendWalletView extends StatelessWidget {
                                                 ' ' +
                                                 AppLocalizations.of(context)
                                                     .walletbalance +
-                                                '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit)} ',
+                                                '  ${NumberUtil.decimalLimiter(model.walletInfo.availableBalance.toString(), decimalPrecision: model.decimalLimit).stringOutput} ',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline6
@@ -411,7 +400,7 @@ class SendWalletView extends StatelessWidget {
                                               Text(
                                                 AppLocalizations.of(context)
                                                         .unConfirmedBalance +
-                                                    '  ${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance, precision: model.decimalLimit)} ',
+                                                    '  ${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance, decimalPrecision: model.decimalLimit)} ',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline6
@@ -443,7 +432,7 @@ class SendWalletView extends StatelessWidget {
                                                 Text(
                                                   AppLocalizations.of(context)
                                                           .totalBalance +
-                                                      '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance + model.unconfirmedBalance, precision: model.decimalLimit)} ',
+                                                      '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance + model.unconfirmedBalance, decimalPrecision: model.decimalLimit)} ',
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .headline6
@@ -533,7 +522,7 @@ class SendWalletView extends StatelessWidget {
                                                             strokeWidth: 0.75,
                                                           ))
                                                 : Text(
-                                                    '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 6)}  ${model.feeUnit}',
+                                                    '${NumberUtil.decimalLimiter(model.transFee.toString(), decimalPrecision: 6).stringOutput}  ${model.feeUnit}',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline6

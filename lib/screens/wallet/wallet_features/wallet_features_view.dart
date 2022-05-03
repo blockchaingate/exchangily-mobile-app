@@ -341,7 +341,7 @@ class WalletFeaturesView extends StatelessWidget {
                     Text(AppLocalizations.of(context).walletbalance,
                         style: Theme.of(context).textTheme.subtitle1),
                     Text(
-                        '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
+                        '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, decimalPrecision: model.decimalLimit).toString()} ${model.specialTicker}',
                         style: Theme.of(context).textTheme.bodyText1),
                   ],
                 ),
@@ -357,7 +357,7 @@ class WalletFeaturesView extends StatelessWidget {
                           Text(AppLocalizations.of(context).unConfirmedBalance,
                               style: Theme.of(context).textTheme.bodyText1),
                           Text(
-                              '${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
+                              '${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance, decimalPrecision: model.decimalLimit).toString()} ${model.specialTicker}',
                               style: Theme.of(context).textTheme.bodyText1),
                         ],
                       ),
@@ -379,7 +379,7 @@ class WalletFeaturesView extends StatelessWidget {
                     Expanded(
                         flex: 4,
                         child: Text(
-                            '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, precision: model.decimalLimit).toString()} ${model.specialTicker}',
+                            '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, decimalPrecision: model.decimalLimit).toString()} ${model.specialTicker}',
                             textAlign: TextAlign.right,
                             style: Theme.of(context).textTheme.subtitle1)),
                   ],
@@ -402,7 +402,7 @@ class WalletFeaturesView extends StatelessWidget {
                           Expanded(
                               flex: 4,
                               child: Text(
-                                  '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.lockedBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
+                                  '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.lockedBalance, decimalPrecision: model.decimalLimit).toString()} ${model.specialTicker}',
                                   textAlign: TextAlign.right,
                                   style:
                                       Theme.of(context).textTheme.subtitle1)),

@@ -153,7 +153,7 @@ class MoveToWalletScreen extends StatelessWidget {
                         children: <Widget>[
                           Text(
                               AppLocalizations.of(context).inExchange +
-                                  ' ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, precision: model.decimalLimit).toString()}',
+                                  ' ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, decimalPrecision: model.decimalLimit).toString()}',
                               style: Theme.of(context).textTheme.subtitle2),
                           Padding(
                             padding: const EdgeInsets.symmetric(
