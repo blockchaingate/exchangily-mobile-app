@@ -1,3 +1,7 @@
+import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/services/coin_service.dart';
+import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:flutter/widgets.dart';
 import 'package:exchangilymobileapp/environments/coins.dart' as coin_list;
 import 'package:exchangilymobileapp/logger.dart';
@@ -12,6 +16,8 @@ class WalletUtil {
   final tokenListDatabaseService = locator<TokenInfoDatabaseService>();
 
   var abiUtils = AbiUtils();
+  final coinService = locator<CoinService>();
+  var coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
 
   Map<String, String> coinTickerAndNameList = {
     'BTC': 'Bitcoin',
@@ -124,6 +130,65 @@ class WalletUtil {
     'Kyber Network',
     'Genesis Vision'
   ];
+
+  // get wallet info object with address using single wallet balance
+  Future<WalletInfo> getWalletInfoObjFromWalletBalance(
+      WalletBalance wallet) async {
+    //FocusScope.of(context).requestFocus(FocusNode());
+
+    // take the tickername and then get the coin type
+    // either from token or token updates api/local storage
+
+    String tickerName = wallet.coin.toUpperCase();
+    String walletAddress = '';
+
+    int coinType = await coinService.getCoinTypeByTickerName(tickerName);
+
+    // use coin type to get the token type
+    String tokenType = getChainNameByTokenType(coinType);
+
+    // get wallet address
+    if (tickerName == 'ETH' ||
+        tokenType == 'ETH' ||
+        tickerName == 'MATICM' ||
+        tokenType == 'POLYGON') {
+      walletAddress =
+          await coreWalletDatabaseService.getWalletAddressByTickerName('ETH');
+    } else if (tickerName == 'FAB' || tokenType == 'FAB') {
+      walletAddress =
+          await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
+    } else if (tickerName == 'TRX' ||
+        tickerName == 'TRON' ||
+        tokenType == 'TRON' ||
+        tokenType == 'TRX') {
+      walletAddress =
+          await coreWalletDatabaseService.getWalletAddressByTickerName('TRX');
+    } else {
+      walletAddress = await coreWalletDatabaseService
+          .getWalletAddressByTickerName(tickerName);
+    }
+    String coinName = '';
+    for (var i = 0; i < coinTickerAndNameList.length; i++) {
+      if (coinTickerAndNameList.containsKey(wallet.coin)) {
+        coinName = coinTickerAndNameList[wallet.coin];
+      }
+      break;
+    }
+
+    // assign address from local DB to walletinfo object
+    var walletInfo = WalletInfo(
+        tickerName: wallet.coin,
+        availableBalance: wallet.balance,
+        tokenType: tokenType,
+        usdValue: wallet.balance * wallet.usdValue.usd,
+        inExchange: wallet.unlockedExchangeBalance,
+        address: walletAddress,
+        name: coinName);
+
+    log.w('routeWithWalletInfoArgs walletInfo ${walletInfo.toJson()}');
+    return walletInfo;
+  }
+
 /*----------------------------------------------------------------------
                 Update special tokens tickername in UI
 ----------------------------------------------------------------------*/

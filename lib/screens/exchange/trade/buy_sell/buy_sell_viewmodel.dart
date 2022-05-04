@@ -593,7 +593,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
         var txHex = await txHexforPlaceOrder(seed);
         log.e('txhex $txHex');
-        var resKanban = await kanbanUtils.sendKanbanRawTransaction(txHex);
+        var resKanban = await kanbanUtils.sendRawKanbanTransaction(txHex);
         log.e('resKanban $resKanban');
         if (resKanban != null && resKanban['transactionHash'] != null) {
           showSimpleNotification(

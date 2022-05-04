@@ -1269,7 +1269,7 @@ class WalletService {
         kanbanPrice,
         kanbanGasLimit);
 
-    var res = await kanbanUtils.sendKanbanRawTransaction(txKanbanHex);
+    var res = await kanbanUtils.sendRawKanbanTransaction(txKanbanHex);
     if (res['transactionHash'] == null) {
       return res;
     }
@@ -1333,7 +1333,7 @@ class WalletService {
         kanbanPrice,
         kanbanGasLimit);
 
-    var res = await kanbanUtils.sendKanbanRawTransaction(txKanbanHex);
+    var res = await kanbanUtils.sendRawKanbanTransaction(txKanbanHex);
 
     if (res['transactionHash'] != '') {
       res['success'] = true;
@@ -1863,7 +1863,7 @@ class WalletService {
     var txHex = await txHexforSendCoin(
         seed, coinType, kbPaymentAddress, amountInLink, gasPrice, gasLimit);
     log.e('txhex $txHex');
-    var resKanban = await kanbanUtils.sendKanbanRawTransaction(txHex);
+    var resKanban = await kanbanUtils.sendRawKanbanTransaction(txHex);
     debugPrint('resKanban=');
     debugPrint(resKanban.toString());
     return resKanban;

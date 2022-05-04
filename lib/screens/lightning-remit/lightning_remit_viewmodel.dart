@@ -508,7 +508,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                                 size: 16,
                               ),
                               onPressed: () {
-                                sharedService.copyAddress(context, kbAddress)();
+                                sharedService.copyAddress(context, kbAddress);
                               })
                         ],
                       ),
