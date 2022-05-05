@@ -2291,5 +2291,23 @@
     "description": "show_small_amount_assets",
     "type": "text",
     "placeholders": {}
+  },
+  "currentVersion": "当前版本",
+  "@currentVersion": {
+    "description": "currentVersion",
+    "type": "text",
+    "placeholders": {}
+  },
+  "latestVersion": "最新版本",
+  "@latestVersion": {
+    "description": "latestVersion",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloadLatestApkFromServer": "从服务器下载最新的apk",
+  "@downloadLatestApkFromServer": {
+    "description": "downloadLatestApkFromServer",
+    "type": "text",
+    "placeholders": {}
   }
 }

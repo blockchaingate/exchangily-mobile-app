@@ -37,6 +37,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/services/version_service.dart';
 import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
@@ -148,6 +149,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   bool isHideSearch = false;
   bool isHideSmallAssetsButton = false;
   var coinsToHideList = ["USDTB"];
+  var versionService = locator<VersionService>();
 
 /*----------------------------------------------------------------------
                     INIT
@@ -169,6 +171,8 @@ class WalletDashboardViewModel extends BaseViewModel {
     customTokens = await apiService.getCustomTokens();
     await getBalanceForSelectedCustomTokens();
     setBusy(false);
+
+    await versionService.checkVersion(context, isForceUpdate: true);
   }
 
 // set route with coin token type and address

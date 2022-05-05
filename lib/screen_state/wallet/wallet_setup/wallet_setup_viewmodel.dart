@@ -73,11 +73,6 @@ class WalletSetupViewmodel extends BaseViewModel {
 
     await checkExistingWallet();
     await walletService.checkLanguage();
-    //await versionService.checkVersion(context);
-  }
-
-  Future checkVersion(context) async {
-    await versionService.checkVersion(context);
   }
 
   importCreateNav(String actionType) async {
