@@ -28,11 +28,11 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
+import 'package:exchangilymobileapp/services/version_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
@@ -67,7 +67,7 @@ class SettingsViewmodel extends BaseViewModel {
   ConfigService configService = locator<ConfigService>();
   final authService = locator<LocalAuthService>();
   final coinService = locator<CoinService>();
-
+  final vs = locator<VersionService>();
   final Map<String, String> languages = {'en': 'English', 'zh': '简体中文'};
   String selectedLanguage;
   // bool result = false;

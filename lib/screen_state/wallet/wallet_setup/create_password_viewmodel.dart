@@ -57,6 +57,7 @@ class CreatePasswordViewModel extends BaseViewModel {
 
   Future createOfflineWallets() async {
     setBusy(true);
+    isShowPassword = false;
     // await _vaultService.secureMnemonic(
     //     passTextController.text, randomMnemonicFromRoute);
     await _walletService

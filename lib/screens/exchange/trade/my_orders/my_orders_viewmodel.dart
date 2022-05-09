@@ -309,7 +309,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
       Uint8List seed = walletService.generateSeed(mnemonic);
 
       var txHex = await txHexforCancelOrder(seed, orderHash);
-      var resKanban = await kanbanUtils.sendKanbanRawTransaction(txHex);
+      var resKanban = await kanbanUtils.sendRawKanbanTransaction(txHex);
       if (resKanban != null && resKanban["transactionHash"] != null) {
         log.w('resKanban=== $resKanban');
 

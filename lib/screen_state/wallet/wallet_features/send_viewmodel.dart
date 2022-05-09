@@ -443,7 +443,8 @@ class SendViewModel extends BaseViewModel {
                 tickerName: walletInfo.tickerName,
                 isBroadcast: true)
             .then((res) {
-          log.i('send screen state ${walletInfo.tickerName} res: $res');
+          log.i(
+              'generateTrxTransactionContract ${walletInfo.tickerName} res: $res');
           var txRes = res['broadcastTronTransactionRes'];
           if (txRes['code'] == 'SUCCESS') {
             log.w('trx tx res $res');

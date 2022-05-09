@@ -20,6 +20,8 @@ const String payOrderApiRoute = ordersTextApiRoute + "/code/";
 /*----------------------------------------------------------------------
                         Wallet
 ----------------------------------------------------------------------*/
+const String appVersionUrl =
+    "https://api.coinranklist.com/app-update/exchangily-app-version";
 const String maticGasFeeUrl = "https://gasstation-mumbai.matic.today/v2";
 const String exchangilyAppLatestApkUrl =
     'http://exchangily.com/download/latest.apk';

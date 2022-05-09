@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2022-04-05T09:19:30.406960",
+  "@@last_modified": "2022-05-04T16:52:09.060267",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -2277,6 +2277,24 @@
   "showSmallAmountAssets": "Show Small Amount Assets",
   "@showSmallAmountAssets": {
     "description": "show_small_amount_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "currentVersion": "Current version",
+  "@currentVersion": {
+    "description": "currentVersion",
+    "type": "text",
+    "placeholders": {}
+  },
+  "latestVersion": "Latest version",
+  "@latestVersion": {
+    "description": "latestVersion",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloadLatestApkFromServer": "Download latest apk from server",
+  "@downloadLatestApkFromServer": {
+    "description": "downloadLatestApkFromServer",
     "type": "text",
     "placeholders": {}
   }

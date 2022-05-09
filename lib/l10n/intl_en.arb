@@ -2225,5 +2225,23 @@
       "description": "show_small_amount_assets",
       "type": "text",
       "placeholders": {}
+    },
+    "currentVersion": "Current version",
+    "@currentVersion": {
+      "description": "currentVersion",
+      "type": "text",
+      "placeholders": {}
+    },
+    "latestVersion": "Latest version",
+    "@latestVersion": {
+      "description": "latestVersion",
+      "type": "text",
+      "placeholders": {}
+    },
+    "downloadLatestApkFromServer": "Download latest apk from server",
+    "@downloadLatestApkFromServer": {
+      "description": "downloadLatestApkFromServer",
+      "type": "text",
+      "placeholders": {}
     }
 }

@@ -271,8 +271,7 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
         ),
       ),
 
-      Container(
-          child: Swiper(
+      Swiper(
         itemBuilder: (BuildContext context, int index) {
           // Total Balance Card //
           model.swiperWidgetIndex = index;
@@ -321,7 +320,7 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
         ),
         autoplay: true,
         autoplayDelay: 7000,
-      )),
+      ),
       //Announcement Widget
       Positioned(
         top: 15,

@@ -1140,20 +1140,23 @@ class MoveToWalletViewmodel extends BaseViewModel {
       //   return;
       // }
 
-      if (isWithdrawChoice) if (!isShowTrxTsWalletBalance &&
-          isShowFabChainBalance &&
-          amount > fabChainBalance) {
-        sharedService.alertDialog(
-            AppLocalizations.of(context).notice,
-            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                ' ' +
-                fabChainBalance.toString() +
-                '. ' +
-                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
-            isWarning: false);
+      if (isWithdrawChoice) {
+        if (!isShowTrxTsWalletBalance &&
+            isShowFabChainBalance &&
+            amount > fabChainBalance) {
+          sharedService.alertDialog(
+              AppLocalizations.of(context).notice,
+              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                  ' ' +
+                  fabChainBalance.toString() +
+                  '. ' +
+                  AppLocalizations.of(context)
+                      .lowTsWalletBalanceErrorSecondPart,
+              isWarning: false);
 
-        setBusy(false);
-        return;
+          setBusy(false);
+          return;
+        }
       }
 
       /// show warning like amount should be less than ts wallet balance
@@ -1173,19 +1176,22 @@ class MoveToWalletViewmodel extends BaseViewModel {
         setBusy(false);
         return;
       }
-      if (isWithdrawChoice) if (isShowTrxTsWalletBalance &&
-          !isShowFabChainBalance &&
-          amount > trxTsWalletBalance) {
-        sharedService.alertDialog(
-            AppLocalizations.of(context).notice,
-            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                ' ' +
-                trxTsWalletBalance.toString() +
-                '. ' +
-                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
-            isWarning: false);
-        setBusy(false);
-        return;
+      if (isWithdrawChoice) {
+        if (isShowTrxTsWalletBalance &&
+            !isShowFabChainBalance &&
+            amount > trxTsWalletBalance) {
+          sharedService.alertDialog(
+              AppLocalizations.of(context).notice,
+              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                  ' ' +
+                  trxTsWalletBalance.toString() +
+                  '. ' +
+                  AppLocalizations.of(context)
+                      .lowTsWalletBalanceErrorSecondPart,
+              isWarning: false);
+          setBusy(false);
+          return;
+        }
       }
 
       message = '';

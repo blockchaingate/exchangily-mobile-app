@@ -1,10 +1,16 @@
 import 'dart:convert';
 
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
+import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:http/http.dart' as http;
+import 'package:launch_review/launch_review.dart';
 import 'dart:io' show Platform;
 import 'package:package_info/package_info.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
@@ -14,31 +20,15 @@ import 'package:version/version.dart';
 class VersionService {
   final log = getLogger('VersionService');
   final client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
+  final sharedService = locator<SharedService>();
 
   String iosStoreUrl =
       "https://apps.apple.com/ca/app/exchangily-dex-wallet/id1503068552";
   String androidStoreUrl =
-      "https://play.google.com/store/apps/details?id=com.exchangily.wallet";
+      "https://www.play.google.com/store/apps/details?id=com.exchangily.wallet";
+  String androidSdkDownloadUrl = "https://exchangily.com/download/latest.apk";
 
-  //api-ts production api
-  String app = "exchangily";
-
-  //api-ts production api
-  // String url = "http://52.194.202.239:3000/app-update";
-
-  //local test
-  String url = isProduction
-      ? "http://52.194.202.239:3000/app-update"
-      : "http://192.168.0.186:3000/app-update";
-
-/*----------------------------------------------------------------------
-                Get Tron Ts wallet balance
-----------------------------------------------------------------------*/
-
-  Future getVersionInfo() async {
-    log.i("Will get version info!");
-    // var body = {"address": address, "visible": true};
-
+  Future getAppVersionInfo() async {
     String os = "";
 
     if (Platform.isAndroid) {
@@ -47,17 +37,11 @@ class VersionService {
       os = "ios";
     }
 
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-    String version = packageInfo.version;
-
-    debugPrint('My os: $os, my version: $version ');
+    debugPrint('My os: $os');
     try {
-      String fullURL =
-          url + "?version=" + version + "&os=" + os + "&app=" + app;
-      debugPrint("fullURL: " + fullURL);
-      var response = await client.get(fullURL);
-      var json = jsonDecode(response.body);
+      debugPrint("appVersionUrl: " + appVersionUrl);
+      var response = await client.get(appVersionUrl);
+      var json = response.body;
       if (json != null) {
         log.w('get version info $json}');
         return json;
@@ -79,28 +63,24 @@ class VersionService {
     }
   }
 
-  _launchURL() async {
-    String url = getAppStoreUrl();
-
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+  openAppStore() async {
+    LaunchReview.launch(
+        androidAppId: "com.exchangily.wallet",
+        iOSAppId: "id1503068552",
+        writeReview: false);
   }
 
-  _downloadSdk() async {
-    String url = "https://exchangily.com/download/latest.apk";
-
-    if (await canLaunch(url)) {
-      await launch(url);
+  downloadSdk() async {
+    if (await canLaunch(androidSdkDownloadUrl)) {
+      log.i('androidSdkDownloadUrl $androidSdkDownloadUrl');
+      await launch(androidSdkDownloadUrl);
     } else {
-      throw 'Could not launch $url';
+      throw 'Could not launch $androidSdkDownloadUrl';
     }
   }
 
   _downloadTestFlight() async {
-    String url = "https://exchangily.com/download/latest.apk";
+    String url = "https://www.apps.apple.com/ca/app/exchangily-dex-wallet";
 
     if (await canLaunch(url)) {
       await launch(url);
@@ -109,7 +89,7 @@ class VersionService {
     }
   }
 
-  _downloadWithLink(String link) async {
+  downloadWithLink(String link) async {
     String url = link;
 
     if (await canLaunch(url)) {
@@ -119,25 +99,29 @@ class VersionService {
     }
   }
 
-  Future checkVersion(context) async {
+  Future checkVersion(context, {isForceUpdate = false}) async {
     try {
-      await getVersionInfo().then((res) async {
-        if (res == "error") {
+      await getAppVersionInfo().then((appVersionFromApi) async {
+        if (appVersionFromApi == "error") {
           log.e("checkVersion has error!");
         } else {
           log.i("Have Res info");
+          var versionInfo = await sharedService.getLocalAppVersion();
+          log.i('getAppVersion $versionInfo');
+          var versionName = versionInfo['name'];
+          var buildNumber = versionInfo['buildNumber'];
+          var localVersion = versionName + '.' + buildNumber;
+          log.i('local version $localVersion');
+          Version currentVersion = Version.parse(localVersion);
+          debugPrint("userVersion: " + localVersion);
 
-          // PackageInfo packageInfo = await PackageInfo.fromPlatform();
-          // String userVersion = (packageInfo.version).toString();
-          Version currentVersion = Version.parse(res['userVersion']);
-          debugPrint("userVersion: " + res['userVersion']);
+          Version latestVersion = Version.parse(appVersionFromApi);
 
-          Version latestVersion = Version.parse(res['data']['version']);
+          debugPrint("latestVersion: " + appVersionFromApi);
 
-          debugPrint("latestVersion: " + res['data']['version']);
-
-          if (res['status'] == 'good' && latestVersion > currentVersion) {
-            _showMyDialog(res['data'], context, res['userVersion']);
+          if (latestVersion > currentVersion) {
+            showMyDialog(latestVersion, context, currentVersion,
+                isForceUpdate: isForceUpdate);
           }
         }
       });
@@ -146,10 +130,11 @@ class VersionService {
     }
   }
 
-  Future<void> _showMyDialog(res, context, userVersion) async {
+  Future<void> showMyDialog(latestVersion, context, userVersion,
+      {isForceUpdate = false}) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: !isForceUpdate, // user must tap button!
 
       builder: (BuildContext context) {
         return AlertDialog(
@@ -157,7 +142,6 @@ class VersionService {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
           elevation: 0.0,
           backgroundColor: Colors.transparent,
-          // title: new
           content: Stack(
             children: [
               Container(
@@ -165,7 +149,7 @@ class VersionService {
                 padding: const EdgeInsets.fromLTRB(10, 20, 10, 15),
                 margin: const EdgeInsets.only(top: 12.0, right: 6.0),
                 decoration: BoxDecoration(
-                    color: const Color(0xff333333),
+                    color: secondaryColor,
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(16.0),
                     boxShadow: const <BoxShadow>[
@@ -177,168 +161,185 @@ class VersionService {
                     ]),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      "App Update Available",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: Text(
+                          AppLocalizations.of(context).appUpdateNotice,
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
+
+                    UIHelper.divider,
                     const SizedBox(
                       height: 20,
                     ),
-                    Text("Current Version: " + userVersion),
-                    Text("Lastest Version: " + res['version']),
-                    Text("Force Update: " + res['forceUpdate'].toString()),
+                    Text("${AppLocalizations.of(context).currentVersion}:  " +
+                        userVersion.toString()),
+                    UIHelper.verticalSpaceSmall,
+                    Text(
+                      "${AppLocalizations.of(context).latestVersion}:  " +
+                          latestVersion.toString(),
+                      style: TextStyle(color: Colors.greenAccent[100]),
+                    ),
+                    // Text("Force Update: " + latestVersion['forceUpdate'].toString()),
                     const SizedBox(
                       height: 20,
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: res['link']
-                          .map<Widget>((l) => TextButton(
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          primaryColor)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    l['name'],
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                              onPressed: () {
-                                _downloadWithLink(l['link']);
-                              }))
-                          .toList(),
-                    )
-                    // Offstage(
-                    //   offstage: !(Platform.isAndroid),
-                    //   child: Column(
-                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //       children: <Widget>[
-                    //         Flexible(
-                    //           flex: 5,
-                    //           child: TextButton(
-                    //               style: ButtonStyle(
-                    //                   backgroundColor:
-                    //                       MaterialStateProperty.all<Color>(
-                    //                           primaryColor)),
-                    //               child: Row(
-                    //                 mainAxisAlignment: MainAxisAlignment.center,
-                    //                 children: [
-                    //                   Text(
-                    //                     'Download SDK',
-                    //                     style: TextStyle(color: Colors.white),
-                    //                   ),
-                    //                 ],
+                    // Column(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: latestVersion['link']
+                    //       .map<Widget>((l) => TextButton(
+                    //           style: ButtonStyle(
+                    //               backgroundColor:
+                    //                   MaterialStateProperty.all<Color>(
+                    //                       primaryColor)),
+                    //           child: Row(
+                    //             mainAxisAlignment: MainAxisAlignment.center,
+                    //             children: [
+                    //               Text(
+                    //                 l['name'],
+                    //                 style: const TextStyle(color: Colors.white),
                     //               ),
-                    //               onPressed: () {
-                    //                 _downloadSdk();
-                    //               }),
-                    //         ),
-                    //         SizedBox(
-                    //           width: 10,
-                    //         ),
-                    //         Flexible(
-                    //           flex: 5,
-                    //           child: TextButton(
-                    //               style: ButtonStyle(
-                    //                   backgroundColor:
-                    //                       MaterialStateProperty.all<Color>(
-                    //                           tertiaryColor)),
-                    //               child: Row(
-                    //                 mainAxisAlignment: MainAxisAlignment.center,
-                    //                 children: [
-                    //                   Text(
-                    //                     'Google PLay',
-                    //                     style: TextStyle(color: Colors.white),
-                    //                   ),
-                    //                 ],
-                    //               ),
-                    //               onPressed: () {
-                    //                 // Navigator.of(context).pop();
-                    //                 _launchURL();
-                    //               }),
-                    //         )
-                    //       ]),
+                    //             ],
+                    //           ),
+                    //           onPressed: () {
+                    //             _downloadWithLink(l['link']);
+                    //           }))
+                    //       .toList(),
                     // ),
-                    // Offstage(
-                    //   offstage: !(Platform.isIOS),
-                    //   child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //       children: <Widget>[
-                    //         Flexible(
-                    //           flex: 5,
-                    //           child: TextButton(
-                    //               style: ButtonStyle(
-                    //                   backgroundColor:
-                    //                       MaterialStateProperty.all<Color>(
-                    //                           primaryColor)),
-                    //               child: Row(
-                    //                 mainAxisAlignment: MainAxisAlignment.center,
-                    //                 children: [
-                    //                   Text(
-                    //                     'TestFlight',
-                    //                     style: TextStyle(color: Colors.white),
-                    //                   ),
-                    //                 ],
-                    //               ),
-                    //               onPressed: () {
-                    //                 _downloadTestFlight();
-                    //               }),
-                    //         ),
-                    //         SizedBox(
-                    //           width: 10,
-                    //         ),
-                    //         Flexible(
-                    //           flex: 5,
-                    //           child: TextButton(
-                    //               style: ButtonStyle(
-                    //                   backgroundColor:
-                    //                       MaterialStateProperty.all<Color>(
-                    //                           tertiaryColor)),
-                    //               child: Row(
-                    //                 mainAxisAlignment: MainAxisAlignment.center,
-                    //                 children: [
-                    //                   Text(
-                    //                     'App Store',
-                    //                     style: TextStyle(color: Colors.white),
-                    //                   ),
-                    //                 ],
-                    //               ),
-                    //               onPressed: () {
-                    //                 // Navigator.of(context).pop();
-                    //                 _launchURL();
-                    //               }),
-                    //         )
-                    //       ]),
-                    // )
+                    Offstage(
+                      offstage: !(Platform.isAndroid),
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Flexible(
+                              flex: 5,
+                              child: TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              primaryColor)),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)
+                                            .downloadLatestApkFromServer,
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    downloadSdk();
+                                  }),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Flexible(
+                              flex: 5,
+                              child: TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              priceColor)),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Text(
+                                        'Google Play',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    // Navigator.of(context).pop();
+                                    openAppStore();
+                                  }),
+                            )
+                          ]),
+                    ),
+                    Offstage(
+                      offstage: !(Platform.isIOS),
+                      child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            // Flexible(
+                            //   flex: 5,
+                            //   child: TextButton(
+                            //       style: ButtonStyle(
+                            //           backgroundColor:
+                            //               MaterialStateProperty.all<Color>(
+                            //                   primaryColor)),
+                            //       child: Row(
+                            //         mainAxisAlignment: MainAxisAlignment.center,
+                            //         children: const [
+                            //           Text(
+                            //             'TestFlight',
+                            //             style: TextStyle(color: Colors.white),
+                            //           ),
+                            //         ],
+                            //       ),
+                            //       onPressed: () {
+                            //         _downloadTestFlight();
+                            //       }),
+                            // ),
+                            // const SizedBox(
+                            //   width: 10,
+                            // ),
+                            Flexible(
+                              flex: 5,
+                              child: TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              priceColor)),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Text(
+                                        'App Store',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    // Navigator.of(context).pop();
+                                    openAppStore();
+                                  }),
+                            )
+                          ]),
+                    )
                   ],
                 ),
               ),
-              Positioned(
-                right: 0.0,
-                child: res['forceUpdate']
-                    ? Container()
-                    : GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Align(
-                          alignment: Alignment.topRight,
-                          child: CircleAvatar(
-                            radius: 12.0,
-                            backgroundColor: Colors.white,
-                            child: Icon(Icons.close, color: Color(0xff000000)),
-                          ),
-                        ),
-                      ),
-              ),
+              // Positioned(
+              //   right: 0.0,
+              //   child: latestVersion['forceUpdate']
+              //       ? Container()
+              //       : GestureDetector(
+              //           onTap: () {
+              //             Navigator.of(context).pop();
+              //           },
+              //           child: const Align(
+              //             alignment: Alignment.topRight,
+              //             child: CircleAvatar(
+              //               radius: 12.0,
+              //               backgroundColor: Colors.white,
+              //               child: Icon(Icons.close, color: Color(0xff000000)),
+              //             ),
+              //           ),
+              //         ),
+              // ),
             ],
           ),
         );

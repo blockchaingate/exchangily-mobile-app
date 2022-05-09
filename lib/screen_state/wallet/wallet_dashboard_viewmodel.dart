@@ -37,6 +37,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/services/version_service.dart';
 import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
@@ -148,6 +149,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   bool isHideSearch = false;
   bool isHideSmallAssetsButton = false;
   var coinsToHideList = ["USDTB"];
+  var versionService = locator<VersionService>();
 
 /*----------------------------------------------------------------------
                     INIT
@@ -169,71 +171,15 @@ class WalletDashboardViewModel extends BaseViewModel {
     customTokens = await apiService.getCustomTokens();
     await getBalanceForSelectedCustomTokens();
     setBusy(false);
-  }
 
-  // get wallet info object with address using single wallet balance
-  Future<WalletInfo> getWalletInfoObjFromWalletBalance(
-      WalletBalance wallet) async {
-    //FocusScope.of(context).requestFocus(FocusNode());
-
-    // take the tickername and then get the coin type
-    // either from token or token updates api/local storage
-
-    String tickerName = wallet.coin.toUpperCase();
-    String walletAddress = '';
-
-    int coinType = await coinService.getCoinTypeByTickerName(tickerName);
-
-    // use coin type to get the token type
-    String tokenType = walletUtil.getChainNameByTokenType(coinType);
-
-    // get wallet address
-    if (tickerName == 'ETH' ||
-        tokenType == 'ETH' ||
-        tickerName == 'MATICM' ||
-        tokenType == 'POLYGON') {
-      walletAddress = await walletService
-          .getAddressFromCoreWalletDatabaseByTickerName('ETH');
-    } else if (tickerName == 'FAB' || tokenType == 'FAB') {
-      walletAddress = await walletService
-          .getAddressFromCoreWalletDatabaseByTickerName('FAB');
-    } else if (tickerName == 'TRX' ||
-        tickerName == 'TRON' ||
-        tokenType == 'TRON' ||
-        tokenType == 'TRX') {
-      walletAddress = await walletService
-          .getAddressFromCoreWalletDatabaseByTickerName('TRX');
-    } else {
-      walletAddress = await coreWalletDatabaseService
-          .getWalletAddressByTickerName(tickerName);
-    }
-    String coinName = '';
-    for (var i = 0; i < walletUtil.coinTickerAndNameList.length; i++) {
-      if (walletUtil.coinTickerAndNameList.containsKey(wallet.coin)) {
-        coinName = walletUtil.coinTickerAndNameList[wallet.coin];
-      }
-      break;
-    }
-
-    // assign address from local DB to walletinfo object
-    var walletInfo = WalletInfo(
-        tickerName: wallet.coin,
-        availableBalance: wallet.balance,
-        tokenType: tokenType,
-        usdValue: wallet.balance * wallet.usdValue.usd,
-        inExchange: wallet.unlockedExchangeBalance,
-        address: walletAddress,
-        name: coinName);
-
-    log.w('routeWithWalletInfoArgs walletInfo ${walletInfo.toJson()}');
-    return walletInfo;
+    await versionService.checkVersion(context, isForceUpdate: true);
   }
 
 // set route with coin token type and address
 
   routeWithWalletInfoArgs(WalletBalance wallet, String routeName) async {
     // assign address from local DB to walletinfo object
-    var walletInfo = await getWalletInfoObjFromWalletBalance(wallet);
+    var walletInfo = await walletUtil.getWalletInfoObjFromWalletBalance(wallet);
 
     log.w('routeWithWalletInfoArgs walletInfo ${walletInfo.toJson()}');
     searchCoinTextController.clear();
@@ -1065,7 +1011,8 @@ class WalletDashboardViewModel extends BaseViewModel {
           arguments: wallets[index]);
       searchCoinTextController.clear();
     } else {
-      rightWalletInfo = await getWalletInfoObjFromWalletBalance(wallets[index]);
+      rightWalletInfo =
+          await walletUtil.getWalletInfoObjFromWalletBalance(wallets[index]);
       (context as Element).markNeedsBuild();
     }
   }

@@ -159,7 +159,7 @@ class KanbanUtils {
     }
   }
 
-  Future<Map<String, dynamic>> sendKanbanRawTransaction(
+  Future<Map<String, dynamic>> sendRawKanbanTransaction(
       String rawKanbanTransaction) async {
     ConfigService configService = locator<ConfigService>();
     var url =

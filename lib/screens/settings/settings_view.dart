@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dar
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:stacked/stacked.dart';
 import '../../localizations.dart';
 import '../../shared/globals.dart' as globals;
@@ -74,7 +75,9 @@ class SettingsView extends StatelessWidget {
           // floatingActionButton: TextButton(
           //     child: Text('Click'),
           //     onPressed: () async {
-          //       model.test();
+          //       //  LaunchReview.launch(androidAppId: "com.exchangily.wallet");
+          //       model.vs.showMyDialog("2.1.51", context, "2.1.49",
+          //           isForceUpdate: false);
           //     }),
         ),
       ),

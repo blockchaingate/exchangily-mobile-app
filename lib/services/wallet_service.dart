@@ -788,7 +788,16 @@ class WalletService {
               'createOfflineWalletsV1 walletCoreModel -- before inserting in the core wallet DB ${walletCoreModel.toJson()}');
 
           // store in single core database
-          await coreWalletDatabaseService.insert(walletCoreModel);
+          try {
+            await coreWalletDatabaseService.insert(walletCoreModel);
+          } catch (err) {
+            log.e('WALLET data insertion failed in corewalletDB');
+          } finally {
+            log.w(
+                'finally: deleting corewalletdb and trying to insert data once more');
+            await coreWalletDatabaseService.deleteDb();
+            await coreWalletDatabaseService.insert(walletCoreModel);
+          }
         }
       }
       return walletCoreModel;
@@ -1260,7 +1269,7 @@ class WalletService {
         kanbanPrice,
         kanbanGasLimit);
 
-    var res = await kanbanUtils.sendKanbanRawTransaction(txKanbanHex);
+    var res = await kanbanUtils.sendRawKanbanTransaction(txKanbanHex);
     if (res['transactionHash'] == null) {
       return res;
     }
@@ -1324,7 +1333,7 @@ class WalletService {
         kanbanPrice,
         kanbanGasLimit);
 
-    var res = await kanbanUtils.sendKanbanRawTransaction(txKanbanHex);
+    var res = await kanbanUtils.sendRawKanbanTransaction(txKanbanHex);
 
     if (res['transactionHash'] != '') {
       res['success'] = true;
@@ -1858,7 +1867,7 @@ class WalletService {
     var txHex = await txHexforSendCoin(
         seed, coinType, kbPaymentAddress, amountInLink, gasPrice, gasLimit);
     log.e('txhex $txHex');
-    var resKanban = await kanbanUtils.sendKanbanRawTransaction(txHex);
+    var resKanban = await kanbanUtils.sendRawKanbanTransaction(txHex);
     debugPrint('resKanban=');
     debugPrint(resKanban.toString());
     return resKanban;
