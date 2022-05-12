@@ -1368,7 +1368,7 @@ class AppLocalizations {
   }
 
   String get reload {
-    return Intl.message('reload', name: 'reload', desc: 'reload_text');
+    return Intl.message('Reload', name: 'reload', desc: 'reload_text');
   }
 
   String get noRouteDefined {

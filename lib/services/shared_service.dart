@@ -52,6 +52,16 @@ class SharedService {
       locator<DecimalConfigDatabaseService>();
   final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
 
+  Future<bool> hasNetwork() async {
+    try {
+      final result = await InternetAddress.lookup('tesla.com');
+      log.i('Pinged tesla.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } on SocketException catch (_) {
+      return false;
+    }
+  }
+
   Future<ClipboardData> pasteClipBoardData() async {
     ClipboardData data;
     if (data != null) {

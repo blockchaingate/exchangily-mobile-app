@@ -1584,7 +1584,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "reload": "reload",
+    "reload": "Reload",
     "@reload": {
         "description": "reload_text",
         "type": "text",

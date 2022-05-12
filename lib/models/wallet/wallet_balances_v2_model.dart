@@ -84,24 +84,31 @@ class WalletBalanceV2 {
 
   factory WalletBalanceV2.fromJson(Map<String, dynamic> json) {
     List<DepositErr> depositErrList = [];
-    var depositErrFromJsonAsList = json['depositErr'] as List;
+    var depositErrFromJsonAsList = json['de'] as List;
     if (depositErrFromJsonAsList != null) {
       depositErrList =
           depositErrFromJsonAsList.map((e) => DepositErr.fromJson(e)).toList();
     }
-
+// {
+// 			"coin": => c,
+// 			"balance": => b,
+// 			"unconfirmedBalance":  => ub,
+// 			"lockBalance":  => lb
+// 			"lockers": => ls,
+// 			"usdValue": => u,
+// 			"depositErr":=> de,
+// 			"unlockedExchangeBalance":=> ul,
+// 			"lockedExchangeBalance": => l
+// 		},
     return WalletBalanceV2(
-      coin: json['c'],
-      balance: (Decimal.parse(json['b'])),
-      unconfirmedBalance: Decimal.parse(json['ub']),
-      lockBalance: (Decimal.parse(json['lb'])),
-      usdValue: Decimal.parse(json["u"].toString()),
-      depositErr: depositErrList,
-      unlockedExchangeBalance: Decimal.parse(json['unlockedExchangeBalance']),
-      lockedExchangeBalance: json['lockedExchangeBalance'] != null
-          ? (Decimal.parse(json['lockedExchangeBalance']))
-          : 0.0,
-    );
+        coin: json['c'],
+        balance: (Decimal.parse(json['b'])),
+        unconfirmedBalance: Decimal.parse(json['ub']),
+        lockBalance: (Decimal.parse(json['lb'])),
+        usdValue: Decimal.parse(json["u"].toString()),
+        depositErr: depositErrList,
+        unlockedExchangeBalance: Decimal.parse(json['ul']),
+        lockedExchangeBalance: Decimal.parse(json['ul']));
   }
 
 // To json
@@ -133,7 +140,7 @@ class WalletBalanceList {
 
   factory WalletBalanceList.fromJson(List<dynamic> parsedJson) {
     List<WalletBalanceV2> balanceList = [];
-    balanceList = parsedJson.map((i) => WalletBalance.fromJson(i)).toList();
+    balanceList = parsedJson.map((i) => WalletBalanceV2.fromJson(i)).toList();
     return WalletBalanceList(walletBalances: balanceList);
   }
 }

@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/constants/ui_var.dart';
+import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
@@ -25,11 +26,13 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_featur
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
+import 'package:exchangilymobileapp/widgets/network_status.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -62,148 +65,150 @@ class WalletDashboardView extends StatelessWidget {
           debugPrint('_refreshController disposed in wallet dashboard view');
         },
         builder: (context, WalletDashboardViewModel model, child) {
-          // var connectionStatus = Provider.of<ConnectivityStatus>(context);
-          // if (connectionStatus == ConnectivityStatus.Offline)
-          //   return NetworkStausView();
-          // else
+          if (!model.isConnectedToInternet) {
+            return NetworkStausView();
+          } else
+            return WillPopScope(
+              onWillPop: () {
+                model.onBackButtonPressed();
+                return Future(() => false);
+              },
+              child: Scaffold(
+                  key: key,
+                  endDrawerEnableOpenDragGesture: true,
+                  body: GestureDetector(
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
+                    child: ShowCaseWidget(
+                      onStart: (index, key) {
+                        debugPrint('onStart: $index, $key');
+                      },
+                      onComplete: (index, key) {
+                        debugPrint('onComplete: $index, $key');
+                      },
+                      onFinish: () {
+                        model.storageService.isShowCaseView = false;
 
-          return WillPopScope(
-            onWillPop: () {
-              model.onBackButtonPressed();
-              return Future(() => false);
-            },
-            child: Scaffold(
-                key: key,
-                endDrawerEnableOpenDragGesture: true,
-                body: GestureDetector(
-                  onTap: () {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  },
-                  child: ShowCaseWidget(
-                    onStart: (index, key) {
-                      debugPrint('onStart: $index, $key');
-                    },
-                    onComplete: (index, key) {
-                      debugPrint('onComplete: $index, $key');
-                    },
-                    onFinish: () {
-                      model.storageService.isShowCaseView = false;
-
-                      model.updateShowCaseViewStatus();
-                    },
-                    builder: Builder(
-                      builder: (context) {
-                        return Column(
-                          children: <Widget>[
-                            LayoutBuilder(builder:
-                                (BuildContext ctx, BoxConstraints constraints) {
-                              if (constraints.maxWidth < largeSize) {
-                                return Container(
-                                  height: MediaQuery.of(context).padding.top,
-                                );
-                              } else {
-                                return Column(
-                                  children: <Widget>[
-                                    topWidget(model, context),
-                                    amountAndGas(model, context),
-                                  ],
-                                );
-                              }
-                            }),
-                            Expanded(
-                              child: LayoutBuilder(builder: (BuildContext ctx,
+                        model.updateShowCaseViewStatus();
+                      },
+                      builder: Builder(
+                        builder: (context) {
+                          return Column(
+                            children: <Widget>[
+                              LayoutBuilder(builder: (BuildContext ctx,
                                   BoxConstraints constraints) {
                                 if (constraints.maxWidth < largeSize) {
-                                  return coinList(model, ctx);
+                                  return Container(
+                                    height: MediaQuery.of(context).padding.top,
+                                  );
                                 } else {
-                                  return Row(
-                                    children: [
-                                      SizedBox(
-                                          width: 300,
-                                          height: double.infinity,
-                                          child: coinList(model, ctx)),
-                                      Expanded(
-                                        child: model.wallets == null
-                                            ? Container()
-                                            : WalletFeaturesView(
-                                                walletInfo:
-                                                    model.rightWalletInfo),
-                                      )
+                                  return Column(
+                                    children: <Widget>[
+                                      topWidget(model, context),
+                                      amountAndGas(model, context),
                                     ],
                                   );
                                 }
                               }),
-                            ),
-                          ],
-                        );
-                      },
+                              Expanded(
+                                child: LayoutBuilder(builder: (BuildContext ctx,
+                                    BoxConstraints constraints) {
+                                  if (constraints.maxWidth < largeSize) {
+                                    return coinList(model, ctx);
+                                  } else {
+                                    return Row(
+                                      children: [
+                                        SizedBox(
+                                            width: 300,
+                                            height: double.infinity,
+                                            child: coinList(model, ctx)),
+                                        Expanded(
+                                          child: model.wallets == null
+                                              ? Container()
+                                              : WalletFeaturesView(
+                                                  walletInfo:
+                                                      model.rightWalletInfo),
+                                        )
+                                      ],
+                                    );
+                                  }
+                                }),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-                bottomNavigationBar: BottomNavBar(count: 0),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerFloat,
-                floatingActionButton: model.busy(model.selectedCustomTokens)
-                    ? Container()
-                    : Visibility(
-                        visible: model.currentTabSelection == 2,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: model.currentTabSelection == 2
-                                ? primaryColor
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(35),
-                          ),
-                          width:
-                              model.selectedCustomTokens.isNotEmpty ? 140 : 120,
-                          child: GestureDetector(
-                            onTap: () => model.showCustomTokensBottomSheet(),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  UIHelper.horizontalSpaceSmall,
-                                  Icon(
-                                    model.selectedCustomTokens.isNotEmpty
-                                        ? Icons.mode_edit_outline_outlined
-                                        : FontAwesomeIcons.plus,
-                                    size: model.selectedCustomTokens.isNotEmpty
-                                        ? 16
-                                        : 14,
-                                    color: model.selectedCustomTokens.isNotEmpty
-                                        ? yellow
-                                        : green,
-                                  ),
-                                  Expanded(
-                                    child: model.selectedCustomTokens.isNotEmpty
-                                        ? Text(
-                                            ' ' +
-                                                AppLocalizations.of(context)
-                                                    .editTokenList,
-                                            style: const TextStyle(
-                                                color: white,
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        : Text(
-                                            ' ' +
-                                                AppLocalizations.of(context)
-                                                    .addToken,
-                                            style: const TextStyle(
-                                                color: white,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold)),
-                                  ),
-                                ],
+                  bottomNavigationBar: BottomNavBar(count: 0),
+                  floatingActionButtonLocation:
+                      FloatingActionButtonLocation.centerFloat,
+                  floatingActionButton: model.busy(model.selectedCustomTokens)
+                      ? Container()
+                      : Visibility(
+                          visible: model.currentTabSelection == 2,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: model.currentTabSelection == 2
+                                  ? primaryColor
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(35),
+                            ),
+                            width: model.selectedCustomTokens.isNotEmpty
+                                ? 140
+                                : 120,
+                            child: GestureDetector(
+                              onTap: () => model.showCustomTokensBottomSheet(),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    UIHelper.horizontalSpaceSmall,
+                                    Icon(
+                                      model.selectedCustomTokens.isNotEmpty
+                                          ? Icons.mode_edit_outline_outlined
+                                          : FontAwesomeIcons.plus,
+                                      size:
+                                          model.selectedCustomTokens.isNotEmpty
+                                              ? 16
+                                              : 14,
+                                      color:
+                                          model.selectedCustomTokens.isNotEmpty
+                                              ? yellow
+                                              : green,
+                                    ),
+                                    Expanded(
+                                      child: model
+                                              .selectedCustomTokens.isNotEmpty
+                                          ? Text(
+                                              ' ' +
+                                                  AppLocalizations.of(context)
+                                                      .editTokenList,
+                                              style: const TextStyle(
+                                                  color: white,
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          : Text(
+                                              ' ' +
+                                                  AppLocalizations.of(context)
+                                                      .addToken,
+                                              style: const TextStyle(
+                                                  color: white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold)),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      )),
-          );
+                        )),
+            );
         });
   }
 

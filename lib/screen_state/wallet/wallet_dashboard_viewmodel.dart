@@ -150,6 +150,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   bool isHideSmallAssetsButton = false;
   var coinsToHideList = ["USDTB"];
   var versionService = locator<VersionService>();
+  bool isConnectedToInternet = true;
 
 /*----------------------------------------------------------------------
                     INIT
@@ -157,7 +158,15 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   init() async {
     setBusy(true);
-
+    isConnectedToInternet =
+        await isConnected().timeout(const Duration(seconds: 5), onTimeout: () {
+      log.e('isConnectedToInternet: In time out');
+      return false;
+    });
+    if (!isConnectedToInternet) {
+      setBusy(false);
+      return;
+    }
     sharedService.context = context;
     //currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
 
@@ -170,11 +179,15 @@ class WalletDashboardViewModel extends BaseViewModel {
     walletService.storeTokenListUpdatesInDB();
     customTokens = await apiService.getCustomTokens();
     await getBalanceForSelectedCustomTokens();
+
     setBusy(false);
 
     await versionService.checkVersion(context, isForceUpdate: true);
   }
 
+  Future<bool> isConnected() async {
+    return await sharedService.hasNetwork();
+  }
 // set route with coin token type and address
 
   routeWithWalletInfoArgs(WalletBalance wallet, String routeName) async {
@@ -1402,10 +1415,11 @@ class WalletDashboardViewModel extends BaseViewModel {
         var json = jsonEncode(pendingDepositCoins);
         var listCoinsToString = jsonDecode(json);
         String holder = listCoinsToString.toString();
-        String f = holder.substring(1, holder.length - 1);
+        String ticker = holder.substring(1, holder.length - 1);
         if (pendingDepositCoins.isNotEmpty) {
           showSimpleNotification(
-              Text('${AppLocalizations.of(context).requireRedeposit}: $f'),
+              Text('${AppLocalizations.of(context).requireRedeposit}: $ticker'),
+              slideDismissDirection: DismissDirection.down,
               position: NotificationPosition.bottom,
               background: primaryColor);
         }
