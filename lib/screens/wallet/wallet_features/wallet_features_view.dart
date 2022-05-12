@@ -275,7 +275,7 @@ class WalletFeaturesView extends StatelessWidget {
         elevation: model.elevation,
         color: walletCardColor,
         child: Container(
-          padding: const EdgeInsets.all(5),
+          padding: const EdgeInsets.all(3),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[

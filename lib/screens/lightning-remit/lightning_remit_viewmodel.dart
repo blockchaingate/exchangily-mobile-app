@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -29,7 +30,6 @@ import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:exchangilymobileapp/constants/api_routes.dart';
 
 class LightningRemitViewmodel extends FutureViewModel {
   final log = getLogger('LightningRemitViewmodel');
@@ -145,11 +145,10 @@ class LightningRemitViewmodel extends FutureViewModel {
 
   // launch url
   openExplorer(String txId) async {
-    String exchangilyExplorerUrl = ExchangilyExplorerUrl + txId;
     log.i(
         'LightningRemi open explorer - explorer url - $exchangilyExplorerUrl');
-    if (await canLaunch(exchangilyExplorerUrl)) {
-      await launch(exchangilyExplorerUrl);
+    if (await canLaunch(exchangilyExplorerUrl + txId)) {
+      await launch(exchangilyExplorerUrl + txId);
     }
   }
 

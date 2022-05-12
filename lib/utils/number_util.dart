@@ -5,10 +5,15 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
 
-class NumberUtilRes {
+class NumberUtilResult {
   String stringOutput;
   Decimal decimalOutput;
-  NumberUtilRes({this.stringOutput, this.decimalOutput});
+  NumberUtilResult({this.stringOutput, this.decimalOutput});
+
+  @override
+  String toString() {
+    return 'String output: $stringOutput -- decimal output: $decimalOutput';
+  }
 }
 
 class NumberUtil {
@@ -17,21 +22,22 @@ class NumberUtil {
   static final BigInt rawPerNano = BigInt.from(10).pow(29);
   static const int maxDecimalDigits = 2; // Max digits after decimal
 
-  static Decimal truncateDecimal(Decimal input,
+  static Decimal decimalLimiter(Decimal input,
       {int decimalPrecision = maxDecimalDigits}) {
     var p = pow(10, decimalPrecision);
     var t = Decimal.fromInt(p);
     var x = (input * t);
     var trunc = x.truncate();
-    x = trunc;
-    var resInRational = x / t;
-    var res = resInRational.toDecimal();
+
+    var resInRational = (trunc / t);
+    var res =
+        resInRational.toDecimal(scaleOnInfinitePrecision: decimalPrecision);
 
     debugPrint('res $res');
     return res;
   }
 
-  static NumberUtilRes decimalLimiter(String input,
+  static NumberUtilResult stringDecimalLimiter(String input,
       {int decimalPrecision = maxDecimalDigits}) {
     String decimalLimiterStringRes = "";
     List<String> splitStr = input.split(".");
@@ -54,12 +60,12 @@ class NumberUtil {
       }
     }
     debugPrint('decimalLimiter res $decimalLimiterStringRes');
-    return NumberUtilRes(
+    return NumberUtilResult(
         stringOutput: decimalLimiterStringRes,
         decimalOutput: Decimal.parse(decimalLimiterStringRes));
   }
 
-  static String decimalToRaw(String amount) {
+  static String stringDecimalToRawDecimalString(String amount) {
     Decimal asDecimal = Decimal.parse(amount);
     Decimal rawDecimal = Decimal.parse(rawPerNano.toString());
     //100000000000000000000000000000
@@ -67,7 +73,12 @@ class NumberUtil {
     return (asDecimal * rawDecimal).toString();
   }
 
-  static BigInt decimalToBigInt(String amount) {
+// 123456789123456789123456789.123456789123456789123
+//                    to
+// 12345678912345678912345678912345678912345678912300000000
+
+  /// Decimal to BigInt with 29 decimal precision
+  static BigInt decimalStringToBigInt(String amount) {
     Decimal asDecimal = Decimal.parse(amount);
     Decimal rawDecimal = Decimal.parse(rawPerNano.toString());
     //100000000000000000000000000000
@@ -75,7 +86,25 @@ class NumberUtil {
     return BigInt.parse((asDecimal * rawDecimal).toString());
   }
 
-  static Decimal rawToDecimal(String raw) {
+// 123456789123456789123456789.12345678912345678912345678
+// to
+// 123456789123456789123456789123456789123456789 (if decimalPrecision is 18)
+// with no extra zeros at the end like decimalStringToBigInt func above
+
+  /// Decimal to BigInt with 18 decimal precision
+  static BigInt decimalToBigInt(Decimal value, {int decimalPrecision = 18}) {
+    return (value * Decimal.fromInt(pow(10, decimalPrecision))).toBigInt();
+  }
+
+  static BigInt decimalToBigInt1(Decimal value, {int decimalPrecision = 18}) {
+    return BigInt.parse(
+        (value * Decimal.fromInt(pow(10, decimalPrecision))).toString());
+  }
+
+// 12345678912345678912345678912345678912345678912300000000
+//                    to
+// 123456789123456789123456789.123456789123456789123
+  static Decimal rawStringToDecimal(String raw) {
     //  if (raw.isEmpty) raw = "1254000000000000000000000000000";
     Decimal amount = Decimal.parse(raw.toString());
     var x = Decimal.fromBigInt(rawPerNano);

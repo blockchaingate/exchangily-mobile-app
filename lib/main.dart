@@ -34,20 +34,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
 
-  // debugRepaintRainbowEnabled = true;
-  // isrgrootx1.pem
-
-  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  //   systemNavigationBarColor: Colors.blue, // navigation bar color
-  //   statusBarColor: Colors.pink, // status bar color
-  // ));
-  // SystemChrome.setSystemUIOverlayStyle(
-  //     SystemUiOverlayStyle(statusBarColor: Colors.white));
-
   try {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     await serviceLocator();
-    Logger.level = Level.nothing;
+    Logger.level = Level.info;
     SystemChannels.textInput
         .invokeMethod('TextInput.hide'); // Hides keyboard initially
     // Force user to use only portrait mode until the development of other screen size design

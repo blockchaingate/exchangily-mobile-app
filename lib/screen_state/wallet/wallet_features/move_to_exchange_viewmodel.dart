@@ -124,11 +124,11 @@ class MoveToExchangeViewModel extends BaseViewModel {
       log.e('old way broke, $err');
     }
     // new
-    newdoubleOutputInBigInt = NumberUtil.decimalToBigInt(tec1.text);
-    var amountNum2 = NumberUtil.decimalToBigInt(tec1.text);
+    newdoubleOutputInBigInt = NumberUtil.decimalStringToBigInt(tec1.text);
+    var amountNum2 = NumberUtil.decimalStringToBigInt(tec1.text);
     debugPrint('amountNum2 $amountNum2');
     log.w(
-        'new bigint result to decimal ${NumberUtil.rawToDecimal(newdoubleOutputInBigInt.toString())}');
+        'new bigint result to decimal ${NumberUtil.rawStringToDecimal(newdoubleOutputInBigInt.toString())}');
     //  BigInt feeCalc= (NumberUtil.decimalToBigInt(2.toString()) *
     //               NumberUtil.decimalToBigInt(34.toString()) +
     //           NumberUtil.decimalToBigInt(10.toString())) *
@@ -156,7 +156,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     //     BigInt.parse(100.toString());
     debugPrint('amountNum2 $amountNum2');
     log.w(
-        'new bigint result to decimal ${NumberUtil.rawToDecimal(amountNum2.toString())}');
+        'new bigint result to decimal ${NumberUtil.rawStringToDecimal(amountNum2.toString())}');
     // 14524642626.674755640000000000000000078
     // 14524642626.67475564(old)
     setBusy(false);

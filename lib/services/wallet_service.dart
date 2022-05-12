@@ -2557,7 +2557,8 @@ class WalletService {
       BigInt amountBigInt = amount.toBigInt();
       // double 2.0 => 2
       log.i('amountBigInt $amountBigInt');
-      BigInt amountBigInt1 = NumberUtil.decimalToBigInt(amount.toString());
+      BigInt amountBigInt1 =
+          NumberUtil.decimalStringToBigInt(amount.toString());
       // double 2.0 => 200000000000000000000000000000 with default decimal limit 29
       log.w('amountBigInt1 $amountBigInt1');
       if (coin == 'DUSD') {

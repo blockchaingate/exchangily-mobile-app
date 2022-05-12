@@ -24,6 +24,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path/path.dart';
 
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -526,52 +527,44 @@ class TransactionHistoryViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   launchUrl(String txId, String chain, bool isKanban) async {
     // copyAddress(txId);
+    String baseUrl = '';
     if (isKanban) {
-      String exchangilyExplorerUrl = ExchangilyExplorerUrl + txId;
-      log.i('Kanban - explorer url - $exchangilyExplorerUrl');
-      openExplorer(exchangilyExplorerUrl);
+      String baseUrl = exchangilyExplorerUrl;
+      log.i('Kanban - explorer url - $baseUrl');
     } else if (chain.toUpperCase() == 'FAB') {
-      String fabExplorerUrl = FabExplorerUrl + txId;
+      baseUrl = fabExplorerUrl + txId;
       log.i('FAB - chainame $chain explorer url - $fabExplorerUrl');
-      openExplorer(fabExplorerUrl);
     } else if (chain.toUpperCase() == 'BTC') {
-      String bitcoinExplorerUrl = BitcoinExplorerUrl + txId;
+      baseUrl = bitcoinExplorerUrl + txId;
       log.i('BTC - chainame $chain explorer url - $bitcoinExplorerUrl');
-      openExplorer(bitcoinExplorerUrl);
     } else if (chain.toUpperCase() == 'ETH') {
-      String ethereumExplorerUrl = isProduction
-          ? EthereumExplorerUrl + txId
-          : TestnetEthereumExplorerUrl + txId;
+      baseUrl = isProduction
+          ? ethereumExplorerUrl + txId
+          : testnetEthereumExplorerUrl + txId;
       log.i('ETH - chainame $chain explorer url - $ethereumExplorerUrl');
-      openExplorer(ethereumExplorerUrl);
     } else if (chain.toUpperCase() == 'LTC') {
-      String litecoinExplorerUrl = LitecoinExplorerUrl + txId;
+      baseUrl = litecoinExplorerUrl + txId;
       log.i('LTC - chainame $chain explorer url - $litecoinExplorerUrl');
-      openExplorer(litecoinExplorerUrl);
     } else if (chain.toUpperCase() == 'DOGE') {
-      String dogeExplorerUrl = DogeExplorerUrl + txId;
+      baseUrl = dogeExplorerUrl + txId;
       log.i('doge - chainame $chain explorer url - $dogeExplorerUrl');
-      openExplorer(dogeExplorerUrl);
     } else if (chain.toUpperCase() == 'TRON' || chain.toUpperCase() == 'TRX') {
       if (txId.startsWith('0x')) {
         txId = txId.substring(2);
       }
-      String tronExplorerUrl = TronExplorerUrl + txId;
+      baseUrl = tronExplorerUrl + txId;
       log.i('tron - chainame $chain explorer url - $tronExplorerUrl');
-      openExplorer(tronExplorerUrl);
     } else if (chain.toUpperCase() == 'BCH') {
-      String bitcoinCashExplorerUrl = BitcoinCashExplorerUrl + txId;
+      baseUrl = bitcoinCashExplorerUrl + txId;
       log.i('BCH - chainame $chain explorer url - $bitcoinCashExplorerUrl');
-      openExplorer(bitcoinCashExplorerUrl);
     } else {
       throw 'Could not launch';
     }
-  }
 
-  // launch url
-  openExplorer(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunch(baseUrl)) {
+      await launch(baseUrl);
+    } else {
+      log.e('open explorer func: can not open URL');
     }
   }
 }

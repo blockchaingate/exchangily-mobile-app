@@ -13,6 +13,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:barcode_scan/barcode_scan.dart';
@@ -160,25 +161,6 @@ class SendViewModel extends BaseViewModel {
         .then((walletBalance) => chainBalance = walletBalance[0].balance);
   }
 
-  /*---------------------------------------------------
-                      Get gas
---------------------------------------------------- */
-
-  // getGasBalance() async {
-  //   String address = await sharedService.getExgAddressFromWalletDatabase();
-  //   await walletService.gasBalance(address).then((data) {
-  //     gasAmount = data;
-  //     if (gasAmount == 0) {
-  //       sharedService.alertDialog(
-  //         AppLocalizations.of(context).notice,
-  //         AppLocalizations.of(context).insufficientGasAmount,
-  //       );
-  //     }
-  //   }).catchError((onError) => log.e(onError));
-  //   log.w('gas amount $gasAmount');
-  //   return gasAmount;
-  // }
-
   setFee(String coinName) async {
     if (coinName == 'BTC') {
       satoshisPerByteTextController.text =
@@ -218,18 +200,25 @@ class SendViewModel extends BaseViewModel {
   }
 
   test() {
-    String value = '123456789123456789123456789.123456789123456789123';
-    var tt = NumberUtil.truncateDecimal(Decimal.parse(value),
-        decimalPrecision: 21); // breaks at 21
+    String value = '123456789123456789123456789.12345678912345678912345678';
+    var tt = NumberUtil.decimalLimiter(Decimal.parse(value),
+        decimalPrecision: 18); // breaks at 19
     log.w('truncate decimal $tt');
-    // var o = NumberUtil.toBigInt(value);
-    // log.w('old $o');
-    var x = NumberUtil.decimalToRaw(value);
-    log.i('decimalToRaw $x');
-    BigInt b = BigInt.parse(x);
-    log.e('Big int from raw $b');
-    var p = NumberUtil.decimalToBigInt(value);
-    log.i('decimalToBigInt $p');
+
+    var sd = NumberUtil.stringDecimalLimiter(value,
+        decimalPrecision: 25); // breaks at 19
+    log.w('String decimal limiter: ${sd.toString()}');
+
+    var x = NumberUtil.stringDecimalToRawDecimalString(value);
+    log.i('stringDecimalToRawDecimalString $x');
+
+    var p = NumberUtil.decimalStringToBigInt(value);
+    log.i('stringDecimalToBigInt $p');
+    var g = NumberUtil.decimalToBigInt(Decimal.parse(value));
+    debugPrint('decimalStringToBigInt18Decimal $g');
+
+    var j = NumberUtil.rawStringToDecimal(p.toString());
+    debugPrint('j $j');
   }
 
   bool isTrx() {
@@ -301,7 +290,7 @@ class SendViewModel extends BaseViewModel {
     log.i(
         'Func:amountAfterFee --  entered amount $amount + transaction fee $transFee = finalAmount $finalAmount after fee --  wallet bal ${walletInfo.availableBalance} -- isValidAmount $isValidAmount');
     setBusy(false);
-    return NumberUtil.decimalLimiter(finalAmount.toString(),
+    return NumberUtil.stringDecimalLimiter(finalAmount.toString(),
             decimalPrecision: decimalLimit)
         .decimalOutput;
   }
@@ -320,7 +309,8 @@ class SendViewModel extends BaseViewModel {
 
     finalAmount = await amountAfterFee(isMaxAmount: true);
     if (transFee != decimalZero) {
-      amountController.text = NumberUtil.decimalLimiter(finalAmount.toString(),
+      amountController.text = NumberUtil.stringDecimalLimiter(
+              finalAmount.toString(),
               decimalPrecision: decimalLimit)
           .stringOutput;
     } else {
@@ -331,9 +321,8 @@ class SendViewModel extends BaseViewModel {
   }
 
   showDetailsMessageToggle() {
-    setBusy(true);
     isShowDetailsMessage = !isShowDetailsMessage;
-    setBusy(false);
+    notifyListeners();
   }
 
   // getExgWalletAddr() async {
@@ -721,7 +710,7 @@ class SendViewModel extends BaseViewModel {
         }
       });
     }
-
+    await updateTransFee();
     if (transFee == decimalZero && !isTrx()) {
       log.e('transfee $transFee not enough $tokenType balance to make tx');
       var coin =
@@ -738,7 +727,6 @@ class SendViewModel extends BaseViewModel {
           ),
           position: NotificationPosition.top,
           background: sellPrice);
-      await updateTransFee();
 
       return;
     }

@@ -58,16 +58,16 @@ const String singleWalletBalanceApiRoute = 'singleCoinWalletBalance';
 const String walletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";
 
 // Transaction history explorer URL's for prod
-const String ExchangilyExplorerUrl =
+const String exchangilyExplorerUrl =
     "https://exchangily.com/explorer/tx-detail/";
-const String BitcoinExplorerUrl = "https://live.blockcypher.com/btc/tx/";
-const String EthereumExplorerUrl = "https://etherscan.io/tx/";
-const String TestnetEthereumExplorerUrl = "https://ropsten.etherscan.io/tx/";
-const String FabExplorerUrl = "https://fabexplorer.info/#/transactions/";
-const String LitecoinExplorerUrl = "https://live.blockcypher.com/ltx/tx/";
-const String DogeExplorerUrl = "https://dogechain.info/tx/";
-const String BitcoinCashExplorerUrl = "https://explorer.bitcoin.com/bch/tx/";
-const String TronExplorerUrl = "https://tronscan.org/#/transaction/";
+const String bitcoinExplorerUrl = "https://live.blockcypher.com/btc/tx/";
+const String ethereumExplorerUrl = "https://etherscan.io/tx/";
+const String testnetEthereumExplorerUrl = "https://ropsten.etherscan.io/tx/";
+const String fabExplorerUrl = "https://fabexplorer.info/#/transactions/";
+const String litecoinExplorerUrl = "https://live.blockcypher.com/ltx/tx/";
+const String dogeExplorerUrl = "https://dogechain.info/tx/";
+const String bitcoinCashExplorerUrl = "https://explorer.bitcoin.com/bch/tx/";
+const String tronExplorerUrl = "https://tronscan.org/#/transaction/";
 
 // Free Fab
 const String getFreeFabUrl =
@@ -76,7 +76,7 @@ const String postFreeFabUrl =
     baseBlockchainGateV2Url + 'airdrop/answerQuestionair/';
 
 // USD Coin Price
-const String GetUsdCoinPriceUrl =
+const String getUsdCoinPriceUrl =
     'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
 
 // Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt

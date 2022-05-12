@@ -260,7 +260,7 @@ class SendWalletView extends StatelessWidget {
                                                 ' ' +
                                                 AppLocalizations.of(context)
                                                     .walletbalance +
-                                                '  ${NumberUtil.decimalLimiter(model.walletInfo.availableBalance.toString(), decimalPrecision: model.decimalLimit).stringOutput} ',
+                                                '  ${NumberUtil.stringDecimalLimiter(model.walletInfo.availableBalance.toString(), decimalPrecision: model.decimalLimit).stringOutput} ',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline6
@@ -522,7 +522,7 @@ class SendWalletView extends StatelessWidget {
                                                             strokeWidth: 0.75,
                                                           ))
                                                 : Text(
-                                                    '${NumberUtil.decimalLimiter(model.transFee.toString(), decimalPrecision: 6).stringOutput}  ${model.feeUnit}',
+                                                    '${NumberUtil.stringDecimalLimiter(model.transFee.toString(), decimalPrecision: 6).stringOutput}  ${model.feeUnit}',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline6
@@ -808,11 +808,13 @@ class SendWalletView extends StatelessWidget {
                                       ),
                                     ],
                                   )
-                                : Center(
-                                    child: Text(
-                                    model.errorMessage,
-                                    style: const TextStyle(color: red),
-                                  ))),
+                                : model.errorMessage != model.serverError
+                                    ? Center(
+                                        child: Text(
+                                        model.errorMessage,
+                                        style: const TextStyle(color: red),
+                                      ))
+                                    : Container()),
                         UIHelper.verticalSpaceSmall,
                         // show error details
                         model.isShowErrorDetailsButton
@@ -826,6 +828,7 @@ class SendWalletView extends StatelessWidget {
                                               .textTheme
                                               .bodyText2
                                               .copyWith(
+                                                  color: grey,
                                                   decoration:
                                                       TextDecoration.underline),
                                           text:
@@ -845,10 +848,14 @@ class SendWalletView extends StatelessWidget {
                               )
                             : Container(),
                         model.isShowDetailsMessage
-                            ? Center(
-                                child: Text(model.serverError,
-                                    style:
-                                        Theme.of(context).textTheme.headline6),
+                            ? Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: Text(model.serverError,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                ),
                               )
                             : Container(),
                         UIHelper.verticalSpaceSmall,
@@ -867,7 +874,8 @@ class SendWalletView extends StatelessWidget {
                             color: primaryColor,
                             textColor: Colors.white,
                             onPressed: () {
-                              if (model.isValidAmount && model.amount != 0.0) {
+                              if (model.isValidAmount &&
+                                  model.amount != Decimal.zero) {
                                 model.checkFields(context);
                               }
                             },
@@ -883,7 +891,7 @@ class SendWalletView extends StatelessWidget {
                                         .headline4
                                         .copyWith(
                                             color: model.isValidAmount &&
-                                                    model.amount != 0.0
+                                                    model.amount != Decimal.zero
                                                 ? white
                                                 : grey)),
                           ),

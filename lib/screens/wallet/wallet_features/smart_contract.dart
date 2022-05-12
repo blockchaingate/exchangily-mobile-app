@@ -36,7 +36,7 @@ class SmartContract extends StatefulWidget {
 class _SmartContractState extends State<SmartContract> {
   final log = getLogger('SmartContract');
   String _currentFunction;
-  String _smartContractName;
+  String _smartContractName = '';
   var abis;
   var functionHex;
   var abi;
@@ -291,11 +291,12 @@ class _SmartContractState extends State<SmartContract> {
   checkPass(abiHex, value, context) async {
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
+        buttonTitle: AppLocalizations.of(context).confirm,
         description:
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote);
     if (res.confirmed) {
       log.w('Pass matched');
-      log.w(res.returnedText);
+
       String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
 
