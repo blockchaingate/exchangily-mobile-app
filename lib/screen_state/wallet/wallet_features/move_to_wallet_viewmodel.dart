@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/font_style.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
@@ -47,7 +48,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   var kanbanTransFee;
   var minimumAmount;
   bool transFeeAdvance = false;
-  double gasAmount = 0.0;
+  Decimal gasAmount = Decimal.zero;
 
   bool isShowErrorDetailsButton = false;
   bool isShowDetailsMessage = false;

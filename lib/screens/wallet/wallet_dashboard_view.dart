@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
@@ -67,7 +68,7 @@ class WalletDashboardView extends StatelessWidget {
         builder: (context, WalletDashboardViewModel model, child) {
           if (!model.isConnectedToInternet) {
             return NetworkStausView();
-          } else
+          } else {
             return WillPopScope(
               onWillPop: () {
                 model.onBackButtonPressed();
@@ -209,6 +210,7 @@ class WalletDashboardView extends StatelessWidget {
                           ),
                         )),
             );
+          }
         });
   }
 
@@ -393,6 +395,12 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
                     ))
           ],
         ), //Announcement Widget end
+      ),
+      Container(
+        child: TextButton(
+          child: Text('est'),
+          onPressed: () => model.getGas(),
+        ),
       ),
       //Refresh BalancesV2
       Positioned(
@@ -1830,7 +1838,8 @@ class DepositWidget extends StatelessWidget {
     // model.showcaseEvent(context);
     return InkWell(
         child: tickerName.toUpperCase() == 'FAB' &&
-                (model.isShowCaseView || model.gasAmount < 0.5) &&
+                (model.isShowCaseView ||
+                    model.gasAmount < Decimal.parse(0.5.toString())) &&
                 !model.isBusy
             ? Showcase(
                 key: model.globalKeyTwo,

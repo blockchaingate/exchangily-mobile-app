@@ -13,7 +13,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:barcode_scan/barcode_scan.dart';
@@ -209,7 +208,7 @@ class SendViewModel extends BaseViewModel {
         decimalPrecision: 25); // breaks at 19
     log.w('String decimal limiter: ${sd.toString()}');
 
-    var x = NumberUtil.stringDecimalToRawDecimalString(value);
+    var x = NumberUtil.decimalStringToRawDecimalString(value);
     log.i('stringDecimalToRawDecimalString $x');
 
     var p = NumberUtil.decimalStringToBigInt(value);
@@ -219,6 +218,9 @@ class SendViewModel extends BaseViewModel {
 
     var j = NumberUtil.rawStringToDecimal(p.toString());
     debugPrint('j $j');
+
+    var test1e8 = Decimal.parse('1e8');
+    debugPrint('test 1e8 to decimal $test1e8');
   }
 
   bool isTrx() {
@@ -427,7 +429,7 @@ class SendViewModel extends BaseViewModel {
                 privateKey: privateKey,
                 fromAddr: walletInfo.address,
                 toAddr: toAddress,
-                amount: amount.toDouble(),
+                amount: amount,
                 isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
                 tickerName: walletInfo.tickerName,
                 isBroadcast: true)
@@ -693,7 +695,7 @@ class SendViewModel extends BaseViewModel {
         // tickerName == 'BTC'
         ) {
       await walletService
-          .hasSufficientWalletBalance(transFee.toDouble(), tokenType)
+          .hasSufficientWalletBalance(transFee, tokenType)
           .then((isValidNativeChainBal) {
         if (!isValidNativeChainBal) {
           log.e('not enough $tokenType balance to make tx');

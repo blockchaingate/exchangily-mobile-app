@@ -193,7 +193,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                                       left:
                                                           5), // padding left to keep some space from the text
                                                   child: Text(
-                                                      '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, decimalPrecision: 6).toString()} ${model.feeUnit}',
+                                                      '${NumberUtil.decimalLimiter(model.chainBalance, decimalPrecision: 6).toString()} ${model.feeUnit}',
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .headline6),
@@ -218,7 +218,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         left:
                                             5), // padding left to keep some space from the text
                                     child: Text(
-                                        '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, decimalPrecision: 6).toString()} ${model.feeUnit}',
+                                        '${NumberUtil.decimalLimiter(model.transFee, decimalPrecision: 6).toString()} ${model.feeUnit}',
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6),
@@ -242,7 +242,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                               left:
                                                   5), // padding left to keep some space from the text
                                           child: Text(
-                                              '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, decimalPrecision: 6).toString()} ${model.feeUnit}',
+                                              '${NumberUtil.decimalLimiter(model.chainBalance, decimalPrecision: 6).toString()} ${model.feeUnit}',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline6),
@@ -263,7 +263,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                               left:
                                   5), // padding left to keep some space from the text
                           child: Text(
-                              '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, decimalPrecision: 6).toString()} GAS',
+                              '${NumberUtil.decimalLimiter(model.kanbanTransFee, decimalPrecision: 6).toString()} GAS',
                               style: Theme.of(context).textTheme.headline6),
                         )
                       ],
@@ -602,32 +602,32 @@ class MoveToExchangeScreen extends StatelessWidget {
               UIHelper.verticalSpaceSmall,
 
 // test code
-              Column(
-                children: [
-                  TextField(
-                    controller: model.tec1,
-                  ),
-                  TextButton(
-                      onPressed: () => model.t1(),
-                      child: const Text('Test Me')),
-                  Text(
-                    model.oldIntOutputInBigInt.toString(),
-                    style: const TextStyle(color: grey),
-                  ),
-                  Text(
-                    model.oldBigIntOutputInInt.toString(),
-                    style: const TextStyle(color: white),
-                  ),
-                  const Text(
-                    'New ',
-                    style: TextStyle(color: white),
-                  ),
-                  Text(
-                    model.newdoubleOutputInBigInt.toString(),
-                    style: TextStyle(color: green),
-                  )
-                ],
-              ),
+              // Column(
+              //   children: [
+              //     TextField(
+              //       controller: model.tec1,
+              //     ),
+              //     TextButton(
+              //         onPressed: () => model.t1(),
+              //         child: const Text('Test Me')),
+              //     Text(
+              //       model.oldIntOutputInBigInt.toString(),
+              //       style: const TextStyle(color: grey),
+              //     ),
+              //     Text(
+              //       model.oldBigIntOutputInInt.toString(),
+              //       style: const TextStyle(color: white),
+              //     ),
+              //     const Text(
+              //       'New ',
+              //       style: TextStyle(color: white),
+              //     ),
+              //     Text(
+              //       model.newdoubleOutputInBigInt.toString(),
+              //       style: TextStyle(color: green),
+              //     )
+              //   ],
+              // ),
               UIHelper.divider,
               UIHelper.verticalSpaceMedium,
               // Confirm Button

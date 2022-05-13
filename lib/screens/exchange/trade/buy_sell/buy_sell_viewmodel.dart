@@ -15,6 +15,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -121,7 +122,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   final abiUtils = AbiUtils();
 
   final kanbanUtils = KanbanUtils();
-  double gasAmount = 0.0;
+  Decimal gasAmount = Decimal.zero;
   bool isFilled = false;
 
   @override
@@ -677,7 +678,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       return;
     }
     await getGasBalance();
-    if (gasAmount < kanbanTransFee) {
+    if (gasAmount < Decimal.parse(kanbanTransFee.toString())) {
       setBusy(false);
       showSimpleNotification(
         Center(

@@ -14,6 +14,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
@@ -94,7 +95,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   final double elevation = 5;
   String totalUsdBalance = '';
 
-  double gasAmount = 0;
+  Decimal gasAmount = Decimal.zero;
   String exgAddress = '';
 
   bool isConfirmDeposit = false;

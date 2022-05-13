@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_balances_v2_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_history_model.dart';
@@ -569,6 +570,38 @@ class ApiService {
                       Get all wallet balance
 -------------------------------------------------------------------------------------*/
 
+  Future<List<WalletBalanceV2>> getSingleWalletBalanceV2(String fabAddress,
+      String tickerName, String thirdPartyChainAddress) async {
+    String url = configService.getKanbanBaseUrl() + singleWalletBalanceApiRoute;
+    log.i('getSingleWalletBalanceV2 URL $url');
+    var body = {
+      "fabAddress": fabAddress,
+      "tickerName": tickerName,
+      "thirdPartyChainAddress": thirdPartyChainAddress,
+      "showEXGAssets": "true"
+    };
+    log.i('getWalletBalance body $body');
+
+    WalletBalanceListV2 balanceList;
+    try {
+      var response = await client.post(url, body: body);
+      bool success = jsonDecode(response.body)['success'];
+      if (success == true) {
+        var jsonList = jsonDecode(response.body)['data'] as List;
+        log.i('json list getSingleWalletBalanceV2 $jsonList');
+
+        balanceList = WalletBalanceListV2.fromJson(jsonList);
+      } else {
+        log.e('getSingleWalletBalanceV2 returning null');
+        return null;
+      }
+      return balanceList.walletBalances;
+    } catch (err) {
+      log.e('In getSingleWalletBalanceV2 catch $err');
+      return null;
+    }
+  }
+
   Future<List<WalletBalance>> getSingleWalletBalance(String fabAddress,
       String tickerName, String thirdPartyChainAddress) async {
     String url = configService.getKanbanBaseUrl() + singleWalletBalanceApiRoute;
@@ -693,7 +726,7 @@ class ApiService {
           exgAddress;
       log.e('get gas balance url $url');
       final res = await client.get(url);
-      log.w(jsonDecode(res.body));
+      log.w('getGasBalance ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }

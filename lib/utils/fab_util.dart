@@ -145,7 +145,7 @@ class FabUtils {
           (2 * 34 + 10) * satoshisPerBytes;
       Decimal transFee = Decimal.fromInt(calc2);
       int amountBigIntToInt =
-          NumberUtil.decimalToBigInt1(totalAmount, decimalPrecision: 8).toInt();
+          NumberUtil.decimalToBigInt(totalAmount, decimalPrecision: 8).toInt();
 
       var output1 =
           (totalInput - amountBigIntToInt - transFee.toDouble()).round();

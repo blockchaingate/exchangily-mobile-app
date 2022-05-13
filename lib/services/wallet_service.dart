@@ -328,7 +328,7 @@ class WalletService {
   }
 
   Future<bool> hasSufficientWalletBalance(
-      double amount, String tickerName) async {
+      Decimal amount, String tickerName) async {
     bool isValidAmount = true;
     String fabAddress =
         await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
@@ -337,7 +337,7 @@ class WalletService {
         .getWalletAddressByTickerName(tickerName);
     log.w('coinAddress $thirdPartyAddress');
     await apiService
-        .getSingleWalletBalance(fabAddress, tickerName, thirdPartyAddress)
+        .getSingleWalletBalanceV2(fabAddress, tickerName, thirdPartyAddress)
         .then((walletBalance) {
       if (walletBalance != null) {
         log.w(walletBalance[0].balance);
@@ -1079,21 +1079,24 @@ class WalletService {
                     Gas Balance
 ----------------------------------------------------------------------*/
 
-  Future<double> gasBalance(String addr) async {
-    double gasAmount = 0.0;
+  Future<Decimal> gasBalance(String addr) async {
+    Decimal gasAmount = Decimal.zero;
     await apiService.getGasBalance(addr).then((res) {
       if (res != null &&
           res['balance'] != null &&
           res['balance']['FAB'] != null) {
         var newBal = BigInt.parse(res['balance']['FAB']);
-        gasAmount = string_utils.bigNum2Double(newBal);
+        gasAmount = NumberUtil.rawStringToDecimal(newBal.toString(),
+            decimalPrecision: 10);
+        debugPrint(
+            'gas amount in double ${string_utils.bigNum2Double(newBal).toString()}');
       }
     }).timeout(const Duration(seconds: 50), onTimeout: () {
       log.e('Timeout');
-      gasAmount = 0.0;
+      gasAmount = Decimal.zero;
     }).catchError((onError) {
       log.w('On error $onError');
-      gasAmount = 0.0;
+      gasAmount = Decimal.zero;
     });
     return gasAmount;
   }
@@ -1351,7 +1354,7 @@ class WalletService {
   Future depositTron(
       {String mnemonic,
       WalletInfo walletInfo,
-      double amount,
+      Decimal amount,
       bool isTrxUsdt,
       bool isBroadcast,
       @required options}) async {
@@ -1449,7 +1452,7 @@ class WalletService {
   }
 
   Future<Map<String, dynamic>> depositDo(
-      seed, String coinName, String tokenType, double amount, option) async {
+      seed, String coinName, String tokenType, Decimal amount, option) async {
     Map<String, dynamic> errRes = <String, dynamic>{};
     errRes['success'] = false;
 
@@ -1474,7 +1477,7 @@ class WalletService {
     var kanbanGasPrice = option['kanbanGasPrice'];
     var kanbanGasLimit = option['kanbanGasLimit'];
     log.e('before send transaction');
-    var resST = await sendTransaction(
+    var resST = await sendTransactionV2(
         coinName, seed, [0], [], officalAddress, amount, option, false);
     log.i('after send transaction');
     if (resST != null) log.w('res $resST');
@@ -2454,7 +2457,8 @@ class WalletService {
       final ethCoinChild = root.derivePath(
           "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
-      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
+      var amountSentInt = NumberUtil.decimalToBigInt(amount);
+      // var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
 
       Credentials credentials = EthPrivateKey.fromHex(privateKey);
 

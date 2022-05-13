@@ -54,14 +54,14 @@ class DepositErr {
 ----------------------------------------------------------------------*/
 
 class WalletBalanceV2 {
-  String _coin;
-  Decimal _balance;
-  Decimal _unconfirmedBalance;
-  Decimal _lockBalance;
-  Decimal _usdValue;
-  List<DepositErr> _depositErr;
-  Decimal _unlockedExchangeBalance;
-  Decimal _lockedExchangeBalance;
+  String coin;
+  Decimal balance;
+  Decimal unconfirmedBalance;
+  Decimal lockBalance;
+  Decimal usdValue;
+  List<DepositErr> depositErr;
+  Decimal unlockedExchangeBalance;
+  Decimal lockedExchangeBalance;
 
   WalletBalanceV2(
       {String coin,
@@ -71,16 +71,7 @@ class WalletBalanceV2 {
       Decimal usdValue,
       List<DepositErr> depositErr,
       Decimal unlockedExchangeBalance,
-      Decimal lockedExchangeBalance}) {
-    _coin = coin;
-    _balance = balance ?? 0.0;
-    _unconfirmedBalance = unconfirmedBalance ?? 0.0;
-    _lockBalance = lockBalance ?? 0.0;
-    _usdValue = usdValue ?? Decimal.zero;
-    _depositErr = depositErr;
-    _unlockedExchangeBalance = unlockedExchangeBalance ?? 0.0;
-    _lockedExchangeBalance = lockedExchangeBalance ?? 0.0;
-  }
+      Decimal lockedExchangeBalance});
 
   factory WalletBalanceV2.fromJson(Map<String, dynamic> json) {
     List<DepositErr> depositErrList = [];
@@ -114,33 +105,33 @@ class WalletBalanceV2 {
 // To json
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['coin'] = _coin;
-    data['balance'] = _balance;
-    data['unconfirmedBalance'] = _unconfirmedBalance;
-    data['lockBalance'] = _lockBalance;
-    if (_usdValue != null) {
-      data['usdValue'] = _usdValue.toJson();
+    data['coin'] = coin;
+    data['balance'] = balance;
+    data['unconfirmedBalance'] = unconfirmedBalance;
+    data['lockBalance'] = lockBalance;
+    if (usdValue != null) {
+      data['usdValue'] = usdValue.toJson();
     }
-    if (_depositErr != null) {
-      data['depositErr'] = _depositErr.map((v) => v.toJson()).toList();
+    if (depositErr != null) {
+      data['depositErr'] = depositErr.map((v) => v.toJson()).toList();
     }
-    data['unlockedExchangeBalance'] = _unlockedExchangeBalance;
-    data['lockedExchangeBalance'] = _lockedExchangeBalance;
+    data['unlockedExchangeBalance'] = unlockedExchangeBalance;
+    data['lockedExchangeBalance'] = lockedExchangeBalance;
     return data;
   }
 
   Decimal balanceInUsd() {
-    return _balance * _usdValue;
+    return balance * usdValue;
   }
 }
 
-class WalletBalanceList {
+class WalletBalanceListV2 {
   final List<WalletBalanceV2> walletBalances;
-  WalletBalanceList({this.walletBalances});
+  WalletBalanceListV2({this.walletBalances});
 
-  factory WalletBalanceList.fromJson(List<dynamic> parsedJson) {
+  factory WalletBalanceListV2.fromJson(List<dynamic> parsedJson) {
     List<WalletBalanceV2> balanceList = [];
     balanceList = parsedJson.map((i) => WalletBalanceV2.fromJson(i)).toList();
-    return WalletBalanceList(walletBalances: balanceList);
+    return WalletBalanceListV2(walletBalances: balanceList);
   }
 }

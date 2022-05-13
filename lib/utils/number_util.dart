@@ -21,20 +21,19 @@ class NumberUtil {
 
   static final BigInt rawPerNano = BigInt.from(10).pow(29);
   static const int maxDecimalDigits = 2; // Max digits after decimal
-
+  /// Breaks at precision 19
   static Decimal decimalLimiter(Decimal input,
       {int decimalPrecision = maxDecimalDigits}) {
     var p = pow(10, decimalPrecision);
     var t = Decimal.fromInt(p);
-    var x = (input * t);
+    var x = input * t;
     var trunc = x.truncate();
-
-    var resInRational = (trunc / t);
-    var res =
+    var resInRational = trunc / t;
+    var finalRes =
         resInRational.toDecimal(scaleOnInfinitePrecision: decimalPrecision);
 
-    debugPrint('res $res');
-    return res;
+    debugPrint('finalRes $finalRes');
+    return finalRes;
   }
 
   static NumberUtilResult stringDecimalLimiter(String input,
@@ -65,7 +64,7 @@ class NumberUtil {
         decimalOutput: Decimal.parse(decimalLimiterStringRes));
   }
 
-  static String stringDecimalToRawDecimalString(String amount) {
+  static String decimalStringToRawDecimalString(String amount) {
     Decimal asDecimal = Decimal.parse(amount);
     Decimal rawDecimal = Decimal.parse(rawPerNano.toString());
     //100000000000000000000000000000
@@ -96,21 +95,19 @@ class NumberUtil {
     return (value * Decimal.fromInt(pow(10, decimalPrecision))).toBigInt();
   }
 
-  static BigInt decimalToBigInt1(Decimal value, {int decimalPrecision = 18}) {
-    return BigInt.parse(
-        (value * Decimal.fromInt(pow(10, decimalPrecision))).toString());
-  }
-
 // 12345678912345678912345678912345678912345678912300000000
 //                    to
 // 123456789123456789123456789.123456789123456789123
-  static Decimal rawStringToDecimal(String raw) {
-    //  if (raw.isEmpty) raw = "1254000000000000000000000000000";
-    Decimal amount = Decimal.parse(raw.toString());
-    var x = Decimal.fromBigInt(rawPerNano);
-    Decimal result = (amount / x).toDecimal();
+  static Decimal rawStringToDecimal(String raw, {decimalPrecision = 18}) {
+    if (raw.isNotEmpty) {
+      Decimal amount = Decimal.parse(raw.toString());
+      var x = Decimal.fromInt(pow(10, decimalPrecision));
+      Decimal result = (amount / x).toDecimal();
 
-    return result;
+      return result;
+    } else {
+      return Decimal.zero;
+    }
   }
 
   static BigInt additionBigInt(BigInt val1, BigInt val2) {

@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -19,7 +20,7 @@ import '../../../localizations.dart';
 import '../../../shared/globals.dart' as globals;
 
 class Gas extends StatelessWidget {
-  final double gasAmount;
+  final Decimal gasAmount;
   const Gas({Key key, this.gasAmount}) : super(key: key);
 
   @override
@@ -47,7 +48,7 @@ class Gas extends StatelessWidget {
             ),
             UIHelper.horizontalSpaceSmall,
             Text(
-              "${AppLocalizations.of(context).gas}: ${NumberUtil().truncateDoubleWithoutRouding(gasAmount, decimalPrecision: 6)}",
+              "${AppLocalizations.of(context).gas}: ${NumberUtil.decimalLimiter(gasAmount, decimalPrecision: 2)}",
               style: Theme.of(context).textTheme.headline5,
             ),
           ],
