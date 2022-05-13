@@ -19,9 +19,9 @@ import "package:flutter/material.dart";
 import '../../../localizations.dart';
 import '../../../shared/globals.dart' as globals;
 
-class Gas extends StatelessWidget {
+class GasBalanceWidget extends StatelessWidget {
   final Decimal gasAmount;
-  const Gas({Key key, this.gasAmount}) : super(key: key);
+  const GasBalanceWidget({Key key, this.gasAmount}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class Gas extends StatelessWidget {
         Row(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 5.0),
+              padding: const EdgeInsets.only(left: 2.0),
               child: Container(
                   decoration: const BoxDecoration(
                       color: globals.iconBackgroundColor,
@@ -44,18 +44,19 @@ class Gas extends StatelessWidget {
                     color: isProduction
                         ? globals.secondaryColor
                         : globals.red.withAlpha(200),
+                    size: 18,
                   )),
             ),
             UIHelper.horizontalSpaceSmall,
             Text(
-              "${AppLocalizations.of(context).gas}: ${NumberUtil.decimalLimiter(gasAmount, decimalPrecision: 2)}",
+              "${AppLocalizations.of(context).gas}: ${NumberUtil.decimalLimiter(gasAmount, decimalPrecision: 6)}",
               style: Theme.of(context).textTheme.headline5,
             ),
           ],
         ),
         UIHelper.horizontalSpaceSmall,
         MaterialButton(
-          minWidth: 70.0,
+          minWidth: 68.0,
           height: 24,
           color: globals.primaryColor,
           padding: const EdgeInsets.all(0),

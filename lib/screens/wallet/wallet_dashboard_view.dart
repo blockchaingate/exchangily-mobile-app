@@ -495,7 +495,8 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                 children: [
                   model.isBusy
                       ? Container()
-                      : Expanded(child: Gas(gasAmount: model.gasAmount)),
+                      : Expanded(
+                          child: GasBalanceWidget(gasAmount: model.gasAmount)),
                   !model.isFreeFabNotUsed
                       ? Container()
                       : Container(
@@ -1821,7 +1822,7 @@ class AddGasRow extends StatelessWidget {
         //         ),
         //       )
         //     :
-        Gas(gasAmount: model.gasAmount);
+        GasBalanceWidget(gasAmount: model.gasAmount);
   }
 }
 

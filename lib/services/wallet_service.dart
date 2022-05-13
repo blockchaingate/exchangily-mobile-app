@@ -1087,10 +1087,11 @@ class WalletService {
           res['balance']['FAB'] != null) {
         var newBal = BigInt.parse(res['balance']['FAB']);
         gasAmount = NumberUtil.rawStringToDecimal(newBal.toString(),
-            decimalPrecision: 10);
+            decimalPrecision: 18);
         debugPrint(
             'gas amount in double ${string_utils.bigNum2Double(newBal).toString()}');
       }
+      //25099828281300000000
     }).timeout(const Duration(seconds: 50), onTimeout: () {
       log.e('Timeout');
       gasAmount = Decimal.zero;
