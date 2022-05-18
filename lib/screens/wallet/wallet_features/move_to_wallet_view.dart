@@ -11,7 +11,7 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_wallet_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -25,8 +25,8 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/gestures.dart';
 
 class MoveToWalletScreen extends StatelessWidget {
-  final WalletInfo walletInfo;
-  const MoveToWalletScreen({Key key, this.walletInfo}) : super(key: key);
+  final AppWallet appWallet;
+  const MoveToWalletScreen({Key key, this.appWallet}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class MoveToWalletScreen extends StatelessWidget {
       viewModelBuilder: () => MoveToWalletViewmodel(),
       onModelReady: (model) {
         model.context = context;
-        model.walletInfo = walletInfo;
+        model.appWallet = appWallet;
         model.initState();
       },
       builder: (context, model, child) => WillPopScope(
@@ -153,13 +153,13 @@ class MoveToWalletScreen extends StatelessWidget {
                         children: <Widget>[
                           Text(
                               AppLocalizations.of(context).inExchange +
-                                  ' ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, decimalPrecision: model.decimalLimit).toString()}',
+                                  ' ${NumberUtil.decimalLimiter(model.appWallet.unlockedExchangeBalance, decimalPrecision: model.decimalLimit).toString()}',
                               style: Theme.of(context).textTheme.subtitle2),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 3,
                             ),
-                            child: walletInfo.tickerName == 'USDTX'
+                            child: appWallet.tickerName == 'USDTX'
                                 ? Text('USDT'.toUpperCase(),
                                     style:
                                         Theme.of(context).textTheme.subtitle2)
@@ -217,9 +217,9 @@ class MoveToWalletScreen extends StatelessWidget {
                               child: Row(
                                 children: [
                                   model.isShowTrxTsWalletBalance ||
-                                          model.walletInfo.tickerName ==
+                                          model.appWallet.tickerName ==
                                               "USDT" ||
-                                          model.walletInfo.tickerName == "USDTX"
+                                          model.appWallet.tickerName == "USDTX"
                                       ? Row(
                                           children: <Widget>[
                                             SizedBox(

@@ -13,7 +13,7 @@
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -24,23 +24,23 @@ import '../../../../utils/string_util.dart';
 
 // {"success":true,"data":{"transactionID":"7f9d1b3fad00afa85076d28d46fd3457f66300989086b95c73ed84e9b3906de8"}}
 class Redeposit extends StatelessWidget {
-  final WalletInfo walletInfo;
+  final AppWallet appWallet;
 
-  const Redeposit({Key key, this.walletInfo}) : super(key: key);
+  const Redeposit({Key key, this.appWallet}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<RedepositViewModel>.reactive(
       onModelReady: (model) {
         model.context = context;
-        model.walletInfo = walletInfo;
+        model.appWallet = appWallet;
       },
       viewModelBuilder: () => RedepositViewModel(),
       builder: (BuildContext context, model, child) => Scaffold(
           appBar: AppBar(
             centerTitle: true,
             title: Text(
-              '${AppLocalizations.of(context).redeposit}  ${walletInfo.tickerName}  ${AppLocalizations.of(context).toExchange}',
+              '${AppLocalizations.of(context).redeposit}  ${appWallet.tickerName}  ${AppLocalizations.of(context).toExchange}',
               style: Theme.of(context).textTheme.headline4,
             ),
             backgroundColor: const Color(0XFF1f2233),
@@ -99,7 +99,7 @@ class Redeposit extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             AppLocalizations.of(context).walletbalance +
-                                ' ${model.walletInfo.availableBalance}',
+                                ' ${model.appWallet.balance}',
                             style: Theme.of(context).textTheme.headline5,
                           ),
                           Padding(
@@ -107,7 +107,7 @@ class Redeposit extends StatelessWidget {
                               horizontal: 10,
                             ),
                             child: Text(
-                              walletInfo.tickerName.toUpperCase(),
+                              appWallet.tickerName.toUpperCase(),
                               style: Theme.of(context).textTheme.headline5,
                             ),
                           )

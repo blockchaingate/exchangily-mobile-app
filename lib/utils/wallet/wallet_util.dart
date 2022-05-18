@@ -1,5 +1,5 @@
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:flutter/widgets.dart';
@@ -131,11 +131,59 @@ class WalletUtil {
     'Genesis Vision'
   ];
 
-  // get wallet info object with address using single wallet balance
-  Future<WalletInfo> getWalletInfoObjFromWalletBalance(
-      WalletBalance wallet) async {
-    //FocusScope.of(context).requestFocus(FocusNode());
+  // Get wallet info object with address using single wallet balance
+  Future<AppWallet> assignWalletAddress(AppWallet appWallet) async {
+    // take the tickername and then get the coin type
+    // either from token or token updates api/local storage
 
+    String tickerName = appWallet.tickerName.toUpperCase();
+    String walletAddress = '';
+
+    int coinType = await coinService.getCoinTypeByTickerName(tickerName);
+
+    // use coin type to get the token type
+    String tokenType = getChainNameByTokenType(coinType);
+
+    // get wallet address
+    if (tickerName == 'ETH' ||
+        tokenType == 'ETH' ||
+        tickerName == 'MATICM' ||
+        tokenType == 'POLYGON') {
+      walletAddress =
+          await coreWalletDatabaseService.getWalletAddressByTickerName('ETH');
+    } else if (tickerName == 'FAB' || tokenType == 'FAB') {
+      walletAddress =
+          await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
+    } else if (tickerName == 'TRX' ||
+        tickerName == 'TRON' ||
+        tokenType == 'TRON' ||
+        tokenType == 'TRX') {
+      walletAddress =
+          await coreWalletDatabaseService.getWalletAddressByTickerName('TRX');
+    } else {
+      walletAddress = await coreWalletDatabaseService
+          .getWalletAddressByTickerName(tickerName);
+    }
+    String coinName = '';
+    for (var i = 0; i < coinTickerAndNameList.length; i++) {
+      if (coinTickerAndNameList.containsKey(appWallet.coin)) {
+        coinName = coinTickerAndNameList[appWallet.coin];
+      }
+      break;
+    }
+    appWallet.address = walletAddress;
+    appWallet.tickerName = appWallet.coin;
+    appWallet.tokenType = tokenType;
+    appWallet.name = coinName;
+
+    log.w(
+        'assignWalletAddress wallet address - ${appWallet.address} --  json ${appWallet.toJson()}');
+    return appWallet;
+  }
+
+  /// Get wallet info object with address using single wallet balance
+  Future<AppWallet> getWalletInfoObjFromWalletBalance(
+      WalletBalance wallet) async {
     // take the tickername and then get the coin type
     // either from token or token updates api/local storage
 
@@ -176,17 +224,17 @@ class WalletUtil {
     }
 
     // assign address from local DB to walletinfo object
-    var walletInfo = WalletInfo(
+    var appWallet = AppWallet(
         tickerName: wallet.coin,
-        availableBalance: wallet.balance,
+        balance: wallet.balance,
         tokenType: tokenType,
         usdValue: wallet.balance * wallet.usdValue.usd,
-        inExchange: wallet.unlockedExchangeBalance,
+        unlockedExchangeBalance: wallet.unlockedExchangeBalance,
         address: walletAddress,
         name: coinName);
 
-    log.w('routeWithWalletInfoArgs walletInfo ${walletInfo.toJson()}');
-    return walletInfo;
+    log.w('routeWithWalletInfoArgs appWallet ${appWallet.toJson()}');
+    return appWallet;
   }
 
 /*----------------------------------------------------------------------

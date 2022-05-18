@@ -10,9 +10,11 @@
 * Author: ken.qiu@exchangily.com and barry_ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/font_style.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,8 +28,8 @@ import 'package:exchangilymobileapp/utils/string_util.dart';
 
 // {"success":true,"data":{"transactionID":"7f9d1b3fad00afa85076d28d46fd3457f66300989086b95c73ed84e9b3906de8"}}
 class MoveToExchangeScreen extends StatelessWidget {
-  final WalletInfo walletInfo;
-  const MoveToExchangeScreen({Key key, this.walletInfo}) : super(key: key);
+  final AppWallet appWallet;
+  const MoveToExchangeScreen({Key key, this.appWallet}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class MoveToExchangeScreen extends StatelessWidget {
       viewModelBuilder: () => MoveToExchangeViewModel(),
       onModelReady: (MoveToExchangeViewModel model) {
         model.context = context;
-        model.walletInfo = walletInfo;
+        model.appWallet = appWallet;
         model.initState();
       },
       builder: (context, MoveToExchangeViewModel model, child) => Scaffold(
@@ -102,24 +104,24 @@ class MoveToExchangeScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: <Widget>[
-                      model.busy(model.walletInfo)
+                      model.busy(model.appWallet)
                           ? Text(
                               AppLocalizations.of(context).walletbalance +
-                                  '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, decimalPrecision: model.decimalLimit).toString()}',
+                                  '  ${NumberUtil.decimalLimiter(model.appWallet.balance, decimalPrecision: model.decimalLimit).toString()}',
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle2
                                   .copyWith(color: yellow))
                           : Text(
                               AppLocalizations.of(context).walletbalance +
-                                  '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, decimalPrecision: model.decimalLimit).toString()}',
-                              style: Theme.of(context).textTheme.subtitle2),
+                                  '  ${NumberUtil.decimalLimiter(model.appWallet.balance, decimalPrecision: model.decimalLimit).toString()}',
+                              style: headText5.copyWith(color: grey)),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 3,
                         ),
                         child: Text(model.specialTicker.toUpperCase(),
-                            style: Theme.of(context).textTheme.subtitle2),
+                            style: headText5.copyWith(color: grey)),
                       )
                     ],
                   ),
@@ -134,7 +136,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                             backgroundColor: MaterialStateProperty.all(green),
                           ),
                           onPressed: () {
-                            if (walletInfo.availableBalance != 0.0) {
+                            if (appWallet.balance != Decimal.zero) {
                               model.fillMaxAmount();
                             }
                           },
@@ -149,16 +151,23 @@ class MoveToExchangeScreen extends StatelessWidget {
                 ],
               ),
               UIHelper.verticalSpaceSmall,
+              model.appWallet.tickerName == 'FAB'
+                  ? Text(
+                      AppLocalizations.of(context).unConfirmedBalance +
+                          '  ${NumberUtil.decimalLimiter(model.appWallet.unconfirmedBalance, decimalPrecision: model.decimalLimit).toString()}',
+                      style: headText5.copyWith(color: grey))
+                  : Container(),
+              UIHelper.verticalSpaceSmall,
 
               Container(
                 child: Column(
                   children: [
-                    walletInfo.tickerName == 'TRX' ||
-                            walletInfo.tickerName == 'USDTX'
+                    appWallet.tickerName == 'TRX' ||
+                            appWallet.tickerName == 'USDTX'
                         ? Container(
                             padding: const EdgeInsets.only(top: 10, bottom: 0),
                             alignment: Alignment.topLeft,
-                            child: walletInfo.tickerName == 'TRX'
+                            child: appWallet.tickerName == 'TRX'
                                 ? Text(
                                     '${AppLocalizations.of(context).gasFee}: 1 TRX',
                                     textAlign: TextAlign.left,
@@ -179,7 +188,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                           ? Row(
                                               children: [
                                                 Text(
-                                                    model.walletInfo.tokenType +
+                                                    model.appWallet.tokenType +
                                                         ' ' +
                                                         AppLocalizations.of(
                                                                 context)
@@ -230,7 +239,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                   ? Row(
                                       children: [
                                         Text(
-                                            model.walletInfo.tokenType +
+                                            model.appWallet.tokenType +
                                                 ' ' +
                                                 AppLocalizations.of(context)
                                                     .balance,

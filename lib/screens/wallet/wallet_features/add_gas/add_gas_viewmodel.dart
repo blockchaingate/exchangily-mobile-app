@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -30,12 +31,12 @@ class AddGasViewModel extends FutureViewModel {
   final gasPriceTextController = TextEditingController();
   final gasLimitTextController = TextEditingController();
   double gasBalance = 0.0;
-  double transFee = 0.0;
+  Decimal transFee = Decimal.zero;
   bool isAdvance = false;
-  double sliderValue = 0.0;
+  Decimal sliderValue = Decimal.zero;
   bool isAmountInvalid = false;
-  double totalAmount = 0.0;
-  double sumUtxos = 0.0;
+  Decimal totalAmount = Constants.decimalZero;
+  Decimal sumUtxos = Constants.decimalZero;
   String fabAddress = '';
   var scarContractAddress;
   var contractInfo;
@@ -44,7 +45,7 @@ class AddGasViewModel extends FutureViewModel {
   int satoshisPerBytes = 14;
   var bytesPerInput;
   var feePerInput;
-  double fabBalance = 0.0;
+  Decimal fabBalance = Decimal.zero;
   final kanbanUtils = KanbanUtils();
 
   @override
@@ -88,7 +89,7 @@ class AddGasViewModel extends FutureViewModel {
         // debugPrint('utxoValueDouble $utxoValueDouble');
         var t = Decimal.fromInt(utxoValue) / Decimal.parse('1e8');
         //  debugPrint(' t ${t.toDouble()}');
-        sumUtxos = sumUtxos + t.toDouble();
+        sumUtxos = sumUtxos + t.toDecimal();
       });
     }
     double amt = 0.0;
@@ -118,11 +119,10 @@ class AddGasViewModel extends FutureViewModel {
   getFabBalance() async {
     setBusy(true);
     await apiService
-        .getSingleWalletBalance(fabAddress, 'FAB', fabAddress)
+        .getSingleCoinWalletBalanceV2(fabAddress, 'FAB', fabAddress)
         .then((walletBalance) {
       if (walletBalance != null) {
-        fabBalance = NumberUtil().truncateDoubleWithoutRouding(
-            walletBalance[0].balance,
+        fabBalance = NumberUtil.decimalLimiter(walletBalance[0].balance,
             decimalPrecision: 6);
       }
     });
@@ -184,9 +184,9 @@ class AddGasViewModel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   updateTransFee() {
     setBusy(true);
-    var amount = double.tryParse(amountController.text);
-    if (amount == null || amount <= 0) {
-      transFee = 0.0;
+    var amount = NumberUtil.parseStringToDecimal(amountController.text);
+    if (amount == null || amount <= Constants.decimalZero) {
+      transFee = Constants.decimalZero;
       setBusy(false);
       return;
     }
@@ -205,8 +205,7 @@ class AddGasViewModel extends FutureViewModel {
     utxosNeeded = calculateUtxosNeeded(totalAmount, utxos);
     var fee = (utxosNeeded) * feePerInput + (2 * 34 + 10) * satoshisPerBytes;
     transFee = ((Decimal.parse(extraAmount.toString()) +
-            (Decimal.parse(fee.toString()) / Decimal.parse('1e8')).toDecimal()))
-        .toDouble();
+        (Decimal.parse(fee.toString()) / Decimal.parse('1e8')).toDecimal()));
     totalAmount = totalAmount + transFee;
     utxosNeeded = calculateUtxosNeeded(totalAmount, utxos);
     bool isRequiredUtxoValueIsMore = totalUtxos < utxosNeeded;
@@ -219,19 +218,19 @@ class AddGasViewModel extends FutureViewModel {
   }
 
 // calculate how many utxos needed
-  int calculateUtxosNeeded(double totalAmount, List utxos) {
+  int calculateUtxosNeeded(Decimal totalAmount, List utxos) {
     int utxosNeeded = 0;
-    sumUtxos = 0.0;
+    sumUtxos = Constants.decimalZero;
     int i = 1;
 
     for (var utxo in utxos) {
       var utxoValue = utxo['value'];
-      debugPrint(utxoValue.toString());
+      log.i(' utxoValue - $utxoValue');
       // double utxoValueDouble = bigNum2Double(utxo['value']);
       // debugPrint('utxoValueDouble $utxoValueDouble');
       var t = Decimal.fromInt(utxoValue) / Decimal.parse('1e8');
       //  debugPrint(' t ${t.toDouble()}');
-      sumUtxos = sumUtxos + t.toDouble();
+      sumUtxos = sumUtxos + t.toDecimal();
       if (totalAmount <= sumUtxos) {
         utxosNeeded = i;
       }
@@ -249,11 +248,12 @@ class AddGasViewModel extends FutureViewModel {
   sliderOnchange(newValue) {
     setBusy(true);
     sliderValue = newValue;
-    if (transFee == 0.0) updateTransFee();
+    if (transFee == Constants.decimalZero) updateTransFee();
 
-    var changeAmountWithSlider = (fabBalance - transFee) * sliderValue / 100;
-    amountController.text = NumberUtil()
-        .truncateDoubleWithoutRouding(changeAmountWithSlider,
+    var changeAmountWithSlider =
+        (fabBalance - transFee) * sliderValue / Decimal.fromInt(100);
+    amountController.text = NumberUtil.decimalLimiter(
+            changeAmountWithSlider.toDecimal(),
             decimalPrecision: 6)
         .toString();
     setBusy(false);

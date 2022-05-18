@@ -13,13 +13,14 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/models/app_update_model.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token_model.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_balances_v2_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_history_model.dart';
@@ -263,7 +264,7 @@ class ApiService {
                 tickerChainTxId: tickerTxId,
                 date: filteredDate,
                 tickerName: ticker,
-                quantity: double.parse(amount));
+                quantity: Decimal.parse(amount));
 
             transactionHistory.add(tx);
             index++;
@@ -316,7 +317,7 @@ class ApiService {
                 tickerChainTxId: holder.txid ?? '',
                 date: filteredDate ?? '',
                 tickerName: holder.coin ?? '',
-                quantity: holder.amount ?? 0.0);
+                quantity: holder.amount ?? Constants.decimalZero);
 
             transactionHistory.add(tx);
           }
@@ -570,9 +571,10 @@ class ApiService {
                       Get all wallet balance
 -------------------------------------------------------------------------------------*/
 
-  Future<List<WalletBalanceV2>> getSingleWalletBalanceV2(String fabAddress,
+  Future<List<WalletBalanceV2>> getSingleCoinWalletBalanceV2(String fabAddress,
       String tickerName, String thirdPartyChainAddress) async {
-    String url = configService.getKanbanBaseUrl() + singleWalletBalanceApiRoute;
+    String url =
+        configService.getKanbanBaseUrl() + 'v2/' + singleWalletBalanceApiRoute;
     log.i('getSingleWalletBalanceV2 URL $url');
     var body = {
       "fabAddress": fabAddress,
@@ -602,65 +604,30 @@ class ApiService {
     }
   }
 
-  Future<List<WalletBalance>> getSingleWalletBalance(String fabAddress,
-      String tickerName, String thirdPartyChainAddress) async {
-    String url = configService.getKanbanBaseUrl() + singleWalletBalanceApiRoute;
-    log.i('getWalletBalance URL $url');
-    var body = {
-      "fabAddress": fabAddress,
-      "tickerName": tickerName,
-      "thirdPartyChainAddress": thirdPartyChainAddress,
-      "showEXGAssets": "true"
-    };
-    log.i('getWalletBalance body $body');
-
-    WalletBalanceList balanceList;
-    try {
-      var response = await client.post(url, body: body);
-      bool success = jsonDecode(response.body)['success'];
-      if (success == true) {
-        var jsonList = jsonDecode(response.body)['data'] as List;
-        log.i('json list getWalletBalance $jsonList');
-        // List newList = [];
-        // jsonList.forEach((element) {
-        //   if (element['balance'] != null) newList.add(element);
-        // });
-        // log.i('single getWalletBalance $newList');
-        balanceList = WalletBalanceList.fromJson(jsonList);
-      } else {
-        log.e('get single wallet balance returning null');
-        return null;
-      }
-      return balanceList.walletBalances;
-    } catch (err) {
-      log.e('In getWalletBalance catch $err');
-      return null;
-    }
-  }
-
 /*-------------------------------------------------------------------------------------
                       Get all wallet balance
 -------------------------------------------------------------------------------------*/
 
-  Future<List<WalletBalance>> getWalletBalance(body) async {
-    String url = configService.getKanbanBaseUrl() + walletBalancesApiRoute;
+  Future<List<WalletBalanceV2>> getWalletBalanceV2(body) async {
+    String url =
+        configService.getKanbanBaseUrl() + 'v2/' + walletBalancesApiRoute;
     log.i('getWalletBalance URL $url');
     log.i('getWalletBalance body $body');
 
-    WalletBalanceList balanceList;
+    WalletBalanceListV2 balanceList;
     try {
       var response = await client.post(url, body: body);
-      bool success = jsonDecode(response.body)['success'];
-      if (success == true) {
-        var jsonList = jsonDecode(response.body)['data'] as List;
-        //  log.i('json list getWalletBalance $jsonList');
-        List newList = [];
-        for (var element in jsonList) {
-          if (element['balance'] == -1) element['balance'] = 0.0;
-          if (element['balance'] != null) newList.add(element);
-        }
-        log.i('newList getWalletBalance $newList');
-        balanceList = WalletBalanceList.fromJson(newList);
+      var resBody = jsonDecode(response.body);
+      if (resBody != null) {
+        var jsonList = jsonDecode(response.body) as List;
+        log.i('json list getWalletBalance $jsonList');
+        // List newList = [];
+        // for (var element in jsonList) {
+        //   if (element['balance'] == -1) element['balance'] = 0.0;
+        //   if (element['balance'] != null) newList.add(element);
+        // }
+        //  log.i('newList getWalletBalance $newList');
+        balanceList = WalletBalanceListV2.fromJson(jsonList.sublist(2));
       } else {
         log.e('get wallet balances returning null');
         return null;

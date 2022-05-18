@@ -10,7 +10,7 @@ import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
@@ -32,7 +32,6 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'dart:async';
@@ -87,7 +86,7 @@ class WalletService {
   double currentTickerUsdValue;
   var txids = [];
   var httpClient = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
-  double coinUsdBalance;
+  Decimal coinUsdBalance = Decimal.zero;
 
   Completer<DialogResponse> _completer;
   final fabUtils = FabUtils();
@@ -102,7 +101,7 @@ class WalletService {
 
   final _vaultService = locator<VaultService>();
 
-  // verify wallet address
+  /// Verify wallet address
   Future<Map<String, bool>> verifyWalletAddresses(String mnemonic) async {
     Map<String, bool> res = {
       "fabAddressCheck": false,
@@ -111,7 +110,7 @@ class WalletService {
 
     // create wallet address and assign to walletcoremodel object
     CoreWalletModel walletDataFromCreateOfflineWalletV1 =
-        await createOfflineWalletsV1(mnemonic, '', isVerifying: true);
+        await createOfflineWalletsV2(mnemonic, '', isVerifying: true);
 
     // get the walletbalancebody from the DB
     var walletBalancesBodyFromStorage;
@@ -337,7 +336,7 @@ class WalletService {
         .getWalletAddressByTickerName(tickerName);
     log.w('coinAddress $thirdPartyAddress');
     await apiService
-        .getSingleWalletBalanceV2(fabAddress, tickerName, thirdPartyAddress)
+        .getSingleCoinWalletBalanceV2(fabAddress, tickerName, thirdPartyAddress)
         .then((walletBalance) {
       if (walletBalance != null) {
         log.w(walletBalance[0].balance);
@@ -699,7 +698,7 @@ class WalletService {
 ----------------------------------------------------------------------*/
 
 // create Offline Wallets V1
-  Future<CoreWalletModel> createOfflineWalletsV1(String mnemonic, String key,
+  Future<CoreWalletModel> createOfflineWalletsV2(String mnemonic, String key,
       {isVerifying = false}) async {
     CoreWalletModel walletCoreModel = CoreWalletModel();
     var vaultService = locator<VaultService>();
@@ -807,59 +806,6 @@ class WalletService {
     }
   }
 
-  Future createOfflineWallets(String mnemonic) async {
-    // await walletDatabaseService.deleteDb();
-    // await walletDatabaseService.initDb();
-    List<WalletInfo> _walletInfo = [];
-    if (_walletInfo != null) {
-      _walletInfo.clear();
-    } else {
-      _walletInfo = [];
-    }
-    var seed = generateSeed(mnemonic);
-    var root = generateBip32Root(seed);
-
-    // BCH address
-    String bchAddress = await generateBchAddress(mnemonic);
-    String trxAddress = generateTrxAddress(mnemonic);
-
-    try {
-      for (int i = 0; i < walletUtil.coinTickers.length; i++) {
-        String tickerName = walletUtil.coinTickers[i];
-        String name = walletUtil.coinNames[i];
-        String token = walletUtil.tokenType[i];
-        String addr = '';
-        if (tickerName == 'BCH') {
-          addr = bchAddress;
-        } else if (tickerName == 'TRX') {
-          addr = trxAddress;
-        } else {
-          addr = await coinUtils.getAddressForCoin(root, tickerName,
-              tokenType: token);
-        }
-        WalletInfo wi = WalletInfo(
-            id: null,
-            tickerName: tickerName,
-            tokenType: token,
-            address: addr,
-            availableBalance: 0.0,
-            lockedBalance: 0.0,
-            usdValue: 0.0,
-            name: name);
-        _walletInfo.add(wi);
-        log.i("Offline wallet ${_walletInfo[i].toJson()}");
-        // await walletDatabaseService.insert(_walletInfo[i]);
-      }
-
-      //  await walletDatabaseService.getAll();
-      return _walletInfo;
-    } catch (e) {
-      log.e(e);
-      log.e('Catch createOfflineWallets $e');
-      throw Exception('Catch createOfflineWallets $e');
-    }
-  }
-
 /*----------------------------------------------------------------------
                 Transaction status
 ----------------------------------------------------------------------*/
@@ -920,7 +866,7 @@ class WalletService {
                     id: storedTx.id,
                     tickerName: storedTx.tickerName,
                     address: '',
-                    amount: 0.0,
+                    amount: Constants.decimalZero,
                     date: date.toString(),
                     kanbanTxId: storedTx.kanbanTxId,
                     tickerChainTxStatus: 'Complete',
@@ -985,7 +931,7 @@ class WalletService {
               id: transactionByTxId.id,
               tickerName: transactionByTxId.tickerName,
               address: '',
-              amount: 0.0,
+              amount: Constants.decimalZero,
               date: date.toString(),
               kanbanTxId: transactionByTxId.kanbanTxId,
               tickerChainTxStatus: 'Complete',
@@ -1002,7 +948,7 @@ class WalletService {
               id: transactionByTxId.id,
               tickerName: transactionByTxId.tickerName,
               address: '',
-              amount: 0.0,
+              amount: Constants.decimalZero,
               date: date.toString(),
               kanbanTxId: transactionByTxId.kanbanTxId,
               tickerChainTxStatus: 'Error',
@@ -1015,7 +961,7 @@ class WalletService {
               id: transactionByTxId.id,
               tickerName: transactionByTxId.tickerName,
               address: '',
-              amount: 0.0,
+              amount: Constants.decimalZero,
               date: date.toString(),
               kanbanTxId: transactionByTxId.kanbanTxId,
               tickerChainTxStatus: 'Failed',
@@ -1028,7 +974,7 @@ class WalletService {
               id: transactionByTxId.id,
               tickerName: transactionByTxId.tickerName,
               address: '',
-              amount: 0.0,
+              amount: Constants.decimalZero,
               date: date.toString(),
               kanbanTxId: transactionByTxId.kanbanTxId,
               tickerChainTxStatus: 'Require redeposit',
@@ -1136,22 +1082,26 @@ class WalletService {
 /*----------------------------------------------------------------------
                 Calculate Only Usd Balance For Individual Coin
 ----------------------------------------------------------------------*/
-
-  double calculateCoinUsdBalance(
-      double marketPrice, double actualWalletBalance, double lockedBalance) {
-    if (marketPrice != null) {
-      if (actualWalletBalance.isNegative) actualWalletBalance = 0.0;
-      if (lockedBalance.isNegative) lockedBalance = 0.0;
-      log.w(
-          'market price $marketPrice -- available bal $actualWalletBalance-- locked bal $lockedBalance');
-      coinUsdBalance = marketPrice * (actualWalletBalance + lockedBalance);
-      return coinUsdBalance;
-    } else {
-      coinUsdBalance = 0.0;
-      log.i('calculateCoinUsdBalance - Wallet balance 0');
-    }
-    return coinUsdBalance;
-  }
+// Todo: check with negative data and see if code is working fine
+  // Decimal calculateWalletUsdBalance(
+  //     Decimal marketPrice, Decimal walletBalance, Decimal lockedBalance) {
+  //   if (marketPrice != null) {
+  //     if (walletBalance.toDouble().isNegative) {
+  //       walletBalance = Decimal.zero;
+  //     }
+  //     if (lockedBalance.toDouble().isNegative) {
+  //       lockedBalance = Decimal.zero;
+  //     }
+  //     log.w(
+  //         'market price $marketPrice -- available bal $walletBalance-- locked bal $lockedBalance');
+  //     coinUsdBalance = marketPrice * (walletBalance + lockedBalance);
+  //     return coinUsdBalance;
+  //   } else {
+  //     coinUsdBalance = Decimal.zero;
+  //     log.i('calculateCoinUsdBalance - Wallet balance 0');
+  //   }
+  //   return coinUsdBalance;
+  // }
 
 // Add Gas
   Future<int> addGas() async {
@@ -1354,7 +1304,7 @@ class WalletService {
 ----------------------------------------------------------------------*/
   Future depositTron(
       {String mnemonic,
-      WalletInfo walletInfo,
+      AppWallet appWallet,
       Decimal amount,
       bool isTrxUsdt,
       bool isBroadcast,
@@ -1366,8 +1316,8 @@ class WalletService {
 
     debugPrint('kanbanGasPrice $kanbanGasPrice');
     debugPrint('kanbanGasLimit $kanbanGasLimit');
-    var officalAddress = coinUtils.getOfficalAddress(walletInfo.tickerName,
-        tokenType: walletInfo.tokenType);
+    var officalAddress = coinUtils.getOfficalAddress(appWallet.tickerName,
+        tokenType: appWallet.tokenType);
     debugPrint('official address in wallet service deposit do $officalAddress');
     if (officalAddress == null) {
       //errRes['data'] = 'no official address';
@@ -1380,11 +1330,11 @@ class WalletService {
     ///
     var rawTxRes = await tron_transaction_util.generateTrxTransactionContract(
         privateKey: privateKey,
-        fromAddr: walletInfo.address,
+        fromAddr: appWallet.address,
         toAddr: officalAddress,
         amount: amount,
         isTrxUsdt: isTrxUsdt,
-        tickerName: walletInfo.tickerName,
+        tickerName: appWallet.tickerName,
         isBroadcast: isBroadcast);
 
     log.w('depositTron signed raw tx $rawTxRes');
@@ -1397,7 +1347,7 @@ class WalletService {
 // code  from depositDo
 
     var coinType =
-        await coinService.getCoinTypeByTickerName(walletInfo.tickerName);
+        await coinService.getCoinTypeByTickerName(appWallet.tickerName);
     log.i('coin type $coinType');
 
     var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
@@ -1414,7 +1364,7 @@ class WalletService {
     log.w('Original message $originalMessage');
 
     var signedMess = await coinUtils.signedMessage(
-        originalMessage, seed, walletInfo.tickerName, walletInfo.tokenType);
+        originalMessage, seed, appWallet.tickerName, appWallet.tokenType);
     log.e('Signed message $signedMess');
     var coinPoolAddress = await kanbanUtils.getCoinPoolAddress();
 
@@ -1422,18 +1372,18 @@ class WalletService {
     /// If special deposits then take the coin type of the respective chain coin
     int sepcialcoinType;
     var abiHex;
-    if (walletInfo.tickerName == 'USDTX') {
+    if (appWallet.tickerName == 'USDTX') {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
       abiHex = abiUtils.getDepositFuncABI(
           sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
-          chain: walletInfo.tokenType, isSpecialDeposit: true);
+          chain: appWallet.tokenType, isSpecialDeposit: true);
 
       log.e('cointype $coinType -- abihex $abiHex');
     } else {
       debugPrint('in else');
       abiHex = abiUtils.getDepositFuncABI(
           coinType, txHash, amountInLink, addressInKanban, signedMess,
-          chain: walletInfo.tokenType);
+          chain: appWallet.tokenType);
       log.i('cointype $coinType -- abihex $abiHex');
     }
     var nonce = await kanbanUtils.getNonce(addressInKanban);

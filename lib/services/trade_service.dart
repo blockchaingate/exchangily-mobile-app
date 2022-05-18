@@ -14,7 +14,9 @@
 import 'dart:convert';
 
 import 'package:bs58check/bs58check.dart';
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 
@@ -58,11 +60,11 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   final RxValue<bool> _isOrderbookLoaded = RxValue<bool>(false);
   bool get isOrderbookLoaded => _isOrderbookLoaded.value;
 
-  final RxValue<double> _price = RxValue<double>(0.0);
-  double get price => _price.value;
+  final RxValue<Decimal> _price = RxValue<Decimal>(Constants.decimalZero);
+  Decimal get price => _price.value;
 
-  final RxValue<double> _quantity = RxValue<double>(0.0);
-  double get quantity => _quantity.value;
+  final RxValue<Decimal> _quantity = RxValue<Decimal>(Constants.decimalZero);
+  Decimal get quantity => _quantity.value;
 
   final RxValue<String> _interval = RxValue<String>('24h');
   String get interval => _interval.value;
@@ -146,7 +148,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 /*----------------------------------------------------------------------
                     Set price and quantity
 ----------------------------------------------------------------------*/
-  void setPriceQuantityValues(double p, double q) {
+  void setPriceQuantityValues(Decimal p, Decimal q) {
     _price.value = p;
     _quantity.value = q;
     log.w('$price, $quantity');

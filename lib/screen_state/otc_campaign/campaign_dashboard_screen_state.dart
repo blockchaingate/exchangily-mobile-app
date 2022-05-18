@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/member_profile.dart';
@@ -167,8 +168,8 @@ class CampaignDashboardScreenState extends BaseState {
         }
         //assignColorAccordingToMemberLevel(level);
 
-        myInvestmentValueWithoutRewards =
-            NumberUtil.currencyFormat(member.totalValue, 2);
+        myInvestmentValueWithoutRewards = NumberUtil.currencyFormat(
+            Decimal.parse(member.totalValue.toString()), 2);
         debugPrint('TOKENS ${member.totalQuantities}');
         memberProfile = member;
       } else {
@@ -410,7 +411,8 @@ class CampaignDashboardScreenState extends BaseState {
     log.e('calcMyTotalAsssetValue');
     double exgPrice = await getUsdValue();
     double holder = myTotalAssetQuantity * exgPrice;
-    myTotalAssetValue = NumberUtil.currencyFormat(holder, 2);
+    myTotalAssetValue =
+        NumberUtil.currencyFormat(Decimal.parse(holder.toString()), 2);
     log.e(
         'calcMyTotalAsssetValue $myTotalAssetQuantity, $exgPrice - $myTotalAssetValue');
     return myTotalAssetValue;

@@ -14,7 +14,7 @@
 import 'dart:async';
 
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -69,7 +69,7 @@ class WalletDatabaseService {
 
   // Get All Records From The Database
 
-  Future<List<WalletInfo>> getAll() async {
+  Future<List<AppWallet>> getAll() async {
     //await deleteDb();
     // await initDb();
     final Database db = await _database;
@@ -79,42 +79,42 @@ class WalletDatabaseService {
     final List<Map<String, dynamic>> res = await db.query(tableName);
     log.w('res $res');
 
-    List<WalletInfo> list =
-        res.isNotEmpty ? res.map((f) => WalletInfo.fromJson(f)).toList() : [];
+    List<AppWallet> list =
+        res.isNotEmpty ? res.map((f) => AppWallet.fromJson(f)).toList() : [];
     return list;
   }
 
 // Insert Data In The Database
-  Future insert(WalletInfo walletInfo) async {
+  Future insert(AppWallet AppWallet) async {
     await initDb();
     final Database db = await _database;
 
-    int id = await db.insert(tableName, walletInfo.toJson(),
+    int id = await db.insert(tableName, AppWallet.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
 
     return id;
   }
 
   // Get Single Wallet By Name
-  Future<WalletInfo> getByName(String name) async {
+  Future<AppWallet> getByName(String name) async {
     final Database db = await _database;
     List<Map> res =
         await db.query(tableName, where: 'name= ?', whereArgs: [name]);
     log.w('ID - $name --- $res');
     if (res.isNotEmpty) {
-      return WalletInfo.fromJson((res.first));
+      return AppWallet.fromJson((res.first));
     }
     return null;
   }
 
   // Get Single Wallet By tickerName
-  Future<WalletInfo> getWalletBytickerName(String tickerName) async {
+  Future<AppWallet> getWalletBytickerName(String tickerName) async {
     final Database db = await _database;
     List<Map> res = await db
         .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);
     log.w('tickerName - $tickerName --res - $res');
     if (res.isNotEmpty) {
-      return WalletInfo.fromJson((res.first));
+      return AppWallet.fromJson((res.first));
     }
     return null;
   }
@@ -125,7 +125,7 @@ class WalletDatabaseService {
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     // log.w('ID - $id --- $res');
     if (res.isNotEmpty) {
-      return WalletInfo.fromJson((res.first));
+      return AppWallet.fromJson((res.first));
     }
     return null;
   }
@@ -144,15 +144,15 @@ class WalletDatabaseService {
   }
 
   // Update database
-  Future<void> update(WalletInfo walletInfo) async {
+  Future<void> update(AppWallet AppWallet) async {
     final Database db = await _database;
 
     await db
         .update(
       tableName,
-      walletInfo.toJson(),
+      AppWallet.toJson(),
       where: "id = ?",
-      whereArgs: [walletInfo.id],
+      whereArgs: [AppWallet.id],
       conflictAlgorithm: ConflictAlgorithm.replace,
     )
         .catchError((err) {

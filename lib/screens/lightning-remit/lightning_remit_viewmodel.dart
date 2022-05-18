@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -49,7 +50,7 @@ class LightningRemitViewmodel extends FutureViewModel {
   WalletService walletService = locator<WalletService>();
   String tickerName = '';
   BuildContext context;
-  double quantity = 0.0;
+  Decimal quantity = Decimal.zero;
   List<Map<String, dynamic>> coins = [];
   GlobalKey globalKey = GlobalKey();
   ScrollController scrollController;
@@ -312,7 +313,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     // changeBottomSheetStatus();
   }
 
-  updateSelectedTickernameIOS(int index, double updatedQuantity) {
+  updateSelectedTickernameIOS(int index, Decimal updatedQuantity) {
     setBusy(true);
     debugPrint(
         'INDEX ${index + 1} ---- coins length ${exchangeBalances.length}');
@@ -607,9 +608,9 @@ class LightningRemitViewmodel extends FutureViewModel {
           .firstWhere((element) => element.ticker == tickerName);
       // int coinType = getCoinTypeIdByName(tickerName);
       debugPrint(_selectedExchangeBal.coinType.toString());
-      double amount = double.parse(amountController.text);
-      double selectedCoinBalance = _selectedExchangeBal.unlockedAmount;
-      if (selectedCoinBalance <= 0.0 || amount > selectedCoinBalance) {
+      Decimal amount = Decimal.parse(amountController.text);
+      Decimal selectedCoinBalance = _selectedExchangeBal.unlockedAmount;
+      if (selectedCoinBalance <= Decimal.zero || amount > selectedCoinBalance) {
         sharedService.alertDialog(AppLocalizations.of(context).validationError,
             AppLocalizations.of(context).invalidAmount);
         setBusy(false);

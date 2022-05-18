@@ -13,10 +13,11 @@
 
 import 'dart:convert';
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
@@ -33,7 +34,7 @@ import 'package:exchangilymobileapp/constants/route_names.dart';
 class WalletFeaturesViewModel extends BaseViewModel {
   final log = getLogger('WalletFeaturesViewModel');
 
-  WalletInfo walletInfo;
+  AppWallet appWallet;
   WalletService walletService = locator<WalletService>();
   final storageService = locator<LocalStorageService>();
   ApiService apiService = locator<ApiService>();
@@ -52,20 +53,19 @@ class WalletFeaturesViewModel extends BaseViewModel {
   List<WalletFeatureName> features = [];
   bool isFavorite = false;
   int decimalLimit = 8;
-  double unconfirmedBalance = 0.0;
   var walletUtil = WalletUtil();
 
   init() async {
     getWalletFeatures();
     getErrDeposit();
     specialTicker = walletUtil.updateSpecialTokensTickerNameForTxHistory(
-        walletInfo.tickerName)["tickerName"];
-    log.i('wi object to check name ${walletInfo.toJson()}');
-    refreshBalance();
+        appWallet.tickerName)["tickerName"];
+    log.i('wi object to check name ${appWallet.toJson()}');
+    await refreshBalance();
     checkIfCoinIsFavorite();
     setBusy(true);
     decimalLimit = await walletService
-        .getSingleCoinWalletDecimalLimit(walletInfo.tickerName);
+        .getSingleCoinWalletDecimalLimit(appWallet.tickerName);
     if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     setBusy(false);
   }
@@ -76,7 +76,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
       List<String> favWalletCoins =
           (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
 
-      if (favWalletCoins.contains(walletInfo.tickerName)) {
+      if (favWalletCoins.contains(appWallet.tickerName)) {
         setBusy(true);
         isFavorite = true;
         setBusy(false);
@@ -154,7 +154,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
             });
           }
           log.w('tickerNameByCointype $tickerNameByCointype');
-          if (tickerNameByCointype == walletInfo.tickerName) {
+          if (tickerNameByCointype == appWallet.tickerName) {
             setBusy(true);
             errDepositItem = item;
             log.w('err deposit item $errDepositItem');
@@ -177,25 +177,21 @@ class WalletFeaturesViewModel extends BaseViewModel {
         await sharedService.getFabAddressFromCoreWalletDatabase();
     //  await getExchangeBal();
     await apiService
-        .getSingleWalletBalance(
-            fabAddress, walletInfo.tickerName, walletInfo.address)
+        .getSingleCoinWalletBalanceV2(
+            fabAddress, appWallet.tickerName, appWallet.address)
         .then((walletBalance) async {
-      var availableBalance = walletBalance[0].balance;
-      walletInfo.availableBalance = availableBalance;
-      var lockedBalance = walletBalance[0].lockBalance;
-      walletInfo.lockedBalance = lockedBalance;
-      unconfirmedBalance = walletBalance[0].unconfirmedBalance;
+      appWallet.balance = walletBalance[0].balance;
+      appWallet.lockBalance = walletBalance[0].lockBalance;
+      appWallet.unconfirmedBalance = walletBalance[0].unconfirmedBalance;
+      appWallet.usdValue = walletBalance[0].usdValue;
       if (!specialTicker.contains('(')) {
-        walletInfo.inExchange = walletBalance[0].unlockedExchangeBalance;
+        appWallet.unlockedExchangeBalance =
+            walletBalance[0].unlockedExchangeBalance;
       } else {
         await getExchangeBalForSpecialTokens();
       }
-      double currentUsdValue = walletBalance[0].usdValue.usd;
-      log.e(
-          'market price $currentUsdValue -- available bal $availableBalance -- inExchange ${walletInfo.inExchange} -- locked bal $lockedBalance');
-      walletInfo.usdValue = walletService.calculateCoinUsdBalance(
-          currentUsdValue, availableBalance, lockedBalance);
-      log.w(walletInfo.toJson());
+
+      log.w(appWallet.toJson());
     })
         // await walletService
         //     .coinBalanceByAddress(
@@ -226,28 +222,28 @@ class WalletFeaturesViewModel extends BaseViewModel {
   // get exchange balance for single coin
   getExchangeBalForSpecialTokens() async {
     String tickerName = '';
-    if (walletInfo.tickerName == 'DSCE' || walletInfo.tickerName == 'DSC') {
+    if (appWallet.tickerName == 'DSCE' || appWallet.tickerName == 'DSC') {
       tickerName = 'DSC';
-    } else if (walletInfo.tickerName == 'BSTE' ||
-        walletInfo.tickerName == 'BST') {
+    } else if (appWallet.tickerName == 'BSTE' ||
+        appWallet.tickerName == 'BST') {
       tickerName = 'BST';
-    } else if (walletInfo.tickerName == 'FABE' ||
-        walletInfo.tickerName == 'FAB') {
+    } else if (appWallet.tickerName == 'FABE' ||
+        appWallet.tickerName == 'FAB') {
       tickerName = 'FAB';
-    } else if (walletInfo.tickerName == 'EXGE' ||
-        walletInfo.tickerName == 'EXG') {
+    } else if (appWallet.tickerName == 'EXGE' ||
+        appWallet.tickerName == 'EXG') {
       tickerName = 'EXG';
-    } else if (walletInfo.tickerName == 'USDT') {
+    } else if (appWallet.tickerName == 'USDT') {
       tickerName = 'USDT';
-    } else if (walletInfo.tickerName == 'USDTX') {
+    } else if (appWallet.tickerName == 'USDTX') {
       tickerName = 'USDT';
     } else {
-      tickerName = walletInfo.tickerName;
+      tickerName = appWallet.tickerName;
     }
     await apiService.getSingleCoinExchangeBalance(tickerName).then((res) {
       if (res != null) {
-        walletInfo.inExchange = res.unlockedAmount;
-        log.w('exchange bal ${walletInfo.inExchange}');
+        appWallet.unlockedExchangeBalance = res.unlockedAmount;
+        log.w('exchange bal ${appWallet.unlockedExchangeBalance}');
       }
     });
   }

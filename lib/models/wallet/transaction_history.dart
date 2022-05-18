@@ -1,14 +1,17 @@
+import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
+
 class TransactionHistory {
   int _id;
   String _tickerName;
   String _address;
-  double _amount;
+  Decimal _amount;
   String _date;
   String _tickerChainTxId;
   String _kanbanTxId;
   String _tickerChainTxStatus; // for deposit look for this one first
   String _kanbanTxStatus; // for withdraw look for this one first
-  double _quantity;
+  Decimal _quantity;
   String _tag;
   String _chainName;
 
@@ -16,25 +19,25 @@ class TransactionHistory {
       {int id,
       String tickerName,
       String address,
-      double amount,
+      Decimal amount,
       String date,
       String tickerChainTxId,
       String kanbanTxId,
       String tickerChainTxStatus,
       String kanbanTxStatus,
-      double quantity,
+      Decimal quantity,
       String tag,
       String chainName}) {
     _id = id;
     _tickerName = tickerName ?? '';
     _address = address ?? '';
-    _amount = amount ?? 0.0;
+    _amount = amount ?? Decimal.zero;
     _date = date ?? '';
     _tickerChainTxId = tickerChainTxId ?? '';
     _kanbanTxId = kanbanTxId ?? '';
     _tickerChainTxStatus = tickerChainTxStatus ?? '';
     _kanbanTxStatus = kanbanTxStatus ?? '';
-    _quantity = quantity ?? 0.0;
+    _quantity = quantity ?? Decimal.zero;
     _tag = tag ?? '';
     _chainName = chainName ?? '';
   }
@@ -59,13 +62,13 @@ class TransactionHistory {
         id: json['id'],
         tickerName: json['tickerName'] as String,
         address: json['address'] as String,
-        amount: json['amount'],
+        amount: NumberUtil.parseStringToDecimal(json['amount'].toString()),
         date: json['date'] as String,
         tickerChainTxId: json['tickerChainTxId'],
         kanbanTxId: json['kanbanTxId'],
         tickerChainTxStatus: json['tickerChainTxStatus'],
         kanbanTxStatus: json['kanbanTxStatus'],
-        quantity: json['quantity'],
+        quantity: NumberUtil.parseStringToDecimal(json['quantity'].toString()),
         tag: json['tag'],
         chainName: json['chainName']);
   }
@@ -88,9 +91,9 @@ class TransactionHistory {
     _address = address;
   }
 
-  double get amount => _amount;
+  Decimal get amount => _amount;
 
-  set amount(double amount) {
+  set amount(Decimal amount) {
     _amount = amount;
   }
 
@@ -122,8 +125,8 @@ class TransactionHistory {
     _kanbanTxStatus = kanbanTxStatus;
   }
 
-  double get quantity => _quantity;
-  set quantity(double quantity) {
+  Decimal get quantity => _quantity;
+  set quantity(Decimal quantity) {
     _quantity = quantity;
   }
 

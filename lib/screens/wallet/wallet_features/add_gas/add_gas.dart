@@ -139,7 +139,7 @@ class AddGas extends StatelessWidget {
                       onChanged: (newValue) {
                         model.sliderOnchange(newValue);
                       },
-                      value: model.sliderValue,
+                      value: model.sliderValue.toDouble(),
                     ),
                     // Advance
                     Row(children: <Widget>[

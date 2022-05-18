@@ -4,7 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
@@ -31,7 +31,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       locator<TokenInfoDatabaseService>();
   CoreWalletDatabaseService coreWalletDatabaseService =
       locator<CoreWalletDatabaseService>();
-  WalletInfo walletInfo;
+  AppWallet appWallet;
   BuildContext context;
   final gasPriceTextController = TextEditingController();
   final gasLimitTextController = TextEditingController();
@@ -71,15 +71,15 @@ class MoveToExchangeViewModel extends BaseViewModel {
   // Init
   void initState() async {
     setBusy(true);
-    coinName = walletInfo.tickerName;
-    if (coinName == 'FAB') walletInfo.tokenType = '';
-    if (coinName == 'USDTX') walletInfo.tokenType = 'TRX';
-    tokenType = walletInfo.tokenType;
+    coinName = appWallet.tickerName;
+    if (coinName == 'FAB') appWallet.tokenType = '';
+    if (coinName == 'USDTX') appWallet.tokenType = 'TRX';
+    tokenType = appWallet.tokenType;
     setFee();
     await getGas();
 
     specialTicker = walletUtil.updateSpecialTokensTickerNameForTxHistory(
-        walletInfo.tickerName)['tickerName'];
+        appWallet.tickerName)['tickerName'];
     await refreshBalance();
 
     if (coinName == 'BTC') {
@@ -171,7 +171,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     }
 
     await apiService
-        .getSingleWalletBalanceV2(fabAddress, tokenType, walletInfo.address)
+        .getSingleCoinWalletBalanceV2(fabAddress, tokenType, appWallet.address)
         .then((walletBalance) => chainBalance = walletBalance.first.balance);
   }
 
@@ -202,18 +202,19 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     Decimal finalAmount = Decimal.zero;
     // update if transfee is 0
-    if (!walletService.isTrx(walletInfo.tickerName)) await updateTransFee();
+    if (!walletService.isTrx(appWallet.tickerName)) await updateTransFee();
     // if tron coins then assign fee accordingly
-    if (walletService.isTrx(walletInfo.tickerName)) {
-      if (walletInfo.tickerName == 'USDTX') {
-        transFee = 15.toDecimal();
+    if (walletService.isTrx(appWallet.tickerName)) {
+      if (appWallet.tickerName == 'USDTX') {
+        transFee = NumberUtil.parseStringToDecimal("15");
         finalAmount = amount;
-        finalAmount <= Decimal.parse(walletInfo.availableBalance.toString())
+        finalAmount <=
+                NumberUtil.parseStringToDecimal(appWallet.balance.toString())
             ? isValidAmount = true
             : isValidAmount = false;
       }
 
-      if (walletInfo.tickerName == 'TRX') {
+      if (appWallet.tickerName == 'TRX') {
         transFee = Decimal.one;
         finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
       }
@@ -233,7 +234,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
         finalAmount = amount;
       }
     }
-    finalAmount <= Decimal.parse(walletInfo.availableBalance.toString())
+    finalAmount <= NumberUtil.parseStringToDecimal(appWallet.balance.toString())
         ? isValidAmount = true
         : isValidAmount = false;
     log.i(
@@ -249,12 +250,12 @@ class MoveToExchangeViewModel extends BaseViewModel {
   fillMaxAmount() async {
     setBusy(true);
 
-    amount = Decimal.parse(walletInfo.availableBalance.toString());
+    amount = NumberUtil.parseStringToDecimal(appWallet.balance.toString());
     amountController.text = amount.toString();
 
-    if (!walletService.isTrx(walletInfo.tickerName)) await updateTransFee();
+    if (!walletService.isTrx(appWallet.tickerName)) await updateTransFee();
     Decimal finalAmount = decimalZero;
-    if (walletService.isTrx(walletInfo.tickerName)) {
+    if (walletService.isTrx(appWallet.tickerName)) {
       transFee = Decimal.one;
     }
     if (transFee != decimalZero) {
@@ -356,13 +357,14 @@ class MoveToExchangeViewModel extends BaseViewModel {
       return;
     }
 
-    if (transFee > Decimal.parse(walletInfo.availableBalance.toString()) &&
-        walletInfo.tickerName != 'TRX' &&
-        walletInfo.tickerName != 'USDTX') {
+    if (transFee >
+            NumberUtil.parseStringToDecimal(appWallet.balance.toString()) &&
+        appWallet.tickerName != 'TRX' &&
+        appWallet.tickerName != 'USDTX') {
       sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).insufficientBalance,
           subtitle:
-              '${AppLocalizations.of(context).gasFee} $transFee > ${AppLocalizations.of(context).walletbalance} ${walletInfo.availableBalance}');
+              '${AppLocalizations.of(context).gasFee} $transFee > ${AppLocalizations.of(context).walletbalance} ${appWallet.balance}');
 
       setBusy(false);
       return;
@@ -371,16 +373,17 @@ class MoveToExchangeViewModel extends BaseViewModel {
     await refreshBalance();
 
     Decimal finalAmount = decimalZero;
-    if (!walletService.isTrx(walletInfo.tickerName)) {
+    if (!walletService.isTrx(appWallet.tickerName)) {
       finalAmount = await amountAfterFee();
     }
 
     if (amount == null ||
-        finalAmount > Decimal.parse(walletInfo.availableBalance.toString()) ||
+        finalAmount >
+            NumberUtil.parseStringToDecimal(appWallet.balance.toString()) ||
         amount == decimalZero ||
         amount.toString() == '-$amount') {
       log.e(
-          'amount $amount --- final amount with fee: $finalAmount -- wallet bal: ${walletInfo.availableBalance}');
+          'amount $amount --- final amount with fee: $finalAmount -- wallet bal: ${appWallet.balance}');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).insufficientBalance,
           isWarning: false);
@@ -392,10 +395,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
     /// whether native token has enough balance to cover transaction fee
     if (tokenType.isNotEmpty) {
       bool hasSufficientChainBalance = await walletService
-          .hasSufficientWalletBalance(transFee, walletInfo.tokenType);
+          .hasSufficientWalletBalance(transFee, appWallet.tokenType);
       if (!hasSufficientChainBalance) {
         log.e('Chain $tokenType -- insufficient balance');
-        sharedService.sharedSimpleNotification(walletInfo.tokenType,
+        sharedService.sharedSimpleNotification(appWallet.tokenType,
             subtitle: AppLocalizations.of(context).insufficientBalance);
         setBusy(false);
         return;
@@ -403,8 +406,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
     }
 
 // * checking trx balance required
-    if (walletInfo.tickerName == 'USDTX') {
-      log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
+    if (appWallet.tickerName == 'USDTX') {
+      log.e('amount $amount --- wallet bal: ${appWallet.balance}');
       bool isCorrectAmount = true;
       await walletService
           .hasSufficientWalletBalance(Decimal.fromInt(15), 'TRX')
@@ -420,12 +423,12 @@ class MoveToExchangeViewModel extends BaseViewModel {
       }
     }
 
-    if (walletInfo.tickerName == 'TRX') {
-      log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
+    if (appWallet.tickerName == 'TRX') {
+      log.e('amount $amount --- wallet bal: ${appWallet.balance}');
       bool isCorrectAmount = true;
       Decimal trxFee = Decimal.one;
       if (amount + trxFee >
-          Decimal.parse(walletInfo.availableBalance.toString())) {
+          NumberUtil.parseStringToDecimal(appWallet.balance.toString())) {
         isCorrectAmount = false;
       }
       if (!isCorrectAmount) {
@@ -447,7 +450,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (res.confirmed) {
       var seed;
       String mnemonic = res.returnedText;
-      if (walletInfo.tickerName != 'TRX' && walletInfo.tickerName != 'USDTX') {
+      if (appWallet.tickerName != 'TRX' && appWallet.tickerName != 'USDTX') {
         seed = walletService.generateSeed(mnemonic);
       }
 
@@ -456,12 +459,12 @@ class MoveToExchangeViewModel extends BaseViewModel {
       var satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
       var kanbanGasPrice = int.tryParse(kanbanGasPriceTextController.text);
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
-      String tickerName = walletInfo.tickerName;
+      String tickerName = appWallet.tickerName;
       int decimal;
       //  BigInt bigIntAmount = BigInt.tryParse(amountController.text);
       // log.w('Big int amount $bigIntAmount');
       String contractAddr = '';
-      if (walletInfo.tokenType.isNotEmpty) {
+      if (appWallet.tokenType.isNotEmpty) {
         contractAddr = environment["addresses"]["smartContract"][tickerName];
       }
       if (contractAddr == null && tokenType != '') {
@@ -481,23 +484,23 @@ class MoveToExchangeViewModel extends BaseViewModel {
         "satoshisPerBytes": satoshisPerBytes ?? 0,
         'kanbanGasPrice': kanbanGasPrice,
         'kanbanGasLimit': kanbanGasLimit,
-        'tokenType': walletInfo.tokenType,
+        'tokenType': appWallet.tokenType,
         'contractAddress': contractAddr,
         'decimal': decimal
       };
-      log.i('3 - -- ${walletInfo.tickerName}, --   $amount, - - $option');
+      log.i('3 - -- ${appWallet.tickerName}, --   $amount, - - $option');
 
       // TRON Transaction
-      if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
+      if (appWallet.tickerName == 'TRX' || appWallet.tickerName == 'USDTX') {
         setBusy(true);
-        log.i('depositing tron ${walletInfo.tickerName}');
+        log.i('depositing tron ${appWallet.tickerName}');
 
         await walletService
             .depositTron(
                 mnemonic: mnemonic,
-                walletInfo: walletInfo,
+                appWallet: appWallet,
                 amount: amount,
-                isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
+                isTrxUsdt: appWallet.tickerName == 'USDTX' ? true : false,
                 isBroadcast: false,
                 options: option)
             .then((res) {
@@ -547,7 +550,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
       else {
         await walletService
-            .depositDo(seed, walletInfo.tickerName, walletInfo.tokenType,
+            .depositDo(seed, appWallet.tickerName, appWallet.tokenType,
                 finalAmount, option)
             .then((ret) {
           log.w('deposit res $ret');
@@ -641,14 +644,14 @@ class MoveToExchangeViewModel extends BaseViewModel {
     String fabAddress =
         await sharedService.getFabAddressFromCoreWalletDatabase();
     await apiService
-        .getSingleWalletBalance(
-            fabAddress, walletInfo.tickerName, walletInfo.address)
+        .getSingleCoinWalletBalanceV2(
+            fabAddress, appWallet.tickerName, appWallet.address)
         .then((walletBalance) {
       if (walletBalance != null) {
         log.w('refreshed balance ${walletBalance[0].balance}');
-        setBusyForObject(walletInfo, true);
-        walletInfo.availableBalance = walletBalance[0].balance;
-        setBusyForObject(walletInfo, false);
+        setBusyForObject(appWallet, true);
+        appWallet.balance = walletBalance[0].balance;
+        setBusyForObject(appWallet, false);
       }
     }).catchError((err) {
       log.e(err);
@@ -680,10 +683,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
       "gasPrice": gasPrice,
       "gasLimit": gasLimit,
       "satoshisPerBytes": satoshisPerBytes,
-      "tokenType": walletInfo.tokenType,
+      "tokenType": appWallet.tokenType,
       "getTransFeeOnly": true
     };
-    var address = walletInfo.address;
+    var address = appWallet.address;
 
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
@@ -695,7 +698,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     await walletService
         .sendTransactionV2(
-            walletInfo.tickerName,
+            appWallet.tickerName,
             Uint8List.fromList(
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             [0],
@@ -719,7 +722,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       //   log.w(
       //       'Func: updateTransFee total amount with fee: amount $amount + kanbantransfee $kanbanTransFee + gasFee $transFee = ${amount + kanbanTransFee + transFee}');
       log.i(
-          'Func: updateTransFee availableBalance ${walletInfo.availableBalance} -- amount entered $amount');
+          'Func: updateTransFee availableBalance ${appWallet.balance} -- amount entered $amount');
     }).catchError((onError) {
       setBusy(false);
       log.e(onError);

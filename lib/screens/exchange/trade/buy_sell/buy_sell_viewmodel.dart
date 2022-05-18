@@ -17,11 +17,12 @@ import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
@@ -64,9 +65,9 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   // double get quantityFromTradeService => tradeService.quantity;
 
   final log = getLogger('BuySellViewModel');
-  List<WalletInfo> walletInfo;
-  WalletInfo targetCoinWalletData;
-  WalletInfo baseCoinWalletData;
+  List<AppWallet> appWalletList;
+  AppWallet targetCoinWalletData;
+  AppWallet baseCoinWalletData;
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
@@ -89,15 +90,15 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   bool transFeeAdvance = false;
 
   final DialogService _dialogService = locator<DialogService>();
-  double currentPrice = 0;
+  Decimal currentPrice = Constants.decimalZero;
   double currentQuantity = 0;
   double sliderValue = 10.0;
-  double price = 0.0;
-  double quantity;
+  Decimal price = Constants.decimalZero;
+  Decimal quantity;
 
   String exgAddress;
 
-  double transactionAmount = 0;
+  Decimal transactionAmount = Constants.decimalZero;
 
   ApiService apiService = locator<ApiService>();
 
@@ -355,7 +356,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   void handleTextChanged(String name, String text) {
     if (name == 'price') {
       try {
-        price = double.parse(text);
+        price = Decimal.parse(text);
         log.w('price $price');
         caculateTransactionAmount();
         updateTransFee();
@@ -366,7 +367,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     }
     if (name == 'quantity') {
       try {
-        quantity = double.parse(text);
+        quantity = Decimal.parse(text);
         log.w('quantity $quantity');
         caculateTransactionAmount();
         updateTransFee();
@@ -567,7 +568,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
             Calculate Transaction Amount
 --------------------------------------------------- */
   caculateTransactionAmount() {
-    if (price != null && quantity != null && price >= 0 && quantity >= 0) {
+    if (price != null &&
+        quantity != null &&
+        price >= Constants.decimalZero &&
+        quantity >= Constants.decimalZero) {
       setBusyForObject(transactionAmount, true);
       transactionAmount = quantity * price;
       setBusyForObject(transactionAmount, false);
@@ -670,8 +674,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
     if (price == null ||
         quantity == null ||
-        price.isNegative ||
-        quantity.isNegative) {
+        price.toDouble().isNegative ||
+        quantity.toDouble().isNegative) {
       setBusy(false);
       sharedService.alertDialog("", AppLocalizations.of(context).invalidAmount,
           isWarning: false);
@@ -742,17 +746,18 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     //  baseCoinbalance = NumberUtil().roundDownLastDigit(baseCoinbalance);
     //baseCoinWalletData
     //  .inExchange;
-    if (quantity.isNaN) quantity = 0.0;
+
     if (price != null &&
         quantity != null &&
-        !price.isNegative &&
-        !quantity.isNegative) {
+        !price.toDouble().isNegative &&
+        !quantity.toDouble().isNegative) {
       if (!bidOrAsk) {
-        var changeQuantityWithSlider = targetCoinbalance * sliderValue / 100;
-        quantity = changeQuantityWithSlider;
+        var changeQuantityWithSlider = targetCoinbalance *
+            Decimal.parse(sliderValue.toString()) /
+            Decimal.parse(100.toString());
+        quantity = changeQuantityWithSlider.toDecimal();
 
-        double formattedQuantity = NumberUtil().truncateDoubleWithoutRouding(
-            quantity,
+        Decimal formattedQuantity = NumberUtil.decimalLimiter(quantity,
             decimalPrecision: singlePairDecimalConfig.qtyDecimal);
         // double roundedQtyDouble = double.parse(roundedQtyString);
         // roundedQtyDouble = NumberUtil().roundDownLastDigit(roundedQtyDouble);
@@ -765,14 +770,16 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
         log.e('changeQuantityWithSlider $changeQuantityWithSlider');
       } else {
         log.w('base balance $baseCoinbalance');
-        var changeBalanceWithSlider = baseCoinbalance * sliderValue / 100;
-        quantity = changeBalanceWithSlider / price;
-        String roundedQtyString = NumberUtil()
-            .truncateDoubleWithoutRouding(quantity,
+        var changeBalanceWithSlider = (baseCoinbalance *
+                Decimal.parse(sliderValue.toString()) /
+                Decimal.fromInt(100))
+            .toDecimal();
+        quantity = (changeBalanceWithSlider / price).toDecimal();
+        String roundedQtyString = NumberUtil.decimalLimiter(quantity,
                 decimalPrecision: singlePairDecimalConfig.qtyDecimal)
             .toString();
-        double roundedQtyDouble = double.parse(roundedQtyString);
-        roundedQtyDouble = NumberUtil().roundDownLastDigit(roundedQtyDouble);
+        Decimal roundedQtyDouble = Decimal.parse(roundedQtyString);
+        //   roundedQtyDouble = NumberUtil().roundDownLastDigit(roundedQtyDouble);
         transactionAmount = roundedQtyDouble * price;
         quantityTextController.text = roundedQtyDouble.toString();
         quantity = roundedQtyDouble;

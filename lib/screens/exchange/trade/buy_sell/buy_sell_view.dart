@@ -11,7 +11,9 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
@@ -493,8 +495,7 @@ Column buildVerticalOrderbookColumn(
                           horizontal: 10, vertical: 2),
                       color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                       child: Text(
-                          NumberUtil()
-                              .truncateDoubleWithoutRouding(order.quantity,
+                          NumberUtil.decimalLimiter(order.quantity,
                                   decimalPrecision:
                                       model.singlePairDecimalConfig.qtyDecimal)
                               .toString(),
@@ -661,9 +662,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             Expanded(
               child: model.bidOrAsk == true
                   ? Text(
-                      NumberUtil()
-                              .truncateDoubleWithoutRouding(
-                                  model.transactionAmount,
+                      NumberUtil.decimalLimiter(model.transactionAmount,
                                   decimalPrecision:
                                       model.singlePairDecimalConfig.qtyDecimal)
                               .toString() +
@@ -673,9 +672,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                       style:
                           const TextStyle(color: Colors.grey, fontSize: 12.0))
                   : Text(
-                      NumberUtil()
-                              .truncateDoubleWithoutRouding(
-                                  model.transactionAmount,
+                      NumberUtil.decimalLimiter(model.transactionAmount,
                                   decimalPrecision:
                                       model.singlePairDecimalConfig.qtyDecimal)
                               .toString() +
@@ -851,8 +848,9 @@ class BalanceRowWidget extends StatelessWidget {
     return Container(
         child: model.isBusy &&
                 model.storageService.isShowCaseView &&
-                (model.targetCoinExchangeBalance.unlockedAmount == 0.0 ||
-                    model.baseCoinExchangeBalance.unlockedAmount < 1.0)
+                (model.targetCoinExchangeBalance.unlockedAmount ==
+                        Constants.decimalZero ||
+                    model.baseCoinExchangeBalance.unlockedAmount < Decimal.one)
             ? Showcase(
                 key: model.globalKeyOne,
                 description: AppLocalizations.of(context).buySellInstruction1,
@@ -882,8 +880,7 @@ class BalanceRowWidget extends StatelessWidget {
             : Container(
                 child: model.bidOrAsk
                     ? Text(
-                        NumberUtil()
-                                .truncateDoubleWithoutRouding(
+                        NumberUtil.decimalLimiter(
                                     model
                                         .baseCoinExchangeBalance.unlockedAmount,
                                     decimalPrecision: model
@@ -896,8 +893,7 @@ class BalanceRowWidget extends StatelessWidget {
                     :
                     // ?  model.targetCoinExchangeBalance.unlockAmount == null?textDemoWidget():
                     Text(
-                        NumberUtil()
-                                .truncateDoubleWithoutRouding(
+                        NumberUtil.decimalLimiter(
                                     model.targetCoinExchangeBalance
                                         .unlockedAmount,
                                     decimalPrecision: model

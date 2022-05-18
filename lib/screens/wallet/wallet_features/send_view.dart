@@ -13,7 +13,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -24,8 +24,8 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:stacked/stacked.dart';
 
 class SendWalletView extends StatelessWidget {
-  final WalletInfo walletInfo;
-  const SendWalletView({Key key, this.walletInfo}) : super(key: key);
+  final AppWallet appWallet;
+  const SendWalletView({Key key, this.appWallet}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class SendWalletView extends StatelessWidget {
         viewModelBuilder: () => SendViewModel(),
         onModelReady: (SendViewModel model) async {
           model.context = context;
-          model.walletInfo = walletInfo;
+          model.appWallet = appWallet;
 
           await model.initState();
         },
@@ -184,7 +184,7 @@ class SendWalletView extends StatelessWidget {
                                     children: <Widget>[
                                       Row(
                                         children: [
-                                          model.walletInfo.tickerName == 'FAB'
+                                          model.appWallet.tickerName == 'FAB'
                                               ? SizedBox(
                                                   width: 12,
                                                   height: 12,
@@ -250,7 +250,7 @@ class SendWalletView extends StatelessWidget {
                                                       }),
                                                 )
                                               : Container(),
-                                          model.walletInfo.tickerName == 'FAB'
+                                          model.appWallet.tickerName == 'FAB'
                                               ? UIHelper.horizontalSpaceSmall
                                               : Container(),
                                           // UIHelper.horizontalSpaceSmall,
@@ -260,7 +260,7 @@ class SendWalletView extends StatelessWidget {
                                                 ' ' +
                                                 AppLocalizations.of(context)
                                                     .walletbalance +
-                                                '  ${NumberUtil.stringDecimalLimiter(model.walletInfo.availableBalance.toString(), decimalPrecision: model.decimalLimit).stringOutput} ',
+                                                '  ${NumberUtil.stringDecimalLimiter(model.appWallet.balance.toString(), decimalPrecision: model.decimalLimit).stringOutput} ',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline6
@@ -313,7 +313,7 @@ class SendWalletView extends StatelessWidget {
                                   ),
                                 ),
                                 // Unconfirmed balance
-                                model.walletInfo.tickerName == 'FAB'
+                                model.appWallet.tickerName == 'FAB'
                                     ? Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -400,7 +400,7 @@ class SendWalletView extends StatelessWidget {
                                               Text(
                                                 AppLocalizations.of(context)
                                                         .unConfirmedBalance +
-                                                    '  ${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance, decimalPrecision: model.decimalLimit)} ',
+                                                    '  ${NumberUtil.decimalLimiter(model.unconfirmedBalance, decimalPrecision: model.decimalLimit)} ',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline6
@@ -419,7 +419,7 @@ class SendWalletView extends StatelessWidget {
                                         ],
                                       )
                                     : Container(),
-                                model.walletInfo.tickerName == 'FAB'
+                                model.appWallet.tickerName == 'FAB'
                                     ? Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 10, horizontal: 22),
@@ -432,7 +432,7 @@ class SendWalletView extends StatelessWidget {
                                                 Text(
                                                   AppLocalizations.of(context)
                                                           .totalBalance +
-                                                      '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance + model.unconfirmedBalance, decimalPrecision: model.decimalLimit)} ',
+                                                      '  ${NumberUtil.decimalLimiter(model.appWallet.balance + model.unconfirmedBalance, decimalPrecision: model.decimalLimit)} ',
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .headline6
@@ -457,13 +457,13 @@ class SendWalletView extends StatelessWidget {
                             )),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: walletInfo.tickerName == 'TRX' ||
-                                  walletInfo.tickerName == 'USDTX'
+                          child: appWallet.tickerName == 'TRX' ||
+                                  appWallet.tickerName == 'USDTX'
                               ? Container(
                                   padding:
                                       const EdgeInsets.only(top: 10, bottom: 0),
                                   alignment: Alignment.topLeft,
-                                  child: walletInfo.tickerName == 'TRX'
+                                  child: appWallet.tickerName == 'TRX'
                                       ? Text(
                                           '${AppLocalizations.of(context).gasFee}: 1 TRX',
                                           textAlign: TextAlign.left,

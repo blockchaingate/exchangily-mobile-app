@@ -59,14 +59,14 @@ class TotalBalanceCardWidget
                                         baseColor: primaryColor,
                                         highlightColor: white,
                                         child: Text(
-                                          '${model.totalUsdBalance} USD',
+                                          '${model.totalWalletUsdBalance} USD',
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle1,
                                         ),
                                       )
                                     : Text(
-                                        '${model.swiperWidgetIndex == 0 ? model.totalUsdBalance : model.totalExchangeBalance} USD',
+                                        '${model.swiperWidgetIndex == 0 ? model.totalWalletUsdBalance : model.totalExchangeBalance} USD',
                                         textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme

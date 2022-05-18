@@ -18,7 +18,7 @@ import 'dart:ui';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 
@@ -32,8 +32,8 @@ import '../../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 
 class ReceiveWalletScreen extends StatefulWidget {
-  final WalletInfo walletInfo;
-  const ReceiveWalletScreen({Key key, this.walletInfo}) : super(key: key);
+  final AppWallet appWallet;
+  const ReceiveWalletScreen({Key key, this.appWallet}) : super(key: key);
 
   @override
   _ReceiveWalletScreenState createState() => _ReceiveWalletScreenState();
@@ -73,7 +73,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              buildCopyAddressContainer(context, walletInfo: widget.walletInfo),
+              buildCopyAddressContainer(context, wallet: widget.appWallet),
               buildQrImageContainer(),
             ],
           ),
@@ -109,7 +109,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                     child: QrImage(
                         backgroundColor: globals.white,
                         data: convertedToFabAddress == ''
-                            ? widget.walletInfo.address
+                            ? widget.appWallet.address
                             : convertedToFabAddress,
                         version: QrVersions.auto,
                         size: 300,
@@ -146,7 +146,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                         file.writeAsBytes(byteData).then((onFile) {
                           Share.shareFiles([onFile.path],
                               text: convertedToFabAddress == ''
-                                  ? widget.walletInfo.address
+                                  ? widget.appWallet.address
                                   : convertedToFabAddress);
                         });
                       });
@@ -166,7 +166,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   Container buildCopyAddressContainer(BuildContext context,
-      {WalletInfo walletInfo}) {
+      {AppWallet wallet}) {
     return Container(
       width: double.infinity,
       height: 150,
@@ -178,7 +178,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
         children: <Widget>[
           Text(
               convertedToFabAddress == ''
-                  ? widget.walletInfo.address
+                  ? widget.appWallet.address
                   : convertedToFabAddress,
               style: Theme.of(context)
                   .textTheme
@@ -235,7 +235,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
 
   copyAddress() {
     String address = convertedToFabAddress == ''
-        ? widget.walletInfo.address
+        ? widget.appWallet.address
         : convertedToFabAddress;
     log.w(address);
     Clipboard.setData(ClipboardData(text: address));

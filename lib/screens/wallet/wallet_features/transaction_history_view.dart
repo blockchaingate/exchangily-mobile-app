@@ -1,6 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history/transaction_history_card_widget.dart';
@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class TransactionHistoryView extends StatelessWidget {
-  final WalletInfo walletInfo;
-  const TransactionHistoryView({Key key, this.walletInfo}) : super(key: key);
+  final AppWallet appWallet;
+  const TransactionHistoryView({Key key, this.appWallet}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class TransactionHistoryView extends StatelessWidget {
     return ViewModelBuilder<TransactionHistoryViewmodel>.reactive(
         createNewModelOnInsert: true,
         viewModelBuilder: () =>
-            TransactionHistoryViewmodel(walletInfo: walletInfo),
+            TransactionHistoryViewmodel(appWallet: appWallet),
         onModelReady: (TransactionHistoryViewmodel model) async {
           model.context = context;
         },

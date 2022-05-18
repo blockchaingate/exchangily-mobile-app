@@ -8,7 +8,7 @@ import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';

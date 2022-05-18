@@ -1,4 +1,7 @@
+import 'package:decimal/decimal.dart';
+
 class Constants {
+  static Decimal decimalZero = Decimal.zero;
   static const String baseAssetImagesLocalPath = 'assets/images/';
 
   static const String dollarSignImageLocalUrl =

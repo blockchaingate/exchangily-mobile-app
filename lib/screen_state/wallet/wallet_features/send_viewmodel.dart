@@ -18,10 +18,11 @@ import 'dart:typed_data';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
@@ -69,7 +70,7 @@ class SendViewModel extends BaseViewModel {
   int gasPrice = 0;
   int gasLimit = 0;
   int satoshisPerBytes = 0;
-  WalletInfo walletInfo;
+  AppWallet appWallet;
   bool checkSendAmount = false;
   bool isShowErrorDetailsButton = false;
   bool isShowDetailsMessage = false;
@@ -93,9 +94,9 @@ class SendViewModel extends BaseViewModel {
   // double gasAmount = 0.0;
   String fabAddress = '';
   String transFeeErrMsg = '';
-  double unconfirmedBalance = 0.0;
+  Decimal unconfirmedBalance = Decimal.zero;
   bool isValidAmount = true;
-  double chainBalance = 0.0;
+  Decimal chainBalance = Decimal.zero;
   bool isCustomToken = false;
   CustomTokenModel customToken = CustomTokenModel();
   var decimalZero = Decimal.zero;
@@ -104,19 +105,19 @@ class SendViewModel extends BaseViewModel {
     setBusy(true);
     sharedService.context = context;
 
-    if (walletInfo.tickerName == 'USDTX') {
+    if (appWallet.tickerName == 'USDTX') {
       tickerName = 'USDT(TRC20)';
-    } else if (walletInfo.tickerName == 'MATICM') {
+    } else if (appWallet.tickerName == 'MATICM') {
       tickerName = 'MATIC';
     } else {
-      tickerName = walletInfo.tickerName;
+      tickerName = appWallet.tickerName;
     }
-    if (walletInfo.tokenType == 'TRON') {
-      walletInfo.tokenType = "TRX";
+    if (appWallet.tokenType == 'TRON') {
+      appWallet.tokenType = "TRX";
     }
-    tokenType = walletInfo.tokenType;
+    tokenType = appWallet.tokenType;
 
-    await setFee(walletInfo.tickerName);
+    await setFee(appWallet.tickerName);
     fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
 
     String customTokenStringData = storageService.customTokenData;
@@ -136,9 +137,7 @@ class SendViewModel extends BaseViewModel {
     if (!isCustomToken) {
       await refreshBalance();
       decimalLimit = await walletService.getSingleCoinWalletDecimalLimit(
-          walletInfo.tickerName == 'MATICM'
-              ? tickerName
-              : walletInfo.tickerName);
+          appWallet.tickerName == 'MATICM' ? tickerName : appWallet.tickerName);
       if (decimalLimit == null || decimalLimit == 0) {
         decimalLimit = 8;
       }
@@ -156,7 +155,7 @@ class SendViewModel extends BaseViewModel {
     }
 
     await apiService
-        .getSingleWalletBalance(fabAddress, tokenType, walletInfo.address)
+        .getSingleCoinWalletBalanceV2(fabAddress, tokenType, appWallet.address)
         .then((walletBalance) => chainBalance = walletBalance[0].balance);
   }
 
@@ -225,8 +224,8 @@ class SendViewModel extends BaseViewModel {
 
   bool isTrx() {
     log.i(
-        'isTrx ${walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX'}');
-    return walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX'
+        'isTrx ${appWallet.tickerName == 'TRX' || appWallet.tickerName == 'USDTX'}');
+    return appWallet.tickerName == 'TRX' || appWallet.tickerName == 'USDTX'
         ? true
         : false;
   }
@@ -258,17 +257,18 @@ class SendViewModel extends BaseViewModel {
 
     Decimal finalAmount = Decimal.zero;
     // update if transfee is 0
-    if (!walletService.isTrx(walletInfo.tickerName)) await updateTransFee();
+    if (!walletService.isTrx(appWallet.tickerName)) await updateTransFee();
     // if tron coins then assign fee accordingly
-    if (walletService.isTrx(walletInfo.tickerName)) {
-      if (walletInfo.tickerName == 'USDTX') {
-        transFee = 15.toDecimal();
+    if (walletService.isTrx(appWallet.tickerName)) {
+      if (appWallet.tickerName == 'USDTX') {
+        transFee = NumberUtil.parseStringToDecimal("15");
         finalAmount = amount;
-      } else if (walletInfo.tickerName == 'TRX') {
+      } else if (appWallet.tickerName == 'TRX') {
         transFee = Decimal.one;
         finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
       }
-      finalAmount <= Decimal.parse(walletInfo.availableBalance.toString())
+      finalAmount <=
+              NumberUtil.parseStringToDecimal(appWallet.balance.toString())
           ? isValidAmount = true
           : isValidAmount = false;
     } else {
@@ -285,12 +285,13 @@ class SendViewModel extends BaseViewModel {
         finalAmount = amount;
       }
 
-      finalAmount <= Decimal.parse(walletInfo.availableBalance.toString())
+      finalAmount <=
+              NumberUtil.parseStringToDecimal(appWallet.balance.toString())
           ? isValidAmount = true
           : isValidAmount = false;
     }
     log.i(
-        'Func:amountAfterFee --  entered amount $amount + transaction fee $transFee = finalAmount $finalAmount after fee --  wallet bal ${walletInfo.availableBalance} -- isValidAmount $isValidAmount');
+        'Func:amountAfterFee --  entered amount $amount + transaction fee $transFee = finalAmount $finalAmount after fee --  wallet bal ${appWallet.balance} -- isValidAmount $isValidAmount');
     setBusy(false);
     return NumberUtil.stringDecimalLimiter(finalAmount.toString(),
             decimalPrecision: decimalLimit)
@@ -303,7 +304,7 @@ class SendViewModel extends BaseViewModel {
   fillMaxAmount() async {
     setBusy(true);
 
-    amount = Decimal.parse(walletInfo.availableBalance.toString());
+    amount = NumberUtil.parseStringToDecimal(appWallet.balance.toString());
     amountController.text = amount.toString();
 
     await updateTransFee();
@@ -365,8 +366,8 @@ class SendViewModel extends BaseViewModel {
     if (dialogResponse.confirmed) {
       String mnemonic = dialogResponse.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
-      String tickerName = walletInfo.tickerName.toUpperCase();
-      String tokenType = walletInfo.tokenType.toUpperCase();
+      String tickerName = appWallet.tickerName.toUpperCase();
+      String tokenType = appWallet.tokenType.toUpperCase();
       if (tickerName == 'USDT') {
         tokenType = 'ETH';
       } else if (tickerName == 'EXG') {
@@ -413,7 +414,7 @@ class SendViewModel extends BaseViewModel {
       }
 
       // Convert FAB to EXG format
-      if (walletInfo.tokenType == 'FAB') {
+      if (appWallet.tokenType == 'FAB') {
         if (!toAddress.startsWith('0x')) {
           toAddress = fabUtils.fabToExgAddress(toAddress);
         }
@@ -421,21 +422,21 @@ class SendViewModel extends BaseViewModel {
       log.i('OPTIONS before send $options');
 
       // TRON Transaction
-      if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
-        log.i('sending tron ${walletInfo.tickerName}');
+      if (appWallet.tickerName == 'TRX' || appWallet.tickerName == 'USDTX') {
+        log.i('sending tron ${appWallet.tickerName}');
         var privateKey = tron_address_util.generateTrxPrivKey(mnemonic);
         await tron_transaction_util
             .generateTrxTransactionContract(
                 privateKey: privateKey,
-                fromAddr: walletInfo.address,
+                fromAddr: appWallet.address,
                 toAddr: toAddress,
                 amount: amount,
-                isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
-                tickerName: walletInfo.tickerName,
+                isTrxUsdt: appWallet.tickerName == 'USDTX' ? true : false,
+                tickerName: appWallet.tickerName,
                 isBroadcast: true)
             .then((res) {
           log.i(
-              'generateTrxTransactionContract ${walletInfo.tickerName} res: $res');
+              'generateTrxTransactionContract ${appWallet.tickerName} res: $res');
           var txRes = res['broadcastTronTransactionRes'];
           if (txRes['code'] == 'SUCCESS') {
             log.w('trx tx res $res');
@@ -444,15 +445,15 @@ class SendViewModel extends BaseViewModel {
             isShowDetailsMessage = false;
 
             String t = '';
-            walletInfo.tickerName == 'USDTX'
+            appWallet.tickerName == 'USDTX'
                 ? t = 'USDT(TRC20)'
-                : t = walletInfo.tickerName;
+                : t = appWallet.tickerName;
             sharedService.alertDialog(
               AppLocalizations.of(context).sendTransactionComplete,
               '$t ${AppLocalizations.of(context).isOnItsWay}',
             );
             // add tx to db
-            addSendTransactionToDB(walletInfo, amount.toDouble(), txHash);
+            addSendTransactionToDB(appWallet, amount, txHash);
             Future.delayed(const Duration(milliseconds: 3), () {
               if (!isCustomToken) refreshBalance();
             });
@@ -508,7 +509,7 @@ class SendViewModel extends BaseViewModel {
             //   var allTxids = res["txids"];
             //  walletService.addTxids(allTxids);
             // add tx to db
-            addSendTransactionToDB(walletInfo, amount.toDouble(), txHash);
+            addSendTransactionToDB(appWallet, amount, txHash);
             Future.delayed(const Duration(milliseconds: 30), () {
               if (!isCustomToken) refreshBalance();
             });
@@ -572,20 +573,20 @@ class SendViewModel extends BaseViewModel {
               Add send tx to transaction database  
 ----------------------------------------------------------------------*/
   void addSendTransactionToDB(
-      WalletInfo walletInfo, double amount, String txHash) {
+      AppWallet appWallet, Decimal amount, String txHash) {
     String date = DateTime.now().toLocal().toString();
 
     TransactionHistory transactionHistory = TransactionHistory(
       id: null,
-      tickerName: walletInfo.tickerName,
+      tickerName: appWallet.tickerName,
       address: '',
-      amount: 0.0,
+      amount: Constants.decimalZero,
       date: date,
       kanbanTxId: '',
       tickerChainTxId: txHash,
       quantity: amount,
       tag: 'send',
-      chainName: walletInfo.tokenType,
+      chainName: appWallet.tokenType,
     );
     walletService.insertTransactionInDatabase(transactionHistory);
   }
@@ -631,13 +632,13 @@ class SendViewModel extends BaseViewModel {
     setBusy(true);
 
     await apiService
-        .getSingleWalletBalance(
-            fabAddress, walletInfo.tickerName, walletInfo.address)
+        .getSingleCoinWalletBalanceV2(
+            fabAddress, appWallet.tickerName, appWallet.address)
         .then((walletBalance) {
       if (walletBalance != null) {
         log.w('refreshBalance ${walletBalance[0].toJson()}');
 
-        walletInfo.availableBalance = walletBalance[0].balance;
+        appWallet.balance = walletBalance[0].balance;
         unconfirmedBalance = walletBalance[0].unconfirmedBalance;
       }
     }).catchError((err) {
@@ -700,7 +701,7 @@ class SendViewModel extends BaseViewModel {
         if (!isValidNativeChainBal) {
           log.e('not enough $tokenType balance to make tx');
           var coin =
-              tokenType.isEmpty ? walletInfo.tickerName : walletInfo.tokenType;
+              tokenType.isEmpty ? appWallet.tickerName : appWallet.tokenType;
           showSimpleNotification(
               Center(
                 child: Text(
@@ -715,8 +716,7 @@ class SendViewModel extends BaseViewModel {
     await updateTransFee();
     if (transFee == decimalZero && !isTrx()) {
       log.e('transfee $transFee not enough $tokenType balance to make tx');
-      var coin =
-          tokenType.isEmpty ? walletInfo.tickerName : walletInfo.tokenType;
+      var coin = tokenType.isEmpty ? appWallet.tickerName : appWallet.tokenType;
       showSimpleNotification(
           Center(
             child: Text(
@@ -761,7 +761,7 @@ class SendViewModel extends BaseViewModel {
 
     if (res) {
       if (!isTrx()) {
-        log.i('checkAmount ${walletInfo.tickerName}');
+        log.i('checkAmount ${appWallet.tickerName}');
 
         await updateTransFee();
         Decimal totalAmount = decimalZero;
@@ -772,32 +772,31 @@ class SendViewModel extends BaseViewModel {
         } else {
           totalAmount = amount;
         }
-        log.w('wallet bal ${walletInfo.availableBalance}');
-        if (totalAmount <=
-                Decimal.parse(walletInfo.availableBalance.toString()) &&
+        log.w('wallet bal ${appWallet.balance}');
+        if (totalAmount <= Decimal.parse(appWallet.balance.toString()) &&
             transFee != decimalZero) {
           checkSendAmount = true;
         } else {
           checkSendAmount = false;
         }
-      } else if (walletInfo.tickerName == 'TRX') {
+      } else if (appWallet.tickerName == 'TRX') {
         if (amount + Decimal.one <=
-            Decimal.parse(walletInfo.availableBalance.toString())) {
+            Decimal.parse(appWallet.balance.toString())) {
           checkSendAmount = true;
         } else {
           checkSendAmount = false;
         }
-      } else if (walletInfo.tickerName == 'USDTX') {
-        double trxBalance = 0.0;
+      } else if (appWallet.tickerName == 'USDTX') {
+        Decimal trxBalance = decimalZero;
 
         trxBalance = await getTrxBalance();
         log.w('checkAmount trx bal $trxBalance');
-        if (amount <= Decimal.parse(walletInfo.availableBalance.toString()) &&
-            trxBalance >= 15) {
+        if (amount <= Decimal.parse(appWallet.balance.toString()) &&
+            trxBalance >= NumberUtil.parseStringToDecimal('15')) {
           checkSendAmount = true;
         } else {
           checkSendAmount = false;
-          if (trxBalance < 15) {
+          if (trxBalance < NumberUtil.parseStringToDecimal('15')) {
             showSimpleNotification(
                 Center(
                   child: Text(
@@ -813,14 +812,14 @@ class SendViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  Future<double> getTrxBalance() async {
-    double balance = 0.0;
+  Future<Decimal> getTrxBalance() async {
+    Decimal balance = decimalZero;
 
     String trxWalletAddress =
         await walletService.getAddressFromCoreWalletDatabaseByTickerName('TRX');
 
     await apiService
-        .getSingleWalletBalance(fabAddress, 'TRX', trxWalletAddress)
+        .getSingleCoinWalletBalanceV2(fabAddress, 'TRX', trxWalletAddress)
         .then((walletBalance) {
       if (walletBalance != null) {
         balance = walletBalance[0].balance;
@@ -862,8 +861,8 @@ class SendViewModel extends BaseViewModel {
   updateTransFee() async {
     setBusy(true);
     log.i('in update trans fee');
-    var to = coinUtils.getOfficalAddress(walletInfo.tickerName.toUpperCase(),
-        tokenType: walletInfo.tokenType.toUpperCase());
+    var to = coinUtils.getOfficalAddress(appWallet.tickerName.toUpperCase(),
+        tokenType: appWallet.tokenType.toUpperCase());
     //amount = double.tryParse(amountController.text);
 
     if (to == null || amount == null || amount <= decimalZero) {
@@ -875,7 +874,7 @@ class SendViewModel extends BaseViewModel {
     gasLimit = int.tryParse(gasLimitTextController.text);
     satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
     var customGasPrice;
-    if (walletInfo.tickerName == 'MATICM') {
+    if (appWallet.tickerName == 'MATICM') {
       customGasPrice = await maticUtils.gasFee();
       log.i('updateTransFee: matic customGasPrice $customGasPrice');
 
@@ -883,18 +882,18 @@ class SendViewModel extends BaseViewModel {
     }
 
     var options = {
-      "gasPrice": walletInfo.tickerName == 'MATICM' ? customGasPrice : gasPrice,
+      "gasPrice": appWallet.tickerName == 'MATICM' ? customGasPrice : gasPrice,
       "gasLimit": gasLimit,
       "satoshisPerBytes": satoshisPerBytes,
-      "tokenType": walletInfo.tokenType,
+      "tokenType": appWallet.tokenType,
       "getTransFeeOnly": true
     };
 
-    var address = walletInfo.address;
+    var address = appWallet.address;
 
     await walletService
         .sendTransactionV2(
-            walletInfo.tickerName,
+            appWallet.tickerName,
             Uint8List.fromList(
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             [0],
@@ -911,9 +910,8 @@ class SendViewModel extends BaseViewModel {
         // * if true then assign the err message to the local var and display it in the
         if (ret['errMsg'].toString().isNotEmpty) {
           if (ret['errMsg'].toString().startsWith('not enough')) {
-            var coin = tokenType.isEmpty
-                ? walletInfo.tickerName
-                : walletInfo.tokenType;
+            var coin =
+                tokenType.isEmpty ? appWallet.tickerName : appWallet.tokenType;
             showSimpleNotification(
                 Center(
                   child: Text(

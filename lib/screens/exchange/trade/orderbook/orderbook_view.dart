@@ -109,11 +109,14 @@ class OrderBookView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(AppLocalizations.of(context).quantity,
-                                style: TextStyle(fontSize: 9, color: grey)),
+                                style:
+                                    const TextStyle(fontSize: 9, color: grey)),
                             Text(AppLocalizations.of(context).price,
-                                style: TextStyle(fontSize: 9, color: grey)),
+                                style:
+                                    const TextStyle(fontSize: 9, color: grey)),
                             Text(AppLocalizations.of(context).quantity,
-                                style: TextStyle(fontSize: 9, color: grey)),
+                                style:
+                                    const TextStyle(fontSize: 9, color: grey)),
                           ],
                         ),
                       ),
@@ -253,12 +256,10 @@ class OrderDetailsView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   orderRow(
-                      NumberUtil()
-                          .truncateDoubleWithoutRouding(
-                            orders[index].quantity,
-                            decimalPrecision: decimalConfig.qtyDecimal,
-                          )
-                          .toString(),
+                      NumberUtil.decimalLimiter(
+                        orders[index].quantity,
+                        decimalPrecision: decimalConfig.qtyDecimal,
+                      ).toString(),
                       TextAlign.start,
                       grey),
                   orderRow(
@@ -278,12 +279,10 @@ class OrderDetailsView extends StatelessWidget {
                       TextAlign.start,
                       sellPrice),
                   orderRow(
-                      NumberUtil()
-                          .truncateDoubleWithoutRouding(
-                            orders[index].quantity,
-                            decimalPrecision: decimalConfig.qtyDecimal,
-                          )
-                          .toString(),
+                      NumberUtil.decimalLimiter(
+                        orders[index].quantity,
+                        decimalPrecision: decimalConfig.qtyDecimal,
+                      ).toString(),
                       TextAlign.end,
                       grey),
                 ],

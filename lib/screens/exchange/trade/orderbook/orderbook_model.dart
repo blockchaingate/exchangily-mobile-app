@@ -13,60 +13,48 @@
 
 // Ordertype to map an array of buy/sell from orderbook data
 
-class OrderType {
-  double _price;
-  double _quantity;
+import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 
-  OrderType({double price, double quantity}) {
-    _price = price ?? 0.0;
-    _quantity = quantity ?? 0.0;
+class OrderType {
+  Decimal price;
+  Decimal quantity;
+
+  OrderType({this.price, this.quantity}) {
+    price = price ?? Constants.decimalZero;
+    quantity = quantity ?? Constants.decimalZero;
   }
 
   factory OrderType.fromJson(Map<String, dynamic> json) {
-    return OrderType(
-        price: json['p'].toDouble(), quantity: json['q'].toDouble());
+    var res = OrderType(
+        price: NumberUtil.parseStringToDecimal(json['p'].toString()),
+        quantity: NumberUtil.parseStringToDecimal(json['q'].toString()));
+    return res;
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['p'] = _price;
-    data['q'] = _quantity;
+    data['p'] = price;
+    data['q'] = quantity;
     return data;
-  }
-
-  double get price => _price;
-  set price(double price) {
-    _price = price;
-  }
-
-  double get quantity => _quantity;
-  set quantity(double quantity) {
-    _quantity = quantity;
   }
 }
 
 // Map orderbook
 
-class Orderbook {
-  List<OrderType> _buyOrders;
-  List<OrderType> _sellOrders;
-  double _price;
-  double _quantity;
+class Orderbook extends OrderType {
+  List<OrderType> buyOrders;
+  List<OrderType> sellOrders;
 
-  Orderbook({
-    List<OrderType> buyOrders,
-    List<OrderType> sellOrders,
-    double price,
-    double orderQuantity,
-  }) {
-    _buyOrders = buyOrders ?? [];
-    _sellOrders = sellOrders ?? [];
-    _price = price ?? 0.0;
-    _quantity = orderQuantity ?? 0.0;
+  Orderbook({this.buyOrders, this.sellOrders, price, quantity})
+      : super(
+            price: price ?? Constants.decimalZero,
+            quantity: quantity ?? Constants.decimalZero) {
+    buyOrders = buyOrders ?? [];
+    sellOrders = sellOrders ?? [];
   }
 
   factory Orderbook.fromJson(Map<String, dynamic> json) {
-    var price = json['p'] ?? 0.0;
-    var qty = json['q'] ?? 0.0;
     List buyOrdersFromJson = json['b'] as List;
     List<OrderType> buyOrders =
         buyOrdersFromJson.map((order) => OrderType.fromJson(order)).toList();
@@ -76,39 +64,20 @@ class Orderbook {
         sellOrdersFromJson.map((order) => OrderType.fromJson(order)).toList();
 
     return Orderbook(
+      price: NumberUtil.parseStringToDecimal(json['p'].toString()),
+      quantity: NumberUtil.parseStringToDecimal(json['q'].toString()),
       buyOrders: buyOrders,
       sellOrders: sellOrders,
-      price: price.toDouble(),
-      orderQuantity: qty.toDouble(),
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['b'] = _buyOrders;
-    data['s'] = _sellOrders;
-    data['p'] = _price;
-    data['q'] = _quantity;
+    data['b'] = buyOrders;
+    data['s'] = sellOrders;
+    data['p'] = price;
+    data['q'] = quantity;
     return data;
-  }
-
-  List<OrderType> get buyOrders => _buyOrders;
-  set buyOrders(List<OrderType> buyOrders) {
-    _buyOrders = buyOrders;
-  }
-
-  List<OrderType> get sellOrders => _sellOrders;
-  set sellOrders(List<OrderType> sellOrders) {
-    _sellOrders = sellOrders;
-  }
-
-  double get price => _price;
-  set price(double price) {
-    _price = price;
-  }
-
-  double get quantity => _quantity;
-  set quantity(double quantity) {
-    _quantity = quantity;
   }
 }

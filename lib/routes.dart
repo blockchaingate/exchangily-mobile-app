@@ -83,7 +83,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ImportWalletView());
 
       case BackupMnemonicViewRoute:
-        return MaterialPageRoute(builder: (_) => const BackupMnemonicWalletScreen());
+        return MaterialPageRoute(
+            builder: (_) => const BackupMnemonicWalletScreen());
 
       case ConfirmMnemonicViewRoute:
         return MaterialPageRoute(
@@ -111,35 +112,35 @@ class RouteGenerator {
 
       case DepositViewRoute:
         return MaterialPageRoute(
-            builder: (_) => MoveToExchangeScreen(walletInfo: args));
+            builder: (_) => MoveToExchangeScreen(appWallet: args));
 
       case RedepositViewRoute:
-        return MaterialPageRoute(builder: (_) => Redeposit(walletInfo: args));
+        return MaterialPageRoute(builder: (_) => Redeposit(appWallet: args));
 
       case WithdrawViewRoute:
         return MaterialPageRoute(
-            builder: (_) => MoveToWalletScreen(walletInfo: args));
+            builder: (_) => MoveToWalletScreen(appWallet: args));
 
       case WalletFeaturesViewRoute:
         return MaterialPageRoute(
-            builder: (_) => WalletFeaturesView(walletInfo: args));
+            builder: (_) => WalletFeaturesView(appWallet: args));
 
       case ReceiveViewRoute:
         return MaterialPageRoute(
             builder: (_) => ReceiveWalletScreen(
-                  walletInfo: args,
+                  appWallet: args,
                 ));
 
       case SendViewRoute:
         return MaterialPageRoute(
             builder: (_) => SendWalletView(
-                  walletInfo: args,
+                  appWallet: args,
                 ));
 
       case TransactionHistoryViewRoute:
         return MaterialPageRoute(
             builder: (_) => TransactionHistoryView(
-                  walletInfo: args,
+                  appWallet: args,
                 ));
 
 /*----------------------------------------------------------------------

@@ -8,7 +8,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
@@ -35,7 +35,7 @@ import 'package:exchangilymobileapp/services/db/user_settings_database_service.d
 import 'package:overlay_support/overlay_support.dart';
 
 class TransactionHistoryViewmodel extends FutureViewModel {
-  final WalletInfo walletInfo;
+  final AppWallet appWallet;
   final String success = 'success';
   final String bindpay = 'bindpay';
   final String send = 'send';
@@ -44,7 +44,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   final String deposit = 'deposit';
   final String rejected = 'rejected or failed';
 
-  TransactionHistoryViewmodel({this.walletInfo});
+  TransactionHistoryViewmodel({this.appWallet});
   final log = getLogger('TransactionHistoryViewmodel');
   BuildContext context;
   List<TransactionHistory> transactionHistoryToShowInView = [];
@@ -66,8 +66,13 @@ class TransactionHistoryViewmodel extends FutureViewModel {
 
   @override
   Future futureToRun() async =>
-      // tickerName.isEmpty ?
-      await transactionHistoryDatabaseService.getByName(walletInfo.tickerName);
+      // {
+      //   try {
+      await transactionHistoryDatabaseService.getByName(appWallet.tickerName);
+  // } catch (err) {
+  //   log.e('Future to run CATCH : $err');
+  // }
+//  }
 
 /*----------------------------------------------------------------------
                   After Future Data is ready
@@ -75,8 +80,10 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   @override
   void onData(data) async {
     setBusy(true);
-    String tickerName = walletInfo.tickerName;
-    log.i('tx length ${data.length}');
+    String tickerName = appWallet.tickerName;
+    if (data != null) {
+      log.i('tx length ${data.length}');
+    }
     List<TransactionHistory> txHistoryFromDb = [];
     List<TransactionHistory> txHistoryEvents = [];
     txHistoryFromDb = data;
@@ -217,11 +224,11 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     setBusy(false);
     if (transactionHistory.chainName.isEmpty ||
         transactionHistory.chainName == null) {
-      transactionHistory.chainName = walletInfo.tokenType.isEmpty
-          ? walletInfo.tickerName
-          : walletInfo.tokenType;
+      transactionHistory.chainName = appWallet.tokenType.isEmpty
+          ? appWallet.tickerName
+          : appWallet.tokenType;
       log.i(
-          'transactionHistory.chainName empty so showing wallet token type ${walletInfo.tokenType}');
+          'transactionHistory.chainName empty so showing wallet token type ${appWallet.tokenType}');
     }
     showDialog(
         barrierDismissible: false,

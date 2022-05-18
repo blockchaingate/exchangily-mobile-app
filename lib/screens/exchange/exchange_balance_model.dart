@@ -1,3 +1,5 @@
+import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/widgets.dart';
 import '../../environments/coins.dart' as coin_list;
@@ -5,8 +7,8 @@ import '../../environments/coins.dart' as coin_list;
 class ExchangeBalanceModel {
   String ticker;
   int coinType;
-  double unlockedAmount;
-  double lockedAmount;
+  Decimal unlockedAmount;
+  Decimal lockedAmount;
 
   ExchangeBalanceModel(
       {this.ticker, this.coinType, this.unlockedAmount, this.lockedAmount});
@@ -24,8 +26,8 @@ class ExchangeBalanceModel {
     ExchangeBalanceModel exchangeBalanceModel = ExchangeBalanceModel(
         ticker: tickerName ?? '',
         coinType: json['coinType'],
-        unlockedAmount: bigNum2Double(json['unlockedAmount']).toDouble(),
-        lockedAmount: bigNum2Double(json['lockedAmount']).toDouble());
+        unlockedAmount: NumberUtil.rawStringToDecimal(json['unlockedAmount']),
+        lockedAmount: NumberUtil.rawStringToDecimal(json['lockedAmount']));
 
     return exchangeBalanceModel;
   }

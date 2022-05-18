@@ -179,8 +179,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 10.0),
                     alignment: Alignment.centerRight,
                     child: AutoSizeText(
-                      NumberUtil()
-                          .truncateDoubleWithoutRouding(transaction.quantity,
+                      NumberUtil.decimalLimiter(transaction.quantity,
                               decimalPrecision: model.decimalLimit)
                           .toString(),
                       textAlign: TextAlign.right,
@@ -270,7 +269,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                                       ..onTap = () {
                                         model.navigationService.navigateTo(
                                             RedepositViewRoute,
-                                            arguments: model.walletInfo);
+                                            arguments: model.appWallet);
                                       }),
                               ) // if withdraw status is success on kanban but null on ticker chain then display sent
                             else if (transaction.tag.toUpperCase() ==

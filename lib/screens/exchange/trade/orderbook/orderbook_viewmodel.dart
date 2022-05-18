@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
@@ -85,7 +86,7 @@ class OrderbookViewModel extends StreamViewModel {
 /*----------------------------------------------------------------------
                     Set price and quantity
 ----------------------------------------------------------------------*/
-  fillTextFields(double p, double q) {
+  fillTextFields(Decimal p, Decimal q) {
     tradeService.setPriceQuantityValues(p, q);
     log.i('fillTextFields $p--$q');
   }

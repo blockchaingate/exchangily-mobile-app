@@ -11,11 +11,12 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -25,16 +26,16 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class WalletFeaturesView extends StatelessWidget {
-  final WalletInfo walletInfo;
-  WalletFeaturesView({Key key, this.walletInfo}) : super(key: key);
+  final AppWallet appWallet;
+  WalletFeaturesView({Key key, this.appWallet}) : super(key: key);
   final log = getLogger('WalletFeatures');
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => WalletFeaturesViewModel(),
-      onModelReady: (model) {
-        model.walletInfo = walletInfo;
+      onModelReady: (WalletFeaturesViewModel model) {
+        model.appWallet = appWallet;
         model.context = context;
         model.init();
       },
@@ -92,7 +93,7 @@ class WalletFeaturesView extends StatelessWidget {
                                   : const Icon(Icons.star_border_outlined,
                                       color: yellow, size: 22),
                               onPressed: () => model.updateFavWalletCoinsList(
-                                  model.walletInfo.tickerName),
+                                  model.appWallet.tickerName),
                             ),
                           ),
                         ),
@@ -119,7 +120,7 @@ class WalletFeaturesView extends StatelessWidget {
                                   size: 17,
                                   color: white,
                                 ),
-                                Text(walletInfo.name ?? '',
+                                Text(appWallet.name ?? '',
                                     style:
                                         Theme.of(context).textTheme.subtitle1)
                               ],
@@ -133,7 +134,7 @@ class WalletFeaturesView extends StatelessWidget {
                                 Positioned(
                                   //   bottom: -15,
                                   child: _buildTotalBalanceCard(
-                                      context, model, walletInfo),
+                                      context, model, appWallet),
                                 )
                               ],
                             ),
@@ -163,7 +164,7 @@ class WalletFeaturesView extends StatelessWidget {
                           child: _featuresCard(context, 1, model))
                     ],
                   ),
-                  model.walletInfo.tickerName == 'MATICM'
+                  model.appWallet.tickerName == 'MATICM'
                       ? Container()
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -192,7 +193,7 @@ class WalletFeaturesView extends StatelessWidget {
                               child: _featuresCard(context, 4, model),
                             )
                           : Container(),
-                      walletInfo.tickerName == 'FAB'
+                      appWallet.tickerName == 'FAB'
                           ? Container(
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 30),
@@ -217,7 +218,7 @@ class WalletFeaturesView extends StatelessWidget {
                         onTap: () {
                           var route = model.features[6].route;
                           Navigator.pushNamed(context, route,
-                              arguments: walletInfo);
+                              arguments: appWallet);
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -318,7 +319,14 @@ class WalletFeaturesView extends StatelessWidget {
                     Expanded(
                       flex: 4,
                       child: Text(
-                        '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.usdValue).toString()} USD',
+                        model.isBusy
+                            ? '0.0'
+                            : NumberUtil.decimalLimiter(
+                                        model.appWallet
+                                            .totalWalletBalanceInUsd(),
+                                        decimalPrecision: model.decimalLimit)
+                                    .toString() +
+                                'USD',
                         textAlign: TextAlign.right,
                         style: Theme.of(context)
                             .textTheme
@@ -341,13 +349,13 @@ class WalletFeaturesView extends StatelessWidget {
                     Text(AppLocalizations.of(context).walletbalance,
                         style: Theme.of(context).textTheme.subtitle1),
                     Text(
-                        '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, decimalPrecision: model.decimalLimit).toString()} ${model.specialTicker}',
+                        '${NumberUtil.decimalLimiter(model.appWallet.balance, decimalPrecision: model.decimalLimit).toString()} ${model.specialTicker}',
                         style: Theme.of(context).textTheme.bodyText1),
                   ],
                 ),
               ),
               // Middle column row containes unconfirmed wallet balance.
-              model.walletInfo.tickerName == 'FAB'
+              model.appWallet.tickerName == 'FAB'
                   ? Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 5.0, vertical: 5.0),
@@ -357,7 +365,7 @@ class WalletFeaturesView extends StatelessWidget {
                           Text(AppLocalizations.of(context).unConfirmedBalance,
                               style: Theme.of(context).textTheme.bodyText1),
                           Text(
-                              '${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance, decimalPrecision: model.decimalLimit).toString()} ${model.specialTicker}',
+                              '${NumberUtil.decimalLimiter(model.appWallet.unconfirmedBalance, decimalPrecision: model.decimalLimit).toString()} ${model.specialTicker}',
                               style: Theme.of(context).textTheme.bodyText1),
                         ],
                       ),
@@ -373,20 +381,20 @@ class WalletFeaturesView extends StatelessWidget {
                     Expanded(
                       flex: 4,
                       child: Text(
-                          '${AppLocalizations.of(context).inExchange} ${model.specialTicker.contains('(') && model.walletInfo.tickerName != 'USDT' ? '\n' + message + ' ' + nativeTicker : ''}',
+                          '${AppLocalizations.of(context).inExchange} ${model.specialTicker.contains('(') && model.appWallet.tickerName != 'USDT' ? '\n' + message + ' ' + nativeTicker : ''}',
                           style: Theme.of(context).textTheme.subtitle1),
                     ),
                     Expanded(
                         flex: 4,
                         child: Text(
-                            '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, decimalPrecision: model.decimalLimit).toString()} ${model.specialTicker}',
+                            '${NumberUtil.decimalLimiter(model.appWallet.unlockedExchangeBalance, decimalPrecision: model.decimalLimit).toString()} ${model.specialTicker}',
                             textAlign: TextAlign.right,
                             style: Theme.of(context).textTheme.subtitle1)),
                   ],
                 ),
               ),
               // Last container locked wallet balance
-              model.walletInfo.lockedBalance != 0.0
+              model.appWallet.lockBalance != Decimal.zero
                   ? Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 5.0, vertical: 2.0),
@@ -396,13 +404,13 @@ class WalletFeaturesView extends StatelessWidget {
                           Expanded(
                             flex: 4,
                             child: Text(
-                                '${AppLocalizations.of(context).totalLockedBalance} ${model.specialTicker.contains('(') && model.walletInfo.tickerName != 'USDT' ? '\n' + message + ' ' + nativeTicker : ''}',
+                                '${AppLocalizations.of(context).totalLockedBalance} ${model.specialTicker.contains('(') && model.appWallet.tickerName != 'USDT' ? '\n' + message + ' ' + nativeTicker : ''}',
                                 style: Theme.of(context).textTheme.subtitle1),
                           ),
                           Expanded(
                               flex: 4,
                               child: Text(
-                                  '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.lockedBalance, decimalPrecision: model.decimalLimit).toString()} ${model.specialTicker}',
+                                  '${NumberUtil.decimalLimiter(model.appWallet.lockBalance, decimalPrecision: model.decimalLimit).toString()} ${model.specialTicker}',
                                   textAlign: TextAlign.right,
                                   style:
                                       Theme.of(context).textTheme.subtitle1)),
@@ -427,7 +435,7 @@ class WalletFeaturesView extends StatelessWidget {
               ? () {
                   var route = model.features[index].route;
                   model.navigationService
-                      .navigateTo('/$route', arguments: model.walletInfo);
+                      .navigateTo('/$route', arguments: model.appWallet);
                 }
               : null,
           child: Container(

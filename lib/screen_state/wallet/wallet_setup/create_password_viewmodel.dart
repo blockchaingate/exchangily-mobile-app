@@ -61,7 +61,7 @@ class CreatePasswordViewModel extends BaseViewModel {
     // await _vaultService.secureMnemonic(
     //     passTextController.text, randomMnemonicFromRoute);
     await _walletService
-        .createOfflineWalletsV1(
+        .createOfflineWalletsV2(
             randomMnemonicFromRoute, passTextController.text)
         .then((data) {
       navigationService

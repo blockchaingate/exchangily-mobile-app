@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -21,9 +22,21 @@ class NumberUtil {
 
   static final BigInt rawPerNano = BigInt.from(10).pow(29);
   static const int maxDecimalDigits = 2; // Max digits after decimal
+
+  /// Parse String to decimal
+  static Decimal parseStringToDecimal(String value) {
+    if (value.contains('-')) {
+      return Decimal.zero;
+    }
+    return Decimal.parse(value);
+  }
+
   /// Breaks at precision 19
   static Decimal decimalLimiter(Decimal input,
       {int decimalPrecision = maxDecimalDigits}) {
+    if (input == null) {
+      input = Constants.decimalZero;
+    }
     var p = pow(10, decimalPrecision);
     var t = Decimal.fromInt(p);
     var x = input * t;
@@ -246,8 +259,9 @@ class NumberUtil {
     return val;
   }
 
+  /// Doesn't work with Decimal value
 // pass value to format with decimal digits needed
-  static String currencyFormat(double value, int decimalDigits) {
+  static String currencyFormat(Decimal value, int decimalDigits) {
     String holder = '';
     holder =
         NumberFormat.simpleCurrency(decimalDigits: decimalDigits).format(value);

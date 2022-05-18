@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
@@ -240,9 +242,9 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   List<Orderbook> orderAggregation(List<Orderbook> passedOrders) {
     List<Orderbook> result = [];
     debugPrint('passed orders length ${passedOrders.length}');
-    double prevQuantity = 0.0;
+    Decimal prevQuantity = Constants.decimalZero;
     List<int> indexArray = [];
-    double prevPrice = 0;
+    Decimal prevPrice = Constants.decimalZero;
 
     // for each
     for (var currentOrder in passedOrders) {
