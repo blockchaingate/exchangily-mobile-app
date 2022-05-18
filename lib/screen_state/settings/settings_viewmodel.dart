@@ -119,8 +119,6 @@ class SettingsViewmodel extends BaseViewModel {
     setBusyForObject(lockAppNow, false);
   }
 
-// Set biometric auth
-
   setBiometricAuth() async {
     setBusyForObject(isBiometricAuth, true);
 
@@ -150,8 +148,6 @@ class SettingsViewmodel extends BaseViewModel {
     setBusyForObject(isBiometricAuth, false);
   }
 
-  //                    setLanguageFromDb
-
   setLanguageFromDb() async {
     setBusy(true);
     await userSettingsDatabaseService.getById(1).then((res) {
@@ -168,21 +164,10 @@ class SettingsViewmodel extends BaseViewModel {
     setBusy(false);
   }
 
-/*-------------------------------------------------------------------------------------
-                      selectDefaultWalletLanguage
--------------------------------------------------------------------------------------*/
-
   Future<String> selectDefaultWalletLanguage() async {
     setBusy(true);
     if (selectedLanguage == '' || selectedLanguage == null) {
       String key = userSettings.language ?? 'en';
-      // await getSetLocalStorageDataByKey('lang');
-      // log.w('key in init $key');
-
-      // /// Created Map of languages because in dropdown if i want to show
-      // /// first default value as whichever language is currently the app
-      // /// is in then default value that i want to show should match with one
-      // /// of the dropdownMenuItem's value
 
       if (languages.containsKey(key)) {
         selectedLanguage = languages[key];
@@ -198,24 +183,6 @@ class SettingsViewmodel extends BaseViewModel {
     setBusy(false);
     return selectedLanguage;
   }
-/*-------------------------------------------------------------------------------------
-                    convertDecimalToHex
--------------------------------------------------------------------------------------*/
-
-// Not in use
-  convertDecimalToHex() async {
-    int baseCoin = 0;
-    await coinService
-        .getCoinTypeByTickerName('USDT')
-        .then((value) => baseCoin = value);
-    var x = baseCoin.toRadixString(16);
-    var t = HEX.encode([baseCoin]);
-    log.e('basecoin $baseCoin --  Hex == $t');
-  }
-
-/*-------------------------------------------------------------------------------------
-                      Reload app
--------------------------------------------------------------------------------------*/
 
   changeBaseAppUrl() {
     setBusy(true);
@@ -230,10 +197,6 @@ class SettingsViewmodel extends BaseViewModel {
     log.e('GLobal kanban url $baseServerUrl');
     setBusy(false);
   }
-
-/*-------------------------------------------------------------------------------------
-                      Showcase Event Start
--------------------------------------------------------------------------------------*/
 
   showcaseEvent(BuildContext test) async {
     setBusy(true);
@@ -254,10 +217,6 @@ class SettingsViewmodel extends BaseViewModel {
     setBusy(false);
     log.w('is show case once value $isShowCaseOnce');
   }
-
-/*-------------------------------------------------------------------------------------
-                      Set the display warning value to local storage
--------------------------------------------------------------------------------------*/
 
   setIsDialogWarningValue(value) async {
     storageService.isNoticeDialogDisplay =
@@ -288,8 +247,7 @@ class SettingsViewmodel extends BaseViewModel {
       if (res.confirmed) {
         setBusy(true);
         isDeleting = true;
-        log.w('deleting wallet');
-        await walletService.deleteWallet();
+        await walletUtil.deleteWallet();
 
         Navigator.pushNamed(context, '/');
       } else if (res.returnedText == 'Closed' && !res.confirmed) {

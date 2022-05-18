@@ -2,6 +2,11 @@ import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
+import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:flutter/widgets.dart';
 import 'package:exchangilymobileapp/environments/coins.dart' as coin_list;
 import 'package:exchangilymobileapp/logger.dart';
@@ -9,6 +14,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/utils/abi_util.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WalletUtil {
   final log = getLogger('WalletUtil');
@@ -18,6 +24,12 @@ class WalletUtil {
   var abiUtils = AbiUtils();
   final coinService = locator<CoinService>();
   var coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+  final storageService = locator<LocalStorageService>();
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+      locator<TransactionHistoryDatabaseService>();
+  final walletDatabaseService = locator<WalletDatabaseService>();
+  final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
+  final _vaultService = locator<VaultService>();
 
   Map<String, String> coinTickerAndNameList = {
     'BTC': 'Bitcoin',
@@ -279,6 +291,59 @@ class WalletUtil {
   }
 
 // Delete wallet
+  Future deleteWallet() async {
+    log.w('deleting wallet');
+    try {
+      await walletDatabaseService
+          .deleteDb()
+          .whenComplete(() => log.e('wallet database deleted!!'))
+          .catchError((err) => log.e('wallet database CATCH $err'));
+
+      await transactionHistoryDatabaseService
+          .deleteDb()
+          .whenComplete(() => log.e('trnasaction history database deleted!!'))
+          .catchError((err) => log.e('tx history database CATCH $err'));
+
+      await _vaultService
+          .deleteEncryptedData()
+          .whenComplete(() => log.e('encrypted data deleted!!'))
+          .catchError((err) => log.e('delete encrypted CATCH $err'));
+
+      await coreWalletDatabaseService
+          .deleteDb()
+          .whenComplete(() => log.e('coreWalletDatabaseService data deleted!!'))
+          .catchError((err) => log.e('coreWalletDatabaseService  CATCH $err'));
+
+      await tokenListDatabaseService
+          .deleteDb()
+          .whenComplete(() => log.e('Token list database deleted!!'))
+          .catchError((err) => log.e('token list database CATCH $err'));
+
+      await userSettingsDatabaseService
+          .deleteDb()
+          .whenComplete(() => log.e('User settings database deleted!!'))
+          .catchError((err) => log.e('user setting database CATCH $err'));
+
+      storageService.walletBalancesBody = '';
+      storageService.isShowCaseView = true;
+      storageService.clearStorage();
+      debugPrint(
+          'Checking has verified key value after clearing local storage : ${storageService.hasWalletVerified.toString()}');
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      log.e('before wallet removal, local storage has ${prefs.getKeys()}');
+      prefs.clear();
+      try {
+        await deleteCacheDir();
+        await deleteAppDir();
+      } catch (err) {
+        log.e('delete cache dir err $err');
+      }
+    } catch (err) {
+      log.e('deleteWallet CATCH -- wallet delete failed: $err');
+      throw Exception(['Wallet deletion failed $err']);
+    }
+  }
 
   Future<void> deleteCacheDir() async {
     final cacheDir = await getTemporaryDirectory();

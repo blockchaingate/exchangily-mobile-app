@@ -81,7 +81,7 @@ class WalletService {
   final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   final walletDatabaseService = locator<WalletDatabaseService>();
   final coinService = locator<CoinService>();
-
+  final _vaultService = locator<VaultService>();
   final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
   double currentTickerUsdValue;
   var txids = [];
@@ -98,8 +98,6 @@ class WalletService {
   final ltcUtils = LtcUtils();
   var walletUtil = WalletUtil();
   final maticmUtils = MaticUtils();
-
-  final _vaultService = locator<VaultService>();
 
   /// Verify wallet address
   Future<Map<String, bool>> verifyWalletAddresses(String mnemonic) async {

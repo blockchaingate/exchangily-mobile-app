@@ -1,7 +1,7 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 2.1.56+213
+version: 2.2.57+215
 environment:
   sdk: ">=2.7.0 <3.0.0"
 

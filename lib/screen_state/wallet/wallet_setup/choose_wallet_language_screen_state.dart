@@ -22,8 +22,9 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
-class ChooseWalletLanguageScreenState extends BaseState {
+class ChooseWalletLanguageViewModel extends BaseViewModel {
   final log = getLogger('ChooseWalletLanguageScreenState');
   BuildContext context;
 
@@ -38,7 +39,7 @@ class ChooseWalletLanguageScreenState extends BaseState {
 
   Future checkLanguage() async {
     String lang = '';
-    setState(ViewState.Busy);
+    setBusy(true);
     //  SharedPreferences prefs = await SharedPreferences.getInstance();
     lang = await userSettingsDatabaseService
         .getById(1)
@@ -46,19 +47,17 @@ class ChooseWalletLanguageScreenState extends BaseState {
     if (lang == null || lang == '') {
       log.e('language empty');
     } else {
-      setState(ViewState.Idle);
       setLangauge(lang);
       storageService.language = lang;
       navigationService.navigateTo('/walletSetup');
     }
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 
   setLangauge(String languageCode) async {
-    setState(ViewState.Busy);
+    setBusy(true);
     //  SharedPreferences prefs = await SharedPreferences.getInstance();
-    UserSettings userSettings =
-        UserSettings(language: languageCode, theme: '');
+    UserSettings userSettings = UserSettings(language: languageCode, theme: '');
     await userSettingsDatabaseService.getById(1).then((res) {
       if (res != null) {
         //   userSettings.language = res.language;
@@ -72,6 +71,6 @@ class ChooseWalletLanguageScreenState extends BaseState {
     await walletService.updateUserSettingsDb(userSettings, isUserSettingsEmpty);
     storageService.language = languageCode;
     AppLocalizations.load(Locale(languageCode, languageCode.toUpperCase()));
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 }

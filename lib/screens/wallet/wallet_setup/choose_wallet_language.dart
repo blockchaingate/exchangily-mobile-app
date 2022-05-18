@@ -11,26 +11,27 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/choose_wallet_language_screen_state.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:stacked/stacked.dart';
 import '../../../shared/globals.dart' as globals;
-import '../../base_screen.dart';
 
 class ChooseWalletLanguageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var orientation = MediaQuery.of(context).orientation;
-    return BaseScreen<ChooseWalletLanguageScreenState>(
+    return ViewModelBuilder.reactive(
+      viewModelBuilder: () => ChooseWalletLanguageViewModel(),
       onModelReady: (model) async {
         model.context = context;
         await model.walletService.checkLanguage();
         //  await model.checkLanguage();
       },
-      builder: (context, model, child) => Container(
+      builder: (context, ChooseWalletLanguageViewModel model, child) =>
+          Container(
         padding: orientation == Orientation.portrait
             ? const EdgeInsets.all(40)
             : const EdgeInsets.all(80),
@@ -73,7 +74,7 @@ class ChooseWalletLanguageView extends StatelessWidget {
               ),
             ),
             // Button Container
-            model.state == ViewState.Busy
+            model.isBusy
                 ? Shimmer.fromColors(
                     baseColor: globals.primaryColor,
                     highlightColor: globals.white,
@@ -91,7 +92,7 @@ class ChooseWalletLanguageView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           // English Lang Button
-                          RaisedButton(
+                          ElevatedButton(
                             child: Text(
                               'English',
                               style: Theme.of(context).textTheme.headline4,
@@ -103,11 +104,13 @@ class ChooseWalletLanguageView extends StatelessWidget {
                             },
                           ),
                           // Chinese Lang Button
-                          RaisedButton(
-                            shape: StadiumBorder(
-                                side: BorderSide(
-                                    color: globals.primaryColor, width: 2)),
-                            color: globals.secondaryColor,
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: const StadiumBorder(
+                                  side: BorderSide(
+                                      color: globals.primaryColor, width: 2)),
+                              primary: globals.secondaryColor,
+                            ),
                             child: Text('中文',
                                 style: Theme.of(context).textTheme.headline4),
                             onPressed: () {

@@ -5,12 +5,13 @@ import 'package:exchangilymobileapp/services/db/user_settings_database_service.d
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
 import '../../logger.dart';
 import '../../service_locator.dart';
 import '../base_state.dart';
 
-class MarketPairsTabViewState extends BaseState {
+class MarketPairsTabViewModel extends BaseViewModel {
   final log = getLogger('MarketPairsTabViewState');
   List images;
   ApiService apiService = locator<ApiService>();

@@ -117,7 +117,7 @@ Future serviceLocator() async {
   locator.registerFactory(() => SettingsViewmodel());
   //locator.registerFactory(() => LanguageScreenState());
   locator.registerFactory(() => WalletSetupViewmodel());
-  locator.registerFactory(() => ChooseWalletLanguageScreenState());
+  locator.registerFactory(() => ChooseWalletLanguageViewModel());
   locator.registerFactory(() => MoveToExchangeViewModel());
   locator.registerFactory(() => MoveToWalletViewmodel());
   locator.registerFactory(() => TransactionHistoryViewmodel());
@@ -139,7 +139,7 @@ Future serviceLocator() async {
   locator.registerFactory(() => TradeViewModel());
   locator.registerFactory(() => BuySellViewModel());
   locator.registerFactory(() => MyExchangeAssetsViewModel());
-  locator.registerFactory(() => MarketPairsTabViewState());
+  locator.registerFactory(() => MarketPairsTabViewModel());
   locator.registerFactory(() => TradingChartViewModel());
 
   // LightningRemit

@@ -5,6 +5,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
@@ -643,7 +644,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                   id: null,
                   tickerName: tickerName,
                   address: '',
-                  amount: 0.0,
+                  amount: Constants.decimalZero,
                   date: date.toString(),
                   tickerChainTxId: res['transactionHash'],
                   tickerChainTxStatus: '',
