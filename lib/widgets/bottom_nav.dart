@@ -18,7 +18,6 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
 
 class BottomNavBar extends StatelessWidget {
@@ -31,10 +30,10 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     // final double paddingValue = 4; // change space between icon and title text
     const double iconSize = 25; // change icon size
-    int _selectedIndex = count;
+    int selectedIndex = count;
 
     return BottomNavigationBar(
-      currentIndex: _selectedIndex,
+      currentIndex: selectedIndex,
       type: BottomNavigationBarType.fixed,
       selectedFontSize: 14,
       elevation: 10,
@@ -48,7 +47,7 @@ class BottomNavBar extends StatelessWidget {
               'assets/images/icons/wallet.png',
               width: 40,
               height: 30,
-              color: _selectedIndex == 0 ? primaryColor : grey,
+              color: selectedIndex == 0 ? primaryColor : grey,
             ),
             label: AppLocalizations.of(context).wallet),
         BottomNavigationBarItem(
@@ -56,7 +55,7 @@ class BottomNavBar extends StatelessWidget {
               'assets/images/icons/price-up.png',
               width: 40,
               height: 30,
-              color: _selectedIndex == 1 ? primaryColor : grey,
+              color: selectedIndex == 1 ? primaryColor : grey,
             ),
             label: AppLocalizations.of(context).trade),
         BottomNavigationBarItem(
@@ -64,7 +63,7 @@ class BottomNavBar extends StatelessWidget {
             'assets/images/lightning-remit/remit.png',
             width: 40,
             height: 30,
-            color: _selectedIndex == 2 ? primaryColor : grey,
+            color: selectedIndex == 2 ? primaryColor : grey,
           ),
           label: AppLocalizations.of(context).remit,
         ),
@@ -78,7 +77,7 @@ class BottomNavBar extends StatelessWidget {
               'assets/images/icons/calendar.png',
               width: 40,
               height: 30,
-              color: _selectedIndex == 3 ? primaryColor : grey,
+              color: selectedIndex == 3 ? primaryColor : grey,
             ),
             label: AppLocalizations.of(context).event),
 
@@ -87,7 +86,7 @@ class BottomNavBar extends StatelessWidget {
               'assets/images/icons/settings-icon.png',
               width: 40,
               height: 30,
-              color: _selectedIndex == 4 ? primaryColor : grey,
+              color: selectedIndex == 4 ? primaryColor : grey,
             ),
             label: AppLocalizations.of(context).settings),
       ].toList(),

@@ -244,8 +244,8 @@ class OtcDetailsScreen extends StatelessWidget {
                                           filled: true,
                                           fillColor: globals.grey.withAlpha(75),
                                           isDense: true,
-                                          focusedBorder: UnderlineInputBorder(
-                                              borderRadius: const BorderRadius.all(
+                                          focusedBorder: const UnderlineInputBorder(
+                                              borderRadius: BorderRadius.all(
                                                   Radius.elliptical(2, 2)),
                                               borderSide: BorderSide(
                                                   color: globals.primaryColor,
@@ -292,8 +292,8 @@ class OtcDetailsScreen extends StatelessWidget {
                                           fillColor:
                                               globals.grey.withAlpha(105),
                                           isDense: true,
-                                          focusedBorder: UnderlineInputBorder(
-                                              borderRadius: const BorderRadius.all(
+                                          focusedBorder: const UnderlineInputBorder(
+                                              borderRadius: BorderRadius.all(
                                                   Radius.elliptical(2, 2)),
                                               borderSide: BorderSide(
                                                   color: globals.primaryColor,

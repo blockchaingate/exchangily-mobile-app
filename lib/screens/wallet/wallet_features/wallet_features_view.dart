@@ -321,12 +321,10 @@ class WalletFeaturesView extends StatelessWidget {
                       child: Text(
                         model.isBusy
                             ? '0.0'
-                            : NumberUtil.decimalLimiter(
+                            : '${NumberUtil.decimalLimiter(
                                         model.appWallet
                                             .totalWalletBalanceInUsd(),
-                                        decimalPrecision: model.decimalLimit)
-                                    .toString() +
-                                'USD',
+                                        decimalPrecision: model.decimalLimit)}USD',
                         textAlign: TextAlign.right,
                         style: Theme.of(context)
                             .textTheme
@@ -381,7 +379,7 @@ class WalletFeaturesView extends StatelessWidget {
                     Expanded(
                       flex: 4,
                       child: Text(
-                          '${AppLocalizations.of(context).inExchange} ${model.specialTicker.contains('(') && model.appWallet.tickerName != 'USDT' ? '\n' + message + ' ' + nativeTicker : ''}',
+                          '${AppLocalizations.of(context).inExchange} ${model.specialTicker.contains('(') && model.appWallet.tickerName != 'USDT' ? '\n$message $nativeTicker' : ''}',
                           style: Theme.of(context).textTheme.subtitle1),
                     ),
                     Expanded(
@@ -404,7 +402,7 @@ class WalletFeaturesView extends StatelessWidget {
                           Expanded(
                             flex: 4,
                             child: Text(
-                                '${AppLocalizations.of(context).totalLockedBalance} ${model.specialTicker.contains('(') && model.appWallet.tickerName != 'USDT' ? '\n' + message + ' ' + nativeTicker : ''}',
+                                '${AppLocalizations.of(context).totalLockedBalance} ${model.specialTicker.contains('(') && model.appWallet.tickerName != 'USDT' ? '\n$message $nativeTicker' : ''}',
                                 style: Theme.of(context).textTheme.subtitle1),
                           ),
                           Expanded(

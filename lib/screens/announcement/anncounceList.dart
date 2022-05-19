@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:exchangilymobileapp/screen_state/announcement/announcement_list_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
@@ -7,7 +6,6 @@ import 'package:exchangilymobileapp/widgets/html_page.dart';
 import 'package:exchangilymobileapp/widgets/loading_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/globals.dart' as globals;
 
 class AnnouncementList extends StatelessWidget {

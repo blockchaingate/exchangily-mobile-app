@@ -15,7 +15,7 @@ const String tronBaseApiUrl = 'https://api.trongrid.io/';
 ----------------------------------------------------------------------*/
 const String chargeTextApiRoute = "charge";
 const String ordersTextApiRoute = "orders";
-const String payOrderApiRoute = ordersTextApiRoute + "/code/";
+const String payOrderApiRoute = "$ordersTextApiRoute/code/";
 
 /*----------------------------------------------------------------------
                         Wallet
@@ -41,8 +41,8 @@ const String depositerrApiRoute = 'depositerr/';
 const String submitDepositApiRoute = 'submitDeposit';
 
 const String tronUsdtAccountBalanceUrl =
-    tronBaseApiUrl + "wallet/triggerconstantcontract";
-const String tronGetAccountUrl = tronBaseApiUrl + "wallet/getaccount";
+    "${tronBaseApiUrl}wallet/triggerconstantcontract";
+const String tronGetAccountUrl = "${tronBaseApiUrl}wallet/getaccount";
 //  const requestURL = `${TRON_API_ENDPOINT}/wallet/getaccount`;
 // const requestBody = {
 //   address,
@@ -50,8 +50,8 @@ const String tronGetAccountUrl = tronBaseApiUrl + "wallet/getaccount";
 // };
 
 const String broadcasrTronTransactionUrl =
-    tronBaseApiUrl + "wallet/broadcasthex";
-const String getTronLatestBlockUrl = tronBaseApiUrl + 'wallet/getnowblock';
+    "${tronBaseApiUrl}wallet/broadcasthex";
+const String getTronLatestBlockUrl = '${tronBaseApiUrl}wallet/getnowblock';
 
 const String walletBalancesApiRoute = 'walletBalances';
 const String singleWalletBalanceApiRoute = 'singleCoinWalletBalance';
@@ -71,9 +71,9 @@ const String tronExplorerUrl = "https://tronscan.org/#/transaction/";
 
 // Free Fab
 const String getFreeFabUrl =
-    baseBlockchainGateV2Url + 'airdrop/getQuestionair/';
+    '${baseBlockchainGateV2Url}airdrop/getQuestionair/';
 const String postFreeFabUrl =
-    baseBlockchainGateV2Url + 'airdrop/answerQuestionair/';
+    '${baseBlockchainGateV2Url}airdrop/answerQuestionair/';
 
 // USD Coin Price
 const String getUsdCoinPriceUrl =

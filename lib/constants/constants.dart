@@ -5,17 +5,17 @@ class Constants {
   static const String baseAssetImagesLocalPath = 'assets/images/';
 
   static const String dollarSignImageLocalUrl =
-      baseAssetImagesLocalPath + 'wallet-page/dollar-sign.png';
+      '${baseAssetImagesLocalPath}wallet-page/dollar-sign.png';
   static const String walletBackgroundLocalUrl =
-      baseAssetImagesLocalPath + 'wallet-page/background.png';
+      '${baseAssetImagesLocalPath}wallet-page/background.png';
   static const String excahngilyLogoLocalUrl =
-      baseAssetImagesLocalPath + 'wallet-page/exlogo.png';
+      '${baseAssetImagesLocalPath}wallet-page/exlogo.png';
 
   static const String emptyWalletLocalUrl =
-      baseAssetImagesLocalPath + 'icons/wallet_empty.png';
+      '${baseAssetImagesLocalPath}icons/wallet_empty.png';
 
   static const String customTokenLogoLocalUrl =
-      baseAssetImagesLocalPath + 'icons/custom-token-logo.png';
+      '${baseAssetImagesLocalPath}icons/custom-token-logo.png';
 
   static const List<String> specialTokens = [
     'USDTX',

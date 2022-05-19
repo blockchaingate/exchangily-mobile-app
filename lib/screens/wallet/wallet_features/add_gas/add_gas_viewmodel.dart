@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 import 'package:decimal/decimal.dart';
-import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';

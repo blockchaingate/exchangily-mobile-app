@@ -76,10 +76,7 @@ class ApiService {
 // Get issue tokens
 
   Future<List<CustomTokenModel>> getCustomTokens() async {
-    String url = baseBlockchainGateV2Url +
-        getIsueTokenApiRoute +
-        '/' +
-        getWithoutLogoApiRoute;
+    String url = '$baseBlockchainGateV2Url$getIsueTokenApiRoute/$getWithoutLogoApiRoute';
     log.i('getIssueTokens url $url');
     try {
       var response = await client.get(url);
@@ -414,11 +411,7 @@ class ApiService {
       String tickerName) async {
     String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
     //  String exgAddress = await getExchangilyAddress();
-    String url = configService.getKanbanBaseUrl() +
-        getSingleCoinExchangeBalApiRoute +
-        exgAddress +
-        '/' +
-        tickerName;
+    String url = '${configService.getKanbanBaseUrl()}$getSingleCoinExchangeBalApiRoute$exgAddress/$tickerName';
     log.e('getSingleCoinExchangeBalance url $url');
     ExchangeBalanceModel exchangeBalance;
     try {
@@ -505,7 +498,7 @@ class ApiService {
     await NetworkInterface.list(type: InternetAddressType.IPv4)
         .then((networkData) => ipAddress = networkData[0].addresses[0].address);
 
-    String url = getFreeFabUrl + address + '/' + ipAddress.toString();
+    String url = '$getFreeFabUrl$address/$ipAddress';
 
     log.i('getFreeFab url $url');
     try {
@@ -555,7 +548,7 @@ class ApiService {
 ----------------------------------------------------------------------*/
 
   Future getTransactionStatus(String transactionId) async {
-    var url = configService.getKanbanBaseUrl() + 'checkstatus/' + transactionId;
+    var url = '${configService.getKanbanBaseUrl()}checkstatus/$transactionId';
     log.e(url);
     try {
       var response = await client.get(url);
@@ -574,7 +567,7 @@ class ApiService {
   Future<List<WalletBalanceV2>> getSingleCoinWalletBalanceV2(String fabAddress,
       String tickerName, String thirdPartyChainAddress) async {
     String url =
-        configService.getKanbanBaseUrl() + 'v2/' + singleWalletBalanceApiRoute;
+        '${configService.getKanbanBaseUrl()}v2/$singleWalletBalanceApiRoute';
     log.i('getSingleWalletBalanceV2 URL $url');
     var body = {
       "fabAddress": fabAddress,
@@ -610,7 +603,7 @@ class ApiService {
 
   Future<List<WalletBalanceV2>> getWalletBalanceV2(body) async {
     String url =
-        configService.getKanbanBaseUrl() + 'v2/' + walletBalancesApiRoute;
+        '${configService.getKanbanBaseUrl()}v2/$walletBalancesApiRoute';
     log.i('getWalletBalance URL $url');
     log.i('getWalletBalance body $body');
 
@@ -742,11 +735,7 @@ class ApiService {
   // Get Orders by tickername
   Future getMyOrdersPagedByFabHexAddressAndTickerName(
       String exgAddress, String tickerName) async {
-    String url = configService.getKanbanBaseUrl() +
-        getOrdersByTickerApiRoute +
-        exgAddress +
-        '/' +
-        tickerName;
+    String url = '${configService.getKanbanBaseUrl()}$getOrdersByTickerApiRoute$exgAddress/$tickerName';
     // String url = environment['endpoints']['kanban'] +
     //     'getordersbytickername/' +
     //     exgAddress +
@@ -934,7 +923,7 @@ class ApiService {
   // Get Fab Transaction
   Future getFabTransactionJson(String txid) async {
     txid = string_utils.trimHexPrefix(txid);
-    var url = fabBaseUrl + 'gettransactionjson/' + txid;
+    var url = '${fabBaseUrl}gettransactionjson/$txid';
     var json;
     try {
       var response = await client.get(url);
@@ -974,7 +963,7 @@ class ApiService {
     try {
       final res = await client.get(
           // kanbanBaseUrl + "/kanban/getadvconfig"
-          configService.getKanbanBaseUrl() + "kanban/getadvconfig");
+          "${configService.getKanbanBaseUrl()}kanban/getadvconfig");
       log.w(' get slider images ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         var json = jsonDecode(res.body) as List;
@@ -989,10 +978,10 @@ class ApiService {
 
   Future getAnnouncement(lang) async {
     final langcode = lang == "en" ? "en" : "sc";
-    final url = baseBlockchainGateV2Url + "announcements/language/" + langcode;
+    final url = "${baseBlockchainGateV2Url}announcements/language/$langcode";
 
     log.w("Calling api: getAnnouncement " + lang);
-    log.i("url: " + url);
+    log.i("url: $url");
     try {
       final res = await client.get(url);
       log.w('getAnnouncement ${jsonDecode(res.body)}');
@@ -1008,19 +997,17 @@ class ApiService {
   }
 
   Future getEvents() async {
-    log.i("getEvents Url: " +
-        configService.getKanbanBaseUrl() +
-        "kanban/getCampaigns");
+    log.i("getEvents Url: ${configService.getKanbanBaseUrl()}kanban/getCampaigns");
     try {
       final res = await client.get(
           // "http://192.168.0.12:4000/kanban/getCampaigns"
-          configService.getKanbanBaseUrl() + "kanban/getCampaigns");
+          "${configService.getKanbanBaseUrl()}kanban/getCampaigns");
       log.w('getEvents ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         debugPrint("success");
         return jsonDecode(res.body);
       } else {
-        log.e("error: " + res.body);
+        log.e("error: ${res.body}");
         return "error";
       }
     } catch (e) {
@@ -1035,7 +1022,7 @@ class ApiService {
     try {
       final res = await client.post(
         // "http://192.168.0.12:4000/kanban/getCampaignSingle",
-        configService.getKanbanBaseUrl() + "kanban/getCampaignSingle",
+        "${configService.getKanbanBaseUrl()}kanban/getCampaignSingle",
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

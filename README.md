@@ -33,3 +33,10 @@ localizations process
 5. Push the code and merge to master
 6. After translation to another lang, pull the code
 7. Run the readme.txt commands one by one or all together
+
+
+## Upgrade packages major version
+<flutter pub upgrade --major-versions>
+
+## Check outdated packages 
+<flutter pub outdated>

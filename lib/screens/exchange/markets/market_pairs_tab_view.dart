@@ -1,5 +1,4 @@
 import 'package:exchangilymobileapp/screen_state/market/MarketPairsTabViewState.dart';
-import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/widgets/carousel.dart';
@@ -235,11 +234,11 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
         Container(
           height: _tabBar.preferredSize.height - 10,
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: PreferredSize(
-              child: _tabBar,
-              preferredSize: Size(MediaQuery.of(context).size.width,
-                  _tabBar.preferredSize.height - 10)),
           color: const Color(0xff202138),
+          child: PreferredSize(
+              preferredSize: Size(MediaQuery.of(context).size.width,
+                  _tabBar.preferredSize.height - 10),
+              child: _tabBar),
         ),
         // new SizedBox(
         //   height: 20,

@@ -117,12 +117,12 @@ class MaticUtils {
 
   getTransactionHash(Uint8List signTransaction) {
     var p = keccak(signTransaction);
-    var hash = "0x" + HEX.encode(p);
+    var hash = "0x${HEX.encode(p)}";
     return hash;
   }
 
   Future getEthTransactionStatus(String txid) async {
-    var url = ethBaseUrl + 'getconfirmationcount/' + txid;
+    var url = '${ethBaseUrl}getconfirmationcount/$txid';
 
     var response = await client.get(url);
     debugPrint(response.body);
@@ -130,10 +130,7 @@ class MaticUtils {
   }
 
   getEthNode(root, {index = 0}) {
-    var node = root.derivePath("m/44'/" +
-        environment["CoinType"]["ETH"].toString() +
-        "'/0'/0/" +
-        index.toString());
+    var node = root.derivePath("m/44'/${environment["CoinType"]["ETH"]}'/0'/0/$index");
     return node;
   }
 
@@ -149,7 +146,7 @@ class MaticUtils {
   }
 
   Future getEthBalanceByAddress(String address) async {
-    var url = ethBaseUrl + 'getbalance/' + address;
+    var url = '${ethBaseUrl}getbalance/$address';
     var ethBalance = 0.0;
     try {
       var response = await client.get(url);
@@ -174,7 +171,7 @@ class MaticUtils {
       });
     }
     var url =
-        ethBaseUrl + 'callcontract/' + smartContractAddress + '/' + address;
+        '${'${ethBaseUrl}callcontract/' + smartContractAddress}/$address';
     debugPrint('eth_util - getEthTokenBalanceByAddress - $url ');
 
     var tokenBalanceIe18 = 0.0;

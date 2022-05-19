@@ -55,7 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "backupMnemonic":
             MessageLookupByLibrary.simpleMessage("Backup Mnemonic"),
         "backupMnemonicNoticeContent": MessageLookupByLibrary.simpleMessage(
-            "A mnemonic phrase is a list of words which store all the information needed to recover virtual coin funds on-chain. Wallet software will typically generate a mnemonic phrase and instruct the user to write it down on paper. If the user\'s computer breaks or their hard drive becomes corrupted, they can download the same wallet software again and use the paper backup to get their virtual coins back. Anybody else who discovers the phrase can steal the virtual coins, so it must be kept safe like jewels or cash. For example, it must not be typed into any website. A mnemonic phrase are an excellent way of backing up and storing bitcoins and so they are used by almost all well-regarded wallets."),
+            "A mnemonic phrase is a list of words which store all the information needed to recover virtual coin funds on-chain. Wallet software will typically generate a mnemonic phrase and instruct the user to write it down on paper. If the user's computer breaks or their hard drive becomes corrupted, they can download the same wallet software again and use the paper backup to get their virtual coins back. Anybody else who discovers the phrase can steal the virtual coins, so it must be kept safe like jewels or cash. For example, it must not be typed into any website. A mnemonic phrase are an excellent way of backing up and storing bitcoins and so they are used by almost all well-regarded wallets."),
         "backupMnemonicNoticeTitle": MessageLookupByLibrary.simpleMessage(
             "What is mnemonic? Why it is so important to backup mnemonic phrases?"),
         "backupYourMnemonic":
@@ -465,7 +465,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Show instructions for how to use certain app features"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
         "showAllPairOrders":
-            MessageLookupByLibrary.simpleMessage("Show all pair\'s orders"),
+            MessageLookupByLibrary.simpleMessage("Show all pair's orders"),
         "showDialogWarnings":
             MessageLookupByLibrary.simpleMessage("Show dialog warnings"),
         "showOnlyCurrentPairOrders": MessageLookupByLibrary.simpleMessage(

@@ -96,7 +96,7 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
         debugPrint('if : adding element ');
         tappedMnemonicList.add(singleWord);
         tapTextControllerList[i].text =
-            tappedMnemonicList.length.toString() + ') ' + singleWord;
+            '${tappedMnemonicList.length}) $singleWord';
         lastIndexList.add(i);
       }
       // else {

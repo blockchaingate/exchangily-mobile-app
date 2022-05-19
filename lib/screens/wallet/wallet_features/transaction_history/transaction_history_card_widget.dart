@@ -142,11 +142,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AutoSizeText(
-                      transaction.date.split(" ")[0].split("-")[1] +
-                          '-' +
-                          transaction.date.split(" ")[0].split("-")[2] +
-                          '-' +
-                          transaction.date.split(" ")[0].split("-")[0],
+                      '${transaction.date.split(" ")[0].split("-")[1]}-${transaction.date.split(" ")[0].split("-")[2]}-${transaction.date.split(" ")[0].split("-")[0]}',
                       style: Theme.of(context)
                           .textTheme
                           .headline5

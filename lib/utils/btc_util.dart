@@ -84,7 +84,7 @@ class BtcUtils {
 
   Future getBtcTransactionStatus(String txid) async {
     Response response;
-    var url = btcBaseUrl + 'gettransactionjson/' + txid;
+    var url = '${btcBaseUrl}gettransactionjson/$txid';
     try {
       response = await client.get(url);
     } catch (e) {}
@@ -93,7 +93,7 @@ class BtcUtils {
   }
 
   Future getBtcBalanceByAddress(String address) async {
-    var url = btcBaseUrl + 'getbalance/' + address;
+    var url = '${btcBaseUrl}getbalance/$address';
     var btcBalance = 0.0;
     try {
       var response = await client.get(url);
@@ -105,7 +105,7 @@ class BtcUtils {
   getBtcNode(root, {String tickerName, index = 0}) {
     var coinType = environment["CoinType"][tickerName].toString();
     var node =
-        root.derivePath("m/44'/" + coinType + "'/0'/0/" + index.toString());
+        root.derivePath("m/44'/$coinType'/0'/0/$index");
     return node;
   }
 

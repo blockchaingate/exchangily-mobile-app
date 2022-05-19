@@ -20,9 +20,7 @@ class MarketOverviewBlock extends StatelessWidget {
                 .headline4
                 .copyWith(color: globals.primaryColor,fontWeight: FontWeight.bold),),
         Text(
-            (((change != null) && (change >= 0)) ? "+" : "") +
-                change.toStringAsFixed(2) +
-                "%",
+            "${((change != null) && (change >= 0)) ? "+" : ""}${change.toStringAsFixed(2)}%",
             style: TextStyle(
                 color: Color(((change != null) && (change >= 0))
                     ? 0XFF0da88b

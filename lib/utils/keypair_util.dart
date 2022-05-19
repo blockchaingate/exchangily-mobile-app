@@ -26,7 +26,7 @@ getExgKeyPair(seed) {
               private: environment["chains"]["BTC"]["network"].bip32.private)));
 
   final fabCoinChild = root.derivePath(
-      "m/44'/" + environment["CoinType"]["FAB"].toString() + "'/0'/0/0");
+      "m/44'/${environment["CoinType"]["FAB"]}'/0'/0/0");
   final fabPublicKey = fabCoinChild.publicKey;
 
   final fabPrivateKey = fabCoinChild.privateKey;
@@ -34,6 +34,6 @@ getExgKeyPair(seed) {
   var pass1 = sha256.process(fabPublicKey);
   Digest ripemd160 = Digest("RIPEMD-160");
   var pass2 = ripemd160.process(pass1);
-  var exgAddr = '0x' + HEX.encode(pass2);
+  var exgAddr = '0x${HEX.encode(pass2)}';
   return {"address": exgAddr, "privateKey": fabPrivateKey};
 }

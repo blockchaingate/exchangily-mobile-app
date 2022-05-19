@@ -27,7 +27,7 @@ final liteCoinTestnetNetwork = BitcoinFlutter.NetworkType(
 generateLtcAddress(root, {index = 0}) async {
   var coinType = environment["CoinType"]["LTC"].toString();
   var node =
-      root.derivePath("m/44'/" + coinType + "'/0'/0/" + index.toString());
+      root.derivePath("m/44'/$coinType'/0'/0/$index");
 
   String address = BitcoinFlutter.P2PKH(
           data: BitcoinFlutter.PaymentData(pubkey: node.publicKey),
@@ -52,7 +52,7 @@ class LtcUtils {
 // getLtcTransactionStatus
   Future getLtcTransactionStatus(String txid) async {
     Response response;
-    var url = ltcBaseUrl + 'gettransactionjson/' + txid;
+    var url = '${ltcBaseUrl}gettransactionjson/$txid';
 
     try {
       response = await httpClient.get(url);
@@ -63,7 +63,7 @@ class LtcUtils {
 
 // getLtcBalanceByAddress
   Future getLtcBalanceByAddress(String address) async {
-    var url = ltcBaseUrl + 'getbalance/' + address;
+    var url = '${ltcBaseUrl}getbalance/$address';
     debugPrint('ltc_util- getLtcBalanceByAddress url $url');
     var btcBalance = 0.0;
     try {

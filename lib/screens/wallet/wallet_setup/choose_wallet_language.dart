@@ -80,7 +80,7 @@ class ChooseWalletLanguageView extends StatelessWidget {
                     highlightColor: globals.white,
                     child: Center(
                       child: Text(
-                        AppLocalizations.of(context).loading + '...',
+                        '${AppLocalizations.of(context).loading}...',
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ),
@@ -109,7 +109,7 @@ class ChooseWalletLanguageView extends StatelessWidget {
                               shape: const StadiumBorder(
                                   side: BorderSide(
                                       color: globals.primaryColor, width: 2)),
-                              primary: globals.secondaryColor,
+                              onPrimary: globals.secondaryColor,
                             ),
                             child: Text('中文',
                                 style: Theme.of(context).textTheme.headline4),

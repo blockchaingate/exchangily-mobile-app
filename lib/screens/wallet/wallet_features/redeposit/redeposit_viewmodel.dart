@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
-import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
@@ -219,8 +218,7 @@ class RedepositViewModel extends FutureViewModel {
 
         sharedService.alertDialog(
             AppLocalizations.of(context).redepositCompleted,
-            AppLocalizations.of(context).transactionId +
-                ': ' +
+            '${AppLocalizations.of(context).transactionId}: ' +
                 newTransactionId,
             path: errDepositList.length == 1 ? WalletFeaturesViewRoute : '',
             arguments: errDepositList.length == 1 ? appWallet : null);

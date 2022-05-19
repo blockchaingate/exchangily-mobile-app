@@ -3,7 +3,6 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -155,8 +154,8 @@ class SettingsPortableContainer extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
+                  const Padding(
+                    padding: EdgeInsets.all(6.0),
                     child: Icon(Icons.warning, color: yellow, size: 16),
                   ),
                   Expanded(
@@ -189,8 +188,8 @@ class SettingsPortableContainer extends StatelessWidget {
                 //  crossAxisAlignment: CrossAxisAlignment.start,
                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
+                  const Padding(
+                    padding: EdgeInsets.all(6.0),
                     child: Icon(Icons.insert_comment, color: white, size: 16),
                   ),
                   Expanded(

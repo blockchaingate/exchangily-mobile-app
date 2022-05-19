@@ -24,9 +24,7 @@ import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
-import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
@@ -986,7 +984,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusy(true);
     unreadMsgNum = getunReadAnnouncement();
 
-    debugPrint("Update unread annmoucement number:" + unreadMsgNum.toString());
+    debugPrint("Update unread annmoucement number:$unreadMsgNum");
     (context as Element).markNeedsBuild();
     setBusy(false);
   }
@@ -1503,8 +1501,9 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     var walletBalancesApiRes =
         await apiService.getWalletBalanceV2(jsonDecode(finalWbb));
-    if (walletBalancesApiRes != null)
+    if (walletBalancesApiRes != null) {
       log.w('walletBalances LENGTH ${walletBalancesApiRes.length}');
+    }
   }
 
   Future<List<WalletBalanceV2>> refreshBalancesV2() async {
@@ -1534,14 +1533,16 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     walletBalancesApiRes =
         await apiService.getWalletBalanceV2(jsonDecode(finalWbb));
-    if (walletBalancesApiRes != null)
+    if (walletBalancesApiRes != null) {
       log.w('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
+    }
     for (var coinToHideTicker in coinsToHideList) {
       walletBalancesApiRes
           .removeWhere((element) => element.coin == coinToHideTicker);
     }
-    if (walletBalancesApiRes != null)
+    if (walletBalancesApiRes != null) {
       log.i('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
+    }
     walletBalances = walletBalancesApiRes;
     walletBalancesCopy = walletBalances;
 

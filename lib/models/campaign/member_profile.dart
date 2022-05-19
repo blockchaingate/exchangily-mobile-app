@@ -1,4 +1,3 @@
-import 'package:exchangilymobileapp/utils/number_util.dart';
 
 class MemberProfile {
   String _membership;

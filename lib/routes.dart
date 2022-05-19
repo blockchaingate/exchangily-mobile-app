@@ -254,7 +254,7 @@ class RouteGenerator {
         ),
         body: Center(
           child: Text(
-              AppLocalizations.of(context).noRouteDefined + ' ${settings.name}',
+              '${AppLocalizations.of(context).noRouteDefined} ${settings.name}',
               style: const TextStyle(color: Colors.white)),
         ),
       );

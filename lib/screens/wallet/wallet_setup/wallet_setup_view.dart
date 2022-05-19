@@ -87,8 +87,8 @@ class WalletSetupView extends StatelessWidget {
               model.isHideIcon
                   ? Container()
                   : model.isWalletVerifySuccess
-                      ? Icon(Icons.check_box_outlined, color: green, size: 32)
-                      : Icon(Icons.cancel_outlined, color: red, size: 32),
+                      ? const Icon(Icons.check_box_outlined, color: green, size: 32)
+                      : const Icon(Icons.cancel_outlined, color: red, size: 32),
               // Button Container
               model.isBusy
                   ? Shimmer.fromColors(

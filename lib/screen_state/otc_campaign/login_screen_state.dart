@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -7,7 +6,6 @@ import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/models/campaign/user.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +90,7 @@ class CampaignLoginScreenState extends BaseState {
           FocusScope.of(context).requestFocus(FocusNode());
         },
         content: TextField(
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             icon: Icon(
               Icons.alternate_email,
               color: globals.primaryColor,

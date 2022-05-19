@@ -1,8 +1,11 @@
+import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
+
 class LightningRemitHistoryModel {
   String type;
   int time;
   String coin;
-  double amount;
+  Decimal amount;
   int status;
   String txid;
 
@@ -20,7 +23,7 @@ class LightningRemitHistoryModel {
       type: json['type'] as String,
       time: json['time'] as int,
       coin: json['coin'] as String,
-      amount: double.parse(json['amount'].toString()),
+      amount: NumberUtil.parseStringToDecimal(json['amount'].toString()),
       status: json['status'] as int,
       txid: json['txid'] as String,
     );

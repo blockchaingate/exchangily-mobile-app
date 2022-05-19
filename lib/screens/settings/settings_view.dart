@@ -17,7 +17,6 @@ import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dar
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
-import 'package:launch_review/launch_review.dart';
 import 'package:stacked/stacked.dart';
 import '../../localizations.dart';
 import '../../shared/globals.dart' as globals;
@@ -94,10 +93,10 @@ class SettingsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey _one = GlobalKey();
-    GlobalKey _two = GlobalKey();
-    model.one = _one;
-    model.two = _two;
+    GlobalKey one = GlobalKey();
+    GlobalKey two = GlobalKey();
+    model.one = one;
+    model.two = two;
     debugPrint('isShow _SettingsWidgetState ${model.isShowCaseOnce}');
     model.showcaseEvent(context);
     // WidgetsBinding.instance
@@ -269,6 +268,7 @@ class SettingsContainer extends StatelessWidget {
                             },
                             items: [
                               DropdownMenuItem(
+                                value: model.languages['en'],
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -286,9 +286,9 @@ class SettingsContainer extends StatelessWidget {
                                             .headline6),
                                   ],
                                 ),
-                                value: model.languages['en'],
                               ),
                               DropdownMenuItem(
+                                value: model.languages['zh'],
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -307,7 +307,6 @@ class SettingsContainer extends StatelessWidget {
                                             .headline6),
                                   ],
                                 ),
-                                value: model.languages['zh'],
                               ),
                             ]),
                       ),
@@ -360,8 +359,8 @@ class SettingsContainer extends StatelessWidget {
                     //  crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5.0, right: 8.0),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 5.0, right: 8.0),
                         child:
                             Icon(Icons.insert_comment, color: white, size: 18),
                       ),
@@ -398,8 +397,8 @@ class SettingsContainer extends StatelessWidget {
                     //  crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5.0, right: 8.0),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 5.0, right: 8.0),
                         child:
                             Icon(Icons.security_sharp, color: white, size: 18),
                       ),
@@ -441,9 +440,9 @@ class SettingsContainer extends StatelessWidget {
                         //  crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Padding(
+                          const Padding(
                             padding:
-                                const EdgeInsets.only(left: 5.0, right: 8.0),
+                                EdgeInsets.only(left: 5.0, right: 8.0),
                             child: Icon(Icons.lock_outline_rounded,
                                 color: white, size: 18),
                           ),
@@ -485,8 +484,8 @@ class SettingsContainer extends StatelessWidget {
                     //  crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5.0, right: 8.0),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 5.0, right: 8.0),
                         child: Icon(Icons.storage, color: white, size: 18),
                       ),
                       // Add column here and add text box that shows which node is current
@@ -578,8 +577,8 @@ class SettingsContainer extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(right: 3.0),
+        const Padding(
+          padding: EdgeInsets.only(right: 3.0),
           child: Icon(
             Icons.delete,
             color: globals.sellPrice,
@@ -587,7 +586,7 @@ class SettingsContainer extends StatelessWidget {
           ),
         ),
         model.isDeleting
-            ? Text(AppLocalizations.of(context).deleteWallet + '...')
+            ? Text('${AppLocalizations.of(context).deleteWallet}...')
             : Text(
                 AppLocalizations.of(context).deleteWallet,
                 textAlign: TextAlign.center,

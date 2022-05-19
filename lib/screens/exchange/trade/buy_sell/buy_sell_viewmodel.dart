@@ -492,7 +492,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     await coinService
         .getCoinTypeByTickerName(baseCoinName)
         .then((value) => baseCoin = value);
-    log.e('basecoin Hex ==' + baseCoin.toRadixString(16));
+    log.e('basecoin Hex ==${baseCoin.toRadixString(16)}');
     int targetCoin = 0;
     await coinService
         .getCoinTypeByTickerName(targetCoinName)

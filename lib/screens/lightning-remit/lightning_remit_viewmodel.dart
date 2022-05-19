@@ -1,7 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
-import 'package:barcode_scan/barcode_scan.dart';
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -27,6 +26,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:scan/scan.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
@@ -58,13 +58,17 @@ class LightningRemitViewmodel extends FutureViewModel {
   bool isExchangeBalanceEmpty = false;
   String barcodeRes = '';
   String barcodeRes2 = '';
-  var walletBalancesBody;
   bool isShowBottomSheet = false;
   List<ExchangeBalanceModel> exchangeBalances = [];
 
   List<TransactionHistory> transactionHistory = [];
 
   String fabAddress = '';
+  String barcode = '';
+  ScanController scanController = ScanController();
+  bool _isScan = false;
+  bool get isScanWindowOpen => _isScan;
+  var walletDecimalList = '';
 
 /*----------------------------------------------------------------------
                     Default Future to Run
@@ -85,6 +89,9 @@ class LightningRemitViewmodel extends FutureViewModel {
     sharedService.context = context;
     fabAddress =
         await walletService.getAddressFromCoreWalletDatabaseByTickerName('FAB');
+    if (storageService.walletDecimalList.isNotEmpty) {
+      walletDecimalList = jsonDecode(storageService.walletDecimalList);
+    }
   }
 
 /*----------------------------------------------------------------------
@@ -128,6 +135,16 @@ class LightningRemitViewmodel extends FutureViewModel {
     setBusy(false);
   }
 
+  toggleScanWindow(bool v) {
+    _isScan = v;
+    notifyListeners();
+  }
+
+  onCapture(data) {
+    barcode = data;
+    toggleScanWindow(false);
+    scanBarcode();
+  }
   // get all LightningRemit transactions
 
   getLightningRemitTransactionHistory() async {
@@ -261,18 +278,22 @@ class LightningRemitViewmodel extends FutureViewModel {
                     onBackButtonPressed
 ----------------------------------------------------------------------*/
   onBackButtonPressed() async {
+    if (_isScan) {
+      toggleScanWindow(false);
+      return;
+    }
     await sharedService.onBackButtonPressed('/dashboard');
   }
-/*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-                                    Barcode Scan
---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   void scanBarcode() async {
     try {
       setBusy(true);
-      String barcode = '';
-      storageService.isCameraOpen = true;
-      barcode = await BarcodeScanner.scan().then((value) => value.rawContent);
+      // String barcode = '';
+
+      // storageService.isCameraOpen = true;
+      // barcode = BarcodeUtil.scanBarcode();
+
+      // await BarcodeScanner.scan().then((value) => value.rawContent);
       addressController.text = barcode;
       setBusy(false);
     } on PlatformException catch (e) {
@@ -467,6 +488,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                   ),
                 ],
               )
+
             // Android Alert Dialog
             : Center(
                 child: AlertDialog(
@@ -538,47 +560,62 @@ class LightningRemitViewmodel extends FutureViewModel {
                             ),
                           )),
                       UIHelper.verticalSpaceSmall,
-                      Container(
-                        padding: const EdgeInsets.all(10.0),
-                        child: RaisedButton(
-                            child: Text(AppLocalizations.of(context).share,
-                                style: Theme.of(context).textTheme.headline6),
-                            onPressed: () {
-                              String receiveFileName =
-                                  'Lightning-remit-kanban-receive-address.png';
-                              getApplicationDocumentsDirectory().then((dir) {
-                                String filePath =
-                                    "${dir.path}/$receiveFileName";
-                                File file = File(filePath);
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10.0),
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: primaryColor),
+                                child: Text(AppLocalizations.of(context).share,
+                                    style:
+                                        Theme.of(context).textTheme.headline6),
+                                onPressed: () {
+                                  String receiveFileName =
+                                      'Lightning-remit-kanban-receive-address.png';
+                                  getApplicationDocumentsDirectory()
+                                      .then((dir) {
+                                    String filePath =
+                                        "${dir.path}/$receiveFileName";
+                                    File file = File(filePath);
 
-                                Future.delayed(const Duration(milliseconds: 30),
-                                    () {
-                                  sharedService
-                                      .capturePng(globalKey: globalKey)
-                                      .then((byteData) {
-                                    file.writeAsBytes(byteData).then((onFile) {
-                                      Share.shareFiles([onFile.path],
-                                          text: kbAddress);
+                                    Future.delayed(
+                                        const Duration(milliseconds: 30), () {
+                                      sharedService
+                                          .capturePng(globalKey: globalKey)
+                                          .then((byteData) {
+                                        file
+                                            .writeAsBytes(byteData)
+                                            .then((onFile) {
+                                          Share.shareFiles([onFile.path],
+                                              text: kbAddress);
+                                        });
+                                      });
                                     });
                                   });
-                                });
-                              });
-                            }),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: OutlineButton(
-                          borderSide: const BorderSide(color: primaryColor),
-                          color: primaryColor,
-                          textColor: Colors.white,
-                          child: Text(
-                            AppLocalizations.of(context).close,
-                            style: Theme.of(context).textTheme.headline6,
+                                }),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
-                          },
-                        ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                  // shape: CustomStyles.roundedShape(),
+                                  side: const BorderSide(color: primaryColor),
+                                  backgroundColor: secondaryColor,
+                                  textStyle:
+                                      const TextStyle(color: Colors.white)),
+                              child: Text(
+                                AppLocalizations.of(context).close,
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop(false);
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       UIHelper.verticalSpaceSmall,
                     ],
@@ -605,17 +642,17 @@ class LightningRemitViewmodel extends FutureViewModel {
         return;
       }
       await refreshBalance();
-      ExchangeBalanceModel _selectedExchangeBal = exchangeBalances
+      ExchangeBalanceModel selectedExchangeBal = exchangeBalances
           .firstWhere((element) => element.ticker == tickerName);
       // int coinType = getCoinTypeIdByName(tickerName);
-      debugPrint(_selectedExchangeBal.coinType.toString());
+      debugPrint(selectedExchangeBal.coinType.toString());
       Decimal amount = Decimal.parse(amountController.text);
-      Decimal selectedCoinBalance = _selectedExchangeBal.unlockedAmount;
+      Decimal selectedCoinBalance = selectedExchangeBal.unlockedAmount;
       if (selectedCoinBalance <= Decimal.zero || amount > selectedCoinBalance) {
         sharedService.alertDialog(AppLocalizations.of(context).validationError,
             AppLocalizations.of(context).invalidAmount);
         setBusy(false);
-        log.e('No exchange balance ${_selectedExchangeBal.unlockedAmount}');
+        log.e('No exchange balance ${selectedExchangeBal.unlockedAmount}');
         return;
       }
       await dialogService
@@ -629,7 +666,7 @@ class LightningRemitViewmodel extends FutureViewModel {
           String mnemonic = res.returnedText;
           Uint8List seed = walletService.generateSeed(mnemonic);
           await walletService
-              .sendCoin(seed, _selectedExchangeBal.coinType,
+              .sendCoin(seed, selectedExchangeBal.coinType,
                   addressController.text, double.parse(amountController.text))
               .then((res) {
             log.w('RES $res');

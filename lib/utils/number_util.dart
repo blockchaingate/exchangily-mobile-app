@@ -34,9 +34,7 @@ class NumberUtil {
   /// Breaks at precision 19
   static Decimal decimalLimiter(Decimal input,
       {int decimalPrecision = maxDecimalDigits}) {
-    if (input == null) {
-      input = Constants.decimalZero;
-    }
+    input ??= Constants.decimalZero;
     var p = pow(10, decimalPrecision);
     var t = Decimal.fromInt(p);
     var x = input * t;
@@ -56,7 +54,7 @@ class NumberUtil {
     if (splitStr.length > 1) {
       if (splitStr[1].length > decimalPrecision) {
         splitStr[1] = splitStr[1].substring(0, decimalPrecision);
-        input = splitStr[0] + "." + splitStr[1];
+        input = "${splitStr[0]}.${splitStr[1]}";
       }
     }
     for (int i = 0; i < input.length; i++) {
@@ -189,10 +187,7 @@ class NumberUtil {
     if (lastDecimalDigit != '0') {
       roundDown = int.parse(lastDecimalDigit) - 1;
     }
-    String res = beforeDecimalBalance +
-        '.' +
-        secondLastDecimalDigit +
-        roundDown.toString();
+    String res = '$beforeDecimalBalance.$secondLastDecimalDigit$roundDown';
     finalBalance = double.parse(res);
 
     log.w('roundDownLastDigit res $finalBalance');
@@ -272,11 +267,7 @@ class NumberUtil {
 // Time Format
   timeFormatted(timeStamp) {
     var time = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
-    return addZeroInFrontForSingleDigit(time.hour.toString()) +
-        ':' +
-        addZeroInFrontForSingleDigit(time.minute.toString()) +
-        ':' +
-        addZeroInFrontForSingleDigit(time.second.toString());
+    return '${addZeroInFrontForSingleDigit(time.hour.toString())}:${addZeroInFrontForSingleDigit(time.minute.toString())}:${addZeroInFrontForSingleDigit(time.second.toString())}';
   }
 
   String addZeroInFrontForSingleDigit(String value) {

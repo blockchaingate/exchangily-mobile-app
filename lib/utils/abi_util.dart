@@ -254,7 +254,7 @@ class AbiUtils {
 
     var encodeList =
         uint8ListFromList(rlp.encode(_encodeToRlp(transaction, signature)));
-    var finalString = '0x' + HEX.encode(encodeList);
+    var finalString = '0x${HEX.encode(encodeList)}';
     // debugPrint('finalString===' + finalString);
     return finalString;
     /*

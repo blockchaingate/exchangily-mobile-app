@@ -36,12 +36,12 @@ class NetworkStausView extends StatelessWidget {
             UIHelper.verticalSpaceSmall,
             ElevatedButton(
                 style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(buyPrice)),
+                    backgroundColor: MaterialStateProperty.all(white)),
                 onPressed: () => navigationService
                     .navigateUsingPushReplacementNamed(DashboardViewRoute),
                 child: Text(
                   AppLocalizations.of(context).reload,
-                  style: TextStyle(color: black),
+                  style: const TextStyle(color: primaryColor),
                 ))
           ],
         ),

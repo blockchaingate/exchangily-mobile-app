@@ -78,7 +78,7 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
                     .textTheme
                     .bodyText1
                     .copyWith(color: globals.white),
-                icon: Icon(
+                icon: const Icon(
                   Icons.event_note,
                   color: globals.primaryColor,
                 ),

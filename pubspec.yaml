@@ -17,29 +17,25 @@ dependencies:
 
   flutter_cupertino_localizations: ^1.0.1
 
-  local_auth: ^1.1.8
+  local_auth: ^2.0.2
 
   # ----- Bitcoin -- Addresses -- Bip
 
   bs58check: ^1.0.1
 
   # bch address
+  #bitbox: ^0.0.5
   bitbox: ^0.0.1
 
   # Generate LTC and DOGE coin address
   bitcoin_flutter: ^2.0.1
 
 
-
-  #bip39: ^1.0.3
-
-  # ----- ICONS ---------
-
   # Cupertino Icons
   cupertino_icons: ^1.0.0
 
   # Font Awesome
-  font_awesome_flutter: ^9.1.0
+  font_awesome_flutter: ^10.1.0
 
   # ----- COMMUNICATION --------
 
@@ -89,29 +85,22 @@ dependencies:
   qr: ^2.1.0
 
   # Barcode Scan
-  barcode_scan: 3.0.1
+  #barcode_scan: 3.0.1
   #barcode_scan: ^2.0.2
+  # barcode_scan2: ^4.1.4
+  scan: 1.6.0
 
   # Material icons
-  material_design_icons_flutter: ^4.0.5345
+  material_design_icons_flutter: ^5.0.6595
 
-  # Flushbar instead of Snackbar for notifications
-  #flushbar: ^1.9.0
-  # flushbar:
-  #   git:
-  #     url: git://github.com/valterh4ck3r/flushbar
-  #     ref: master
 
-  # decimal
   decimal: ^2.2.0
 
-  # Device Preview
   # device_preview:
 
   #webview_flutter
   #webview_flutter: ^0.3.19+4
 
-  # rflutter Alert
   rflutter_alert: ^2.0.4
 
   # Shared Preferences
@@ -172,7 +161,7 @@ dependencies:
   # flutter_local_notifications: ^1.4.4+4
 
   # #share
-  share_plus: ^2.1.4
+  share_plus: ^4.0.4
 
   json_diff: 0.2.0
 
@@ -191,24 +180,24 @@ dependencies:
   showcaseview: ^1.1.1
 
   # Reactive
-  observable_ish: ^3.0.1
+  observable_ish: ^4.0.4
 
   # Pagination
   #pagination_view: ^1.0.3+2
 
   # Overlay notification
-  overlay_support: ^1.2.0
+  overlay_support: ^2.0.0
 
   # Reload app
   #flutter_phoenix: ^0.1.0
 
   # auto size text
-  auto_size_text: ^2.1.0
+  auto_size_text: ^3.0.0
 
-  # protobuf
+  #protobuf: 2.0.1
   protobuf: ^1.1.1
 
-  # protoc_plugin
+  # #protoc_plugin : 20.0.0
   protoc_plugin: ^19.3.1
 
   intl_translation: ^0.17.0
@@ -222,7 +211,7 @@ dev_dependencies:
 
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.4
+  flutter_lints: ^2.0.1
 
 flutter:
   uses-material-design: true

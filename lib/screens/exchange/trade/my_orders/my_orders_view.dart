@@ -16,7 +16,7 @@ class MyOrdersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RefreshController _refreshController =
+    RefreshController refreshController =
         RefreshController(initialRefresh: false);
     return ViewModelBuilder<MyOrdersViewModel>.reactive(
         createNewModelOnInsert: true,
@@ -26,11 +26,11 @@ class MyOrdersView extends StatelessWidget {
           debugPrint('in init MyOrdersView');
           model.context = context;
 
-          model.refreshController = _refreshController;
+          model.refreshController = refreshController;
           model.init();
         },
         onDispose: () {
-          _refreshController.dispose();
+          refreshController.dispose();
           debugPrint('_refreshController disposed in my orders view');
         },
         builder: (context, MyOrdersViewModel model, _) => Container(
@@ -44,8 +44,7 @@ class MyOrdersView extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              AppLocalizations.of(context).serverError +
-                                  ': ${model.errorMessage}',
+                              '${AppLocalizations.of(context).serverError}: ${model.errorMessage}',
                               style: const TextStyle(color: Colors.white),
                             ),
                             IconButton(

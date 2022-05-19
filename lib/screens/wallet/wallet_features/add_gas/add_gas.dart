@@ -78,7 +78,7 @@ class AddGas extends StatelessWidget {
                             borderSide: BorderSide(
                                 color: Color(0XFF871fff), width: 1.0)),
                         hintText:
-                            AppLocalizations.of(context).enterAmount + '(FAB)',
+                            '${AppLocalizations.of(context).enterAmount}(FAB)',
                         hintStyle: Theme.of(context).textTheme.headline6,
                       ),
                       controller: model.amountController,
@@ -125,7 +125,7 @@ class AddGas extends StatelessWidget {
                             style: const TextStyle(
                                 fontSize: 12.0, color: Colors.white)),
                       ),
-                      Text(model.transFee.toString() + ' FAB',
+                      Text('${model.transFee} FAB',
                           style: const TextStyle(
                               fontSize: 13.0, color: Colors.white))
                     ]),
@@ -268,11 +268,14 @@ class AddGas extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Flexible(
-                          child: OutlineButton(
-                            borderSide: const BorderSide(color: primaryColor),
-                            padding: const EdgeInsets.all(15),
-                            color: primaryColor,
-                            textColor: Colors.white,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                                side: const BorderSide(color: primaryColor),
+                                padding: const EdgeInsets.all(15),
+                                backgroundColor: primaryColor,
+                                textStyle: const TextStyle(
+                                  color: Colors.white,
+                                )),
                             onPressed: () async {
                               double amount = 0;
                               if (model.amountController.text != '') {

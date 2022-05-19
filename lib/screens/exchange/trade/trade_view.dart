@@ -1,5 +1,4 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_view.dart';
@@ -8,13 +7,10 @@ import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my
 import 'package:exchangilymobileapp/screens/exchange/trade/pair_price_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trading_chart/trading_chart_view.dart';
-import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
-import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:stacked/stacked.dart';
 
 import 'market_trades/market_trades_view.dart';
@@ -363,7 +359,7 @@ class TradeView extends StatelessWidget {
                                 },
                                 child: Text(AppLocalizations.of(context).buy,
                                     style:
-                                        TextStyle(fontSize: 13, color: white)),
+                                        const TextStyle(fontSize: 13, color: white)),
                               ),
                             )),
                         // Sell button
@@ -373,7 +369,7 @@ class TradeView extends StatelessWidget {
                             child: RaisedButton(
                               padding: const EdgeInsets.all(0),
                               color: sellPrice,
-                              shape: StadiumBorder(
+                              shape: const StadiumBorder(
                                   side: BorderSide(color: sellPrice, width: 1)),
                               onPressed: () {
                                 if (model.currentPairPrice != null &&

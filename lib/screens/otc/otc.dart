@@ -1,7 +1,6 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
@@ -66,7 +65,7 @@ class OtcScreen extends StatelessWidget {
                                             color: globals.grey,
                                             fontWeight: FontWeight.bold),
                                   ),
-                                  Divider(
+                                  const Divider(
                                     color: globals.primaryColor,
                                     thickness: 2,
                                   ),
@@ -127,7 +126,7 @@ class OtcScreen extends StatelessWidget {
                                               fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  Divider(
+                                  const Divider(
                                     color: globals.primaryColor,
                                     thickness: 2,
                                   ),

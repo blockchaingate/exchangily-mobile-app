@@ -97,9 +97,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                          AppLocalizations.of(context)
-                                                  .minimumAmount +
-                                              ': ',
+                                          '${AppLocalizations.of(context)
+                                                  .minimumAmount}: ',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
@@ -119,9 +118,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                          AppLocalizations.of(context)
-                                                  .decimalLimit +
-                                              ': ',
+                                          '${AppLocalizations.of(context)
+                                                  .decimalLimit}: ',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
@@ -152,8 +150,7 @@ class MoveToWalletScreen extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(
-                              AppLocalizations.of(context).inExchange +
-                                  ' ${NumberUtil.decimalLimiter(model.appWallet.unlockedExchangeBalance, decimalPrecision: model.decimalLimit).toString()}',
+                              '${AppLocalizations.of(context).inExchange} ${NumberUtil.decimalLimiter(model.appWallet.unlockedExchangeBalance, decimalPrecision: model.decimalLimit).toString()}',
                               style: Theme.of(context).textTheme.subtitle2),
                           Padding(
                             padding: const EdgeInsets.symmetric(
@@ -175,7 +172,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                   height: 20,
                                   child: IconButton(
                                       padding: EdgeInsets.zero,
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.info_outline,
                                         color: primaryColor,
                                         size: 16,
@@ -390,7 +387,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                       true), // numnber keyboard
                                               decoration: InputDecoration(
                                                   focusedBorder:
-                                                      UnderlineInputBorder(
+                                                      const UnderlineInputBorder(
                                                           borderSide: BorderSide(
                                                               color: globals
                                                                   .primaryColor)),
@@ -436,7 +433,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                               keyboardType: TextInputType
                                                   .number, // numnber keyboard
                                               decoration: InputDecoration(
-                                                  focusedBorder: UnderlineInputBorder(
+                                                  focusedBorder: const UnderlineInputBorder(
                                                       borderSide: BorderSide(
                                                           color: globals
                                                               .primaryColor)),
@@ -592,7 +589,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                     text: TextSpan(
                                         text: AppLocalizations.of(context)
                                             .taphereToCopyTxId,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             decoration:
                                                 TextDecoration.underline,
                                             color: primaryColor),

@@ -76,10 +76,7 @@ class FabUtils {
 
     for (var i = 0; i < addressIndexList.length; i++) {
       var index = addressIndexList[i];
-      var fabCoinChild = root.derivePath("m/44'/" +
-          environment["CoinType"]["FAB"].toString() +
-          "'/0'/0/" +
-          index.toString());
+      var fabCoinChild = root.derivePath("m/44'/${environment["CoinType"]["FAB"]}'/0'/0/$index");
       var fromAddress = btcUtils.getBtcAddressForNode(fabCoinChild);
       if (addressList != null && addressList.length > 0) {
         fromAddress = addressList[i];
@@ -250,10 +247,7 @@ class FabUtils {
   }
 
   getFabNode(root, {index = 0}) {
-    var node = root.derivePath("m/44'/" +
-        environment["CoinType"]["FAB"].toString() +
-        "'/0'/0/" +
-        index.toString());
+    var node = root.derivePath("m/44'/${environment["CoinType"]["FAB"]}'/0'/0/$index");
     return node;
   }
 
@@ -267,7 +261,7 @@ class FabUtils {
       'data': trimHexPrefix(getLockedInfoABI),
       'sender': address
     };
-    var url = fabBaseUrl + 'callcontract';
+    var url = '${fabBaseUrl}callcontract';
     try {
       var response = await client.post(url, body: data);
       var json = jsonDecode(response.body);
@@ -414,7 +408,7 @@ class FabUtils {
   }
 
   Future getFabBalanceByAddress(String address) async {
-    var url = fabBaseUrl + 'getbalance/' + address;
+    var url = '${fabBaseUrl}getbalance/$address';
     var fabBalance = 0.0;
     try {
       var response = await client.get(url);
@@ -448,7 +442,7 @@ class FabUtils {
 
    */
     address = bs58check.encode(HEX.decode(address));
-    log.w('address after encode=' + address);
+    log.w('address after encode=$address');
 
     /*
   var decoded = bs58check.decode('mvLuZXGYMxpRM65kgzbfoKqs3FPcisM6ri');
@@ -463,7 +457,7 @@ class FabUtils {
     var decoded = bs58check.decode(address);
     address = HEX.encode(decoded);
     address = address.substring(2);
-    address = '0x' + address;
+    address = '0x$address';
     log.w('in fabToExgAddress $address');
     return address;
   }
@@ -484,7 +478,7 @@ class FabUtils {
       'data': balanceInfoABI + fixLength(trimHexPrefix(address), 64)
     };
     var tokenBalance = 0.0;
-    var url = fabBaseUrl + 'callcontract';
+    var url = '${fabBaseUrl}callcontract';
     log.i(
         'Fab_util -- address $address getFabTokenBalanceForABI balance by address url -- $url -- body $body');
     try {
@@ -516,7 +510,7 @@ class FabUtils {
   }
 
   Future getSmartContractABI(String smartContractAddress) async {
-    var url = fabBaseUrl + 'getabiforcontract/' + smartContractAddress;
+    var url = '${fabBaseUrl}getabiforcontract/$smartContractAddress';
     var response = await client.get(url);
     Map<String, dynamic> resJson = jsonDecode(response.body);
     return resJson;
@@ -533,7 +527,7 @@ class FabUtils {
           .getContractAddressByTickerName(coinName)
           .then((value) {
         if (!value.startsWith('0x')) {
-          smartContractAddress = '0x' + value;
+          smartContractAddress = '0x$value';
         } else {
           smartContractAddress = value;
         }

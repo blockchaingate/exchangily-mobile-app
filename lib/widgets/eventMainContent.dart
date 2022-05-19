@@ -1,8 +1,6 @@
 import 'package:exchangilymobileapp/widgets/cache_image.dart';
 import 'package:exchangilymobileapp/widgets/customSeparator.dart';
-import 'package:drop_cap_text/drop_cap_text.dart';
 import 'package:flutter/material.dart';
-import 'package:web3dart/web3dart.dart';
 
 class EventMainContent extends StatelessWidget {
   final List campaignInfo;
@@ -138,7 +136,7 @@ class ContentRowList extends StatelessWidget {
                               //     color: Colors.white,
                               //     shape: BoxShape.circle)
                               child: Text(
-                                (l.key + 1).toString() + ".",
+                                "${l.key + 1}.",
                                 style: const TextStyle(color: Colors.white),
                               ),
                             ),

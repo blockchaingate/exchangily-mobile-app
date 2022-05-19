@@ -81,9 +81,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                 },
                 decoration: InputDecoration(
                   suffix: Text(
-                      AppLocalizations.of(context).decimalLimit +
-                          ': ' +
-                          model.decimalLimit.toString(),
+                      '${AppLocalizations.of(context).decimalLimit}: ${model.decimalLimit}',
                       style: Theme.of(context).textTheme.headline6),
                   enabledBorder: const OutlineInputBorder(
                       borderSide:
@@ -106,15 +104,13 @@ class MoveToExchangeScreen extends StatelessWidget {
                     children: <Widget>[
                       model.busy(model.appWallet)
                           ? Text(
-                              AppLocalizations.of(context).walletbalance +
-                                  '  ${NumberUtil.decimalLimiter(model.appWallet.balance, decimalPrecision: model.decimalLimit).toString()}',
+                              '${AppLocalizations.of(context).walletbalance}  ${NumberUtil.decimalLimiter(model.appWallet.balance, decimalPrecision: model.decimalLimit).toString()}',
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle2
                                   .copyWith(color: yellow))
                           : Text(
-                              AppLocalizations.of(context).walletbalance +
-                                  '  ${NumberUtil.decimalLimiter(model.appWallet.balance, decimalPrecision: model.decimalLimit).toString()}',
+                              '${AppLocalizations.of(context).walletbalance}  ${NumberUtil.decimalLimiter(model.appWallet.balance, decimalPrecision: model.decimalLimit).toString()}',
                               style: headText5.copyWith(color: grey)),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -153,8 +149,7 @@ class MoveToExchangeScreen extends StatelessWidget {
               UIHelper.verticalSpaceSmall,
               model.appWallet.tickerName == 'FAB'
                   ? Text(
-                      AppLocalizations.of(context).unConfirmedBalance +
-                          '  ${NumberUtil.decimalLimiter(model.appWallet.unconfirmedBalance, decimalPrecision: model.decimalLimit).toString()}',
+                      '${AppLocalizations.of(context).unConfirmedBalance}  ${NumberUtil.decimalLimiter(model.appWallet.unconfirmedBalance, decimalPrecision: model.decimalLimit).toString()}',
                       style: headText5.copyWith(color: grey))
                   : Container(),
               UIHelper.verticalSpaceSmall,
@@ -188,11 +183,9 @@ class MoveToExchangeScreen extends StatelessWidget {
                                           ? Row(
                                               children: [
                                                 Text(
-                                                    model.appWallet.tokenType +
-                                                        ' ' +
-                                                        AppLocalizations.of(
+                                                    '${model.appWallet.tokenType} ${AppLocalizations.of(
                                                                 context)
-                                                            .balance,
+                                                            .balance}',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline5),
@@ -239,10 +232,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                                   ? Row(
                                       children: [
                                         Text(
-                                            model.appWallet.tokenType +
-                                                ' ' +
-                                                AppLocalizations.of(context)
-                                                    .balance,
+                                            '${model.appWallet.tokenType} ${AppLocalizations.of(context)
+                                                    .balance}',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5),

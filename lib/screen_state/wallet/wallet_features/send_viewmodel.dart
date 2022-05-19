@@ -15,7 +15,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:barcode_scan/barcode_scan.dart';
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
@@ -45,6 +44,7 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:scan/scan.dart';
 import 'package:stacked/stacked.dart';
 
 class SendViewModel extends BaseViewModel {
@@ -100,7 +100,11 @@ class SendViewModel extends BaseViewModel {
   bool isCustomToken = false;
   CustomTokenModel customToken = CustomTokenModel();
   var decimalZero = Decimal.zero;
-  // Init State
+  String barcode = '';
+  ScanController scanController = ScanController();
+  bool _isScan = false;
+  bool get isScanWindowOpen => _isScan;
+
   initState() async {
     setBusy(true);
     sharedService.context = context;
@@ -843,7 +847,7 @@ class SendViewModel extends BaseViewModel {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppLocalizations.of(context).transactionId + ' '),
+            Text('${AppLocalizations.of(context).transactionId} '),
             Text(AppLocalizations.of(context).copiedSuccessfully),
           ],
         ),
@@ -873,7 +877,7 @@ class SendViewModel extends BaseViewModel {
     gasPrice = int.tryParse(gasPriceTextController.text);
     gasLimit = int.tryParse(gasLimitTextController.text);
     satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
-    var customGasPrice;
+    num customGasPrice;
     if (appWallet.tickerName == 'MATICM') {
       customGasPrice = await maticUtils.gasFee();
       log.i('updateTransFee: matic customGasPrice $customGasPrice');
@@ -934,21 +938,28 @@ class SendViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-/*--------------------------------------------------------
-                      Barcode Scan
---------------------------------------------------------*/
+  toggleScanWindow(bool v) {
+    _isScan = v;
+    notifyListeners();
+  }
 
-  Future scan() async {
-    log.i("Barcode: going to scan");
+  onCapture(data) {
+    barcode = data;
+    toggleScanWindow(false);
+    scanBarcode();
+  }
+
+  Future scanBarcode() async {
     setBusy(true);
 
     try {
-      log.i("Barcode: try");
-      String barcode = '';
+      // var result;
       storageService.isCameraOpen = true;
-      var result = await BarcodeScanner.scan();
-      barcode = result.rawContent;
-      log.i("Barcode Res: $result ");
+
+      // var result = await Scan();
+      // BarcodeScanner.scan();
+      //  barcode = result.rawContent;
+      log.i("Barcode Res: $barcode ");
 
       receiverWalletAddressTextController.text = barcode;
       setBusy(false);

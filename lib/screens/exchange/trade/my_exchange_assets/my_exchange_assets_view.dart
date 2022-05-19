@@ -82,14 +82,14 @@ class MyExchangeAssetsView extends StatelessWidget {
                                           borderRadius:
                                               BorderRadius.circular(50),
                                         ),
+                                        width: 35,
+                                        height: 35,
                                         child:
                                             // Image.asset(
                                             // 'assets/images/wallet-page/${tickerName.toLowerCase()}.png') ??
                                             Image.network(model.logoUrl +
                                                 tickerName.toLowerCase() +
-                                                '.png'),
-                                        width: 35,
-                                        height: 35),
+                                                '.png')),
                                   ),
                                   UIHelper.horizontalSpaceSmall,
                                   UIHelper.horizontalSpaceSmall,

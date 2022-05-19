@@ -1,4 +1,3 @@
-import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 

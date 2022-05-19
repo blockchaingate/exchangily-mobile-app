@@ -120,7 +120,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 ----------------------------------------------------------------------*/
   Future getTxStatus(String txHash) async {
     String url =
-        configService.getKanbanBaseUrl() + txStatusStatusRoute + '/$txHash';
+        '${configService.getKanbanBaseUrl()}$txStatusStatusRoute/$txHash';
     log.e('getTxStatus url $url');
     var res;
     try {
@@ -168,7 +168,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 // no need to convert everytime
   String trimHexString(String hexString) {
     //  int length = hexString.length;
-    String trimmedString = '0x' + hexString.substring(2, 42);
+    String trimmedString = '0x${hexString.substring(2, 42)}';
     return trimmedString;
   }
 
@@ -202,11 +202,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
   IOWebSocketChannel tickerDataChannel(String pair, {String interval = '24'}) {
-    var wsStringUrl = configService.getKanbanBaseWSUrl() +
-        tickerWSRoute +
-        pair +
-        '@' +
-        interval;
+    var wsStringUrl = '${configService.getKanbanBaseWSUrl()}$tickerWSRoute$pair@$interval';
     log.i('getTickerDataUrl $wsStringUrl');
     final channel = IOWebSocketChannel.connect(wsStringUrl);
     return channel;

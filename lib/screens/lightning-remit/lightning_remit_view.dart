@@ -2,7 +2,10 @@ import 'dart:io';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_viewmodel.dart';
+import 'package:exchangilymobileapp/shared/custom_styles.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
+import 'package:exchangilymobileapp/utils/wallet/barcode_util.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -42,13 +45,22 @@ class LightningRemitView extends StatelessWidget {
                 debugPrint('Close bottom sheet');
               }
             },
-            child: model.busy(model.exchangeBalances) || model.isBusy
-                ? model.sharedService.loadingIndicator()
-                : Container(
-                    color: secondaryColor,
-                    margin: const EdgeInsets.only(top: 40),
-                    child: Stack(children: [
-                      Container(
+            child:
+                //  model.busy(model.exchangeBalances) || model.isBusy
+                //     ? model.sharedService.loadingIndicator()
+                //     :
+                Container(
+              color: secondaryColor,
+              margin: const EdgeInsets.only(top: 40),
+              child: Stack(children: [
+                model.isScanWindowOpen
+                    ? Align(
+                        alignment: Alignment.center,
+                        child: BarcodeUtilWidget(
+                          afterCapture: (v) => model.onCapture(v),
+                          onClose: (v) => model.toggleScanWindow(v),
+                        ))
+                    : Container(
                         margin: const EdgeInsets.all(10.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -128,6 +140,7 @@ class LightningRemitView extends StatelessWidget {
                                         items: model.exchangeBalances.map(
                                           (coin) {
                                             return DropdownMenuItem(
+                                              value: coin.ticker,
                                               child: Padding(
                                                 padding: const EdgeInsets.only(
                                                     left: 10.0),
@@ -146,7 +159,11 @@ class LightningRemitView extends StatelessWidget {
                                                     UIHelper
                                                         .horizontalSpaceSmall,
                                                     Text(
-                                                      coin.unlockedAmount
+                                                      NumberUtil.decimalLimiter(
+                                                              coin
+                                                                  .unlockedAmount,
+                                                              decimalPrecision:
+                                                                  6)
                                                           .toString(),
                                                       style: Theme.of(context)
                                                           .textTheme
@@ -160,16 +177,10 @@ class LightningRemitView extends StatelessWidget {
                                                   ],
                                                 ),
                                               ),
-                                              value: coin.ticker,
                                             );
                                           },
                                         ).toList()),
                                   ),
-
-/*----------------------------------------------------------------------------------------------------
-                                        Receiver Address textfield
-----------------------------------------------------------------------------------------------------*/
-
                             UIHelper.verticalSpaceSmall,
                             TextField(
                                 keyboardType: TextInputType.text,
@@ -180,19 +191,25 @@ class LightningRemitView extends StatelessWidget {
                                         alignment: Alignment.centerLeft,
                                         tooltip: AppLocalizations.of(context)
                                             .scanBarCode,
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.camera_alt,
                                           color: white,
                                           size: 18,
                                         ),
                                         onPressed: () {
-                                          model.scanBarcode();
+                                          if (!model.isScanWindowOpen) {
+                                            model.toggleScanWindow(true);
+                                          } else {
+                                            debugPrint(
+                                                'in else :isScan ${model.isScanWindowOpen} ');
+                                          }
+                                          // model.scanBarcode();
                                           FocusScope.of(context)
                                               .requestFocus(FocusNode());
                                         }),
                                     suffixIcon: IconButton(
                                         padding: EdgeInsets.zero,
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.content_paste,
                                           color: green,
                                           size: 18,
@@ -211,11 +228,6 @@ class LightningRemitView extends StatelessWidget {
                                     .textTheme
                                     .headline5
                                     .copyWith(fontWeight: FontWeight.bold)),
-
-/*----------------------------------------------------------------------------------------------------
-                                        Transfer amount textfield
-----------------------------------------------------------------------------------------------------*/
-
                             UIHelper.verticalSpaceSmall,
                             TextField(
                                 keyboardType:
@@ -236,18 +248,17 @@ class LightningRemitView extends StatelessWidget {
                                     .headline5
                                     .copyWith(fontWeight: FontWeight.bold)),
                             UIHelper.verticalSpaceMedium,
-/*----------------------------------------------------------------------------------------------------
-                                        Transfer - Receive Button Row
-----------------------------------------------------------------------------------------------------*/
-
                             Row(
                               children: [
                                 Expanded(
                                   child: Container(
                                     decoration: model.sharedService
                                         .gradientBoxDecoration(),
-                                    child: FlatButton(
-                                      textColor: Colors.white,
+                                    child: TextButton(
+                                      style: TextButton.styleFrom(
+                                          textStyle: const TextStyle(
+                                        color: Colors.white,
+                                      )),
                                       onPressed: () {
                                         model.isBusy
                                             ? debugPrint('busy')
@@ -262,17 +273,17 @@ class LightningRemitView extends StatelessWidget {
                                   ),
                                 ),
                                 UIHelper.horizontalSpaceSmall,
-
-/*----------------------------------------------------------------------------------------------------
-                                            Receive Button
-----------------------------------------------------------------------------------------------------*/
-
                                 Expanded(
-                                  child: OutlineButton(
-                                    borderSide: BorderSide(color: primaryColor),
-                                    padding: const EdgeInsets.all(15),
-                                    color: primaryColor,
-                                    textColor: Colors.white,
+                                  child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                        shape: CustomStyles.roundedShape(),
+                                        side: const BorderSide(
+                                            color: primaryColor),
+                                        padding: const EdgeInsets.all(15),
+                                        // backgroundColor: primaryColor,
+                                        textStyle: const TextStyle(
+                                          color: Colors.white,
+                                        )),
                                     onPressed: () {
                                       model.isBusy
                                           ? debugPrint('busy')
@@ -301,7 +312,7 @@ class LightningRemitView extends StatelessWidget {
                                                     model.transactionHistory,
                                                 model: model)));
                                   },
-                                  icon: Icon(Icons.history,
+                                  icon: const Icon(Icons.history,
                                       color: white, size: 24),
                                   // child: Text('History',
                                   //     style: Theme.of(context).textTheme.headline4),
@@ -316,14 +327,14 @@ class LightningRemitView extends StatelessWidget {
                                         Stack loading container
 ----------------------------------------------------------------------------------------------------*/
 
-                      model.isBusy
-                          ? Align(
-                              alignment: Alignment.center,
-                              child: model.sharedService
-                                  .stackFullScreenLoadingIndicator())
-                          : Container()
-                    ]),
-                  ),
+                model.isBusy
+                    ? Align(
+                        alignment: Alignment.center,
+                        child: model.sharedService
+                            .stackFullScreenLoadingIndicator())
+                    : Container()
+              ]),
+            ),
           ),
           bottomNavigationBar: BottomNavBar(count: 2),
         ),
@@ -427,12 +438,12 @@ class TxHistoryView extends StatelessWidget {
                                 ),
                                 // icon
                                 transaction.tag == 'send'
-                                    ? Icon(
+                                    ? const Icon(
                                         FontAwesomeIcons.arrowRight,
                                         size: 11,
                                         color: sellPrice,
                                       )
-                                    : Icon(
+                                    : const Icon(
                                         Icons.arrow_downward,
                                         size: 18,
                                         color: buyPrice,
@@ -475,7 +486,7 @@ class TxHistoryView extends StatelessWidget {
                                       ),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.copy_outlined,
+                                      icon: const Icon(Icons.copy_outlined,
                                           color: white, size: 16),
                                       onPressed: () => model.copyAddress(
                                           transaction.tickerChainTxId),

@@ -2,7 +2,6 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/register_account_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
@@ -47,7 +46,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                               flex: 2,
                               child: TextField(
                                 controller: model.emailTextController,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: globals.white54,
                                 ),
                                 decoration: InputDecoration(
@@ -75,7 +74,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                   flex: 2,
                                   child: TextField(
                                     controller: model.passwordTextController,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: globals.white54,
                                     ),
                                     decoration: InputDecoration(
@@ -101,7 +100,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                   flex: 2,
                                   child: TextField(
                                     controller: model.passwordTextController,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: globals.white54,
                                     ),
                                     decoration: InputDecoration(
@@ -135,7 +134,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                   child: TextField(
                                     controller:
                                         model.confirmPasswordTextController,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: globals.white54,
                                     ),
                                     decoration: InputDecoration(
@@ -152,7 +151,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                   child: TextField(
                                     controller:
                                         model.confirmPasswordTextController,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: globals.white54,
                                     ),
                                     decoration: InputDecoration(
@@ -177,7 +176,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                 },
                                 controller:
                                     model.exgWalletAddressTextController,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: globals.white54,
                                 ),
                                 decoration: InputDecoration(
@@ -206,7 +205,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                   debugPrint(value.toString());
                                 },
                                 controller: model.referralCodeTextController,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: globals.white54,
                                 ),
                                 decoration: InputDecoration(
@@ -256,9 +255,8 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                 elevation: 5,
                                 focusElevation: 5,
                                 child: Text(
-                                    AppLocalizations.of(context)
-                                            .alreadyHaveAnAccount +
-                                        '?',
+                                    '${AppLocalizations.of(context)
+                                            .alreadyHaveAnAccount}?',
                                     textAlign: TextAlign.center,
                                     style:
                                         Theme.of(context).textTheme.headline4),
@@ -274,7 +272,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                             child: RaisedButton(
                               padding: const EdgeInsets.all(2.0),
                               elevation: 5,
-                              shape: StadiumBorder(
+                              shape: const StadiumBorder(
                                   side: BorderSide(
                                       color: globals.primaryColor, width: 2)),
                               color: globals.secondaryColor,

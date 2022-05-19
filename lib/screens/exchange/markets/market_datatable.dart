@@ -2,7 +2,6 @@ import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 
@@ -269,7 +268,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                         Text(
                           itemRow.change >= 0
                               ? "+" + itemRow.change.toStringAsFixed(2) + '%'
-                              : itemRow.change.toStringAsFixed(2) + '%',
+                              : '${itemRow.change.toStringAsFixed(2)}%',
                           style: Theme.of(context).textTheme.headline5.copyWith(
                                 color: Color(itemRow.change >= 0
                                     ? 0XFF0da88b

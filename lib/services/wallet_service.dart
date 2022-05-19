@@ -52,7 +52,6 @@ import '../utils/coin_util.dart';
 
 import 'package:bitcoin_flutter/src/utils/script.dart' as script;
 import '../environments/environment.dart';
-import 'package:encrypt/encrypt.dart' as prefix0;
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:decimal/decimal.dart';
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as bitcoin_flutter;
@@ -467,7 +466,7 @@ class WalletService {
     debugPrint('root $root');
     String ct = '195';
     bip32.BIP32 node =
-        root.derivePath("m/44'/" + ct + "'/0'/0/" + 0.toString());
+        root.derivePath("m/44'/$ct'/0'/0/${0}");
     debugPrint('node $node');
     var privKey = node.privateKey;
     //  var pubKey = node.publicKey;
@@ -549,7 +548,7 @@ class WalletService {
     var bchSeed = generateSeed(mnemonic);
     final masterNode = bitbox.HDNode.fromSeed(bchSeed);
     var coinType = environment["CoinType"][tickerName].toString();
-    final accountDerivationPath = "m/44'/" + coinType + "'/0'/0";
+    final accountDerivationPath = "m/44'/$coinType'/0'/0";
     final accountNode = masterNode.derivePath(accountDerivationPath);
     final accountXPriv = accountNode.toXPriv();
     final childNode = accountNode.derive(0);
@@ -579,7 +578,7 @@ class WalletService {
     var root = generateBip32Root(seed);
     // var coinType = environment["CoinType"]["$tickerName"].toString();
     //  log.w('coin type $coinType');
-    var node = root.derivePath("m/44'/3'/0'/0/" + index.toString());
+    var node = root.derivePath("m/44'/3'/0'/0/$index");
 
     String address1 = bitcoin_flutter
         .P2PKH(
@@ -1452,8 +1451,8 @@ class WalletService {
     var amountInTxString = amountInTx.toString();
     var amountInLinkString = amountInLink.toString();
 
-    debugPrint('amountInTxString===' + amountInTxString);
-    debugPrint('amountInLinkString===' + amountInLinkString);
+    debugPrint('amountInTxString===$amountInTxString');
+    debugPrint('amountInLinkString===$amountInLinkString');
     // 0 means equal
     // 1 means >
     // -1 means <
@@ -1477,7 +1476,7 @@ class WalletService {
     var coinType = await coinService.getCoinTypeByTickerName(coinName);
     log.i('coin type $coinType');
     if (coinType == 0) {
-      errRes['data'] = 'invalid coinType for ' + coinName;
+      errRes['data'] = 'invalid coinType for $coinName';
       return errRes;
     }
 
@@ -1642,10 +1641,7 @@ class WalletService {
 
     for (var i = 0; i < addressIndexList.length; i++) {
       var index = addressIndexList[i];
-      var fabCoinChild = root.derivePath("m/44'/" +
-          environment["CoinType"]["FAB"].toString() +
-          "'/0'/0/" +
-          index.toString());
+      var fabCoinChild = root.derivePath("m/44'/${environment["CoinType"]["FAB"]}'/0'/0/$index");
       var fromAddress = btcUtils.getBtcAddressForNode(fabCoinChild);
       if (addressList != null && addressList.length > 0) {
         fromAddress = addressList[i];
@@ -1895,10 +1891,7 @@ class WalletService {
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
-        var bitCoinChild = root.derivePath("m/44'/" +
-            environment["CoinType"]["BTC"].toString() +
-            "'/0'/0/" +
-            index.toString());
+        var bitCoinChild = root.derivePath("m/44'/${environment["CoinType"]["BTC"]}'/0'/0/$index");
         var fromAddress = btcUtils.getBtcAddressForNode(bitCoinChild);
         if (addressList.isNotEmpty) {
           fromAddress = addressList[i];
@@ -1990,7 +1983,7 @@ class WalletService {
         errMsg = res['errMsg'];
         return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       } else {
-        txHash = '0x' + tx.getId();
+        txHash = '0x${tx.getId()}';
       }
     }
 
@@ -2010,7 +2003,7 @@ class WalletService {
       final masterNode =
           bitbox.HDNode.fromSeed(seed, environment["chains"]["BCH"]["testnet"]);
       final childNode =
-          "m/44'/" + environment["CoinType"]["BCH"].toString() + "'/0'/0/0";
+          "m/44'/${environment["CoinType"]["BCH"]}'/0'/0/0";
       final accountNode = masterNode.derivePath(childNode);
       final address = accountNode.toCashAddress();
 
@@ -2092,7 +2085,7 @@ class WalletService {
         errMsg = res['errMsg'];
         return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       } else {
-        txHash = '0x' + tx.getId();
+        txHash = '0x${tx.getId()}';
       }
     }
 
@@ -2111,10 +2104,7 @@ class WalletService {
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
-        var node = root.derivePath("m/44'/" +
-            environment["CoinType"]["LTC"].toString() +
-            "'/0'/0/" +
-            index.toString());
+        var node = root.derivePath("m/44'/${environment["CoinType"]["LTC"]}'/0'/0/$index");
         var fromAddress = ltcUtils.getLtcAddressForNode(node);
         if (addressList.isNotEmpty) {
           fromAddress = addressList[i];
@@ -2195,7 +2185,7 @@ class WalletService {
         errMsg = res['errMsg'];
         return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       } else {
-        txHash = '0x' + tx.getId();
+        txHash = '0x${tx.getId()}';
       }
     }
 
@@ -2214,12 +2204,9 @@ class WalletService {
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
-        var node = root.derivePath("m/44'/" +
-            environment["CoinType"]["DOGE"].toString() +
-            "'/0'/0/" +
-            index.toString());
+        var node = root.derivePath("m/44'/${environment["CoinType"]["DOGE"]}'/0'/0/$index");
         var fromAddress = getDogeAddressForNode(node);
-        debugPrint('fromAddress==' + fromAddress);
+        debugPrint('fromAddress==$fromAddress');
         if (addressList.isNotEmpty) {
           fromAddress = addressList[i];
         }
@@ -2304,7 +2291,7 @@ class WalletService {
         errMsg = res['errMsg'];
         return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       } else {
-        txHash = '0x' + tx.getId();
+        txHash = '0x${tx.getId()}';
       }
     }
     // Matic Transaction
@@ -2335,7 +2322,7 @@ class WalletService {
 
       final chainId = environment["chains"]["MATIC"]["chainId"];
       final ethCoinChild = root.derivePath(
-          "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
+          "m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
 
@@ -2364,9 +2351,9 @@ class WalletService {
           chainId: chainId,
           fetchChainIdFromNetworkId: false);
 
-      txHex = '0x' + HEX.encode(signed);
+      txHex = '0x${HEX.encode(signed)}';
 
-      debugPrint('maticm txHex in ETH=' + txHex);
+      debugPrint('maticm txHex in ETH=$txHex');
       if (doSubmit) {
         var res = await maticmUtils.postTx(txHex);
         txHash = res['txHash'];
@@ -2404,7 +2391,7 @@ class WalletService {
 
       final chainId = environment["chains"]["ETH"]["chainId"];
       final ethCoinChild = root.derivePath(
-          "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
+          "m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       var amountSentInt = NumberUtil.decimalToBigInt(amount);
       // var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
@@ -2433,9 +2420,9 @@ class WalletService {
           chainId: chainId,
           fetchChainIdFromNetworkId: false);
 
-      txHex = '0x' + HEX.encode(signed);
+      txHex = '0x${HEX.encode(signed)}';
 
-      debugPrint('txHex in ETH=' + txHex);
+      debugPrint('txHex in ETH=$txHex');
       if (doSubmit) {
         var res = await ethUtils.postEthTx(txHex);
         txHash = res['txHash'];
@@ -2483,7 +2470,7 @@ class WalletService {
           errMsg = res['errMsg'];
         } else {
           var tx = bitcoin_flutter.Transaction.fromHex(txHex);
-          txHash = '0x' + tx.getId();
+          txHash = '0x${tx.getId()}';
         }
       }
     }
@@ -2572,7 +2559,7 @@ class WalletService {
           errMsg = res['errMsg'];
         } else {
           var tx = bitcoin_flutter.Transaction.fromHex(txHex);
-          txHash = '0x' + tx.getId();
+          txHash = '0x${tx.getId()}';
         }
       }
     }
@@ -2588,7 +2575,7 @@ class WalletService {
               BigInt.parse(gasLimit.toString()) /
               BigInt.parse('1000000000'))
           .toDouble();
-      log.i('transFeeDouble===' + transFeeDouble.toString());
+      log.i('transFeeDouble===$transFeeDouble');
       if (getTransFeeOnly) {
         return {
           'txHex': '',
@@ -2601,7 +2588,7 @@ class WalletService {
 
       final chainId = environment["chains"]["ETH"]["chainId"];
       final ethCoinChild = root.derivePath(
-          "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
+          "m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       Credentials credentials = EthPrivateKey.fromHex(privateKey);
 
@@ -2667,7 +2654,7 @@ class WalletService {
           chainId: chainId,
           fetchChainIdFromNetworkId: false);
       log.w('signed=');
-      txHex = '0x' + HEX.encode(signed);
+      txHex = '0x${HEX.encode(signed)}';
 
       if (doSubmit) {
         var res = await ethUtils.postEthTx(txHex);
@@ -2758,10 +2745,7 @@ class WalletService {
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
-        var bitCoinChild = root.derivePath("m/44'/" +
-            environment["CoinType"]["BTC"].toString() +
-            "'/0'/0/" +
-            index.toString());
+        var bitCoinChild = root.derivePath("m/44'/${environment["CoinType"]["BTC"]}'/0'/0/$index");
         var fromAddress = btcUtils.getBtcAddressForNode(bitCoinChild);
         if (addressList.isNotEmpty) {
           fromAddress = addressList[i];
@@ -2853,7 +2837,7 @@ class WalletService {
         errMsg = res['errMsg'];
         return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       } else {
-        txHash = '0x' + tx.getId();
+        txHash = '0x${tx.getId()}';
       }
     }
 
@@ -2873,7 +2857,7 @@ class WalletService {
       final masterNode =
           bitbox.HDNode.fromSeed(seed, environment["chains"]["BCH"]["testnet"]);
       final childNode =
-          "m/44'/" + environment["CoinType"]["BCH"].toString() + "'/0'/0/0";
+          "m/44'/${environment["CoinType"]["BCH"]}'/0'/0/0";
       final accountNode = masterNode.derivePath(childNode);
       final address = accountNode.toCashAddress();
 
@@ -2955,7 +2939,7 @@ class WalletService {
         errMsg = res['errMsg'];
         return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       } else {
-        txHash = '0x' + tx.getId();
+        txHash = '0x${tx.getId()}';
       }
     }
 
@@ -2974,10 +2958,7 @@ class WalletService {
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
-        var node = root.derivePath("m/44'/" +
-            environment["CoinType"]["LTC"].toString() +
-            "'/0'/0/" +
-            index.toString());
+        var node = root.derivePath("m/44'/${environment["CoinType"]["LTC"]}'/0'/0/$index");
         var fromAddress = ltcUtils.getLtcAddressForNode(node);
         if (addressList.isNotEmpty) {
           fromAddress = addressList[i];
@@ -3058,7 +3039,7 @@ class WalletService {
         errMsg = res['errMsg'];
         return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       } else {
-        txHash = '0x' + tx.getId();
+        txHash = '0x${tx.getId()}';
       }
     }
 
@@ -3077,12 +3058,9 @@ class WalletService {
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
-        var node = root.derivePath("m/44'/" +
-            environment["CoinType"]["DOGE"].toString() +
-            "'/0'/0/" +
-            index.toString());
+        var node = root.derivePath("m/44'/${environment["CoinType"]["DOGE"]}'/0'/0/$index");
         var fromAddress = getDogeAddressForNode(node);
-        debugPrint('fromAddress==' + fromAddress);
+        debugPrint('fromAddress==$fromAddress');
         if (addressList.isNotEmpty) {
           fromAddress = addressList[i];
         }
@@ -3167,7 +3145,7 @@ class WalletService {
         errMsg = res['errMsg'];
         return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       } else {
-        txHash = '0x' + tx.getId();
+        txHash = '0x${tx.getId()}';
       }
     }
     // Matic Transaction
@@ -3198,7 +3176,7 @@ class WalletService {
 
       final chainId = environment["chains"]["MATIC"]["chainId"];
       final ethCoinChild = root.derivePath(
-          "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
+          "m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
 
@@ -3227,9 +3205,9 @@ class WalletService {
           chainId: chainId,
           fetchChainIdFromNetworkId: false);
 
-      txHex = '0x' + HEX.encode(signed);
+      txHex = '0x${HEX.encode(signed)}';
 
-      debugPrint('maticm txHex in ETH=' + txHex);
+      debugPrint('maticm txHex in ETH=$txHex');
       if (doSubmit) {
         var res = await maticmUtils.postTx(txHex);
         txHash = res['txHash'];
@@ -3267,7 +3245,7 @@ class WalletService {
 
       final chainId = environment["chains"]["ETH"]["chainId"];
       final ethCoinChild = root.derivePath(
-          "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
+          "m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
 
@@ -3295,9 +3273,9 @@ class WalletService {
           chainId: chainId,
           fetchChainIdFromNetworkId: false);
 
-      txHex = '0x' + HEX.encode(signed);
+      txHex = '0x${HEX.encode(signed)}';
 
-      debugPrint('txHex in ETH=' + txHex);
+      debugPrint('txHex in ETH=$txHex');
       if (doSubmit) {
         var res = await ethUtils.postEthTx(txHex);
         txHash = res['txHash'];
@@ -3338,7 +3316,7 @@ class WalletService {
           errMsg = res['errMsg'];
         } else {
           var tx = bitcoin_flutter.Transaction.fromHex(txHex);
-          txHash = '0x' + tx.getId();
+          txHash = '0x${tx.getId()}';
         }
       }
     }
@@ -3419,7 +3397,7 @@ class WalletService {
           errMsg = res['errMsg'];
         } else {
           var tx = bitcoin_flutter.Transaction.fromHex(txHex);
-          txHash = '0x' + tx.getId();
+          txHash = '0x${tx.getId()}';
         }
       }
     }
@@ -3435,7 +3413,7 @@ class WalletService {
               BigInt.parse(gasLimit.toString()) /
               BigInt.parse('1000000000'))
           .toDouble();
-      log.i('transFeeDouble===' + transFeeDouble.toString());
+      log.i('transFeeDouble===$transFeeDouble');
       if (getTransFeeOnly) {
         return {
           'txHex': '',
@@ -3448,7 +3426,7 @@ class WalletService {
 
       final chainId = environment["chains"]["ETH"]["chainId"];
       final ethCoinChild = root.derivePath(
-          "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
+          "m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       Credentials credentials = EthPrivateKey.fromHex(privateKey);
 
@@ -3514,7 +3492,7 @@ class WalletService {
           chainId: chainId,
           fetchChainIdFromNetworkId: false);
       log.w('signed=');
-      txHex = '0x' + HEX.encode(signed);
+      txHex = '0x${HEX.encode(signed)}';
 
       if (doSubmit) {
         var res = await ethUtils.postEthTx(txHex);

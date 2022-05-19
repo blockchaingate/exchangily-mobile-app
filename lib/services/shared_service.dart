@@ -113,7 +113,7 @@ class SharedService {
           .then((value) {
         if (value != null) {
           if (!value.startsWith('0x')) {
-            smartContractAddress = '0x' + value;
+            smartContractAddress = '0x$value';
           } else {
             smartContractAddress = value;
           }
@@ -391,7 +391,7 @@ class SharedService {
                   TextButton(
                     child: Text(
                       AppLocalizations.of(context).no,
-                      style: TextStyle(color: white, fontSize: 12),
+                      style: const TextStyle(color: white, fontSize: 12),
                     ),
                     onPressed: () {
                       Navigator.of(context).pop(false);
@@ -399,7 +399,7 @@ class SharedService {
                   ),
                   TextButton(
                     child: Text(AppLocalizations.of(context).yes,
-                        style: TextStyle(color: yellow, fontSize: 12)),
+                        style: const TextStyle(color: yellow, fontSize: 12)),
                     onPressed: () {
                       SystemChannels.platform
                           .invokeMethod('SystemNavigator.pop');
@@ -509,7 +509,7 @@ class SharedService {
                         text: TextSpan(
                             text:
                                 AppLocalizations.of(context).taphereToCopyTxId,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 12,
                                 decoration: TextDecoration.underline,
                                 color: globals.primaryColor),

@@ -201,7 +201,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                   child: Text(AppLocalizations.of(context).withdrawPopupNote)),
             ),
             titleTextStyle: headText5,
-            contentTextStyle: TextStyle(color: grey),
+            contentTextStyle: const TextStyle(color: grey),
             content: Container(
               padding: const EdgeInsets.all(5.0),
               child: isWithdrawChoice
@@ -683,7 +683,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                   child: Center(child: Text(AppLocalizations.of(context).note)),
                 ),
                 titleTextStyle: headText4.copyWith(fontWeight: FontWeight.bold),
-                contentTextStyle: TextStyle(color: grey),
+                contentTextStyle: const TextStyle(color: grey),
                 content: Container(
                   padding: const EdgeInsets.all(5.0),
                   child: !isTSWalletInfo
@@ -711,7 +711,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                                   child: Text(
                                     AppLocalizations.of(context).close,
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(color: red),
+                                    style: const TextStyle(color: red),
                                   ),
                                 ),
                               )
@@ -743,7 +743,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                                 },
                                 child: Text(
                                   AppLocalizations.of(context).close,
-                                  style: TextStyle(color: red),
+                                  style: const TextStyle(color: red),
                                 ),
                               )
                             ]),
@@ -956,7 +956,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       'data': balanceInfoABI + fixLength(trimHexPrefix(address), 64)
     };
     var tokenBalance;
-    var url = fabBaseUrl + 'callcontract';
+    var url = '${fabBaseUrl}callcontract';
     debugPrint(
         'Fab_util -- address $address getFabTokenBalanceForABI balance by address url -- $url -- body $body');
 
@@ -1145,12 +1145,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
             amount > fabChainBalance) {
           sharedService.alertDialog(
               AppLocalizations.of(context).notice,
-              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                  ' ' +
-                  fabChainBalance.toString() +
-                  '. ' +
-                  AppLocalizations.of(context)
-                      .lowTsWalletBalanceErrorSecondPart,
+              '${AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart} $fabChainBalance. ${AppLocalizations.of(context)
+                      .lowTsWalletBalanceErrorSecondPart}',
               isWarning: false);
 
           setBusy(false);
@@ -1165,11 +1161,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
           amount > ethChainBalance) {
         sharedService.alertDialog(
             AppLocalizations.of(context).notice,
-            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                ' ' +
-                ethChainBalance.toString() +
-                '. ' +
-                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
+            '${AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart} $ethChainBalance. ${AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart}',
             isWarning: false);
 
         setBusy(false);
@@ -1181,12 +1173,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
             amount > trxTsWalletBalance) {
           sharedService.alertDialog(
               AppLocalizations.of(context).notice,
-              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                  ' ' +
-                  trxTsWalletBalance.toString() +
-                  '. ' +
-                  AppLocalizations.of(context)
-                      .lowTsWalletBalanceErrorSecondPart,
+              '${AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart} $trxTsWalletBalance. ${AppLocalizations.of(context)
+                      .lowTsWalletBalanceErrorSecondPart}',
               isWarning: false);
           setBusy(false);
           return;

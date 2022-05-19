@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -21,9 +20,9 @@ class PairPriceView extends StatelessWidget {
   Widget build(BuildContext context) {
     return isBusy
         ? Shimmer.fromColors(
-            child: buildContainer(context),
             baseColor: grey,
-            highlightColor: primaryColor)
+            highlightColor: primaryColor,
+            child: buildContainer(context))
         : buildContainer(context);
   }
 
@@ -40,7 +39,7 @@ class PairPriceView extends StatelessWidget {
               children: <Widget>[
                 Text(
                     pairPrice.price.toStringAsFixed(decimalConfig.priceDecimal),
-                    style: TextStyle(fontSize: 30, color: priceColor)),
+                    style: const TextStyle(fontSize: 30, color: priceColor)),
                 Column(
                   children: [
                     // Text(
@@ -60,7 +59,7 @@ class PairPriceView extends StatelessWidget {
                                             ? 0XFF0da88b
                                             : 0XFFe2103c))),
                         UIHelper.horizontalSpaceSmall,
-                        Text(pairPrice.change.toStringAsFixed(2) + "%",
+                        Text("${pairPrice.change.toStringAsFixed(2)}%",
                             style: Theme.of(context)
                                 .textTheme
                                 .headline5

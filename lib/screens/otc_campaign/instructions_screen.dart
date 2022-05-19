@@ -6,12 +6,10 @@ import 'package:exchangilymobileapp/screens/otc_campaign/campaign_single.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/cache_image.dart';
 import 'package:exchangilymobileapp/widgets/loading_animation.dart';
-import 'package:exchangilymobileapp/widgets/video_page.dart';
 import 'package:exchangilymobileapp/widgets/web_page.dart';
 import 'package:exchangilymobileapp/widgets/youtube.dart';
 import 'package:exchangilymobileapp/widgets/youtube_list_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CampaignInstructionScreen extends StatelessWidget {
   const CampaignInstructionScreen({Key key, this.newPage = true})
@@ -88,10 +86,8 @@ class CampaignInstructionScreen extends StatelessWidget {
                       ? Container(
                           child: Center(
                             child: Text(
-                              AppLocalizations.of(context)
-                                      .serverBusy
-                                      .toString() +
-                                  "...",
+                              "${AppLocalizations.of(context)
+                                      .serverBusy}...",
                               style: const TextStyle(color: Colors.white),
                             ),
                           ),
@@ -226,7 +222,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                             }
                                           },
                                           child: Container(
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                               color: walletCardColor,
                                             ),
                                             child: Column(

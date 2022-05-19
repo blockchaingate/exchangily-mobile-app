@@ -8,7 +8,6 @@ import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
-import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -16,7 +15,6 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -24,7 +22,6 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -173,7 +170,7 @@ class CampaignPaymentScreenState extends BaseState {
       if (contractAddr == null) {
         await tokenListDatabaseService
             .getContractAddressByTickerName(tickerName)
-            .then((value) => contractAddr = '0x' + value);
+            .then((value) => contractAddr = '0x$value');
       }
 
       options = {
@@ -426,7 +423,7 @@ class CampaignPaymentScreenState extends BaseState {
                 hintText: AppLocalizations.of(context).paymentDescription,
                 hintStyle: Theme.of(context).textTheme.bodyText1,
                 labelStyle: Theme.of(context).textTheme.headline6,
-                icon: Icon(
+                icon: const Icon(
                   Icons.event_note,
                   color: globals.primaryColor,
                 ),

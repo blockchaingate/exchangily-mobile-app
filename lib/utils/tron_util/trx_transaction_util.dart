@@ -177,7 +177,7 @@ _generateTrxRawTransaction(
     @required Uint8List privateKey,
     @required bool isTrxUsdt,
     @required bool isBroadcast}) async {
-  ApiService _apiService = locator<ApiService>();
+  ApiService apiService = locator<ApiService>();
 // txRaw.SetRefBlockHash(blkhash)
 // txRaw.SetRefBlockBytes(blk.BlockHeader.Raw.Number)
 // txRaw.SetExpiration(blk.BlockHeader.Raw.Timestamp + 1 * 60 * 60 * 1000 + int64(i) ) // 1 hours
@@ -198,7 +198,7 @@ _generateTrxRawTransaction(
 // timestamp: 1615246092000
 // },
 
-  await _apiService.getTronLatestBlock().then((res) {
+  await apiService.getTronLatestBlock().then((res) {
     var blockHash =
         //'0000000001b2a1380ab6f5081d4388499fa9dbb0d4c7d7b70478fbd6c661cfdd';
         res['blockID'];

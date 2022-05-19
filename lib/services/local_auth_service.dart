@@ -62,7 +62,8 @@ class LocalAuthService {
       await _auth
           .authenticate(
         localizedReason: 'Authenticate to access the wallet',
-        useErrorDialogs: true,
+        options: const AuthenticationOptions(useErrorDialogs: true),
+
         //  stickyAuth: true,
       )
           .then((res) {

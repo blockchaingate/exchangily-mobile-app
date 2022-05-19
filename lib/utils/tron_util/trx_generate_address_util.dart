@@ -16,7 +16,7 @@ generateTrxPrivKey(String mnemonic) {
   var root = walletService.generateBip32Root(seed);
 
   String ct = '195';
-  bip32.BIP32 node = root.derivePath("m/44'/" + ct + "'/0'/0/" + 0.toString());
+  bip32.BIP32 node = root.derivePath("m/44'/$ct'/0'/0/${0}");
 
   var privKey = node.privateKey;
   return privKey;
@@ -27,7 +27,7 @@ generateTrxPrivKeyBySeed(seed) {
   var root = walletService.generateBip32Root(seed);
 
   String ct = '195';
-  bip32.BIP32 node = root.derivePath("m/44'/" + ct + "'/0'/0/" + 0.toString());
+  bip32.BIP32 node = root.derivePath("m/44'/$ct'/0'/0/${0}");
 
   var privKey = node.privateKey;
   return privKey;

@@ -13,13 +13,26 @@
 
 import 'package:flutter/material.dart';
 
-class Styles {
+import '../constants/colors.dart';
+
+class CustomStyles {
   static TextStyle textStyleParaGraph(BuildContext context) {
     return const TextStyle(
         fontFamily: '',
         fontSize: FontSizes.medium,
         fontWeight: FontWeight.w200,
         color: Colors.black);
+  }
+
+  static Decoration roundedBoxDecoration({Color color = primaryColor}) {
+    return BoxDecoration(
+      color: color,
+      borderRadius: const BorderRadius.all(Radius.circular(15)),
+    );
+  }
+
+  static ShapeBorder roundedShape() {
+    return RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0));
   }
 }
 

@@ -31,7 +31,7 @@ class EthUtils {
 
   // Eth Post
   Future postEthTx(String txHex) async {
-    var url = ethBaseUrl + 'sendsignedtransaction';
+    var url = '${ethBaseUrl}sendsignedtransaction';
     var data = {'signedtx': txHex};
     var errMsg = '';
     String txHash;
@@ -52,7 +52,7 @@ class EthUtils {
 
   // Eth Nonce
   Future getEthNonce(String address) async {
-    var url = ethBaseUrl + getNonceApiRoute + address + '/latest';
+    var url = '$ethBaseUrl$getNonceApiRoute$address/latest';
     var nonce = 0;
     try {
       var response = await client.get(url);
@@ -63,12 +63,12 @@ class EthUtils {
 
   getTransactionHash(Uint8List signTransaction) {
     var p = keccak(signTransaction);
-    var hash = "0x" + HEX.encode(p);
+    var hash = "0x${HEX.encode(p)}";
     return hash;
   }
 
   Future getEthTransactionStatus(String txid) async {
-    var url = ethBaseUrl + 'getconfirmationcount/' + txid;
+    var url = '${ethBaseUrl}getconfirmationcount/$txid';
 
     var response = await client.get(url);
     debugPrint(response.body);
@@ -76,10 +76,7 @@ class EthUtils {
   }
 
   getEthNode(root, {index = 0}) {
-    var node = root.derivePath("m/44'/" +
-        environment["CoinType"]["ETH"].toString() +
-        "'/0'/0/" +
-        index.toString());
+    var node = root.derivePath("m/44'/${environment["CoinType"]["ETH"]}'/0'/0/$index");
     return node;
   }
 
@@ -95,7 +92,7 @@ class EthUtils {
   }
 
   Future getEthBalanceByAddress(String address) async {
-    var url = ethBaseUrl + 'getbalance/' + address;
+    var url = '${ethBaseUrl}getbalance/$address';
     var ethBalance = 0.0;
     try {
       var response = await client.get(url);
@@ -120,7 +117,7 @@ class EthUtils {
       });
     }
     var url =
-        ethBaseUrl + 'callcontract/' + smartContractAddress + '/' + address;
+        '${'${ethBaseUrl}callcontract/' + smartContractAddress}/$address';
     debugPrint('eth_util - getEthTokenBalanceByAddress - $url ');
 
     var tokenBalanceIe18 = 0.0;

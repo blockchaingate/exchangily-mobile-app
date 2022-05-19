@@ -37,16 +37,16 @@ class BuySellView extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    GlobalKey _one = GlobalKey();
-    GlobalKey _two = GlobalKey();
+    GlobalKey one = GlobalKey();
+    GlobalKey two = GlobalKey();
     return ViewModelBuilder<BuySellViewModel>.reactive(
         disposeViewModel: false,
         viewModelBuilder: () =>
             BuySellViewModel(tickerNameFromRoute: tickerName),
         onModelReady: (model) async {
           model.context = context;
-          model.globalKeyOne = _one;
-          model.globalKeyTwo = _two;
+          model.globalKeyOne = one;
+          model.globalKeyTwo = two;
           model.bidOrAsk = bidOrAsk;
 
           model.pairSymbolWithSlash = pairSymbolWithSlash;
@@ -662,22 +662,16 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             Expanded(
               child: model.bidOrAsk == true
                   ? Text(
-                      NumberUtil.decimalLimiter(model.transactionAmount,
+                      "${NumberUtil.decimalLimiter(model.transactionAmount,
                                   decimalPrecision:
-                                      model.singlePairDecimalConfig.qtyDecimal)
-                              .toString() +
-                          " " +
-                          model.baseCoinName,
+                                      model.singlePairDecimalConfig.qtyDecimal)} ${model.baseCoinName}",
                       textAlign: TextAlign.end,
                       style:
                           const TextStyle(color: Colors.grey, fontSize: 12.0))
                   : Text(
-                      NumberUtil.decimalLimiter(model.transactionAmount,
+                      "${NumberUtil.decimalLimiter(model.transactionAmount,
                                   decimalPrecision:
-                                      model.singlePairDecimalConfig.qtyDecimal)
-                              .toString() +
-                          " " +
-                          model.baseCoinName,
+                                      model.singlePairDecimalConfig.qtyDecimal)} ${model.baseCoinName}",
                       textAlign: TextAlign.end,
                       style:
                           const TextStyle(color: Colors.grey, fontSize: 12.0)),
@@ -880,27 +874,21 @@ class BalanceRowWidget extends StatelessWidget {
             : Container(
                 child: model.bidOrAsk
                     ? Text(
-                        NumberUtil.decimalLimiter(
+                        "${NumberUtil.decimalLimiter(
                                     model
                                         .baseCoinExchangeBalance.unlockedAmount,
                                     decimalPrecision: model
-                                        .singlePairDecimalConfig.qtyDecimal)
-                                .toString() +
-                            " " +
-                            model.baseCoinName,
+                                        .singlePairDecimalConfig.qtyDecimal)} ${model.baseCoinName}",
                         style: const TextStyle(
                             color: primaryColor, fontSize: 13.0))
                     :
                     // ?  model.targetCoinExchangeBalance.unlockAmount == null?textDemoWidget():
                     Text(
-                        NumberUtil.decimalLimiter(
+                        "${NumberUtil.decimalLimiter(
                                     model.targetCoinExchangeBalance
                                         .unlockedAmount,
                                     decimalPrecision: model
-                                        .singlePairDecimalConfig.qtyDecimal)
-                                .toString() +
-                            " " +
-                            model.targetCoinName,
+                                        .singlePairDecimalConfig.qtyDecimal)} ${model.targetCoinName}",
                         style: const TextStyle(
                             color: primaryColor, fontSize: 13.0)),
               )

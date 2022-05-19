@@ -14,8 +14,6 @@
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
@@ -153,8 +151,8 @@ class CoinUtils {
   }
 
   Uint8List hash256(Uint8List buffer) {
-    Uint8List _tmp = SHA256Digest().process(buffer);
-    return SHA256Digest().process(_tmp);
+    Uint8List tmp = SHA256Digest().process(buffer);
+    return SHA256Digest().process(tmp);
   }
 
   encodeSignature(signature, recovery, compressed, segwitType) {
@@ -213,7 +211,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 
     final publicKey =
         crypto_web3.bytesToInt(crypto_web3.privateKeyBytesToPublic(privateKey));
-    debugPrint("publicKey: " + publicKey.toString());
+    debugPrint("publicKey: $publicKey");
 
     //Implementation for calculating v naively taken from there, I don't understand
     //any of this.
@@ -227,7 +225,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       }
     }
 
-    debugPrint('recId====' + recId.toString());
+    debugPrint('recId====$recId');
     if (recId == -1) {
       throw Exception(
           'Could not construct a recoverable key. This should never happen');
@@ -383,9 +381,9 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
   }
 
   Future<Uint8List> signPersonalMessageWith(
-      String _messagePrefix, Uint8List privateKey, Uint8List payload,
+      String messagePrefix, Uint8List privateKey, Uint8List payload,
       {int chainId}) async {
-    final prefix = _messagePrefix + payload.length.toString();
+    final prefix = messagePrefix + payload.length.toString();
     final prefixBytes = ascii.encode(prefix);
 
     // will be a Uint8List, see the documentation of Uint8List.+
@@ -397,8 +395,8 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
     // be aware that signature.v already is recovery + 27
-    debugPrint('signature.v=======' + signature.v.toString());
-    debugPrint('chainId=' + chainId.toString());
+    debugPrint('signature.v=======${signature.v}');
+    debugPrint('chainId=$chainId');
 
     /*
   final chainIdV =
@@ -406,7 +404,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 
    */
     final chainIdV = signature.v + 27;
-    debugPrint('chainIdV=' + chainIdV.toString());
+    debugPrint('chainIdV=$chainIdV');
     signature = crypto_web3.MsgSignature(signature.r, signature.s, chainIdV);
 
     final r = _padTo32(crypto_web3.intToBytes(signature.r));
@@ -488,14 +486,14 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       final root = bip32.BIP32.fromSeed(seed);
       var coinType = environment["CoinType"]["ETH"];
       final ethCoinChild =
-          root.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
+          root.derivePath("m/44'/$coinType'/0'/0/0");
       var privateKey = ethCoinChild.privateKey;
       //var credentials = EthPrivateKey.fromHex(privateKey);
       //var credentials = EthPrivateKey(privateKey);
 
       var chainId = environment["chains"]["ETH"]["chainId"];
       // chainId = 0;
-      debugPrint('chainId==' + chainId.toString());
+      debugPrint('chainId==$chainId');
 
       // var signedMessOrig = await credentials
       //    .signPersonalMessage(stringToUint8List(originalMessage), chainId: chainId);
@@ -511,7 +509,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       r = ss.substring(0, 64);
       s = ss.substring(64, 128);
       v = ss.substring(128);
-      debugPrint('v=' + v);
+      debugPrint('v=$v');
     } else if (coinName == 'FAB' ||
         coinName == 'BTC' ||
         coinName == 'LTC' ||
@@ -548,7 +546,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
         coinType = environment["CoinType"]["BCH"];
       }
       var bitCoinChild =
-          root2.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
+          root2.derivePath("m/44'/$coinType'/0'/0/0");
       //var btcWallet =
       //    hdWallet.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
       var privateKey = bitCoinChild.privateKey;
@@ -664,7 +662,7 @@ getAddressForCoin(root, 'EXG', tokenType: 'FAB');
       var pass1 = sha256.process(fabPublicKey);
       Digest ripemd160 = Digest("RIPEMD-160");
       var pass2 = ripemd160.process(pass1);
-      var fabTokenAddr = '0x' + HEX.encode(pass2);
+      var fabTokenAddr = '0x${HEX.encode(pass2)}';
       return fabTokenAddr;
     }
     return '';

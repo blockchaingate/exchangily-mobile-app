@@ -82,8 +82,7 @@ class Redeposit extends StatelessWidget {
                                     onChanged: (val) {
                                       model.setBusy(true);
                                       model.errDepositTransactionID = val;
-                                      debugPrint('valllll=' +
-                                          model.errDepositTransactionID);
+                                      debugPrint('valllll=${model.errDepositTransactionID}');
                                       model.setBusy(false);
                                     },
                                   ))
@@ -98,8 +97,7 @@ class Redeposit extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(
-                            AppLocalizations.of(context).walletbalance +
-                                ' ${model.appWallet.balance}',
+                            '${AppLocalizations.of(context).walletbalance} ${model.appWallet.balance}',
                             style: Theme.of(context).textTheme.headline5,
                           ),
                           Padding(
@@ -169,17 +167,17 @@ class Redeposit extends StatelessWidget {
                                         keyboardType: TextInputType
                                             .number, // numnber keyboard
                                         decoration: InputDecoration(
-                                            focusedBorder: UnderlineInputBorder(
+                                            focusedBorder: const UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                     color: primaryColor)),
-                                            enabledBorder: UnderlineInputBorder(
+                                            enabledBorder: const UnderlineInputBorder(
                                                 borderSide:
                                                     BorderSide(color: grey)),
                                             hintText: '0.00000',
                                             hintStyle: Theme.of(context)
                                                 .textTheme
                                                 .headline5),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: grey, fontSize: 12),
                                       ))
                                 ],
@@ -207,17 +205,17 @@ class Redeposit extends StatelessWidget {
                                                 .numberWithOptions(
                                             decimal: true), // numnber keyboard
                                         decoration: InputDecoration(
-                                            focusedBorder: UnderlineInputBorder(
+                                            focusedBorder: const UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                     color: primaryColor)),
-                                            enabledBorder: UnderlineInputBorder(
+                                            enabledBorder: const UnderlineInputBorder(
                                                 borderSide:
                                                     BorderSide(color: grey)),
                                             hintText: '0.00000',
                                             hintStyle: Theme.of(context)
                                                 .textTheme
                                                 .headline5),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: grey, fontSize: 12),
                                       ))
                                 ],
@@ -231,7 +229,7 @@ class Redeposit extends StatelessWidget {
                     ? Center(
                         child: Text(
                         model.errorMessage,
-                        style: TextStyle(color: red),
+                        style: const TextStyle(color: red),
                       ))
                     : Container(),
                 UIHelper.verticalSpaceSmall,

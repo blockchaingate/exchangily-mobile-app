@@ -13,7 +13,6 @@
 
 import 'dart:convert';
 
-import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';

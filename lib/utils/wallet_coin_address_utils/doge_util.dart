@@ -24,7 +24,7 @@ final dogeCoinMainnetNetwork = BitcoinFlutter.NetworkType(
 generateDogeAddress(root, {index = 0}) async {
   var coinType = environment["CoinType"]["DOGE"].toString();
   var node =
-      root.derivePath("m/44'/" + coinType + "'/0'/0/" + index.toString());
+      root.derivePath("m/44'/$coinType'/0'/0/$index");
 
   String address = BitcoinFlutter.P2PKH(
           data: BitcoinFlutter.PaymentData(pubkey: node.publicKey),

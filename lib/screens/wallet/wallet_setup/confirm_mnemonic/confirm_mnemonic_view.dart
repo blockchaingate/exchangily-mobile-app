@@ -11,7 +11,6 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -44,9 +43,7 @@ class ConfirmMnemonicView extends StatelessWidget {
           appBar: AppBar(
               centerTitle: true,
               title: Text(
-                AppLocalizations.of(context).confirm +
-                    ' ' +
-                    AppLocalizations.of(context).mnemonic,
+                '${AppLocalizations.of(context).confirm} ${AppLocalizations.of(context).mnemonic}',
                 style: Theme.of(context).textTheme.headline3,
               ),
               backgroundColor: secondaryColor),
@@ -65,7 +62,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                             BorderSide(color: model.isTap ? green : grey)),
                         // backgroundColor: MaterialStateProperty.all(primaryColor),
                         elevation: MaterialStateProperty.all(5),
-                        shape: MaterialStateProperty.all(StadiumBorder(
+                        shape: MaterialStateProperty.all(const StadiumBorder(
                             side: BorderSide(color: primaryColor, width: 2))),
                       ),
                       child: Text(
@@ -86,7 +83,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                             BorderSide(color: model.isTap ? grey : green)),
                         // backgroundColor: MaterialStateProperty.all(primaryColor),
                         elevation: MaterialStateProperty.all(5),
-                        shape: MaterialStateProperty.all(StadiumBorder(
+                        shape: MaterialStateProperty.all(const StadiumBorder(
                             side: BorderSide(color: secondaryColor, width: 2))),
                       ),
                       child: Text('Verify Mnemonic by typing mnemonic words',
@@ -116,8 +113,8 @@ class ConfirmMnemonicView extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 2.0),
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 2.0),
                                     child: Icon(
                                       Icons.restore_sharp,
                                       color: yellow,
@@ -183,11 +180,11 @@ class ConfirmMnemonicView extends StatelessWidget {
                                       filled: true,
                                       hintText: singleWord,
                                       hintMaxLines: 1,
-                                      hintStyle: TextStyle(
+                                      hintStyle: const TextStyle(
                                           color: white,
                                           fontWeight: FontWeight.w400),
                                       focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
+                                          borderSide: const BorderSide(
                                               color: white, width: 2),
                                           borderRadius:
                                               BorderRadius.circular(30.0)),
@@ -208,7 +205,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(primaryColor),
                       elevation: MaterialStateProperty.all(5),
-                      shape: MaterialStateProperty.all(StadiumBorder(
+                      shape: MaterialStateProperty.all(const StadiumBorder(
                           side: BorderSide(color: primaryColor, width: 2))),
                     ),
                     child: Padding(

@@ -25,24 +25,24 @@ class CampaignService {
   Campaign campaign;
 
   static const BASE_URL = baseBlockchainGateV2Url;
-  static const registerUrl = BASE_URL + 'members/create';
-  static const loginUrl = BASE_URL + 'members/login';
-  static const kycWithTokenUrl = BASE_URL + 'kyc/create';
-  static const createOrderUrl = BASE_URL + 'campaign-order/create';
-  static const updateOrderUrl = BASE_URL + 'campaign-order/update';
+  static const registerUrl = '${BASE_URL}members/create';
+  static const loginUrl = '${BASE_URL}members/login';
+  static const kycWithTokenUrl = '${BASE_URL}kyc/create';
+  static const createOrderUrl = '${BASE_URL}campaign-order/create';
+  static const updateOrderUrl = '${BASE_URL}campaign-order/update';
   static const listOrdersByWalletAddressUrl =
-      BASE_URL + 'campaign-order/wallet-orders/';
+      '${BASE_URL}campaign-order/wallet-orders/';
   static const listOrdersByMemberIdUrl =
-      BASE_URL + 'campaign-order/member-orders/';
-  static const rewardsWithTokenUrl = BASE_URL + 'coinorders/rewards';
-  static const setTokenUrl = BASE_URL + 'coinorders/rewards?token=';
-  static const campaignNameUrl = BASE_URL + 'campaign/1';
-  static const memberReferralsUrl = BASE_URL + 'campaign-referral/referrals/';
-  static const memberRewardUrl = BASE_URL + 'campaign-referral/rewards/';
-  static const rewardsUrl = BASE_URL + 'campaign-order/rewards';
-  static const memberProfileUrl = BASE_URL + 'campaign-order/profile';
+      '${BASE_URL}campaign-order/member-orders/';
+  static const rewardsWithTokenUrl = '${BASE_URL}coinorders/rewards';
+  static const setTokenUrl = '${BASE_URL}coinorders/rewards?token=';
+  static const campaignNameUrl = '${BASE_URL}campaign/1';
+  static const memberReferralsUrl = '${BASE_URL}campaign-referral/referrals/';
+  static const memberRewardUrl = '${BASE_URL}campaign-referral/rewards/';
+  static const rewardsUrl = '${BASE_URL}campaign-order/rewards';
+  static const memberProfileUrl = '${BASE_URL}campaign-order/profile';
 
-  static const resetPasswordUrl = BASE_URL + 'members/requestpwdreset';
+  static const resetPasswordUrl = '${BASE_URL}members/requestpwdreset';
 
   CampaignUserData userData;
   CampaignUserDatabaseService campaignUserDatabaseService =

@@ -69,16 +69,16 @@ class VerifyMnemonicWalletView extends StatelessWidget {
             FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
             // FilteringTextInputFormatter.allow(RegExp(r'([a-z]{0,})$'))
           ],
-          style: TextStyle(color: white, fontWeight: FontWeight.w400),
+          style: const TextStyle(color: white, fontWeight: FontWeight.w400),
           controller: controller[i],
           autocorrect: true,
           decoration: InputDecoration(
             fillColor: primaryColor,
             filled: true,
             hintText: '$hintMnemonicWordNumber',
-            hintStyle: TextStyle(color: white),
+            hintStyle: const TextStyle(color: white),
             focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: white, width: 2),
+                borderSide: const BorderSide(color: white, width: 2),
                 borderRadius: BorderRadius.circular(30.0)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),

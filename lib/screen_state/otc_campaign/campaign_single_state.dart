@@ -30,7 +30,7 @@ class CampaignSingleScreenState extends BaseState {
     setBusy(true);
     log.e(busy);
 
-    debugPrint("eventID: " + eventID);
+    debugPrint("eventID: $eventID");
 
     //get campaign info in selected language
     lang = localStorageService.language;

@@ -9,7 +9,6 @@ import 'package:stacked/stacked.dart';
 
 import '../../logger.dart';
 import '../../service_locator.dart';
-import '../base_state.dart';
 
 class MarketPairsTabViewModel extends BaseViewModel {
   final log = getLogger('MarketPairsTabViewState');

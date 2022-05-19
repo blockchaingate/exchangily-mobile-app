@@ -41,7 +41,6 @@ import '../../localizations.dart';
 import '../../logger.dart';
 import '../../service_locator.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
-import "package:hex/hex.dart";
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 
 class SettingsViewmodel extends BaseViewModel {

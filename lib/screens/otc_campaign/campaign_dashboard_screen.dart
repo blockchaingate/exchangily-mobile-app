@@ -3,7 +3,6 @@ import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
@@ -48,7 +47,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                     )),
                   ),
                   ListTile(
-                    trailing: Icon(
+                    trailing: const Icon(
                       Icons.person,
                       color: globals.white54,
                     ),
@@ -61,7 +60,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                   ),
                   UIHelper.divider,
                   ListTile(
-                    trailing: Icon(
+                    trailing: const Icon(
                       Icons.event_note,
                       color: globals.green,
                     ),
@@ -83,7 +82,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     color: globals.primaryColor,
                                     decoration: TextDecoration.underline))
                         : const Text(''),
-                    trailing: Icon(Icons.share, color: globals.white54),
+                    trailing: const Icon(Icons.share, color: globals.white54),
                     onTap: () {
                       Share.share(
                           'Here is my referral code ${model.campaignUserData.referralCode.toString()} for campaign ${model.campaignName}');
@@ -128,7 +127,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   alignment: Alignment.centerLeft,
                                   padding: const EdgeInsets.only(right: 10),
                                   iconSize: 28,
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.menu,
                                     color: globals.primaryColor,
                                   ),
@@ -170,8 +169,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                       children: <Widget>[
                         ListTile(
                           dense: false,
-                          leading: Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
+                          leading: const Padding(
+                            padding: EdgeInsets.only(top: 5.0),
                             child: Icon(
                               Icons.verified_user,
                               color: globals.primaryColor,
@@ -228,9 +227,9 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   width: 120,
                                   child: Row(
                                     children: <Widget>[
-                                      Padding(
+                                      const Padding(
                                         padding:
-                                            const EdgeInsets.only(right: 3.0),
+                                            EdgeInsets.only(right: 3.0),
                                         child: Icon(Icons.monetization_on,
                                             color: globals.buyPrice, size: 18),
                                       ),
@@ -289,7 +288,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Icon(
+                                  const Icon(
                                     Icons.device_hub,
                                     size: 20,
                                     color: globals.exgLogoColor,
@@ -298,9 +297,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 5.0),
                                     child: Text(
-                                      AppLocalizations.of(context)
-                                              .referralCount +
-                                          ' ',
+                                      '${AppLocalizations.of(context)
+                                              .referralCount} ',
                                       style:
                                           Theme.of(context).textTheme.headline5,
                                     ),
@@ -338,8 +336,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                               model.getCampaignOrdeList();
                             },
                             dense: false,
-                            leading: Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
+                            leading: const Padding(
+                              padding: EdgeInsets.only(top: 5.0),
                               child: Icon(
                                 Icons.confirmation_number,
                                 color: globals.exgLogoColor,
@@ -405,7 +403,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                                           .memberLevelTextColor)))
                                     ],
                                   ),
-                            trailing: Icon(
+                            trailing: const Icon(
                               Icons.navigate_next,
                               color: globals.white54,
                             ))
@@ -426,8 +424,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   '/MyRewardDetails', model.campaignRewardList);
                             },
                             dense: false,
-                            leading: Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
+                            leading: const Padding(
+                              padding: EdgeInsets.only(top: 5.0),
                               child: Icon(
                                 Icons.card_giftcard,
                                 color: globals.fabLogoColor,
@@ -449,7 +447,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     model.myReferralReward.toStringAsFixed(2),
                                     style:
                                         Theme.of(context).textTheme.headline5),
-                            trailing: Icon(
+                            trailing: const Icon(
                               Icons.navigate_next,
                               color: globals.white54,
                             ))
@@ -473,8 +471,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                               }
                             },
                             dense: false,
-                            leading: Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
+                            leading: const Padding(
+                              padding: EdgeInsets.only(top: 5.0),
                               child: Icon(
                                 Icons.people_outline,
                                 color: globals.primaryColor,
@@ -568,7 +566,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 //                         model.memberLevelTextColor))),
                                 //   ],
                                 // ),
-                                Icon(
+                                const Icon(
                               Icons.navigate_next,
                               color: globals.white54,
                             )),

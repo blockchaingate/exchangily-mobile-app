@@ -1,10 +1,8 @@
-import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/payment_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../localizations.dart';
@@ -78,7 +76,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       controller:
                                           model.sendAmountTextController,
                                       decoration: InputDecoration(
-                                          focusedBorder: OutlineInputBorder(
+                                          focusedBorder: const OutlineInputBorder(
                                               borderRadius: BorderRadius.zero,
                                               borderSide: BorderSide(
                                                   width: 1,
@@ -247,8 +245,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                             .gasFee),
                                         UIHelper.horizontalSpaceSmall,
                                         Text(
-                                            model.transportationFee.toString() +
-                                                ' ETH'),
+                                            '${model.transportationFee} ETH'),
                                       ],
                                     )),
 
@@ -321,9 +318,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           Expanded(
                                             flex: 2,
                                             child: Text(
-                                                AppLocalizations.of(context)
-                                                        .bankAccount +
-                                                    ' #'),
+                                                '${AppLocalizations.of(context)
+                                                        .bankAccount} #'),
                                           ),
                                           const Expanded(
                                             flex: 1,
@@ -436,7 +432,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                             const EdgeInsets.only(right: 5.0),
                                         child: RaisedButton(
                                           padding: const EdgeInsets.all(0),
-                                          shape: StadiumBorder(
+                                          shape: const StadiumBorder(
                                               side: BorderSide(
                                                   color: globals.primaryColor,
                                                   width: 2)),
@@ -503,10 +499,10 @@ class CampaignPaymentScreen extends StatelessWidget {
 
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: globals.walletCardColor,
                       borderRadius:
-                          const BorderRadius.all(Radius.circular(5.0))),
+                          BorderRadius.all(Radius.circular(5.0))),
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,

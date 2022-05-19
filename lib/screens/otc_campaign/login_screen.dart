@@ -1,7 +1,6 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/login_screen_state.dart';
 import 'package:shimmer/shimmer.dart';
@@ -135,7 +134,7 @@ class CampaignLoginScreen extends StatelessWidget {
                     UIHelper.verticalSpaceMedium,
                     InkWell(
                       child: Text(
-                        AppLocalizations.of(context).forgotPassword + '?',
+                        '${AppLocalizations.of(context).forgotPassword}?',
                         style: const TextStyle(
                             decoration: TextDecoration.underline,
                             color: globals.white),
@@ -200,7 +199,7 @@ class CampaignLoginScreen extends StatelessWidget {
                           child: RaisedButton(
                             padding: const EdgeInsets.all(2.0),
                             elevation: 5,
-                            shape: StadiumBorder(
+                            shape: const StadiumBorder(
                                 side: BorderSide(
                                     color: globals.primaryColor, width: 2)),
                             color: globals.secondaryColor,

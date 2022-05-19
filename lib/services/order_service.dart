@@ -87,15 +87,7 @@ https://kanbanprod.fabcoinapi.com/ordersbyaddresspaged/0x3b7b00ee5a7f7d57dff7b54
       {int skip = 0, int count = 10, String status = ''}) async {
     log.w('getMyOrders $exgAddress  -- skip $skip -- count $count');
     try {
-      String url = configService.getKanbanBaseUrl() +
-          'ordersbyaddresspaged/' +
-          exgAddress +
-          '/' +
-          skip.toString() +
-          '/' +
-          count.toString() +
-          '/' +
-          status;
+      String url = '${configService.getKanbanBaseUrl()}ordersbyaddresspaged/$exgAddress/$skip/$count/$status';
       log.w('get my orders url $url');
       var res = await client.get(url);
       var jsonList = jsonDecode(res.body) as List;
@@ -127,17 +119,7 @@ https://kanbanprod.fabcoinapi.com/ordersbyaddresspaged/0x3b7b00ee5a7f7d57dff7b54
         'getMyOrdersByTickerName $exgAddress -- $tickerName -- skip $skip -- count $count');
 
     try {
-      String url = configService.getKanbanBaseUrl() +
-          'getordersbytickernamepaged/' +
-          exgAddress +
-          '/' +
-          tickerName +
-          '/' +
-          skip.toString() +
-          '/' +
-          count.toString() +
-          '/' +
-          status;
+      String url = '${configService.getKanbanBaseUrl()}getordersbytickernamepaged/$exgAddress/$tickerName/$skip/$count/$status';
       // String url = environment['endpoints']['kanban'] +
       //     'getordersbytickername/' +
       //     exgAddress +
