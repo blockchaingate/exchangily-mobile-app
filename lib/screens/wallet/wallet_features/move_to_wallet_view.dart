@@ -97,13 +97,13 @@ class MoveToWalletScreen extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                          '${AppLocalizations.of(context)
-                                                  .minimumAmount}: ',
+                                          '${AppLocalizations.of(context).minimumAmount}: ',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
                                       Text(
-                                          model.token.minWithdraw == null
+                                          model.token.minWithdraw == null ||
+                                                  model.isBusy
                                               ? AppLocalizations.of(context)
                                                   .loading
                                               : model.token.minWithdraw
@@ -118,8 +118,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                          '${AppLocalizations.of(context)
-                                                  .decimalLimit}: ',
+                                          '${AppLocalizations.of(context).decimalLimit}: ',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
@@ -399,8 +398,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                       .textTheme
                                                       .headline5
                                                       .copyWith(
-                                                          fontWeight:
-                                                              FontWeight.w300)),
+                                                          fontWeight: FontWeight.w300)),
                                               style: Theme.of(context).textTheme.headline5.copyWith(fontWeight: FontWeight.w300))))
                                 ],
                               ),
@@ -433,10 +431,11 @@ class MoveToWalletScreen extends StatelessWidget {
                                               keyboardType: TextInputType
                                                   .number, // numnber keyboard
                                               decoration: InputDecoration(
-                                                  focusedBorder: const UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: globals
-                                                              .primaryColor)),
+                                                  focusedBorder:
+                                                      const UnderlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: globals
+                                                                  .primaryColor)),
                                                   enabledBorder: const UnderlineInputBorder(
                                                       borderSide: BorderSide(
                                                           color: globals.grey)),
@@ -450,8 +449,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5
-                                                  .copyWith(
-                                                      fontWeight: FontWeight.w300)))),
+                                                  .copyWith(fontWeight: FontWeight.w300)))),
                                 ],
                               ),
                               UIHelper.verticalSpaceSmall,
@@ -615,6 +613,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                             .textTheme
                                             .headline5
                                             .copyWith(
+                                                fontWeight: FontWeight.w400,
                                                 color: red,
                                                 decoration:
                                                     TextDecoration.underline),
@@ -626,11 +625,14 @@ class MoveToWalletScreen extends StatelessWidget {
                                           }),
                                   ),
                                 ),
-                                !model.isShowDetailsMessage
-                                    ? const Icon(Icons.arrow_drop_down,
-                                        color: Colors.red, size: 20)
-                                    : const Icon(Icons.arrow_drop_up,
-                                        color: Colors.red, size: 20)
+                                Container(
+                                  margin: EdgeInsets.only(top: 2.0),
+                                  child: !model.isShowDetailsMessage
+                                      ? const Icon(Icons.arrow_drop_down,
+                                          color: Colors.red, size: 24)
+                                      : const Icon(Icons.arrow_drop_up,
+                                          color: Colors.red, size: 24),
+                                )
                               ],
                             )
                           : Container(),

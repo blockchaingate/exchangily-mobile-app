@@ -465,8 +465,7 @@ class WalletService {
     var root = generateBip32Root(seed);
     debugPrint('root $root');
     String ct = '195';
-    bip32.BIP32 node =
-        root.derivePath("m/44'/$ct'/0'/0/${0}");
+    bip32.BIP32 node = root.derivePath("m/44'/$ct'/0'/0/${0}");
     debugPrint('node $node');
     var privKey = node.privateKey;
     //  var pubKey = node.publicKey;
@@ -616,9 +615,6 @@ class WalletService {
       return addr;
     }
   }
-/*----------------------------------------------------------------------
-                Future Get Coin Balance By Address
-----------------------------------------------------------------------*/
 
   Future coinBalanceByAddress(
       String name, String address, String tokenType) async {
@@ -1129,14 +1125,14 @@ class WalletService {
       String coinName,
       String coinAddress,
       String tokenType,
-      double amount,
+      Decimal amount,
       kanbanPrice,
       kanbanGasLimit,
       isSpeicalTronTokenWithdraw) async {
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
-    var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
-    //amount * BigInt.from(1e18);
+    var amountInLink = NumberUtil.decimalToBigInt(amount);
+
     log.i(
         'AMount in link $amountInLink -- coin name $coinName -- token type $tokenType');
 
@@ -1242,15 +1238,16 @@ class WalletService {
       String coinName,
       String coinAddress,
       String tokenType,
-      double amount,
+      Decimal amount,
       kanbanPrice,
       kanbanGasLimit) async {
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
-    var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
-    //amount * BigInt.from(1e18);
+    var amountInLink = NumberUtil.decimalToBigInt(amount);
+    // var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
+
     log.i(
-        'AMount in link $amountInLink -- coin name $coinName -- token type $tokenType');
+        'Amount in link $amountInLink -- coin name $coinName -- token type $tokenType');
     var addressInWallet = coinAddress;
     addressInWallet = btcUtils.btcToBase58Address(addressInWallet);
 
@@ -1347,7 +1344,7 @@ class WalletService {
         await coinService.getCoinTypeByTickerName(appWallet.tickerName);
     log.i('coin type $coinType');
 
-    var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
+    var amountInLink = NumberUtil.decimalToBigInt(amount);
 
     var seed = generateSeed(mnemonic);
     var keyPairKanban = getExgKeyPair(seed);
@@ -1641,7 +1638,8 @@ class WalletService {
 
     for (var i = 0; i < addressIndexList.length; i++) {
       var index = addressIndexList[i];
-      var fabCoinChild = root.derivePath("m/44'/${environment["CoinType"]["FAB"]}'/0'/0/$index");
+      var fabCoinChild = root
+          .derivePath("m/44'/${environment["CoinType"]["FAB"]}'/0'/0/$index");
       var fromAddress = btcUtils.getBtcAddressForNode(fabCoinChild);
       if (addressList != null && addressList.length > 0) {
         fromAddress = addressList[i];
@@ -1891,7 +1889,8 @@ class WalletService {
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
-        var bitCoinChild = root.derivePath("m/44'/${environment["CoinType"]["BTC"]}'/0'/0/$index");
+        var bitCoinChild = root
+            .derivePath("m/44'/${environment["CoinType"]["BTC"]}'/0'/0/$index");
         var fromAddress = btcUtils.getBtcAddressForNode(bitCoinChild);
         if (addressList.isNotEmpty) {
           fromAddress = addressList[i];
@@ -2002,8 +2001,7 @@ class WalletService {
           testnet: environment["chains"]["BCH"]["testnet"]);
       final masterNode =
           bitbox.HDNode.fromSeed(seed, environment["chains"]["BCH"]["testnet"]);
-      final childNode =
-          "m/44'/${environment["CoinType"]["BCH"]}'/0'/0/0";
+      final childNode = "m/44'/${environment["CoinType"]["BCH"]}'/0'/0/0";
       final accountNode = masterNode.derivePath(childNode);
       final address = accountNode.toCashAddress();
 
@@ -2104,7 +2102,8 @@ class WalletService {
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
-        var node = root.derivePath("m/44'/${environment["CoinType"]["LTC"]}'/0'/0/$index");
+        var node = root
+            .derivePath("m/44'/${environment["CoinType"]["LTC"]}'/0'/0/$index");
         var fromAddress = ltcUtils.getLtcAddressForNode(node);
         if (addressList.isNotEmpty) {
           fromAddress = addressList[i];
@@ -2204,7 +2203,8 @@ class WalletService {
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
-        var node = root.derivePath("m/44'/${environment["CoinType"]["DOGE"]}'/0'/0/$index");
+        var node = root.derivePath(
+            "m/44'/${environment["CoinType"]["DOGE"]}'/0'/0/$index");
         var fromAddress = getDogeAddressForNode(node);
         debugPrint('fromAddress==$fromAddress');
         if (addressList.isNotEmpty) {
@@ -2321,8 +2321,8 @@ class WalletService {
       }
 
       final chainId = environment["chains"]["MATIC"]["chainId"];
-      final ethCoinChild = root.derivePath(
-          "m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
+      final ethCoinChild =
+          root.derivePath("m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
 
@@ -2390,8 +2390,8 @@ class WalletService {
       }
 
       final chainId = environment["chains"]["ETH"]["chainId"];
-      final ethCoinChild = root.derivePath(
-          "m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
+      final ethCoinChild =
+          root.derivePath("m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       var amountSentInt = NumberUtil.decimalToBigInt(amount);
       // var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
@@ -2587,8 +2587,8 @@ class WalletService {
       }
 
       final chainId = environment["chains"]["ETH"]["chainId"];
-      final ethCoinChild = root.derivePath(
-          "m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
+      final ethCoinChild =
+          root.derivePath("m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       Credentials credentials = EthPrivateKey.fromHex(privateKey);
 
@@ -2745,7 +2745,8 @@ class WalletService {
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
-        var bitCoinChild = root.derivePath("m/44'/${environment["CoinType"]["BTC"]}'/0'/0/$index");
+        var bitCoinChild = root
+            .derivePath("m/44'/${environment["CoinType"]["BTC"]}'/0'/0/$index");
         var fromAddress = btcUtils.getBtcAddressForNode(bitCoinChild);
         if (addressList.isNotEmpty) {
           fromAddress = addressList[i];
@@ -2856,8 +2857,7 @@ class WalletService {
           testnet: environment["chains"]["BCH"]["testnet"]);
       final masterNode =
           bitbox.HDNode.fromSeed(seed, environment["chains"]["BCH"]["testnet"]);
-      final childNode =
-          "m/44'/${environment["CoinType"]["BCH"]}'/0'/0/0";
+      final childNode = "m/44'/${environment["CoinType"]["BCH"]}'/0'/0/0";
       final accountNode = masterNode.derivePath(childNode);
       final address = accountNode.toCashAddress();
 
@@ -2958,7 +2958,8 @@ class WalletService {
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
-        var node = root.derivePath("m/44'/${environment["CoinType"]["LTC"]}'/0'/0/$index");
+        var node = root
+            .derivePath("m/44'/${environment["CoinType"]["LTC"]}'/0'/0/$index");
         var fromAddress = ltcUtils.getLtcAddressForNode(node);
         if (addressList.isNotEmpty) {
           fromAddress = addressList[i];
@@ -3058,7 +3059,8 @@ class WalletService {
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
-        var node = root.derivePath("m/44'/${environment["CoinType"]["DOGE"]}'/0'/0/$index");
+        var node = root.derivePath(
+            "m/44'/${environment["CoinType"]["DOGE"]}'/0'/0/$index");
         var fromAddress = getDogeAddressForNode(node);
         debugPrint('fromAddress==$fromAddress');
         if (addressList.isNotEmpty) {
@@ -3175,8 +3177,8 @@ class WalletService {
       }
 
       final chainId = environment["chains"]["MATIC"]["chainId"];
-      final ethCoinChild = root.derivePath(
-          "m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
+      final ethCoinChild =
+          root.derivePath("m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
 
@@ -3244,8 +3246,8 @@ class WalletService {
       }
 
       final chainId = environment["chains"]["ETH"]["chainId"];
-      final ethCoinChild = root.derivePath(
-          "m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
+      final ethCoinChild =
+          root.derivePath("m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
 
@@ -3425,8 +3427,8 @@ class WalletService {
       }
 
       final chainId = environment["chains"]["ETH"]["chainId"];
-      final ethCoinChild = root.derivePath(
-          "m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
+      final ethCoinChild =
+          root.derivePath("m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       Credentials credentials = EthPrivateKey.fromHex(privateKey);
 

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/font_style.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -16,6 +17,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,7 +47,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   final kanbanGasPriceTextController = TextEditingController();
   final kanbanGasLimitTextController = TextEditingController();
   final amountController = TextEditingController();
-  var kanbanTransFee;
+  double kanbanTransFee;
   var minimumAmount;
   bool transFeeAdvance = false;
   Decimal gasAmount = Decimal.zero;
@@ -54,9 +56,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
   bool isShowDetailsMessage = false;
   String serverError = '';
   List<Map<String, dynamic>> chainBalances = [];
-  var ethChainBalance;
-  var fabChainBalance;
-  var trxTsWalletBalance;
+  Decimal ethChainBalance = Decimal.zero;
+  Decimal fabChainBalance = Decimal.zero;
+  Decimal trxTsWalletBalance = Decimal.zero;
   bool isWithdrawChoice = false;
   String _groupValue;
   get groupValue => _groupValue;
@@ -816,7 +818,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
     await walletService.gasBalance(address).then((data) {
       gasAmount = data;
       log.i('gas balance $gasAmount');
-      if (gasAmount == 0) {
+      if (gasAmount == Constants.decimalZero) {
         sharedService.alertDialog(
           AppLocalizations.of(context).notice,
           AppLocalizations.of(context).insufficientGasAmount,
@@ -932,10 +934,17 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
   getFabBalance() async {
     setBusy(true);
-    String fabAddress = coinService.getCoinOfficalAddress('FAB');
-    await walletService.coinBalanceByAddress('FAB', fabAddress, '').then((res) {
-      log.e('fab res $res');
-      fabChainBalance = res['balance'];
+    String officialFabAddress = coinService.getCoinOfficalAddress('FAB');
+    await apiService
+        .getSingleCoinWalletBalanceV2(
+            officialFabAddress, 'FAB', officialFabAddress)
+        .then((res) {
+      fabChainBalance = res[0].balance;
+      log.w('fabChainBalance $fabChainBalance');
+      // await walletService.coinBalanceByAddress('FAB', officialFabAddress, '').then((res) {
+      //   log.e('fab res $res');
+      //   fabChainBalance = res['balance'];
+      // });
     });
     setBusy(false);
   }
@@ -1108,7 +1117,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
         return;
       }
       await checkGasBalance();
-      if (gasAmount == 0.0 || gasAmount < kanbanTransFee) {
+      if (gasAmount == Constants.decimalZero ||
+          gasAmount.toDouble() < kanbanTransFee) {
         sharedService.alertDialog(
           AppLocalizations.of(context).notice,
           AppLocalizations.of(context).insufficientGasAmount,
@@ -1117,8 +1127,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
         return;
       }
 
-      var amount = double.tryParse(amountController.text);
-      if (amount < double.parse(token.minWithdraw)) {
+      var amount = NumberUtil.parseStringToDecimal(amountController.text);
+      if (amount < NumberUtil.parseStringToDecimal(token.minWithdraw)) {
         sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).minimumAmountError,
           subtitle: AppLocalizations.of(context)
@@ -1143,10 +1153,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
         if (!isShowTrxTsWalletBalance &&
             isShowFabChainBalance &&
             amount > fabChainBalance) {
-          sharedService.alertDialog(
-              AppLocalizations.of(context).notice,
-              '${AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart} $fabChainBalance. ${AppLocalizations.of(context)
-                      .lowTsWalletBalanceErrorSecondPart}',
+          sharedService.alertDialog(AppLocalizations.of(context).notice,
+              '${AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart} $fabChainBalance. ${AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart}',
               isWarning: false);
 
           setBusy(false);
@@ -1159,8 +1167,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (isWithdrawChoice) if (!isShowTrxTsWalletBalance &&
           !isShowFabChainBalance &&
           amount > ethChainBalance) {
-        sharedService.alertDialog(
-            AppLocalizations.of(context).notice,
+        sharedService.alertDialog(AppLocalizations.of(context).notice,
             '${AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart} $ethChainBalance. ${AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart}',
             isWarning: false);
 
@@ -1171,10 +1178,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
         if (isShowTrxTsWalletBalance &&
             !isShowFabChainBalance &&
             amount > trxTsWalletBalance) {
-          sharedService.alertDialog(
-              AppLocalizations.of(context).notice,
-              '${AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart} $trxTsWalletBalance. ${AppLocalizations.of(context)
-                      .lowTsWalletBalanceErrorSecondPart}',
+          sharedService.alertDialog(AppLocalizations.of(context).notice,
+              '${AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart} $trxTsWalletBalance. ${AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart}',
               isWarning: false);
           setBusy(false);
           return;
