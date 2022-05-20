@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -35,9 +37,10 @@ class OrderService with ReactiveServiceMixin {
   List<OrderModel> orderAggregation(List<OrderModel> passedOrders) {
     List<OrderModel> result = [];
     debugPrint('passed orders length ${passedOrders.length}');
-    double prevQuantity = 0.0;
+    Decimal prevQuantity = Constants.decimalZero;
     List<int> indexArray = [];
-    double prevPrice = 0;
+    Decimal prevPrice = Constants.decimalZero;
+    ;
 
     // for each
     for (var currentOrder in passedOrders) {
@@ -87,7 +90,8 @@ https://kanbanprod.fabcoinapi.com/ordersbyaddresspaged/0x3b7b00ee5a7f7d57dff7b54
       {int skip = 0, int count = 10, String status = ''}) async {
     log.w('getMyOrders $exgAddress  -- skip $skip -- count $count');
     try {
-      String url = '${configService.getKanbanBaseUrl()}ordersbyaddresspaged/$exgAddress/$skip/$count/$status';
+      String url =
+          '${configService.getKanbanBaseUrl()}ordersbyaddresspaged/$exgAddress/$skip/$count/$status';
       log.w('get my orders url $url');
       var res = await client.get(url);
       var jsonList = jsonDecode(res.body) as List;
@@ -119,7 +123,8 @@ https://kanbanprod.fabcoinapi.com/ordersbyaddresspaged/0x3b7b00ee5a7f7d57dff7b54
         'getMyOrdersByTickerName $exgAddress -- $tickerName -- skip $skip -- count $count');
 
     try {
-      String url = '${configService.getKanbanBaseUrl()}getordersbytickernamepaged/$exgAddress/$tickerName/$skip/$count/$status';
+      String url =
+          '${configService.getKanbanBaseUrl()}getordersbytickernamepaged/$exgAddress/$tickerName/$skip/$count/$status';
       // String url = environment['endpoints']['kanban'] +
       //     'getordersbytickername/' +
       //     exgAddress +

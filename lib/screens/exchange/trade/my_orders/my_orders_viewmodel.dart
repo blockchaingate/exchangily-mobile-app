@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
@@ -20,11 +22,11 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
-import 'package:hex/hex.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
+import 'package:hex/hex.dart';
 
 class MyOrdersViewModel extends ReactiveViewModel {
   @override
@@ -44,7 +46,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
 
-  double filledAmount = 0;
+  Decimal filledAmount = Constants.decimalZero;
   double filledPercentage = 0;
   String errorMessage = '';
 
@@ -161,14 +163,6 @@ class MyOrdersViewModel extends ReactiveViewModel {
         myAllOrders = data;
         log.e('getAllMyOrders length ${myAllOrders.length}');
         for (var element in data) {
-          /// 'amount' = orderQuantity,
-          /// 'filledAmount' = filledQuantity
-          // filledAmount =
-          //     doubleAdd(element.orderQuantity, element.filledQuantity);
-          // filledPercentage = (element.filledQuantity *
-          //     100 /
-          //     doubleAdd(element.filledQuantity, element.orderQuantity));
-
           if (element.isActive) {
             myOpenOrders.add(element);
           } else if (!element.isActive && !element.isCancelled) {
@@ -212,13 +206,6 @@ class MyOrdersViewModel extends ReactiveViewModel {
       for (var element in singlePairOrders) {
         myAllOrders = singlePairOrders;
 
-        /// 'amount' = orderQuantity,
-        /// 'filledAmount' = filledQuantity
-        // filledAmount =
-        //     doubleAdd(element.orderQuantity, element.filledQuantity);
-        // filledPercentage = (element.filledQuantity *
-        //     100 /
-        //     doubleAdd(element.filledQuantity, element.orderQuantity));
         if (element.isActive) {
           myOpenOrders.add(element);
           //  log.e('Close orders ${myOpenOrders.length}');
@@ -257,10 +244,11 @@ class MyOrdersViewModel extends ReactiveViewModel {
       for (var element in data) {
         /// 'amount' = orderQuantity,
         /// 'filledAmount' = filledQuantity
-        filledAmount = doubleAdd(element.orderQuantity, element.filledQuantity);
+        filledAmount = element.orderQuantity + element.filledQuantity;
         filledPercentage = (element.filledQuantity *
-            100 /
-            doubleAdd(element.filledQuantity, element.orderQuantity));
+                Decimal.fromInt(100) /
+                (element.filledQuantity + element.orderQuantity))
+            .toDouble();
 
         if (element.isActive) {
           myOpenOrders.add(element);

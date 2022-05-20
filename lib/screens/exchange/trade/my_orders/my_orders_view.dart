@@ -2,6 +2,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -302,8 +303,10 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                 Expanded(
                     flex: 2,
                     child: Text(
-                        order.totalOrderQuantity
-                            .toStringAsFixed(model.decimalConfig.qtyDecimal),
+                        NumberUtil.decimalLimiter(order.totalOrderQuantity(),
+                                decimalPrecision:
+                                    model.decimalConfig.qtyDecimal)
+                            .toString(),
                         style: Theme.of(context).textTheme.headline6)),
                 Expanded(
                     flex: 2,
@@ -314,9 +317,9 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                                 model.decimalConfig.qtyDecimal),
                             style: Theme.of(context).textTheme.headline6),
                         Text(
-                            order.filledPercentage.isNaN
+                            order.filledPercentage().toDouble().isNaN
                                 ? '0.0%'
-                                : '${order.filledPercentage.toStringAsFixed(2)}%',
+                                : '${NumberUtil.decimalLimiter(order.filledPercentage(), decimalPrecision: model.decimalConfig.qtyDecimal).toString()}%',
                             style: Theme.of(context).textTheme.subtitle2)
                       ],
                     )),

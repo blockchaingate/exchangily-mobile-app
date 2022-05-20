@@ -2,6 +2,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my_exchange_assets_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/material.dart';
 
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
@@ -14,7 +15,7 @@ class MyExchangeAssetsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => MyExchangeAssetsViewModel(),
-      builder: (context, model, _) => Container(
+      builder: (context, MyExchangeAssetsViewModel model, _) => Container(
         child: model.isBusy
             ? const ShimmerLayout(
                 layoutType: 'marketTrades',
@@ -75,8 +76,8 @@ class MyExchangeAssetsView extends StatelessWidget {
                                   Expanded(
                                     flex: 1,
                                     child: Container(
-                                        padding:
-                                            const EdgeInsets.symmetric(vertical: 7),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 7),
                                         //  margin: EdgeInsets.only(right: 10.0),
                                         decoration: BoxDecoration(
                                           borderRadius:
@@ -87,9 +88,8 @@ class MyExchangeAssetsView extends StatelessWidget {
                                         child:
                                             // Image.asset(
                                             // 'assets/images/wallet-page/${tickerName.toLowerCase()}.png') ??
-                                            Image.network(model.logoUrl +
-                                                tickerName.toLowerCase() +
-                                                '.png')),
+                                            Image.network(
+                                                '${model.logoUrl}${tickerName.toLowerCase()}.png')),
                                   ),
                                   UIHelper.horizontalSpaceSmall,
                                   UIHelper.horizontalSpaceSmall,
@@ -108,8 +108,10 @@ class MyExchangeAssetsView extends StatelessWidget {
                                   Expanded(
                                       flex: 2,
                                       child: Text(
-                                          model.exchangeBalances[index]
-                                              .unlockedAmount
+                                          NumberUtil.decimalLimiter(
+                                                  model.exchangeBalances[index]
+                                                      .unlockedAmount,
+                                                  decimalPrecision: 8)
                                               .toString(),
                                           style: Theme.of(context)
                                               .textTheme
@@ -117,8 +119,10 @@ class MyExchangeAssetsView extends StatelessWidget {
                                   Expanded(
                                       flex: 2,
                                       child: Text(
-                                          model.exchangeBalances[index]
-                                              .lockedAmount
+                                          NumberUtil.decimalLimiter(
+                                                  model.exchangeBalances[index]
+                                                      .lockedAmount,
+                                                  decimalPrecision: 8)
                                               .toString(),
                                           style: Theme.of(context)
                                               .textTheme

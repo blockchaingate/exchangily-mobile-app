@@ -774,7 +774,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
                 Decimal.parse(sliderValue.toString()) /
                 Decimal.fromInt(100))
             .toDecimal();
-        quantity = (changeBalanceWithSlider / price).toDecimal();
+        quantity = (changeBalanceWithSlider / price).toDecimal(
+            scaleOnInfinitePrecision: singlePairDecimalConfig.qtyDecimal);
         String roundedQtyString = NumberUtil.decimalLimiter(quantity,
                 decimalPrecision: singlePairDecimalConfig.qtyDecimal)
             .toString();

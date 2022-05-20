@@ -37,6 +37,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
+import 'package:http/http.dart' as http;
 
 /// The service responsible for networking requests
 class ApiService {
@@ -76,7 +77,8 @@ class ApiService {
 // Get issue tokens
 
   Future<List<CustomTokenModel>> getCustomTokens() async {
-    String url = '$baseBlockchainGateV2Url$getIsueTokenApiRoute/$getWithoutLogoApiRoute';
+    String url =
+        '$baseBlockchainGateV2Url$getIsueTokenApiRoute/$getWithoutLogoApiRoute';
     log.i('getIssueTokens url $url');
     try {
       var response = await client.get(url);
@@ -411,7 +413,8 @@ class ApiService {
       String tickerName) async {
     String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
     //  String exgAddress = await getExchangilyAddress();
-    String url = '${configService.getKanbanBaseUrl()}$getSingleCoinExchangeBalApiRoute$exgAddress/$tickerName';
+    String url =
+        '${configService.getKanbanBaseUrl()}$getSingleCoinExchangeBalApiRoute$exgAddress/$tickerName';
     log.e('getSingleCoinExchangeBalance url $url');
     ExchangeBalanceModel exchangeBalance;
     try {
@@ -735,7 +738,8 @@ class ApiService {
   // Get Orders by tickername
   Future getMyOrdersPagedByFabHexAddressAndTickerName(
       String exgAddress, String tickerName) async {
-    String url = '${configService.getKanbanBaseUrl()}$getOrdersByTickerApiRoute$exgAddress/$tickerName';
+    String url =
+        '${configService.getKanbanBaseUrl()}$getOrdersByTickerApiRoute$exgAddress/$tickerName';
     // String url = environment['endpoints']['kanban'] +
     //     'getordersbytickername/' +
     //     exgAddress +
@@ -997,7 +1001,8 @@ class ApiService {
   }
 
   Future getEvents() async {
-    log.i("getEvents Url: ${configService.getKanbanBaseUrl()}kanban/getCampaigns");
+    log.i(
+        "getEvents Url: ${configService.getKanbanBaseUrl()}kanban/getCampaigns");
     try {
       final res = await client.get(
           // "http://192.168.0.12:4000/kanban/getCampaigns"

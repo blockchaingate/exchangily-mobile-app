@@ -161,10 +161,10 @@ fixLength(String str, int length) {
   }
 }
 
-doubleAdd(double d1, double d2) {
-  var d = Decimal.parse(d1.toString()) + Decimal.parse(d2.toString());
-  return d.toDouble();
-}
+// doubleAdd(double d1, double d2) {
+//   var d = Decimal.parse(d1.toString()) + Decimal.parse(d2.toString());
+//   return d.toDouble();
+// }
 
 bigNum2Double(bigNum) {
   var dec =

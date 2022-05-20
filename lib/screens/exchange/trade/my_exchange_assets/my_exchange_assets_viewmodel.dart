@@ -64,31 +64,31 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
     }
   }
 
-  Future getSingleCoinExchangeBalanceFromAll(String tickerName) async {
-    setBusy(true);
+  // Future getSingleCoinExchangeBalanceFromAll(String tickerName) async {
+  //   setBusy(true);
 
-    await getSingleCoinExchangeBalance(tickerName).then((value) {
-      debugPrint('exchangeBalance using api ${value.toJson()}');
-      exchangeBalance = value;
-    });
-    if (exchangeBalance.lockedAmount == null) {
-      List res = data as List;
-      for (var coin in res) {
-        if (coin['coin'] == tickerName) {
-          log.w('singleCoinExchangeBalance $coin');
-          exchangeBalance.unlockedAmount = coin['amount'];
-          exchangeBalance.lockedAmount = coin['lockedAmount'];
-          debugPrint(
-              'exchangeBalance using all coins for loop ${exchangeBalance.toJson()}');
-        }
-      }
-    }
-    setBusy(false);
-    return exchangeBalance;
-  }
+  //   await getSingleCoinExchangeBalance(tickerName).then((value) {
+  //     debugPrint('exchangeBalance using api ${value.toJson()}');
+  //     exchangeBalance = value;
+  //   });
+  //   if (exchangeBalance.lockedAmount == null) {
+  //     List res = data as List;
+  //     for (var coin in res) {
+  //       if (coin['coin'] == tickerName) {
+  //         log.w('singleCoinExchangeBalance $coin');
+  //         exchangeBalance.unlockedAmount = coin['amount'];
+  //         exchangeBalance.lockedAmount = coin['lockedAmount'];
+  //         debugPrint(
+  //             'exchangeBalance using all coins for loop ${exchangeBalance.toJson()}');
+  //       }
+  //     }
+  //   }
+  //   setBusy(false);
+  //   return exchangeBalance;
+  // }
 
-  Future<ExchangeBalanceModel> getSingleCoinExchangeBalance(
-      String tickerName) async {
-    return await apiService.getSingleCoinExchangeBalance(tickerName);
-  }
+  // Future<ExchangeBalanceModel> getSingleCoinExchangeBalance(
+  //     String tickerName) async {
+  //   return await apiService.getSingleCoinExchangeBalance(tickerName);
+  // }
 }
