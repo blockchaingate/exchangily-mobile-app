@@ -263,7 +263,7 @@ class ApiService {
                 tickerChainTxId: tickerTxId,
                 date: filteredDate,
                 tickerName: ticker,
-                quantity: Decimal.parse(amount));
+                quantity: amount);
 
             transactionHistory.add(tx);
             index++;
@@ -316,7 +316,7 @@ class ApiService {
                 tickerChainTxId: holder.txid ?? '',
                 date: filteredDate ?? '',
                 tickerName: holder.coin ?? '',
-                quantity: holder.amount ?? Constants.decimalZero);
+                quantity: holder.amount.toString() ?? '');
 
             transactionHistory.add(tx);
           }
@@ -333,9 +333,6 @@ class ApiService {
       throw Exception(err);
     }
   }
-/*----------------------------------------------------------------------
-                Get Banner
-----------------------------------------------------------------------*/
 
   getBanner() async {
     log.i('getBanner url $bannerApiUrl');
@@ -353,13 +350,6 @@ class ApiService {
     }
   }
 
-  /*<---    ------------------------------------    --------------->                
-                            WALLET Futures
-    <---   -------------------------------------    --------------->*/
-
-/*----------------------------------------------------------------------
-                Withdraw Tx Status
-----------------------------------------------------------------------*/
   Future withdrawTxStatus() async {
     String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
     //  String exgAddress = await getExchangilyAddress();

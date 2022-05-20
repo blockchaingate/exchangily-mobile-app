@@ -10,16 +10,16 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
-import 'package:exchangilymobileapp/utils/string_util.dart' as StringUtil;
+import 'package:exchangilymobileapp/utils/string_util.dart' as string_util;
 import 'package:flutter/material.dart';
 import 'package:protobuf/protobuf.dart';
-import 'package:web3dart/crypto.dart' as CryptoWeb3;
-import 'package:crypto/crypto.dart' as CryptoHash;
+import 'package:web3dart/crypto.dart' as crypto_web3;
+import 'package:crypto/crypto.dart' as crypto_hash;
 // import 'trx_generate_address_util.dart' as TrxUtil;
 import 'package:fixnum/fixnum.dart';
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:exchangilymobileapp/protos_gen/any.pb.dart';
-import 'package:exchangilymobileapp/protos_gen/protos/tron.pb.dart' as Tron;
+import 'package:exchangilymobileapp/protos_gen/protos/tron.pb.dart' as tron;
 
 import '../custom_http_util.dart';
 
@@ -31,8 +31,6 @@ Future generateTrxTransactionContract(
     @required bool isTrxUsdt,
     @required String tickerName,
     @required bool isBroadcast}) async {
-  int decimal = 0;
-
   String contractAddress = '';
   final tokenListDatabaseService = locator<TokenInfoDatabaseService>();
   final apiService = locator<ApiService>();
@@ -43,9 +41,10 @@ Future generateTrxTransactionContract(
   // debugPrint(
   //    'base58 address toAddress to hex ${StringUtil.uint8ListToHex(toAddress)}');
   // 4103b01c144f4e41c22b411c2997fbcdfae4fc9c2e
-  var amount1e6 = amount * Decimal.parse(1e6.toString());
-  var amountToBigInt = NumberUtil.decimalToBigInt(amount1e6);
-  Int64 bigIntAmountToInt64 = Int64.parseInt(amountToBigInt.toString());
+  var intAmount = amount * Decimal.parse(1e6.toString());
+  var amountToBigInt = intAmount.toBigInt();
+
+  Int64 bigIntAmountToInt64 = Int64.parseInt(intAmount.toString());
 
   // debugPrint('original amount - $amount and int64 res $bigIntAmountToInt64');
 
@@ -60,15 +59,13 @@ Future generateTrxTransactionContract(
           .then((token) async {
         if (token != null) {
           contractAddress = token.contract;
-          decimal = token.decimal;
+
           //   debugPrint('token from token database ${token.toJson()}');
         } else {
           await apiService.getTokenListUpdates().then((tokenList) {
             for (var token in tokenList) {
               if (token.tickerName == 'USDTX') {
                 contractAddress = token.contract;
-                decimal = token.decimal;
-                //  debugPrint('token from api ${token.toJson()}');
               }
             }
           });
@@ -79,7 +76,7 @@ Future generateTrxTransactionContract(
   }
   if (isTrxUsdt) {
     var transferAbi = Constants.DepositTronUsdtSignatureAbi;
-    var decodedHexToAddress = StringUtil.uint8ListToHex(toAddress);
+    var decodedHexToAddress = string_util.uint8ListToHex(toAddress);
 // 4103b01c144f4e41c22b411c2997fbcdfae4fc9c2e
     if (decodedHexToAddress.startsWith('41') ||
         decodedHexToAddress.startsWith('0x')) {
@@ -94,13 +91,13 @@ Future generateTrxTransactionContract(
       decodedHexToAddress = decodedHexToAddress.substring(
           0, decodedHexToAddress.length - difference);
     }
-    var dataToAddress = StringUtil.fixLength(decodedHexToAddress, 64);
+    var dataToAddress = string_util.fixLength(decodedHexToAddress, 64);
     // 00000000000000000000000003b01c144f4e41c22b411c2997fbcdfae4fc9c2e
     //  debugPrint('dataToAddress ${dataToAddress.length} -- $dataToAddress');
 
 // AMOUNT
-    var hexDataAmount = NumberUtil().intToHex(amountToBigInt);
-    var dataAmount = StringUtil.fixLength(hexDataAmount.toString(), 64);
+    var hexDataAmount = amountToBigInt.toRadixString(16);
+    var dataAmount = string_util.fixLength(hexDataAmount.toString(), 64);
 // 00000000000000000000000000000000000000000000000000000000002dc6c0
     //   debugPrint('dataAmount ${dataAmount.length} -- $dataAmount');
     //   debugPrint('bigint amount $amountToBigInt -- hex amount $dataAmount');
@@ -108,15 +105,15 @@ Future generateTrxTransactionContract(
     //   debugPrint('data $data');
 
 // Trigger Smart Contract
-    trans = Tron.TriggerSmartContract(
-      data: StringUtil.hexToBytes(data),
+    trans = tron.TriggerSmartContract(
+      data: string_util.hexToBytes(data),
       ownerAddress: fromAddress,
       //  hex address for contract address in config for trx-usdt
-      contractAddress: StringUtil.hexToUint8List(contractAddress),
+      contractAddress: string_util.hexToUint8List(contractAddress),
     );
   } else {
     //  debugPrint('in else $fromAddress -- $toAddress -- $bigIntAmountToInt64 ');
-    trans = Tron.TransferContract(
+    trans = tron.TransferContract(
         ownerAddress: fromAddress,
         toAddress: toAddress,
         amount: bigIntAmountToInt64);
@@ -125,7 +122,7 @@ Future generateTrxTransactionContract(
 //buf, _ := proto.Marshal(&trans)
   var transToUint8List = trans.writeToBuffer();
   //debugPrint('transToUint8List $transToUint8List');
-  var buf = Tron.TransferContract.fromBuffer(transToUint8List);
+  var buf = tron.TransferContract.fromBuffer(transToUint8List);
 
   //debugPrint('buf $buf');
 
@@ -134,22 +131,22 @@ Future generateTrxTransactionContract(
     // typeUrlPrefix: "type.googleapis.com/protocol",
   );
   var transferContractType = isTrxUsdt
-      ? Tron.Transaction_Contract_ContractType.TriggerSmartContract
-      : Tron.Transaction_Contract_ContractType.TransferContract;
+      ? tron.Transaction_Contract_ContractType.TriggerSmartContract
+      : tron.Transaction_Contract_ContractType.TransferContract;
 
   parameter.typeUrl =
       Constants.DepositTronTypeProtocol + transferContractType.toString();
 
   //debugPrint('PARAMETER $parameter');
 
-  Tron.Transaction_Contract contract = Tron.Transaction_Contract();
+  tron.Transaction_Contract contract = tron.Transaction_Contract();
   contract.parameter = parameter;
 
   contract.type = transferContractType;
   // debugPrint('contract -- $contract');
 
   var contractBuffer = contract.writeToBuffer();
-  var contractBufferToHex = StringUtil.uint8ListToHex(contractBuffer);
+  var contractBufferToHex = string_util.uint8ListToHex(contractBuffer);
   // debugPrint('contractBufferToHex $contractBufferToHex');
   // gen raw tx
   var res = _generateTrxRawTransaction(
@@ -173,7 +170,7 @@ Future generateTrxTransactionContract(
                   Raw Transaction
 ----------------------------------------------------------------------*/
 _generateTrxRawTransaction(
-    {@required Tron.Transaction_Contract contract,
+    {@required tron.Transaction_Contract contract,
     @required Uint8List privateKey,
     @required bool isTrxUsdt,
     @required bool isBroadcast}) async {
@@ -213,20 +210,20 @@ _generateTrxRawTransaction(
     timestamp = calculateTrxRwTxInt64Timestamp();
     expiration = calculateTrxRwTxExpiration(timestampOfLatestBlock);
   });
-  List<Tron.Transaction_Contract> contractList = [];
+  List<tron.Transaction_Contract> contractList = [];
   contractList.add(contract);
-  Tron.Transaction_raw rawTx;
+  tron.Transaction_raw rawTx;
   // if trx usdt then add fee limit of 15 trx
   int feeLimit = 15000000;
   isTrxUsdt
-      ? rawTx = Tron.Transaction_raw(
+      ? rawTx = tron.Transaction_raw(
           feeLimit: Int64.parseInt(feeLimit.toString()),
           contract: contractList,
           refBlockHash: refBlockHash,
           refBlockBytes: refBlockBytes,
           expiration: expiration,
           timestamp: timestamp)
-      : rawTx = Tron.Transaction_raw(
+      : rawTx = tron.Transaction_raw(
           contract: contractList,
           refBlockHash: refBlockHash,
           refBlockBytes: refBlockBytes,
@@ -238,7 +235,7 @@ _generateTrxRawTransaction(
   //debugPrint('txRawBuffer $txRawBuffer');
   // String rawTxBufferToHex = StringUtil.uint8ListToHex(txRawBuffer);
 //  debugPrint('txRawBufferToHex $rawTxBufferToHex');
-  var hashedRawTxBuffer = CryptoHash.sha256.convert(txRawBuffer);
+  var hashedRawTxBuffer = crypto_hash.sha256.convert(txRawBuffer);
   // debugPrint('hashedRawTxBuffer $hashedRawTxBuffer');
 
   // CryptoWeb3.MsgSignature
@@ -250,9 +247,9 @@ _generateTrxRawTransaction(
   //  sendTrxTx(rawTx, [], signature);
   //debugPrint('signature $signature');
   var transaction =
-      Tron.Transaction(rawData: rawTx, ret: [], signature: signature);
+      tron.Transaction(rawData: rawTx, ret: [], signature: signature);
   var txBuffer = transaction.writeToBuffer();
-  var rawTxBufferHex = StringUtil.uint8ListToHex(txBuffer);
+  var rawTxBufferHex = string_util.uint8ListToHex(txBuffer);
 
   // debugPrint('txBufferHex $rawTxBufferHex');
 
@@ -296,17 +293,17 @@ Future broadcastTronTransaction(transactionHex) async {
                 Construct Signture List
 ----------------------------------------------------------------------*/
 
-List<Uint8List> constructTrxSigntureList(CryptoWeb3.MsgSignature signature) {
+List<Uint8List> constructTrxSigntureList(crypto_web3.MsgSignature signature) {
   // List<int> vIntList = [];
   // vIntList.add(signature.v);
 
   var bytesBuilder = BytesBuilder();
 
-  var r = CryptoWeb3.intToBytes(signature.r);
+  var r = crypto_web3.intToBytes(signature.r);
   bytesBuilder.add(r);
-  var s = CryptoWeb3.intToBytes(signature.s);
+  var s = crypto_web3.intToBytes(signature.s);
   bytesBuilder.add(s);
-  var v = CryptoWeb3.intToBytes(BigInt.from(signature.v - 27));
+  var v = crypto_web3.intToBytes(BigInt.from(signature.v - 27));
   if (signature.v == 0) {
     v = Uint8List.fromList([0].toList());
   }
@@ -351,7 +348,7 @@ List<int> calculateTrxRawTxRefBlockBytes(int source) {
 //  debugPrint('last4Bytes $last4BytesHexBlockNumber');
 
 //  debugPrint(Endian.host == Endian.little);
-  res = StringUtil.hexToUint8List(last4BytesHexBlockNumber);
+  res = string_util.hexToUint8List(last4BytesHexBlockNumber);
 
   debugPrint('res $res');
   return res;
@@ -360,11 +357,11 @@ List<int> calculateTrxRawTxRefBlockBytes(int source) {
 // blockHash is hash[8:16] of latest block.
 // take first 8 or last 8 bytes from 16 bytes
 calculateTrxRwTxRefBlockHash(blockHash) {
-  var x = StringUtil.hexToUint8List(blockHash);
+  var x = string_util.hexToUint8List(blockHash);
   // debugPrint('x $x');
   var last8Bytes = x.sublist(8, 16);
   // debugPrint('last8Bytes $last8Bytes');
-  var refBlockHashInHex = StringUtil.uint8ListToHex(last8Bytes);
+  var refBlockHashInHex = string_util.uint8ListToHex(last8Bytes);
 //  debugPrint('refBlockHashInHex $refBlockHashInHex');
   return last8Bytes;
 }

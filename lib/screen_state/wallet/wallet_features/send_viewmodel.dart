@@ -584,11 +584,11 @@ class SendViewModel extends BaseViewModel {
       id: null,
       tickerName: appWallet.tickerName,
       address: '',
-      amount: Constants.decimalZero,
+      amount: '',
       date: date,
       kanbanTxId: '',
       tickerChainTxId: txHash,
-      quantity: amount,
+      quantity: amount.toString(),
       tag: 'send',
       chainName: appWallet.tokenType,
     );

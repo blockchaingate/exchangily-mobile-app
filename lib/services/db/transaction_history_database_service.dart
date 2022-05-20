@@ -36,7 +36,7 @@ class TransactionHistoryDatabaseService {
   final String columnTag = 'tag';
   final String columnChainName = 'chainName';
 
-  static const _databaseVersion = 7;
+  static const _databaseVersion = 8;
   static Future<Database> _database;
   String path = '';
 
@@ -57,13 +57,13 @@ class TransactionHistoryDatabaseService {
         $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
         $columnTickerName TEXT,    
         $columnAddress TEXT,
-        $columnAmount REAL,
+        $columnAmount TEXT,
         $columnDate TEXT,
         $columnKanabanTxId TEXT,
         $columnTickerChainTxId TEXT,
         $columnTickerChainTxStatus TEXT,
         $columnKanbanTxStatus TEXT,
-        $columnQuantity REAL,
+        $columnQuantity TEXT,
         $columnTag TEXT,
         $columnChainName TEXT) ''');
   }

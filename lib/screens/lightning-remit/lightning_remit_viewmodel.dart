@@ -681,11 +681,11 @@ class LightningRemitViewmodel extends FutureViewModel {
                   id: null,
                   tickerName: tickerName,
                   address: '',
-                  amount: Constants.decimalZero,
+                  amount: '',
                   date: date.toString(),
                   tickerChainTxId: res['transactionHash'],
                   tickerChainTxStatus: '',
-                  quantity: amount,
+                  quantity: amount.toString(),
                   tag: 'bindpay');
               walletService.insertTransactionInDatabase(transactionHistory);
               Future.delayed(const Duration(seconds: 3), () async {

@@ -626,7 +626,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(top: 2.0),
+                                  margin: const EdgeInsets.only(top: 2.0),
                                   child: !model.isShowDetailsMessage
                                       ? const Icon(Icons.arrow_drop_down,
                                           color: Colors.red, size: 24)

@@ -515,11 +515,10 @@ class TxHistoryView extends StatelessWidget {
                               Text(AppLocalizations.of(context).quantity,
                                   style: Theme.of(context).textTheme.subtitle2),
                               Text(
-                                transaction.quantity.toStringAsFixed(
-                                    // model
-                                    //   .decimalConfig
-                                    //   .quantityDecimal
-                                    2),
+                                NumberUtil.stringDecimalLimiter(
+                                        transaction.quantity,
+                                        decimalPrecision: 6)
+                                    .stringOutput,
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline5

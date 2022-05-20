@@ -12,6 +12,7 @@
 */
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/font_style.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
@@ -183,9 +184,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                           ? Row(
                                               children: [
                                                 Text(
-                                                    '${model.appWallet.tokenType} ${AppLocalizations.of(
-                                                                context)
-                                                            .balance}',
+                                                    '${model.appWallet.tokenType} ${AppLocalizations.of(context).balance}',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline5),
@@ -232,8 +231,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                   ? Row(
                                       children: [
                                         Text(
-                                            '${model.appWallet.tokenType} ${AppLocalizations.of(context)
-                                                    .balance}',
+                                            '${model.appWallet.tokenType} ${AppLocalizations.of(context).balance}',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5),
@@ -636,7 +634,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                 color: globals.primaryColor,
                 textColor: Colors.white,
                 onPressed: () {
-                  if (model.isValidAmount && model.amount != 0.0) {
+                  if (model.isValidAmount &&
+                      model.amount != Constants.decimalZero) {
                     model.checkPass();
                   }
                 },
@@ -649,10 +648,33 @@ class MoveToExchangeScreen extends StatelessWidget {
                         ))
                     : Text(AppLocalizations.of(context).confirm,
                         style: Theme.of(context).textTheme.button.copyWith(
-                            color: model.isValidAmount && model.amount != 0.0
+                            color: model.isValidAmount &&
+                                    model.amount != Constants.decimalZero
                                 ? white
                                 : grey)),
               ),
+
+              TextButton(
+                  onPressed: () {
+                    var amount1e6 = model.amount * Decimal.fromInt(1000000);
+                    debugPrint(
+                        'new decimal amount multiply with 1e6 $amount1e6}');
+
+                    var amountToBigIntNew = amount1e6.toBigInt();
+                    //1123400000000000000000000
+                    //BigInt.from(amount1e6.toDouble());
+                    debugPrint('new decimal to big int $amountToBigIntNew');
+                    var y = amountToBigIntNew.toRadixString(16);
+                    debugPrint('new big int to hex $y');
+
+                    var amountToBigInt =
+                        BigInt.from(model.amount.toDouble() * 1e6);
+                    debugPrint(' old amountToBigInt $amountToBigInt');
+
+                    var x = amountToBigInt.toRadixString(16);
+                    debugPrint('big int to hex $x');
+                  },
+                  child: const Text('Click me'))
             ],
           ),
         ),

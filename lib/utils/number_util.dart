@@ -43,7 +43,7 @@ class NumberUtil {
     var finalRes =
         resInRational.toDecimal(scaleOnInfinitePrecision: decimalPrecision);
 
-    debugPrint('finalRes $finalRes');
+    //debugPrint('finalRes $finalRes');
     return finalRes;
   }
 
@@ -204,7 +204,7 @@ class NumberUtil {
     return double.parse(value.toString()) / 1e9;
   }
 
-  intToHex(source) {
+  static intToHex(int source) {
     return source.toRadixString(16);
   }
 

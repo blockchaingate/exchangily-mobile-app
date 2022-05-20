@@ -175,7 +175,9 @@ class TxHisotryCardWidget extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 10.0),
                     alignment: Alignment.centerRight,
                     child: AutoSizeText(
-                      NumberUtil.decimalLimiter(transaction.quantity,
+                      NumberUtil.decimalLimiter(
+                              NumberUtil.parseStringToDecimal(
+                                  transaction.quantity),
                               decimalPrecision: model.decimalLimit)
                           .toString(),
                       textAlign: TextAlign.right,
