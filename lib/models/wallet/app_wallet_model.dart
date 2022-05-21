@@ -152,6 +152,10 @@ class WalletBalanceV2 {
   }
 
   Decimal totalWalletBalanceInUsd() {
+    if ((coin == 'USDTX' || coin == 'USDTB' || coin == 'USDTM') &&
+        usdValue == Decimal.zero) {
+      usdValue = Decimal.one;
+    }
     return (balance + lockBalance) * usdValue;
   }
 }
