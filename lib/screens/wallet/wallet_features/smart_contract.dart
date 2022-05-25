@@ -11,10 +11,13 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
@@ -287,7 +290,7 @@ class _SmartContractState extends State<SmartContract> {
 
   callContract() {}
 
-  checkPass(abiHex, value, context) async {
+  checkPass(abiHex, Decimal amount, context) async {
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         buttonTitle: AppLocalizations.of(context).confirm,
@@ -302,11 +305,11 @@ class _SmartContractState extends State<SmartContract> {
       var contractInfo = await walletService.getFabSmartContract(
           smartContractAddressController.value.text, abiHex, 800000, 50);
 
-      var res1 = await walletService.getFabTransactionHex(
+      var res1 = await fabUtils.getFabTransactionHexV2(
           seed,
           [0],
           contractInfo['contract'],
-          value,
+          amount,
           contractInfo['totalFee'],
           14,
           [],
@@ -338,9 +341,9 @@ class _SmartContractState extends State<SmartContract> {
     var abiHex = formABI();
     abiHex = stringUtils.trimHexPrefix(abiHex);
 
-    double value = 0;
+    Decimal value = Constants.decimalZero;
     if (payable) {
-      value = double.parse(payableController.value.text);
+      value = NumberUtil.parseNumStringToDecimal(payableController.value.text);
     }
 
     checkPass(abiHex, value, context);

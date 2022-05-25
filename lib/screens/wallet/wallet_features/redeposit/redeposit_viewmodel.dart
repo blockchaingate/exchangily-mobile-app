@@ -56,15 +56,6 @@ class RedepositViewModel extends FutureViewModel {
   final kanbanUtils = KanbanUtils();
   void init() {}
 
-/*----------------------------------------------------------------------
-                      Get Error Deposit
-----------------------------------------------------------------------*/
-  click(bigInt) {
-    var b = Decimal.parse(bigInt) / Decimal.parse('1e18');
-    debugPrint('b $b');
-    debugPrint(NumberUtil().roundDownLastDigit(b.toDouble()).toString());
-  }
-
   Future getErrDeposit() async {
     setBusy(true);
     var address = await sharedService.getExgAddressFromWalletDatabase();

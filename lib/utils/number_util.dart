@@ -3,8 +3,8 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 class NumberUtilResult {
   String stringOutput;
@@ -24,8 +24,8 @@ class NumberUtil {
   static const int maxDecimalDigits = 2; // Max digits after decimal
 
   /// Parse String to decimal
-  static Decimal parseStringToDecimal(String value) {
-    if (value.contains('-')) {
+  static Decimal parseNumStringToDecimal(String value) {
+    if (value.contains('-') || value.isEmpty) {
       return Decimal.zero;
     }
     return Decimal.parse(value);
@@ -219,6 +219,37 @@ class NumberUtil {
 
     if (value != null) res = double.parse(value.toString());
     return res;
+  }
+
+  static toBigIntV2(String amount, {int decimalLength = 18}) {
+    var numString = amount;
+    var numStringArray = numString.split('.');
+
+    var amountBeforeDecimal = '';
+    if (numStringArray != null) {
+      amountBeforeDecimal = numStringArray[0];
+      if (numStringArray.length == 2) {
+        var decimalPart = numStringArray[1];
+        if (decimalPart.length > decimalLength) {
+          debugPrint('toBigInt func: decimalPart before: $decimalPart');
+          debugPrint('toBigInt func: decimalLength: $decimalLength');
+          decimalPart = decimalPart.substring(0, decimalLength);
+          debugPrint('toBigInt func: decimalPart after: $decimalPart');
+        }
+        decimalLength -= decimalPart.length;
+        amountBeforeDecimal += decimalPart;
+      }
+    }
+    String finalAmount = amountBeforeDecimal;
+
+    if (decimalLength > 0) {
+      for (var i = 0; i < decimalLength; i++) {
+        finalAmount += '0';
+      }
+    }
+
+    debugPrint('toBigInt value: $finalAmount');
+    return finalAmount;
   }
 
 // To Big Int

@@ -23,7 +23,7 @@ class LightningRemitHistoryModel {
       type: json['type'] as String,
       time: json['time'] as int,
       coin: json['coin'] as String,
-      amount: NumberUtil.parseStringToDecimal(json['amount'].toString()),
+      amount: NumberUtil.parseNumStringToDecimal(json['amount'].toString()),
       status: json['status'] as int,
       txid: json['txid'] as String,
     );

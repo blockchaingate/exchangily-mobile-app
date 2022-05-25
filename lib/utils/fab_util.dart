@@ -64,9 +64,9 @@ class FabUtils {
     var totalAmount = amount + extraTransactionFee;
 
     int calc1 = ((2 * 34 + 10) * satoshisPerBytes).toInt();
-    var amountNum =
-        NumberUtil.decimalToBigInt(totalAmount, decimalPrecision: 8).toInt() +
-            calc1;
+    var amountInt =
+        NumberUtil.decimalToBigInt(totalAmount, decimalPrecision: 8).toInt();
+    var amountNum = amountInt + calc1;
     //  var amountNum = BigInt.parse(NumberUtil.toBigInt(totalAmount, 8)).toInt();
     //   amountNum += (2 * 34 + 10) * satoshisPerBytes;
 
@@ -76,7 +76,8 @@ class FabUtils {
 
     for (var i = 0; i < addressIndexList.length; i++) {
       var index = addressIndexList[i];
-      var fabCoinChild = root.derivePath("m/44'/${environment["CoinType"]["FAB"]}'/0'/0/$index");
+      var fabCoinChild = root
+          .derivePath("m/44'/${environment["CoinType"]["FAB"]}'/0'/0/$index");
       var fromAddress = btcUtils.getBtcAddressForNode(fabCoinChild);
       if (addressList != null && addressList.length > 0) {
         fromAddress = addressList[i];
@@ -247,7 +248,8 @@ class FabUtils {
   }
 
   getFabNode(root, {index = 0}) {
-    var node = root.derivePath("m/44'/${environment["CoinType"]["FAB"]}'/0'/0/$index");
+    var node =
+        root.derivePath("m/44'/${environment["CoinType"]["FAB"]}'/0'/0/$index");
     return node;
   }
 

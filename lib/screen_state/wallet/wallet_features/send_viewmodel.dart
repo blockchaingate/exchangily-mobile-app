@@ -265,14 +265,14 @@ class SendViewModel extends BaseViewModel {
     // if tron coins then assign fee accordingly
     if (walletService.isTrx(appWallet.tickerName)) {
       if (appWallet.tickerName == 'USDTX') {
-        transFee = NumberUtil.parseStringToDecimal("15");
+        transFee = NumberUtil.parseNumStringToDecimal("15");
         finalAmount = amount;
       } else if (appWallet.tickerName == 'TRX') {
         transFee = Decimal.one;
         finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
       }
       finalAmount <=
-              NumberUtil.parseStringToDecimal(appWallet.balance.toString())
+              NumberUtil.parseNumStringToDecimal(appWallet.balance.toString())
           ? isValidAmount = true
           : isValidAmount = false;
     } else {
@@ -290,7 +290,7 @@ class SendViewModel extends BaseViewModel {
       }
 
       finalAmount <=
-              NumberUtil.parseStringToDecimal(appWallet.balance.toString())
+              NumberUtil.parseNumStringToDecimal(appWallet.balance.toString())
           ? isValidAmount = true
           : isValidAmount = false;
     }
@@ -308,7 +308,7 @@ class SendViewModel extends BaseViewModel {
   fillMaxAmount() async {
     setBusy(true);
 
-    amount = NumberUtil.parseStringToDecimal(appWallet.balance.toString());
+    amount = NumberUtil.parseNumStringToDecimal(appWallet.balance.toString());
     amountController.text = amount.toString();
 
     await updateTransFee();
@@ -796,11 +796,11 @@ class SendViewModel extends BaseViewModel {
         trxBalance = await getTrxBalance();
         log.w('checkAmount trx bal $trxBalance');
         if (amount <= Decimal.parse(appWallet.balance.toString()) &&
-            trxBalance >= NumberUtil.parseStringToDecimal('15')) {
+            trxBalance >= NumberUtil.parseNumStringToDecimal('15')) {
           checkSendAmount = true;
         } else {
           checkSendAmount = false;
-          if (trxBalance < NumberUtil.parseStringToDecimal('15')) {
+          if (trxBalance < NumberUtil.parseNumStringToDecimal('15')) {
             showSimpleNotification(
                 Center(
                   child: Text(

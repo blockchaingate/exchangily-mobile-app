@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
@@ -20,6 +21,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/material.dart';
@@ -147,7 +149,7 @@ class CampaignPaymentScreenState extends BaseState {
                 Verify wallet password in pop up dialog
 ----------------------------------------------------------------------*/
 
-  verifyWalletPassword(double amount) async {
+  verifyWalletPassword(Decimal amount) async {
     setBusy(true);
     log.w(('Sending payment amount $amount'));
     var dialogResponse = await dialogService.showDialog(
@@ -186,7 +188,7 @@ class CampaignPaymentScreenState extends BaseState {
           : address = testUsdtWalletAddress;
 
       await walletService
-          .sendTransaction(
+          .sendTransactionV2(
               tickerName, seed, [0], [], address, amount, options, true)
           .then((res) async {
         log.w('Result $res');
@@ -511,7 +513,8 @@ class CampaignPaymentScreenState extends BaseState {
       return;
     }
     setErrorMessage('');
-    double amount = double.parse(sendAmountTextController.text);
+    Decimal amount =
+        NumberUtil.parseNumStringToDecimal(sendAmountTextController.text);
     // USD Select
     if (_groupValue == 'USD') {
       isConfirming = true;
@@ -521,7 +524,7 @@ class CampaignPaymentScreenState extends BaseState {
     } else {
       if (amount == null ||
           !checkSendAmount ||
-          amount > walletBalances.balance ||
+          amount.toDouble() > walletBalances.balance ||
           !isBalanceAvailabeForOrder()) {
         log.e('$usdtUnconfirmedOrderQuantity');
         setErrorMessage(AppLocalizations.of(context).pleaseEnterValidNumber);

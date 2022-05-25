@@ -287,7 +287,7 @@ class WalletFeaturesView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Expanded(
-                      flex: 4,
+                      flex: 3,
                       child: Text(
                         //  '${model.specialTicker} ' +
                         AppLocalizations.of(context).totalBalance,
@@ -321,10 +321,7 @@ class WalletFeaturesView extends StatelessWidget {
                       child: Text(
                         model.isBusy
                             ? '0.0'
-                            : '${NumberUtil.decimalLimiter(
-                                        model.appWallet
-                                            .totalWalletBalanceInUsd(),
-                                        decimalPrecision: model.decimalLimit)}USD',
+                            : '${NumberUtil.decimalLimiter(model.appWallet.totalWalletBalanceInUsd(), decimalPrecision: model.decimalLimit)} USD',
                         textAlign: TextAlign.right,
                         style: Theme.of(context)
                             .textTheme

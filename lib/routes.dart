@@ -46,7 +46,7 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/send_view.dar
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/wallet_setup_view.dart';
 import 'package:flutter/material.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas/add_gas.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas/add_gas_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_wallet_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/smart_contract.dart';
@@ -105,7 +105,7 @@ class RouteGenerator {
             builder: (_) => const WalletDashboardView());
 
       case AddGasViewRoute:
-        return MaterialPageRoute(builder: (_) => AddGas());
+        return MaterialPageRoute(builder: (_) => AddGasView());
 
       case SmartContractViewRoute:
         return MaterialPageRoute(builder: (_) => const SmartContract());

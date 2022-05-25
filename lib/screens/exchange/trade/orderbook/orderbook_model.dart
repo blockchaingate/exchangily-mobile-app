@@ -28,8 +28,8 @@ class OrderType {
 
   factory OrderType.fromJson(Map<String, dynamic> json) {
     var res = OrderType(
-        price: NumberUtil.parseStringToDecimal(json['p'].toString()),
-        quantity: NumberUtil.parseStringToDecimal(json['q'].toString()));
+        price: NumberUtil.parseNumStringToDecimal(json['p'].toString()),
+        quantity: NumberUtil.parseNumStringToDecimal(json['q'].toString()));
     return res;
   }
   Map<String, dynamic> toJson() {
@@ -64,8 +64,8 @@ class Orderbook extends OrderType {
         sellOrdersFromJson.map((order) => OrderType.fromJson(order)).toList();
 
     return Orderbook(
-      price: NumberUtil.parseStringToDecimal(json['p'].toString()),
-      quantity: NumberUtil.parseStringToDecimal(json['q'].toString()),
+      price: NumberUtil.parseNumStringToDecimal(json['p'].toString()),
+      quantity: NumberUtil.parseNumStringToDecimal(json['q'].toString()),
       buyOrders: buyOrders,
       sellOrders: sellOrders,
     );

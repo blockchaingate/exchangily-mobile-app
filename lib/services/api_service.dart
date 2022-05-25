@@ -223,7 +223,7 @@ class ApiService {
             for (var element in transactionsInside) {
               String chain = element['chain'];
               if (chain == 'KANBAN') {
-                kanbanTxStatus = element['status'];
+                kanbanTxStatus = element['status'] ?? '';
                 if (element['transactionId'] != null) {
                   kanbanTxId = element['transactionId'];
                 }
@@ -237,7 +237,7 @@ class ApiService {
               //     ticker == 'FAB' ||
               //     ticker == 'BCH')
               else {
-                tickerChainTxStatus = element['status'];
+                tickerChainTxStatus = element['status'] ?? '';
                 chainName = chain;
                 if (element['transactionId'] != null) {
                   tickerTxId = element['transactionId'];
@@ -259,9 +259,9 @@ class ApiService {
                 chainName: chainName,
                 tickerChainTxStatus: tickerChainTxStatus,
                 kanbanTxStatus: kanbanTxStatus,
-                kanbanTxId: kanbanTxId,
-                tickerChainTxId: tickerTxId,
-                date: filteredDate,
+                kanbanTxId: kanbanTxId ?? '',
+                tickerChainTxId: tickerTxId ?? '',
+                date: filteredDate ?? "",
                 tickerName: ticker,
                 quantity: amount);
 

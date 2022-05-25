@@ -636,6 +636,26 @@ class WalletDashboardViewModel extends BaseViewModel {
   //   setBusyForObject(favWalletInfoList, false);
   // }
 
+  moveUsdt() async {
+    try {
+      var usdtWalletObj =
+          walletBalances.singleWhere((element) => element.coin == 'USDT');
+      if (usdtWalletObj != null) {
+        int usdtIndex = walletBalances.indexOf(usdtWalletObj);
+        if (usdtIndex != 4) {
+          walletBalances.removeAt(usdtIndex);
+          walletBalances.insert(4, usdtWalletObj);
+        } else {
+          log.i('2nd else move moveUsdt tron usdt already at #5');
+        }
+      } else {
+        log.w('1st else move moveUsdt can\'t find tron usdt');
+      }
+    } catch (err) {
+      log.e('moveUsdt Catch $err');
+    }
+  }
+
 /*----------------------------------------------------------------------
                             Move Trx Usdt
 ----------------------------------------------------------------------*/
@@ -1551,6 +1571,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
       await checkToUpdateWallet();
       moveTronUsdt();
+      moveUsdt();
       moveTron();
       await getGas();
 

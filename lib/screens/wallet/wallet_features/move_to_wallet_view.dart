@@ -306,7 +306,8 @@ class MoveToWalletScreen extends StatelessWidget {
                             padding: const EdgeInsets.only(
                                 left:
                                     5), // padding left to keep some space from the text
-                            child: model.isBusy
+                            child: model.isBusy ||
+                                    model.token.feeWithdraw == null
                                 ? const Text('..')
                                 : Text(
                                     '${model.token.feeWithdraw} ${model.specialTickerForTxHistory.contains('(') ? model.specialTickerForTxHistory.split('(')[0] : model.specialTickerForTxHistory}',

@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/models/wallet/app_wallet_model.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:stacked/stacked.dart';
@@ -68,7 +69,8 @@ class Redeposit extends StatelessWidget {
                                                 .headline4),
                                         UIHelper.horizontalSpaceSmall,
                                         Text(
-                                          bigNum2Double(redepositItem["amount"])
+                                          NumberUtil.rawStringToDecimal(
+                                                  redepositItem["amount"])
                                               .toString(),
                                           style: Theme.of(context)
                                               .textTheme
@@ -82,7 +84,8 @@ class Redeposit extends StatelessWidget {
                                     onChanged: (val) {
                                       model.setBusy(true);
                                       model.errDepositTransactionID = val;
-                                      debugPrint('valllll=${model.errDepositTransactionID}');
+                                      debugPrint(
+                                          'valllll=${model.errDepositTransactionID}');
                                       model.setBusy(false);
                                     },
                                   ))
@@ -167,12 +170,14 @@ class Redeposit extends StatelessWidget {
                                         keyboardType: TextInputType
                                             .number, // numnber keyboard
                                         decoration: InputDecoration(
-                                            focusedBorder: const UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: primaryColor)),
-                                            enabledBorder: const UnderlineInputBorder(
-                                                borderSide:
-                                                    BorderSide(color: grey)),
+                                            focusedBorder:
+                                                const UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: primaryColor)),
+                                            enabledBorder:
+                                                const UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: grey)),
                                             hintText: '0.00000',
                                             hintStyle: Theme.of(context)
                                                 .textTheme
@@ -205,12 +210,14 @@ class Redeposit extends StatelessWidget {
                                                 .numberWithOptions(
                                             decimal: true), // numnber keyboard
                                         decoration: InputDecoration(
-                                            focusedBorder: const UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: primaryColor)),
-                                            enabledBorder: const UnderlineInputBorder(
-                                                borderSide:
-                                                    BorderSide(color: grey)),
+                                            focusedBorder:
+                                                const UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: primaryColor)),
+                                            enabledBorder:
+                                                const UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: grey)),
                                             hintText: '0.00000',
                                             hintStyle: Theme.of(context)
                                                 .textTheme

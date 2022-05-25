@@ -206,10 +206,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
     // if tron coins then assign fee accordingly
     if (walletService.isTrx(appWallet.tickerName)) {
       if (appWallet.tickerName == 'USDTX') {
-        transFee = NumberUtil.parseStringToDecimal("15");
+        transFee = NumberUtil.parseNumStringToDecimal("15");
         finalAmount = amount;
         finalAmount <=
-                NumberUtil.parseStringToDecimal(appWallet.balance.toString())
+                NumberUtil.parseNumStringToDecimal(appWallet.balance.toString())
             ? isValidAmount = true
             : isValidAmount = false;
       }
@@ -234,7 +234,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
         finalAmount = amount;
       }
     }
-    finalAmount <= NumberUtil.parseStringToDecimal(appWallet.balance.toString())
+    finalAmount <=
+            NumberUtil.parseNumStringToDecimal(appWallet.balance.toString())
         ? isValidAmount = true
         : isValidAmount = false;
     log.i(
@@ -250,7 +251,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   fillMaxAmount() async {
     setBusy(true);
 
-    amount = NumberUtil.parseStringToDecimal(appWallet.balance.toString());
+    amount = NumberUtil.parseNumStringToDecimal(appWallet.balance.toString());
     amountController.text = amount.toString();
 
     if (!walletService.isTrx(appWallet.tickerName)) await updateTransFee();
@@ -358,7 +359,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     }
 
     if (transFee >
-            NumberUtil.parseStringToDecimal(appWallet.balance.toString()) &&
+            NumberUtil.parseNumStringToDecimal(appWallet.balance.toString()) &&
         appWallet.tickerName != 'TRX' &&
         appWallet.tickerName != 'USDTX') {
       sharedService.sharedSimpleNotification(
@@ -379,7 +380,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     if (amount == null ||
         finalAmount >
-            NumberUtil.parseStringToDecimal(appWallet.balance.toString()) ||
+            NumberUtil.parseNumStringToDecimal(appWallet.balance.toString()) ||
         amount == decimalZero ||
         amount.toString() == '-$amount') {
       log.e(
@@ -428,7 +429,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       bool isCorrectAmount = true;
       Decimal trxFee = Decimal.one;
       if (amount + trxFee >
-          NumberUtil.parseStringToDecimal(appWallet.balance.toString())) {
+          NumberUtil.parseNumStringToDecimal(appWallet.balance.toString())) {
         isCorrectAmount = false;
       }
       if (!isCorrectAmount) {

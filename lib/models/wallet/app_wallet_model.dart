@@ -113,23 +113,23 @@ class WalletBalanceV2 {
     var res = WalletBalanceV2(
         coin: json['c'] ?? '',
         balance: json['b'] != null
-            ? NumberUtil.parseStringToDecimal(json['b'].toString())
+            ? NumberUtil.parseNumStringToDecimal(json['b'].toString())
             : Constants.decimalZero,
         unconfirmedBalance: json['ub'] != null
-            ? NumberUtil.parseStringToDecimal(json['ub'].toString())
+            ? NumberUtil.parseNumStringToDecimal(json['ub'].toString())
             : Constants.decimalZero,
         lockBalance: json['lb'] != null
-            ? NumberUtil.parseStringToDecimal(json['lb'])
+            ? NumberUtil.parseNumStringToDecimal(json['lb'])
             : Constants.decimalZero,
         usdValue: json["u"] != null
-            ? NumberUtil.parseStringToDecimal(json["u"].toString())
+            ? NumberUtil.parseNumStringToDecimal(json["u"].toString())
             : Constants.decimalZero,
         depositErr: depositErrList,
         unlockedExchangeBalance: json['ul'] != null
-            ? NumberUtil.parseStringToDecimal(json['ul'])
+            ? NumberUtil.parseNumStringToDecimal(json['ul'])
             : Constants.decimalZero,
         lockedExchangeBalance: json['l'] != null
-            ? NumberUtil.parseStringToDecimal(json['l'])
+            ? NumberUtil.parseNumStringToDecimal(json['l'])
             : Constants.decimalZero);
     return res;
   }

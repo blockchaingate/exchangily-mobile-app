@@ -29,7 +29,7 @@ class AddGasViewModel extends FutureViewModel {
   final amountController = TextEditingController();
   final gasPriceTextController = TextEditingController();
   final gasLimitTextController = TextEditingController();
-  double gasBalance = 0.0;
+  Decimal gasBalance = Constants.decimalZero;
   Decimal transFee = Decimal.zero;
   bool isAdvance = false;
   Decimal sliderValue = Decimal.zero;
@@ -129,7 +129,7 @@ class AddGasViewModel extends FutureViewModel {
     setBusy(false);
   }
 
-  checkPass(double amount, context) async {
+  checkPass(Decimal amount) async {
     setBusy(true);
     if (isAmountInvalid) {
       sharedService.sharedSimpleNotification(
@@ -152,7 +152,12 @@ class AddGasViewModel extends FutureViewModel {
         "gasLimit": gasLimit ?? 800000
       };
       Uint8List seed = walletService.generateSeed(mnemonic);
-      var ret = await walletService.addGasDo(seed, amount, options: options);
+      var ret = await walletService
+          .addGasDo(seed, amount, options: options)
+          .catchError((err) {
+        log.e('Check Pass func: wallet service.addgasdo CATCH $err');
+        setBusy(false);
+      });
       log.w('res $ret');
       //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}
       String formattedErrorMsg = '';
@@ -183,7 +188,7 @@ class AddGasViewModel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   updateTransFee() {
     setBusy(true);
-    var amount = NumberUtil.parseStringToDecimal(amountController.text);
+    var amount = NumberUtil.parseNumStringToDecimal(amountController.text);
     if (amount == null || amount <= Constants.decimalZero) {
       transFee = Constants.decimalZero;
       setBusy(false);
@@ -241,12 +246,9 @@ class AddGasViewModel extends FutureViewModel {
     return utxosNeeded;
   }
 
-/*----------------------------------------------------------------------
-                   Slider On change
-----------------------------------------------------------------------*/
   sliderOnchange(newValue) {
     setBusy(true);
-    sliderValue = newValue;
+    sliderValue = Decimal.parse(newValue.toString());
     if (transFee == Constants.decimalZero) updateTransFee();
 
     var changeAmountWithSlider =

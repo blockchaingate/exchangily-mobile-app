@@ -654,27 +654,27 @@ class MoveToExchangeScreen extends StatelessWidget {
                                 : grey)),
               ),
 
-              TextButton(
-                  onPressed: () {
-                    var amount1e6 = model.amount * Decimal.fromInt(1000000);
-                    debugPrint(
-                        'new decimal amount multiply with 1e6 $amount1e6}');
+              // TextButton(
+              //     onPressed: () {
+              //       var amount1e6 = model.amount * Decimal.fromInt(1000000);
+              //       debugPrint(
+              //           'new decimal amount multiply with 1e6 $amount1e6}');
 
-                    var amountToBigIntNew = amount1e6.toBigInt();
-                    //1123400000000000000000000
-                    //BigInt.from(amount1e6.toDouble());
-                    debugPrint('new decimal to big int $amountToBigIntNew');
-                    var y = amountToBigIntNew.toRadixString(16);
-                    debugPrint('new big int to hex $y');
+              //       var amountToBigIntNew = amount1e6.toBigInt();
+              //       //1123400000000000000000000
+              //       //BigInt.from(amount1e6.toDouble());
+              //       debugPrint('new decimal to big int $amountToBigIntNew');
+              //       var y = amountToBigIntNew.toRadixString(16);
+              //       debugPrint('new big int to hex $y');
 
-                    var amountToBigInt =
-                        BigInt.from(model.amount.toDouble() * 1e6);
-                    debugPrint(' old amountToBigInt $amountToBigInt');
+              //       var amountToBigInt =
+              //           BigInt.from(model.amount.toDouble() * 1e6);
+              //       debugPrint(' old amountToBigInt $amountToBigInt');
 
-                    var x = amountToBigInt.toRadixString(16);
-                    debugPrint('big int to hex $x');
-                  },
-                  child: const Text('Click me'))
+              //       var x = amountToBigInt.toRadixString(16);
+              //       debugPrint('big int to hex $x');
+              //     },
+              //     child: const Text('Click me'))
             ],
           ),
         ),

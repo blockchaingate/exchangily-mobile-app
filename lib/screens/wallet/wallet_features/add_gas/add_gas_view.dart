@@ -11,9 +11,12 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas/add_gas_viewmodel.dart';
+import 'package:exchangilymobileapp/shared/custom_styles.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,7 +24,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class AddGas extends StatelessWidget {
+class AddGasView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AddGasViewModel>.reactive(
@@ -97,7 +100,10 @@ class AddGas extends StatelessWidget {
                             style: const TextStyle(
                                 fontSize: 12.0, color: Colors.white)),
                       ),
-                      Text(model.gasBalance.toString(),
+                      Text(
+                          NumberUtil.decimalLimiter(model.gasBalance,
+                                  decimalPrecision: 8)
+                              .toString(),
                           style: const TextStyle(
                               fontSize: 12.0, color: Colors.white))
                     ]),
@@ -125,7 +131,8 @@ class AddGas extends StatelessWidget {
                             style: const TextStyle(
                                 fontSize: 12.0, color: Colors.white)),
                       ),
-                      Text('${model.transFee} FAB',
+                      Text(
+                          '${NumberUtil.decimalLimiter(model.transFee, decimalPrecision: 8)} FAB',
                           style: const TextStyle(
                               fontSize: 13.0, color: Colors.white))
                     ]),
@@ -254,55 +261,67 @@ class AddGas extends StatelessWidget {
                           )
                         : Container(),
                     const SizedBox(height: 30),
-                    Row(
-                      children: <Widget>[
-                        Flexible(
-                          child: MaterialButton(
-                              // borderSide: BorderSide(color: globals.primaryColor),
-                              color: primaryColor,
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text(AppLocalizations.of(context).cancel,
-                                  style: const TextStyle(color: Colors.white))),
-                        ),
-                        const SizedBox(width: 8),
-                        Flexible(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: primaryColor),
-                                padding: const EdgeInsets.all(15),
-                                backgroundColor: primaryColor,
-                                textStyle: const TextStyle(
-                                  color: Colors.white,
-                                )),
-                            onPressed: () async {
-                              double amount = 0;
-                              if (model.amountController.text != '') {
-                                amount =
-                                    double.parse(model.amountController.text);
-                              }
-                              // var res = await AddGasDo(double.parse(myController.text));
-                              model.amountController.text == '' ||
-                                      amount == null
-                                  ? model.sharedService
-                                      .sharedSimpleNotification(
-                                      AppLocalizations.of(context)
-                                          .invalidAmount,
-                                      subtitle: AppLocalizations.of(context)
-                                          .pleaseEnterValidNumber,
-                                    )
-                                  : model.checkPass(amount, context);
-                              //   debugPrint(res);
-                            },
-                            child: Text(
-                              AppLocalizations.of(context).confirm,
-                              style: Theme.of(context).textTheme.button,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
+                    model.isBusy
+                        ? Container(
+                            child: model.sharedService.loadingIndicator())
+                        : Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Flexible(
+                                child: ElevatedButton(
+                                    // borderSide: BorderSide(color: globals.primaryColor),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: primaryColor,
+                                      shape: CustomStyles.roundedShape(),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                        AppLocalizations.of(context).cancel,
+                                        style: const TextStyle(
+                                            color: Colors.white))),
+                              ),
+                              const SizedBox(width: 8),
+                              Flexible(
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                      shape: CustomStyles.roundedShape(),
+                                      side:
+                                          const BorderSide(color: primaryColor),
+                                      textStyle: const TextStyle(
+                                        color: Colors.white,
+                                      )),
+                                  onPressed: () async {
+                                    Decimal amount = Constants.decimalZero;
+                                    if (model.amountController.text != '') {
+                                      amount =
+                                          NumberUtil.parseNumStringToDecimal(
+                                              model.amountController.text);
+                                    }
+                                    // var res = await AddGasDo(double.parse(myController.text));
+                                    model.amountController.text == '' ||
+                                            amount == null
+                                        ? model.sharedService
+                                            .sharedSimpleNotification(
+                                            AppLocalizations.of(context)
+                                                .invalidAmount,
+                                            subtitle:
+                                                AppLocalizations.of(context)
+                                                    .pleaseEnterValidNumber,
+                                          )
+                                        : model.checkPass(amount);
+                                    //   debugPrint(res);
+                                  },
+                                  child: Text(
+                                    AppLocalizations.of(context).confirm,
+                                    style: Theme.of(context).textTheme.button,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
                   ],
                 ))));
   }

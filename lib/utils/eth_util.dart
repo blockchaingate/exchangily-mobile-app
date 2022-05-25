@@ -11,9 +11,11 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:keccak/keccak.dart';
 import 'package:hex/hex.dart';
@@ -76,7 +78,8 @@ class EthUtils {
   }
 
   getEthNode(root, {index = 0}) {
-    var node = root.derivePath("m/44'/${environment["CoinType"]["ETH"]}'/0'/0/$index");
+    var node =
+        root.derivePath("m/44'/${environment["CoinType"]["ETH"]}'/0'/0/$index");
     return node;
   }
 
@@ -102,7 +105,8 @@ class EthUtils {
     return {'balance': ethBalance, 'lockbalance': 0.0};
   }
 
-  Future getEthTokenBalanceByAddress(String address, String coinName) async {
+  Future<BigInt> getEthTokenBalanceByAddress(
+      String address, String coinName) async {
     TokenInfoDatabaseService tokenListDatabaseService =
         locator<TokenInfoDatabaseService>();
     var smartContractAddress =
@@ -116,25 +120,26 @@ class EthUtils {
         smartContractAddress = value;
       });
     }
-    var url =
-        '${'${ethBaseUrl}callcontract/' + smartContractAddress}/$address';
+    var url = '${'${ethBaseUrl}callcontract/' + smartContractAddress}/$address';
     debugPrint('eth_util - getEthTokenBalanceByAddress - $url ');
 
-    var tokenBalanceIe18 = 0.0;
-    var balanceIe8 = 0.0;
-    var balance1e6 = 0.0;
+    var balance;
     try {
       var response = await client.get(url);
-      var balance = jsonDecode(response.body);
-      balanceIe8 = double.parse(balance['balance']) / 1e8;
-      balance1e6 = double.parse(balance['balance']) / 1e6;
-      tokenBalanceIe18 = double.parse(balance['balance']) / 1e18;
-    } catch (e) {}
-    return {
-      'balance1e6': balance1e6,
-      'balanceIe8': balanceIe8,
-      'lockbalance': 0.0,
-      'tokenBalanceIe18': tokenBalanceIe18
-    };
+      balance = jsonDecode(response.body);
+      debugPrint('getEthBalanceByAddress $balance');
+      // balanceIe8 = double.parse(balance['balance']) / 1e8;
+      // balance1e6 = double.parse(balance['balance']) / 1e6;
+      // tokenBalanceIe18 = double.parse(balance['balance']) / 1e18;
+    } catch (e) {
+      debugPrint('getEthTokenBalanceByAddress CATCH $e');
+    }
+    return BigInt.parse(balance['balance'].toString());
+    // return {
+    //   'balance1e6': balance1e6,
+    //   'balanceIe8': balanceIe8,
+    //   'lockbalance': 0.0,
+    //   'tokenBalanceIe18': tokenBalanceIe18
+    // };
   }
 }

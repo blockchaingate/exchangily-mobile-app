@@ -25,6 +25,7 @@ class TransactionHistory {
       this.quantity = '',
       this.tag = '',
       this.chainName = ''});
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'tickerName': tickerName,
@@ -48,8 +49,8 @@ class TransactionHistory {
         amount: json['amount'].toString(),
         date: json['date'] as String,
         tickerChainTxId: json['tickerChainTxId'],
-        kanbanTxId: json['kanbanTxId'],
-        tickerChainTxStatus: json['tickerChainTxStatus'],
+        kanbanTxId: json['kanbanTxId'] ?? '',
+        tickerChainTxStatus: json['tickerChainTxStatus'] ?? '',
         kanbanTxStatus: json['kanbanTxStatus'],
         quantity: json['quantity'].toString(),
         tag: json['tag'],

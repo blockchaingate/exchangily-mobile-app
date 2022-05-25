@@ -1021,12 +1021,15 @@ class MoveToWalletViewmodel extends BaseViewModel {
         .then((res) {
       log.e('getEthChainBalance $res');
       if (appWallet.tickerName == 'USDT' || appWallet.tickerName == 'USDTX') {
-        ethChainBalance = res['balance1e6'];
+        ethChainBalance =
+            NumberUtil.rawStringToDecimal(res.toString(), decimalPrecision: 6);
       } else if (appWallet.tickerName == 'FABE' ||
           appWallet.tickerName == 'FAB') {
-        ethChainBalance = res['balanceIe8'];
+        ethChainBalance =
+            NumberUtil.rawStringToDecimal(res.toString(), decimalPrecision: 8);
       } else {
-        ethChainBalance = res['tokenBalanceIe18'];
+        ethChainBalance =
+            NumberUtil.rawStringToDecimal(res.toString(), decimalPrecision: 18);
       }
 
       log.w('ethChainBalance $ethChainBalance');
@@ -1127,8 +1130,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
         return;
       }
 
-      var amount = NumberUtil.parseStringToDecimal(amountController.text);
-      if (amount < NumberUtil.parseStringToDecimal(token.minWithdraw)) {
+      var amount = NumberUtil.parseNumStringToDecimal(amountController.text);
+      if (amount < NumberUtil.parseNumStringToDecimal(token.minWithdraw)) {
         sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).minimumAmountError,
           subtitle: AppLocalizations.of(context)
@@ -1164,15 +1167,17 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
       /// show warning like amount should be less than ts wallet balance
       /// instead of displaying the generic error
-      if (isWithdrawChoice) if (!isShowTrxTsWalletBalance &&
-          !isShowFabChainBalance &&
-          amount > ethChainBalance) {
-        sharedService.alertDialog(AppLocalizations.of(context).notice,
-            '${AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart} $ethChainBalance. ${AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart}',
-            isWarning: false);
+      if (isWithdrawChoice) {
+        if (!isShowTrxTsWalletBalance &&
+            !isShowFabChainBalance &&
+            amount > ethChainBalance) {
+          sharedService.alertDialog(AppLocalizations.of(context).notice,
+              '${AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart} $ethChainBalance. ${AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart}',
+              isWarning: false);
 
-        setBusy(false);
-        return;
+          setBusy(false);
+          return;
+        }
       }
       if (isWithdrawChoice) {
         if (isShowTrxTsWalletBalance &&
