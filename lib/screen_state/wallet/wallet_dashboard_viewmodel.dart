@@ -144,7 +144,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   var walletUtil = WalletUtil();
   bool isHideSearch = false;
   bool isHideSmallAssetsButton = false;
-  var coinsToHideList = ["USDTB"];
+  var coinsToHideList = ["USDTB", "BNB"];
   var versionService = locator<VersionService>();
   bool isConnectedToInternet = true;
   Decimal decimalZero = Decimal.zero;

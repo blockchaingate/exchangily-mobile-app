@@ -265,10 +265,10 @@ class AddGasView extends StatelessWidget {
                         ? Container(
                             child: model.sharedService.loadingIndicator())
                         : Row(
-                            mainAxisSize: MainAxisSize.min,
+                            mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Flexible(
+                              Expanded(
                                 child: ElevatedButton(
                                     // borderSide: BorderSide(color: globals.primaryColor),
                                     style: ElevatedButton.styleFrom(
@@ -284,7 +284,7 @@ class AddGasView extends StatelessWidget {
                                             color: Colors.white))),
                               ),
                               const SizedBox(width: 8),
-                              Flexible(
+                              Expanded(
                                 child: OutlinedButton(
                                   style: OutlinedButton.styleFrom(
                                       shape: CustomStyles.roundedShape(),

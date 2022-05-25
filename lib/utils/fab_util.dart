@@ -158,7 +158,7 @@ class FabUtils {
         return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
       }
       var output2 =
-          NumberUtil.decimalToBigInt(totalAmount, decimalPrecision: 8).toInt();
+          NumberUtil.decimalToBigInt(amount, decimalPrecision: 8).toInt();
       amountInTx = BigInt.from(output2);
       if (output1 < 0 || output2 < 0) {
         return {
