@@ -103,7 +103,8 @@ class NumberUtil {
 
   /// Decimal to BigInt with 18 decimal precision
   static BigInt decimalToBigInt(Decimal value, {int decimalPrecision = 18}) {
-    return (value * Decimal.fromInt(pow(10, decimalPrecision))).toBigInt();
+    return (value * Decimal.fromInt(pow(10, decimalPrecision ?? 18)))
+        .toBigInt();
   }
 
 // 12345678912345678912345678912345678912345678912300000000

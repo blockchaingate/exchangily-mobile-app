@@ -220,8 +220,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     isDialogUp = true;
     log.i('showTxDetailDialog isDialogUp $isDialogUp');
     setBusy(false);
-    if (transactionHistory.chainName.isEmpty ||
-        transactionHistory.chainName == null) {
+    if (transactionHistory.chainName == null ||
+        transactionHistory.chainName.isEmpty) {
       transactionHistory.chainName = appWallet.tokenType.isEmpty
           ? appWallet.tickerName
           : appWallet.tokenType;

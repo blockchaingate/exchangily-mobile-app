@@ -1134,7 +1134,7 @@ class WalletService {
     var amountInLink = NumberUtil.decimalToBigInt(amount);
 
     log.i(
-        'AMount in link $amountInLink -- coin name $coinName -- token type $tokenType');
+        'Amount in link $amountInLink -- coin name $coinName -- token type $tokenType');
 
     var addressInWallet = coinAddress;
     if ((coinName == 'BTC' ||
@@ -1722,6 +1722,8 @@ class WalletService {
     log.w(
         'gasPrice= $gasPrice -- gasLimit =  $gasLimit -- satoshisPerBytes= $satoshisPerBytes');
 
+    int amountBigIntToIntPrecision8 =
+        NumberUtil.decimalToBigInt(amount, decimalPrecision: 8).toInt();
     // BTC
     if (coin == 'BTC') {
       if (bytesPerInput == 0) {
@@ -1730,8 +1732,11 @@ class WalletService {
       if (satoshisPerBytes == 0) {
         satoshisPerBytes = environment["chains"]["BTC"]["satoshisPerBytes"];
       }
-      var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      var amountNum = amountBigIntToIntPrecision8;
+      // BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
+
       final txb = bitcoin_flutter.TransactionBuilder(
           network: environment["chains"]["BTC"]["network"]);
       // txb.setVersion(1);
@@ -1787,14 +1792,17 @@ class WalletService {
           (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
               (2 * 34 + 10) * satoshisPerBytes;
 
-      var output1 = (totalInput -
-              BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt() -
-              transFee)
-          .round();
+// amount 0.002 => output1 1084382
+      var output1 =
+          (totalInput - amountBigIntToIntPrecision8 - transFee).round();
 
       if (output1 < 2730) {
         transFee += output1;
       }
+      // 0.00213456(deposited amount)   +   0.00023(fee) = 0.00236456(final amount)
+      //    0.01507382(wallet balance) - 0.00236456(total amount)= 0.01270926(remaining wallet  balance)
+      // 0.0046284(exchange balance+ 0.00213456(transferred amount) =  0.00676296
+      //                             0.00236456                     =  0.00699296
 
       transFeeDouble = transFee / 1e8;
       if (getTransFeeOnly) {
@@ -1807,7 +1815,7 @@ class WalletService {
         };
       }
 
-      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      var output2 = amountBigIntToIntPrecision8;
 
       if (output1 >= 2730) {
         txb.addOutput(changeAddress, output1);
@@ -1843,7 +1851,7 @@ class WalletService {
       if (satoshisPerBytes == 0) {
         satoshisPerBytes = environment["chains"]["BCH"]["satoshisPerBytes"];
       }
-      var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      var amountNum = amountBigIntToIntPrecision8;
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
 
       final txb = bitbox.Bitbox.transactionBuilder(
@@ -1909,11 +1917,9 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput -
-              BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt() -
-              transFee)
-          .round();
-      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      var output1 =
+          (totalInput - amountBigIntToIntPrecision8 - transFee).round();
+      var output2 = amountBigIntToIntPrecision8;
 
       amountInTx = BigInt.from(output2);
       txb.addOutput(address, output1);
@@ -1944,7 +1950,7 @@ class WalletService {
       if (satoshisPerBytes == 0) {
         satoshisPerBytes = environment["chains"]["LTC"]["satoshisPerBytes"];
       }
-      var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      var amountNum = amountBigIntToIntPrecision8;
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
       final txb = bitcoin_flutter.TransactionBuilder(
           network: environment["chains"]["LTC"]["network"]);
@@ -2010,11 +2016,9 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput -
-              BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt() -
-              transFee)
-          .round();
-      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      var output1 =
+          (totalInput - amountBigIntToIntPrecision8 - transFee).round();
+      var output2 = amountBigIntToIntPrecision8;
       amountInTx = BigInt.from(output2);
       txb.addOutput(changeAddress, output1);
       txb.addOutput(toAddress, output2);
@@ -2045,7 +2049,7 @@ class WalletService {
       if (satoshisPerBytes == 0) {
         satoshisPerBytes = environment["chains"]["DOGE"]["satoshisPerBytes"];
       }
-      var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      var amountNum = amountBigIntToIntPrecision8;
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
       final txb = bitcoin_flutter.TransactionBuilder(
           network: environment["chains"]["DOGE"]["network"]);
@@ -2115,11 +2119,9 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput -
-              BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt() -
-              transFee)
-          .round();
-      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
+      var output1 =
+          (totalInput - amountBigIntToIntPrecision8 - transFee).round();
+      var output2 = amountBigIntToIntPrecision8;
       amountInTx = BigInt.from(output2);
       txb.addOutput(changeAddress, output1);
 
@@ -2173,7 +2175,7 @@ class WalletService {
       final ethCoinChild =
           root.derivePath("m/44'/${environment["CoinType"]["ETH"]}'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
-      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
+      var amountSentInt = NumberUtil.decimalToBigInt(amount);
 
       Credentials credentials = EthPrivateKey.fromHex(privateKey);
 
@@ -2340,18 +2342,13 @@ class WalletService {
         gasLimit = environment["chains"]["FAB"]["gasLimit"];
       }
       var transferAbi = 'a9059cbb';
-      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, decimal));
+      var amountSentInt =
+          NumberUtil.decimalToBigInt(amount, decimalPrecision: decimal);
       // double 2.0 => 2000000000000000000 with default decimal limit 18
       log.w('amountSentInt $amountSentInt');
-      BigInt amountBigInt = amount.toBigInt();
-      // double 2.0 => 2
-      log.i('amountBigInt $amountBigInt');
-      BigInt amountBigInt1 =
-          NumberUtil.decimalStringToBigInt(amount.toString());
-      // double 2.0 => 200000000000000000000000000000 with default decimal limit 29
-      log.w('amountBigInt1 $amountBigInt1');
+
       if (coin == 'DUSD') {
-        amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 6));
+        amountSentInt = NumberUtil.decimalToBigInt(amount, decimalPrecision: 6);
       }
 
       amountInTx = amountSentInt;
@@ -2372,13 +2369,15 @@ class WalletService {
                 ? fabUtils.exgToFabAddress(addressList[0])
                 : addressList[0];
       }
+      var txFee = NumberUtil.parseNumStringToDecimal(
+          contractInfo['totalFee'].toString());
 //8f08d6e1b8978fdba995dc44f1f01a3a26fa572a78f6a0450fa9c547239201b7
       var res1 = await fabUtils.getFabTransactionHexV2(
           seed,
           addressIndexList,
           contractInfo['contract'],
           Constants.decimalZero,
-          contractInfo['totalFee'],
+          txFee,
           satoshisPerBytes,
           addressList,
           getTransFeeOnly);
@@ -2460,22 +2459,24 @@ class WalletService {
           coin == 'KNC' ||
           coin == 'GVT' ||
           coin == 'DRGN') {
-        convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount));
+        convertedDecimalAmount = NumberUtil.decimalToBigInt(amount);
         //   (BigInt.from(10).pow(18) * BigInt.from(amount));
 
         //var amountSentInt = BigInt.parse(toBigInt(amount, 18));
         log.e('amount send $convertedDecimalAmount');
       } else if (coin == 'FUN' || coin == 'WAX' || coin == 'MTL') {
-        convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount, 8));
+        convertedDecimalAmount =
+            NumberUtil.decimalToBigInt(amount, decimalPrecision: 8);
         log.e('amount send $convertedDecimalAmount');
       } else if (coin == 'POWR' || coin == 'USDT') {
-        convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount, 6));
+        convertedDecimalAmount =
+            NumberUtil.decimalToBigInt(amount, decimalPrecision: 6);
       } else if (coin == 'CEL') {
-        convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount, 4));
+        convertedDecimalAmount =
+            NumberUtil.decimalToBigInt(amount, decimalPrecision: 4);
       } else {
         convertedDecimalAmount =
             NumberUtil.decimalToBigInt(amount, decimalPrecision: decimal);
-        // BigInt.parse(NumberUtil.toBigInt(amount, decimal));
       }
 
       amountInTx = convertedDecimalAmount;
@@ -2532,10 +2533,7 @@ class WalletService {
       String contractAddress, String fxnCallHex, gasLimit, gasPrice) async {
     contractAddress = string_utils.trimHexPrefix(contractAddress);
     fxnCallHex = string_utils.trimHexPrefix(fxnCallHex);
-    var ta = (Decimal.parse(gasLimit.toString()) *
-            Decimal.parse(gasPrice.toString()) /
-            Decimal.parse('1e8'))
-        .toDecimal();
+
     var totalAmount = (Decimal.parse(gasLimit.toString()) *
             Decimal.parse(gasPrice.toString()) /
             Decimal.parse('1e8'))

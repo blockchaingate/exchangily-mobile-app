@@ -201,31 +201,6 @@ class SendViewModel extends BaseViewModel {
     }
   }
 
-  test() {
-    String value = '123456789123456789123456789.12345678912345678912345678';
-    var tt = NumberUtil.decimalLimiter(Decimal.parse(value),
-        decimalPrecision: 18); // breaks at 19
-    log.w('truncate decimal $tt');
-
-    var sd = NumberUtil.stringDecimalLimiter(value,
-        decimalPrecision: 25); // breaks at 19
-    log.w('String decimal limiter: ${sd.toString()}');
-
-    var x = NumberUtil.decimalStringToRawDecimalString(value);
-    log.i('stringDecimalToRawDecimalString $x');
-
-    var p = NumberUtil.decimalStringToBigInt(value);
-    log.i('stringDecimalToBigInt $p');
-    var g = NumberUtil.decimalToBigInt(Decimal.parse(value));
-    debugPrint('decimalStringToBigInt18Decimal $g');
-
-    var j = NumberUtil.rawStringToDecimal(p.toString());
-    debugPrint('j $j');
-
-    var test1e8 = Decimal.parse('1e8');
-    debugPrint('test 1e8 to decimal $test1e8');
-  }
-
   bool isTrx() {
     log.i(
         'isTrx ${appWallet.tickerName == 'TRX' || appWallet.tickerName == 'USDTX'}');
@@ -517,6 +492,7 @@ class SendViewModel extends BaseViewModel {
             Future.delayed(const Duration(milliseconds: 30), () {
               if (!isCustomToken) refreshBalance();
             });
+            setBusy(false);
             return txHash;
           } else if (txHash == '' && errorMessage == '') {
             log.e('Both TxHash and Error Message are empty $errorMessage');

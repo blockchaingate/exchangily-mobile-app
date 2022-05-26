@@ -54,7 +54,7 @@ class TransactionHistory {
         kanbanTxStatus: json['kanbanTxStatus'],
         quantity: json['quantity'].toString(),
         tag: json['tag'],
-        chainName: json['chainName']);
+        chainName: json['chainName'] ?? '');
   }
 }
 

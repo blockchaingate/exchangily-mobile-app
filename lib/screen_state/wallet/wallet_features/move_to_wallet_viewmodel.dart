@@ -964,7 +964,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       'address': trimHexPrefix(smartContractAddress),
       'data': balanceInfoABI + fixLength(trimHexPrefix(address), 64)
     };
-    var tokenBalance;
+
     var url = '${fabBaseUrl}callcontract';
     debugPrint(
         'Fab_util -- address $address getFabTokenBalanceForABI balance by address url -- $url -- body $body');
@@ -980,14 +980,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
     // if ((decimal != null) && (decimal > 0)) {
     //   tokenBalance = ((unlockInt) / BigInt.parse(pow(10, decimal).toString()));
     // } else {
-    tokenBalance = bigNum2Double(unlockInt);
+    fabChainBalance = NumberUtil.rawStringToDecimal(unlockInt.toString());
     //   // debugPrint('tokenBalance for EXG==');
     //   // debugPrint(tokenBalance);
     // }
 
     // }
 
-    fabChainBalance = tokenBalance;
     debugPrint('$tickerName fab chain balance $fabChainBalance');
     setBusy(false);
   }
@@ -1280,7 +1279,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                     success ? "" : AppLocalizations.of(context).networkIssue,
                 isError: success ? false : true);
           }).catchError((err) {
-            log.e('Withdraw catch $err');
+            log.e('Withdraw catch trx $err');
             isShowErrorDetailsButton = true;
             isSubmittingTx = false;
             serverError = err.toString();

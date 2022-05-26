@@ -13,9 +13,7 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
-import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/models/app_update_model.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
@@ -37,7 +35,6 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
-import 'package:http/http.dart' as http;
 
 /// The service responsible for networking requests
 class ApiService {
@@ -238,7 +235,7 @@ class ApiService {
               //     ticker == 'BCH')
               else {
                 tickerChainTxStatus = element['status'] ?? '';
-                chainName = chain;
+                chainName = chain ?? '';
                 if (element['transactionId'] != null) {
                   tickerTxId = element['transactionId'];
                 }
@@ -256,7 +253,7 @@ class ApiService {
             TransactionHistory tx = TransactionHistory(
                 id: index,
                 tag: tag,
-                chainName: chainName,
+                chainName: chainName ?? '',
                 tickerChainTxStatus: tickerChainTxStatus,
                 kanbanTxStatus: kanbanTxStatus,
                 kanbanTxId: kanbanTxId ?? '',

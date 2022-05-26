@@ -60,7 +60,7 @@ class FabUtils {
     var changeAddress = '';
     var finished = false;
     var receivePrivateKeyArr = [];
-
+//var amountBigIntToInt
     var totalAmount = amount + extraTransactionFee;
 
     int calc1 = ((2 * 34 + 10) * satoshisPerBytes).toInt();
@@ -141,19 +141,16 @@ class FabUtils {
       }
       var calc2 = (receivePrivateKeyArr.length) * feePerInput +
           (2 * 34 + 10) * satoshisPerBytes;
-      Decimal transFee = Decimal.fromInt(calc2);
-      int amountBigIntToInt =
+      var transFee = calc2;
+      int totalAmountBigIntToInt =
           NumberUtil.decimalToBigInt(totalAmount, decimalPrecision: 8).toInt();
 
-      var output1 =
-          (totalInput - amountBigIntToInt - transFee.toDouble()).round();
+      var output1 = (totalInput - totalAmountBigIntToInt - transFee).round();
 
 // transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
 //               Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
 //           .toDouble();
-      transFeeDouble =
-          (extraTransactionFee + (transFee / Decimal.parse('1e8')).toDecimal())
-              .toDouble();
+      transFeeDouble = extraTransactionFee.toDouble() + (transFee / 1e8);
       if (getTransFeeOnly) {
         return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
       }
