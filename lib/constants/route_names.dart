@@ -34,7 +34,7 @@ const String ExchangeTradeViewRoute = '/exchangeTrade';
 const String DashboardViewRoute = '/dashboard';
 const String MarketsViewRoute = '/markets';
 const String LightningRemitViewRoute = '/lightningRemit';
-const String InstructionsViewRoute = '/campaignInstructions';
+const String instructionsViewRoute = '/campaignInstructions';
 const String SettingViewRoute = '/settings';
 
 /*----------------------------------------------------------------------
