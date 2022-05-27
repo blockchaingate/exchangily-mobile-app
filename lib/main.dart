@@ -34,7 +34,7 @@ Future<void> main() async {
   try {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     await serviceLocator();
-    Logger.level = Level.info;
+    Logger.level = Level.nothing;
     SystemChannels.textInput
         .invokeMethod('TextInput.hide'); // Hides keyboard initially
     // Force user to use only portrait mode until the development of other screen size design

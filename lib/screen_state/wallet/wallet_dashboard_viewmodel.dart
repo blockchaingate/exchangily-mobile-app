@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/constants/ui_var.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
@@ -144,7 +145,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   var walletUtil = WalletUtil();
   bool isHideSearch = false;
   bool isHideSmallAssetsButton = false;
-  var coinsToHideList = ["USDTB", "BNB"];
+  var coinsToHideList = ["USDTB", "BNB", "IXT", "USDTM"];
   var versionService = locator<VersionService>();
   bool isConnectedToInternet = true;
   Decimal decimalZero = Decimal.zero;
@@ -1556,9 +1557,11 @@ class WalletDashboardViewModel extends BaseViewModel {
     if (walletBalancesApiRes != null) {
       log.w('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
     }
-    for (var coinToHideTicker in coinsToHideList) {
-      walletBalancesApiRes
-          .removeWhere((element) => element.coin == coinToHideTicker);
+    if (isProduction) {
+      for (var coinToHideTicker in coinsToHideList) {
+        walletBalancesApiRes
+            .removeWhere((element) => element.coin == coinToHideTicker);
+      }
     }
     if (walletBalancesApiRes != null) {
       log.i('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
