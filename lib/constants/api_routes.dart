@@ -164,3 +164,9 @@ const String getSingleCoinExchangeBalApiRoute = 'exchangily/getBalance/';
 const String assetsBalanceApiRoute = 'exchangily/getBalances/';
 
 const String ordersByAddrApiRoute = 'ordersbyaddress/';
+
+// Events
+
+const String exchangilyBlogUrl = "https://blog.exchangily.com/";
+
+const String exchangilyAnnouncementUrl = "https://exchangily.com/announcements";

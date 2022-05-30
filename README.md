@@ -33,3 +33,25 @@ localizations process
 5. Push the code and merge to master
 6. After translation to another lang, pull the code
 7. Run the readme.txt commands one by one or all together
+
+### To use different version of flutter use FVM
+Reference: 
+
+- https://github.com/fluttertools/fvm#vscode 
+
+- In windows VS code terminal type : <flutter pub global activate fvm>
+- fvm install 2.10.0
+- Add below to .vscode/settings.json
+{
+  "dart.flutterSdkPath": ".fvm/flutter_sdk",
+  // Remove .fvm files from search
+  "search.exclude": {
+    "**/.fvm": true
+  },
+  // Remove from file watching
+  "files.watcherExclude": {
+    "**/.fvm": true
+  }
+}
+- fvm use <version>
+

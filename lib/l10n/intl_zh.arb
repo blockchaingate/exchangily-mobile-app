@@ -2309,5 +2309,23 @@
     "description": "downloadLatestApkFromServer",
     "type": "text",
     "placeholders": {}
+  },
+  "noEventNote": "目前没有活动，但您可以查看我们的博客和公告页面以获取最新消息和更新",
+  "@noEventNote": {
+    "description": "noEventNote",
+    "type": "text",
+    "placeholders": {}
+  },
+  "blog": "博客",
+  "@blog": {
+    "description": "blog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "announcements": "公告",
+  "@announcements": {
+    "description": "announcements",
+    "type": "text",
+    "placeholders": {}
   }
 }

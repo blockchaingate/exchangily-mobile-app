@@ -1407,6 +1407,7 @@ class WalletDashboardViewModel extends BaseViewModel {
           showSimpleNotification(
               Text('${AppLocalizations.of(context).requireRedeposit}: $f'),
               position: NotificationPosition.bottom,
+              slideDismissDirection: DismissDirection.down,
               background: primaryColor);
         }
       }

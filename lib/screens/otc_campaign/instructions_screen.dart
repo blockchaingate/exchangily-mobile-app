@@ -1,8 +1,10 @@
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/instructions_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/campaign_single.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/cache_image.dart';
 import 'package:exchangilymobileapp/widgets/loading_animation.dart';
@@ -10,6 +12,8 @@ import 'package:exchangilymobileapp/widgets/web_page.dart';
 import 'package:exchangilymobileapp/widgets/youtube.dart';
 import 'package:exchangilymobileapp/widgets/youtube_list_page.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path/path.dart';
 
 class CampaignInstructionScreen extends StatelessWidget {
   const CampaignInstructionScreen({Key key, this.newPage = true})
@@ -96,28 +100,86 @@ class CampaignInstructionScreen extends StatelessWidget {
                         )
                       : model.campaignInfoList.isEmpty
                           ? Center(
-                              child: Container(
-                                  child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: const [
-                                  Icon(
-                                    Icons.event,
-                                    color: Colors.white,
-                                    size: 35,
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'No Event',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              )
-                                  // Text(AppLocalizations.of(context).event),
-
-                                  ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.event,
+                                      color: Colors.white,
+                                      size: 35,
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      AppLocalizations.of(context).noEventNote,
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                    UIHelper.verticalSpaceSmall,
+                                    UIHelper.divider,
+                                    UIHelper.verticalSpaceMedium,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        OutlinedButton(
+                                          style: OutlinedButton.styleFrom(
+                                              textStyle: const TextStyle(
+                                                  color: white,
+                                                  fontWeight: FontWeight.w400),
+                                              side: const BorderSide(
+                                                  color: primaryColor,
+                                                  width: 1)),
+                                          child: Row(
+                                            children: [
+                                              Text(AppLocalizations.of(context)
+                                                  .announcements),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 5.0, bottom: 5.0),
+                                                child: Icon(
+                                                  FontAwesomeIcons.bullhorn,
+                                                  size: 16,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          onPressed: () => model.sharedService
+                                              .launchInBrowser(Uri.parse(
+                                                  exchangilyAnnouncementUrl)),
+                                        ),
+                                        UIHelper.horizontalSpaceSmall,
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              primary: primaryColor),
+                                          child: Row(
+                                            children: [
+                                              Text(AppLocalizations.of(context)
+                                                  .blog),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 5.0, bottom: 5.0),
+                                                child: Icon(
+                                                  FontAwesomeIcons.blog,
+                                                  size: 16,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          onPressed: () => model.sharedService
+                                              .launchInBrowser(
+                                                  Uri.parse(exchangilyBlogUrl)),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
                             )
                           : ListView.builder(
                               padding:
@@ -224,7 +286,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                             }
                                           },
                                           child: Container(
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                               color: walletCardColor,
                                             ),
                                             child: Column(

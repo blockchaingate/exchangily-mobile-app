@@ -2010,8 +2010,24 @@ class AppLocalizations {
 
   String get googlePlay {
     return Intl.message('Google Play', //谷歌播放
-        name: 'downloadLatestApkFromServer',
-        desc: 'downloadLatestApkFromServer');
+        name: 'googlePlay',
+        desc: 'googlePlay');
+  }
+
+  String get noEventNote {
+    return Intl.message(
+        'Currently there are no events but you can check our blog and announcement page to get the latest news and updates',
+        name: 'noEventNote',
+        desc: 'noEventNote');
+  }
+
+  String get blog {
+    return Intl.message('Blog', name: 'blog', desc: 'blog');
+  }
+
+  String get announcements {
+    return Intl.message('Announcements',
+        name: 'announcements', desc: 'announcements');
   }
 }
 
