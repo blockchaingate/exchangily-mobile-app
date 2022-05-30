@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
@@ -566,10 +567,8 @@ class LightningRemitViewmodel extends FutureViewModel {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: OutlineButton(
-                          borderSide: const BorderSide(color: primaryColor),
-                          color: primaryColor,
-                          textColor: Colors.white,
+                        child: OutlinedButton(
+                          style: outlinedButtonStyles1,
                           child: Text(
                             AppLocalizations.of(context).close,
                             style: Theme.of(context).textTheme.headline6,

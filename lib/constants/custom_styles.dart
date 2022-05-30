@@ -38,9 +38,13 @@ var generalButtonStyle1 = ButtonStyle(
     shape: shapeRoundBorder,
     backgroundColor: buttonBackgroundColor,
     padding: buttonPadding15);
-var outlinedButtonStyles = OutlinedButton.styleFrom(
+
+var outlinedButtonStyles1 = OutlinedButton.styleFrom(
   side: const BorderSide(color: primaryColor),
-  backgroundColor: primaryColor,
+  padding: const EdgeInsets.all(15.0),
+  shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(25.0),
+      side: const BorderSide(color: primaryColor)),
   textStyle: const TextStyle(color: Colors.white),
 );
 

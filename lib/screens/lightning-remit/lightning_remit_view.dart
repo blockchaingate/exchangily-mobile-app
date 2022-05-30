@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -268,11 +269,8 @@ class LightningRemitView extends StatelessWidget {
 ----------------------------------------------------------------------------------------------------*/
 
                                 Expanded(
-                                  child: OutlineButton(
-                                    borderSide: BorderSide(color: primaryColor),
-                                    padding: const EdgeInsets.all(15),
-                                    color: primaryColor,
-                                    textColor: Colors.white,
+                                  child: OutlinedButton(
+                                    style: outlinedButtonStyles1,
                                     onPressed: () {
                                       model.isBusy
                                           ? debugPrint('busy')

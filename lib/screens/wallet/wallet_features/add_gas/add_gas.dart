@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas/add_gas_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -268,11 +269,8 @@ class AddGas extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Flexible(
-                          child: OutlineButton(
-                            borderSide: const BorderSide(color: primaryColor),
-                            padding: const EdgeInsets.all(15),
-                            color: primaryColor,
-                            textColor: Colors.white,
+                          child: OutlinedButton(
+                            style: outlinedButtonStyles1,
                             onPressed: () async {
                               double amount = 0;
                               if (model.amountController.text != '') {
