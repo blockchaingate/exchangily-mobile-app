@@ -105,6 +105,8 @@ class SendViewModel extends BaseViewModel {
 
     if (walletInfo.tickerName == 'USDTX') {
       tickerName = 'USDT(TRC20)';
+    } else if (walletInfo.tickerName == 'USDCX') {
+      tickerName = 'USDC(TRC20)';
     } else if (walletInfo.tickerName == 'MATICM') {
       tickerName = 'MATIC';
     } else {
@@ -226,16 +228,12 @@ class SendViewModel extends BaseViewModel {
   }
 
   bool isTrx() {
-    log.i(
-        'isTrx ${walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX'}');
-    return walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX'
+    log.w(
+        'tickername ${walletInfo.tickerName}:  isTrx ${walletInfo.tickerName == 'TRX' || walletInfo.tokenType == 'TRX'}');
+    return walletInfo.tickerName == 'TRX' || walletInfo.tokenType == 'TRX'
         ? true
         : false;
   }
-
-/*---------------------------------------------------
-                  Amount After fee
-----------------------------------------------------*/
 
   Future<double> amountAfterFee({bool isMaxAmount = false}) async {
     setBusy(true);
@@ -257,9 +255,9 @@ class SendViewModel extends BaseViewModel {
 
     double finalAmount = 0.0;
     // update if transfee is 0
-    if (!walletService.isTrx(walletInfo.tickerName)) await updateTransFee();
+    if (!isTrx()) await updateTransFee();
     // if tron coins then assign fee accordingly
-    if (walletService.isTrx(walletInfo.tickerName)) {
+    if (!isTrx()) {
       if (walletInfo.tickerName == 'USDTX') {
         transFee = 15;
         finalAmount = amount;
@@ -419,7 +417,7 @@ class SendViewModel extends BaseViewModel {
       log.i('OPTIONS before send $options');
 
       // TRON Transaction
-      if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
+      if (walletInfo.tickerName == 'TRX' || walletInfo.tokenType == 'TRX') {
         log.i('sending tron ${walletInfo.tickerName}');
         var privateKey = tron_address_util.generateTrxPrivKey(mnemonic);
         await tron_transaction_util

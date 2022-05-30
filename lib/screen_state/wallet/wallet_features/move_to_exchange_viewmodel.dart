@@ -134,9 +134,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     double finalAmount = 0.0;
     // update if transfee is 0
-    if (!walletService.isTrx(walletInfo.tickerName)) await updateTransFee();
+    if (!isTrx()) await updateTransFee();
     // if tron coins then assign fee accordingly
-    if (walletService.isTrx(walletInfo.tickerName)) {
+    if (!isTrx()) {
       if (walletInfo.tickerName == 'USDTX') {
         transFee = 15;
         finalAmount = amount;
@@ -184,9 +184,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     amount = walletInfo.availableBalance;
     amountController.text = amount.toString();
 
-    if (!walletService.isTrx(walletInfo.tickerName)) await updateTransFee();
+    if (!isTrx()) await updateTransFee();
     double finalAmount = 0.0;
-    if (walletService.isTrx(walletInfo.tickerName)) {
+    if (!isTrx()) {
       transFee = 1;
     }
     if (transFee != 0.0) {
@@ -263,9 +263,14 @@ class MoveToExchangeViewModel extends BaseViewModel {
     return gasAmount;
   }
 
-/*---------------------------------------------------
-                Check pass and amount
---------------------------------------------------- */
+  bool isTrx() {
+    log.w(
+        'tickername ${walletInfo.tickerName}:  isTrx ${walletInfo.tickerName == 'TRX' || walletInfo.tokenType == 'TRX'}');
+    return walletInfo.tickerName == 'TRX' || walletInfo.tokenType == 'TRX'
+        ? true
+        : false;
+  }
+
   checkPass() async {
     setBusy(true);
 
@@ -301,7 +306,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     await refreshBalance();
 
     double finalAmount = 0.0;
-    if (!walletService.isTrx(walletInfo.tickerName)) {
+    if (!isTrx()) {
       finalAmount = await amountAfterFee();
     }
 

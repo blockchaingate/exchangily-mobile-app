@@ -283,15 +283,6 @@ class WalletService {
   }
 
 /*----------------------------------------------------------------------
-                      Is tron coin
-----------------------------------------------------------------------*/
-  bool isTrx(String tickerName) {
-    log.i(
-        'tickername $tickerName:  isTrx ${tickerName == 'TRX' || tickerName == 'USDTX'}');
-    return tickerName == 'TRX' || tickerName == 'USDTX' ? true : false;
-  }
-
-/*----------------------------------------------------------------------
                       Get decimal data
 ----------------------------------------------------------------------*/
 
