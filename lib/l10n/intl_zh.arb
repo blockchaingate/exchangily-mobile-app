@@ -137,7 +137,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "gasFee": "燃料费",
+    "gasFee": "矿工费",
     "@gasFee": {
         "description": "send_gas_fee",
         "type": "text",
@@ -833,7 +833,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "kanbanGasFee": "看板燃料费",
+    "kanbanGasFee": "看板矿工费",
     "@kanbanGasFee": {
         "description": "kanban_gas_fee",
         "type": "text",
@@ -2289,6 +2289,42 @@
   "showSmallAmountAssets": "显示小型资产",
   "@showSmallAmountAssets": {
     "description": "show_small_amount_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "currentVersion": "当前版本",
+  "@currentVersion": {
+    "description": "currentVersion",
+    "type": "text",
+    "placeholders": {}
+  },
+  "latestVersion": "最新版本",
+  "@latestVersion": {
+    "description": "latestVersion",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloadLatestApkFromServer": "从服务器下载最新的apk",
+  "@downloadLatestApkFromServer": {
+    "description": "downloadLatestApkFromServer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noEventNote": "目前没有活动，但您可以查看我们的博客和公告页面以获取最新消息和更新",
+  "@noEventNote": {
+    "description": "noEventNote",
+    "type": "text",
+    "placeholders": {}
+  },
+  "blog": "博客",
+  "@blog": {
+    "description": "blog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "announcements": "公告",
+  "@announcements": {
+    "description": "announcements",
     "type": "text",
     "placeholders": {}
   }

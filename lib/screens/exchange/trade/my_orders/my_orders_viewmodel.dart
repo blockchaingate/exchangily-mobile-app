@@ -7,7 +7,6 @@ import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/order_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -90,7 +89,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
     _orderCancelledText = AppLocalizations.of(context).orderCancelled;
     orderCancelledTextStyle =
-        Theme.of(context).textTheme.bodyText1.copyWith(color: colors.green);
+        Theme.of(context).textTheme.bodyText1.copyWith(color: colors.white);
     // _orderService.swapSources();
   }
 
@@ -104,8 +103,6 @@ class MyOrdersViewModel extends ReactiveViewModel {
     isShowAllOrders ? await getAllMyOrders() : await getMyOrdersByTickerName();
     setBusy(false);
   }
-
-  // Pull to refresh
 
   void onRefresh() async {
     setBusy(true);
@@ -312,7 +309,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
       Uint8List seed = walletService.generateSeed(mnemonic);
 
       var txHex = await txHexforCancelOrder(seed, orderHash);
-      var resKanban = await kanbanUtils.sendKanbanRawTransaction(txHex);
+      var resKanban = await kanbanUtils.sendRawKanbanTransaction(txHex);
       if (resKanban != null && resKanban["transactionHash"] != null) {
         log.w('resKanban=== $resKanban');
 
@@ -338,11 +335,13 @@ class MyOrdersViewModel extends ReactiveViewModel {
             }
 
             timer.cancel();
+            log.e('timer cancelled');
             showSimpleNotification(
                 Center(
                   child:
                       Text(orderCancelledText, style: orderCancelledTextStyle),
                 ),
+                background: colors.primaryColor,
                 position: NotificationPosition.bottom);
           }
         });

@@ -20,6 +20,9 @@ const String payOrderApiRoute = ordersTextApiRoute + "/code/";
 /*----------------------------------------------------------------------
                         Wallet
 ----------------------------------------------------------------------*/
+const String appVersionUrl =
+    "https://api.coinranklist.com/app-update/exchangily-app-version";
+const String maticGasFeeUrl = "https://gasstation-mumbai.matic.today/v2";
 const String exchangilyAppLatestApkUrl =
     'http://exchangily.com/download/latest.apk';
 // app update post
@@ -136,6 +139,7 @@ final String bchBaseUrl = environment["endpoints"]["bch"];
 final String dogeBaseUrl = environment["endpoints"]["doge"];
 final String fabBaseUrl = environment["endpoints"]["fab"];
 final String ethBaseUrl = environment["endpoints"]["eth"];
+final String maticmBaseUrl = environment["endpoints"]["maticm"];
 final String eventsUrl = environment["eventInfo"];
 
 const String txStatusStatusRoute = 'kanban/explorer/getTransactionStatus';
@@ -160,3 +164,9 @@ const String getSingleCoinExchangeBalApiRoute = 'exchangily/getBalance/';
 const String assetsBalanceApiRoute = 'exchangily/getBalances/';
 
 const String ordersByAddrApiRoute = 'ordersbyaddress/';
+
+// Events
+
+const String exchangilyBlogUrl = "https://blog.exchangily.com/";
+
+const String exchangilyAnnouncementUrl = "https://exchangily.com/announcements";

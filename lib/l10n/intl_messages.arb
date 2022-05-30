@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2022-04-05T09:19:30.406960",
+  "@@last_modified": "2022-05-30T10:56:20.354319",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -2277,6 +2277,48 @@
   "showSmallAmountAssets": "Show Small Amount Assets",
   "@showSmallAmountAssets": {
     "description": "show_small_amount_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "currentVersion": "Current version",
+  "@currentVersion": {
+    "description": "currentVersion",
+    "type": "text",
+    "placeholders": {}
+  },
+  "latestVersion": "Latest version",
+  "@latestVersion": {
+    "description": "latestVersion",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloadLatestApkFromServer": "Download latest apk from server",
+  "@downloadLatestApkFromServer": {
+    "description": "downloadLatestApkFromServer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "googlePlay": "Google Play",
+  "@googlePlay": {
+    "description": "googlePlay",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noEventNote": "Currently there are no events but you can check our blog and announcement page to get the latest news and updates",
+  "@noEventNote": {
+    "description": "noEventNote",
+    "type": "text",
+    "placeholders": {}
+  },
+  "blog": "Blog",
+  "@blog": {
+    "description": "blog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "announcements": "Announcements",
+  "@announcements": {
+    "description": "announcements",
     "type": "text",
     "placeholders": {}
   }

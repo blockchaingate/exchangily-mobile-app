@@ -42,15 +42,22 @@ class CreatePasswordViewModel extends BaseViewModel {
       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[`~!@#\$%\^&*\(\)-_\+\=\{\[\}\]]).{8,}$';
 
   FocusNode passFocus = FocusNode();
+  FocusNode confirmPassFocus = FocusNode();
   TextEditingController passTextController = TextEditingController();
   TextEditingController confirmPassTextController = TextEditingController();
   WalletService walletService = locator<WalletService>();
   final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+  bool isShowPassword = false;
 
-  //                Create Offline Wallets
+  togglePassword() {
+    setBusyForObject(isShowPassword, true);
+    isShowPassword = !isShowPassword;
+    setBusyForObject(isShowPassword, false);
+  }
 
   Future createOfflineWallets() async {
     setBusy(true);
+    isShowPassword = false;
     // await _vaultService.secureMnemonic(
     //     passTextController.text, randomMnemonicFromRoute);
     await _walletService
@@ -66,7 +73,8 @@ class CreatePasswordViewModel extends BaseViewModel {
       passwordMatch = false;
       password = '';
       confirmPassword = '';
-      errorMessage = AppLocalizations.of(context).somethingWentWrong;
+      errorMessage = onError.toString();
+      //AppLocalizations.of(context).somethingWentWrong;
       log.e(onError);
       setBusy(false);
     });

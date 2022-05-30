@@ -19,7 +19,9 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -237,17 +239,11 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
         : convertedToFabAddress;
     log.w(address);
     Clipboard.setData(ClipboardData(text: address));
-    Flushbar(
-      backgroundColor: globals.secondaryColor.withOpacity(0.75),
-      message: AppLocalizations.of(context).addressCopied,
-      icon: const Icon(
-        Icons.done,
-        size: 24,
-        color: globals.primaryColor,
-      ),
-      leftBarIndicatorColor: globals.green,
-      duration: const Duration(seconds: 4),
-    ).show(context);
+    SharedService sharedService = locator<SharedService>();
+    sharedService.sharedSimpleNotification(
+      AppLocalizations.of(context).addressCopied,
+      isError: false,
+    );
   }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------

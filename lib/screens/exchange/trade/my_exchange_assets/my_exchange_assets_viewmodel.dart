@@ -3,7 +3,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/widgets.dart';
@@ -16,8 +16,8 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
 
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   ApiService apiService = locator<ApiService>();
   ExchangeBalanceModel exchangeBalance = ExchangeBalanceModel();
   List<ExchangeBalanceModel> exchangeBalances = [];

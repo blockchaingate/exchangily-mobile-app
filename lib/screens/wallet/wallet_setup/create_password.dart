@@ -15,6 +15,8 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_viewmodel.dart';
+import 'package:exchangilymobileapp/widgets/wallet/toggle_password_widget.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +74,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             ? Center(
                                 child: Text(
                                 AppLocalizations.of(context).passwordMatched,
-                                style: TextStyle(color: white),
+                                style: const TextStyle(color: white),
                               ))
                             : model.password.isEmpty ||
                                     model.confirmPassword.isEmpty
@@ -81,7 +83,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                     child: Text(
                                         AppLocalizations.of(context)
                                             .passwordDoesNotMatched,
-                                        style: TextStyle(color: grey)))
+                                        style: const TextStyle(color: grey)))
                         : const Text(''),
                     UIHelper.verticalSpaceSmall,
                     Center(
@@ -135,28 +137,37 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   Widget _buildPasswordTextField(CreatePasswordViewModel model) {
-    return TextField(
+    return TextFormField(
         onChanged: (String pass) {
           model.checkPassword(pass);
         },
         keyboardType: TextInputType.visiblePassword,
         focusNode: model.passFocus,
+        onFieldSubmitted: (term) {
+          _fieldFocusChange(context, model.passFocus, model.confirmPassFocus);
+        },
         autofocus: true,
         controller: model.passTextController,
-        obscureText: true,
+        obscureText: model.isShowPassword ? false : true,
         maxLength: 32,
+        textInputAction: TextInputAction.next,
         style: model.checkPasswordConditions
-            ? TextStyle(color: primaryColor, fontSize: 16)
-            : TextStyle(color: grey, fontSize: 16),
+            ? const TextStyle(color: primaryColor, fontSize: 16)
+            : const TextStyle(color: grey, fontSize: 16),
         decoration: InputDecoration(
-            suffixIcon:
-                model.checkPasswordConditions && model.password.isNotEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.only(right: 0),
-                        child: Icon(Icons.check, color: primaryColor))
-                    : Padding(
-                        padding: const EdgeInsets.only(right: 0),
-                        child: Icon(Icons.clear, color: grey)),
+            suffixIcon: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.only(right: 0),
+                    child: model.checkPasswordConditions &&
+                            model.password.isNotEmpty
+                        ? const Icon(Icons.check, color: primaryColor)
+                        : const Icon(Icons.clear, color: grey)),
+                TogglePasswordWidget(model)
+              ],
+            ),
             labelText: AppLocalizations.of(context).enterPassword,
             prefixIcon: const Icon(Icons.lock_outline, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headline5,
@@ -168,28 +179,43 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                     Widget Confirm Password
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+  _fieldFocusChange(
+      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+    currentFocus.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
+  }
 
   Widget _buildConfirmPasswordTextField(CreatePasswordViewModel model) {
-    return TextField(
+    return TextFormField(
         onChanged: (String pass) {
           model.checkConfirmPassword(pass);
         },
         controller: model.confirmPassTextController,
-        obscureText: true,
+        focusNode: model.confirmPassFocus,
+        obscureText: model.isShowPassword ? false : true,
+        onFieldSubmitted: (term) {
+          model.confirmPassFocus.unfocus();
+          model.validatePassword();
+        },
         maxLength: 32,
         style: model.checkConfirmPasswordConditions
-            ? TextStyle(color: primaryColor, fontSize: 16)
-            : TextStyle(color: grey, fontSize: 16),
+            ? const TextStyle(color: primaryColor, fontSize: 16)
+            : const TextStyle(color: grey, fontSize: 16),
         decoration: InputDecoration(
             hintStyle: const TextStyle(color: Colors.white),
-            suffixIcon: model.checkConfirmPasswordConditions &&
-                    model.confirmPassword.isNotEmpty
-                ? Padding(
+            suffixIcon: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
                     padding: const EdgeInsets.only(right: 0),
-                    child: Icon(Icons.check, color: primaryColor))
-                : Padding(
-                    padding: const EdgeInsets.only(right: 0),
-                    child: Icon(Icons.clear, color: grey)),
+                    child: model.checkConfirmPasswordConditions &&
+                            model.password.isNotEmpty
+                        ? const Icon(Icons.check, color: primaryColor)
+                        : const Icon(Icons.clear, color: grey)),
+                TogglePasswordWidget(model)
+              ],
+            ),
             labelText: AppLocalizations.of(context).confirmPassword,
             prefixIcon: const Icon(Icons.lock, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headline5,
@@ -205,8 +231,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   Widget _buildCreateNewWalletButton(
       CreatePasswordViewModel model, BuildContext context) {
     return ButtonTheme(
-      shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       minWidth: double.infinity,
       child: MaterialButton(
         padding: const EdgeInsets.all(15),

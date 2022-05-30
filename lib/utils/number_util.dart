@@ -51,10 +51,6 @@ class NumberUtil {
     return res;
   }
 
-/*---------------------------------------------------
-                Round down
---------------------------------------------------- */
-
   double roundDownLastDigit(double input) {
     log.w('roundDownLastDigit input val $input');
     double finalBalance = 0.0;
@@ -77,6 +73,16 @@ class NumberUtil {
 
     log.w('roundDownLastDigit res $finalBalance');
     return finalBalance;
+  }
+
+  static int convertIntToHex(int coinType) {
+    var x = coinType.toRadixString(16);
+    debugPrint('basecoin $coinType --  Hex == $x');
+    return int.parse(x);
+  }
+
+  static double weiToGwei(int value) {
+    return double.parse(value.toString()) / 1e9;
   }
 
   intToHex(source) {
@@ -138,13 +144,6 @@ class NumberUtil {
     return holder;
   }
 
-// Check if value is an int
-  static bool checkIfInt(value) {
-    bool result;
-
-    return result;
-  }
-
 // Time Format
   timeFormatted(timeStamp) {
     var time = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
@@ -164,11 +163,6 @@ class NumberUtil {
     }
 
     return holder;
-  }
-
-  // check decimal places more than 6
-  checkDecimal(double value) {
-    String valueToString = value.toString();
   }
 }
 

@@ -15,7 +15,7 @@ import 'package:bip32/bip32.dart' as bip32;
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
@@ -37,7 +37,6 @@ import "package:pointycastle/digests/sha256.dart";
 import "package:pointycastle/signers/ecdsa_signer.dart";
 import 'package:pointycastle/macs/hmac.dart';
 import 'varuint.dart';
-import '../environments/coins.dart' as coin_list;
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
     as tron_address_util;
 import 'package:web3dart/crypto.dart' as crypto_web3;
@@ -152,20 +151,6 @@ class CoinUtils {
     debugPrint('rsv list $rsvList');
     return rsvList;
   }
-
-/*----------------------------------------------------------------------
-                Convert Decimal to Hex
-----------------------------------------------------------------------*/
-
-  int convertDecimalToHex(int coinType) {
-    var x = coinType.toRadixString(16);
-    log.e('basecoin $coinType --  Hex == $x');
-    return int.parse(x);
-  }
-
-/*----------------------------------------------------------------------
-                Hash 256
-----------------------------------------------------------------------*/
 
   Uint8List hash256(Uint8List buffer) {
     Uint8List _tmp = SHA256Digest().process(buffer);

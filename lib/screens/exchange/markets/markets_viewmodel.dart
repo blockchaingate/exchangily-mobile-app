@@ -126,22 +126,20 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
         'ELFUSDT',
         'HOTUSDT'
       ];
-      for (var t in priceList.prices) {
-        for (var coin in coinsToRemove) {
-          if (t.symbol.contains(coin)) log.i(t.toJson());
-        }
-      }
-
       for (var coin in coinsToRemove) {
         priceList.prices.removeWhere((item) => item.symbol.contains(coin));
       }
+
+      // for (var t in priceList.prices) {
+      //   if (t.symbol.contains('UNKNOWN')) {
+      //     int index = priceList.prices
+      //         .indexWhere((element) => element.symbol == t.symbol);
+      //     priceList.prices.removeAt(index);
+      //   }
+      // }
+
       log.e(' priceList.prices length after ${priceList.prices.length}');
       pairPriceList = priceList.prices;
-
-      // pairPriceList.forEach((element) {
-      //   //  debugPrint(element.toJson());
-      //   if (element.change.isNaN) element.change = 0.0;
-      // });
     } catch (err) {
       log.e('transformData Catch error $err');
       debugPrint('Cancelling Stream Subsciption');

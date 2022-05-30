@@ -20,13 +20,13 @@ import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
-import 'package:flushbar/flushbar.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +38,7 @@ import 'package:package_info/package_info.dart';
 //import 'package:url_launcher/url_launcher.dart';
 
 import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../localizations.dart';
 import '../shared/globals.dart' as globals;
@@ -47,7 +48,7 @@ class SharedService {
   final log = getLogger('SharedService');
   final storageService = locator<LocalStorageService>();
   NavigationService navigationService = locator<NavigationService>();
-  final tokenListDatabaseService = locator<TokenListDatabaseService>();
+  final tokenListDatabaseService = locator<TokenInfoDatabaseService>();
   DecimalConfigDatabaseService decimalConfigDatabaseService =
       locator<DecimalConfigDatabaseService>();
   final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
@@ -68,7 +69,7 @@ class SharedService {
     return showSimpleNotification(
         Text(firstCharToUppercase(content),
             textAlign: subtitle.isEmpty ? TextAlign.center : TextAlign.start,
-            style: headText3.copyWith(
+            style: headText4.copyWith(
                 color: isError ? red : green, fontWeight: FontWeight.w500)),
         position: NotificationPosition.top,
         background: white,
@@ -83,13 +84,11 @@ class SharedService {
                     ShowNotification
 ----------------------------------------------------------------------*/
 
-  showNotification(context) {
-    showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        red,
-        context);
+  inCorrectpasswordNotification(context) {
+    sharedSimpleNotification(
+      AppLocalizations.of(context).passwordMismatch,
+      subtitle: AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+    );
   }
 
 /*--------------------------------------------------------------------------
@@ -206,7 +205,7 @@ class SharedService {
       Get EXG Official address
 --------------------------------------------------- */
 
-  String getEXGOfficialAddress() {
+  String getExgOfficialAddress() {
     return environment['addresses']['exchangilyOfficial'][0]['address'];
   }
 
@@ -225,6 +224,35 @@ class SharedService {
     );
   }
 
+  Future<void> launchInBrowser(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<void> launchInWebViewOrVC(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.inAppWebView,
+      webViewConfiguration: const WebViewConfiguration(
+          headers: <String, String>{'my_header_key': 'my_header_value'}),
+    )) {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<void> launchInWebViewWithoutJavaScript(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.inAppWebView,
+      webViewConfiguration: const WebViewConfiguration(enableJavaScript: false),
+    )) {
+      throw 'Could not launch $url';
+    }
+  }
 /*---------------------------------------------------
             Launch link urls
 --------------------------------------------------- */
@@ -611,22 +639,22 @@ class SharedService {
                 Flushbar Notification bar
     -------------------------------------------------- */
 
-  void showInfoFlushbar(String title, String message, IconData iconData,
-      Color leftBarColor, BuildContext context) {
-    Flushbar(
-      backgroundColor: globals.primaryColor,
-      titleText: Text(title, style: Theme.of(context).textTheme.headline5),
-      messageText: Text(message, style: Theme.of(context).textTheme.headline6),
-      // icon: Icon(
-      //   iconData,
-      //   size: 24,
-      //   color: globals.primaryColor,
-      // ),
-      // leftBarIndicatorColor: leftBarColor,
-      duration: const Duration(seconds: 5),
-      isDismissible: true,
-    ).show(context);
-  }
+  // void showInfoFlushbar(String title, String message, IconData iconData,
+  //     Color leftBarColor, BuildContext context) {
+  //   Flushbar(
+  //     backgroundColor: globals.primaryColor,
+  //     titleText: Text(title, style: Theme.of(context).textTheme.headline5),
+  //     messageText: Text(message, style: Theme.of(context).textTheme.headline6),
+  //     // icon: Icon(
+  //     //   iconData,
+  //     //   size: 24,
+  //     //   color: globals.primaryColor,
+  //     // ),
+  //     // leftBarIndicatorColor: leftBarColor,
+  //     duration: const Duration(seconds: 5),
+  //     isDismissible: true,
+  //   ).show(context);
+  // }
 
 /* ---------------------------------------------------
                 Copy Address
@@ -634,17 +662,8 @@ class SharedService {
 
   copyAddress(context, text) {
     Clipboard.setData(ClipboardData(text: text));
-    Flushbar(
-      backgroundColor: globals.secondaryColor.withOpacity(0.75),
-      message: AppLocalizations.of(context).addressCopied,
-      icon: Icon(
-        Icons.done,
-        size: 24,
-        color: globals.primaryColor,
-      ),
-      leftBarIndicatorColor: globals.green,
-      duration: const Duration(seconds: 4),
-    ).show(context);
+    sharedSimpleNotification(AppLocalizations.of(context).addressCopied,
+        isError: false);
   }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------

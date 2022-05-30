@@ -23,13 +23,14 @@ import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
+import 'package:exchangilymobileapp/utils/coin_utils/matic_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
@@ -52,8 +53,8 @@ class SendViewModel extends BaseViewModel {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
 
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   final storageService = locator<LocalStorageService>();
   final navigationService = locator<NavigationService>();
 
@@ -86,6 +87,7 @@ class SendViewModel extends BaseViewModel {
   String tokenType = '';
   final coinUtils = CoinUtils();
   final fabUtils = FabUtils();
+  final maticUtils = MaticUtils();
   int decimalLimit = 8;
   // double gasAmount = 0.0;
   String fabAddress = '';
@@ -95,17 +97,27 @@ class SendViewModel extends BaseViewModel {
   double chainBalance = 0.0;
   bool isCustomToken = false;
   CustomTokenModel customToken = CustomTokenModel();
+
   // Init State
   initState() async {
     setBusy(true);
     sharedService.context = context;
-    walletInfo.tickerName == 'USDTX'
-        ? tickerName = 'USDT(TRC20)'
-        : tickerName = walletInfo.tickerName;
-    if (walletInfo.tokenType == 'TRON') walletInfo.tokenType = "TRX";
+
+    if (walletInfo.tickerName == 'USDTX') {
+      tickerName = 'USDT(TRC20)';
+    } else if (walletInfo.tickerName == 'USDCX') {
+      tickerName = 'USDC(TRC20)';
+    } else if (walletInfo.tickerName == 'MATICM') {
+      tickerName = 'MATIC';
+    } else {
+      tickerName = walletInfo.tickerName;
+    }
+    if (walletInfo.tokenType == 'TRON') {
+      walletInfo.tokenType = "TRX";
+    }
     tokenType = walletInfo.tokenType;
-    String coinName = walletInfo.tickerName;
-    await setFee(coinName);
+
+    await setFee(walletInfo.tickerName);
     fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
 
     String customTokenStringData = storageService.customTokenData;
@@ -124,8 +136,10 @@ class SendViewModel extends BaseViewModel {
     }
     if (!isCustomToken) {
       await refreshBalance();
-      decimalLimit =
-          await walletService.getSingleCoinWalletDecimalLimit(coinName);
+      decimalLimit = await walletService.getSingleCoinWalletDecimalLimit(
+          walletInfo.tickerName == 'MATICM'
+              ? tickerName
+              : walletInfo.tickerName);
       if (decimalLimit == null || decimalLimit == 0) {
         decimalLimit = 8;
       }
@@ -171,6 +185,12 @@ class SendViewModel extends BaseViewModel {
       satoshisPerByteTextController.text =
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
       feeUnit = 'BTC';
+    } else if (coinName == 'MATICM') {
+      gasPriceTextController.text =
+          environment["chains"]["MATIC"]["gasPrice"].toString();
+      gasLimitTextController.text =
+          environment["chains"]["MATIC"]["gasLimit"].toString();
+      feeUnit = 'MATIC';
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       var gasPriceReal = await walletService.getEthGasPrice();
       debugPrint('gasPriceReal======');
@@ -208,16 +228,12 @@ class SendViewModel extends BaseViewModel {
   }
 
   bool isTrx() {
-    log.i(
-        'isTrx ${walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX'}');
-    return walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX'
+    log.w(
+        'tickername ${walletInfo.tickerName}:  isTrx ${walletInfo.tickerName == 'TRX' || walletInfo.tokenType == 'TRX'}');
+    return walletInfo.tickerName == 'TRX' || walletInfo.tokenType == 'TRX'
         ? true
         : false;
   }
-
-/*---------------------------------------------------
-                  Amount After fee
-----------------------------------------------------*/
 
   Future<double> amountAfterFee({bool isMaxAmount = false}) async {
     setBusy(true);
@@ -239,9 +255,9 @@ class SendViewModel extends BaseViewModel {
 
     double finalAmount = 0.0;
     // update if transfee is 0
-    if (!walletService.isTrx(walletInfo.tickerName)) await updateTransFee();
+    if (!isTrx()) await updateTransFee();
     // if tron coins then assign fee accordingly
-    if (walletService.isTrx(walletInfo.tickerName)) {
+    if (!isTrx()) {
       if (walletInfo.tickerName == 'USDTX') {
         transFee = 15;
         finalAmount = amount;
@@ -401,7 +417,7 @@ class SendViewModel extends BaseViewModel {
       log.i('OPTIONS before send $options');
 
       // TRON Transaction
-      if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
+      if (walletInfo.tickerName == 'TRX' || walletInfo.tokenType == 'TRX') {
         log.i('sending tron ${walletInfo.tickerName}');
         var privateKey = tron_address_util.generateTrxPrivKey(mnemonic);
         await tron_transaction_util
@@ -414,7 +430,8 @@ class SendViewModel extends BaseViewModel {
                 tickerName: walletInfo.tickerName,
                 isBroadcast: true)
             .then((res) {
-          log.i('send screen state ${walletInfo.tickerName} res: $res');
+          log.i(
+              'generateTrxTransactionContract ${walletInfo.tickerName} res: $res');
           var txRes = res['broadcastTronTransactionRes'];
           if (txRes['code'] == 'SUCCESS') {
             log.w('trx tx res $res');
@@ -847,12 +864,19 @@ class SendViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
+    gasPrice = int.tryParse(gasPriceTextController.text);
+    gasLimit = int.tryParse(gasLimitTextController.text);
+    satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
+    var customGasPrice;
+    if (walletInfo.tickerName == 'MATICM') {
+      customGasPrice = await maticUtils.gasFee();
+      log.i('updateTransFee: matic customGasPrice $customGasPrice');
 
-    var gasPrice = int.tryParse(gasPriceTextController.text);
-    var gasLimit = int.tryParse(gasLimitTextController.text);
-    var satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
+      customGasPrice = int.parse(customGasPrice.toString().split('.')[0]) + 1;
+    }
+
     var options = {
-      "gasPrice": gasPrice,
+      "gasPrice": walletInfo.tickerName == 'MATICM' ? customGasPrice : gasPrice,
       "gasLimit": gasLimit,
       "satoshisPerBytes": satoshisPerBytes,
       "tokenType": walletInfo.tokenType,

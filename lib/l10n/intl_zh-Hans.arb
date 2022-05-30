@@ -137,7 +137,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "gasFee": "燃料费",
+    "gasFee": "矿工费",
     "@gasFee": {
         "description": "send_gas_fee",
         "type": "text",
@@ -839,7 +839,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "kanbanGasFee": "看板燃料费",
+    "kanbanGasFee": "看板矿工费",
     "@kanbanGasFee": {
         "description": "kanban_gas_fee",
         "type": "text",

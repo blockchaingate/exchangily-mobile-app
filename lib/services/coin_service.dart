@@ -4,14 +4,75 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:flutter/widgets.dart';
 
 class CoinService {
   final log = getLogger('CoinService');
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   final apiService = locator<ApiService>();
+
+  storeTokensInTokenDatabase() async {
+    List existingTokensInTokenDatabase;
+    try {
+      existingTokensInTokenDatabase = await tokenListDatabaseService.getAll();
+    } catch (err) {
+      existingTokensInTokenDatabase = [];
+      log.e('getTokenList tokenListDatabaseService.getAll CATCH err $err');
+    }
+    await apiService.getTokenList().then((newTokenListFromTokenApi) async {
+      if (newTokenListFromTokenApi != null &&
+          newTokenListFromTokenApi.isNotEmpty) {
+        existingTokensInTokenDatabase ??= [];
+        if (existingTokensInTokenDatabase.length !=
+            newTokenListFromTokenApi.length) {
+          await tokenListDatabaseService.deleteDb().whenComplete(() => log.e(
+              'token list database cleared before inserting updated token data from api'));
+
+          /// Fill the token list database with new data from the api
+
+          for (var singleNewToken in newTokenListFromTokenApi) {
+            await tokenListDatabaseService.insert(singleNewToken);
+          }
+        } else {
+          log.i('storeTokenListInDB -- local token db same length as api\'s ');
+        }
+      }
+    });
+  }
+
+  storeTokenListUpdatesInDB() async {
+    List existingTokensInTokenDatabase;
+    try {
+      existingTokensInTokenDatabase = await tokenListDatabaseService.getAll();
+    } catch (err) {
+      existingTokensInTokenDatabase = [];
+      log.e('getTokenList tokenListDatabaseService.getAll CATCH err $err');
+    }
+    await apiService
+        .getTokenListUpdates()
+        .then((newTokenListFromTokenUpdateApi) async {
+      if (newTokenListFromTokenUpdateApi != null &&
+          newTokenListFromTokenUpdateApi.isNotEmpty) {
+        existingTokensInTokenDatabase ??= [];
+        if (existingTokensInTokenDatabase.length !=
+            newTokenListFromTokenUpdateApi.length) {
+          await tokenListDatabaseService.deleteDb().whenComplete(() => log.e(
+              'token list database cleared before inserting updated token data from api'));
+
+          /// Fill the token list database with new data from the api
+
+          for (var singleNewToken in newTokenListFromTokenUpdateApi) {
+            await tokenListDatabaseService.insert(singleNewToken);
+          }
+        } else {
+          log.i(
+              'storeTokenListUpdatesInDB -- local token db same length as api\'s ');
+        }
+      }
+    });
+  }
 
 /*----------------------------------------------------------------------
                       Get coin's official address

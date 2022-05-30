@@ -28,7 +28,6 @@ import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_m
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -50,7 +49,6 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
 // import 'package:web_socket_channel/io.dart';
 
-import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:convert/convert.dart';
 import 'package:hex/hex.dart';
 import 'dart:core';
@@ -124,6 +122,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
   final kanbanUtils = KanbanUtils();
   double gasAmount = 0.0;
+  bool isFilled = false;
 
   @override
   Stream get stream =>
@@ -141,7 +140,14 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   @override
   void onData(data) {
     log.i('data ready $dataReady');
-    initialTextfieldsFill();
+    if (!isFilled) {
+      initialTextfieldsFill();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -171,6 +177,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
     transFeeAdvance = false;
     await getGasBalance();
+
     setBusy(false);
   }
 
@@ -193,9 +200,6 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     return gasAmount;
   }
 
-// /*----------------------------------------------------------------------
-//                     Refresh balance after cancelling order
-// ----------------------------------------------------------------------*/
   Widget refreshBalanceAfterCancellingOrder() {
     getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
 
@@ -276,6 +280,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       }
     }
     tradeService.setBalanceRefresh(false);
+    setBusy(false);
   }
 
   /*----------------------------------------------------------------------
@@ -290,14 +295,16 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   }
 
   fillPriceAndQuantityTextFields(p, q) {
-    setBusy(true);
+    // setBusyForObject(priceTextController, true);
+    // setBusyForObject(quantityTextController, true);
     priceTextController.text =
         p.toStringAsFixed(singlePairDecimalConfig.priceDecimal);
     price = p;
     quantityTextController.text =
         q.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
     quantity = q;
-    setBusy(false);
+    // setBusyForObject(priceTextController, false);
+    // setBusyForObject(quantityTextController, false);
   }
 
   /*----------------------------------------------------------------------
@@ -311,6 +318,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     quantityTextController.text =
         orderbook.quantity.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
     quantity = orderbook.quantity;
+    isFilled = true;
     setBusy(false);
   }
 
@@ -344,7 +352,6 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
             Handle Text Change
 --------------------------------------------------- */
   void handleTextChanged(String name, String text) {
-    setBusy(true);
     if (name == 'price') {
       try {
         price = double.parse(text);
@@ -367,22 +374,18 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
         log.e('Handle text quantity changed $e');
       }
     }
-    setBusy(false);
   }
 
-/*----------------------------------------------------------------------
-                  Get Decimal Pair Configuration
-----------------------------------------------------------------------*/
   getDecimalPairConfig() async {
-    setBusy(true);
     String currentCoinName = targetCoinName + baseCoinName;
     await sharedService.getSinglePairDecimalConfig(currentCoinName).then((res) {
       log.w('Current coin $currentCoinName in get decimal config $res');
+      setBusyForObject(singlePairDecimalConfig, true);
       singlePairDecimalConfig = res;
+      setBusyForObject(singlePairDecimalConfig, false);
 
       log.e('Price and quantity decimal ${singlePairDecimalConfig.toJson()}');
     });
-    setBusy(false);
   }
 
 /*---------------------------------------------------
@@ -447,7 +450,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
     // if needed convert the output byte array into hex string.
     var output = hex.encode(outputHashData);
-    setBusy(false);
+    // setBusy(false);
     return output;
   }
 
@@ -513,8 +516,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
         false,
         bidOrAsk,
         //  orderType,
-        coinUtils.convertDecimalToHex(baseCoin),
-        coinUtils.convertDecimalToHex(targetCoin),
+        NumberUtil.convertIntToHex(baseCoin),
+        NumberUtil.convertIntToHex(targetCoin),
         qtyBigInt,
         priceBigInt,
         //   timeBeforeExpiration,
@@ -544,8 +547,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 /* ---------------------------------------------------
             Update Transfer Fee
 --------------------------------------------------- */
-  updateTransFee() async {
-    setBusy(true);
+  updateTransFee() {
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
     if (kanbanGasLimit != null && kanbanPrice != null) {
@@ -553,10 +555,11 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       var kanbanGasLimitBig = BigInt.from(kanbanGasLimit);
       var kanbanTransFeeDouble =
           bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
+      setBusyForObject(kanbanTransFee, true);
       kanbanTransFee = kanbanTransFeeDouble;
+      setBusyForObject(kanbanTransFee, false);
       log.w('fee $kanbanPrice $kanbanGasLimit $kanbanTransFeeDouble');
     }
-    setBusy(false);
   }
 
 /* ---------------------------------------------------
@@ -564,7 +567,9 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 --------------------------------------------------- */
   caculateTransactionAmount() {
     if (price != null && quantity != null && price >= 0 && quantity >= 0) {
+      setBusyForObject(transactionAmount, true);
       transactionAmount = quantity * price;
+      setBusyForObject(transactionAmount, false);
     }
     return transactionAmount;
   }
@@ -588,7 +593,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
         var txHex = await txHexforPlaceOrder(seed);
         log.e('txhex $txHex');
-        var resKanban = await kanbanUtils.sendKanbanRawTransaction(txHex);
+        var resKanban = await kanbanUtils.sendRawKanbanTransaction(txHex);
         log.e('resKanban $resKanban');
         if (resKanban != null && resKanban['transactionHash'] != null) {
           showSimpleNotification(
@@ -601,6 +606,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
                     style: Theme.of(context).textTheme.headline6),
               ],
             ),
+            background: primaryColor,
             position: NotificationPosition.bottom,
           );
           // Future.delayed(new Duration(seconds: 2), () {
@@ -614,7 +620,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
               log.i('RES $res');
               String status = res['status'];
               if (status == '0x1') {
-                setBusy(true);
+                setBusyForObject(targetCoinExchangeBalance, true);
+                setBusyForObject(targetCoinExchangeBalance, true);
                 log.e('isReloadMyOrders $isReloadMyOrders -- isBusy $isBusy');
                 isReloadMyOrders = true;
                 getSingleCoinExchangeBalanceFromAll(
@@ -625,11 +632,13 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
                   log.e('isReloadMyOrders $isReloadMyOrders');
                   setBusy(false);
                 });
-                setBusy(false);
+                setBusyForObject(targetCoinExchangeBalance, false);
+                setBusyForObject(targetCoinExchangeBalance, false);
               }
               log.e('isReloadMyOrders $isReloadMyOrders');
-              log.i('timer cancelled');
+
               timer.cancel();
+              log.i('timer cancelled');
             }
           });
         } else {
@@ -643,15 +652,12 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       } else {
         log.e('Wrong pass');
         setBusy(false);
-        showNotification(context);
+        sharedService.inCorrectpasswordNotification(context);
       }
     });
     setBusy(false);
   }
 
-/* ---------------------------------------------------
-            Check Pass
---------------------------------------------------- */
   checkPass(context) async {
     setBusy(true);
 
@@ -670,6 +676,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
           isWarning: false);
       return;
     }
+    await getGasBalance();
     if (gasAmount < kanbanTransFee) {
       setBusy(false);
       showSimpleNotification(
@@ -681,7 +688,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
                   .copyWith(fontWeight: FontWeight.w800)),
         ),
         background: sellPrice,
-        position: NotificationPosition.bottom,
+        position: NotificationPosition.top,
       );
 
       return;
@@ -718,12 +725,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     setBusy(false);
   }
 
-/* ---------------------------------------------------
-                  Slider Onchange
---------------------------------------------------- */
-
   sliderOnchange(double newValue) {
-    setBusy(true);
+    //setBusy(true);
     log.i('new slider value $newValue');
     sliderValue = newValue;
     //if (sliderValue == 100) sliderValue = sliderValue - 0.001;
@@ -782,17 +785,5 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
           'In sliderOnchange else where quantity $quantity or price $price is null/empty');
     }
     setBusy(false);
-  }
-
-/* ---------------------------------------------------
-            Show Notification
---------------------------------------------------- */
-  showNotification(context) {
-    sharedService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        globals.red,
-        context);
   }
 }

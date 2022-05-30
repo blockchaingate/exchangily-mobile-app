@@ -271,8 +271,7 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
         ),
       ),
 
-      Container(
-          child: Swiper(
+      Swiper(
         itemBuilder: (BuildContext context, int index) {
           // Total Balance Card //
           model.swiperWidgetIndex = index;
@@ -320,7 +319,7 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
         ),
         autoplay: true,
         autoplayDelay: 7000,
-      )),
+      ),
       //Announcement Widget
       Positioned(
         top: 15,
@@ -454,7 +453,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                                 : primaryColor,
                           ),
                     Container(
-                      width: 100,
+                      width: 110,
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
                         !model.isHideSmallAssetsButton
@@ -476,38 +475,44 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                 ),
               ),
             ),
-            //Add free FAB container
-            !model.isFreeFabNotUsed
-                ? model.isBusy
-                    ? Container()
-                    : Expanded(child: Gas(gasAmount: model.gasAmount))
-                : Container(
-                    margin: const EdgeInsets.symmetric(vertical: 5.0),
-                    decoration: BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.circular(30)),
-                    child: SizedBox(
-                      width: 120,
-                      height: 20,
-                      child: OutlinedButton.icon(
-                          style: ButtonStyle(
-                              padding: MaterialStateProperty.all(
-                                  const EdgeInsets.all(0))),
-                          onPressed: () => model.getFreeFab(),
-                          icon: const Icon(
-                            Icons.add,
-                            size: 18,
-                            color: white,
-                          ),
-                          label: Text(
-                            AppLocalizations.of(context).getFree + ' FAB',
-                            style: Theme.of(context).textTheme.headline6,
+            SizedBox(
+              height: model.isFreeFabNotUsed ? 100 : 40,
+              child: Column(
+                children: [
+                  model.isBusy
+                      ? Container()
+                      : Expanded(child: Gas(gasAmount: model.gasAmount)),
+                  !model.isFreeFabNotUsed
+                      ? Container()
+                      : Container(
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          decoration: BoxDecoration(
+                              color: primaryColor,
+                              borderRadius: BorderRadius.circular(30)),
+                          child: SizedBox(
+                            width: 120,
+                            height: 20,
+                            child: OutlinedButton.icon(
+                                style: ButtonStyle(
+                                    padding: MaterialStateProperty.all(
+                                        const EdgeInsets.all(0))),
+                                onPressed: model.getFreeFab,
+                                icon: const Icon(
+                                  Icons.add,
+                                  size: 14,
+                                  color: white,
+                                ),
+                                label: Text(
+                                  AppLocalizations.of(context).getFree + ' FAB',
+                                  style: Theme.of(context).textTheme.headline6,
+                                )),
                           )),
-                    )),
+                ],
+              ),
+            ),
           ],
         ),
       ),
-      // Gas Container
       Container(
         margin: const EdgeInsets.only(left: 8.0),
         child: GestureDetector(
@@ -541,7 +546,6 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
           ),
         ),
       ),
-
       UIHelper.verticalSpaceSmall,
       model.isUpdateWallet
           ? TextButton(
@@ -798,10 +802,12 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                       padding:
                                                           EdgeInsetsDirectional
                                                               .zero,
-                                                      onPressed: () {
+                                                      onPressed: () async {
                                                         var wi = WalletInfo(
-                                                            address: customToken
-                                                                .owner);
+                                                            address: await model
+                                                                .coreWalletDatabaseService
+                                                                .getWalletAddressByTickerName(
+                                                                    'FAB'));
                                                         model.navigationService
                                                             .navigateTo(
                                                                 ReceiveViewRoute,
@@ -932,41 +938,15 @@ ListView buildListView(WalletDashboardViewModel model) {
 Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
     elevation, context, WalletDashboardViewModel model) {
   String logoTicker = '';
-  if (tickerName.toUpperCase() == 'BSTE') {
-    tickerName = 'BST(ERC20)';
-    logoTicker = 'BSTE';
-  } else if (tickerName.toUpperCase() == 'DSCE') {
-    tickerName = 'DSC(ERC20)';
-    logoTicker = 'DSCE';
-  } else if (tickerName.toUpperCase() == 'EXGE') {
-    tickerName = 'EXG(ERC20)';
-    logoTicker = 'EXGE';
-  } else if (tickerName.toUpperCase() == 'FABE') {
-    tickerName = 'FAB(ERC20)';
-    logoTicker = 'FABE';
-  } else if (tickerName.toUpperCase() == 'USDTX') {
-    tickerName = 'USDT(TRC20)';
-    logoTicker = 'USDTX';
-  } else if (tickerName.toUpperCase() == 'USDT') {
-    tickerName = 'USDT(ERC20)';
-    logoTicker = 'USDT';
-  } else if (tickerName.toUpperCase() == 'USDC') {
-    tickerName = 'USDC(erc20)';
-    logoTicker = 'USDC';
-  } else if (tickerName.toUpperCase() == 'USDCX') {
-    tickerName = 'USDC(trc20)';
-    logoTicker = 'USDC';
-  } else {
-    logoTicker = tickerName;
-  }
-//  tickerName = model.walletService
-//         .updateSpecialTokensTickerNameForTxHistory(tickerName)['tickerName'];
-//     logoTicker = model.walletService
-//         .updateSpecialTokensTickerNameForTxHistory(tickerName)['logoTicker'];
+  var specialTokenData = {};
+  specialTokenData =
+      model.walletUtil.updateSpecialTokensTickerNameForTxHistory(tickerName);
+  tickerName = specialTokenData['tickerName'];
+  logoTicker = specialTokenData['logoTicker'];
   if (model.isHideSmallAssetsButton &&
       (model.wallets[index].balance * model.wallets[index].usdValue.usd)
               .toInt() <
-          1) {
+          0.1) {
     return Container();
   } else {
     return Card(

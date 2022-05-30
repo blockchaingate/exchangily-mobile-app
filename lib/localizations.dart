@@ -1991,6 +1991,44 @@ class AppLocalizations {
     return Intl.message('Show Small Amount Assets',
         name: 'showSmallAmountAssets', desc: 'show_small_amount_assets');
   }
+
+  String get currentVersion {
+    return Intl.message('Current version',
+        name: 'currentVersion', desc: 'currentVersion');
+  }
+
+  String get latestVersion {
+    return Intl.message('Latest version',
+        name: 'latestVersion', desc: 'latestVersion');
+  }
+
+  String get downloadLatestApkFromServer {
+    return Intl.message('Download latest apk from server',
+        name: 'downloadLatestApkFromServer',
+        desc: 'downloadLatestApkFromServer');
+  }
+
+  String get googlePlay {
+    return Intl.message('Google Play', //谷歌播放
+        name: 'googlePlay',
+        desc: 'googlePlay');
+  }
+
+  String get noEventNote {
+    return Intl.message(
+        'Currently there are no events but you can check our blog and announcement page to get the latest news and updates',
+        name: 'noEventNote',
+        desc: 'noEventNote');
+  }
+
+  String get blog {
+    return Intl.message('Blog', name: 'blog', desc: 'blog');
+  }
+
+  String get announcements {
+    return Intl.message('Announcements',
+        name: 'announcements', desc: 'announcements');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas/add_gas_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -60,7 +61,7 @@ class AddGas extends StatelessWidget {
                   children: <Widget>[
                     Container(
                         padding: const EdgeInsets.all(30),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             shape: BoxShape.circle, color: primaryColor),
                         child: Image.asset("assets/images/img/gas.png",
                             width: 100, height: 100)),
@@ -185,12 +186,14 @@ class AddGas extends StatelessWidget {
                                               decimal:
                                                   true), // numnber keyboard
                                       decoration: InputDecoration(
-                                          focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: primaryColor)),
-                                          enabledBorder: UnderlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: grey)),
+                                          focusedBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: primaryColor)),
+                                          enabledBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide:
+                                                      BorderSide(color: grey)),
                                           hintText: '0.00000',
                                           hintStyle: Theme.of(context)
                                               .textTheme
@@ -229,12 +232,14 @@ class AddGas extends StatelessWidget {
                                               decimal:
                                                   true), // numnber keyboard
                                       decoration: InputDecoration(
-                                          focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: primaryColor)),
-                                          enabledBorder: UnderlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: grey)),
+                                          focusedBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: primaryColor)),
+                                          enabledBorder:
+                                              const UnderlineInputBorder(
+                                                  borderSide:
+                                                      BorderSide(color: grey)),
                                           hintText: '0.00000',
                                           hintStyle: Theme.of(context)
                                               .textTheme
@@ -264,11 +269,8 @@ class AddGas extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Flexible(
-                          child: OutlineButton(
-                            borderSide: BorderSide(color: primaryColor),
-                            padding: const EdgeInsets.all(15),
-                            color: primaryColor,
-                            textColor: Colors.white,
+                          child: OutlinedButton(
+                            style: outlinedButtonStyles1,
                             onPressed: () async {
                               double amount = 0;
                               if (model.amountController.text != '') {
@@ -279,14 +281,12 @@ class AddGas extends StatelessWidget {
                               model.amountController.text == '' ||
                                       amount == null
                                   ? model.sharedService
-                                      .showInfoFlushbar(
-                                          AppLocalizations.of(context)
-                                              .invalidAmount,
-                                          AppLocalizations.of(context)
-                                              .pleaseEnterValidNumber,
-                                          Icons.cancel,
-                                          red,
-                                          context)
+                                      .sharedSimpleNotification(
+                                      AppLocalizations.of(context)
+                                          .invalidAmount,
+                                      subtitle: AppLocalizations.of(context)
+                                          .pleaseEnterValidNumber,
+                                    )
                                   : model.checkPass(amount, context);
                               //   debugPrint(res);
                             },

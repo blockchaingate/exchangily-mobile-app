@@ -16,9 +16,10 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/utils/eth_util.dart';
 import 'dart:convert';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
@@ -32,7 +33,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   WalletService walletService = locator<WalletService>();
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
-  final tokenListDatabaseService = locator<TokenListDatabaseService>();
+  final tokenListDatabaseService = locator<TokenInfoDatabaseService>();
   final coinService = locator<CoinService>();
 
   WalletInfo walletInfo;
@@ -74,6 +75,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   TokenModel mainChainToken = TokenModel();
   bool isSubmittingTx = false;
   var tokenType;
+  var walletUtil = WalletUtil();
 
 /*---------------------------------------------------
                       INIT
@@ -111,7 +113,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       setWithdrawLimit("BTC");
     }
     specialTickerForTxHistory =
-        walletService.updateSpecialTokensTickerNameForTxHistory(
+        walletUtil.updateSpecialTokensTickerNameForTxHistory(
             walletInfo.tickerName)['tickerName'];
     await checkGasBalance();
     await getSingleCoinExchangeBal();
@@ -940,7 +942,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
   getFabChainBalance(String tickerName) async {
     setBusy(true);
-    var address = sharedService.getEXGOfficialAddress();
+    var address = sharedService.getExgOfficialAddress();
 
     String smartContractAddress;
     await coinService
@@ -1138,20 +1140,23 @@ class MoveToWalletViewmodel extends BaseViewModel {
       //   return;
       // }
 
-      if (isWithdrawChoice) if (!isShowTrxTsWalletBalance &&
-          isShowFabChainBalance &&
-          amount > fabChainBalance) {
-        sharedService.alertDialog(
-            AppLocalizations.of(context).notice,
-            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                ' ' +
-                fabChainBalance.toString() +
-                '. ' +
-                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
-            isWarning: false);
+      if (isWithdrawChoice) {
+        if (!isShowTrxTsWalletBalance &&
+            isShowFabChainBalance &&
+            amount > fabChainBalance) {
+          sharedService.alertDialog(
+              AppLocalizations.of(context).notice,
+              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                  ' ' +
+                  fabChainBalance.toString() +
+                  '. ' +
+                  AppLocalizations.of(context)
+                      .lowTsWalletBalanceErrorSecondPart,
+              isWarning: false);
 
-        setBusy(false);
-        return;
+          setBusy(false);
+          return;
+        }
       }
 
       /// show warning like amount should be less than ts wallet balance
@@ -1171,19 +1176,22 @@ class MoveToWalletViewmodel extends BaseViewModel {
         setBusy(false);
         return;
       }
-      if (isWithdrawChoice) if (isShowTrxTsWalletBalance &&
-          !isShowFabChainBalance &&
-          amount > trxTsWalletBalance) {
-        sharedService.alertDialog(
-            AppLocalizations.of(context).notice,
-            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                ' ' +
-                trxTsWalletBalance.toString() +
-                '. ' +
-                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
-            isWarning: false);
-        setBusy(false);
-        return;
+      if (isWithdrawChoice) {
+        if (isShowTrxTsWalletBalance &&
+            !isShowFabChainBalance &&
+            amount > trxTsWalletBalance) {
+          sharedService.alertDialog(
+              AppLocalizations.of(context).notice,
+              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                  ' ' +
+                  trxTsWalletBalance.toString() +
+                  '. ' +
+                  AppLocalizations.of(context)
+                      .lowTsWalletBalanceErrorSecondPart,
+              isWarning: false);
+          setBusy(false);
+          return;
+        }
       }
 
       message = '';
@@ -1344,12 +1352,10 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
   showNotification(context) {
     setBusy(true);
-    sharedService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        red,
-        context);
+    sharedService.sharedSimpleNotification(
+      AppLocalizations.of(context).passwordMismatch,
+      subtitle: AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+    );
     setBusy(false);
   }
 

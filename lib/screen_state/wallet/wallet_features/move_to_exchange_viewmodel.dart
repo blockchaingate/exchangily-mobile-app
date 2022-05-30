@@ -6,13 +6,14 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
@@ -26,8 +27,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
   WalletService walletService = locator<WalletService>();
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   CoreWalletDatabaseService coreWalletDatabaseService =
       locator<CoreWalletDatabaseService>();
   WalletInfo walletInfo;
@@ -58,7 +59,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   double chainBalance = 0.0;
   String fabAddress = '';
   bool isValidAmount = true;
-
+  var walletUtil = WalletUtil();
   // Init
   void initState() async {
     setBusy(true);
@@ -68,8 +69,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
     tokenType = walletInfo.tokenType;
     setFee();
     await getGas();
-    //  }
-    specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
+
+    specialTicker = walletUtil.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)['tickerName'];
     await refreshBalance();
 
@@ -81,6 +82,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
       feeUnit = 'FAB';
     } else if (tokenType == 'FAB') {
       feeUnit = 'FAB';
+    } else if (coinName == 'MATICM' || tokenType == 'POLYGON') {
+      feeUnit = 'MATIC(POLYGON)';
     }
     decimalLimit =
         await walletService.getSingleCoinWalletDecimalLimit(coinName);
@@ -131,9 +134,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     double finalAmount = 0.0;
     // update if transfee is 0
-    if (!walletService.isTrx(walletInfo.tickerName)) await updateTransFee();
+    if (!isTrx()) await updateTransFee();
     // if tron coins then assign fee accordingly
-    if (walletService.isTrx(walletInfo.tickerName)) {
+    if (!isTrx()) {
       if (walletInfo.tickerName == 'USDTX') {
         transFee = 15;
         finalAmount = amount;
@@ -181,9 +184,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     amount = walletInfo.availableBalance;
     amountController.text = amount.toString();
 
-    if (!walletService.isTrx(walletInfo.tickerName)) await updateTransFee();
+    if (!isTrx()) await updateTransFee();
     double finalAmount = 0.0;
-    if (walletService.isTrx(walletInfo.tickerName)) {
+    if (!isTrx()) {
       transFee = 1;
     }
     if (transFee != 0.0) {
@@ -260,9 +263,14 @@ class MoveToExchangeViewModel extends BaseViewModel {
     return gasAmount;
   }
 
-/*---------------------------------------------------
-                Check pass and amount
---------------------------------------------------- */
+  bool isTrx() {
+    log.w(
+        'tickername ${walletInfo.tickerName}:  isTrx ${walletInfo.tickerName == 'TRX' || walletInfo.tokenType == 'TRX'}');
+    return walletInfo.tickerName == 'TRX' || walletInfo.tokenType == 'TRX'
+        ? true
+        : false;
+  }
+
   checkPass() async {
     setBusy(true);
 
@@ -298,7 +306,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     await refreshBalance();
 
     double finalAmount = 0.0;
-    if (!walletService.isTrx(walletInfo.tickerName)) {
+    if (!isTrx()) {
       finalAmount = await amountAfterFee();
     }
 
@@ -555,7 +563,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     } else {
       log.e('Wrong pass');
       setBusy(false);
-      sharedService.showNotification(context);
+      sharedService.inCorrectpasswordNotification(context);
     }
     setBusy(false);
   }

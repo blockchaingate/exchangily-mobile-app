@@ -3,7 +3,6 @@ import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
@@ -394,7 +393,9 @@ class CampaignDashboardScreen extends StatelessWidget {
                                       model.memberProfile == null
                                           ? const Text('')
                                           : Text(
-                                              model.memberProfile.totalQuantities.toString(),
+                                              model
+                                                  .memberProfile.totalQuantities
+                                                  .toString(),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5

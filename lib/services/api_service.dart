@@ -49,8 +49,6 @@ class ApiService {
   WalletDatabaseService walletDatabaseService =
       locator<WalletDatabaseService>();
 
-// Post app update
-
   postAppUpdate() async {
     String url = postAppUpdateVersionUrl;
     log.i('postAppUpdate url $url');
@@ -943,38 +941,6 @@ class ApiService {
       json = jsonDecode(response.body);
     } catch (e) {}
     return json;
-  }
-
-  // Eth Post
-  Future postEthTx(String txHex) async {
-    var url = ethBaseUrl + 'sendsignedtransaction';
-    var data = {'signedtx': txHex};
-    var errMsg = '';
-    String txHash;
-    try {
-      var response =
-          await client.post(url, headers: {"responseType": "text"}, body: data);
-      txHash = response.body;
-
-      if (txHash.contains('txerError')) {
-        errMsg = txHash;
-        txHash = '';
-      }
-    } catch (e) {
-      errMsg = 'connection error';
-    }
-    return {'txHash': txHash, 'errMsg': errMsg};
-  }
-
-  // Eth Nonce
-  Future getEthNonce(String address) async {
-    var url = ethBaseUrl + getNonceApiRoute + address + '/latest';
-    var nonce = 0;
-    try {
-      var response = await client.get(url);
-      nonce = int.parse(response.body);
-    } catch (e) {}
-    return nonce;
   }
 
 /*----------------------------------------------------------------------

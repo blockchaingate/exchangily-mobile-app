@@ -16,7 +16,7 @@ import 'dart:async';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -28,6 +28,7 @@ import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/version_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import '../../../localizations.dart';
@@ -44,8 +45,8 @@ class WalletSetupViewmodel extends BaseViewModel {
   final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
 
   UserSettingsDatabaseService userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();
@@ -65,18 +66,13 @@ class WalletSetupViewmodel extends BaseViewModel {
   bool isVerifying = false;
   bool hasVerificationStarted = false;
   bool isHideIcon = true;
-
+  var walletUtil = WalletUtil();
   // init
   init() async {
     sharedService.context = context;
 
     await checkExistingWallet();
     await walletService.checkLanguage();
-    //await versionService.checkVersion(context);
-  }
-
-  Future checkVersion(context) async {
-    await versionService.checkVersion(context);
   }
 
   importCreateNav(String actionType) async {
@@ -97,8 +93,7 @@ class WalletSetupViewmodel extends BaseViewModel {
           .showVerifyDialog(
               title: AppLocalizations.of(context).existingWalletFound,
               secondaryButton: AppLocalizations.of(context).restore,
-              description:
-                  '${AppLocalizations.of(context).askWalletRestore} + ?',
+              description: '${AppLocalizations.of(context).askWalletRestore}?',
               buttonTitle: AppLocalizations.of(context)
                   .importWallet) // want to ask whether i should show Delete & Import
           .then((res) async {
@@ -148,39 +143,7 @@ class WalletSetupViewmodel extends BaseViewModel {
     setBusyForObject(isDeleting, true);
     log.w('deleting wallet');
     try {
-      await walletDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('wallet database deleted!!'))
-          .catchError((err) => log.e('wallet database CATCH $err'));
-
-      await transactionHistoryDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('trnasaction history database deleted!!'))
-          .catchError((err) => log.e('tx history database CATCH $err'));
-
-      await _vaultService
-          .deleteEncryptedData()
-          .whenComplete(() => log.e('encrypted data deleted!!'))
-          .catchError((err) => log.e('delete encrypted CATCH $err'));
-
-      await coreWalletDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('coreWalletDatabaseService data deleted!!'))
-          .catchError((err) => log.e('coreWalletDatabaseService  CATCH $err'));
-
-      await tokenListDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('Token list database deleted!!'))
-          .catchError((err) => log.e('token list database CATCH $err'));
-
-      await userSettingsDatabaseService
-          .deleteDb()
-          .whenComplete(() => log.e('User settings database deleted!!'))
-          .catchError((err) => log.e('user setting database CATCH $err'));
-
-      storageService.walletBalancesBody = '';
-      storageService.isShowCaseView = true;
-      storageService.clearStorage();
+      await walletService.deleteWallet();
 
       setBusyForObject(isDeleting, false);
     } catch (err) {
@@ -210,6 +173,7 @@ class WalletSetupViewmodel extends BaseViewModel {
         storageService.hasWalletVerified = true;
         var walletVerificationRes =
             await walletService.verifyWalletAddresses(res.returnedText);
+        storageService.hasWalletVerified = true;
         isWalletVerifySuccess = walletVerificationRes['fabAddressCheck'] &&
             walletVerificationRes['trxAddressCheck'];
         isHideIcon = false;
@@ -333,6 +297,6 @@ class WalletSetupViewmodel extends BaseViewModel {
     }
     setBusy(false);
 
-    walletService.storeTokenListInDB();
+    walletService.storeTokenListUpdatesInDB();
   }
 }

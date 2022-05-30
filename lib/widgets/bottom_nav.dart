@@ -122,14 +122,15 @@ class BottomNavBar extends StatelessWidget {
           case 3:
             if (currentRouteName != 'CampaignInstructionScreen') {
               navigationService
-                  .navigateUsingPushReplacementNamed(InstructionsViewRoute);
+                  .navigateUsingPushReplacementNamed(instructionsViewRoute);
             }
             break;
           case 4:
             if (currentRouteName != 'SettingsScreen') {
               navigationService
                   .navigateUsingpopAndPushedNamed(SettingViewRoute);
-            } else if (ModalRoute.of(context).settings.name == 'SettingsScreen') {
+            } else if (ModalRoute.of(context).settings.name ==
+                'SettingsScreen') {
               return null;
             }
             break;

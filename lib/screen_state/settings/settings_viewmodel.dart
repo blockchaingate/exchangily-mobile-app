@@ -28,10 +28,11 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
+import 'package:exchangilymobileapp/services/version_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
@@ -41,7 +42,7 @@ import '../../logger.dart';
 import '../../service_locator.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import "package:hex/hex.dart";
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 
 class SettingsViewmodel extends BaseViewModel {
   bool isVisible = false;
@@ -52,8 +53,8 @@ class SettingsViewmodel extends BaseViewModel {
   final _vaultService = locator<VaultService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
 
   SharedService sharedService = locator<SharedService>();
   final storageService = locator<LocalStorageService>();
@@ -66,7 +67,7 @@ class SettingsViewmodel extends BaseViewModel {
   ConfigService configService = locator<ConfigService>();
   final authService = locator<LocalAuthService>();
   final coinService = locator<CoinService>();
-
+  final vs = locator<VersionService>();
   final Map<String, String> languages = {'en': 'English', 'zh': '简体中文'};
   String selectedLanguage;
   // bool result = false;
@@ -96,7 +97,7 @@ class SettingsViewmodel extends BaseViewModel {
   final t = TextEditingController();
   bool _lockAppNow = false;
   get lockAppNow => _lockAppNow;
-
+  var walletUtil = WalletUtil();
   init() async {
     setBusy(true);
 
@@ -288,56 +289,7 @@ class SettingsViewmodel extends BaseViewModel {
         setBusy(true);
         isDeleting = true;
         log.w('deleting wallet');
-        await walletDatabaseService
-            .deleteDb()
-            .whenComplete(() => log.e('wallet database deleted!!'))
-            .catchError((err) => log.e('wallet database CATCH $err'));
-
-        await transactionHistoryDatabaseService
-            .deleteDb()
-            .whenComplete(() => log.e('trnasaction history database deleted!!'))
-            .catchError((err) => log.e('tx history database CATCH $err'));
-
-        await _vaultService
-            .deleteEncryptedData()
-            .whenComplete(() => log.e('encrypted data deleted!!'))
-            .catchError((err) => log.e('delete encrypted CATCH $err'));
-
-        await coreWalletDatabaseService
-            .deleteDb()
-            .whenComplete(
-                () => log.e('coreWalletDatabaseService data deleted!!'))
-            .catchError(
-                (err) => log.e('coreWalletDatabaseService  CATCH $err'));
-
-        await tokenListDatabaseService
-            .deleteDb()
-            .whenComplete(() => log.e('Token list database deleted!!'))
-            .catchError((err) => log.e('token list database CATCH $err'));
-
-        await userSettingsDatabaseService
-            .deleteDb()
-            .whenComplete(() => log.e('User settings database deleted!!'))
-            .catchError((err) => log.e('user setting database CATCH $err'));
-
-        // may need to add old campaign databases here to delete as well
-        storageService.walletBalancesBody = '';
-        storageService.isShowCaseView = true;
-
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        log.e('before wallet removal, local storage has ${prefs.getKeys()}');
-        prefs.clear();
-
-        storageService.clearStorage();
-        log.e('before local storage service clear ${prefs.getKeys()}');
-
-        log.e('all keys after clearing ${prefs.getKeys()}');
-
-        await _deleteCacheDir()
-            .catchError((err) => log.e('delete cache failed $err'));
-
-        await _deleteAppDir()
-            .catchError((err) => log.e('delete app dir failed $err'));
+        await walletService.deleteWallet();
 
         Navigator.pushNamed(context, '/');
       } else if (res.returnedText == 'Closed' && !res.confirmed) {
@@ -357,22 +309,6 @@ class SettingsViewmodel extends BaseViewModel {
     });
     isDeleting = false;
     setBusy(false);
-  }
-
-  Future<void> _deleteCacheDir() async {
-    final cacheDir = await getTemporaryDirectory();
-
-    if (cacheDir.existsSync()) {
-      cacheDir.deleteSync(recursive: true);
-    }
-  }
-
-  Future<void> _deleteAppDir() async {
-    final appDir = await getApplicationSupportDirectory();
-
-    if (appDir.existsSync()) {
-      appDir.deleteSync(recursive: true);
-    }
   }
 
 /*----------------------------------------------------------------------

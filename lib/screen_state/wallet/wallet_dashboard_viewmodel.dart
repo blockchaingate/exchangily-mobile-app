@@ -30,13 +30,14 @@ import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/services/version_service.dart';
 import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
@@ -45,6 +46,7 @@ import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
     as tron_address_util;
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
@@ -74,8 +76,8 @@ class WalletDashboardViewModel extends BaseViewModel {
       locator<DecimalConfigDatabaseService>();
   ApiService apiService = locator<ApiService>();
 
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   var coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   var storageService = locator<LocalStorageService>();
   final dialogService = locator<DialogService>();
@@ -143,8 +145,11 @@ class WalletDashboardViewModel extends BaseViewModel {
   List<CustomTokenModel> selectedCustomTokens = [];
   var receiverWalletAddressTextController = TextEditingController();
   int swiperWidgetIndex = 0;
+  var walletUtil = WalletUtil();
   bool isHideSearch = false;
   bool isHideSmallAssetsButton = false;
+  var coinsToHideList = ["USDTB"];
+  var versionService = locator<VersionService>();
 
 /*----------------------------------------------------------------------
                     INIT
@@ -162,72 +167,19 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     checkAnnouncement();
 
-    walletService.storeTokenListInDB();
+    walletService.storeTokenListUpdatesInDB();
     customTokens = await apiService.getCustomTokens();
     await getBalanceForSelectedCustomTokens();
     setBusy(false);
-  }
 
-  // get wallet info object with address using single wallet balance
-  Future<WalletInfo> getWalletInfoObjFromWalletBalance(
-      WalletBalance wallet) async {
-    //FocusScope.of(context).requestFocus(FocusNode());
-
-    // take the tickername and then get the coin type
-    // either from token or token updates api/local storage
-
-    String tickerName = wallet.coin.toUpperCase();
-    String walletAddress = '';
-
-    int coinType = await coinService.getCoinTypeByTickerName(tickerName);
-
-    // use coin type to get the token type
-    String tokenType = walletService.getChainNameByTokenType(coinType);
-
-    // get wallet address
-    if (tickerName == 'ETH' || tokenType == 'ETH' || tokenType == 'POLYGON') {
-      walletAddress = await walletService
-          .getAddressFromCoreWalletDatabaseByTickerName('ETH');
-    } else if (tickerName == 'FAB' || tokenType == 'FAB') {
-      walletAddress = await walletService
-          .getAddressFromCoreWalletDatabaseByTickerName('FAB');
-    } else if (tickerName == 'TRX' ||
-        tickerName == 'TRON' ||
-        tokenType == 'TRON' ||
-        tokenType == 'TRX') {
-      walletAddress = await walletService
-          .getAddressFromCoreWalletDatabaseByTickerName('TRX');
-    } else {
-      walletAddress = await coreWalletDatabaseService
-          .getWalletAddressByTickerName(tickerName);
-    }
-    String coinName = '';
-    for (var i = 0; i < walletService.coinTickerAndNameList.length; i++) {
-      if (walletService.coinTickerAndNameList.containsKey(wallet.coin)) {
-        coinName = walletService.coinTickerAndNameList[wallet.coin];
-      }
-      break;
-    }
-
-    // assign address from local DB to walletinfo object
-    var walletInfo = WalletInfo(
-        tickerName: wallet.coin,
-        availableBalance: wallet.balance,
-        tokenType: tokenType,
-        usdValue: wallet.balance * wallet.usdValue.usd,
-        inExchange: wallet.unlockedExchangeBalance,
-        address: walletAddress,
-        name: coinName);
-
-    log.w('routeWithWalletInfoArgs walletInfo ${walletInfo.toJson()}');
-    return walletInfo;
+    await versionService.checkVersion(context, isForceUpdate: true);
   }
 
 // set route with coin token type and address
 
   routeWithWalletInfoArgs(WalletBalance wallet, String routeName) async {
     // assign address from local DB to walletinfo object
-    var walletInfo = await getWalletInfoObjFromWalletBalance(wallet);
+    var walletInfo = await walletUtil.getWalletInfoObjFromWalletBalance(wallet);
 
     log.w('routeWithWalletInfoArgs walletInfo ${walletInfo.toJson()}');
     searchCoinTextController.clear();
@@ -1059,7 +1011,8 @@ class WalletDashboardViewModel extends BaseViewModel {
           arguments: wallets[index]);
       searchCoinTextController.clear();
     } else {
-      rightWalletInfo = await getWalletInfoObjFromWalletBalance(wallets[index]);
+      rightWalletInfo =
+          await walletUtil.getWalletInfoObjFromWalletBalance(wallets[index]);
       (context as Element).markNeedsBuild();
     }
   }
@@ -1454,6 +1407,7 @@ class WalletDashboardViewModel extends BaseViewModel {
           showSimpleNotification(
               Text('${AppLocalizations.of(context).requireRedeposit}: $f'),
               position: NotificationPosition.bottom,
+              slideDismissDirection: DismissDirection.down,
               background: primaryColor);
         }
       }
@@ -1544,8 +1498,14 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     walletBalancesApiRes =
         await apiService.getWalletBalance(jsonDecode(finalWbb));
-    log.w('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
-
+    if (walletBalancesApiRes != null)
+      log.w('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
+    for (var coinToHideTicker in coinsToHideList) {
+      walletBalancesApiRes
+          .removeWhere((element) => element.coin == coinToHideTicker);
+    }
+    if (walletBalancesApiRes != null)
+      log.i('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
     wallets = walletBalancesApiRes;
     walletsCopy = wallets;
 

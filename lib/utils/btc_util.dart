@@ -16,7 +16,7 @@ import 'dart:convert';
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:http/src/response.dart';
+import 'package:http/http.dart';
 import '../environments/environment.dart';
 
 import 'package:convert/convert.dart';

@@ -205,7 +205,7 @@ class AbiUtils {
     }
 
     list.add(transaction.value.getInWei);
-    list.add('');
+    // list.add(''); // removed cointype
     list.add(transaction.data);
 
     if (signature != null) {

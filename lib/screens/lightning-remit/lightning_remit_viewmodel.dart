@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
@@ -27,7 +28,7 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 
@@ -38,8 +39,8 @@ class LightningRemitViewmodel extends FutureViewModel {
   final addressController = TextEditingController();
   ApiService apiService = locator<ApiService>();
   NavigationService navigationService = locator<NavigationService>();
-  TokenListDatabaseService tokenListDatabaseService =
-      locator<TokenListDatabaseService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   SharedService sharedService = locator<SharedService>();
   DialogService dialogService = locator<DialogService>();
   LocalStorageService storageService = locator<LocalStorageService>();
@@ -508,7 +509,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                                 size: 16,
                               ),
                               onPressed: () {
-                                sharedService.copyAddress(context, kbAddress)();
+                                sharedService.copyAddress(context, kbAddress);
                               })
                         ],
                       ),
@@ -566,10 +567,8 @@ class LightningRemitViewmodel extends FutureViewModel {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: OutlineButton(
-                          borderSide: const BorderSide(color: primaryColor),
-                          color: primaryColor,
-                          textColor: Colors.white,
+                        child: OutlinedButton(
+                          style: outlinedButtonStyles1,
                           child: Text(
                             AppLocalizations.of(context).close,
                             style: Theme.of(context).textTheme.headline6,
@@ -665,12 +664,11 @@ class LightningRemitViewmodel extends FutureViewModel {
           setBusy(false);
         } else {
           log.e('Wrong pass');
-          sharedService.showInfoFlushbar(
-              AppLocalizations.of(context).notice,
-              AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-              Icons.cancel,
-              red,
-              context);
+          sharedService.sharedSimpleNotification(
+            AppLocalizations.of(context).notice,
+            subtitle:
+                AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+          );
           setBusy(false);
         }
       }).catchError((error) {

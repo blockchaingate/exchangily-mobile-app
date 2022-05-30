@@ -15,12 +15,14 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/coin_utils/matic_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
+import 'package:web3dart/web3dart.dart';
 
 class SendWalletView extends StatelessWidget {
   final WalletInfo walletInfo;
@@ -135,12 +137,6 @@ class SendWalletView extends StatelessWidget {
                             ],
                           ),
                         ),
-
-                        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-          
-                                      Send Amount And Available Balance Container
-          
-          --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
                         Container(
                             color: walletCardColor,
                             padding: const EdgeInsets.all(10),
@@ -470,15 +466,9 @@ class SendWalletView extends StatelessWidget {
                                     : Container()
                               ],
                             )),
-                        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-          
-                                      Gas fee and Advance Switch Container
-          
-          --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: walletInfo.tickerName == 'TRX' ||
-                                  walletInfo.tickerName == 'USDTX'
+                          child: model.isTrx()
                               ? Container(
                                   padding:
                                       const EdgeInsets.only(top: 10, bottom: 0),
@@ -797,7 +787,8 @@ class SendWalletView extends StatelessWidget {
                         Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 10),
-                            child: model.txHash.isNotEmpty
+                            child: model.txHash != null &&
+                                    model.txHash.isNotEmpty
                                 ? Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -914,8 +905,17 @@ class SendWalletView extends StatelessWidget {
                 ),
               ),
               // floatingActionButton: TextButton(
-              //   child: Text('click'),
-              //   onPressed: () => model.test(),
+              //   child: Text('Click'),
+              //   onPressed: () {
+              //     int gasLimit = 21000;
+              //     var gasPrice = 6.7415494;
+              //     var b = BigInt.parse('0x1dfd14000');
+              //     var transFeeDouble = (b *
+              //             BigInt.parse(gasLimit.toString()) /
+              //             BigInt.parse('1000000000'))
+              //         .toDouble();
+              //     debugPrint(transFeeDouble.toString());
+              //   },
               // ),
             ),
           );

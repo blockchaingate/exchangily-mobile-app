@@ -6,7 +6,7 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
-import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart' as StringUtil;
@@ -33,7 +33,7 @@ Future generateTrxTransactionContract(
   int decimal = 0;
 
   String contractAddress = '';
-  final tokenListDatabaseService = locator<TokenListDatabaseService>();
+  final tokenListDatabaseService = locator<TokenInfoDatabaseService>();
   final apiService = locator<ApiService>();
   List<int> fromAddress = bs58check.decode(fromAddr);
 

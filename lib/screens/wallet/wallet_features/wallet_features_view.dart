@@ -163,21 +163,22 @@ class WalletFeaturesView extends StatelessWidget {
                           child: _featuresCard(context, 1, model))
                     ],
                   ),
-
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        SizedBox(
-                          width: model.containerWidth,
-                          height: model.containerHeight,
-                          child: _featuresCard(context, 2, model),
-                        ),
-                        SizedBox(
-                          width: model.containerWidth,
-                          height: model.containerHeight,
-                          child: _featuresCard(context, 3, model),
-                        ),
-                      ]),
+                  model.walletInfo.tickerName == 'MATICM'
+                      ? Container()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                              SizedBox(
+                                width: model.containerWidth,
+                                height: model.containerHeight,
+                                child: _featuresCard(context, 2, model),
+                              ),
+                              SizedBox(
+                                width: model.containerWidth,
+                                height: model.containerHeight,
+                                child: _featuresCard(context, 3, model),
+                              ),
+                            ]),
                   Column(
                     //  mainAxisSize: MainAxisSize.max,
                     //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -306,7 +307,7 @@ class WalletFeaturesView extends StatelessWidget {
                                 height: 20,
                                 child: model.sharedService.loadingIndicator())
                             : const Center(
-                                child: const Icon(
+                                child: Icon(
                                   Icons.refresh,
                                   color: white,
                                   size: 18,
@@ -416,7 +417,7 @@ class WalletFeaturesView extends StatelessWidget {
 
   // Features Card
 
-  Widget _featuresCard(context, index, model) => Card(
+  Widget _featuresCard(context, index, WalletFeaturesViewModel model) => Card(
         color: walletCardColor,
         elevation: model.elevation,
         child: InkWell(
@@ -425,8 +426,8 @@ class WalletFeaturesView extends StatelessWidget {
                   model.features[index].route != '')
               ? () {
                   var route = model.features[index].route;
-                  Navigator.pushNamed(context, '/$route',
-                      arguments: model.walletInfo);
+                  model.navigationService
+                      .navigateTo('/$route', arguments: model.walletInfo);
                 }
               : null,
           child: Container(
