@@ -13,28 +13,28 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'package:exchangilymobileapp/constants/api_routes.dart';
-import 'package:exchangilymobileapp/models/app_update_model.dart';
-import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
-import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
-import 'package:exchangilymobileapp/models/wallet/token_model.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
-import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
-import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_history_model.dart';
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/config_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
-import 'package:exchangilymobileapp/utils/custom_http_util.dart';
+import 'package:exchangily_mobile_wallet/src/constants/api_routes.dart';
+import 'package:exchangily_mobile_wallet/src/models/app_update_model.dart';
+import 'package:exchangily_mobile_wallet/src/models/shared/pair_decimal_config_model.dart';
+import 'package:exchangily_mobile_wallet/src/models/wallet/custom_token_model.dart';
+import 'package:exchangily_mobile_wallet/src/models/wallet/token_model.dart';
+import 'package:exchangily_mobile_wallet/src/models/wallet/wallet_balance.dart';
+import 'package:exchangily_mobile_wallet/src/screens/exchange/exchange_balance_model.dart';
+import 'package:exchangily_mobile_wallet/src/screens/exchange/trade/my_orders/my_order_model.dart';
+import 'package:exchangily_mobile_wallet/src/screens/lightning-remit/lightning_remit_history_model.dart';
+import 'package:exchangily_mobile_wallet/src/service_locator.dart';
+import 'package:exchangily_mobile_wallet/src/services/config_service.dart';
+import 'package:exchangily_mobile_wallet/src/services/db/wallet_database_service.dart';
+import 'package:exchangily_mobile_wallet/src/utils/custom_http_util.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/string_util.dart' as stringUtils;
-import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangily_mobile_wallet/src/logger.dart';
 import '../environments/environment.dart';
-import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:exchangily_mobile_wallet/src/services/shared_service.dart';
+import 'package:exchangily_mobile_wallet/src/services/local_storage_service.dart';
 
-import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
+import 'package:exchangily_mobile_wallet/src/models/wallet/transaction_history.dart';
 
 /// The service responsible for networking requests
 class ApiService {

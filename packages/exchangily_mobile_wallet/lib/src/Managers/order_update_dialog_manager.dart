@@ -11,19 +11,14 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/dialog/dialog_request.dart';
-import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/dialog_service.dart';
-import 'package:flutter/material.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-import '../shared/globals.dart' as globals;
-import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangily_mobile_wallet/src/logger.dart';
+import 'package:exchangily_mobile_wallet/src/service_locator.dart';
+import 'package:exchangily_mobile_wallet/src/services/dialog_service.dart';
+import 'package:flutter/widgets.dart';
 
 class OrderUpdateDialogManager extends StatefulWidget {
   final Widget child;
-  const OrderUpdateDialogManager({Key key, this.child}) : super(key: key);
+  const OrderUpdateDialogManager({required this.child});
 
   @override
   _OrderUpdateDialogManagerState createState() =>

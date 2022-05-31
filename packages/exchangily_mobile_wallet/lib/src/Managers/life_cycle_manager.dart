@@ -1,8 +1,5 @@
-import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/stoppable_service.dart';
-import 'package:exchangilymobileapp/services/trade_service.dart';
+import 'package:exchangily_mobile_wallet/src/service_locator.dart';
+import 'package:exchangily_mobile_wallet/src/services/stoppable_service.dart';
 import 'package:flutter/material.dart';
 
 class LifeCycleManager extends StatefulWidget {

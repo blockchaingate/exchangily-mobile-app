@@ -12,13 +12,15 @@
 */
 
 import 'dart:async';
-import 'package:exchangilymobileapp/models/dialog/dialog_request.dart';
-import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:exchangilymobileapp/logger.dart';
+
+import 'package:exchangily_mobile_wallet/src/logger.dart';
+import 'package:exchangily_mobile_wallet/src/views/models/dialog/dialog_request.dart';
+import 'package:exchangily_mobile_wallet/src/views/models/dialog/dialog_response.dart';
+import 'package:flutter/widgets.dart';
 
 class DialogService {
-  final GlobalKey<NavigatorState> _dialogNavigationKey = GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> _dialogNavigationKey =
+      GlobalKey<NavigatorState>();
   Function(DialogRequest) _showDialogListener;
   Function(DialogRequest) _showOrderUpdateDialogListener;
   Function(DialogRequest) _showBasicDialogListener;
