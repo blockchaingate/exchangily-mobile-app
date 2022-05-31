@@ -257,7 +257,7 @@ class AddGas extends StatelessWidget {
                     const SizedBox(height: 30),
                     Row(
                       children: <Widget>[
-                        Flexible(
+                        Expanded(
                           child: MaterialButton(
                               // borderSide: BorderSide(color: globals.primaryColor),
                               color: primaryColor,
@@ -268,7 +268,7 @@ class AddGas extends StatelessWidget {
                                   style: const TextStyle(color: Colors.white))),
                         ),
                         const SizedBox(width: 8),
-                        Flexible(
+                        Expanded(
                           child: OutlinedButton(
                             style: outlinedButtonStyles1,
                             onPressed: () async {
