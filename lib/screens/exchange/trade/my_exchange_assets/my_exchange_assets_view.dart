@@ -48,7 +48,9 @@ class MyExchangeAssetsView extends StatelessWidget {
                         flex: 2,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 5),
-                          child: Text(AppLocalizations.of(context).amount,
+                          child: Text(
+                              AppLocalizations.of(context)
+                                  .updatedAmountTranslation,
                               style: Theme.of(context).textTheme.subtitle2),
                         ),
                       ),
@@ -75,8 +77,8 @@ class MyExchangeAssetsView extends StatelessWidget {
                                   Expanded(
                                     flex: 1,
                                     child: Container(
-                                        padding:
-                                            const EdgeInsets.symmetric(vertical: 7),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 7),
                                         //  margin: EdgeInsets.only(right: 10.0),
                                         decoration: BoxDecoration(
                                           borderRadius:

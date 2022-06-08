@@ -2261,5 +2261,11 @@
       "description": "announcements",
       "type": "text",
       "placeholders": {}
+    },
+    "updatedAmountTranslation": "Amount",
+    "@updatedAmountTranslation": {
+      "description": "updatedAmountTranslation",
+      "type": "text",
+      "placeholders": {}
     }
 }

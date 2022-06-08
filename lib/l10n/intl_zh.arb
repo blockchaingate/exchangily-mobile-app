@@ -2327,5 +2327,11 @@
     "description": "announcements",
     "type": "text",
     "placeholders": {}
+  },
+  "updatedAmountTranslation": "可用数量",
+  "@updatedAmountTranslation": {
+    "description": "updatedAmountTranslation",
+    "type": "text",
+    "placeholders": {}
   }
 }

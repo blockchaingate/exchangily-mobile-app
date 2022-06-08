@@ -2029,6 +2029,11 @@ class AppLocalizations {
     return Intl.message('Announcements',
         name: 'announcements', desc: 'announcements');
   }
+
+  String get updatedAmountTranslation {
+    return Intl.message('Amount',
+        name: 'updatedAmountTranslation', desc: 'updatedAmountTranslation');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
