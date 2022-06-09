@@ -136,7 +136,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     // update if transfee is 0
     if (!isTrx()) await updateTransFee();
     // if tron coins then assign fee accordingly
-    if (!isTrx()) {
+    if (isTrx()) {
       if (walletInfo.tickerName == 'USDTX') {
         transFee = 15;
         finalAmount = amount;
@@ -186,7 +186,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     if (!isTrx()) await updateTransFee();
     double finalAmount = 0.0;
-    if (!isTrx()) {
+    if (isTrx()) {
       transFee = 1;
     }
     if (transFee != 0.0) {

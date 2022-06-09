@@ -257,7 +257,7 @@ class SendViewModel extends BaseViewModel {
     // update if transfee is 0
     if (!isTrx()) await updateTransFee();
     // if tron coins then assign fee accordingly
-    if (!isTrx()) {
+    if (isTrx()) {
       if (walletInfo.tickerName == 'USDTX') {
         transFee = 15;
         finalAmount = amount;
