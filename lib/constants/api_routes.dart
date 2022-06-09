@@ -72,7 +72,7 @@ const String tronExplorerUrl = "https://tronscan.org/#/transaction/";
 // Free Fab
 const String getFreeFabUrl =
     '${baseBlockchainGateV2Url}airdrop/getQuestionair/';
-const String postFreeFabUrl =
+const String postFreeGasUrl =
     '${baseBlockchainGateV2Url}airdrop/answerQuestionair/';
 
 // USD Coin Price

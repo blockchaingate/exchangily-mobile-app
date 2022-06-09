@@ -192,7 +192,7 @@ class FabUtils {
 
   Future postFreeFab(data) async {
     try {
-      var response = await client.post(postFreeFabUrl, body: data);
+      var response = await client.post(postFreeGasUrl, body: data);
       var json = jsonDecode(response.body);
       log.w(json);
       return json;
