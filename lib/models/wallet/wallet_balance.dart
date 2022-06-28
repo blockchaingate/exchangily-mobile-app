@@ -8,7 +8,9 @@ class UsdValue {
   }
 
   factory UsdValue.fromJson(Map<String, dynamic> json) {
-    double jsonUsd = json['USD'].toDouble();
+    String usdString = json['USD'].toString();
+
+    double jsonUsd = double.parse(usdString);
     if (jsonUsd.isNegative) {
       jsonUsd = 0.0;
     }
