@@ -32,7 +32,6 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'dart:async';

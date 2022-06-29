@@ -150,126 +150,121 @@ class MoveToExchangeScreen extends StatelessWidget {
               ),
               UIHelper.verticalSpaceSmall,
 
-              Container(
-                child: Column(
-                  children: [
-                    walletInfo.tickerName == 'TRX' ||
-                            walletInfo.tickerName == 'USDTX'
-                        ? Container(
-                            padding: const EdgeInsets.only(top: 10, bottom: 0),
-                            alignment: Alignment.topLeft,
-                            child: walletInfo.tickerName == 'TRX'
-                                ? Text(
-                                    '${AppLocalizations.of(context).gasFee}: 1 TRX',
-                                    textAlign: TextAlign.left,
+              Column(
+                children: [
+                  model.isTrx()
+                      ? Container(
+                          padding: const EdgeInsets.only(top: 10, bottom: 0),
+                          alignment: Alignment.topLeft,
+                          child: walletInfo.tickerName == 'TRX'
+                              ? Text(
+                                  '${AppLocalizations.of(context).gasFee}: 1 TRX',
+                                  textAlign: TextAlign.left,
+                                  style: Theme.of(context).textTheme.headline5)
+                              : Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        '${AppLocalizations.of(context).gasFee}: 15 TRX',
+                                        textAlign: TextAlign.left,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                    // chain balance
+                                    model.tokenType.isNotEmpty
+                                        ? Row(
+                                            children: [
+                                              Text(
+                                                  model.walletInfo.tokenType +
+                                                      ' ' +
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .balance,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left:
+                                                        5), // padding left to keep some space from the text
+                                                child: Text(
+                                                    '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, precision: 6).toString()} ${model.feeUnit}',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline6),
+                                              )
+                                            ],
+                                          )
+                                        : Container()
+                                  ],
+                                ),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              children: [
+                                Text(AppLocalizations.of(context).gasFee,
                                     style:
-                                        Theme.of(context).textTheme.headline5)
-                                : Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                        Theme.of(context).textTheme.headline5),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left:
+                                          5), // padding left to keep some space from the text
+                                  child: Text(
+                                      '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 6).toString()} ${model.feeUnit}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                )
+                              ],
+                            ),
+                            // chain balance
+                            model.tokenType.isNotEmpty
+                                ? Row(
                                     children: [
                                       Text(
-                                          '${AppLocalizations.of(context).gasFee}: 15 TRX',
-                                          textAlign: TextAlign.left,
+                                          model.walletInfo.tokenType +
+                                              ' ' +
+                                              AppLocalizations.of(context)
+                                                  .balance,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline5),
-                                      // chain balance
-                                      model.tokenType.isNotEmpty
-                                          ? Row(
-                                              children: [
-                                                Text(
-                                                    model.walletInfo.tokenType +
-                                                        ' ' +
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .balance,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline5),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .only(
-                                                      left:
-                                                          5), // padding left to keep some space from the text
-                                                  child: Text(
-                                                      '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, precision: 6).toString()} ${model.feeUnit}',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline6),
-                                                )
-                                              ],
-                                            )
-                                          : Container()
-                                    ],
-                                  ),
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Row(
-                                children: [
-                                  Text(AppLocalizations.of(context).gasFee,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left:
-                                            5), // padding left to keep some space from the text
-                                    child: Text(
-                                        '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 6).toString()} ${model.feeUnit}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6),
-                                  )
-                                ],
-                              ),
-                              // chain balance
-                              model.tokenType.isNotEmpty
-                                  ? Row(
-                                      children: [
-                                        Text(
-                                            model.walletInfo.tokenType +
-                                                ' ' +
-                                                AppLocalizations.of(context)
-                                                    .balance,
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left:
+                                                5), // padding left to keep some space from the text
+                                        child: Text(
+                                            '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, precision: 6).toString()} ${model.feeUnit}',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline5),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left:
-                                                  5), // padding left to keep some space from the text
-                                          child: Text(
-                                              '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, precision: 6).toString()} ${model.feeUnit}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6),
-                                        )
-                                      ],
-                                    )
-                                  : Container()
-                            ],
-                          ),
-                    UIHelper.verticalSpaceSmall,
-                    // Kanaban Gas Fee Row
-                    Row(
-                      children: <Widget>[
-                        Text(AppLocalizations.of(context).kanbanGasFee,
-                            style: Theme.of(context).textTheme.headline5),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left:
-                                  5), // padding left to keep some space from the text
-                          child: Text(
-                              '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 6).toString()} GAS',
-                              style: Theme.of(context).textTheme.headline6),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+                                                .headline6),
+                                      )
+                                    ],
+                                  )
+                                : Container()
+                          ],
+                        ),
+                  UIHelper.verticalSpaceSmall,
+                  // Kanaban Gas Fee Row
+
+                  Row(
+                    children: <Widget>[
+                      Text(AppLocalizations.of(context).kanbanGasFee,
+                          style: Theme.of(context).textTheme.headline5),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left:
+                                5), // padding left to keep some space from the text
+                        child: Text(
+                            '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 6).toString()} GAS',
+                            style: Theme.of(context).textTheme.headline6),
+                      )
+                    ],
+                  ),
+                ],
               ),
 
               // Switch Row

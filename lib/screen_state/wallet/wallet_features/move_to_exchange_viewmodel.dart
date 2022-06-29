@@ -68,7 +68,14 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (coinName == 'USDTX') walletInfo.tokenType = 'TRX';
     tokenType = walletInfo.tokenType;
     setFee();
-    await getGas();
+    var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
+    var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
+    var kanbanTransFeeDouble = (Decimal.parse(kanbanPrice.toString()) *
+            Decimal.parse(kanbanGasLimit.toString()) /
+            Decimal.parse('1e18'))
+        .toDouble();
+    kanbanTransFee = kanbanTransFeeDouble;
+    await getGasBalance();
 
     specialTicker = walletUtil.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)['tickerName'];
@@ -248,7 +255,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
                       Get gas
 --------------------------------------------------- */
 
-  getGas() async {
+  getGasBalance() async {
     String address = await sharedService.getExgAddressFromWalletDatabase();
     await walletService.gasBalance(address).then((data) {
       gasAmount = data;
@@ -619,13 +626,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
     };
     var address = walletInfo.address;
 
-    var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
-    var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
-    var kanbanTransFeeDouble = (Decimal.parse(kanbanPrice.toString()) *
-            Decimal.parse(kanbanGasLimit.toString()) /
-            Decimal.parse('1e18'))
-        .toDouble();
-
     await walletService
         .sendTransaction(
             walletInfo.tickerName,
@@ -643,7 +643,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
         transFee = NumberUtil()
             .truncateDoubleWithoutRouding(ret['transFee'], precision: 8);
         log.i('transfee $transFee');
-        kanbanTransFee = kanbanTransFeeDouble;
         setBusy(false);
       }
 

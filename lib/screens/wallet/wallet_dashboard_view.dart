@@ -321,7 +321,10 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
         autoplay: true,
         autoplayDelay: 7000,
       ),
-      //Announcement Widget
+      // Align(
+      //     alignment: Alignment.center,
+      //     child: ElevatedButton(
+      //         onPressed: (() => model.test()), child: Text('CLICK'))),
       Positioned(
         top: 15,
         child: Stack(

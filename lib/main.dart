@@ -98,7 +98,7 @@ class MyApp extends StatelessWidget {
                         quarterTurns: 1,
                         child: Text(
                           // 'v ',
-                          'v: ${packageInfo.version}.${packageInfo.buildNumber}',
+                          'v ${packageInfo.version}.${packageInfo.buildNumber}',
                           style: const TextStyle(
                               fontSize: 10, color: Color(0x44ffffff)),
                         ),
