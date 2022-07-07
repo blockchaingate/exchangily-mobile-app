@@ -1307,7 +1307,7 @@ class WalletService {
         'depositTron -- amount $amount -- istrxusdt $isTrxUsdt -- isBroadcast $isBroadcast');
     int kanbanGasPrice = options['kanbanGasPrice'];
     int kanbanGasLimit = options['kanbanGasLimit'];
-
+    var amountInLink = NumberUtil.decimalToBigInt(amount);
     debugPrint('kanbanGasPrice $kanbanGasPrice');
     debugPrint('kanbanGasLimit $kanbanGasLimit');
     var officalAddress = coinUtils.getOfficalAddress(appWallet.tickerName,
@@ -1343,8 +1343,6 @@ class WalletService {
     var coinType =
         await coinService.getCoinTypeByTickerName(appWallet.tickerName);
     log.i('coin type $coinType');
-
-    var amountInLink = NumberUtil.decimalToBigInt(amount);
 
     var seed = generateSeed(mnemonic);
     var keyPairKanban = getExgKeyPair(seed);
