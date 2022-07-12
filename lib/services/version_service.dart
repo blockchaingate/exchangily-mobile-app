@@ -71,11 +71,12 @@ class VersionService {
   }
 
   downloadSdk() async {
-    if (await canLaunch(androidSdkDownloadUrl)) {
-      log.i('androidSdkDownloadUrl $androidSdkDownloadUrl');
-      await launch(androidSdkDownloadUrl);
+    Uri uri = Uri.parse(androidSdkDownloadUrl);
+    log.w('androidSdkDownloadUrl $androidSdkDownloadUrl');
+    if (!await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
-      throw 'Could not launch $androidSdkDownloadUrl';
+      throw 'Could not launch $uri';
     }
   }
 
@@ -91,9 +92,9 @@ class VersionService {
 
   downloadWithLink(String link) async {
     String url = link;
-
-    if (await canLaunch(url)) {
-      await launch(url);
+    Uri uri = Uri.parse(link);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
       throw 'Could not launch $url';
     }

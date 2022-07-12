@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/constants/ui_var.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
@@ -172,7 +173,9 @@ class WalletDashboardViewModel extends BaseViewModel {
     await getBalanceForSelectedCustomTokens();
     setBusy(false);
 
-    await versionService.checkVersion(context, isForceUpdate: true);
+    if (isProduction) {
+      await versionService.checkVersion(context, isForceUpdate: true);
+    }
   }
 
 // set route with coin token type and address

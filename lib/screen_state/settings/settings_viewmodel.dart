@@ -33,6 +33,7 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
@@ -110,6 +111,38 @@ class SettingsViewmodel extends BaseViewModel {
     await setLanguageFromDb();
     await selectDefaultWalletLanguage();
     setBusy(false);
+  }
+
+  walletConnectConcsSign() async {
+    debugPrint('walletConnectConcsSign start');
+    const channel = 'com.exchangily.wallet/walletconnectsign';
+    const abc = MethodChannel(channel);
+
+    abc.invokeMethod('test', {"data": "This is the first test"});
+
+    try {
+      const testMethodChannel = MethodChannel(channel);
+
+      var result = await testMethodChannel.invokeMethod('sign');
+      debugPrint('walletConnectConcsSign RESULT $result');
+    } on PlatformException catch (err) {
+      log.e('walletConnectConcsSign Method call failed $err');
+    }
+    debugPrint('walletConnectConcsSign finished');
+  }
+
+  testWalletConnectConc() async {
+    debugPrint('start');
+    const channel = 'com.exchangily.wallet/connectiontest';
+    try {
+      const testMethodChannel = MethodChannel(channel);
+
+      var result = await testMethodChannel.invokeMethod('test');
+      debugPrint('RESULT $result');
+    } on PlatformException catch (err) {
+      log.e('Method call failed $err');
+    }
+    debugPrint('finished');
   }
 
   setLockAppNowValue() {

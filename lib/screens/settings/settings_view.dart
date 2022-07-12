@@ -39,6 +39,9 @@ class SettingsView extends StatelessWidget {
           return Future(() => false);
         },
         child: Scaffold(
+          floatingActionButton: TextButton(
+              child: Text('TEST BUTTOn'),
+              onPressed: () => model.walletConnectConcsSign()),
           // When the keyboard appears, the Flutter widgets resize to avoid that we use resizeToAvoidBottomInset: false
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
