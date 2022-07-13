@@ -361,6 +361,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "unConfirmedBalanceInfoContent" : MessageLookupByLibrary.simpleMessage("The unconfirmed balance reflects the total value of your unspent transactions outputs (utxos) for transactions that are still pending (not yet confirmed on the blockchain)"),
     "unConfirmedBalanceInfoExample" : MessageLookupByLibrary.simpleMessage("This is the normal transaction process where unconfirmed funds may be more than the amount user sends. For example, when you purchase 50 dollars worth of groceries in a cash transaction and you give the shopkeeper a 100 dollar bill, then you get your change(50 dollars) back by the shopkeeper"),
     "unConfirmedBalanceInfoTitle" : MessageLookupByLibrary.simpleMessage("Unconfirmed Balance Info"),
+    "unavailable" : MessageLookupByLibrary.simpleMessage("Unavailable"),
     "unknownError" : MessageLookupByLibrary.simpleMessage("Unknown Error"),
     "unlock" : MessageLookupByLibrary.simpleMessage("Unlock"),
     "updateNow" : MessageLookupByLibrary.simpleMessage("Update now"),

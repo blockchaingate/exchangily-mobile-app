@@ -2267,5 +2267,11 @@
       "description": "updatedAmountTranslation",
       "type": "text",
       "placeholders": {}
+    },
+    "unavailable": "Unavailable",
+    "@unavailable": {
+      "description": "unavailable",
+      "type": "text",
+      "placeholders": {}
     }
 }

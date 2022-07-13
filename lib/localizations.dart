@@ -2034,6 +2034,11 @@ class AppLocalizations {
     return Intl.message('Amount',
         name: 'updatedAmountTranslation', desc: 'updatedAmountTranslation');
   }
+
+  String get unavailable {
+    return Intl.message('Unavailable',
+        name: 'unavailable', desc: 'unavailable');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

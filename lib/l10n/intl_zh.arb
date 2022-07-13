@@ -2333,5 +2333,11 @@
     "description": "updatedAmountTranslation",
     "type": "text",
     "placeholders": {}
+  },
+  "unavailable": "不能利用的",
+  "@unavailable": {
+    "description": "unavailable",
+    "type": "text",
+    "placeholders": {}
   }
 }

@@ -173,6 +173,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusy(false);
 
     await versionService.checkVersion(context, isForceUpdate: true);
+    sharedService.refreshDecimalConfigDB();
   }
 
 // set route with coin token type and address
@@ -1343,21 +1344,34 @@ class WalletDashboardViewModel extends BaseViewModel {
     totalWalletBalance = '';
     totalLockedBalance = '';
     totalExchangeBalance = '';
+
     var twb = 0.0;
     var tlb = 0.0;
     var teb = 0.0;
+
     for (var i = 0; i < wallets.length; i++) {
-      if (!wallets[i].balance.isNegative) {
-        twb += wallets[i].balance * wallets[i].usdValue.usd;
+      if (!wallets[i].usdValue.usd.isNegative) {
+        if (!wallets[i].balance.isNegative) {
+          twb += wallets[i].balance * wallets[i].usdValue.usd;
+        }
+
+        if (!wallets[i].lockBalance.isNegative) {
+          tlb += wallets[i].lockBalance * wallets[i].usdValue.usd;
+        }
+
+        if (!wallets[i].unlockedExchangeBalance.isNegative) {
+          teb += wallets[i].unlockedExchangeBalance * wallets[i].usdValue.usd;
+        }
       }
-      tlb += wallets[i].lockBalance * wallets[i].usdValue.usd;
-      teb += wallets[i].unlockedExchangeBalance * wallets[i].usdValue.usd;
     }
+
     totalWalletBalance = NumberUtil.currencyFormat(twb, 2);
     totalLockedBalance = NumberUtil.currencyFormat(tlb, 2);
     totalExchangeBalance = NumberUtil.currencyFormat(teb, 2);
+
     var total = twb + tlb;
     totalUsdBalance = NumberUtil.currencyFormat(total, 2);
+
     log.i(
         'Total usd balance $totalUsdBalance -- totalWalletBalance $totalWalletBalance --totalLockedBalance $totalLockedBalance ');
   }
@@ -1394,11 +1408,17 @@ class WalletDashboardViewModel extends BaseViewModel {
             });
           }
           log.w('tickerNameByCointype $tickerNameByCointype');
+          tickerNameByCointype =
+              walletUtil.updateSpecialTokensTickerNameForTxHistory(
+                  tickerNameByCointype)["tickerName"];
+          log.i(
+              'if Special then updated tickerNameByCointype $tickerNameByCointype');
           if (tickerNameByCointype != null &&
               !pendingDepositCoins.contains(tickerNameByCointype)) {
             pendingDepositCoins.add(tickerNameByCointype);
           }
         }
+
         var json = jsonEncode(pendingDepositCoins);
         var listCoinsToString = jsonDecode(json);
         String holder = listCoinsToString.toString();
@@ -1486,8 +1506,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       );
       // store in single core database
       await coreWalletDatabaseService.insert(walletCoreModel);
-    }
-    if (walletBalancesBodyFromDB != null) {
+    } else if (walletBalancesBodyFromDB != null) {
       finalWbb = walletBalancesBodyFromDB['walletBalancesBody'];
     }
     if (finalWbb == null || finalWbb == '') {

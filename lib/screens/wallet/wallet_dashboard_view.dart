@@ -913,10 +913,6 @@ ListView buildListView(WalletDashboardViewModel model) {
     itemCount: model.wallets.length,
     itemBuilder: (BuildContext context, int index) {
       var name = model.wallets[index].coin.toLowerCase();
-      var usdBalance = (!model.wallets[index].balance.isNegative
-              ? model.wallets[index].balance
-              : 0.0) *
-          model.wallets[index].usdValue.usd;
 
       return _coinDetailsCard(
           name, index, model.wallets, model.elevation, context, model);
@@ -947,7 +943,9 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
       model.walletUtil.updateSpecialTokensTickerNameForTxHistory(tickerName);
   tickerName = specialTokenData['tickerName'];
   logoTicker = specialTokenData['logoTicker'];
+  bool isUsdNegative = model.wallets[index].usdValue.usd.isNegative;
   if (model.isHideSmallAssetsButton &&
+      !isUsdNegative &&
       (model.wallets[index].balance * model.wallets[index].usdValue.usd)
               .toInt() <
           0.1) {
@@ -988,7 +986,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                     errorBuilder: (BuildContext context, Object exception,
                         StackTrace stackTrace) {
                       return Text(logoTicker.toString(),
-                          style: TextStyle(fontSize: 8, color: white));
+                          style: const TextStyle(fontSize: 8, color: white));
                     },
                   ),
                   //asset('assets/images/wallet-page/$tickerName.png'),
@@ -1029,7 +1027,8 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                               : Expanded(
                                   child: Text(
                                       wallets[index].balance.isNegative
-                                          ? '0.0'
+                                          ? AppLocalizations.of(context)
+                                              .unavailable
                                           : NumberUtil()
                                               .truncateDoubleWithoutRouding(
                                                   model.wallets[index].balance,
@@ -1067,7 +1066,8 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                               : Expanded(
                                   child: Text(
                                       wallets[index].lockBalance.isNegative
-                                          ? '0.0'
+                                          ? AppLocalizations.of(context)
+                                              .unavailable
                                           : NumberUtil()
                                               .truncateDoubleWithoutRouding(
                                                   model.wallets[index]
@@ -1107,9 +1107,11 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                 ))
                               : Expanded(
                                   child: Text(
-                                      wallets[index].unlockedExchangeBalance ==
-                                              0
-                                          ? '0.0'
+                                      wallets[index]
+                                              .unlockedExchangeBalance
+                                              .isNegative
+                                          ? AppLocalizations.of(context)
+                                              .unavailable
                                           : NumberUtil()
                                               .truncateDoubleWithoutRouding(
                                                   wallets[index]
@@ -1143,14 +1145,17 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                           Text('\$', style: TextStyle(color: green)),
                           Expanded(
                             child: Text(
-                              NumberUtil()
-                                  .truncateDoubleWithoutRouding(
-                                      (!model.wallets[index].balance.isNegative
-                                              ? model.wallets[index].balance
-                                              : 0.0) *
-                                          model.wallets[index].usdValue.usd,
-                                      precision: 2)
-                                  .toString(),
+                              model.wallets[index].usdValue.usd.isNegative
+                                  ? AppLocalizations.of(context).unavailable
+                                  : NumberUtil()
+                                      .truncateDoubleWithoutRouding(
+                                          (!model.wallets[index].balance
+                                                      .isNegative
+                                                  ? model.wallets[index].balance
+                                                  : 0.0) *
+                                              model.wallets[index].usdValue.usd,
+                                          precision: 2)
+                                      .toString(),
                               style: TextStyle(color: green),
                             ),
                           )

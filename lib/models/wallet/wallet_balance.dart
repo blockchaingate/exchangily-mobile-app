@@ -11,9 +11,9 @@ class UsdValue {
     String usdString = json['USD'].toString();
 
     double jsonUsd = double.parse(usdString);
-    if (jsonUsd.isNegative) {
-      jsonUsd = 0.0;
-    }
+    // if (jsonUsd.isNegative) {
+    //   jsonUsd = 0.0;
+    // }
     return UsdValue(usd: jsonUsd);
   }
 

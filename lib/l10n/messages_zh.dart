@@ -357,6 +357,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "unConfirmedBalanceInfoContent" : MessageLookupByLibrary.simpleMessage("未确认余额反映你的交易未动用的输出（utxos）的对于那些仍在等待交易的总价值（尚未证实的blockchain）"),
     "unConfirmedBalanceInfoExample" : MessageLookupByLibrary.simpleMessage("这是正常的交易过程，其中未经确认的资金可能超过用户发送的金额。 例如，当您在现金交易中购买价值 50 美元的杂货时，您给店主一张 100 美元的钞票，然后店主将零钱找回给您（50 美元）。"),
     "unConfirmedBalanceInfoTitle" : MessageLookupByLibrary.simpleMessage("未确认余额的详情"),
+    "unavailable" : MessageLookupByLibrary.simpleMessage("不能利用的"),
     "unknownError" : MessageLookupByLibrary.simpleMessage("不明原因错误"),
     "unlock" : MessageLookupByLibrary.simpleMessage("解锁"),
     "updateNow" : MessageLookupByLibrary.simpleMessage("立即更新"),

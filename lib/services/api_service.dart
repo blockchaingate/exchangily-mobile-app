@@ -611,8 +611,7 @@ class ApiService {
 
   Future<List<WalletBalance>> getWalletBalance(body) async {
     String url = configService.getKanbanBaseUrl() + walletBalancesApiRoute;
-    log.i('getWalletBalance URL $url');
-    log.i('getWalletBalance body $body');
+    log.i('getWalletBalance URL $url --getWalletBalance body $body');
 
     WalletBalanceList balanceList;
     try {
@@ -621,13 +620,13 @@ class ApiService {
       if (success == true) {
         var jsonList = jsonDecode(response.body)['data'] as List;
         //  log.i('json list getWalletBalance $jsonList');
-        List newList = [];
-        for (var element in jsonList) {
-          if (element['balance'] == -1) element['balance'] = 0.0;
-          if (element['balance'] != null) newList.add(element);
-        }
-        log.i('newList getWalletBalance $newList');
-        balanceList = WalletBalanceList.fromJson(newList);
+        // List newList = [];
+        // for (var element in jsonList) {
+        //   if (element['balance'] == -1) element['balance'] = 0.0;
+        //   if (element['balance'] != null) newList.add(element);
+        // }
+        // log.i('newList getWalletBalance $newList');
+        balanceList = WalletBalanceList.fromJson(jsonList.sublist(2));
       } else {
         log.e('get wallet balances returning null');
         return null;
