@@ -122,7 +122,7 @@ class SettingsViewmodel extends BaseViewModel {
 
     try {
       const testMethodChannel = MethodChannel(channel);
-
+// we need to pass like relayserverurl, projectid, hostname etc
       var result = await testMethodChannel.invokeMethod('sign');
       debugPrint('walletConnectConcsSign RESULT $result');
     } on PlatformException catch (err) {
