@@ -939,16 +939,13 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
     elevation, context, WalletDashboardViewModel model) {
   String logoTicker = '';
   var specialTokenData = {};
+  bool isBalanceNegative = model.wallets[index].balance.isNegative;
   specialTokenData =
       model.walletUtil.updateSpecialTokensTickerNameForTxHistory(tickerName);
   tickerName = specialTokenData['tickerName'];
   logoTicker = specialTokenData['logoTicker'];
-  bool isUsdNegative = model.wallets[index].usdValue.usd.isNegative;
-  if (model.isHideSmallAssetsButton &&
-      !isUsdNegative &&
-      (model.wallets[index].balance * model.wallets[index].usdValue.usd)
-              .toInt() <
-          0.1) {
+
+  if (model.hideSmallAmountCheck(wallets[index])) {
     return Container();
   } else {
     return Card(
@@ -1026,7 +1023,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                 ))
                               : Expanded(
                                   child: Text(
-                                      wallets[index].balance.isNegative
+                                      isBalanceNegative
                                           ? AppLocalizations.of(context)
                                               .unavailable
                                           : NumberUtil()
@@ -1141,22 +1138,29 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          UIHelper.horizontalSpaceSmall,
-                          Text('\$', style: TextStyle(color: green)),
+                          isBalanceNegative
+                              ? Container(
+                                  padding: EdgeInsets.only(left: 5),
+                                )
+                              : model.wallets[index].balance == 0.0
+                                  ? UIHelper.horizontalSpaceMedium
+                                  : UIHelper.horizontalSpaceSmall,
+                          isBalanceNegative
+                              ? Container()
+                              : Text('\$', style: TextStyle(color: green)),
                           Expanded(
                             child: Text(
-                              model.wallets[index].usdValue.usd.isNegative
+                              isBalanceNegative
                                   ? AppLocalizations.of(context).unavailable
                                   : NumberUtil()
                                       .truncateDoubleWithoutRouding(
-                                          (!model.wallets[index].balance
-                                                      .isNegative
-                                                  ? model.wallets[index].balance
-                                                  : 0.0) *
+                                          model.wallets[index].balance *
                                               model.wallets[index].usdValue.usd,
                                           precision: 2)
                                       .toString(),
-                              style: TextStyle(color: green),
+                              style: isBalanceNegative
+                                  ? const TextStyle(color: grey, fontSize: 13)
+                                  : TextStyle(color: green),
                             ),
                           )
                         ],

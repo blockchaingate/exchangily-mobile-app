@@ -504,6 +504,17 @@ class WalletDashboardViewModel extends BaseViewModel {
     });
   }
 
+  bool hideSmallAmountCheck(WalletBalance wallet) {
+    bool isSuccess = false;
+
+    if (isHideSmallAssetsButton &&
+        (wallet.balance * wallet.usdValue.usd).toInt() < 0.1 &&
+        wallet.balance < 0.1) {
+      isSuccess = true;
+    }
+    return isSuccess;
+  }
+
   updateTabSelection(int tabIndex) async {
     setBusy(true);
     currentTabSelection = tabIndex;
