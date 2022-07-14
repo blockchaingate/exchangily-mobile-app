@@ -2273,5 +2273,11 @@
       "description": "unavailable",
       "type": "text",
       "placeholders": {}
+    },
+    "visitWebsite": "Visit Website",
+    "@visitWebsite": {
+      "description": "visitWebsite",
+      "type": "text",
+      "placeholders": {}
     }
 }

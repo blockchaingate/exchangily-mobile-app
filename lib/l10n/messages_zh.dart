@@ -372,6 +372,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "validationError" : MessageLookupByLibrary.simpleMessage("验证错误"),
     "value" : MessageLookupByLibrary.simpleMessage("价值"),
     "verifyingWallet" : MessageLookupByLibrary.simpleMessage("验证钱包"),
+    "visitWebsite" : MessageLookupByLibrary.simpleMessage("訪問網站"),
     "vol" : MessageLookupByLibrary.simpleMessage("数量"),
     "volume" : MessageLookupByLibrary.simpleMessage("交易量"),
     "waiting" : MessageLookupByLibrary.simpleMessage("等候付款"),

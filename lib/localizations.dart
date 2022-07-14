@@ -2039,6 +2039,11 @@ class AppLocalizations {
     return Intl.message('Unavailable',
         name: 'unavailable', desc: 'unavailable');
   }
+
+  String get visitWebsite {
+    return Intl.message('Visit Website',
+        name: 'visitWebsite', desc: 'visitWebsite');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -376,6 +376,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "validationError" : MessageLookupByLibrary.simpleMessage("Validation Error"),
     "value" : MessageLookupByLibrary.simpleMessage("Value"),
     "verifyingWallet" : MessageLookupByLibrary.simpleMessage("Verifying Wallet"),
+    "visitWebsite" : MessageLookupByLibrary.simpleMessage("Visit Website"),
     "vol" : MessageLookupByLibrary.simpleMessage("Vol"),
     "volume" : MessageLookupByLibrary.simpleMessage("Volume"),
     "waiting" : MessageLookupByLibrary.simpleMessage("Waiting"),

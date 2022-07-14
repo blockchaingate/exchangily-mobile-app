@@ -9,8 +9,10 @@ import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/cache_image.dart';
 import 'package:exchangilymobileapp/widgets/loading_animation.dart';
 import 'package:exchangilymobileapp/widgets/web_page.dart';
+import 'package:exchangilymobileapp/widgets/web_view_widget.dart';
 import 'package:exchangilymobileapp/widgets/youtube.dart';
 import 'package:exchangilymobileapp/widgets/youtube_list_page.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path/path.dart';
@@ -37,31 +39,48 @@ class CampaignInstructionScreen extends StatelessWidget {
           child: Scaffold(
               // appBar: AppBar(title: Text("instruction")),
 
-              // floatingActionButtonLocation:
-              //     FloatingActionButtonLocation.centerDocked,
-              // floatingActionButton: Container(
-              //   decoration: BoxDecoration(
-              //       color: white.withOpacity(.90),
-              //       borderRadius: BorderRadius.circular(25),
-              //       border: Border.all(
-              //           color: primaryColor.withAlpha(145), width: 1.5)),
-              //   constraints: BoxConstraints(minWidth: 250),
-              //   margin: EdgeInsets.symmetric(horizontal: 60, vertical: 80),
-              //   child: FlatButton(
-              //     //   borderSide: BorderSide(color: primaryColor),
-              //     // color: primaryColor,
-              //     padding: EdgeInsets.all(0),
-              //     child: Text(
-              //         AppLocalizations.of(context).tapHereToEnterInCampaign,
-              //         style: Theme.of(context).textTheme.headline5.copyWith(
-              //             color: primaryColor, fontWeight: FontWeight.bold)),
-              //     onPressed: () {
-              //       model.busy
-              //           ? debugPrint('loading...')
-              //           : Navigator.pushNamed(context, '/campaignLogin');
-              //     },
-              //   ),
-              // ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+              floatingActionButton: Container(
+                // decoration: BoxDecoration(
+                //     color: white.withOpacity(.90),
+                //     borderRadius: BorderRadius.circular(25),
+                //     border: Border.all(
+                //         color: primaryColor.withAlpha(145), width: 1.5)),
+                constraints: const BoxConstraints(minWidth: 250),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 60, vertical: 80),
+                child: TextButton(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              model.sharedService.launchInBrowser(
+                                  Uri.parse(exchangilyAnnouncementUrl));
+                            },
+                          text: AppLocalizations.of(context).visitWebsite,
+                          style: Theme.of(context).textTheme.bodyText1.copyWith(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 5.0),
+                        child: Icon(
+                          Icons.web,
+                          size: 16,
+                        ),
+                      )
+                    ],
+                  ),
+                  onPressed: () => model.sharedService
+                      .launchInBrowser(Uri.parse(exchangilyAnnouncementUrl)),
+                ),
+              ),
               key: key,
               body: model.busy
                   ? const LoadingGif()
@@ -137,21 +156,28 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                   width: 1)),
                                           child: Row(
                                             children: [
-                                              Text(AppLocalizations.of(context)
-                                                  .announcements),
+                                              Text(
+                                                AppLocalizations.of(context)
+                                                    .announcements,
+                                                style: TextStyle(color: white),
+                                              ),
                                               const Padding(
                                                 padding: EdgeInsets.only(
                                                     left: 5.0, bottom: 5.0),
                                                 child: Icon(
                                                   FontAwesomeIcons.bullhorn,
                                                   size: 16,
+                                                  color: white,
                                                 ),
                                               )
                                             ],
                                           ),
-                                          onPressed: () => model.sharedService
-                                              .launchInBrowser(Uri.parse(
-                                                  exchangilyAnnouncementUrl)),
+                                          onPressed: () => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) => const WebViewWidget(
+                                                      exchangilyAnnouncementUrl,
+                                                      'Exchangily Announcements'))),
                                         ),
                                         UIHelper.horizontalSpaceSmall,
                                         ElevatedButton(
@@ -171,9 +197,13 @@ class CampaignInstructionScreen extends StatelessWidget {
                                               )
                                             ],
                                           ),
-                                          onPressed: () => model.sharedService
-                                              .launchInBrowser(
-                                                  Uri.parse(exchangilyBlogUrl)),
+                                          onPressed: () => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      const WebViewWidget(
+                                                          exchangilyBlogUrl,
+                                                          'Exchangily Blogs'))),
                                         ),
                                       ],
                                     )

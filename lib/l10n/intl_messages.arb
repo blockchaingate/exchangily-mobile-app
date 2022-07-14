@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2022-07-13T10:53:23.163783",
+  "@@last_modified": "2022-07-14T16:51:38.780157",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -2331,6 +2331,12 @@
   "unavailable": "Unavailable",
   "@unavailable": {
     "description": "unavailable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "visitWebsite": "Visit Website",
+  "@visitWebsite": {
+    "description": "visitWebsite",
     "type": "text",
     "placeholders": {}
   }
