@@ -11,7 +11,7 @@ class EventsViewModel extends BaseViewModel {
 
   updateUrl(String url) async {
     setBusy(true);
-    await Future.delayed(const Duration(milliseconds: 500), () => _url = url);
+    await Future.delayed(const Duration(milliseconds: 50), () => _url = url);
 
     setBusy(false);
   }

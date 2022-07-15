@@ -85,36 +85,39 @@ class EventsView extends StatelessWidget {
                     // website link
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  model.sharedService.launchInBrowser(
-                                      Uri.parse(exchangilyAnnouncementUrl));
-                                },
-                              text: AppLocalizations.of(context).visitWebsite,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .copyWith(
-                                    color: Colors.blue,
-                                    decoration: TextDecoration.underline,
+                      child: model.isBusy
+                          ? model.sharedService.loadingIndicator()
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        model.sharedService.launchInBrowser(
+                                            Uri.parse(model.url));
+                                      },
+                                    text: AppLocalizations.of(context)
+                                        .visitWebsite,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(
+                                          color: Colors.blue,
+                                          decoration: TextDecoration.underline,
+                                        ),
                                   ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 5.0),
+                                  child: Icon(
+                                    Icons.web,
+                                    size: 16,
+                                    color: Colors.blue,
+                                  ),
+                                )
+                              ],
                             ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 5.0),
-                            child: Icon(
-                              Icons.web,
-                              size: 16,
-                              color: Colors.blue,
-                            ),
-                          )
-                        ],
-                      ),
                     ),
                     UIHelper.verticalSpaceSmall
                   ],
