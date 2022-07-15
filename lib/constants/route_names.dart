@@ -36,6 +36,7 @@ const String MarketsViewRoute = '/markets';
 const String LightningRemitViewRoute = '/lightningRemit';
 const String instructionsViewRoute = '/campaignInstructions';
 const String SettingViewRoute = '/settings';
+const String eventsViewRoute = '/eventsView';
 
 /*----------------------------------------------------------------------
                       Campaign Routes

@@ -120,9 +120,9 @@ class BottomNavBar extends StatelessWidget {
           //   Navigator.pushNamed(context, '/otc');
           //   break;
           case 3:
-            if (currentRouteName != 'CampaignInstructionScreen') {
+            if (currentRouteName != 'EventsView') {
               navigationService
-                  .navigateUsingPushReplacementNamed(instructionsViewRoute);
+                  .navigateUsingPushReplacementNamed(eventsViewRoute);
             }
             break;
           case 4:

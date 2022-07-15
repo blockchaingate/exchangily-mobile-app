@@ -14,6 +14,7 @@
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/screens/announcement/events/events_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
 import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_view.dart';
@@ -214,8 +215,10 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => const CampaignRegisterAccountScreen());
 
-      // case '/switchLanguage':
-      //   return MaterialPageRoute(builder: (_) => LanguageScreen());
+      case '/eventsView':
+        return MaterialPageRoute(
+            settings: const RouteSettings(name: 'EventsView'),
+            builder: (_) => const EventsView());
 /*----------------------------------------------------------------------
                       LightningRemit Routes
 ----------------------------------------------------------------------*/

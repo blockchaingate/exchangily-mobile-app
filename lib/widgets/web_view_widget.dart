@@ -28,21 +28,22 @@ class _WebViewWidgetState extends State<WebViewWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            widget.title,
-            style: headText4,
-          ),
-        ),
+        // appBar: AppBar(
+        //   centerTitle: true,
+        //   title: Text(
+        //     widget.title,
+        //     style: headText4,
+        //   ),
+        // ),
         body: Column(
-          children: [
-            Expanded(
-                child: WebView(
-                    key: _key,
-                    javascriptMode: JavascriptMode.unrestricted,
-                    initialUrl: _url))
-          ],
-        ));
+      children: [
+        Expanded(
+            child: WebView(
+          key: _key,
+          javascriptMode: JavascriptMode.unrestricted,
+          initialUrl: _url,
+        ))
+      ],
+    ));
   }
 }
