@@ -10,9 +10,12 @@ import android.os.Bundle
 import androidx.annotation.NonNull
 import com.walletconnect.sign.client.Sign
 import com.walletconnect.sign.client.SignClient
-import android.app.Application
+// import android.app.Application
+import com.walletconnect.sample_common.BuildConfig
+import com.walletconnect.sample_common.WALLET_CONNECT_PROD_RELAY_URL
+import com.walletconnect.sample_common.tag
 
-class  MainActivity: FlutterActivity(), Application(){
+ class  MainActivity: FlutterActivity(){
     
     // override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
     //     GeneratedPluginRegistrant.registerWith(flutterEngine)
@@ -22,19 +25,30 @@ class  MainActivity: FlutterActivity(), Application(){
     private val TESTCHANNEL = "com.exchangily.wallet/connectiontest"
     
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
-        super.configureFlutterEngine(<Application>,flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, TESTCHANNEL).setMethodCallHandler {
-            call, result -> 
-            if(call.method == "test"){
-                result.success("Test passed")
-            }
+        //super.configureFlutterEngine(flutterEngine)
+        // MethodChannel(flutterEngine.dartExecutor.binaryMessenger, TESTCHANNEL).setMethodCallHandler {
+        //     call, result -> 
+        //     if(call.method == "test"){
+        //         result.success("Test passed")
+        //     }
             
-        }
+        // }
     }
-
+    private fun connect(data :  String) {
+        val initString = Sign.Params.Init(
+            application = this,
+            relayServerUrl = "wss://test?projectId=${}",
+            //TODO: register at https://walletconnect.com/register to get a project ID
+            metadata = Sign.Model.AppMetaData(
+                name = "Kotlin Wallet",
+                description = "wallet description",
+                url = "example.wallet",
+                icons = listOf("https://gblobscdn.gitbook.com/spaces%2F-LJJeCjcLrr53DcT1Ml7%2Favatar.png?alt=media")
+            )
+        )
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(<Application>, savedInstanceState)
-
+        super.onCreate( savedInstanceState)
         GeneratedPluginRegister.registerGeneratedPlugins(FlutterEngine(this@MainActivity))
        
         val signChannel = MethodChannel(flutterEngine?.dartExecutor, CHANNEL)
@@ -44,6 +58,7 @@ class  MainActivity: FlutterActivity(), Application(){
                     val a = call.argument<String>("data")
                     if(call.method == "sign"){
                         
+                        connect(a)
                         // val appMetaData = Sign.Model.AppMetaData(
                         //     name = "Wallet Name",
                         //     description = "Wallet Description",
@@ -51,22 +66,22 @@ class  MainActivity: FlutterActivity(), Application(){
                         //     icons = listOf("https://gblobscdn.gitbook.com/spaces%2F-LJJeCjcLrr53DcT1Ml7%2Favatar.png?alt=media")
                         //     )
                             
-                         val connectionType = Sign.ConnectionType.AUTOMATIC
-                            // or Sign.ConnectionType.MANUAL
-                            val initString = Sign.Params.Init(
-                                application = application,
-                                relayServerUrl = "wss://testme.ca?projectId=123",
-                                appMetaData = appMetaData,
-                                connectionType = connectionType
-                                //TODO: register at https://walletconnect.com/register to get a project ID
+                        //  val connectionType = Sign.ConnectionType.AUTOMATIC
+                        //     // or Sign.ConnectionType.MANUAL
+                        //     val initString = Sign.Params.Init(
+                        //         application = application,
+                        //         relayServerUrl = "wss://testme.ca?projectId=123",
+                        //         appMetaData = appMetaData,
+                        //         connectionType = connectionType
+                        //         //TODO: register at https://walletconnect.com/register to get a project ID
                             
-                                )
+                        //         )
                            
                                    
-                                    SignClient.initialize(initString) { error ->
-                                        //Log.e(tag(this), error.throwable.stackTraceToString())
-                                        result.success("Test Failed: " +error.throwable.stackTraceToString())
-                                    }
+                        //             SignClient.initialize(initString) { error ->
+                        //                 //Log.e(tag(this), error.throwable.stackTraceToString())
+                        //                 result.success("Test Failed: " +error.throwable.stackTraceToString())
+                        //             }
                     }
                 }
               }
