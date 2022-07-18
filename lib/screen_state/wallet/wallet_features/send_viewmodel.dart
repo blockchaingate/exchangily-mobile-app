@@ -674,6 +674,13 @@ class SendViewModel extends BaseViewModel {
           isWarning: false);
       return;
     }
+    if (walletService.isValidKbAddress(toAddress)) {
+      debugPrint('invalid address ');
+      sharedService.alertDialog(AppLocalizations.of(context).notice,
+          AppLocalizations.of(context).invalidAddress,
+          isWarning: false);
+      return;
+    }
     if ((isTrx()) && !toAddress.startsWith('T')) {
       debugPrint('invalid tron address');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAddress,

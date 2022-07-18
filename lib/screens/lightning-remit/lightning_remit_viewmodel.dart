@@ -538,45 +538,58 @@ class LightningRemitViewmodel extends FutureViewModel {
                             ),
                           )),
                       UIHelper.verticalSpaceSmall,
-                      Container(
-                        padding: const EdgeInsets.all(10.0),
-                        child: RaisedButton(
-                            child: Text(AppLocalizations.of(context).share,
-                                style: Theme.of(context).textTheme.headline6),
-                            onPressed: () {
-                              String receiveFileName =
-                                  'Lightning-remit-kanban-receive-address.png';
-                              getApplicationDocumentsDirectory().then((dir) {
-                                String filePath =
-                                    "${dir.path}/$receiveFileName";
-                                File file = File(filePath);
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            // padding: const EdgeInsets.all(10.0),
+                            child: ElevatedButton(
+                                style: outlinedButtonStyles1.copyWith(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        primaryColor)),
+                                child: Text(AppLocalizations.of(context).share,
+                                    style:
+                                        Theme.of(context).textTheme.headline6),
+                                onPressed: () {
+                                  String receiveFileName =
+                                      'Lightning-remit-kanban-receive-address.png';
+                                  getApplicationDocumentsDirectory()
+                                      .then((dir) {
+                                    String filePath =
+                                        "${dir.path}/$receiveFileName";
+                                    File file = File(filePath);
 
-                                Future.delayed(const Duration(milliseconds: 30),
-                                    () {
-                                  sharedService
-                                      .capturePng(globalKey: globalKey)
-                                      .then((byteData) {
-                                    file.writeAsBytes(byteData).then((onFile) {
-                                      Share.shareFiles([onFile.path],
-                                          text: kbAddress);
+                                    Future.delayed(
+                                        const Duration(milliseconds: 30), () {
+                                      sharedService
+                                          .capturePng(globalKey: globalKey)
+                                          .then((byteData) {
+                                        file
+                                            .writeAsBytes(byteData)
+                                            .then((onFile) {
+                                          Share.shareFiles([onFile.path],
+                                              text: kbAddress);
+                                        });
+                                      });
                                     });
                                   });
-                                });
-                              });
-                            }),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: OutlinedButton(
-                          style: outlinedButtonStyles1,
-                          child: Text(
-                            AppLocalizations.of(context).close,
-                            style: Theme.of(context).textTheme.headline6,
+                                }),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
-                          },
-                        ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: OutlinedButton(
+                              style: outlinedButtonStyles1,
+                              child: Text(
+                                AppLocalizations.of(context).close,
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop(false);
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       UIHelper.verticalSpaceSmall,
                     ],

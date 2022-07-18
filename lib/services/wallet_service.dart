@@ -1833,7 +1833,9 @@ class WalletService {
     var fabAddress = '';
     try {
       fabAddress = toLegacyAddress(kbPaymentAddress);
-    } catch (e) {}
+    } catch (e) {
+      log.e('isValidKbAddress CATCH $e');
+    }
 
     return (fabAddress != '');
   }

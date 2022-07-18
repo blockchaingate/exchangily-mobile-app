@@ -93,7 +93,6 @@ class WalletDashboardViewModel extends BaseViewModel {
   WalletInfo rightWalletInfo;
   final double elevation = 5;
   String totalUsdBalance = '';
-
   double gasAmount = 0;
   String exgAddress = '';
 
@@ -148,7 +147,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   var walletUtil = WalletUtil();
   bool isHideSearch = false;
   bool isHideSmallAssetsButton = false;
-  var coinsToHideList = ["USDTB"];
+  var coinsToHideList = ["USDTB", "USDTM", "FABB", "BNB"];
   var versionService = locator<VersionService>();
 
 /*----------------------------------------------------------------------

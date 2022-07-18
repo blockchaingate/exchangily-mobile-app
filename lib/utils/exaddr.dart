@@ -67,7 +67,9 @@ var VERSION_BYTE = {
 decodeAddress(address) {
   try {
     return decodeBase58Address(address);
-  } catch (error) {}
+  } catch (err) {
+    debugPrint('decodeAddress - CATCH: $err');
+  }
   return '';
 }
 
@@ -123,7 +125,9 @@ decodeBase58Address(address) {
         'type': Type['P2PKH']
       };
     }
-  } catch (error) {}
+  } catch (err) {
+    debugPrint('decodeBase58Address - CATCH: $err');
+  }
   return {};
 }
 

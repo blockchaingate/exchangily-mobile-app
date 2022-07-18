@@ -219,11 +219,20 @@ class WalletUtil {
       tickerName = 'USDT(ERC20)';
       logoTicker = 'USDT';
     } else if (tickerName.toUpperCase() == 'USDCX') {
-      tickerName = 'USDC(trc20)';
-      logoTicker = 'USDC';
+      tickerName = 'USDC(TRC20)';
+      logoTicker = 'USDCX';
     } else if (tickerName.toUpperCase() == 'MATICM') {
-      tickerName = 'MATIC';
+      tickerName = 'MATIC(POLYGON)';
       logoTicker = 'MATICM';
+    } else if (tickerName.toUpperCase() == 'USDTM') {
+      tickerName = 'USDT(MATIC)';
+      logoTicker = 'USDTM';
+    } else if (tickerName.toUpperCase() == 'FABB') {
+      tickerName = 'FAB(BEP20)';
+      logoTicker = 'FABB';
+    } else if (tickerName.toUpperCase() == 'MATIC') {
+      tickerName = 'MATIC(ERC20)';
+      logoTicker = 'MATIC';
     } else {
       logoTicker = tickerName;
     }

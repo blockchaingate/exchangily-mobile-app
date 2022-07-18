@@ -1228,6 +1228,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
       BuildContext context, WalletDashboardViewModel model, Widget child) {
     debugPrint('fav list length before');
     debugPrint(model.favWallets.length.toString());
+
     return model.busy(model.favWallets)
         ? model.sharedService.loadingIndicator()
         : Container(
@@ -1260,34 +1261,15 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                           model.favWallets[index].coin.toLowerCase();
 
                       String logoTicker = '';
-                      if (tickerName.toUpperCase() == 'BSTE') {
-                        tickerName = 'BST(ERC20)';
-                        logoTicker = 'BSTE';
-                      } else if (tickerName.toUpperCase() == 'DSCE') {
-                        tickerName = 'DSC(ERC20)';
-                        logoTicker = 'DSCE';
-                      } else if (tickerName.toUpperCase() == 'EXGE') {
-                        tickerName = 'EXG(ERC20)';
-                        logoTicker = 'EXGE';
-                      } else if (tickerName.toUpperCase() == 'FABE') {
-                        tickerName = 'FAB(ERC20)';
-                        logoTicker = 'FABE';
-                      } else if (tickerName.toUpperCase() == 'USDTX') {
-                        tickerName = 'USDT(TRC20)';
-                        logoTicker = 'USDTX';
-                      } else if (tickerName.toUpperCase() == 'USDT') {
-                        tickerName = 'USDT(ERC20)';
-                        logoTicker = 'USDT';
-                      } else if (tickerName.toUpperCase() == 'USDC') {
-                        tickerName = 'USDC(erc20)';
-                        logoTicker = 'USDC';
-                      } else if (tickerName.toUpperCase() == 'USDCX') {
-                        tickerName = 'USDC(trc20)';
-                        logoTicker = 'USDC';
-                      } else {
-                        logoTicker = tickerName;
-                      }
 
+                      var specialTokenData = {};
+                      bool isBalanceNegative =
+                          model.wallets[index].balance.isNegative;
+                      specialTokenData = model.walletUtil
+                          .updateSpecialTokensTickerNameForTxHistory(
+                              tickerName);
+                      tickerName = specialTokenData['tickerName'];
+                      logoTicker = specialTokenData['logoTicker'];
                       return Card(
                         color: walletCardColor,
                         elevation: model.elevation,
@@ -1319,7 +1301,15 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                               spreadRadius: 1.0),
                                         ]),
                                     child: Image.network(
-                                        '$walletCoinsLogoUrl${logoTicker.toLowerCase()}.png'),
+                                      '$walletCoinsLogoUrl${logoTicker.toLowerCase()}.png',
+                                      errorBuilder: (BuildContext context,
+                                          Object exception,
+                                          StackTrace stackTrace) {
+                                        return Text(logoTicker.toString(),
+                                            style: const TextStyle(
+                                                fontSize: 8, color: white));
+                                      },
+                                    ),
                                     //asset('assets/images/wallet-page/$tickerName.png'),
                                     width: 35,
                                     height: 35),
