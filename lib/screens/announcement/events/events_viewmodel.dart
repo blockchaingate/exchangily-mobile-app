@@ -16,9 +16,13 @@ class EventsViewModel extends BaseViewModel {
 
   updateUrl(String url) async {
     setBusy(true);
-    await Future.delayed(const Duration(milliseconds: 50), () => _url = url);
-    //+ '${storageService.language}');
-    log.w(_url);
+    var lang = storageService.language;
+    if (lang == 'en') {
+      lang = '';
+    }
+    await Future.delayed(
+        const Duration(milliseconds: 50), () => _url = url + lang);
+    log.i(_url);
     setBusy(false);
   }
 }

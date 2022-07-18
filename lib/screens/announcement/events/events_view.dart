@@ -128,7 +128,7 @@ class EventsView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     model.isBusy
-                        ? model.sharedService.loadingIndicator()
+                        ? const Text('...')
                         : Expanded(
                             child: WebViewWidget(
                                 model.url, 'Exchangily Announcements'),

@@ -169,4 +169,5 @@ const String ordersByAddrApiRoute = 'ordersbyaddress/';
 
 const String exchangilyBlogUrl = "https://blog.exchangily.com/";
 
-const String exchangilyAnnouncementUrl = "https://exchangily.com/announcements";
+const String exchangilyAnnouncementUrl =
+    "https://exchangily.com/announcements/";
