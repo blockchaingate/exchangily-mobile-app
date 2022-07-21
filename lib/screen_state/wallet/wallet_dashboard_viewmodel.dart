@@ -107,7 +107,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   var top = 0.0;
   final freeFabAnswerTextController = TextEditingController();
   String postFreeFabResult = '';
-  bool isFreeFabNotUsed = false;
+  bool isEligibleForFreeGas = false;
   double fabBalance = 0.0;
   // List<String> formattedUsdValueList = [];
   // List<String> formattedUsdValueListCopy = [];
@@ -147,7 +147,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   var walletUtil = WalletUtil();
   bool isHideSearch = false;
   bool isHideSmallAssetsButton = false;
-  var coinsToHideList = ["USDTB", "USDTM", "FABB", "BNB"];
+  var coinsToHideList = ["USDTB", "USDTM", "FABB"];
   var versionService = locator<VersionService>();
 
 /*----------------------------------------------------------------------
@@ -1111,7 +1111,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     await apiService.getFreeFab(address).then((res) {
       if (res != null) {
         if (res['ok']) {
-          isFreeFabNotUsed = res['ok'];
+          isEligibleForFreeGas = res['ok'];
           debugPrint(res['_body']['question'].toString());
           showDialog(
               context: context,
@@ -1260,7 +1260,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                     Navigator.of(context)
                                                         .pop(false);
                                                     setState(() =>
-                                                        isFreeFabNotUsed =
+                                                        isEligibleForFreeGas =
                                                             false);
 
                                                     sharedService
@@ -1313,9 +1313,9 @@ class WalletDashboardViewModel extends BaseViewModel {
                 );
               });
         } else {
-          debugPrint(isFreeFabNotUsed.toString());
-          isFreeFabNotUsed = res['ok'];
-          debugPrint(isFreeFabNotUsed.toString());
+          debugPrint(isEligibleForFreeGas.toString());
+          isEligibleForFreeGas = res['ok'];
+          debugPrint(isEligibleForFreeGas.toString());
 
           sharedService.sharedSimpleNotification(
               AppLocalizations.of(context).notice,
@@ -1561,7 +1561,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         }
         var res = await apiService.getFreeFab(address);
         if (res != null) {
-          isFreeFabNotUsed = res['ok'];
+          isEligibleForFreeGas = res['ok'];
         }
       } else {
         log.i('Fab or gas balance available already');

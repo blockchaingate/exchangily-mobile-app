@@ -480,13 +480,13 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
               ),
             ),
             SizedBox(
-              height: model.isFreeFabNotUsed ? 100 : 40,
+              height: model.isEligibleForFreeGas ? 100 : 40,
               child: Column(
                 children: [
                   model.isBusy
                       ? Container()
                       : Expanded(child: Gas(gasAmount: model.gasAmount)),
-                  !model.isFreeFabNotUsed
+                  !model.isEligibleForFreeGas
                       ? Container()
                       : Container(
                           margin: const EdgeInsets.symmetric(vertical: 8.0),

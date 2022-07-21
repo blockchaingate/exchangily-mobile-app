@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bitbox/bitbox.dart' as Bitbox;
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -23,6 +24,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
+import 'package:exchangilymobileapp/utils/coin_utils/erc20_util.dart';
 import 'package:exchangilymobileapp/utils/coin_utils/matic_util.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
@@ -98,6 +100,7 @@ class WalletService {
   final ltcUtils = LtcUtils();
   var walletUtil = WalletUtil();
   final maticmUtils = MaticUtils();
+  final erc20Util = ERC20Util();
 
   final _vaultService = locator<VaultService>();
 
@@ -782,11 +785,6 @@ class WalletService {
             await coreWalletDatabaseService.insert(walletCoreModel);
           } catch (err) {
             log.e('WALLET data insertion failed in corewalletDB');
-          } finally {
-            log.w(
-                'finally: deleting corewalletdb and trying to insert data once more');
-            await coreWalletDatabaseService.deleteDb();
-            await coreWalletDatabaseService.insert(walletCoreModel);
           }
         }
       }
@@ -2345,7 +2343,73 @@ class WalletService {
       } else {
         txHash = '0x' + tx.getId();
       }
+    } else if (coin == 'BNB' || tokenType == "BNB") {
+      // Credentials fromHex = EthPrivateKey.fromHex("c87509a[...]dc0d3");
+
+      if (gasPrice == 0) {
+        gasPrice = environment["chains"]["BNB"]["gasPrice"];
+      }
+      if (gasLimit == 0) {
+        gasLimit = environment["chains"]["BNB"]["gasLimit"];
+      }
+      transFeeDouble = (BigInt.parse(gasPrice.toString()) *
+              BigInt.parse(gasLimit.toString()) /
+              BigInt.parse('1000000000'))
+          .toDouble();
+
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble
+        };
+      }
+
+      final chainId = environment["chains"]["BNB"]["chainId"];
+      final ethCoinChild = root.derivePath(
+          "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
+      final privateKey = HEX.encode(ethCoinChild.privateKey);
+      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
+
+      Credentials credentials = EthPrivateKey.fromHex(privateKey);
+
+      final address = await credentials.extractAddress();
+      final addressHex = address.hex;
+      final nonce = await erc20Util.getNonce(
+          smartContractAddress: addressHex, baseUrl: bnbBaseUrl);
+
+      var apiUrl =
+          environment["chains"]["ETH"]["infura"]; //Replace with your API
+
+      var ethClient = Web3Client(apiUrl, httpClient);
+
+      amountInTx = amountSentInt;
+      final signed = await ethClient.signTransaction(
+          credentials,
+          Transaction(
+            nonce: nonce,
+            to: EthereumAddress.fromHex(toAddress),
+            gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+            maxGas: gasLimit,
+            value: EtherAmount.fromUnitAndValue(EtherUnit.wei, amountSentInt),
+          ),
+          chainId: chainId,
+          fetchChainIdFromNetworkId: false);
+
+      txHex = '0x' + HEX.encode(signed);
+
+      log.i('bnb txHex in ETH=' + txHex);
+      if (doSubmit) {
+        var res = await erc20Util.postBnbTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+      } else {
+        txHash = ethUtils.getTransactionHash(signed);
+      }
     }
+
     // Matic Transaction
 
     else if (coin == 'MATICM') {

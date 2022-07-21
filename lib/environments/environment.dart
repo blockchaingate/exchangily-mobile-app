@@ -83,10 +83,17 @@ Map devConfig = {
     'fab': 'https://fabtest.fabcoinapi.com/',
     'eth': 'https://ethtest.fabcoinapi.com/',
     'campaign': 'https://test.blockchaingate.com/v2/',
-    'maticm': 'https://rpc-mumbai.matic.today'
+    'maticm': 'https://rpc-mumbai.matic.today',
+    'bnb': 'https://data-seed-prebsc-1-s1.binance.org:8545'
   },
   "addresses": {
     "smartContract": {
+      "USDT": {
+        "ETH": '0x1c35eCBc06ae6061d925A2fC2920779a1896282c',
+        "TRX": 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
+        "BNB": '0x4850754EA867654339F38d4e6DF7cd80CFee141f',
+        "MATIC": '0x26CbCDe3842D9A9170d47F122F69D993a00676ED'
+      },
       "FABLOCK": '0xa7d4a4e23bf7dd7a1e03eda9eb7c28a016fd54aa',
       "EXG": '0x867480ba8e577402fa44f43c33875ce74bdc5df6',
       "DUSD": '0x78f6bedc7c3d6500e004c6dca19c8d614cfd91ed',
@@ -241,7 +248,8 @@ Map productionConfig = {
     'eth': 'https://ethprod.fabcoinapi.com/',
     'trx': 'https://api.trongrid.io/',
     'campaign': 'https://api.blockchaingate.com/v2/',
-    'maticm': 'https://polygon-rpc.com'
+    'maticm': 'https://polygon-rpc.com',
+    'bnb': 'https://bsc-dataseed.binance.org'
   },
   'addresses': {
     "smartContract": {

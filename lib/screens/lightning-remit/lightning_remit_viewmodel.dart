@@ -118,7 +118,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     setBusyForObject(exchangeBalances, false);
 
     setBusyForObject(tickerName, true);
-    if (exchangeBalances != null || exchangeBalances.isNotEmpty) {
+    if (exchangeBalances != null && exchangeBalances.isNotEmpty) {
       tickerName = exchangeBalances[0].ticker;
       quantity = exchangeBalances[0].unlockedAmount;
     }
