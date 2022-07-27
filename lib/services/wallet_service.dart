@@ -256,6 +256,8 @@ class WalletService {
   }
 
   storeTokenListUpdatesInDB() async {
+    debugPrint(
+        'Store token TIME START ${DateTime.now().toLocal().toIso8601String()}');
     List existingTokensInTokenDatabase;
     try {
       existingTokensInTokenDatabase = await tokenListDatabaseService.getAll();
@@ -282,6 +284,8 @@ class WalletService {
         }
       }
     });
+    debugPrint(
+        'Store token TIME FINISH ${DateTime.now().toLocal().toIso8601String()}');
   }
 
 /*----------------------------------------------------------------------
@@ -373,52 +377,52 @@ class WalletService {
   /*----------------------------------------------------------------------
                     Check Language
 ----------------------------------------------------------------------*/
-  Future checkLanguage() async {
-    UserSettingsDatabaseService userSettingsDatabaseService =
-        locator<UserSettingsDatabaseService>();
-    //lang = storageService.language;
+  // Future checkLanguage() async {
+  //   UserSettingsDatabaseService userSettingsDatabaseService =
+  //       locator<UserSettingsDatabaseService>();
+  //   //lang = storageService.language;
 
-    await userSettingsDatabaseService.getAll().then((res) {
-      if (res == null || res == [] || res.isEmpty) {
-        log.e('language empty- setting english');
-        storageService.language = "en";
-        AppLocalizations.load(const Locale('en', 'EN'));
-      } else {
-        String languageFromDb = res[0].language;
-        AppLocalizations.load(
-            Locale(languageFromDb, languageFromDb.toUpperCase()));
-        storageService.language = languageFromDb;
-        log.i('language $languageFromDb found');
-      }
-    }).catchError((err) => log.e('user setting db empty'));
-  }
+  //   await userSettingsDatabaseService.getAll().then((res) {
+  //     if (res == null || res == [] || res.isEmpty) {
+  //       log.e('language empty- setting english');
+  //       storageService.language = "en";
+  //       AppLocalizations.load(const Locale('en', 'EN'));
+  //     } else {
+  //       String languageFromDb = res[0].language;
+  //       AppLocalizations.load(
+  //           Locale(languageFromDb, languageFromDb.toUpperCase()));
+  //       storageService.language = languageFromDb;
+  //       log.i('language $languageFromDb found');
+  //     }
+  //   }).catchError((err) => log.e('user setting db empty'));
+  // }
 
-  updateUserSettingsDb(UserSettings userSettings, isUserSettingsEmpty) async {
-    UserSettingsDatabaseService userSettingsDatabaseService =
-        locator<UserSettingsDatabaseService>();
-    isUserSettingsEmpty
-        ? await userSettingsDatabaseService
-            .insert(userSettings)
-            .then((value) => null)
-            .catchError((err) async {
-            log.e(
-                'In updateUserSettingsDb -- INSERT Catch- deleting the database and re-inserting the data');
-            await userSettingsDatabaseService.deleteDb().then((value) => () {
-                  userSettingsDatabaseService.insert(userSettings);
-                });
-          })
-        : await userSettingsDatabaseService
-            .update(userSettings)
-            .then((value) => null)
-            .catchError((err) async {
-            log.e(
-                'In updateUserSettingsDb -- UPDATE Catch- deleting the database and re-inserting the data');
-            await userSettingsDatabaseService.deleteDb().then((value) => () {
-                  userSettingsDatabaseService.update(userSettings);
-                });
-          });
-    await userSettingsDatabaseService.getAll();
-  }
+  // updateUserSettingsDb(UserSettings userSettings, isUserSettingsEmpty) async {
+  //   UserSettingsDatabaseService userSettingsDatabaseService =
+  //       locator<UserSettingsDatabaseService>();
+  //   isUserSettingsEmpty
+  //       ? await userSettingsDatabaseService
+  //           .insert(userSettings)
+  //           .then((value) => null)
+  //           .catchError((err) async {
+  //           log.e(
+  //               'In updateUserSettingsDb -- INSERT Catch- deleting the database and re-inserting the data');
+  //           await userSettingsDatabaseService.deleteDb().then((value) => () {
+  //                 userSettingsDatabaseService.insert(userSettings);
+  //               });
+  //         })
+  //       : await userSettingsDatabaseService
+  //           .update(userSettings)
+  //           .then((value) => null)
+  //           .catchError((err) async {
+  //           log.e(
+  //               'In updateUserSettingsDb -- UPDATE Catch- deleting the database and re-inserting the data');
+  //           await userSettingsDatabaseService.deleteDb().then((value) => () {
+  //                 userSettingsDatabaseService.update(userSettings);
+  //               });
+  //         });
+  //   await userSettingsDatabaseService.getAll();
+  // }
 
 /*----------------------------------------------------------------------
                 Get Random Mnemonic

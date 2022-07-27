@@ -1,7 +1,7 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 2.1.63+228
+version: 2.1.64+229
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
@@ -119,7 +119,7 @@ dependencies:
   shimmer: ^2.0.0
 
   # Sqflite
-  sqflite:
+  sqflite: 2.0.1
 
   # Path
   path: ^1.6.4

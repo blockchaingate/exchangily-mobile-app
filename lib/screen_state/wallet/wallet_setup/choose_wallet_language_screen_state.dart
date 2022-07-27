@@ -57,8 +57,7 @@ class ChooseWalletLanguageScreenState extends BaseState {
   setLangauge(String languageCode) async {
     setState(ViewState.Busy);
     //  SharedPreferences prefs = await SharedPreferences.getInstance();
-    UserSettings userSettings =
-        UserSettings(language: languageCode, theme: '');
+    UserSettings userSettings = UserSettings(language: languageCode, theme: '');
     await userSettingsDatabaseService.getById(1).then((res) {
       if (res != null) {
         //   userSettings.language = res.language;
@@ -69,7 +68,7 @@ class ChooseWalletLanguageScreenState extends BaseState {
         log.i('user settings db null --$res');
       }
     }).catchError((err) => log.e('user settings db empty $err'));
-    await walletService.updateUserSettingsDb(userSettings, isUserSettingsEmpty);
+    //await walletService.updateUserSettingsDb(userSettings, isUserSettingsEmpty);
     storageService.language = languageCode;
     AppLocalizations.load(Locale(languageCode, languageCode.toUpperCase()));
     setState(ViewState.Idle);

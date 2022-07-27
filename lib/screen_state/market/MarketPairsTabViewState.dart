@@ -15,8 +15,8 @@ class MarketPairsTabViewState extends BaseState {
   List images;
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
-  LocalStorageService localStorageService = locator<LocalStorageService>();
-  final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
+  LocalStorageService storageService = locator<LocalStorageService>();
+  //final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
   BuildContext context;
   String lang = 'en';
 
@@ -32,12 +32,8 @@ class MarketPairsTabViewState extends BaseState {
     setBusy(true);
     var result = await apiService.getSliderImages();
 
-    await userSettingsDatabaseService.getById(1).then((value) {
-      if (value != null) {
-        debugPrint('111 ${value.toJson()}');
-        lang = value.language;
-      }
-    });
+    lang = storageService.language;
+
     debugPrint('lang $lang --');
     if (lang == null) {
       lang = Platform.localeName.substring(0, 2);

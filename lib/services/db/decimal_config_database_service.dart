@@ -22,7 +22,7 @@ class DecimalConfigDatabaseService {
 
   static const _databaseName = 'decimal_config_database.db';
   final String tableName = 'decimal_config';
- 
+
   final String columnName = 'name';
   final String columnPriceDecimal = 'priceDecimal';
   final String columnQtyDecimal = 'qtyDecimal';
@@ -59,7 +59,7 @@ class DecimalConfigDatabaseService {
 
     // res is giving me the same output in the log whether i map it or just take var res
     final List<Map<String, dynamic>> res = await db.query(tableName);
-    log.w('res $res');
+    log.w('res ${res.length}');
     List<PairDecimalConfig> list = res.isNotEmpty
         ? res.map((f) => PairDecimalConfig.fromJson(f)).toList()
         : [];
@@ -87,7 +87,7 @@ class DecimalConfigDatabaseService {
     //     ? res.map((f) => PairDecimalConfig.fromJson(f)).toList()
     //     : [];
     // return list;
-     return PairDecimalConfig.fromJson((res.first));
+    return PairDecimalConfig.fromJson((res.first));
   }
 
   // Close Database

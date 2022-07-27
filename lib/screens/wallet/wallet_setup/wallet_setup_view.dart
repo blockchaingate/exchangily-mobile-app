@@ -71,7 +71,7 @@ class WalletSetupView extends StatelessWidget {
                 child:
                     Image.asset('assets/images/start-page/middle-design.png'),
               ),
-              // UIHelper.verticalSpaceLarge,
+
               model.isDeleting
                   ? Text(
                       AppLocalizations.of(context).deletingWallet,
@@ -88,7 +88,7 @@ class WalletSetupView extends StatelessWidget {
                   ? Container()
                   : model.isWalletVerifySuccess
                       ? Icon(Icons.check_box_outlined, color: green, size: 32)
-                      : Icon(Icons.cancel_outlined, color: red, size: 32),
+                      : const Icon(Icons.cancel_outlined, color: red, size: 32),
               // Button Container
               model.isBusy
                   ? Shimmer.fromColors(
@@ -132,7 +132,8 @@ class WalletSetupView extends StatelessWidget {
                                       model.storageService
                                           .hasInAppBiometricAuthEnabled &&
                                       model.storageService
-                                          .hasPhoneProtectionEnabled
+                                          .hasPhoneProtectionEnabled &&
+                                      model.hasData
                                   ? ElevatedButton(
                                       style: ButtonStyle(
                                           shape: MaterialStateProperty.all(
@@ -171,7 +172,8 @@ class WalletSetupView extends StatelessWidget {
                               !model.storageService
                                           .hasInAppBiometricAuthEnabled ||
                                       !model.storageService
-                                          .hasPhoneProtectionEnabled
+                                          .hasPhoneProtectionEnabled ||
+                                      !model.hasData
                                   ? Row(children: <Widget>[
                                       Expanded(
                                         child: Container(

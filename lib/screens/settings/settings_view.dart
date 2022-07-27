@@ -198,59 +198,65 @@ class SettingsContainer extends StatelessWidget {
                                 AppLocalizations.of(context)
                                     .changeWalletLanguage,
                                 style: Theme.of(context).textTheme.subtitle2)),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
+                        model.isBusy
+                            ? Container()
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text('English',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5),
-                                  Checkbox(
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                    activeColor: globals.primaryColor,
-                                    onChanged: (bool value) {
-                                      String lang = '';
-                                      if (value) {
-                                        lang = 'en';
-                                      } else {
-                                        lang = 'zh';
-                                      }
+                                    Row(
+                                      children: [
+                                        Text('English',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5),
+                                        Checkbox(
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                          activeColor: globals.primaryColor,
+                                          onChanged: (bool value) {
+                                            String lang = '';
+                                            if (value) {
+                                              lang = 'en';
+                                            } else {
+                                              lang = 'zh';
+                                            }
 
-                                      model.changeWalletLanguage(lang);
-                                    },
-                                    value: model.selectedLanguage == "English",
-                                  )
-                                ],
-                              ),
-                              UIHelper.horizontalSpaceSmall,
-                              Row(
-                                children: [
-                                  Text('Chinese',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5),
-                                  Checkbox(
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                    activeColor: globals.primaryColor,
-                                    onChanged: (bool value) {
-                                      String lang = '';
-                                      if (!value) {
-                                        lang = 'en';
-                                      } else {
-                                        lang = 'zh';
-                                      }
+                                            model.changeWalletLanguage(lang);
+                                          },
+                                          value: model.languages[
+                                                  model.selectedLanguage] ==
+                                              "English",
+                                        )
+                                      ],
+                                    ),
+                                    UIHelper.horizontalSpaceSmall,
+                                    Row(
+                                      children: [
+                                        Text('Chinese',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5),
+                                        Checkbox(
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                          activeColor: globals.primaryColor,
+                                          onChanged: (bool value) {
+                                            String lang = '';
+                                            if (!value) {
+                                              lang = 'en';
+                                            } else {
+                                              lang = 'zh';
+                                            }
 
-                                      model.changeWalletLanguage(lang);
-                                    },
-                                    value: model.selectedLanguage == "简体中文",
-                                  )
-                                ],
-                              )
-                            ]),
+                                            model.changeWalletLanguage(lang);
+                                          },
+                                          value: model.languages[
+                                                  model.selectedLanguage] ==
+                                              "简体中文",
+                                        )
+                                      ],
+                                    )
+                                  ]),
                       ],
                     )
                   : Center(

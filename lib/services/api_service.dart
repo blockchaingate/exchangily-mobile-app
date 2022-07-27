@@ -83,8 +83,9 @@ class ApiService {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
 
-      log.w('getIssueTokens func: json data $json');
       var parsedTokenList = json as List;
+      log.w(
+          'getIssueTokens func: json data list length ${parsedTokenList.length}');
 
       CustomTokenModelList isueTokenList =
           CustomTokenModelList.fromJson(parsedTokenList);
@@ -202,10 +203,10 @@ class ApiService {
 
       var json = jsonDecode(response.body);
       if (json != null) {
-        log.w('getTransactionHistoryEvents json $json}');
         if (json['success']) {
           //  log.e('getTransactionHistoryEvents json ${json['data']}');
           var data = json['data'] as List;
+          log.w('getTransactionHistoryEvents json ${data.length}}');
 
           int index = 1;
           for (var element in data) {
@@ -445,7 +446,7 @@ class ApiService {
       var json = jsonDecode(response.body);
       var data = json['data'];
       var parsedTokenList = data as List;
-      log.w('getTokenListUpdates  $parsedTokenList');
+      log.w('getTokenListUpdates  ${parsedTokenList.length}');
       TokenList tokenList = TokenList.fromJson(parsedTokenList);
       return tokenList.tokens;
     } catch (err) {
@@ -466,7 +467,7 @@ class ApiService {
       var json = jsonDecode(response.body);
       var data = json['data'];
       var parsedTokenList = data['tokenList'] as List;
-      log.w('getTokenList  $parsedTokenList');
+      log.w('getTokenList  ${parsedTokenList.length}');
       TokenList tokenList = TokenList.fromJson(parsedTokenList);
       return tokenList.tokens;
     } catch (err) {
@@ -953,7 +954,7 @@ class ApiService {
       var response = await client.get(url);
       if (response.statusCode == 200 || response.statusCode == 201) {
         var jsonList = jsonDecode(response.body) as List;
-        log.w(' getPairDecimalConfig $jsonList');
+        log.w(' getPairDecimalConfig ${jsonList.length}');
         PairDecimalConfigList pairList =
             PairDecimalConfigList.fromJson(jsonList);
         result = pairList.pairList;
@@ -994,7 +995,7 @@ class ApiService {
     log.i("url: " + url);
     try {
       final res = await client.get(url);
-      log.w('getAnnouncement ${jsonDecode(res.body)}');
+      // log.w('getAnnouncement ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         var body = jsonDecode(res.body)['body'];
         return body;

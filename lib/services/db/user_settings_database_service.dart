@@ -94,6 +94,7 @@ class UserSettingsDatabaseService {
 
   // Get Single Wallet By Id
   Future<UserSettings> getById(int id) async {
+    // await initDb();
     final Database db = await _database;
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
