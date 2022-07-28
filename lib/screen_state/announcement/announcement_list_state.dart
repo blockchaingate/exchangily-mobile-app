@@ -23,10 +23,10 @@ class AnnouncementListScreenState extends BaseState {
     List tempdata = prefs.getStringList('announceData');
     for (var element in tempdata) {
       announceList.add(jsonDecode(element));
-      debugPrint('jsonData $announceList');
+      // debugPrint('jsonData $announceList');
     }
     debugPrint("announceList from list page state: ");
-    debugPrint(announceList.toString());
+    // debugPrint(announceList.toString());
     setBusy(false);
   }
 
@@ -34,10 +34,10 @@ class AnnouncementListScreenState extends BaseState {
     setBusy(true);
     log.i("updateReadStatus function: ");
     announceList[index]['isRead'] = true;
-    debugPrint("announceList[" +
-        index.toString() +
-        "]['isRead']: " +
-        announceList[index]['isRead'].toString());
+    // debugPrint("announceList[" +
+    //     index.toString() +
+    //     "]['isRead']: " +
+    //     announceList[index]['isRead'].toString());
     //save cache
     List<String> jsonData = [];
     int readedNum = 0;
@@ -47,7 +47,7 @@ class AnnouncementListScreenState extends BaseState {
       debugPrint('jsonData $jsonData');
     }
     setunReadAnnouncement(readedNum);
-    debugPrint("check status: " + prefs.containsKey('announceData').toString());
+    //debugPrint("check status: " + prefs.containsKey('announceData').toString());
     prefs.setStringList('announceData', jsonData);
     //save cache end
     setBusy(false);

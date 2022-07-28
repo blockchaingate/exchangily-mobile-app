@@ -121,6 +121,7 @@ class SharedService {
 
   Future<PairDecimalConfig> getSinglePairDecimalConfig(String pairName,
       {String base = ''}) async {
+    final apiService = locator<ApiService>();
     PairDecimalConfig singlePairDecimalConfig = PairDecimalConfig();
     log.i('tickername $pairName -- endswith usdt ${pairName.endsWith('USDT')}');
 
@@ -139,7 +140,7 @@ class SharedService {
           PairDecimalConfig(name: pairName, priceDecimal: 2, qtyDecimal: 2);
     } else {
       log.i('base $base');
-      await getAllPairDecimalConfig().then((res) {
+      await apiService.getPairDecimalConfig().then((res) {
         if (res != null) {
           singlePairDecimalConfig =
               res.firstWhere((element) => element.name == pairName + base);
@@ -169,42 +170,28 @@ class SharedService {
 
 // -------------- all pair ---------------------
 
-  Future<List<PairDecimalConfig>> getAllPairDecimalConfig() async {
-    ApiService apiService = locator<ApiService>();
-    List<PairDecimalConfig> result = [];
-    result = await decimalConfigDatabaseService.getAll();
-    log.e('decimal configs length in db ${result.length}');
-    if (result == null || result.isEmpty) {
-      await apiService.getPairDecimalConfig().then((res) async {
-        if (res == null) {
-          return null;
-        } else {
-          result = res;
-        }
-      });
-    }
-    debugPrint('returning result');
-    return result;
-  }
+  // refreshDecimalConfigDB() async {
+  //   debugPrint(
+  //       'Refreshh decimal data TIME START ${DateTime.now().toLocal().toIso8601String()}');
+  //   ApiService apiService = locator<ApiService>();
+  //   await decimalConfigDatabaseService
+  //       .deleteDb()
+  //       .whenComplete(() => log.w('decimalConfig DB deleted'));
 
-  refreshDecimalConfigDB() async {
-    ApiService apiService = locator<ApiService>();
-    await decimalConfigDatabaseService
-        .deleteDb()
-        .whenComplete(() => log.w('decimalConfig DB deleted'));
-
-    await apiService.getPairDecimalConfig().then((decimalPairDataApi) async {
-      if (decimalPairDataApi != null) {
-        log.i(
-            'decimal config data fecthed from api length ${decimalPairDataApi.length}');
-        for (var i = 0; i < decimalPairDataApi.length; i++) {
-          decimalConfigDatabaseService.insert(decimalPairDataApi[i]);
-        }
-      }
-    });
-    var allDecimalStoredData = await decimalConfigDatabaseService.getAll();
-    log.e('decimal configs length in db ${allDecimalStoredData.length}');
-  }
+  //   await apiService.getPairDecimalConfig().then((decimalPairDataApi) async {
+  //     if (decimalPairDataApi != null) {
+  //       log.i(
+  //           'decimal config data fecthed from api length ${decimalPairDataApi.length}');
+  //       for (var i = 0; i < decimalPairDataApi.length; i++) {
+  //         decimalConfigDatabaseService.insert(decimalPairDataApi[i]);
+  //       }
+  //     }
+  //   });
+  //   var allDecimalStoredData = await decimalConfigDatabaseService.getAll();
+  //   log.e('decimal configs length in db ${allDecimalStoredData.length}');
+  //   debugPrint(
+  //       'Refreshh decimal data TIME FINISH ${DateTime.now().toLocal().toIso8601String()}');
+  // }
 /*---------------------------------------------------
       Get EXG address from wallet database
 --------------------------------------------------- */

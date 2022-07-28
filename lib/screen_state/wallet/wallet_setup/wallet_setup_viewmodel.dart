@@ -51,7 +51,6 @@ class WalletSetupViewmodel extends BaseViewModel {
   UserSettingsDatabaseService userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();
 
-  final _vaultService = locator<VaultService>();
   VersionService versionService = locator<VersionService>();
   final dialogService = locator<DialogService>();
 
@@ -67,12 +66,27 @@ class WalletSetupViewmodel extends BaseViewModel {
   bool hasVerificationStarted = false;
   bool isHideIcon = true;
   var walletUtil = WalletUtil();
+  bool hasData = false;
   // init
   init() async {
     sharedService.context = context;
+    checkLanguageFromStorage();
 
     await checkExistingWallet();
-    await walletService.checkLanguage();
+  }
+
+  Future checkLanguageFromStorage() async {
+    String lang = '';
+    setBusy(true);
+    lang = storageService.language;
+    if (lang == null || lang.isEmpty) {
+      log.e('language empty - setting to english');
+      lang = 'en';
+    }
+    AppLocalizations.load(Locale(lang, lang.toUpperCase()));
+    storageService.language = lang;
+
+    setBusy(false);
   }
 
   importCreateNav(String actionType) async {
@@ -236,6 +250,7 @@ class WalletSetupViewmodel extends BaseViewModel {
       log.e('checkExistingWallet func: getEncryptedMnemonic CATCH err $err');
     }
     if (coreWalletDbData == null || coreWalletDbData.isEmpty) {
+      hasData = false;
       log.w('coreWalletDbData is null or empty');
       List walletDatabase;
       try {
@@ -263,6 +278,7 @@ class WalletSetupViewmodel extends BaseViewModel {
     // IF THERE IS NO OLD DATA IN STORAGE BUT NEW CORE WALLET DATA IS PRESENT IN DATABASE
     // THEN VERIFY AGAIN IF STORED DATA IS NOT PREVIOUSLY VERIFIED
     else if (coreWalletDbData != null || coreWalletDbData.isNotEmpty) {
+      hasData = true;
       isVerifying = false;
       goToWalletDashboard();
     }
@@ -286,6 +302,7 @@ class WalletSetupViewmodel extends BaseViewModel {
         isWallet = false;
         setBusy(false);
         authService.setIsCancelledValueFalse();
+        return;
       }
       // bool isDeviceSupported = await authService.isDeviceSupported();
       if (!storageService.hasPhoneProtectionEnabled) {
@@ -296,6 +313,6 @@ class WalletSetupViewmodel extends BaseViewModel {
     }
     setBusy(false);
 
-    walletService.storeTokenListUpdatesInDB();
+    //  walletService.storeTokenListUpdatesInDB();
   }
 }

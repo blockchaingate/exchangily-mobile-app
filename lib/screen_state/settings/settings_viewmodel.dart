@@ -47,7 +47,7 @@ import 'package:exchangilymobileapp/services/db/token_info_database_service.dart
 class SettingsViewmodel extends BaseViewModel {
   bool isVisible = false;
   String mnemonic = '';
-  final log = getLogger('SettingsState');
+  final log = getLogger('SettingsViewmodel');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   final _vaultService = locator<VaultService>();
@@ -107,8 +107,15 @@ class SettingsViewmodel extends BaseViewModel {
 
     getAppVersion();
     baseServerUrl = configService.getKanbanBaseUrl();
-    await setLanguageFromDb();
-    await selectDefaultWalletLanguage();
+    // Future.delayed(const Duration(seconds: 1), () async {
+    // await setLanguageFromDb();
+    selectedLanguage = storageService.language;
+    if (selectedLanguage.isEmpty) {
+      selectedLanguage = 'en';
+    }
+    // await selectDefaultWalletLanguage();
+    // });
+
     setBusy(false);
   }
 
@@ -175,7 +182,9 @@ class SettingsViewmodel extends BaseViewModel {
   Future<String> selectDefaultWalletLanguage() async {
     setBusy(true);
     if (selectedLanguage == '' || selectedLanguage == null) {
-      String key = userSettings.language ?? 'en';
+      String key;
+      if (userSettings.language == null || userSettings.language.isEmpty)
+        key = 'en';
       // await getSetLocalStorageDataByKey('lang');
       // log.w('key in init $key');
 
@@ -381,7 +390,7 @@ class SettingsViewmodel extends BaseViewModel {
       key = updatedLanguageValue;
     }
 // selected language should be English,Chinese or other language selected not its lang code
-    selectedLanguage = key.isEmpty ? updatedLanguageValue : languages[key];
+    selectedLanguage = key.isNotEmpty ? updatedLanguageValue : languages[key];
     log.w('selectedLanguage $selectedLanguage');
     if (updatedLanguageValue == 'Chinese' ||
         updatedLanguageValue == 'zh' ||
@@ -389,8 +398,8 @@ class SettingsViewmodel extends BaseViewModel {
       log.e('in zh');
       AppLocalizations.load(const Locale('zh', 'ZH'));
 
-      UserSettings us = UserSettings(id: 1, language: 'zh', theme: '');
-      await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
+      //   UserSettings us = UserSettings(id: 1, language: 'zh', theme: '');
+      //   await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
       storageService.language = 'zh';
     } else if (updatedLanguageValue == 'English' ||
         updatedLanguageValue == 'en' ||
@@ -398,8 +407,8 @@ class SettingsViewmodel extends BaseViewModel {
       log.e('in en');
       AppLocalizations.load(const Locale('en', 'EN'));
       storageService.language = 'en';
-      UserSettings us = UserSettings(id: 1, language: 'en', theme: '');
-      await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
+      // UserSettings us = UserSettings(id: 1, language: 'en', theme: '');
+      // await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
     }
 
     setBusy(false);

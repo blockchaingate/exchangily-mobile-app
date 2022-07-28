@@ -81,7 +81,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   var coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   var storageService = locator<LocalStorageService>();
   final dialogService = locator<DialogService>();
-  final userDatabaseService = locator<UserSettingsDatabaseService>();
+  //final userDatabaseService = locator<UserSettingsDatabaseService>();
   final coinService = locator<CoinService>();
 
   BuildContext context;
@@ -166,13 +166,15 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     checkAnnouncement();
 
-    walletService.storeTokenListUpdatesInDB();
     customTokens = await apiService.getCustomTokens();
     await getBalanceForSelectedCustomTokens();
     setBusy(false);
 
     await versionService.checkVersion(context, isForceUpdate: true);
-    sharedService.refreshDecimalConfigDB();
+
+    Future.delayed(const Duration(seconds: 2), () async {
+      await walletService.storeTokenListUpdatesInDB();
+    });
   }
 
 // set route with coin token type and address
@@ -1515,7 +1517,8 @@ class WalletDashboardViewModel extends BaseViewModel {
         walletBalancesBody: finalWbb,
       );
       // store in single core database
-      await coreWalletDatabaseService.insert(walletCoreModel);
+      if (finalWbb.isNotEmpty)
+        await coreWalletDatabaseService.insert(walletCoreModel);
     } else if (walletBalancesBodyFromDB != null) {
       finalWbb = walletBalancesBodyFromDB['walletBalancesBody'];
     }

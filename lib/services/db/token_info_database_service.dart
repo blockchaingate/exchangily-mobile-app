@@ -71,9 +71,10 @@ class TokenInfoDatabaseService {
 
     // res is giving me the same output in the log whether i map it or just take var res
     final List<Map<String, dynamic>> res = await db.query(tableName);
-    log.w('res $res');
+    log.w('res ${res.length}');
     List<TokenModel> list =
         res.isNotEmpty ? res.map((f) => TokenModel.fromJson(f)).toList() : [];
+
     return list;
   }
 

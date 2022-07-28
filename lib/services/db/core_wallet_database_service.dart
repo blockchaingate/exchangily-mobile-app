@@ -101,6 +101,7 @@ class CoreWalletDatabaseService {
           conflictAlgorithm: ConflictAlgorithm.replace);
 
       log.w('core wallet inserted Id $id');
+
       return id;
     } catch (err) {
       log.e('Insert failed -Catch $err');

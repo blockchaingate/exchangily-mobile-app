@@ -77,6 +77,10 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 
   /// Initialize when model ready
   init() async {
+    // Future.delayed(const Duration(seconds: 7), () async {
+    // await sharedService.refreshDecimalConfigDB();
+    // });
+
     await getDecimalPairConfig();
     //   await getExchangeAssets();
     String holder = updateTickerName(pairPriceByRoute.symbol);
