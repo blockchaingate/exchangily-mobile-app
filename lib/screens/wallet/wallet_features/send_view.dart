@@ -10,11 +10,13 @@
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/coin_utils/erc20_util.dart';
 import 'package:exchangilymobileapp/utils/coin_utils/matic_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -906,15 +908,13 @@ class SendWalletView extends StatelessWidget {
               ),
               // floatingActionButton: TextButton(
               //   child: Text('Click'),
-              //   onPressed: () {
-              //     int gasLimit = 21000;
-              //     var gasPrice = 6.7415494;
-              //     var b = BigInt.parse('0x1dfd14000');
-              //     var transFeeDouble = (b *
-              //             BigInt.parse(gasLimit.toString()) /
-              //             BigInt.parse('1000000000'))
-              //         .toDouble();
-              //     debugPrint(transFeeDouble.toString());
+              //   onPressed: () async {
+              //     var a = await ERC20Util().getGasPrice(bnbBaseUrl);
+              //     // 10000000000
+
+              //     int.parse(a.toString());
+
+              //     print('a $a');
               //   },
               // ),
             ),

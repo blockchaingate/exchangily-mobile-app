@@ -33,10 +33,12 @@ Map devConfig = {
       "gasLimitToken": 70000
     },
     "BNB": {
-      "chain": {"name": 'testnet', "networkId": 97, "chainId": 97},
+      "chain": 'testnet',
+      "networkId": 97,
+      "chainId": 97,
       "rpcEndpoint": 'https://data-seed-prebsc-1-s1.binance.org:8545',
       "hardfork": 'byzantium',
-      "gasPrice": 5,
+      "gasPrice": 10,
       "gasPriceMax": 100,
       "gasLimit": 21000,
       "gasLimitToken": 70000
@@ -66,7 +68,8 @@ Map devConfig = {
     "BCH": 1,
     "LTC": 1,
     "DOGE": 1,
-    "TRX": 195
+    "TRX": 195,
+    "BNB": 60,
   },
   'endpoints': {
     //for local test
@@ -88,12 +91,12 @@ Map devConfig = {
   },
   "addresses": {
     "smartContract": {
-      "USDT": {
-        "ETH": '0x1c35eCBc06ae6061d925A2fC2920779a1896282c',
-        "TRX": 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
-        "BNB": '0x4850754EA867654339F38d4e6DF7cd80CFee141f',
-        "MATIC": '0x26CbCDe3842D9A9170d47F122F69D993a00676ED'
-      },
+      // "USDT": {
+      //   "ETH": '0x1c35eCBc06ae6061d925A2fC2920779a1896282c',
+      //   "TRX": 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
+      //   "BNB": '0x4850754EA867654339F38d4e6DF7cd80CFee141f',
+      //   "MATIC": '0x26CbCDe3842D9A9170d47F122F69D993a00676ED'
+      // },
       "FABLOCK": '0xa7d4a4e23bf7dd7a1e03eda9eb7c28a016fd54aa',
       "EXG": '0x867480ba8e577402fa44f43c33875ce74bdc5df6',
       "DUSD": '0x78f6bedc7c3d6500e004c6dca19c8d614cfd91ed',
@@ -130,7 +133,11 @@ Map devConfig = {
         'address': 'bchtest:qrkhd038rw685m0s2kauyquhx0pxlhkvsg6dydtwn9 ',
       },
       {'name': 'LTC', 'address': 'n3AYguoFtN7SqsfAJPx6Ky8FTTZUkeKbvc'},
-      {'name': 'DOGE', 'address': 'nqqkf8PqJj3CUjwLMEcjJDfpiU5NDcMUrB'}
+      {'name': 'DOGE', 'address': 'nqqkf8PqJj3CUjwLMEcjJDfpiU5NDcMUrB'},
+      {
+        'name': 'BNB',
+        'address': '0x450C53c50F8c0413a5829B0A9ab9Fa7e38f3eD2E',
+      }
     ],
   },
   "websocket": {
@@ -197,10 +204,12 @@ Map productionConfig = {
       "gasLimitToken": 70000
     },
     "BNB": {
-      "chain": {"name": 'mainnet', "networkId": 56, "chainId": 56},
+      "chain": 'mainnet',
+      "networkId": 56,
+      "chainId": 56,
       "rpcEndpoint": 'https://bsc-dataseed.binance.org',
       "hardfork": 'petersburg',
-      "gasPrice": 5,
+      "gasPrice": 10,
       "gasPriceMax": 200,
       "gasLimit": 21000,
       "gasLimitToken": 70000
@@ -234,7 +243,8 @@ Map productionConfig = {
     "BCH": 145,
     "LTC": 2,
     "DOGE": 3,
-    "TRX": 195
+    "TRX": 195,
+    "BNB": 60,
   },
   'endpoints': {
     'blockchaingate': 'https://www.blockchaingate.com/v2/',
@@ -253,6 +263,16 @@ Map productionConfig = {
   },
   'addresses': {
     "smartContract": {
+      // "USDT": {
+      //   "ETH": '0xdac17f958d2ee523a2206206994597c13d831ec7',
+      //   "TRX": 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
+      //   "BNB": '0x55d398326f99059ff775485246999027b3197955',
+      //   "MATIC": '0xc2132D05D31c914a87C6611C10748AEb04B58e8F'
+      // },
+      "USDC": {
+        "ETH": '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        "TRX": 'TEkxiTehnzSmSe2XqrBj4w32RUN966rdz8'
+      },
       "FABLOCK": '0x04baa04d9550c49831427c6abe16def2c579af4a',
       "EXG": '0xa3e26671a38978e8204b8a37f1c2897042783b00',
       "USDT": '0xdac17f958d2ee523a2206206994597c13d831ec7',
@@ -291,7 +311,8 @@ Map productionConfig = {
       },
       {'name': 'LTC', 'address': 'LaX6sfX8RoHbQHNDEBmdzyBMN9vFa95FXL'},
       {'name': 'DOGE', 'address': 'DLSF9i9weYwpgUrendmuGiHC35HGoHuvR9'},
-      {'name': 'TRX', 'address': 'TGfvRWxddNoWrghwE5zC1JEcbXyMdPATdo'}
+      {'name': 'TRX', 'address': 'TGfvRWxddNoWrghwE5zC1JEcbXyMdPATdo'},
+      {'name': 'BNB', 'address': '0x4983f8634255762A18D854790E6d35A522E2633a'}
     ],
     "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },

@@ -129,6 +129,7 @@ class WalletUtil {
     'Metal',
     'Kyber Network',
     'Genesis Vision'
+        'Binance Coin'
   ];
 
   // get wallet info object with address using single wallet balance
@@ -151,7 +152,9 @@ class WalletUtil {
     if (tickerName == 'ETH' ||
         tokenType == 'ETH' ||
         tickerName == 'MATICM' ||
-        tokenType == 'POLYGON') {
+        tokenType == 'POLYGON' ||
+        tickerName == "BNB" ||
+        tokenType == "BNB") {
       walletAddress =
           await coreWalletDatabaseService.getWalletAddressByTickerName('ETH');
     } else if (tickerName == 'FAB' || tokenType == 'FAB') {

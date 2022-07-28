@@ -521,7 +521,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     isHideSearch = true;
 
     if (tabIndex == 0) {
-      await init();
+      // await init();
       isHideSmallAssetsButton = false;
       isHideSearch = false;
     } else if (tabIndex == 1) {

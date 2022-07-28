@@ -693,9 +693,9 @@ class SendViewModel extends BaseViewModel {
     // ! Same for Fab token based coins
 
     if (tokenType == 'ETH' || tokenType == 'FAB' || tokenType == 'TRX'
-        // tickerName == 'ETH' ||
-        // tickerName == 'FAB' ||
-        // tickerName == 'BTC'
+        // tokenType == 'BNB' ||
+        // tokenType == 'MATIC' ||
+
         ) {
       await walletService
           .hasSufficientWalletBalance(transFee, tokenType)
@@ -716,6 +716,7 @@ class SendViewModel extends BaseViewModel {
       });
     }
 
+    await updateTransFee();
     if (transFee == 0.0 && !isTrx()) {
       log.e('transfee $transFee not enough $tokenType balance to make tx');
       var coin =
@@ -732,7 +733,6 @@ class SendViewModel extends BaseViewModel {
           ),
           position: NotificationPosition.top,
           background: sellPrice);
-      await updateTransFee();
 
       return;
     }

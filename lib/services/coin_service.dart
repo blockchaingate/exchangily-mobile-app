@@ -230,10 +230,12 @@ class CoinService {
           if (token.tickerName == tickerName) coinType = token.coinType;
         }
       });
-
-      // await tokenListDatabaseService
-      //     .getCoinTypeByTickerName(tickerName)
-      //     .then((value) => coinType = value);
+      await apiService.getTokenList().then((tokens) {
+        for (var token in tokens) {
+          //    await tokenListDatabaseService.insert(token);
+          if (token.tickerName == tickerName) coinType = token.coinType;
+        }
+      });
     }
     debugPrint('ticker $tickerName -- coin type $coinType');
     return coinType;

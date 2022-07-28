@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -12,6 +13,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
+import 'package:exchangilymobileapp/utils/coin_utils/erc20_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +62,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
   String fabAddress = '';
   bool isValidAmount = true;
   var walletUtil = WalletUtil();
+  var erc20Util = ERC20Util();
+
   // Init
   void initState() async {
     setBusy(true);
@@ -67,14 +71,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (coinName == 'FAB') walletInfo.tokenType = '';
     if (coinName == 'USDTX') walletInfo.tokenType = 'TRX';
     tokenType = walletInfo.tokenType;
-    setFee();
-    var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
-    var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
-    var kanbanTransFeeDouble = (Decimal.parse(kanbanPrice.toString()) *
-            Decimal.parse(kanbanGasLimit.toString()) /
-            Decimal.parse('1e18'))
-        .toDouble();
-    kanbanTransFee = kanbanTransFeeDouble;
+    await setFee();
+
     await getGasBalance();
 
     specialTicker = walletUtil.updateSpecialTokensTickerNameForTxHistory(
@@ -91,6 +89,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
       feeUnit = 'FAB';
     } else if (coinName == 'MATICM' || tokenType == 'POLYGON') {
       feeUnit = 'MATIC(POLYGON)';
+    } else if (coinName == 'BNB' || tokenType == 'BNB') {
+      feeUnit = 'BNB';
     }
     decimalLimit =
         await walletService.getSingleCoinWalletDecimalLimit(coinName);
@@ -234,6 +234,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
         gasLimitTextController.text =
             environment["chains"]["ETH"]["gasLimitToken"].toString();
       }
+    } else if (coinName == 'BNB' || tokenType == 'BNB') {
+      var gasPriceReal = await erc20Util.getGasPrice(bnbBaseUrl);
+      gasPriceTextController.text = gasPriceReal.toString();
+      gasLimitTextController.text =
+          environment["chains"]["BNB"]["gasLimit"].toString();
+
+      if (tokenType == 'BNB') {
+        gasLimitTextController.text =
+            environment["chains"]["BNB"]["gasLimitToken"].toString();
+      }
     } else if (coinName == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();
@@ -249,6 +259,13 @@ class MoveToExchangeViewModel extends BaseViewModel {
         environment["chains"]["KANBAN"]["gasPrice"].toString();
     kanbanGasLimitTextController.text =
         environment["chains"]["KANBAN"]["gasLimit"].toString();
+    var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
+    var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
+    var kanbanTransFeeDouble = (Decimal.parse(kanbanPrice.toString()) *
+            Decimal.parse(kanbanGasLimit.toString()) /
+            Decimal.parse('1e18'))
+        .toDouble();
+    kanbanTransFee = kanbanTransFeeDouble;
   }
 
 /*---------------------------------------------------
@@ -637,12 +654,13 @@ class MoveToExchangeViewModel extends BaseViewModel {
             amount,
             options,
             false)
-        .then((ret) {
+        .then((ret) async {
       log.w('updateTransFee $ret');
       if (ret != null && ret['transFee'] != null) {
         transFee = NumberUtil()
             .truncateDoubleWithoutRouding(ret['transFee'], precision: 8);
-        log.i('transfee $transFee');
+        log.i('transfee $transFee -- kanbanTransFee $kanbanTransFee');
+        await setFee();
         setBusy(false);
       }
 

@@ -510,6 +510,34 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       s = ss.substring(64, 128);
       v = ss.substring(128);
       debugPrint('v=' + v);
+    } else if (coinName == 'BNB' || tokenType == 'BNB') {
+      final root = bip32.BIP32.fromSeed(seed);
+      var coinType = environment["CoinType"]["BNB"];
+      final ethCoinChild =
+          root.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
+      var privateKey = ethCoinChild.privateKey;
+      //var credentials = EthPrivateKey.fromHex(privateKey);
+      //var credentials = EthPrivateKey(privateKey);
+
+      var chainId = environment["chains"]["BNB"]["chainId"];
+      // chainId = 0;
+      debugPrint('chainId==' + chainId.toString());
+
+      // var signedMessOrig = await credentials
+      //    .signPersonalMessage(stringToUint8List(originalMessage), chainId: chainId);
+
+      signedMess = await signPersonalMessageWith(Constants.EthMessagePrefix,
+          privateKey, stringToUint8List(originalMessage),
+          chainId: chainId);
+      String ss = HEX.encode(signedMess);
+      //String ss2 = HEX.encode(signedMessOrig);
+
+      //debugPrint('ss='+ss);
+      //debugPrint('ss2='+ss2);
+      r = ss.substring(0, 64);
+      s = ss.substring(64, 128);
+      v = ss.substring(128);
+      debugPrint('v=' + v);
     } else if (coinName == 'FAB' ||
         coinName == 'BTC' ||
         coinName == 'LTC' ||

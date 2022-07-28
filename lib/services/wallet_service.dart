@@ -2402,7 +2402,7 @@ class WalletService {
 
       log.i('bnb txHex in ETH=' + txHex);
       if (doSubmit) {
-        var res = await erc20Util.postBnbTx(txHex);
+        var res = await erc20Util.postTx(bnbBaseUrl, txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
       } else {
