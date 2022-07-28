@@ -23,8 +23,9 @@ class WalletUtil {
     'BTC': 'Bitcoin',
     'ETH': 'Ethereum',
     'FAB': 'Fast Access Blockchain',
-    'USDT': 'USDT',
+    'BNB': 'Binance Coin',
     'EXG': 'Exchangily',
+    'USDT': 'USDT',
     'DUSD': 'DUSD',
     'TRX': 'Tron',
     'BCH': 'Bitcoin Cash',
@@ -51,6 +52,7 @@ class WalletUtil {
     'BTC',
     'ETH',
     'FAB',
+    'BNB',
     'EXG',
     'USDT',
     'DUSD',
@@ -72,10 +74,11 @@ class WalletUtil {
     'WINGS',
     'MTL',
     'KNC',
-    'GVT'
+    'GVT',
   ];
 
   List<String> tokenType = [
+    '',
     '',
     '',
     '',
@@ -216,13 +219,13 @@ class WalletUtil {
       logoTicker = 'FABE';
     } else if (tickerName.toUpperCase() == 'TRON_USDT' ||
         tickerName.toUpperCase() == 'USDTX') {
-      tickerName = 'USDT(TRC20)';
+      tickerName = 'USDT(TRX)';
       logoTicker = 'USDTX';
     } else if (tickerName.toUpperCase() == 'USDT') {
-      tickerName = 'USDT(ERC20)';
+      tickerName = 'USDT(ETH)';
       logoTicker = 'USDT';
     } else if (tickerName.toUpperCase() == 'USDCX') {
-      tickerName = 'USDC(TRC20)';
+      tickerName = 'USDC(TRX)';
       logoTicker = 'USDCX';
     } else if (tickerName.toUpperCase() == 'MATICM') {
       tickerName = 'MATIC(POLYGON)';
@@ -236,6 +239,9 @@ class WalletUtil {
     } else if (tickerName.toUpperCase() == 'MATIC') {
       tickerName = 'MATIC(ERC20)';
       logoTicker = 'MATIC';
+    } else if (tickerName.toUpperCase() == 'USDTB') {
+      tickerName = 'USDT(BNB)';
+      logoTicker = 'USDTB';
     } else {
       logoTicker = tickerName;
     }

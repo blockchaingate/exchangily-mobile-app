@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/constants/ui_var.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
@@ -641,46 +642,24 @@ class WalletDashboardViewModel extends BaseViewModel {
   //   setBusyForObject(favWalletInfoList, false);
   // }
 
-/*----------------------------------------------------------------------
-                            Move Trx Usdt
-----------------------------------------------------------------------*/
-  moveTronUsdt() async {
+  moveCoin(String tickerName, int desiredIndexPosition) {
     try {
-      var tronUsdtWalletObj =
-          wallets.singleWhere((element) => element.coin == 'USDTX');
-      if (tronUsdtWalletObj != null) {
-        int tronUsdtIndex = wallets.indexOf(tronUsdtWalletObj);
-        if (tronUsdtIndex != 5) {
-          wallets.removeAt(tronUsdtIndex);
-          wallets.insert(5, tronUsdtWalletObj);
+      var walletObj =
+          wallets.singleWhere((element) => element.coin == tickerName);
+      if (walletObj != null) {
+        int walletObjIndex = wallets.indexOf(walletObj);
+        if (walletObjIndex != desiredIndexPosition) {
+          wallets.removeAt(walletObjIndex);
+          wallets.insert(desiredIndexPosition, walletObj);
         } else {
-          log.i('2nd else move tronusdt tron usdt already at #5');
+          log.i(
+              '2nd else moveCoin $tickerName already at $desiredIndexPosition');
         }
       } else {
-        log.w('1st else move tronusdt can\'t find tron usdt');
+        log.w('1st else moveCoin cant find $tickerName');
       }
     } catch (err) {
-      log.e('movetronusdt Catch $err');
-    }
-  }
-
-  moveTron() {
-    try {
-      var tronWalletObj =
-          wallets.singleWhere((element) => element.coin == 'TRX');
-      if (tronWalletObj != null) {
-        int tronUsdtIndex = wallets.indexOf(tronWalletObj);
-        if (tronUsdtIndex != 7) {
-          wallets.removeAt(tronUsdtIndex);
-          wallets.insert(7, tronWalletObj);
-        } else {
-          log.i('2nd else moveTron tron usdt already at #7');
-        }
-      } else {
-        log.w('1st else moveTron cant find tron usdt');
-      }
-    } catch (err) {
-      log.e('moveTron Catch $err');
+      log.e('moveCoin Catch $err');
     }
   }
 
@@ -1532,9 +1511,11 @@ class WalletDashboardViewModel extends BaseViewModel {
         await apiService.getWalletBalance(jsonDecode(finalWbb));
     if (walletBalancesApiRes != null)
       log.w('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
-    for (var coinToHideTicker in coinsToHideList) {
-      walletBalancesApiRes
-          .removeWhere((element) => element.coin == coinToHideTicker);
+    if (isProduction) {
+      for (var coinToHideTicker in coinsToHideList) {
+        walletBalancesApiRes
+            .removeWhere((element) => element.coin == coinToHideTicker);
+      }
     }
     if (walletBalancesApiRes != null)
       log.i('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
@@ -1545,8 +1526,9 @@ class WalletDashboardViewModel extends BaseViewModel {
       calcTotalBal();
 
       await checkToUpdateWallet();
-      moveTronUsdt();
-      moveTron();
+      moveCoin('USDTX', 5);
+      moveCoin('BNB', 6);
+      moveCoin('TRX', 7);
       await getGas();
 
       // check gas and fab balance if 0 then ask for free fab

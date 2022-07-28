@@ -111,6 +111,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
       radioButtonSelection('TRX');
     } else if (walletInfo.tickerName == "BTC") {
       setWithdrawLimit("BTC");
+    } else {
+      setWithdrawLimit(walletInfo.tickerName);
     }
     specialTickerForTxHistory =
         walletUtil.updateSpecialTokensTickerNameForTxHistory(
