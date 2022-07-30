@@ -148,7 +148,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   var walletUtil = WalletUtil();
   bool isHideSearch = false;
   bool isHideSmallAssetsButton = false;
-  var coinsToHideList = ["USDTB", "USDTM", "FABB"];
+  var coinsToHideList = [];
   var versionService = locator<VersionService>();
 
 /*----------------------------------------------------------------------
@@ -1399,9 +1399,8 @@ class WalletDashboardViewModel extends BaseViewModel {
             });
           }
           log.w('tickerNameByCointype $tickerNameByCointype');
-          tickerNameByCointype =
-              walletUtil.updateSpecialTokensTickerNameForTxHistory(
-                  tickerNameByCointype)["tickerName"];
+          tickerNameByCointype = walletUtil.updateSpecialTokensTickerName(
+              tickerNameByCointype)["tickerName"];
           log.i(
               'if Special then updated tickerNameByCointype $tickerNameByCointype');
           if (tickerNameByCointype != null &&
@@ -1511,7 +1510,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         await apiService.getWalletBalance(jsonDecode(finalWbb));
     if (walletBalancesApiRes != null)
       log.w('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
-    if (isProduction) {
+    if (isProduction && coinsToHideList.isNotEmpty) {
       for (var coinToHideTicker in coinsToHideList) {
         walletBalancesApiRes
             .removeWhere((element) => element.coin == coinToHideTicker);
@@ -1527,8 +1526,9 @@ class WalletDashboardViewModel extends BaseViewModel {
 
       await checkToUpdateWallet();
       moveCoin('USDTX', 5);
-      moveCoin('BNB', 6);
-      moveCoin('TRX', 7);
+      moveCoin('TRX', 6);
+      moveCoin('BNB', 7);
+      moveCoin('USDTB', 8);
       await getGas();
 
       // check gas and fab balance if 0 then ask for free fab

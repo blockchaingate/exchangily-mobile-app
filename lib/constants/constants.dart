@@ -19,7 +19,9 @@ class Constants {
     'FABE',
     'EXGE',
     'DSCE',
-    'BSTE'
+    'BSTE',
+    'USDTB',
+    'FABB'
   ];
 
   static const String appName = 'exchangily';
@@ -46,9 +48,11 @@ class Constants {
     '1D': '24h',
   };
 
-  static const String EthChainPrefix = '0003';
-  static const String TronChainPrefix = '0007';
-  static const String FabChainPrefix = '0002';
+  static const String fabChainPrefix = '0002';
+  static const String ethChainPrefix = '0003';
+  static const String tronChainPrefix = '0007';
+  static const String bnbChainPrefix = '0008';
+  static const String maticmChainPrefix = '0009';
 
   static const String DepositSignatureAbi = "0x379eb862";
   static const String WithdrawSignatureAbi = "0x3295d51e";

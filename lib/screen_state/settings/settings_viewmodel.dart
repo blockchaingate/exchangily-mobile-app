@@ -50,7 +50,6 @@ class SettingsViewmodel extends BaseViewModel {
   final log = getLogger('SettingsViewmodel');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
-  final _vaultService = locator<VaultService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
   TokenInfoDatabaseService tokenListDatabaseService =

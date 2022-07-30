@@ -5,7 +5,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:flutter/widgets.dart';
 
-class ERC20Util {
+class Erc20Util {
   final log = getLogger('ERC20Util');
 
   var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();

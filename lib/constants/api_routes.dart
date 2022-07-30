@@ -10,6 +10,7 @@ const String baseBlockchainGateV2Url = isProduction
     : 'https://test.blockchaingate.com/v2/';
 
 const String tronBaseApiUrl = 'https://api.trongrid.io/';
+
 /*----------------------------------------------------------------------
                         LightningRemit
 ----------------------------------------------------------------------*/
@@ -68,6 +69,9 @@ const String LitecoinExplorerUrl = "https://live.blockcypher.com/ltx/tx/";
 const String DogeExplorerUrl = "https://dogechain.info/tx/";
 const String BitcoinCashExplorerUrl = "https://explorer.bitcoin.com/bch/tx/";
 const String TronExplorerUrl = "https://tronscan.org/#/transaction/";
+// testnet.bscscan.com
+const String bnbExplorerUrl = 'https://www.bscscan.com/tx/';
+const String maticmExplorerUrl = 'https://polygonscan.com/tx/';
 
 // Free Fab
 const String getFreeFabUrl =

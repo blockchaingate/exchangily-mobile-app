@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bitbox/bitbox.dart' as Bitbox;
+import 'package:bitbox/bitbox.dart' as bitbox;
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
@@ -100,7 +100,7 @@ class WalletService {
   final ltcUtils = LtcUtils();
   var walletUtil = WalletUtil();
   final maticmUtils = MaticUtils();
-  final erc20Util = ERC20Util();
+  final erc20Util = Erc20Util();
 
   final _vaultService = locator<VaultService>();
 
@@ -327,11 +327,14 @@ class WalletService {
   Future<bool> hasSufficientWalletBalance(
       double amount, String tickerName) async {
     bool isValidAmount = true;
+    String thirdPartyTicker = '';
     String fabAddress =
         await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
-
+    if (tickerName == 'BNB' || tickerName == "MATIC") {
+      thirdPartyTicker = 'ETH';
+    }
     String thirdPartyAddress = await coreWalletDatabaseService
-        .getWalletAddressByTickerName(tickerName);
+        .getWalletAddressByTickerName(thirdPartyTicker);
     log.w('coinAddress $thirdPartyAddress');
     await apiService
         .getSingleWalletBalance(fabAddress, tickerName, thirdPartyAddress)
@@ -547,7 +550,7 @@ class WalletService {
   Future<String> generateBchAddress(String mnemonic) async {
     String tickerName = 'BCH';
     var bchSeed = generateSeed(mnemonic);
-    final masterNode = Bitbox.HDNode.fromSeed(bchSeed);
+    final masterNode = bitbox.HDNode.fromSeed(bchSeed);
     var coinType = environment["CoinType"][tickerName].toString();
     final accountDerivationPath = "m/44'/" + coinType + "'/0'/0";
     final accountNode = masterNode.derivePath(accountDerivationPath);
@@ -566,7 +569,7 @@ class WalletService {
 
   // get BCH address details
   Future getBchAddressDetails(String bchAddress) async {
-    final addressDetails = await Bitbox.Address.details(bchAddress);
+    final addressDetails = await bitbox.Address.details(bchAddress);
     log.e('Address $bchAddress -- address details $addressDetails');
     return addressDetails;
   }
@@ -1465,6 +1468,7 @@ class WalletService {
     */
     var kanbanGasPrice = option['kanbanGasPrice'];
     var kanbanGasLimit = option['kanbanGasLimit'];
+    var decimal = option['decimal'];
     log.e('before send transaction');
     var resST = await sendTransaction(
         coinName, seed, [0], [], officalAddress, amount, option, false);
@@ -2046,10 +2050,10 @@ class WalletService {
       var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
 
-      final txb = Bitbox.Bitbox.transactionBuilder(
+      final txb = bitbox.Bitbox.transactionBuilder(
           testnet: environment["chains"]["BCH"]["testnet"]);
       final masterNode =
-          Bitbox.HDNode.fromSeed(seed, environment["chains"]["BCH"]["testnet"]);
+          bitbox.HDNode.fromSeed(seed, environment["chains"]["BCH"]["testnet"]);
       final childNode =
           "m/44'/" + environment["CoinType"]["BCH"].toString() + "'/0'/0/0";
       final accountNode = masterNode.derivePath(childNode);
@@ -2347,84 +2351,11 @@ class WalletService {
       } else {
         txHash = '0x' + tx.getId();
       }
-    } else if (coin == 'BNB' || tokenType == "BNB") {
-      // Credentials fromHex = EthPrivateKey.fromHex("c87509a[...]dc0d3");
-
-      if (gasPrice == 0) {
-        gasPrice = environment["chains"]["BNB"]["gasPrice"];
-      }
-      if (gasLimit == 0) {
-        gasLimit = environment["chains"]["BNB"]["gasLimit"];
-      }
-      transFeeDouble = (BigInt.parse(gasPrice.toString()) *
-              BigInt.parse(gasLimit.toString()) /
-              BigInt.parse('1000000000'))
-          .toDouble();
-
-      if (getTransFeeOnly) {
-        return {
-          'txHex': '',
-          'txHash': '',
-          'errMsg': '',
-          'amountSent': '',
-          'transFee': transFeeDouble
-        };
-      }
-
-      final chainId = environment["chains"]["BNB"]["chainId"];
-      final ethCoinChild = root.derivePath(
-          "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
-      final privateKey = HEX.encode(ethCoinChild.privateKey);
-      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
-
-      Credentials credentials = EthPrivateKey.fromHex(privateKey);
-
-      final address = await credentials.extractAddress();
-      final addressHex = address.hex;
-      final nonce = await erc20Util.getNonce(
-          smartContractAddress: addressHex, baseUrl: bnbBaseUrl);
-
-      var apiUrl =
-          environment["chains"]["ETH"]["infura"]; //Replace with your API
-
-      var ethClient = Web3Client(apiUrl, httpClient);
-
-      amountInTx = amountSentInt;
-      final signed = await ethClient.signTransaction(
-          credentials,
-          Transaction(
-            nonce: nonce,
-            to: EthereumAddress.fromHex(toAddress),
-            gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
-            maxGas: gasLimit,
-            value: EtherAmount.fromUnitAndValue(EtherUnit.wei, amountSentInt),
-          ),
-          chainId: chainId,
-          fetchChainIdFromNetworkId: false);
-
-      txHex = '0x' + HEX.encode(signed);
-
-      log.i('bnb txHex in ETH=' + txHex);
-      if (doSubmit) {
-        var res = await erc20Util.postTx(bnbBaseUrl, txHex);
-        txHash = res['txHash'];
-        errMsg = res['errMsg'];
-      } else {
-        txHash = ethUtils.getTransactionHash(signed);
-      }
     }
 
     // Matic Transaction
 
-    else if (coin == 'MATICM') {
-      // Credentials fromHex = EthPrivateKey.fromHex("c87509a[...]dc0d3");
-
-      if (gasPrice == 0) {
-        gasPrice = environment["chains"]["MATIC"]["gasPrice"];
-      }
-      if (gasLimit == 0) {
-        gasLimit = environment["chains"]["MATIC"]["gasLimit"];
-      }
+    else if (coin == 'MATICM' || coin == 'BNB') {
       transFeeDouble = (BigInt.parse(gasPrice.toString()) *
               BigInt.parse(gasLimit.toString()) /
               BigInt.parse('1000000000'))
@@ -2440,18 +2371,26 @@ class WalletService {
         };
       }
 
-      final chainId = environment["chains"]["MATIC"]["chainId"];
+      final chainId = environment["chains"][coin]["chainId"];
       final ethCoinChild = root.derivePath(
           "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
-      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
+      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount));
 
       Credentials credentials = EthPrivateKey.fromHex(privateKey);
 
       final address = await credentials.extractAddress();
       final addressHex = address.hex;
-      var maticUtils = MaticUtils();
-      final nonce = await maticUtils.getNonce(addressHex);
+
+      String baseUrl = '';
+      if (coin == 'BNB') {
+        baseUrl = bnbBaseUrl;
+      } else if (coin == 'MATIC') {
+        baseUrl = maticmBaseUrl;
+      }
+
+      final nonce = await erc20Util.getNonce(
+          smartContractAddress: addressHex, baseUrl: baseUrl);
 
       var apiUrl =
           environment["chains"]["ETH"]["infura"]; //Replace with your API
@@ -2473,9 +2412,9 @@ class WalletService {
 
       txHex = '0x' + HEX.encode(signed);
 
-      debugPrint('maticm txHex in ETH=' + txHex);
+      debugPrint('$coin txHex in ETH=' + txHex);
       if (doSubmit) {
-        var res = await maticmUtils.postTx(txHex);
+        var res = await erc20Util.postTx(baseUrl, txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
       } else {
@@ -2762,6 +2701,79 @@ class WalletService {
 
       if (doSubmit) {
         var res = await ethUtils.postEthTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+      } else {
+        txHash = ethUtils.getTransactionHash(signed);
+      }
+    } else if (tokenType == 'BNB' || tokenType == 'MATIC') {
+      transFeeDouble = (BigInt.parse(gasPrice.toString()) *
+              BigInt.parse(gasLimit.toString()) /
+              BigInt.parse('1000000000'))
+          .toDouble();
+      log.i('transFeeDouble===' + transFeeDouble.toString());
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble
+        };
+      }
+
+      final chainId = environment["chains"][tokenType]["chainId"];
+      final ethCoinChild = root.derivePath(
+          "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
+      final privateKey = HEX.encode(ethCoinChild.privateKey);
+      Credentials credentials = EthPrivateKey.fromHex(privateKey);
+
+      final address = await credentials.extractAddress();
+      final addressHex = address.hex;
+      String baseUrl = '';
+
+      if (tokenType == 'BNB') {
+        baseUrl = bnbBaseUrl;
+      } else if (tokenType == 'MATIC') {
+        baseUrl = maticmBaseUrl;
+      }
+      final nonce = await erc20Util.getNonce(
+          baseUrl: baseUrl, smartContractAddress: addressHex);
+
+      //gasLimit = 100000;
+
+      var convertedDecimalAmount =
+          BigInt.parse(NumberUtil.toBigInt(amount, decimal));
+
+      amountInTx = convertedDecimalAmount;
+      var transferAbi = 'a9059cbb';
+      var fxnCallHex = transferAbi +
+          string_utils.fixLength(string_utils.trimHexPrefix(toAddress), 64) +
+          string_utils.fixLength(
+              string_utils
+                  .trimHexPrefix(convertedDecimalAmount.toRadixString(16)),
+              64);
+      var apiUrl = environment["chains"]["ETH"]["infura"];
+
+      var ethClient = Web3Client(apiUrl, httpClient);
+      debugPrint(
+          '5 $nonce -- $contractAddress -- ${EtherUnit.wei} -- $fxnCallHex');
+      final signed = await ethClient.signTransaction(
+          credentials,
+          Transaction(
+              nonce: nonce,
+              to: EthereumAddress.fromHex(contractAddress),
+              gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+              maxGas: gasLimit,
+              value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
+              data: Uint8List.fromList(string_utils.hex2Buffer(fxnCallHex))),
+          chainId: chainId,
+          fetchChainIdFromNetworkId: false);
+      log.w('signed=');
+      txHex = '0x' + HEX.encode(signed);
+
+      if (doSubmit) {
+        var res = await erc20Util.postTx(baseUrl, txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
       } else {

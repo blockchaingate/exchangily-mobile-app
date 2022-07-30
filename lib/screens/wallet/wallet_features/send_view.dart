@@ -282,7 +282,8 @@ class SendWalletView extends StatelessWidget {
                                                         FontWeight.w400),
                                           ),
                                           Text(
-                                            model.tickerName.toUpperCase(),
+                                            model.specialTickerName
+                                                .toUpperCase(),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline6,
@@ -422,7 +423,8 @@ class SendWalletView extends StatelessWidget {
                                                             FontWeight.w400),
                                               ),
                                               Text(
-                                                model.tickerName.toUpperCase(),
+                                                model.specialTickerName
+                                                    .toUpperCase(),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline6,
@@ -454,7 +456,7 @@ class SendWalletView extends StatelessWidget {
                                                               FontWeight.w400),
                                                 ),
                                                 Text(
-                                                  model.tickerName
+                                                  model.specialTickerName
                                                       .toUpperCase(),
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -577,10 +579,13 @@ class SendWalletView extends StatelessWidget {
                                         child: Column(
                                           children: <Widget>[
                                             Visibility(
-                                                visible: (model.tickerName ==
-                                                        'ETH' ||
-                                                    model.tokenType == 'ETH' ||
-                                                    model.tokenType == 'FAB'),
+                                                visible:
+                                                    (model.specialTickerName ==
+                                                            'ETH' ||
+                                                        model.tokenType ==
+                                                            'ETH' ||
+                                                        model.tokenType ==
+                                                            'FAB'),
                                                 child: Row(
                                                   children: <Widget>[
                                                     Expanded(
@@ -638,10 +643,13 @@ class SendWalletView extends StatelessWidget {
                                                   ],
                                                 )),
                                             Visibility(
-                                                visible: (model.tickerName ==
-                                                        'ETH' ||
-                                                    model.tokenType == 'ETH' ||
-                                                    model.tokenType == 'FAB'),
+                                                visible:
+                                                    (model.specialTickerName ==
+                                                            'ETH' ||
+                                                        model.tokenType ==
+                                                            'ETH' ||
+                                                        model.tokenType ==
+                                                            'FAB'),
                                                 child: Row(
                                                   children: <Widget>[
                                                     Expanded(
@@ -709,9 +717,11 @@ class SendWalletView extends StatelessWidget {
                                                   ],
                                                 )),
                                             Visibility(
-                                                visible: (model.tickerName ==
+                                                visible: (model
+                                                            .specialTickerName ==
                                                         'BTC' ||
-                                                    model.tickerName == 'FAB' ||
+                                                    model.specialTickerName ==
+                                                        'FAB' ||
                                                     model.tokenType == 'FAB'),
                                                 child: Row(
                                                   children: <Widget>[
@@ -827,42 +837,42 @@ class SendWalletView extends StatelessWidget {
                                   ))),
                         UIHelper.verticalSpaceSmall,
                         // show error details
-                        model.isShowErrorDetailsButton
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Center(
-                                    child: RichText(
-                                      text: TextSpan(
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2
-                                              .copyWith(
-                                                  decoration:
-                                                      TextDecoration.underline),
-                                          text:
-                                              '${AppLocalizations.of(context).error} ${AppLocalizations.of(context).details}',
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              model.showDetailsMessageToggle();
-                                            }),
-                                    ),
-                                  ),
-                                  !model.isShowDetailsMessage
-                                      ? const Icon(Icons.arrow_drop_down,
-                                          color: Colors.red, size: 18)
-                                      : const Icon(Icons.arrow_drop_up,
-                                          color: Colors.red, size: 18)
-                                ],
-                              )
-                            : Container(),
-                        model.isShowDetailsMessage
-                            ? Center(
-                                child: Text(model.serverError,
-                                    style:
-                                        Theme.of(context).textTheme.headline6),
-                              )
-                            : Container(),
+                        // model.isShowErrorDetailsButton
+                        //     ? Row(
+                        //         mainAxisAlignment: MainAxisAlignment.center,
+                        //         children: [
+                        //           Center(
+                        //             child: RichText(
+                        //               text: TextSpan(
+                        //                   style: Theme.of(context)
+                        //                       .textTheme
+                        //                       .bodyText2
+                        //                       .copyWith(
+                        //                           decoration:
+                        //                               TextDecoration.underline),
+                        //                   text:
+                        //                       '${AppLocalizations.of(context).error} ${AppLocalizations.of(context).details}',
+                        //                   recognizer: TapGestureRecognizer()
+                        //                     ..onTap = () {
+                        //                       model.showDetailsMessageToggle();
+                        //                     }),
+                        //             ),
+                        //           ),
+                        //           !model.isShowDetailsMessage
+                        //               ? const Icon(Icons.arrow_drop_down,
+                        //                   color: Colors.red, size: 18)
+                        //               : const Icon(Icons.arrow_drop_up,
+                        //                   color: Colors.red, size: 18)
+                        //         ],
+                        //       )
+                        //     : Container(),
+                        // model.isShowDetailsMessage
+                        //     ? Center(
+                        //         child: Text(model.serverError,
+                        //             style:
+                        //                 Theme.of(context).textTheme.headline6),
+                        //       )
+                        //     : Container(),
                         UIHelper.verticalSpaceSmall,
                         /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
           
@@ -909,7 +919,7 @@ class SendWalletView extends StatelessWidget {
               // floatingActionButton: TextButton(
               //   child: Text('Click'),
               //   onPressed: () async {
-              //     var a = await ERC20Util().getGasPrice(bnbBaseUrl);
+              //     var a = await Erc20Util().getGasPrice(bnbBaseUrl);
               //     // 10000000000
 
               //     int.parse(a.toString());

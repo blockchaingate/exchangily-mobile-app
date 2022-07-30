@@ -62,7 +62,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   String fabAddress = '';
   bool isValidAmount = true;
   var walletUtil = WalletUtil();
-  var erc20Util = ERC20Util();
+  var erc20Util = Erc20Util();
 
   // Init
   void initState() async {
@@ -75,8 +75,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     await getGasBalance();
 
-    specialTicker = walletUtil.updateSpecialTokensTickerNameForTxHistory(
-        walletInfo.tickerName)['tickerName'];
+    specialTicker = walletUtil
+        .updateSpecialTokensTickerName(walletInfo.tickerName)['tickerName'];
     await refreshBalance();
 
     if (coinName == 'BTC') {
@@ -244,6 +244,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
         gasLimitTextController.text =
             environment["chains"]["BNB"]["gasLimitToken"].toString();
       }
+    } else if (coinName == 'MATICM' || tokenType == 'POLYGON') {
+      var gasPriceReal = await erc20Util.getGasPrice(maticmBaseUrl);
+      gasPriceTextController.text = gasPriceReal.toString();
+      gasLimitTextController.text =
+          environment["chains"]["MATICM"]["gasLimit"].toString();
+
+      if (tokenType == 'POLYGON') {
+        gasLimitTextController.text =
+            environment["chains"]["MATICM"]["gasLimitToken"].toString();
+      }
     } else if (coinName == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();
@@ -403,6 +413,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
+      setBusy(true);
       var seed;
       String mnemonic = res.returnedText;
       if (walletInfo.tickerName != 'TRX' && walletInfo.tickerName != 'USDTX') {

@@ -114,9 +114,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
     } else {
       setWithdrawLimit(walletInfo.tickerName);
     }
-    specialTickerForTxHistory =
-        walletUtil.updateSpecialTokensTickerNameForTxHistory(
-            walletInfo.tickerName)['tickerName'];
+    specialTickerForTxHistory = walletUtil
+        .updateSpecialTokensTickerName(walletInfo.tickerName)['tickerName'];
     await checkGasBalance();
     await getSingleCoinExchangeBal();
     setBusy(false);

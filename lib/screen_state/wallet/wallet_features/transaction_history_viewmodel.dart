@@ -12,7 +12,6 @@ import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -102,6 +101,15 @@ class TransactionHistoryViewmodel extends FutureViewModel {
         } else if (element.tickerName.toUpperCase() == 'TRON_USDT' &&
             tickerName == 'USDTX') {
           transactionHistoryToShowInView.add(element);
+        } else if (element.tickerName.toUpperCase() == 'BNB_USDT' &&
+            tickerName == 'USDTB') {
+          transactionHistoryToShowInView.add(element);
+        } else if (element.tickerName.toUpperCase() == 'MATIC_USDT' &&
+            tickerName == 'USDTM') {
+          transactionHistoryToShowInView.add(element);
+        } else if (element.tickerName.toUpperCase() == 'BNB_FAB' &&
+            tickerName == 'FABB') {
+          transactionHistoryToShowInView.add(element);
         }
       }
     }
@@ -157,8 +165,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                   Update special tokens ticker
 ----------------------------------------------------------------------*/
   updateTickers(String ticker) {
-    return walletUtil
-        .updateSpecialTokensTickerNameForTxHistory(ticker)['tickerName'];
+    return walletUtil.updateSpecialTokensTickerName(ticker)['tickerName'];
   }
 
 /*----------------------------------------------------------------------
@@ -544,6 +551,12 @@ class TransactionHistoryViewmodel extends FutureViewModel {
           : TestnetEthereumExplorerUrl + txId;
       log.i('ETH - chainame $chain explorer url - $ethereumExplorerUrl');
       openExplorer(ethereumExplorerUrl);
+    } else if (chain.toUpperCase() == 'BNB') {
+      log.i('chainame $chain explorer url - ${bnbExplorerUrl + txId}');
+      openExplorer(bnbExplorerUrl + txId);
+    } else if (chain.toUpperCase() == 'MATICM') {
+      log.i('chainame $chain explorer url - ${maticmExplorerUrl + txId}');
+      openExplorer(maticmExplorerUrl + txId);
     } else if (chain.toUpperCase() == 'LTC') {
       String litecoinExplorerUrl = LitecoinExplorerUrl + txId;
       log.i('LTC - chainame $chain explorer url - $litecoinExplorerUrl');

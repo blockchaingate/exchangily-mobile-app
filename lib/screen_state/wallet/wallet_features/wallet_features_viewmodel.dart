@@ -58,8 +58,8 @@ class WalletFeaturesViewModel extends BaseViewModel {
   init() async {
     getWalletFeatures();
     getErrDeposit();
-    specialTicker = walletUtil.updateSpecialTokensTickerNameForTxHistory(
-        walletInfo.tickerName)["tickerName"];
+    specialTicker = walletUtil
+        .updateSpecialTokensTickerName(walletInfo.tickerName)["tickerName"];
     log.i('wi object to check name ${walletInfo.toJson()}');
     refreshBalance();
     checkIfCoinIsFavorite();

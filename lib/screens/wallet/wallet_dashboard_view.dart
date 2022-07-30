@@ -940,8 +940,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
   String logoTicker = '';
   var specialTokenData = {};
   bool isBalanceNegative = model.wallets[index].balance.isNegative;
-  specialTokenData =
-      model.walletUtil.updateSpecialTokensTickerNameForTxHistory(tickerName);
+  specialTokenData = model.walletUtil.updateSpecialTokensTickerName(tickerName);
   tickerName = specialTokenData['tickerName'];
   logoTicker = specialTokenData['logoTicker'];
 
@@ -1266,8 +1265,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                       bool isBalanceNegative =
                           model.wallets[index].balance.isNegative;
                       specialTokenData = model.walletUtil
-                          .updateSpecialTokensTickerNameForTxHistory(
-                              tickerName);
+                          .updateSpecialTokensTickerName(tickerName);
                       tickerName = specialTokenData['tickerName'];
                       logoTicker = specialTokenData['logoTicker'];
                       return Card(

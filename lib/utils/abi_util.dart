@@ -120,13 +120,16 @@ class AbiUtils {
         retStr += '0';
       }
       if (chain == 'ETH') {
-        retStr += Constants.EthChainPrefix;
+        retStr += Constants.ethChainPrefix;
       } else if (chain == 'TRX' || chain == 'TRON') {
-        retStr += Constants.TronChainPrefix;
+        retStr += Constants.tronChainPrefix;
       } else if (chain == 'FAB') {
-        retStr += Constants.FabChainPrefix;
+        retStr += Constants.fabChainPrefix;
+      } else if (chain == 'MATICM') {
+        retStr += Constants.maticmChainPrefix;
+      } else if (chain == 'BNB') {
+        retStr += Constants.bnbChainPrefix;
       }
-
       retStr += hexaDecimalCoinType;
       return retStr;
     } else if (finalLength < 0) {

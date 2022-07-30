@@ -16,6 +16,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
@@ -30,6 +31,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
+import 'package:exchangilymobileapp/utils/coin_utils/erc20_util.dart';
 import 'package:exchangilymobileapp/utils/coin_utils/matic_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
@@ -37,6 +39,7 @@ import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.da
     as tron_address_util;
 import 'package:exchangilymobileapp/utils/tron_util/trx_transaction_util.dart'
     as tron_transaction_util;
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
@@ -82,12 +85,13 @@ class SendViewModel extends BaseViewModel {
   double transFee = 0.0;
   bool transFeeAdvance = false;
   String feeUnit = '';
-  String tickerName = '';
+  String specialTickerName = '';
 
   String tokenType = '';
   final coinUtils = CoinUtils();
   final fabUtils = FabUtils();
   final maticUtils = MaticUtils();
+  final erc20Util = Erc20Util();
   int decimalLimit = 8;
   // double gasAmount = 0.0;
   String fabAddress = '';
@@ -102,16 +106,19 @@ class SendViewModel extends BaseViewModel {
   initState() async {
     setBusy(true);
     sharedService.context = context;
-
-    if (walletInfo.tickerName == 'USDTX') {
-      tickerName = 'USDT(TRC20)';
-    } else if (walletInfo.tickerName == 'USDCX') {
-      tickerName = 'USDC(TRC20)';
-    } else if (walletInfo.tickerName == 'MATICM') {
-      tickerName = 'MATIC';
-    } else {
-      tickerName = walletInfo.tickerName;
-    }
+    specialTickerName = WalletUtil()
+        .updateSpecialTokensTickerName(walletInfo.tickerName)['tickerName'];
+    // if (walletInfo.tickerName == 'USDTX') {
+    //   tickerName = 'USDT(TRC20)';
+    // } else if (walletInfo.tickerName == 'USDCX') {
+    //   tickerName = 'USDC(TRC20)';
+    // } else if (walletInfo.tickerName == 'USDTB') {
+    //   tickerName = 'USDT(BNB)';
+    // } else if (walletInfo.tickerName == 'MATICM') {
+    //   tickerName = 'MATIC';
+    // } else {
+    //   tickerName = walletInfo.tickerName;
+    // }
     if (walletInfo.tokenType == 'TRON') {
       walletInfo.tokenType = "TRX";
     }
@@ -136,10 +143,11 @@ class SendViewModel extends BaseViewModel {
     }
     if (!isCustomToken) {
       await refreshBalance();
-      decimalLimit = await walletService.getSingleCoinWalletDecimalLimit(
-          walletInfo.tickerName == 'MATICM'
-              ? tickerName
-              : walletInfo.tickerName);
+      String ticker =
+          walletInfo.tickerName == "MATICM" ? "MATIC" : walletInfo.tickerName;
+      // both matic(nativ) and matic erc20 have decimal limit of 18
+      decimalLimit =
+          await walletService.getSingleCoinWalletDecimalLimit(ticker);
       if (decimalLimit == null || decimalLimit == 0) {
         decimalLimit = 8;
       }
@@ -192,7 +200,7 @@ class SendViewModel extends BaseViewModel {
           environment["chains"]["MATIC"]["gasLimit"].toString();
       feeUnit = 'MATIC';
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
-      var gasPriceReal = await walletService.getEthGasPrice();
+      var gasPriceReal = await apiService.getEthGasPrice();
       debugPrint('gasPriceReal======');
       debugPrint(gasPriceReal.toString());
       gasPriceTextController.text = gasPriceReal.toString();
@@ -203,6 +211,18 @@ class SendViewModel extends BaseViewModel {
             environment["chains"]["ETH"]["gasLimitToken"].toString();
       }
       feeUnit = 'ETH';
+    } else if (coinName == 'BNB' || tokenType == 'BNB') {
+      var gasPriceReal = await erc20Util.getGasPrice(bnbBaseUrl);
+      debugPrint('gasPriceReal====== ${gasPriceReal.toString()}');
+
+      gasPriceTextController.text = gasPriceReal.toString();
+      gasLimitTextController.text =
+          environment["chains"]["BNB"]["gasLimit"].toString();
+      if (tokenType == 'BNB') {
+        gasLimitTextController.text =
+            environment["chains"]["BNB"]["gasLimitToken"].toString();
+      }
+      feeUnit = 'BNB';
     } else if (coinName == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();
@@ -216,15 +236,6 @@ class SendViewModel extends BaseViewModel {
           environment["chains"]["FAB"]["gasLimit"].toString();
       feeUnit = 'FAB';
     }
-  }
-
-  test() {
-    // CustomTokenModel customTokenModel =
-    //     (jsonDecode(storageService.customTokenData) as dynamic)
-    //         .cast<CustomTokenModel>();
-    CustomTokenModel customTokenModel =
-        CustomTokenModel.fromJson(jsonDecode(storageService.customTokenData));
-    debugPrint(customTokenModel.toJson().toString());
   }
 
   bool isTrx() {
@@ -692,8 +703,11 @@ class SendViewModel extends BaseViewModel {
     // ! Check if ETH is available for making USDT transaction
     // ! Same for Fab token based coins
 
-    if (tokenType == 'ETH' || tokenType == 'FAB' || tokenType == 'TRX'
-        // tokenType == 'BNB' ||
+    if (tokenType == 'ETH' ||
+            tokenType == 'FAB' ||
+            tokenType == 'TRX' ||
+            tokenType == 'BNB'
+        // ||
         // tokenType == 'MATIC' ||
 
         ) {

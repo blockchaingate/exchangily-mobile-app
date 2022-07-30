@@ -292,7 +292,7 @@ class SettingsContainer extends StatelessWidget {
                                             .headline6),
                                   ],
                                 ),
-                                value: model.languages['en'],
+                                value: model.languages.keys.first,
                               ),
                               DropdownMenuItem(
                                 child: Row(
@@ -313,7 +313,7 @@ class SettingsContainer extends StatelessWidget {
                                             .headline6),
                                   ],
                                 ),
-                                value: model.languages['zh'],
+                                value: model.languages.keys.last,
                               ),
                             ]),
                       ),

@@ -57,7 +57,9 @@ class EthUtils {
     try {
       var response = await client.get(url);
       nonce = int.parse(response.body);
-    } catch (e) {}
+    } catch (e) {
+      debugPrint('getEthNonce CATCH $e');
+    }
     return nonce;
   }
 
@@ -101,7 +103,9 @@ class EthUtils {
       var response = await client.get(url);
       Map<String, dynamic> balance = jsonDecode(response.body);
       ethBalance = bigNum2Double(balance['balance']);
-    } catch (e) {}
+    } catch (e) {
+      debugPrint('getEthNonce CATCH $e');
+    }
     return {'balance': ethBalance, 'lockbalance': 0.0};
   }
 
@@ -132,7 +136,9 @@ class EthUtils {
       balanceIe8 = double.parse(balance['balance']) / 1e8;
       balance1e6 = double.parse(balance['balance']) / 1e6;
       tokenBalanceIe18 = double.parse(balance['balance']) / 1e18;
-    } catch (e) {}
+    } catch (e) {
+      debugPrint('getEthNonce CATCH $e');
+    }
     return {
       'balance1e6': balance1e6,
       'balanceIe8': balanceIe8,

@@ -137,6 +137,10 @@ Map devConfig = {
       {
         'name': 'BNB',
         'address': '0x450C53c50F8c0413a5829B0A9ab9Fa7e38f3eD2E',
+      },
+      {
+        'name': 'MATICM',
+        'address': '0x450C53c50F8c0413a5829B0A9ab9Fa7e38f3eD2E'
       }
     ],
   },
@@ -312,7 +316,11 @@ Map productionConfig = {
       {'name': 'LTC', 'address': 'LaX6sfX8RoHbQHNDEBmdzyBMN9vFa95FXL'},
       {'name': 'DOGE', 'address': 'DLSF9i9weYwpgUrendmuGiHC35HGoHuvR9'},
       {'name': 'TRX', 'address': 'TGfvRWxddNoWrghwE5zC1JEcbXyMdPATdo'},
-      {'name': 'BNB', 'address': '0x4983f8634255762A18D854790E6d35A522E2633a'}
+      {'name': 'BNB', 'address': '0x4983f8634255762A18D854790E6d35A522E2633a'},
+      {
+        'name': 'MATICM',
+        'address': '0x4983f8634255762A18D854790E6d35A522E2633a'
+      }
     ],
     "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },

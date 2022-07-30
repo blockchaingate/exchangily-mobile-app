@@ -198,24 +198,23 @@ class WalletUtil {
 /*----------------------------------------------------------------------
                 Update special tokens tickername in UI
 ----------------------------------------------------------------------*/
-  Map<String, String> updateSpecialTokensTickerNameForTxHistory(
-      String tickerName) {
+  Map<String, String> updateSpecialTokensTickerName(String tickerName) {
     String logoTicker = '';
     if (tickerName.toUpperCase() == 'ETH_BST' ||
         tickerName.toUpperCase() == 'BSTE') {
-      tickerName = 'BST(ERC20)';
+      tickerName = 'BST(ETH)';
       logoTicker = 'BSTE';
     } else if (tickerName.toUpperCase() == 'ETH_DSC' ||
         tickerName.toUpperCase() == 'DSCE') {
-      tickerName = 'DSC(ERC20)';
+      tickerName = 'DSC(ETH)';
       logoTicker = 'DSCE';
     } else if (tickerName.toUpperCase() == 'ETH_EXG' ||
         tickerName.toUpperCase() == 'EXGE') {
-      tickerName = 'EXG(ERC20)';
+      tickerName = 'EXG(ETH)';
       logoTicker = 'EXGE';
     } else if (tickerName.toUpperCase() == 'ETH_FAB' ||
         tickerName.toUpperCase() == 'FABE') {
-      tickerName = 'FAB(ERC20)';
+      tickerName = 'FAB(ETH)';
       logoTicker = 'FABE';
     } else if (tickerName.toUpperCase() == 'TRON_USDT' ||
         tickerName.toUpperCase() == 'USDTX') {
@@ -234,14 +233,14 @@ class WalletUtil {
       tickerName = 'USDT(MATIC)';
       logoTicker = 'USDTM';
     } else if (tickerName.toUpperCase() == 'FABB') {
-      tickerName = 'FAB(BEP20)';
+      tickerName = 'FAB(BNB)';
       logoTicker = 'FABB';
     } else if (tickerName.toUpperCase() == 'MATIC') {
-      tickerName = 'MATIC(ERC20)';
+      tickerName = 'MATIC(ETH)';
       logoTicker = 'MATIC';
     } else if (tickerName.toUpperCase() == 'USDTB') {
       tickerName = 'USDT(BNB)';
-      logoTicker = 'USDTB';
+      logoTicker = 'USDT';
     } else {
       logoTicker = tickerName;
     }
@@ -333,6 +332,8 @@ class WalletUtil {
       tokenType = 'TRX';
     } else if (firstHalf == '0009' && secondHalf != '0000') {
       tokenType = 'POLYGON';
+    } else if (firstHalf == '0008' && secondHalf != '0000') {
+      tokenType = 'BNB';
     }
     log.i('hexCoinType $hexCoinType - tokenType $tokenType');
     return tokenType;
