@@ -172,6 +172,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
         finalAmount = amount;
       }
     }
+    finalAmount = NumberUtil()
+        .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit);
     finalAmount <= walletInfo.availableBalance
         ? isValidAmount = true
         : isValidAmount = false;

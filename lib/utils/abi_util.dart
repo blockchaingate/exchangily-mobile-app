@@ -30,9 +30,9 @@ class AbiUtils {
 
   // withdraw abi
   getWithdrawFuncABI(coinType, amountInLink, addressInWallet,
-      {String chain = '', bool isSpecialDeposit = false}) {
+      {String chain = '', bool isSpecialToken = false}) {
     var abiHex = Constants.WithdrawSignatureAbi;
-    if (isSpecialDeposit) {
+    if (isSpecialToken) {
       var hexaDecimalCoinType = fix8LengthCoinType(coinType.toRadixString(16));
       abiHex += specialFixLength(hexaDecimalCoinType, 64, chain);
     } else {
@@ -152,7 +152,7 @@ class AbiUtils {
       }
       result += coinType;
     }
-    debugPrint('fix8LengthCoinType result $result');
+    log.i('fix8LengthCoinType result $result');
     return result;
   }
 

@@ -222,7 +222,7 @@ Map productionConfig = {
       "chain": "mainnet",
       "networkId": 137,
       "chainId": 137,
-      "gasPrice": 5,
+      "gasPrice": 10,
       "gasPriceMax": 200,
       "gasLimit": 21000,
       "gasLimitToken": 70000

@@ -25,7 +25,6 @@ import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/coin_utils/erc20_util.dart';
-import 'package:exchangilymobileapp/utils/coin_utils/matic_util.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
@@ -99,7 +98,6 @@ class WalletService {
   final kanbanUtils = KanbanUtils();
   final ltcUtils = LtcUtils();
   var walletUtil = WalletUtil();
-  final maticmUtils = MaticUtils();
   final erc20Util = Erc20Util();
 
   final _vaultService = locator<VaultService>();
@@ -1220,33 +1218,45 @@ class WalletService {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('DSC');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
-          isSpecialDeposit: true, chain: tokenType);
+          isSpecialToken: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'BSTE' || coinName == 'BST') {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('BST');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
-          isSpecialDeposit: true, chain: tokenType);
+          isSpecialToken: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'EXGE' || coinName == 'EXG') {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('EXG');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
-          isSpecialDeposit: true, chain: tokenType);
+          isSpecialToken: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'FABE' ||
         (coinName == 'FAB' && tokenType == 'ETH')) {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('FAB');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
-          isSpecialDeposit: true, chain: tokenType);
+          isSpecialToken: true, chain: tokenType);
+
+      log.e('cointype $coinType -- abihex $abiHex');
+    }
+    // Matic polygon is a special case where instead of
+    // token type, we use coinname as token type is empty
+    // because Matic is native coin on polygon
+    else if (coinName == 'MATICM') {
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('MATIC');
+      abiHex = abiUtils.getWithdrawFuncABI(
+          sepcialcoinType, amountInLink, addressInWallet,
+          isSpecialToken: true,
+          chain: coinName == 'MATICM' ? coinName : tokenType);
 
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (isSpeicalTronTokenWithdraw) {
       addressInWallet = btcUtils.btcToBase58Address(addressInWallet);
       abiHex = abiUtils.getWithdrawFuncABI(
           coinType, amountInLink, addressInWallet,
-          isSpecialDeposit: true, chain: tokenType);
+          isSpecialToken: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else {
       abiHex =
@@ -1310,7 +1320,7 @@ class WalletService {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
-          isSpecialDeposit: true, chain: tokenType);
+          isSpecialToken: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else {
       abiHex =
@@ -1468,7 +1478,7 @@ class WalletService {
     */
     var kanbanGasPrice = option['kanbanGasPrice'];
     var kanbanGasLimit = option['kanbanGasLimit'];
-    var decimal = option['decimal'];
+
     log.e('before send transaction');
     var resST = await sendTransaction(
         coinName, seed, [0], [], officalAddress, amount, option, false);
@@ -1546,6 +1556,7 @@ class WalletService {
     int specialCoinType;
     var abiHex;
     bool isSpecial = false;
+
     for (var specialTokenTicker in Constants.specialTokens) {
       if (coinName == specialTokenTicker) isSpecial = true;
     }
@@ -1557,7 +1568,8 @@ class WalletService {
     var coinTypeUsed = isSpecial ? specialCoinType : coinType;
     abiHex = abiUtils.getDepositFuncABI(
         coinTypeUsed, txHash, amountInLink, addressInKanban, signedMess,
-        chain: tokenType, isSpecialDeposit: isSpecial);
+        chain: coinName == 'MATICM' ? coinName : tokenType,
+        isSpecialDeposit: isSpecial);
 
     var amountInAbi = abiUtils.getAmountFromDepositAbiHex(abiHex);
 
@@ -2385,7 +2397,7 @@ class WalletService {
       String baseUrl = '';
       if (coin == 'BNB') {
         baseUrl = bnbBaseUrl;
-      } else if (coin == 'MATIC') {
+      } else if (coin == 'MATICM') {
         baseUrl = maticmBaseUrl;
       }
 

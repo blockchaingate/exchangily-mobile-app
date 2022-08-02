@@ -45,7 +45,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   TransactionHistoryViewmodel({this.walletInfo});
   final log = getLogger('TransactionHistoryViewmodel');
   BuildContext context;
-  List<TransactionHistory> transactionHistoryToShowInView = [];
+  List<TransactionHistory> txHistoryToView = [];
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
   final storageService = locator<LocalStorageService>();
@@ -58,7 +58,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
 
   bool isChinese = false;
   bool isDialogUp = false;
-  int decimalLimit = 0;
+  int decimalLimit = 6;
   bool isCustomToken = false;
   var walletUtil = WalletUtil();
 
@@ -82,51 +82,53 @@ class TransactionHistoryViewmodel extends FutureViewModel {
         await walletService.getAddressFromCoreWalletDatabaseByTickerName('FAB');
     txHistoryEvents = await apiService.getTransactionHistoryEvents(fabAddress);
     if (txHistoryEvents.isNotEmpty) {
-      for (var element in txHistoryEvents) {
-        if (element.tickerName == tickerName) {
-          transactionHistoryToShowInView.add(element);
-        } else if (element.tickerName.toUpperCase() == 'ETH_DSC' &&
+      for (var txFromApi in txHistoryEvents) {
+        if (txFromApi.tickerName == tickerName) {
+          txHistoryToView.add(txFromApi);
+        } else if (txFromApi.tickerName.toUpperCase() == 'ETH_DSC' &&
             tickerName == 'DSCE') {
-          transactionHistoryToShowInView.add(element);
-        } else if (element.tickerName.toUpperCase() == 'ETH_BST' &&
+          txHistoryToView.add(txFromApi);
+        } else if (txFromApi.tickerName.toUpperCase() == 'ETH_BST' &&
             tickerName == 'BSTE') {
-          transactionHistoryToShowInView.add(element);
-        } else if (element.tickerName.toUpperCase() == 'ETH_FAB' &&
+          txHistoryToView.add(txFromApi);
+        } else if (txFromApi.tickerName.toUpperCase() == 'ETH_FAB' &&
             tickerName == 'FABE') {
-          transactionHistoryToShowInView.add(element);
-        } else if (element.tickerName.toUpperCase() == 'ETH_EXG' &&
+          txHistoryToView.add(txFromApi);
+        } else if (txFromApi.tickerName.toUpperCase() == 'ETH_EXG' &&
             tickerName == 'EXGE') {
           // element.tickerName = 'EXG(ERC20)';
-          transactionHistoryToShowInView.add(element);
-        } else if (element.tickerName.toUpperCase() == 'TRON_USDT' &&
+          txHistoryToView.add(txFromApi);
+        } else if (txFromApi.tickerName.toUpperCase() == 'TRON_USDT' &&
             tickerName == 'USDTX') {
-          transactionHistoryToShowInView.add(element);
-        } else if (element.tickerName.toUpperCase() == 'BNB_USDT' &&
+          txHistoryToView.add(txFromApi);
+        } else if (txFromApi.tickerName.toUpperCase() == 'BNB_USDT' &&
             tickerName == 'USDTB') {
-          transactionHistoryToShowInView.add(element);
-        } else if (element.tickerName.toUpperCase() == 'MATIC_USDT' &&
+          txHistoryToView.add(txFromApi);
+        } else if (txFromApi.tickerName.toUpperCase() == 'MATIC_USDT' &&
             tickerName == 'USDTM') {
-          transactionHistoryToShowInView.add(element);
-        } else if (element.tickerName.toUpperCase() == 'BNB_FAB' &&
+          txHistoryToView.add(txFromApi);
+        } else if (txFromApi.tickerName.toUpperCase() == 'BNB_FAB' &&
             tickerName == 'FABB') {
-          transactionHistoryToShowInView.add(element);
+          txHistoryToView.add(txFromApi);
+        } else if (txFromApi.tickerName.toUpperCase() == 'POLYGON_MATIC' &&
+            tickerName == 'MATICM') {
+          txHistoryToView.add(txFromApi);
         }
       }
     }
 
     if (txHistoryFromDb != null || txHistoryFromDb.isNotEmpty) {
       for (var t in txHistoryFromDb) {
-        if (t.tag == 'send' && t.tickerName == tickerName) {
-          transactionHistoryToShowInView.add(t);
+        if (t.tag == 'send' &&
+            (t.tickerName == tickerName ||
+                t.tickerName == updateTickers(tickerName))) {
+          txHistoryToView.add(t);
         }
       }
     }
-    transactionHistoryToShowInView.sort(
-        (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)));
 
-    await userSettingsDatabaseService.getLanguage().then((value) {
-      if (value == 'zh') isChinese = true;
-    });
+    txHistoryToView.sort(
+        (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)));
 
     String customTokenStringData = storageService.customTokenData;
 
@@ -147,7 +149,6 @@ class TransactionHistoryViewmodel extends FutureViewModel {
           await walletService.getSingleCoinWalletDecimalLimit(tickerName);
       if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     }
-    // debugPrint(transactionHistoryToShowInView.first.toJson());
     setBusy(false);
   }
 
@@ -158,7 +159,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   }
 
   clearLists() {
-    transactionHistoryToShowInView = [];
+    txHistoryToView = [];
   }
 
 /*----------------------------------------------------------------------
@@ -173,24 +174,24 @@ class TransactionHistoryViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   getTransaction(String tickerName) async {
     setBusy(true);
-    transactionHistoryToShowInView = [];
+    txHistoryToView = [];
     await transactionHistoryDatabaseService
         .getByNameOrderByDate(tickerName)
         .then((data) async {
-      transactionHistoryToShowInView = data;
-      await sharedService
-          .getSinglePairDecimalConfig(tickerName)
-          .then((decimalConfig) => decimalConfig = decimalConfig);
+      txHistoryToView = data;
+      await walletService
+          .getSingleCoinWalletDecimalLimit(tickerName)
+          .then((data) => decimalLimit = data);
 
-      for (var t in transactionHistoryToShowInView) {
+      for (var t in txHistoryToView) {
         log.e(t.toJson);
         if (t.tag.startsWith('sent')) {
           await walletService.checkTxStatus(t);
         }
       }
-      transactionHistoryToShowInView.sort(
+      txHistoryToView.sort(
           (a, b) => DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
-      for (var t in transactionHistoryToShowInView) {
+      for (var t in txHistoryToView) {
         log.w(t.toJson);
       }
       setBusy(false);
@@ -224,7 +225,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     if (transactionHistory.chainName.isEmpty ||
         transactionHistory.chainName == null) {
       transactionHistory.chainName = walletInfo.tokenType.isEmpty
-          ? walletInfo.tickerName
+          ? updateTickers(walletInfo.tickerName)
           : walletInfo.tokenType;
       log.i(
           'transactionHistory.chainName empty so showing wallet token type ${walletInfo.tokenType}');

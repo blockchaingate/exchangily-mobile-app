@@ -510,16 +510,24 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       s = ss.substring(64, 128);
       v = ss.substring(128);
       debugPrint('v=' + v);
-    } else if (coinName == 'BNB' || tokenType == 'BNB') {
+    } else if (coinName == 'BNB' ||
+        tokenType == 'BNB' ||
+        coinName == 'MATICM' ||
+        tokenType == 'MATICM') {
       final root = bip32.BIP32.fromSeed(seed);
-      var coinType = environment["CoinType"]["BNB"];
+      var coinType = environment["CoinType"]["ETH"];
       final ethCoinChild =
           root.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
       var privateKey = ethCoinChild.privateKey;
       //var credentials = EthPrivateKey.fromHex(privateKey);
       //var credentials = EthPrivateKey(privateKey);
+      var chainId;
+      if (coinName == 'BNB' || tokenType == 'BNB') {
+        chainId = environment["chains"]["BNB"]["chainId"];
+      } else if (coinName == 'MATICM' || tokenType == 'MATICM') {
+        chainId = environment["chains"]["MATICM"]["chainId"];
+      }
 
-      var chainId = environment["chains"]["BNB"]["chainId"];
       // chainId = 0;
       debugPrint('chainId==' + chainId.toString());
 

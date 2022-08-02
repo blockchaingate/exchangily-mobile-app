@@ -32,7 +32,6 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/coin_utils/erc20_util.dart';
-import 'package:exchangilymobileapp/utils/coin_utils/matic_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
@@ -90,7 +89,6 @@ class SendViewModel extends BaseViewModel {
   String tokenType = '';
   final coinUtils = CoinUtils();
   final fabUtils = FabUtils();
-  final maticUtils = MaticUtils();
   final erc20Util = Erc20Util();
   int decimalLimit = 8;
   // double gasAmount = 0.0;
@@ -108,17 +106,7 @@ class SendViewModel extends BaseViewModel {
     sharedService.context = context;
     specialTickerName = WalletUtil()
         .updateSpecialTokensTickerName(walletInfo.tickerName)['tickerName'];
-    // if (walletInfo.tickerName == 'USDTX') {
-    //   tickerName = 'USDT(TRC20)';
-    // } else if (walletInfo.tickerName == 'USDCX') {
-    //   tickerName = 'USDC(TRC20)';
-    // } else if (walletInfo.tickerName == 'USDTB') {
-    //   tickerName = 'USDT(BNB)';
-    // } else if (walletInfo.tickerName == 'MATICM') {
-    //   tickerName = 'MATIC';
-    // } else {
-    //   tickerName = walletInfo.tickerName;
-    // }
+
     if (walletInfo.tokenType == 'TRON') {
       walletInfo.tokenType = "TRX";
     }
@@ -128,7 +116,7 @@ class SendViewModel extends BaseViewModel {
     fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
 
     String customTokenStringData = storageService.customTokenData;
-
+    // custom tokens
     try {
       if (customTokenStringData.isNotEmpty) {
         customToken =
@@ -141,6 +129,7 @@ class SendViewModel extends BaseViewModel {
     } catch (err) {
       log.e('custom token CATCH $err');
     }
+    // Normal coins and tokens
     if (!isCustomToken) {
       await refreshBalance();
       String ticker =
@@ -169,36 +158,11 @@ class SendViewModel extends BaseViewModel {
         .then((walletBalance) => chainBalance = walletBalance[0].balance);
   }
 
-  /*---------------------------------------------------
-                      Get gas
---------------------------------------------------- */
-
-  // getGasBalance() async {
-  //   String address = await sharedService.getExgAddressFromWalletDatabase();
-  //   await walletService.gasBalance(address).then((data) {
-  //     gasAmount = data;
-  //     if (gasAmount == 0) {
-  //       sharedService.alertDialog(
-  //         AppLocalizations.of(context).notice,
-  //         AppLocalizations.of(context).insufficientGasAmount,
-  //       );
-  //     }
-  //   }).catchError((onError) => log.e(onError));
-  //   log.w('gas amount $gasAmount');
-  //   return gasAmount;
-  // }
-
   setFee(String coinName) async {
     if (coinName == 'BTC') {
       satoshisPerByteTextController.text =
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
       feeUnit = 'BTC';
-    } else if (coinName == 'MATICM') {
-      gasPriceTextController.text =
-          environment["chains"]["MATIC"]["gasPrice"].toString();
-      gasLimitTextController.text =
-          environment["chains"]["MATIC"]["gasLimit"].toString();
-      feeUnit = 'MATIC';
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       var gasPriceReal = await apiService.getEthGasPrice();
       debugPrint('gasPriceReal======');
@@ -211,6 +175,18 @@ class SendViewModel extends BaseViewModel {
             environment["chains"]["ETH"]["gasLimitToken"].toString();
       }
       feeUnit = 'ETH';
+    } else if (coinName == 'MATICM') {
+      var gasPriceReal = await erc20Util.getGasPrice(maticmBaseUrl);
+      debugPrint('gasPriceReal====== ${gasPriceReal.toString()}');
+
+      gasPriceTextController.text = gasPriceReal.toString();
+      gasLimitTextController.text =
+          environment["chains"]["MATICM"]["gasLimit"].toString();
+      if (tokenType == 'BNB') {
+        gasLimitTextController.text =
+            environment["chains"]["MATICM"]["gasLimitToken"].toString();
+      }
+      feeUnit = 'MATIC';
     } else if (coinName == 'BNB' || tokenType == 'BNB') {
       var gasPriceReal = await erc20Util.getGasPrice(bnbBaseUrl);
       debugPrint('gasPriceReal====== ${gasPriceReal.toString()}');
@@ -888,16 +864,9 @@ class SendViewModel extends BaseViewModel {
     gasPrice = int.tryParse(gasPriceTextController.text);
     gasLimit = int.tryParse(gasLimitTextController.text);
     satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
-    var customGasPrice;
-    if (walletInfo.tickerName == 'MATICM') {
-      customGasPrice = await maticUtils.gasFee();
-      log.i('updateTransFee: matic customGasPrice $customGasPrice');
-
-      customGasPrice = int.parse(customGasPrice.toString().split('.')[0]) + 1;
-    }
 
     var options = {
-      "gasPrice": walletInfo.tickerName == 'MATICM' ? customGasPrice : gasPrice,
+      "gasPrice": gasPrice,
       "gasLimit": gasLimit,
       "satoshisPerBytes": satoshisPerBytes,
       "tokenType": walletInfo.tokenType,

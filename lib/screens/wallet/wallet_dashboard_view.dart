@@ -1223,6 +1223,10 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
   }
 
   @override
+  bool get initialiseSpecialViewModelsOnce => true;
+  @override
+  bool get fireOnModelReadyOnce => true;
+  @override
   Widget builder(
       BuildContext context, WalletDashboardViewModel model, Widget child) {
     debugPrint('fav list length before');

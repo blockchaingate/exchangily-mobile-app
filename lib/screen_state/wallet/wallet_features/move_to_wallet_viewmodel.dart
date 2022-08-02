@@ -853,6 +853,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
       tickerName = 'USDT';
       isWithdrawChoice = true;
       isShowFabChainBalance = false;
+    } else if (walletInfo.tickerName == 'MATICM') {
+      tickerName = 'MATIC';
     }
     //  else if (walletInfo.tickerName == 'USDTX') {
     //   tickerName = 'USDT';

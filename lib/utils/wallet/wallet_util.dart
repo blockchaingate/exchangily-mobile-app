@@ -131,8 +131,8 @@ class WalletUtil {
     'Wings',
     'Metal',
     'Kyber Network',
-    'Genesis Vision'
-        'Binance Coin'
+    'Genesis Vision',
+    'Binance Coin'
   ];
 
   // get wallet info object with address using single wallet balance

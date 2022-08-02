@@ -163,22 +163,23 @@ class WalletFeaturesView extends StatelessWidget {
                           child: _featuresCard(context, 1, model))
                     ],
                   ),
-                  model.walletInfo.tickerName == 'MATICM'
-                      ? Container()
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                              SizedBox(
-                                width: model.containerWidth,
-                                height: model.containerHeight,
-                                child: _featuresCard(context, 2, model),
-                              ),
-                              SizedBox(
-                                width: model.containerWidth,
-                                height: model.containerHeight,
-                                child: _featuresCard(context, 3, model),
-                              ),
-                            ]),
+                  // model.walletInfo.tickerName == 'MATICM'
+                  //     ? Container()
+                  //     :
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        SizedBox(
+                          width: model.containerWidth,
+                          height: model.containerHeight,
+                          child: _featuresCard(context, 2, model),
+                        ),
+                        SizedBox(
+                          width: model.containerWidth,
+                          height: model.containerHeight,
+                          child: _featuresCard(context, 3, model),
+                        ),
+                      ]),
                   Column(
                     //  mainAxisSize: MainAxisSize.max,
                     //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -373,7 +374,7 @@ class WalletFeaturesView extends StatelessWidget {
                     Expanded(
                       flex: 4,
                       child: Text(
-                          '${AppLocalizations.of(context).inExchange} ${model.specialTicker.contains('(') && model.walletInfo.tickerName != 'USDT' ? '\n' + message + ' ' + nativeTicker : ''}',
+                          '${AppLocalizations.of(context).inExchange} ${model.specialTicker.contains('(') && model.walletInfo.tickerName != 'USDT' && model.walletInfo.tickerName != 'MATICM' ? '\n' + message + ' ' + nativeTicker : ''}',
                           style: Theme.of(context).textTheme.subtitle1),
                     ),
                     Expanded(

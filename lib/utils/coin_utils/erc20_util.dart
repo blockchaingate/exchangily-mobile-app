@@ -18,9 +18,10 @@ class Erc20Util {
       "id": 1
     };
     var errMsg = '';
+    log.i('url $baseUrl -- body $body');
     String txHash;
     try {
-      var response = await client.post(bnbBaseUrl,
+      var response = await client.post(baseUrl,
           headers: {"responseType": "text"}, body: jsonEncode(body));
       var json = jsonDecode(response.body);
       log.w('json $json');
@@ -32,7 +33,7 @@ class Erc20Util {
         txHash = '';
       }
     } catch (e) {
-      log.e('erc20tils - postbnb Func: Catch $e');
+      log.e('erc20tils - $baseUrl Func: Catch $e');
       errMsg = e.toString();
     }
     return {'txHash': txHash, 'errMsg': errMsg};
@@ -43,6 +44,7 @@ class Erc20Util {
       "jsonrpc": "2.0",
       "method": "eth_getTransactionCount",
       "params": [smartContractAddress, "latest"],
+      //    "params": ["0x02c55515e62a0b25d2447c6d70369186b8f10359", "latest"],
       "id": 1
     };
     debugPrint('url $baseUrl -- body $body');
@@ -82,4 +84,29 @@ class Erc20Util {
     log.w('res getGasPrice $gasPrice');
     return gasPrice;
   }
+  // Future<double> gasFee() async {
+  //    String result;
+  //   var body = {
+  //     "jsonrpc": "2.0",
+  //     "method": "eth_gasPrice",
+  //     "params": [],
+  //     "id": 73
+  //   };
+  //   log.i('gasFee url $maticmBaseUrl');
+  //   try {
+  //     var response = await client.post(maticmBaseUrl,
+  //         headers: {"responseType": "text"}, body: jsonEncode(body));
+  //     var json = jsonDecode(response.body);
+  //     log.w('json $json');
+  //     result = json["result"];
+  //     int gasInWei = int.parse(result);
+  //     log.w('gasInWei $gasInWei');
+  //     var fee = NumberUtil.weiToGwei(gasInWei);
+  //     log.i('feeInGwei $fee');
+  //     return fee;
+  //   } catch (err) {
+  //     log.e('gasFee: CATCH $err');
+  //     throw Exception(err);
+  //   }
+  // }
 }

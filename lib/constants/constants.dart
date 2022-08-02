@@ -21,7 +21,9 @@ class Constants {
     'DSCE',
     'BSTE',
     'USDTB',
-    'FABB'
+    'FABB',
+    'USDTM',
+    'MATICM'
   ];
 
   static const String appName = 'exchangily';

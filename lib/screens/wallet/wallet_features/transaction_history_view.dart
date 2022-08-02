@@ -64,7 +64,7 @@ class TransactionHistoryView extends StatelessWidget {
                         width: double.infinity,
                         height: 300,
                         child: model.sharedService.loadingIndicator())
-                    : model.transactionHistoryToShowInView.isEmpty
+                    : model.txHistoryToView.isEmpty
                         ? Container(
                             margin: const EdgeInsets.only(top: 20),
                             child: const Center(
@@ -132,16 +132,14 @@ class TransactionHistoryView extends StatelessWidget {
                                         child: ListView.builder(
                                             scrollDirection: Axis.vertical,
                                             shrinkWrap: true,
-                                            itemCount: model
-                                                .transactionHistoryToShowInView
-                                                .length,
+                                            itemCount:
+                                                model.txHistoryToView.length,
                                             itemBuilder: (context, index) {
                                               return TxHisotryCardWidget(
                                                   customFontSize:
                                                       customFontSize,
                                                   transaction: model
-                                                          .transactionHistoryToShowInView[
-                                                      index],
+                                                      .txHistoryToView[index],
                                                   model: model);
                                             }),
                                       ),
