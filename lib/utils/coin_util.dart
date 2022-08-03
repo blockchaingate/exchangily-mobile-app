@@ -513,7 +513,8 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     } else if (coinName == 'BNB' ||
         tokenType == 'BNB' ||
         coinName == 'MATICM' ||
-        tokenType == 'MATICM') {
+        tokenType == 'MATICM' ||
+        tokenType == 'POLYGON') {
       final root = bip32.BIP32.fromSeed(seed);
       var coinType = environment["CoinType"]["ETH"];
       final ethCoinChild =
@@ -662,7 +663,9 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       debugPrint(
           'BNBTokenOfficialAddress $bnbTokenOfficialAddress for $coinName');
       return bnbTokenOfficialAddress;
-    } else if (coinName == 'MATICM' || tokenType == 'MATICM') {
+    } else if (coinName == 'MATICM' ||
+        tokenType == 'MATICM' ||
+        tokenType == 'POLYGON') {
       var maticmTokenOfficialAddress =
           environment['addresses']['exchangilyOfficial'][11]['address'];
 

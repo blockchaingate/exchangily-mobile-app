@@ -66,6 +66,14 @@ class AbiUtils {
   /// amountHex
   /// 912211ee52fe5000 --
 
+  /// 0x379eb862
+  /// 1f00000000000000000000000000000000000000000000000000000000020001
+  /// a2934de547c15759a92094f5d0d04ec26ccafb90c78b7fd071846bfd76a4dafc
+  /// 0000000000000000000000000000000000000000000000001d79f6bf1eee0000
+  /// 0000000000000000000000003b7b00ee5a7f7d57dff7b54cec39c1a21886fe0f
+  /// 3d00e77074d830647389466428f4510bdf07fd83ae0fe1eaaf1eda5cf83c2447
+  /// 3e7ac84ec97fff0829b167949eb3e3c920241ab2cecec16f554b39dbf40b4b0c
+
   /// abihex
   /// 0x379eb862 abi prefix
   /// 1f00000000000000000000000000000000000000000000000000000000020000 signature v + coin type
@@ -80,7 +88,7 @@ class AbiUtils {
     var abiHex = Constants.DepositSignatureAbi;
     abiHex += trimHexPrefix(signedMessage["v"]);
     if (isSpecialDeposit) {
-      // coin type of coins converting to hex for instance 458753 becomes 00070001
+      // coin type of coins converting int to hex for instance 458753 becomes 00070001
       var hexaDecimalCoinType = fix8LengthCoinType(coinType.toRadixString(16));
       abiHex += specialFixLength(hexaDecimalCoinType, 62, chain);
     } else {
@@ -125,7 +133,7 @@ class AbiUtils {
         retStr += Constants.tronChainPrefix;
       } else if (chain == 'FAB') {
         retStr += Constants.fabChainPrefix;
-      } else if (chain == 'MATICM') {
+      } else if (chain == 'MATICM' || chain == 'POLYGON') {
         retStr += Constants.maticmChainPrefix;
       } else if (chain == 'BNB') {
         retStr += Constants.bnbChainPrefix;

@@ -52,6 +52,15 @@ Map devConfig = {
       "gasLimit": 21000,
       "gasLimitToken": 70000
     },
+    "POLYGON": {
+      "chain": 'testnet',
+      "networkId": 80001,
+      "chainId": 80001,
+      "gasPrice": 5,
+      "gasPriceMax": 100,
+      "gasLimit": 21000,
+      "gasLimitToken": 70000
+    },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
       "satoshisPerBytes": 100,
@@ -219,6 +228,15 @@ Map productionConfig = {
       "gasLimitToken": 70000
     },
     "MATICM": {
+      "chain": "mainnet",
+      "networkId": 137,
+      "chainId": 137,
+      "gasPrice": 10,
+      "gasPriceMax": 200,
+      "gasLimit": 21000,
+      "gasLimitToken": 70000
+    },
+    "POLYGON": {
       "chain": "mainnet",
       "networkId": 137,
       "chainId": 137,

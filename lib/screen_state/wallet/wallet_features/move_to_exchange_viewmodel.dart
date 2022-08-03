@@ -107,9 +107,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
       fabAddress =
           await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
     }
-
+    var _tokenType = tokenType == 'POLYGON' ? 'MATICM' : tokenType;
     await apiService
-        .getSingleWalletBalance(fabAddress, tokenType, walletInfo.address)
+        .getSingleWalletBalance(fabAddress, _tokenType, walletInfo.address)
         .then((walletBalance) => chainBalance = walletBalance.first.balance);
   }
 

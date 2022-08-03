@@ -50,11 +50,13 @@ class RedepositViewModel extends FutureViewModel {
   WalletInfo walletInfo;
   BuildContext context;
   String errorMessage = '';
-  @override
-  Future futureToRun() => getErrDeposit();
   bool isConfirmButtonPressed = false;
   final abiUtils = AbiUtils();
   final kanbanUtils = KanbanUtils();
+
+  @override
+  Future futureToRun() => getErrDeposit();
+
   void init() {}
 
   Future getErrDeposit() async {

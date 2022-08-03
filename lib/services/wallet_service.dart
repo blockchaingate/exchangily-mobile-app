@@ -1499,8 +1499,7 @@ class WalletService {
 
     var txids = resST['txids'];
     var amountInTx = resST['amountInTx'];
-    // int decimal = 0;
-    //  if (coinName == 'FAB') decimal = 8;
+
     var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
 
     var amountInTxString = amountInTx.toString();
@@ -1529,6 +1528,9 @@ class WalletService {
     }
 
     var coinType = await coinService.getCoinTypeByTickerName(coinName);
+    // if (tokenType == 'POLYGON') {
+    //   coinType = await coinService.getCoinTypeByTickerName('MATIC');
+    // }
     log.i('coin type $coinType');
     if (coinType == 0) {
       errRes['data'] = 'invalid coinType for ' + coinName;
@@ -1538,17 +1540,18 @@ class WalletService {
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
     debugPrint('txHash=' + txHash);
+
     var originalMessage = getOriginalMessage(
         coinType,
         string_utils.trimHexPrefix(txHash),
         amountInLink,
         string_utils.trimHexPrefix(addressInKanban));
+    log.w('Original message $originalMessage');
 
     var signedMess = await coinUtils.signedMessage(
         originalMessage, seed, coinName, tokenType);
-    log.e('Signed message $signedMess');
-    debugPrint('coin type $coinType');
-    log.w('Original message $originalMessage');
+    log.i('Signed message $signedMess');
+
     var coinPoolAddress = await kanbanUtils.getCoinPoolAddress();
 
     /// assinging coin type accoringly
@@ -1566,6 +1569,7 @@ class WalletService {
     }
 
     var coinTypeUsed = isSpecial ? specialCoinType : coinType;
+
     abiHex = abiUtils.getDepositFuncABI(
         coinTypeUsed, txHash, amountInLink, addressInKanban, signedMess,
         chain: coinName == 'MATICM' ? coinName : tokenType,
@@ -2718,7 +2722,9 @@ class WalletService {
       } else {
         txHash = ethUtils.getTransactionHash(signed);
       }
-    } else if (tokenType == 'BNB' || tokenType == 'MATIC') {
+    } else if (tokenType == 'BNB' ||
+        tokenType == 'MATIC' ||
+        tokenType == 'POLYGON') {
       transFeeDouble = (BigInt.parse(gasPrice.toString()) *
               BigInt.parse(gasLimit.toString()) /
               BigInt.parse('1000000000'))
@@ -2746,7 +2752,7 @@ class WalletService {
 
       if (tokenType == 'BNB') {
         baseUrl = bnbBaseUrl;
-      } else if (tokenType == 'MATIC') {
+      } else if (tokenType == 'MATIC' || tokenType == 'POLYGON') {
         baseUrl = maticmBaseUrl;
       }
       final nonce = await erc20Util.getNonce(

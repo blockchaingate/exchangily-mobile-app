@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -113,7 +114,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                           : Text(
                               AppLocalizations.of(context).walletbalance +
                                   '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()}',
-                              style: Theme.of(context).textTheme.subtitle2),
+                              style: headText6),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 3,
@@ -225,10 +226,9 @@ class MoveToExchangeScreen extends StatelessWidget {
                                 ? Row(
                                     children: [
                                       Text(
-                                          model.walletInfo.tokenType +
-                                              ' ' +
-                                              AppLocalizations.of(context)
-                                                  .balance,
+                                          // model.walletInfo.tokenType +
+                                          //     ' ' +
+                                          AppLocalizations.of(context).balance,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline5),
