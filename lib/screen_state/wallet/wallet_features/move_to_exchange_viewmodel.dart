@@ -254,7 +254,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
       if (tokenType == 'POLYGON') {
         gasLimitTextController.text =
-            environment["chains"]["MATICM"]["gasLimitToken"].toString();
+            environment["chains"]["POLYGON"]["gasLimitToken"].toString();
       }
     } else if (coinName == 'FAB') {
       satoshisPerByteTextController.text =
