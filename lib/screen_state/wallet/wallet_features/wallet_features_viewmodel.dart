@@ -232,14 +232,16 @@ class WalletFeaturesViewModel extends BaseViewModel {
         walletInfo.tickerName == 'BST') {
       tickerName = 'BST';
     } else if (walletInfo.tickerName == 'FABE' ||
+        walletInfo.tickerName == 'FABB' ||
         walletInfo.tickerName == 'FAB') {
       tickerName = 'FAB';
     } else if (walletInfo.tickerName == 'EXGE' ||
         walletInfo.tickerName == 'EXG') {
       tickerName = 'EXG';
-    } else if (walletInfo.tickerName == 'USDT') {
-      tickerName = 'USDT';
-    } else if (walletInfo.tickerName == 'USDTX') {
+    } else if (walletInfo.tickerName == 'USDT' ||
+        walletInfo.tickerName == 'USDTX' ||
+        walletInfo.tickerName == 'USDTM' ||
+        walletInfo.tickerName == 'USDTB') {
       tickerName = 'USDT';
     } else {
       tickerName = walletInfo.tickerName;

@@ -326,8 +326,13 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-
-    if (transFee > walletInfo.availableBalance &&
+    var checkTransFeeAgainst;
+    if (tokenType.isEmpty) {
+      checkTransFeeAgainst = walletInfo.availableBalance;
+    } else {
+      checkTransFeeAgainst = chainBalance;
+    }
+    if (transFee > checkTransFeeAgainst &&
         walletInfo.tickerName != 'TRX' &&
         walletInfo.tickerName != 'USDTX') {
       sharedService.sharedSimpleNotification(

@@ -84,6 +84,58 @@ class Erc20Util {
     log.w('res getGasPrice $gasPrice');
     return gasPrice;
   }
+
+  Future getTokenBalanceByAddress(String baseUrl, String smartContractAddress,
+      String officialAddress) async {
+    var callTransaction = {
+      'to': smartContractAddress,
+      'data': '0x70a08231000000000000000000000000' + officialAddress
+    };
+    var body = {
+      "jsonrpc": "2.0",
+      "method": "eth_call",
+      "params": [callTransaction, "latest"],
+      "id": 1
+    };
+    debugPrint('url $baseUrl -- body $body');
+    int nonce = 0;
+    try {
+      var response = await client.post(baseUrl, body: jsonEncode(body));
+      log.w('getTokenBalanceByAddress func- response: ${response.body}');
+      var json = jsonDecode(response.body);
+      log.w('json $json');
+      nonce = int.parse(json['result']);
+    } catch (e) {
+      log.e('getTokenBalanceByAddress func- Catch $e');
+    }
+    log.w('res getTokenBalanceByAddress $nonce');
+
+    var url = baseUrl +
+        'callcontract/' +
+        smartContractAddress +
+        '/' +
+        smartContractAddress;
+    log.i('getEthTokenBalanceByAddress - $url ');
+
+    var tokenBalanceIe18 = 0.0;
+    var balanceIe8 = 0.0;
+    var balance1e6 = 0.0;
+    try {
+      var response = await client.get(url);
+      var balance = jsonDecode(response.body);
+      balanceIe8 = double.parse(balance['balance']) / 1e8;
+      balance1e6 = double.parse(balance['balance']) / 1e6;
+      tokenBalanceIe18 = double.parse(balance['balance']) / 1e18;
+    } catch (e) {
+      debugPrint('getEthNonce CATCH $e');
+    }
+    return {
+      'balance1e6': balance1e6,
+      'balanceIe8': balanceIe8,
+      'lockbalance': 0.0,
+      'tokenBalanceIe18': tokenBalanceIe18
+    };
+  }
   // Future<double> gasFee() async {
   //    String result;
   //   var body = {

@@ -321,7 +321,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                       decoration: InputDecoration(
                                           focusedBorder:
                                               const UnderlineInputBorder(
-                                                  borderSide: const BorderSide(
+                                                  borderSide: BorderSide(
                                                       color: globals
                                                           .primaryColor)),
                                           enabledBorder:
@@ -370,7 +370,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                       decoration: InputDecoration(
                                           focusedBorder:
                                               const UnderlineInputBorder(
-                                                  borderSide: const BorderSide(
+                                                  borderSide: BorderSide(
                                                       color: globals
                                                           .primaryColor)),
                                           enabledBorder:
@@ -464,7 +464,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                           decimal: true), // numnber keyboard
                                   decoration: InputDecoration(
                                       focusedBorder: const UnderlineInputBorder(
-                                          borderSide: const BorderSide(
+                                          borderSide: BorderSide(
                                               color: globals.primaryColor)),
                                       enabledBorder: const UnderlineInputBorder(
                                           borderSide:

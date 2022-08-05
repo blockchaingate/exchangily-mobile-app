@@ -25,6 +25,8 @@ import 'dart:convert';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../utils/coin_utils/erc20_util.dart';
+
 class MoveToWalletViewmodel extends BaseViewModel {
   final log = getLogger('MoveToWalletViewmodel');
 
@@ -56,11 +58,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
   var ethChainBalance;
   var fabChainBalance;
   var trxTsWalletBalance;
+  var bnbTsWalletBalance;
   bool isWithdrawChoice = false;
   String _groupValue;
   get groupValue => _groupValue;
   bool isShowFabChainBalance = false;
   bool isShowTrxTsWalletBalance = false;
+  bool isShowBnbTsWalletBalance = false;
   String specialTickerForTxHistory = '';
   String updateTickerForErc = '';
   bool isAlert = false;
@@ -72,6 +76,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   int decimalLimit = 6;
   String ercSmartContractAddress = '';
   TokenModel ercChainToken = TokenModel();
+  TokenModel bnbChainToken = TokenModel();
   TokenModel mainChainToken = TokenModel();
   bool isSubmittingTx = false;
   var tokenType;
@@ -109,6 +114,12 @@ class MoveToWalletViewmodel extends BaseViewModel {
       isShowTrxTsWalletBalance = true;
 
       radioButtonSelection('TRX');
+    } else if (walletInfo.tickerName == 'FABB')
+    //   || walletInfo.tickerName == 'TRX'
+    {
+      isShowBnbTsWalletBalance = true;
+
+      radioButtonSelection('BNB');
     } else if (walletInfo.tickerName == "BTC") {
       setWithdrawLimit("BTC");
     } else {
@@ -774,6 +785,11 @@ class MoveToWalletViewmodel extends BaseViewModel {
       setBusy(false);
       return;
     }
+    if (bnbChainToken.feeWithdraw != null && _groupValue == 'BNB') {
+      token = bnbChainToken;
+      setBusy(false);
+      return;
+    }
     if (mainChainToken.feeWithdraw != null &&
         (_groupValue == 'TRX' || _groupValue == 'FAB')) {
       token = mainChainToken;
@@ -789,19 +805,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
     await tokenListDatabaseService.getByCointype(ct).then((res) async {
       if (res != null) {
         token = res;
-        if (_groupValue == 'ETH') ercChainToken = token;
-        if (_groupValue == 'TRX' || _groupValue == 'FAB') {
-          mainChainToken = token;
-        }
+        assignToken(token);
       } else {
         await coinService.getSingleTokenData(ticker).then((resFromApi) {
           if (resFromApi != null) {
             debugPrint('token from api res ${resFromApi.toJson()}');
             token = resFromApi;
-            if (_groupValue == 'ETH') ercChainToken = token;
-            if (_groupValue == 'TRX' || _groupValue == 'FAB') {
-              mainChainToken = token;
-            }
+            assignToken(token);
           }
         });
       }
@@ -809,6 +819,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
     setBusy(false);
   }
 
+  assignToken(TokenModel token) {
+    if (_groupValue == 'ETH') ercChainToken = token;
+    if (_groupValue == 'BNB') bnbChainToken = token;
+    if (_groupValue == 'TRX' || _groupValue == 'FAB') {
+      mainChainToken = token;
+    }
+  }
 /*---------------------------------------------------
                       Get gas
 --------------------------------------------------- */
@@ -841,6 +858,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       tickerName = 'BST';
       isWithdrawChoice = true;
     } else if (walletInfo.tickerName == 'FABE' ||
+        walletInfo.tickerName == 'FABB' ||
         walletInfo.tickerName == 'FAB') {
       tickerName = 'FAB';
       isWithdrawChoice = true;
@@ -879,7 +897,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
           'is withdraw choice and is submitting is true-- fetching ts wallet balance of group $_groupValue');
       if (_groupValue == 'ETH') await getEthChainBalance();
       if (_groupValue == 'TRX') await getTrxUsdtTsWalletBalance();
-
+      if (_groupValue == 'BNB') await getBnbTsWalletBalance();
       if (_groupValue == 'FAB') {
         tickerName == 'FAB'
             ? await getFabBalance()
@@ -1028,6 +1046,21 @@ class MoveToWalletViewmodel extends BaseViewModel {
     setBusy(false);
   }
 
+  getBnbTsWalletBalance() async {
+    setBusy(true);
+    String officialAddress = '';
+    officialAddress = coinService.getCoinOfficalAddress('ETH');
+    var fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
+    await apiService
+        .getSingleWalletBalance(fabAddress, 'BNB', officialAddress)
+        .then((res) {
+      bnbTsWalletBalance = res[0].balance;
+    });
+
+    log.w('bnbTsWalletBalance $bnbTsWalletBalance');
+
+    setBusy(false);
+  }
 /*----------------------------------------------------------------------
                 Radio button selection
 ----------------------------------------------------------------------*/
@@ -1066,14 +1099,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
         await setWithdrawLimit('USDTX');
         tokenType = 'TRX';
       }
-    }
-    // else if (walletInfo.tickerName == 'TRX' && !isShowTrxTsWalletBalance) {
-    //   await tokenListDatabaseService
-    //       .getByTickerName('USDTX')
-    //       .then((token) => withdrawLimit = double.parse(token.minWithdraw));
-    //   log.i('withdrawLimit $withdrawLimit');
-    // }
-    else {
+    } else if (value == 'BNB') {
+      await setWithdrawLimit(walletInfo.tickerName);
+    } else {
       isShowTrxTsWalletBalance = false;
       isShowFabChainBalance = false;
 
@@ -1164,20 +1192,24 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
       /// show warning like amount should be less than ts wallet balance
       /// instead of displaying the generic error
-      if (isWithdrawChoice) if (!isShowTrxTsWalletBalance &&
-          !isShowFabChainBalance &&
-          amount > ethChainBalance) {
-        sharedService.alertDialog(
-            AppLocalizations.of(context).notice,
-            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                ' ' +
-                ethChainBalance.toString() +
-                '. ' +
-                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
-            isWarning: false);
+      if (isWithdrawChoice) {
+        if (!isShowTrxTsWalletBalance &&
+            !isShowFabChainBalance &&
+            !isShowBnbTsWalletBalance &&
+            amount > ethChainBalance) {
+          sharedService.alertDialog(
+              AppLocalizations.of(context).notice,
+              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                  ' ' +
+                  ethChainBalance.toString() +
+                  '. ' +
+                  AppLocalizations.of(context)
+                      .lowTsWalletBalanceErrorSecondPart,
+              isWarning: false);
 
-        setBusy(false);
-        return;
+          setBusy(false);
+          return;
+        }
       }
       if (isWithdrawChoice) {
         if (isShowTrxTsWalletBalance &&
@@ -1188,6 +1220,23 @@ class MoveToWalletViewmodel extends BaseViewModel {
               AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
                   ' ' +
                   trxTsWalletBalance.toString() +
+                  '. ' +
+                  AppLocalizations.of(context)
+                      .lowTsWalletBalanceErrorSecondPart,
+              isWarning: false);
+          setBusy(false);
+          return;
+        }
+      }
+      if (isWithdrawChoice) {
+        if (isShowBnbTsWalletBalance &&
+            !isShowFabChainBalance &&
+            amount > bnbTsWalletBalance) {
+          sharedService.alertDialog(
+              AppLocalizations.of(context).notice,
+              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                  ' ' +
+                  bnbTsWalletBalance.toString() +
                   '. ' +
                   AppLocalizations.of(context)
                       .lowTsWalletBalanceErrorSecondPart,
