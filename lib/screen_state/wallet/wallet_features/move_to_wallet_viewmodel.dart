@@ -25,8 +25,6 @@ import 'dart:convert';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../../utils/coin_utils/erc20_util.dart';
-
 class MoveToWalletViewmodel extends BaseViewModel {
   final log = getLogger('MoveToWalletViewmodel');
 
@@ -54,30 +52,39 @@ class MoveToWalletViewmodel extends BaseViewModel {
   bool isShowErrorDetailsButton = false;
   bool isShowDetailsMessage = false;
   String serverError = '';
+
   List<Map<String, dynamic>> chainBalances = [];
+
   var ethChainBalance;
   var fabChainBalance;
   var trxTsWalletBalance;
   var bnbTsWalletBalance;
+
   bool isWithdrawChoice = false;
+
   String _groupValue;
   get groupValue => _groupValue;
+
   bool isShowFabChainBalance = false;
   bool isShowTrxTsWalletBalance = false;
   bool isShowBnbTsWalletBalance = false;
+
   String specialTickerForTxHistory = '';
   String updateTickerForErc = '';
+
   bool isAlert = false;
   bool isSpeicalTronTokenWithdraw = false;
   String message = '';
 
   bool isWithdrawChoicePopup = false;
-  TokenModel token = TokenModel();
   int decimalLimit = 6;
   String ercSmartContractAddress = '';
+
+  TokenModel token = TokenModel();
   TokenModel ercChainToken = TokenModel();
   TokenModel bnbChainToken = TokenModel();
   TokenModel mainChainToken = TokenModel();
+
   bool isSubmittingTx = false;
   var tokenType;
   var walletUtil = WalletUtil();
@@ -103,6 +110,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       feeMeasurement = '10^(-8)';
     }
     _groupValue = 'ETH';
+
     if (walletInfo.tickerName == 'ETH' || walletInfo.tokenType == 'ETH') {
       radioButtonSelection('ETH');
     } else if (walletInfo.tickerName == 'FAB' ||
@@ -114,9 +122,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
       isShowTrxTsWalletBalance = true;
 
       radioButtonSelection('TRX');
-    } else if (walletInfo.tickerName == 'FABB')
-    //   || walletInfo.tickerName == 'TRX'
-    {
+    } else if (walletInfo.tickerName == 'FABB' ||
+        walletInfo.tickerName == 'USDTB') {
       isShowBnbTsWalletBalance = true;
 
       radioButtonSelection('BNB');
@@ -867,7 +874,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
       tickerName = 'EXG';
       isWithdrawChoice = true;
     } else if (walletInfo.tickerName == 'USDT' ||
-        walletInfo.tickerName == 'USDTX') {
+        walletInfo.tickerName == 'USDTX' ||
+        walletInfo.tickerName == 'USDTB' ||
+        walletInfo.tickerName == 'USDTM') {
       tickerName = 'USDT';
       isWithdrawChoice = true;
       isShowFabChainBalance = false;
@@ -1020,7 +1029,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
       updateTickerForErc = 'BSTE';
     } else if (walletInfo.tickerName == 'EXG') {
       updateTickerForErc = 'EXGE';
-    } else if (walletInfo.tickerName == 'USDTX') {
+    } else if (walletInfo.tickerName == 'USDTX' ||
+        walletInfo.tickerName == 'USDTB' ||
+        walletInfo.tickerName == 'USDTM') {
       updateTickerForErc = 'USDT';
     } else {
       updateTickerForErc = walletInfo.tickerName;
@@ -1095,7 +1106,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       log.i('chain type ${walletInfo.tokenType}');
       if (walletInfo.tickerName == 'TRX' && isShowTrxTsWalletBalance) {
         await setWithdrawLimit('TRX');
-      } else {
+      } else if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
         await setWithdrawLimit('USDTX');
         tokenType = 'TRX';
       }

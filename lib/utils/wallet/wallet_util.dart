@@ -134,6 +134,16 @@ class WalletUtil {
     'Genesis Vision',
     'Binance Coin'
   ];
+  List<String> allUsdtTokens = ["USDT", "USDTX", "USDTB", "USDTM"];
+  List<String> allFabTokens = ["FAB", "FABE", "FABB"];
+
+  bool isSpecialUsdt(String tickerName) {
+    return allUsdtTokens.contains(tickerName);
+  }
+
+  bool isSpecialFab(String tickerName) {
+    return allFabTokens.contains(tickerName);
+  }
 
   // get wallet info object with address using single wallet balance
   Future<WalletInfo> getWalletInfoObjFromWalletBalance(

@@ -1,12 +1,10 @@
 import 'dart:convert';
-
-import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:flutter/widgets.dart';
 
 class Erc20Util {
-  final log = getLogger('ERC20Util');
+  final log = getLogger('Erc20Util');
 
   var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
 
@@ -50,7 +48,11 @@ class Erc20Util {
     debugPrint('url $baseUrl -- body $body');
     int nonce = 0;
     try {
-      var response = await client.post(baseUrl, body: jsonEncode(body));
+      var response = await client.post(baseUrl,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(body));
       log.w('getnonce func- response: ${response.body}');
       var json = jsonDecode(response.body);
       log.w('json $json');
@@ -67,12 +69,18 @@ class Erc20Util {
       "jsonrpc": "2.0",
       "method": "eth_gasPrice",
       "params": [],
-      "id": 1
+      "id": "1"
     };
     debugPrint('url $baseUrl -- body $body');
     var gasPrice = 0;
     try {
-      var response = await client.post(baseUrl, body: jsonEncode(body));
+      var jsonString = jsonEncode(body);
+      log.i('jsonString $jsonString');
+      var response = await client.post(baseUrl,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonString);
       var json = jsonDecode(response.body);
       log.w('json $json');
       gasPrice = (BigInt.parse(json['result']) / BigInt.parse('1000000000'))
@@ -100,7 +108,11 @@ class Erc20Util {
     debugPrint('url $baseUrl -- body $body');
     int nonce = 0;
     try {
-      var response = await client.post(baseUrl, body: jsonEncode(body));
+      var response = await client.post(baseUrl,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(body));
       log.w('getTokenBalanceByAddress func- response: ${response.body}');
       var json = jsonDecode(response.body);
       log.w('json $json');
@@ -136,29 +148,4 @@ class Erc20Util {
       'tokenBalanceIe18': tokenBalanceIe18
     };
   }
-  // Future<double> gasFee() async {
-  //    String result;
-  //   var body = {
-  //     "jsonrpc": "2.0",
-  //     "method": "eth_gasPrice",
-  //     "params": [],
-  //     "id": 73
-  //   };
-  //   log.i('gasFee url $maticmBaseUrl');
-  //   try {
-  //     var response = await client.post(maticmBaseUrl,
-  //         headers: {"responseType": "text"}, body: jsonEncode(body));
-  //     var json = jsonDecode(response.body);
-  //     log.w('json $json');
-  //     result = json["result"];
-  //     int gasInWei = int.parse(result);
-  //     log.w('gasInWei $gasInWei');
-  //     var fee = NumberUtil.weiToGwei(gasInWei);
-  //     log.i('feeInGwei $fee');
-  //     return fee;
-  //   } catch (err) {
-  //     log.e('gasFee: CATCH $err');
-  //     throw Exception(err);
-  //   }
-  // }
 }

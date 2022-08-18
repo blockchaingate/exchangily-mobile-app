@@ -220,7 +220,7 @@ Map productionConfig = {
       "chain": 'mainnet',
       "networkId": 56,
       "chainId": 56,
-      "rpcEndpoint": 'https://bsc-dataseed.binance.org',
+      "rpcEndpoint": 'https://kanbanprod.fabcoinapi.com/redirect/binance',
       "hardfork": 'petersburg',
       "gasPrice": 10,
       "gasPriceMax": 200,
@@ -280,8 +280,8 @@ Map productionConfig = {
     'eth': 'https://ethprod.fabcoinapi.com/',
     'trx': 'https://api.trongrid.io/',
     'campaign': 'https://api.blockchaingate.com/v2/',
-    'maticm': 'https://polygon-rpc.com',
-    'bnb': 'https://bsc-dataseed.binance.org'
+    'maticm': 'https://kanbanprod.fabcoinapi.com/redirect/polygon',
+    'bnb': 'https://kanbanprod.fabcoinapi.com/redirect/binance'
   },
   'addresses': {
     "smartContract": {

@@ -39,7 +39,7 @@ Reference:
 
 - https://github.com/fluttertools/fvm#vscode 
 
-- In windows VS code terminal type : <flutter pub global activate fvm>
+- In VS code terminal type : <flutter pub global activate fvm>
 - fvm install 2.10.0
 - Add below to .vscode/settings.json
 {
@@ -53,5 +53,6 @@ Reference:
     "**/.fvm": true
   }
 }
+  - If debug with breakpoint does not work then add "dart.flutterSdkPath": ".fvm/flutter_sdk", in vscode settings by searching for flutter sdk path in settings
 - fvm use <version>
 
