@@ -182,7 +182,7 @@ class SendViewModel extends BaseViewModel {
       gasPriceTextController.text = gasPriceReal.toString();
       gasLimitTextController.text =
           environment["chains"]["MATICM"]["gasLimit"].toString();
-      if (tokenType == 'BNB') {
+      if (tokenType == 'MATICM' || tokenType == 'POLYGON') {
         gasLimitTextController.text =
             environment["chains"]["MATICM"]["gasLimitToken"].toString();
       }
