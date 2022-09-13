@@ -9,6 +9,9 @@ const String baseBlockchainGateV2Url = isProduction
     ? 'https://api.blockchaingate.com/v2/'
     : 'https://test.blockchaingate.com/v2/';
 
+const String fabInfoUrl =
+    isProduction ? 'https://fabprod.info/' : 'https://fabtest.info/';
+
 const String tronBaseApiUrl = 'https://api.trongrid.io/';
 
 /*----------------------------------------------------------------------
@@ -129,6 +132,10 @@ const String getLogoApiRoute = 'withoutLogo';
 // banner
 const String bannerApiUrl =
     'https://api.blockchaingate.com/v2/banners/app/5b6a8688905612106e976a69';
+
+// https://fabtest.info/api/kanban/locker/user/0xdcd0f23125f74ef621dfa3310625f8af0dcd971b/50/0
+const String lockerApiUrl = fabInfoUrl + 'api/kanban/locker/user/';
+const String totalCountTextApiRoute = '/totalCount';
 
 // /ordersbyaddresspaged/:address/:start?/:count?/:status?
 // /getordersbytickernamepaged/:address/:tickerName/:start?/:count?/:status?
