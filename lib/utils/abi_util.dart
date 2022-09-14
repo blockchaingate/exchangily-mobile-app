@@ -28,6 +28,16 @@ class AbiUtils {
   final log = getLogger('AbiUtils');
   final fabUtils = FabUtils();
 
+  // locker abi
+  getLockerAbi(String id, String userAddress) {
+    var abiHex = Constants.lockerUnlockSignatureAbi +
+        fixLength(trimHexPrefix(userAddress), 64) +
+        fixLength(trimHexPrefix(id), 64);
+
+    debugPrint('getLockerAbi abi $abiHex');
+    return abiHex;
+  }
+
   // withdraw abi
   getWithdrawFuncABI(coinType, amountInLink, addressInWallet,
       {String chain = '', bool isSpecialToken = false}) {
