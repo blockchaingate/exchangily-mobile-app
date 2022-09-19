@@ -60,7 +60,8 @@ class Constants {
   static const String WithdrawSignatureAbi = "0x3295d51e";
   static const String SendSignatureAbi = "0x3faf0a66";
   static const String CustomTokenSignatureAbi = "70a08231";
-  static const String lockerUnlockSignatureAbi = "0x2f6c493c";
+  static const String unlockAbiSignature = "0x27978c85";
+  static const String lockAbiSignature = "0xe98bfea0";
 
 // tron
   static const String DepositTronUsdtSignatureAbi = 'a9059cbb';

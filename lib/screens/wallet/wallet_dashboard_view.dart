@@ -209,6 +209,7 @@ class WalletDashboardView extends StatelessWidget {
 
   ListView buildListView(WalletDashboardViewModel model) {
     return ListView.builder(
+      key: const PageStorageKey('storage-key'),
       controller: model.walletsScrollController,
       shrinkWrap: true,
       itemCount: model.wallets.length,
@@ -908,6 +909,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
 
 ListView buildListView(WalletDashboardViewModel model) {
   return ListView.builder(
+    key: const PageStorageKey('storage-key'),
     padding: const EdgeInsets.only(top: 0),
     shrinkWrap: true,
     itemCount: model.wallets.length,
@@ -1255,6 +1257,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                 :
                 //Text('test'));
                 ListView.builder(
+                    key: const PageStorageKey('storage-key'),
                     controller: model.walletsScrollController,
                     // itemExtent: 95,
                     shrinkWrap: true,

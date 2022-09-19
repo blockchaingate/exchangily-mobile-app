@@ -14,7 +14,9 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/utils/exaddr.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/widgets.dart';
+import '../screens/exchange/trade/my_exchange_assets/locker/locker_model.dart';
 import './string_util.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:hex/hex.dart';
@@ -28,13 +30,37 @@ class AbiUtils {
   final log = getLogger('AbiUtils');
   final fabUtils = FabUtils();
 
-  // locker abi
-  getLockerAbi(String id, String userAddress) {
-    var abiHex = Constants.lockerUnlockSignatureAbi +
-        fixLength(trimHexPrefix(userAddress), 64) +
-        fixLength(trimHexPrefix(id), 64);
+  // unlock locker abi
+  construcUnlockAbiHex(String id, String userAddress) {
+    var abiHex = Constants.unlockAbiSignature +
+        fixLength(trimHexPrefix(id), 64) +
+        fixLength(trimHexPrefix(userAddress), 64);
 
-    debugPrint('getLockerAbi abi $abiHex');
+    debugPrint('construcUnlockAbiHex abi $abiHex');
+    return abiHex;
+  }
+
+  construcLockAbiHex(LockerModel locker) {
+    // function lock(
+    //     bytes32 _id,
+    //     address _user,
+    //     uint32 _coinType,
+    //     uint256 _amount,
+    //     uint256 _lockPeriodOfBlockNumber // blockNumber
+    // )
+
+    // convert decimal to big int
+    // then convert big int amount to radix string
+    var amountHex = NumberUtil.decimalToBigInt(locker.amount).toRadixString(16);
+
+    var abiHex = Constants.unlockAbiSignature +
+        fixLength(trimHexPrefix(locker.id), 64) +
+        fixLength(trimHexPrefix(locker.user), 64) +
+        fixLength(locker.coinType.toRadixString(16), 64) +
+        fixLength(trimHexPrefix(amountHex), 64) +
+        fixLength(locker.releaseBlock.toRadixString(16), 64);
+
+    debugPrint('construcLockAbiHex abi $abiHex');
     return abiHex;
   }
 

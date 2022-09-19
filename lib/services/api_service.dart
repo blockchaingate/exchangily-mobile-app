@@ -28,7 +28,7 @@ import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/exchange/trade/my_exchange_assets/locker_model.dart';
+import '../screens/exchange/trade/my_exchange_assets/locker/locker_model.dart';
 import '../utils/string_util.dart' as string_utils;
 import 'package:exchangilymobileapp/logger.dart';
 import '../environments/environment.dart';
@@ -67,60 +67,6 @@ class ApiService {
       log.w('postAppUpdate  $parsedTokenList');
     } catch (err) {
       log.e('postAppUpdate CATCH $err');
-      throw Exception(err);
-    }
-  }
-
-  Future<int> getLockerCount(
-    String exgAddress,
-  ) async {
-    String url = lockerApiUrl + exgAddress + totalCountTextApiRoute;
-    int referralCount = 0;
-    log.i('getLockerCount url $url');
-    try {
-      var response = await client.get(url);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        var json = jsonDecode(response.body);
-
-        // log.w('getChildrenByAddress json $json');
-        if (json.isNotEmpty) {
-          referralCount = json['_body'];
-          log.i('getLockerCount count $referralCount');
-          return referralCount;
-        } else {
-          return 0;
-        }
-      } else {
-        log.e("getLockerCount error: ${response.body}");
-        return 0;
-      }
-    } catch (err) {
-      log.e('In getLockerCount catch $err');
-      return 0;
-    }
-  }
-
-  Future<List<LockerModel>> getLockers(String exgAddress,
-      {int pageSize = 10, int pageNumber = 0}) async {
-    if (pageNumber != 0) {
-      pageNumber = pageNumber - 1;
-    }
-    String url = lockerApiUrl + exgAddress + '/$pageSize/$pageNumber';
-    log.i('getLockerInfo url $url');
-    try {
-      var response = await client.get(url);
-      log.w('response ${response.body}');
-      var json = jsonDecode(response.body);
-
-      var parsedTokenList = json as List;
-
-      LockerModelList lockerModelList =
-          LockerModelList.fromJson(parsedTokenList);
-      log.w(
-          'getLockerInfo func: lockerModelList length ${lockerModelList.lockers.length}');
-      return lockerModelList.lockers;
-    } catch (err) {
-      log.e('getLockerInfo CATCH $err');
       throw Exception(err);
     }
   }

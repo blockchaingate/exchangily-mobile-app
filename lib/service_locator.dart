@@ -67,6 +67,8 @@ import 'package:exchangilymobileapp/screen_state/otc/otc_details_screen_state.da
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/team_reward_details_screen_state.dart';
 
+import 'screens/exchange/trade/my_exchange_assets/exchange_balance_service.dart';
+
 GetIt locator = GetIt.instance;
 
 Future serviceLocator() async {
@@ -97,6 +99,7 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => TransactionHistoryDatabaseService());
   locator.registerLazySingleton(() => PdfViewerService());
   locator.registerLazySingleton(() => OrderService());
+  locator.registerLazySingleton(() => ExchangeBalanceService());
 
   //Version Service
   locator.registerLazySingleton(() => VersionService());

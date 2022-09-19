@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -100,6 +101,10 @@ class NumberUtil {
 
     if (value != null) res = double.parse(value.toString());
     return res;
+  }
+
+  static BigInt decimalToBigInt(Decimal value, {int decimalPrecision = 18}) {
+    return (value * Decimal.fromInt(pow(10, decimalPrecision))).toBigInt();
   }
 
 // To Big Int
