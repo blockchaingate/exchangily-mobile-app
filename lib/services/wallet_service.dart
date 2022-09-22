@@ -1206,6 +1206,7 @@ class WalletService {
       addressInWallet = fabUtils.exgToFabAddress(addressInWallet);
       addressInWallet = btcUtils.btcToBase58Address(addressInWallet);
     }
+
     int coinType;
     await coinService
         .getCoinTypeByTickerName(coinName)
@@ -1214,6 +1215,7 @@ class WalletService {
 
     int sepcialcoinType;
     var abiHex;
+
     if (coinName == 'DSCE' || coinName == 'DSC') {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('DSC');
       abiHex = abiUtils.getWithdrawFuncABI(
@@ -1251,6 +1253,20 @@ class WalletService {
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialToken: true,
           chain: coinName == 'MATICM' ? coinName : tokenType);
+
+      log.e('cointype $coinType -- abihex $abiHex');
+    } else if (tokenType == 'POLYGON' && walletUtil.isSpecialUsdt(coinName)) {
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
+      abiHex = abiUtils.getWithdrawFuncABI(
+          sepcialcoinType, amountInLink, addressInWallet,
+          isSpecialToken: true, chain: 'POLYGON');
+
+      log.e('cointype $coinType -- abihex $abiHex');
+    } else if (tokenType == 'BNB' && walletUtil.isSpecialUsdt(coinName)) {
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
+      abiHex = abiUtils.getWithdrawFuncABI(
+          sepcialcoinType, amountInLink, addressInWallet,
+          isSpecialToken: true, chain: 'BNB');
 
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (isSpeicalTronTokenWithdraw) {

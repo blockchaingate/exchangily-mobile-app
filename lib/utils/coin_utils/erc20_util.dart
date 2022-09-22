@@ -20,7 +20,10 @@ class Erc20Util {
     String txHash;
     try {
       var response = await client.post(baseUrl,
-          headers: {"responseType": "text"}, body: jsonEncode(body));
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(body));
       var json = jsonDecode(response.body);
       log.w('json $json');
       txHash = json["result"];

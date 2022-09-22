@@ -113,6 +113,9 @@ class TransactionHistoryViewmodel extends FutureViewModel {
         } else if (txFromApi.tickerName.toUpperCase() == 'POLYGON_MATIC' &&
             tickerName == 'MATICM') {
           txHistoryToView.add(txFromApi);
+        } else if (txFromApi.tickerName.toUpperCase() == 'POLYGON_USDT' &&
+            tickerName == 'USDTM') {
+          txHistoryToView.add(txFromApi);
         }
       }
     }

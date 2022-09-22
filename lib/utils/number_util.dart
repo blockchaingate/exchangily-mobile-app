@@ -100,6 +100,9 @@ class NumberUtil {
     double res = 0.0;
 
     if (value != null) res = double.parse(value.toString());
+    if (res.isNegative) {
+      res = 0.0;
+    }
     return res;
   }
 

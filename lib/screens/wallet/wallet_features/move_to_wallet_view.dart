@@ -175,7 +175,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                   height: 20,
                                   child: IconButton(
                                       padding: EdgeInsets.zero,
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.info_outline,
                                         color: primaryColor,
                                         size: 16,
@@ -458,7 +458,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                       true), // numnber keyboard
                                               decoration: InputDecoration(
                                                   focusedBorder:
-                                                      UnderlineInputBorder(
+                                                      const UnderlineInputBorder(
                                                           borderSide: BorderSide(
                                                               color: globals
                                                                   .primaryColor)),
@@ -470,8 +470,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                       .textTheme
                                                       .headline5
                                                       .copyWith(
-                                                          fontWeight:
-                                                              FontWeight.w300)),
+                                                          fontWeight: FontWeight.w300)),
                                               style: Theme.of(context).textTheme.headline5.copyWith(fontWeight: FontWeight.w300))))
                                 ],
                               ),
@@ -504,10 +503,11 @@ class MoveToWalletScreen extends StatelessWidget {
                                               keyboardType: TextInputType
                                                   .number, // numnber keyboard
                                               decoration: InputDecoration(
-                                                  focusedBorder: UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: globals
-                                                              .primaryColor)),
+                                                  focusedBorder:
+                                                      const UnderlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: globals
+                                                                  .primaryColor)),
                                                   enabledBorder: const UnderlineInputBorder(
                                                       borderSide: BorderSide(
                                                           color: globals.grey)),
@@ -521,8 +521,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5
-                                                  .copyWith(
-                                                      fontWeight: FontWeight.w300)))),
+                                                  .copyWith(fontWeight: FontWeight.w300)))),
                                 ],
                               ),
                               UIHelper.verticalSpaceSmall,
@@ -660,7 +659,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                     text: TextSpan(
                                         text: AppLocalizations.of(context)
                                             .taphereToCopyTxId,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             decoration:
                                                 TextDecoration.underline,
                                             color: primaryColor),
@@ -699,9 +698,9 @@ class MoveToWalletScreen extends StatelessWidget {
                                 ),
                                 !model.isShowDetailsMessage
                                     ? const Icon(Icons.arrow_drop_down,
-                                        color: Colors.red, size: 20)
+                                        color: Colors.red, size: 26)
                                     : const Icon(Icons.arrow_drop_up,
-                                        color: Colors.red, size: 20)
+                                        color: Colors.red, size: 26)
                               ],
                             )
                           : Container(),

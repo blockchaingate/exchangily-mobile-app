@@ -134,11 +134,13 @@ class WalletUtil {
     'Genesis Vision',
     'Binance Coin'
   ];
-  List<String> allUsdtTokens = ["USDT", "USDTX", "USDTB", "USDTM"];
+  List<String> allUsdtTokens = ["USDT", "USDTX", "USDCX", "USDTB", "USDTM"];
   List<String> allFabTokens = ["FAB", "FABE", "FABB"];
 
   bool isSpecialUsdt(String tickerName) {
-    return allUsdtTokens.contains(tickerName);
+    var res = allUsdtTokens.contains(tickerName);
+    log.w('isSpecialUsdt - ticker $tickerName = res $res');
+    return res;
   }
 
   bool isSpecialFab(String tickerName) {
