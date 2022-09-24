@@ -811,27 +811,27 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
   setWithdrawLimit(String ticker) async {
     setBusy(true);
-    if (ercChainToken.feeWithdraw != null && _groupValue == 'ETH') {
-      token = ercChainToken;
-      setBusy(false);
-      return;
-    }
-    if (bnbChainToken.feeWithdraw != null && _groupValue == 'BNB') {
-      token = bnbChainToken;
-      setBusy(false);
-      return;
-    }
-    if (polygonChainToken.feeWithdraw != null && _groupValue == 'POLYGON') {
-      token = polygonChainToken;
-      setBusy(false);
-      return;
-    }
-    if (mainChainToken.feeWithdraw != null &&
-        (_groupValue == 'TRX' || _groupValue == 'FAB')) {
-      token = mainChainToken;
-      setBusy(false);
-      return;
-    }
+    // if (ercChainToken.feeWithdraw != null && _groupValue == 'ETH') {
+    //   token = ercChainToken;
+    //   setBusy(false);
+    //   return;
+    // }
+    // if (bnbChainToken.feeWithdraw != null && _groupValue == 'BNB') {
+    //   token = bnbChainToken;
+    //   setBusy(false);
+    //   return;
+    // }
+    // if (polygonChainToken.feeWithdraw != null && _groupValue == 'POLYGON') {
+    //   token = polygonChainToken;
+    //   setBusy(false);
+    //   return;
+    // }
+    // if (mainChainToken.feeWithdraw != null &&
+    //     (_groupValue == 'TRX' || _groupValue == 'FAB')) {
+    //   token = mainChainToken;
+    //   setBusy(false);
+    //   return;
+    // }
     token = TokenModel();
     int ct = 0;
     await coinService.getCoinTypeByTickerName(ticker).then((value) {
@@ -1057,30 +1057,22 @@ class MoveToWalletViewmodel extends BaseViewModel {
       updateTickerForErc = 'BSTE';
     } else if (walletInfo.tickerName == 'EXG') {
       updateTickerForErc = 'EXGE';
-    } else if (walletInfo.tickerName == 'USDTX' ||
-        walletInfo.tickerName == 'USDTB' ||
-        walletInfo.tickerName == 'USDTM') {
+    } else if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
       updateTickerForErc = 'USDT';
     } else {
       updateTickerForErc = walletInfo.tickerName;
     }
-    ercSmartContractAddress = await coinService
-        .getSmartContractAddressByTickerName(updateTickerForErc);
+    // ercSmartContractAddress = await coinService
+    //     .getSmartContractAddressByTickerName(updateTickerForErc);
 
-    await EthUtils()
-        .getEthTokenBalanceByAddress(officialAddress, updateTickerForErc)
+    var fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
+    await apiService
+        .getSingleWalletBalance(fabAddress, updateTickerForErc, officialAddress)
         .then((res) {
-      log.e('getEthChainBalance $res');
-      if (walletInfo.tickerName == 'USDT' || walletInfo.tickerName == 'USDTX') {
-        ethChainBalance = res['balance1e6'];
-      } else if (walletUtil.isSpecialFab(walletInfo.tickerName)) {
-        ethChainBalance = res['balanceIe8'];
-      } else {
-        ethChainBalance = res['tokenBalanceIe18'];
-      }
-
-      log.w('ethChainBalance $ethChainBalance');
+      ethChainBalance = res[0].balance;
     });
+
+    log.w('ethChainBalance $ethChainBalance');
     setBusy(false);
   }
 
@@ -1089,8 +1081,14 @@ class MoveToWalletViewmodel extends BaseViewModel {
     String officialAddress = '';
     officialAddress = coinService.getCoinOfficalAddress('ETH');
     var fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
+    String updatedTicker = '';
+    if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
+      updatedTicker = 'USDTB';
+    } else {
+      updatedTicker = walletInfo.tickerName;
+    }
     await apiService
-        .getSingleWalletBalance(fabAddress, 'BNB', officialAddress)
+        .getSingleWalletBalance(fabAddress, updatedTicker, officialAddress)
         .then((res) {
       bnbTsWalletBalance = res[0].balance;
     });
@@ -1105,8 +1103,14 @@ class MoveToWalletViewmodel extends BaseViewModel {
     String officialAddress = '';
     officialAddress = coinService.getCoinOfficalAddress('ETH');
     var fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
+    String updatedTicker = '';
+    if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
+      updatedTicker = 'USDTM';
+    } else {
+      updatedTicker = walletInfo.tickerName;
+    }
     await apiService
-        .getSingleWalletBalance(fabAddress, 'MATICM', officialAddress)
+        .getSingleWalletBalance(fabAddress, updatedTicker, officialAddress)
         .then((res) {
       polygonTsWalletBalance = res[0].balance;
     });
@@ -1156,15 +1160,17 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
         await setWithdrawLimit('USDTB');
         tokenType = 'BNB';
+      } else {
+        await setWithdrawLimit(walletInfo.tickerName);
       }
-      await setWithdrawLimit(walletInfo.tickerName);
     } else if (value == 'POLYGON') {
       isShowPolygonTsWalletBalance = true;
       if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
         await setWithdrawLimit('USDTM');
         tokenType = 'POLYGON';
+      } else {
+        await setWithdrawLimit(walletInfo.tickerName);
       }
-      await setWithdrawLimit(walletInfo.tickerName);
     } else {
       isShowTrxTsWalletBalance = false;
       isShowFabChainBalance = false;

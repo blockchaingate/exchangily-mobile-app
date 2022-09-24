@@ -23,6 +23,7 @@ class LockerBalanceWidget extends ViewModelBuilderWidget<LockerViewModel> {
   Widget builder(BuildContext context, LockerViewModel model, Widget child) {
     return Container(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             color: walletCardColor,

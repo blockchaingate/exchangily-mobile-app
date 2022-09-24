@@ -152,6 +152,9 @@ class SendViewModel extends BaseViewModel {
     if (fabAddress.isEmpty) {
       fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
     }
+    if (tokenType == 'POLYGON') {
+      tokenType = 'MATICM';
+    }
 
     await apiService
         .getSingleWalletBalance(fabAddress, tokenType, walletInfo.address)
@@ -175,7 +178,9 @@ class SendViewModel extends BaseViewModel {
             environment["chains"]["ETH"]["gasLimitToken"].toString();
       }
       feeUnit = 'ETH';
-    } else if (coinName == 'MATICM') {
+    } else if (coinName == 'MATICM' ||
+        tokenType == 'MATICM' ||
+        tokenType == 'POLYGON') {
       var gasPriceReal = await erc20Util.getGasPrice(maticmBaseUrl);
       debugPrint('gasPriceReal====== ${gasPriceReal.toString()}');
 
@@ -402,6 +407,7 @@ class SendViewModel extends BaseViewModel {
         }
       }
       log.i('OPTIONS before send $options');
+      var walletUtil = WalletUtil();
 
       // TRON Transaction
       if (walletInfo.tickerName == 'TRX' || walletInfo.tokenType == 'TRX') {
@@ -427,9 +433,9 @@ class SendViewModel extends BaseViewModel {
             isShowDetailsMessage = false;
 
             String t = '';
-            walletInfo.tickerName == 'USDTX'
-                ? t = 'USDT(TRC20)'
-                : t = walletInfo.tickerName;
+            t = walletUtil.updateSpecialTokensTickerName(
+                walletInfo.tickerName)['tickerName'];
+
             sharedService.alertDialog(
               AppLocalizations.of(context).sendTransactionComplete,
               '$t ${AppLocalizations.of(context).isOnItsWay}',
@@ -484,9 +490,11 @@ class SendViewModel extends BaseViewModel {
             amountController.text = '';
             isShowErrorDetailsButton = false;
             isShowDetailsMessage = false;
+            var t = walletUtil.updateSpecialTokensTickerName(
+                walletInfo.tickerName)['tickerName'];
             sharedService.alertDialog(
               AppLocalizations.of(context).sendTransactionComplete,
-              '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
+              '$t ${AppLocalizations.of(context).isOnItsWay}',
             );
             //   var allTxids = res["txids"];
             //  walletService.addTxids(allTxids);
@@ -680,13 +688,11 @@ class SendViewModel extends BaseViewModel {
     // ! Same for Fab token based coins
 
     if (tokenType == 'ETH' ||
-            tokenType == 'FAB' ||
-            tokenType == 'TRX' ||
-            tokenType == 'BNB'
-        // ||
-        // tokenType == 'MATIC' ||
-
-        ) {
+        tokenType == 'FAB' ||
+        tokenType == 'TRX' ||
+        tokenType == 'BNB' ||
+        tokenType == 'MATICM' ||
+        tokenType == 'POLYGON') {
       await walletService
           .hasSufficientWalletBalance(transFee, tokenType)
           .then((isValidNativeChainBal) {

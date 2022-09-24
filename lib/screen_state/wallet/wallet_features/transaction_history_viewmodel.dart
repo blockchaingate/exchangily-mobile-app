@@ -558,7 +558,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     } else if (chain.toUpperCase() == 'BNB') {
       log.i('chainame $chain explorer url - ${bnbExplorerUrl + txId}');
       openExplorer(bnbExplorerUrl + txId);
-    } else if (chain.toUpperCase() == 'MATICM') {
+    } else if (chain.toUpperCase() == 'MATICM' ||
+        chain.toUpperCase() == 'POLYGON') {
       log.i('chainame $chain explorer url - ${maticmExplorerUrl + txId}');
       openExplorer(maticmExplorerUrl + txId);
     } else if (chain.toUpperCase() == 'LTC') {

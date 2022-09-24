@@ -73,22 +73,22 @@ class SettingsView extends StatelessWidget {
               //       )
               : SettingsContainer(model: model),
           bottomNavigationBar: BottomNavBar(count: 4),
-          floatingActionButton: TextButton(
-              child: Text('Click'),
-              onPressed: () async {
-                Decimal d = Decimal.one;
-                print(d);
-                var hex = '7e4';
-                int hexToInt = int.parse(hex, radix: 16);
-                print('hex to int $hexToInt');
-                var hexToDouble = hexToInt / 1e18;
-                print('hex to double $hexToDouble');
-                var hexToDecimal = Decimal.parse(hex);
-                print('hex to decimal $hexToDecimal');
-                //  LaunchReview.launch(androidAppId: "com.exchangily.wallet");
-                // model.vs.showMyDialog("2.1.51", context, "2.1.49",
-                //     isForceUpdate: false);
-              }),
+          // floatingActionButton: TextButton(
+          //     child: Text('Click'),
+          //     onPressed: () async {
+          //       Decimal d = Decimal.one;
+          //       print(d);
+          //       var hex = '7e4';
+          //       int hexToInt = int.parse(hex, radix: 16);
+          //       print('hex to int $hexToInt');
+          //       var hexToDouble = hexToInt / 1e18;
+          //       print('hex to double $hexToDouble');
+          //       var hexToDecimal = Decimal.parse(hex);
+          //       print('hex to decimal $hexToDecimal');
+          //       //  LaunchReview.launch(androidAppId: "com.exchangily.wallet");
+          //       // model.vs.showMyDialog("2.1.51", context, "2.1.49",
+          //       //     isForceUpdate: false);
+          //     }),
         ),
       ),
     );

@@ -323,19 +323,21 @@ class WalletService {
   }
 
   Future<bool> hasSufficientWalletBalance(
-      double amount, String tickerName) async {
+      double amount, String chainType) async {
     bool isValidAmount = true;
     String thirdPartyTicker = '';
     String fabAddress =
         await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
-    if (tickerName == 'BNB' || tickerName == "MATIC") {
+    if (chainType == 'BNB' || chainType == "MATICM") {
       thirdPartyTicker = 'ETH';
+    } else {
+      thirdPartyTicker = chainType;
     }
     String thirdPartyAddress = await coreWalletDatabaseService
         .getWalletAddressByTickerName(thirdPartyTicker);
     log.w('coinAddress $thirdPartyAddress');
     await apiService
-        .getSingleWalletBalance(fabAddress, tickerName, thirdPartyAddress)
+        .getSingleWalletBalance(fabAddress, chainType, thirdPartyAddress)
         .then((walletBalance) {
       if (walletBalance != null) {
         log.w(walletBalance[0].balance);
