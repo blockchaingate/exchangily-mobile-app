@@ -25,7 +25,6 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
-import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/version_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
@@ -70,8 +69,27 @@ class WalletSetupViewmodel extends BaseViewModel {
   // init
   init() async {
     sharedService.context = context;
+    if (!storageService.hasPrivacyConsent) {
+      showModalBottomSheet(
+          isDismissible: false,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+                child: Column(
+              children: [
+                Text('Privacy'),
+                ElevatedButton(
+                    onPressed: (() => storageService.hasPrivacyConsent = true),
+                    child: Text('Accept'))
+              ],
+            ));
+          });
+      return;
+    }
     checkLanguageFromStorage();
-
     await checkExistingWallet();
   }
 

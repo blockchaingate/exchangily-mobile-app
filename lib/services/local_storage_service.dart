@@ -31,6 +31,7 @@ class LocalStorageService {
   static const String customTokensKey = 'customTokensKey';
   static const String singleCustomTokenDataKey = 'customTokenDataKey';
   static const String cameraOpenKey = 'CameraOpenKey';
+  static const String privacyConsentKey = 'privacyConsentKey';
 
 /*----------------------------------------------------------------------
                   Instance
@@ -92,6 +93,9 @@ class LocalStorageService {
     }
     return objLength;
   }
+
+  bool get hasPrivacyConsent => _getFromDisk(privacyConsentKey) ?? false;
+  set hasPrivacyConsent(bool value) => _saveToDisk(privacyConsentKey, value);
 
   // is camera open
 
