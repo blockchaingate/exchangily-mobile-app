@@ -61,7 +61,7 @@ const Map<int, String> newCoinTypeMap = {
   458752: "TRX",
   458753: "USDTX",
   196628: "FABE",
-  1996629: "EXGE",
+  196629: "EXGE",
   196630: "DSCE",
   196631: "BSTE",
   589824: "MATICM",

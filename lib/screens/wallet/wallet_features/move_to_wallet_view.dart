@@ -326,9 +326,10 @@ class MoveToWalletScreen extends StatelessWidget {
                                             ],
                                           )
                                         : Container(),
-                                    UIHelper.verticalSpaceSmall,
+                                    UIHelper.verticalSpaceMedium,
+
                                     // MATIC radio button
-                                    model.isShowBnbTsWalletBalance ||
+                                    model.isShowPolygonTsWalletBalance ||
                                             model.walletUtil.isSpecialUsdt(
                                                 walletInfo.tickerName)
                                         ? Row(

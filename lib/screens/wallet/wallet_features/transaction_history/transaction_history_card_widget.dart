@@ -254,6 +254,14 @@ class TxHisotryCardWidget extends StatelessWidget {
                                   style: TextStyle(
                                       fontSize: customFontSize, color: yellow))
                             else if (transaction.tag.toUpperCase() ==
+                                    model.deposit.toUpperCase() &&
+                                transaction.tickerChainTxStatus == model.failed)
+                              Text(
+                                AppLocalizations.of(context).failed,
+                                style:
+                                    const TextStyle(fontSize: 12, color: red),
+                              )
+                            else if (transaction.tag.toUpperCase() ==
                                         model.deposit.toUpperCase() &&
                                     transaction.kanbanTxStatus ==
                                         model.rejected ||

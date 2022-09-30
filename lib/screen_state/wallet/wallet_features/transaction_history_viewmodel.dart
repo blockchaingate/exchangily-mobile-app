@@ -41,6 +41,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   final String withdraw = 'withdraw';
   final String deposit = 'deposit';
   final String rejected = 'rejected or failed';
+  final String failed = 'failed';
 
   TransactionHistoryViewmodel({this.walletInfo});
   final log = getLogger('TransactionHistoryViewmodel');

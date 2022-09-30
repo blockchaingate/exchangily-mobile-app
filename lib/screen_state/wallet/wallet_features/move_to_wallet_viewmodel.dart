@@ -836,14 +836,16 @@ class MoveToWalletViewmodel extends BaseViewModel {
     int ct = 0;
     await coinService.getCoinTypeByTickerName(ticker).then((value) {
       ct = value;
-      log.i('setWithdrawLimit coin type $ct');
+      log.i('setWithdrawLimit coin type $ct for $ticker');
     });
     await tokenListDatabaseService.getByCointype(ct).then((res) async {
       if (res != null) {
         token = res;
         assignToken(token);
       } else {
-        await coinService.getSingleTokenData(ticker).then((resFromApi) {
+        await coinService
+            .getSingleTokenData(ticker, coinType: ct)
+            .then((resFromApi) {
           if (resFromApi != null) {
             debugPrint('token from api res ${resFromApi.toJson()}');
             token = resFromApi;
@@ -883,7 +885,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
     return gasAmount;
   }
 
-  // Check single coin exchange balance
+  // Check single coin exchange balance as exchange balance is same for special tokens
   Future getSingleCoinExchangeBal() async {
     setBusy(true);
     String tickerName = '';
@@ -894,9 +896,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
         walletInfo.tickerName == 'BST') {
       tickerName = 'BST';
       isWithdrawChoice = true;
-    } else if (walletInfo.tickerName == 'FABE' ||
-        walletInfo.tickerName == 'FABB' ||
-        walletInfo.tickerName == 'FAB') {
+    } else if (walletUtil.isSpecialFab(walletInfo.tickerName)) {
       tickerName = 'FAB';
       isWithdrawChoice = true;
     } else if (walletInfo.tickerName == 'EXGE' ||
@@ -1049,7 +1049,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
     String officialAddress = '';
     officialAddress = coinService.getCoinOfficalAddress('ETH');
     // call to get token balance
-    if (walletInfo.tickerName == 'FAB') {
+    if (walletUtil.isSpecialFab(walletInfo.tickerName)) {
       updateTickerForErc = 'FABE';
     } else if (walletInfo.tickerName == 'DSC') {
       updateTickerForErc = 'DSCE';
@@ -1084,6 +1084,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
     String updatedTicker = '';
     if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
       updatedTicker = 'USDTB';
+    }
+    if (walletUtil.isSpecialFab(walletInfo.tickerName)) {
+      updatedTicker = 'FABB';
     } else {
       updatedTicker = walletInfo.tickerName;
     }
@@ -1134,7 +1137,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       // if (walletInfo.tickerName == 'FAB') walletInfo.tokenType = '';
       // updateTickerForErc = walletInfo.tickerName;
       log.i('chain type ${walletInfo.tokenType}');
-      if (walletInfo.tickerName == 'FABE' && isShowFabChainBalance) {
+      if (walletUtil.isSpecialFab(walletInfo.tickerName)) {
         await setWithdrawLimit('FAB');
       } else if (walletInfo.tickerName == 'DSCE' && isShowFabChainBalance) {
         await setWithdrawLimit('DSC');
@@ -1159,10 +1162,12 @@ class MoveToWalletViewmodel extends BaseViewModel {
       isShowBnbTsWalletBalance = true;
       if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
         await setWithdrawLimit('USDTB');
-        tokenType = 'BNB';
+      } else if (walletUtil.isSpecialFab(walletInfo.tickerName)) {
+        await setWithdrawLimit('FABB');
       } else {
         await setWithdrawLimit(walletInfo.tickerName);
       }
+      tokenType = 'BNB';
     } else if (value == 'POLYGON') {
       isShowPolygonTsWalletBalance = true;
       if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
@@ -1171,6 +1176,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       } else {
         await setWithdrawLimit(walletInfo.tickerName);
       }
+      tokenType = 'POLYGON';
     } else {
       isShowTrxTsWalletBalance = false;
       isShowFabChainBalance = false;
@@ -1179,7 +1185,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
       tokenType = 'ETH';
       log.i('chain type ${walletInfo.tokenType}');
-      if (walletInfo.tickerName == 'FAB' && !isShowFabChainBalance) {
+      if (walletUtil.isSpecialFab(walletInfo.tickerName)) {
         await setWithdrawLimit('FABE');
       } else if (walletInfo.tickerName == 'DSC' && !isShowFabChainBalance) {
         await setWithdrawLimit('DSCE');
@@ -1342,10 +1348,14 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
         /// Ticker is FAB but fab chain balance is false then
         /// take coin address as ETH wallet address because coin is an erc20
-        if (coinName == 'FAB' && !isShowFabChainBalance) {
+        if (walletUtil.isSpecialFab(walletInfo.tickerName) &&
+            !isShowFabChainBalance) {
           coinAddress = await walletService
               .getAddressFromCoreWalletDatabaseByTickerName('ETH');
           log.i('coin address is ETH address');
+        } else if (coinName == 'EXG' && !isShowFabChainBalance) {
+          coinAddress = exgAddress;
+          log.i('coin address is EXG address');
         } else if (coinName == 'USDT' && isShowTrxTsWalletBalance) {
           coinAddress = await walletService
               .getAddressFromCoreWalletDatabaseByTickerName('TRX');

@@ -1236,9 +1236,7 @@ class WalletService {
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialToken: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
-    } else if (coinName == 'FABE' ||
-        coinName == 'FABB' ||
-        (coinName == 'FAB' && tokenType == 'ETH')) {
+    } else if (walletUtil.isSpecialFab(coinName)) {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('FAB');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
@@ -2523,7 +2521,9 @@ class WalletService {
       } else {
         txHash = ethUtils.getTransactionHash(signed);
       }
-    } else if (coin == 'FAB') {
+    }
+    // FAB transaction
+    else if (coin == 'FAB') {
       if (bytesPerInput == 0) {
         bytesPerInput = environment["chains"]["FAB"]["bytesPerInput"];
       }
