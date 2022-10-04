@@ -355,6 +355,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     List<Price> btcPairsList = [];
     List<Price> ethPairsList = [];
     List<Price> exgPairsList = [];
+    List<Price> usdcPairsList = [];
     List<Price> btcFabExgUsdtPriceList = [];
     for (var pair in pairPriceList) {
       if (pair.symbol.endsWith("USDT")) {
@@ -375,6 +376,9 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
       } else if (pair.symbol.endsWith("EXG")) {
         pair.symbol = seperateBasePair(pair.symbol);
         exgPairsList.add(pair);
+      } else if (pair.symbol.endsWith("USDC")) {
+        pair.symbol = seperateBasePair(pair.symbol);
+        usdcPairsList.add(pair);
       }
     }
     marketPairsGroupList.add(dusdPairsList);
@@ -382,6 +386,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     marketPairsGroupList.add(btcPairsList);
     marketPairsGroupList.add(ethPairsList);
     marketPairsGroupList.add(exgPairsList);
+    marketPairsGroupList.add(usdcPairsList);
     Map<String, dynamic> res = {
       'marketPairsGroupList': marketPairsGroupList,
       'btcFabExgUsdtPriceList': btcFabExgUsdtPriceList
@@ -404,6 +409,8 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
       updateTickerName = tickerName.replaceAll('ETH', '/ETH');
     } else if (tickerName.endsWith("EXG")) {
       updateTickerName = tickerName.replaceAll('EXG', '/EXG');
+    } else if (tickerName.endsWith("USDC")) {
+      updateTickerName = tickerName.replaceAll('USDC', '/USDC');
     }
     return updateTickerName;
   }

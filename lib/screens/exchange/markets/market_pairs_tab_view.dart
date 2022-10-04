@@ -24,7 +24,7 @@ class MarketPairsTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> tabNames = [
       // 'FAV.',
-      'DUSD', 'USDT', 'BTC', 'ETH', 'EXG'
+      'DUSD', 'USDT', 'BTC', 'ETH', 'EXG', 'USDC'
     ];
 
     return BaseScreen<MarketPairsTabViewState>(
@@ -100,7 +100,7 @@ class MarketPairsTabView extends StatelessWidget {
                           TabBar(
                               unselectedLabelColor: const Color(0xffaaaaaa),
                               unselectedLabelStyle:
-                                  const TextStyle(fontSize: 14),
+                                  const TextStyle(fontSize: 10),
                               indicatorSize: TabBarIndicatorSize.tab,
                               indicator: const BoxDecoration(
                                   gradient: LinearGradient(
@@ -113,7 +113,7 @@ class MarketPairsTabView extends StatelessWidget {
                                   shape: BoxShape.rectangle,
                                   borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(5),
-                                      topRight: Radius.circular(5)),
+                                      topRight: Radius.circular(3)),
                                   color: Colors.redAccent),
                               tabs: [
                                 for (var tab in tabNames)
@@ -122,7 +122,7 @@ class MarketPairsTabView extends StatelessWidget {
                                     alignment: Alignment.center,
                                     child: Text(tab,
                                         style: const TextStyle(
-                                          fontSize: 13,
+                                          fontSize: 11,
                                           fontWeight: FontWeight.w500,
                                         )),
                                   ))

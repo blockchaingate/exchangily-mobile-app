@@ -1780,7 +1780,8 @@ class WalletService {
         return {
           'txHex': '',
           'errMsg': 'not enough fab coin to make the transaction.',
-          'transFee': transFeeDouble,
+          'transFee': NumberUtil()
+              .truncateDoubleWithoutRouding(transFeeDouble, precision: 8),
           'amountInTx': amountInTx
         };
       }
@@ -1806,7 +1807,8 @@ class WalletService {
         return {
           'txHex': '',
           'errMsg': 'output1 or output2 should be greater than 0.',
-          'transFee': transFeeDouble,
+          'transFee': NumberUtil()
+              .truncateDoubleWithoutRouding(transFeeDouble, precision: 8),
           'amountInTx': amountInTx
         };
       }
@@ -1828,7 +1830,8 @@ class WalletService {
       return {
         'txHex': txHex,
         'errMsg': '',
-        'transFee': transFeeDouble,
+        'transFee': NumberUtil()
+            .truncateDoubleWithoutRouding(transFeeDouble, precision: 8),
         'amountInTx': amountInTx,
         'txids': allTxids
       };
@@ -2142,7 +2145,8 @@ class WalletService {
           'txHash': '',
           'errMsg': '',
           'amountSent': '',
-          'transFee': transFeeDouble,
+          'transFee': NumberUtil()
+              .truncateDoubleWithoutRouding(transFeeDouble, precision: 8),
           'amountInTx': amountInTx
         };
       }
@@ -2246,7 +2250,8 @@ class WalletService {
           'txHash': '',
           'errMsg': '',
           'amountSent': '',
-          'transFee': transFeeDouble
+          'transFee': NumberUtil()
+              .truncateDoubleWithoutRouding(transFeeDouble, precision: 8),
         };
       }
 
@@ -2352,7 +2357,8 @@ class WalletService {
           'txHash': '',
           'errMsg': '',
           'amountSent': '',
-          'transFee': transFeeDouble,
+          'transFee': NumberUtil()
+              .truncateDoubleWithoutRouding(transFeeDouble, precision: 8),
           'amountInTx': amountInTx
         };
       }
@@ -2400,7 +2406,8 @@ class WalletService {
           'txHash': '',
           'errMsg': '',
           'amountSent': '',
-          'transFee': transFeeDouble
+          'transFee': NumberUtil()
+              .truncateDoubleWithoutRouding(transFeeDouble, precision: 8),
         };
       }
 
@@ -2477,7 +2484,8 @@ class WalletService {
           'txHash': '',
           'errMsg': '',
           'amountSent': '',
-          'transFee': transFeeDouble
+          'transFee': NumberUtil()
+              .truncateDoubleWithoutRouding(transFeeDouble, precision: 8),
         };
       }
 
@@ -2660,7 +2668,8 @@ class WalletService {
           'txHash': '',
           'errMsg': '',
           'amountSent': '',
-          'transFee': transFeeDouble
+          'transFee': NumberUtil()
+              .truncateDoubleWithoutRouding(transFeeDouble, precision: 8),
         };
       }
 
@@ -2755,7 +2764,8 @@ class WalletService {
           'txHash': '',
           'errMsg': '',
           'amountSent': '',
-          'transFee': transFeeDouble
+          'transFee': NumberUtil()
+              .truncateDoubleWithoutRouding(transFeeDouble, precision: 8),
         };
       }
 
@@ -2822,7 +2832,8 @@ class WalletService {
       'txHash': txHash,
       'errMsg': errMsg,
       'amountSent': amount,
-      'transFee': transFeeDouble,
+      'transFee': NumberUtil()
+          .truncateDoubleWithoutRouding(transFeeDouble, precision: 8),
       'amountInTx': amountInTx,
       'txids': allTxids
     };
