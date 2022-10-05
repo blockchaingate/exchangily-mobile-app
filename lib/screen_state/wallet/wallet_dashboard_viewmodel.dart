@@ -806,12 +806,13 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   checkAnnouncement() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
-    var lang = await userSettingsDatabaseService.getLanguage();
-    // lang = storageService.language;
+    // final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
+    // var lang = await userSettingsDatabaseService.getLanguage();
+    lang = storageService.language;
     if (lang == '' || lang == null) {
       lang = Platform.localeName.substring(0, 2) ?? 'en';
     }
+
     setlangGlobal(lang);
     // log.w('langGlobal: ' + getlangGlobal());
 

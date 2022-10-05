@@ -120,6 +120,7 @@ class CoinService {
 
 // first look coin in the local storage
 // TODO uncomment code below once save decimaldata in local storage works in wallet service
+
     // List<Map<String, int>> decimalDataFromStorage =
     //     jsonEncode(storageService.walletDecimalList) as List;
     // decimalDataFromStorage.forEach((decimalDataList) {

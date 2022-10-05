@@ -24,6 +24,7 @@ import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
@@ -375,12 +376,12 @@ class SendViewModel extends BaseViewModel {
         }
 
         if (contractAddr == null) {
-          await tokenListDatabaseService
-              .getByTickerName(tickerName)
-              .then((token) {
+          var coinService = locator<CoinService>();
+          await coinService.getSingleTokenData(tickerName).then((token) {
+            log.i(
+                'send :single token json of $tickerName -- ${token.toJson()}');
             contractAddr = token.contract;
             decimalLimit = token.decimal;
-            log.i('send token address ${token.toJson()}');
           });
         }
 

@@ -14,6 +14,7 @@
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/constants/ui_var.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -1204,6 +1205,37 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                               }),
                         ],
                       ),
+                      wallets[index].coin == 'FAB' &&
+                              wallets[index].unconfirmedBalance != 0
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 5.0, vertical: 5.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                          //  '${model.specialTicker} '.toUpperCase() +
+                                          AppLocalizations.of(context)
+                                              .unConfirmedBalance,
+                                          style:
+                                              subText2.copyWith(color: yellow)),
+                                      Text(
+                                          '${NumberUtil().truncateDoubleWithoutRouding(wallets[index].unconfirmedBalance, precision: 8)}  FAB',
+                                          textAlign: TextAlign.start,
+                                          style:
+                                              subText2.copyWith(color: yellow)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Container(),
                     ],
                   ),
                 ),

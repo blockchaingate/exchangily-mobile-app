@@ -47,8 +47,11 @@ class SendWalletView extends StatelessWidget {
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 backgroundColor: walletCardColor,
-                title: Text(AppLocalizations.of(context).send,
-                    style: Theme.of(context).textTheme.headline3),
+                title: Text(
+                    AppLocalizations.of(context).send +
+                        ' ' +
+                        model.specialTickerName,
+                    style: Theme.of(context).textTheme.headline4),
                 centerTitle: true,
               ),
               body: GestureDetector(
