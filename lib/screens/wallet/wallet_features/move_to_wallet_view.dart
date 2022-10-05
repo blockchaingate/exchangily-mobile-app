@@ -300,7 +300,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                             model.walletUtil.isSpecialUsdt(
                                                 walletInfo.tickerName) ||
                                             model.walletUtil.isSpecialFab(
-                                                walletInfo.tickerName)
+                                                walletInfo.tickerName) ||
+                                            walletInfo.tickerName == 'FAB'
                                         ? Row(
                                             children: <Widget>[
                                               SizedBox(

@@ -136,7 +136,7 @@ class WalletUtil {
     'Binance Coin'
   ];
   List<String> allUsdtTokens = ["USDT", "USDTX", "USDCX", "USDTB", "USDTM"];
-  List<String> allFabTokens = ["FAB", "FABE", "FABB"];
+  List<String> allFabTokens = ["FABE", "FABB"];
 
   bool isSpecialUsdt(String tickerName) {
     var res = allUsdtTokens.contains(tickerName);
