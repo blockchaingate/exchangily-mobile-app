@@ -14,15 +14,33 @@ class EventsViewModel extends BaseViewModel {
   String _url = exchangilyAnnouncementUrl;
   String get url => _url;
 
-  updateUrl(String url) async {
+  bool _isAnnouncement = true;
+  bool get isAnnouncement => _isAnnouncement;
+  var lang = '';
+  init() {
+    updateLangCode(storageService.language);
+    _url = _url + lang;
+  }
+
+  updateUrl(String passedUrl, {bool isAnnouncement = false}) async {
     setBusy(true);
-    var lang = storageService.language;
+    lang = storageService.language;
+    _isAnnouncement = isAnnouncement;
+    if (isAnnouncement) {
+      lang = updateLangCode(lang);
+    }
     if (lang == 'en') {
       lang = '';
     }
+    _url = passedUrl;
     await Future.delayed(
-        const Duration(milliseconds: 50), () => _url = url + lang);
+        const Duration(milliseconds: 50), () => _url = passedUrl + lang);
     log.i(_url);
     setBusy(false);
+  }
+
+  String updateLangCode(String langcode) {
+    lang = langcode == "en" ? "en" : "sc";
+    return lang;
   }
 }

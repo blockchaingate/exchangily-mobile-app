@@ -17,7 +17,9 @@ class EventsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => EventsViewModel(),
-        onModelReady: (EventsViewModel model) async {},
+        onModelReady: (EventsViewModel model) async {
+          model.init();
+        },
         builder: (context, EventsViewModel model, child) {
           return Scaffold(
               floatingActionButtonLocation:
@@ -36,6 +38,9 @@ class EventsView extends StatelessWidget {
                       children: [
                         OutlinedButton(
                           style: OutlinedButton.styleFrom(
+                              backgroundColor: model.isAnnouncement
+                                  ? primaryColor
+                                  : secondaryColor,
                               textStyle: const TextStyle(
                                   color: white, fontWeight: FontWeight.w400),
                               side: const BorderSide(
@@ -57,13 +62,17 @@ class EventsView extends StatelessWidget {
                               )
                             ],
                           ),
-                          onPressed: () =>
-                              model.updateUrl(exchangilyAnnouncementUrl),
+                          onPressed: () => model.updateUrl(
+                              exchangilyAnnouncementUrl,
+                              isAnnouncement: true),
                         ),
                         UIHelper.horizontalSpaceSmall,
                         ElevatedButton(
-                            style:
-                                ElevatedButton.styleFrom(primary: primaryColor),
+                            style: ElevatedButton.styleFrom(
+                              primary: !model.isAnnouncement
+                                  ? primaryColor
+                                  : secondaryColor,
+                            ),
                             child: Row(
                               children: [
                                 Text(AppLocalizations.of(context).blog),
