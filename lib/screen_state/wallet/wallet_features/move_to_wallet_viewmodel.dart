@@ -20,7 +20,6 @@ import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
-import 'package:exchangilymobileapp/utils/eth_util.dart';
 import 'dart:convert';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:stacked/stacked.dart';
@@ -1138,10 +1137,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
       isShowTrxTsWalletBalance = false;
       isShowPolygonTsWalletBalance = false;
       isShowBnbTsWalletBalance = false;
-      if (walletInfo.tickerName != 'FAB') tokenType = 'FAB';
-      if (walletInfo.tickerName == 'FAB') tokenType = '';
+      if (walletInfo.tickerName != 'FAB' &&
+          !walletUtil.isSpecialFab(walletInfo.tickerName)) tokenType = 'FAB';
+      if (walletInfo.tickerName == 'FAB' ||
+          walletUtil.isSpecialFab(walletInfo.tickerName)) tokenType = '';
       // updateTickerForErc = walletInfo.tickerName;
-      log.i('chain type ${walletInfo.tokenType}');
+      log.i('walletInfo token type ${walletInfo.tokenType}');
+      log.w('updated token type ${tokenType}');
       if (walletUtil.isSpecialFab(walletInfo.tickerName)) {
         await setWithdrawLimit('FAB');
       } else if (walletInfo.tickerName == 'DSCE' && isShowFabChainBalance) {
@@ -1351,7 +1353,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
         var coinName = walletInfo.tickerName;
         var coinAddress = '';
-        if (isShowFabChainBalance && coinName != 'FAB') {
+        if (isShowFabChainBalance &&
+            coinName != 'FAB' &&
+            !walletUtil.isSpecialFab(coinName)) {
           coinAddress = exgAddress;
           tokenType = 'FAB';
           log.i('coin address is exg address');
@@ -1359,11 +1363,20 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
         /// Ticker is FAB but fab chain balance is false then
         /// take coin address as ETH wallet address because coin is an erc20
-        if ((coinName == 'FAB' && !isShowFabChainBalance) ||
-            walletUtil.isSpecialFab(coinName)) {
+        else if ((coinName == 'FAB' && !isShowFabChainBalance)) {
           coinAddress = await walletService
               .getAddressFromCoreWalletDatabaseByTickerName('ETH');
           log.i('coin address is ETH address');
+        }
+        // i.e when user is in FABB and selects FAB withdraw
+        // then token type set to empty and uses fab address
+        else if ((coinName != 'FAB' && isShowFabChainBalance) &&
+            walletUtil.isSpecialFab(coinName)) {
+          coinAddress = await walletService
+              .getAddressFromCoreWalletDatabaseByTickerName('FAB');
+          tokenType = '';
+          coinName = 'FAB';
+          log.i('coin address is FAB address');
         } else if (coinName == 'EXG' && !isShowFabChainBalance) {
           coinAddress = exgAddress;
           log.i('coin address is EXG address');

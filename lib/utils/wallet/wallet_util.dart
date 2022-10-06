@@ -46,7 +46,8 @@ class WalletUtil {
     'MTL': 'Metal',
     'KNC': 'Kyber Network',
     'GVT': 'Genesis Vision',
-    'USDTX': 'TRON USDT'
+    'USDTX': 'TRON USDT',
+    'FABB': 'FAB Binance'
   };
 
   List<String> coinTickers = [

@@ -1238,7 +1238,8 @@ class WalletService {
       log.e('cointype $coinType -- abihex $abiHex');
     } else if ((coinName == 'FAB' && tokenType == 'BNB') ||
         (coinName == 'FAB' && tokenType == 'ETH') ||
-        walletUtil.isSpecialFab(coinName)) {
+        (walletUtil.isSpecialFab(coinName) &&
+            (tokenType == 'BNB' || tokenType == 'ETH'))) {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('FAB');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
