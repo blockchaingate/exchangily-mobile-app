@@ -137,16 +137,20 @@ class WalletUtil {
     'Binance Coin'
   ];
   List<String> allUsdtTokens = ["USDT", "USDTX", "USDCX", "USDTB", "USDTM"];
-  List<String> allFabTokens = ["FABE", "FABB"];
+  List<String> usdtSpecialTokens = ["USDTX", "USDTB", "USDTM"];
+  List<String> fabSpecialTokens = ["FABE", "FABB"];
+  List<String> exgSpecialTokens = ["EXGE"];
+  List<String> bstSpecialTokens = ["BSTE"];
+  List<String> dscSpecialTokens = ["DSCE"];
 
   bool isSpecialUsdt(String tickerName) {
-    var res = allUsdtTokens.contains(tickerName);
+    var res = usdtSpecialTokens.contains(tickerName);
     log.w('isSpecialUsdt - ticker $tickerName = res $res');
     return res;
   }
 
   bool isSpecialFab(String tickerName) {
-    return allFabTokens.contains(tickerName);
+    return fabSpecialTokens.contains(tickerName);
   }
 
   // get wallet info object with address using single wallet balance

@@ -66,7 +66,7 @@ class MoveToWalletScreen extends StatelessWidget {
                 },
               ),
               middle: Text(
-                  '${AppLocalizations.of(context).move}  ${model.specialTickerForTxHistory}  ${AppLocalizations.of(context).toWallet}',
+                  '${AppLocalizations.of(context).move}  ${model.specialTicker}  ${AppLocalizations.of(context).toWallet}',
                   style: Theme.of(context).textTheme.headline5),
               backgroundColor: const Color(0XFF1f2233),
             ),
@@ -163,9 +163,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                 ? Text('USDT'.toUpperCase(),
                                     style:
                                         Theme.of(context).textTheme.subtitle2)
-                                : Text(
-                                    model.specialTickerForTxHistory
-                                        .toUpperCase(),
+                                : Text(model.specialTicker.toUpperCase(),
                                     style:
                                         Theme.of(context).textTheme.subtitle2),
                           ),
@@ -213,42 +211,77 @@ class MoveToWalletScreen extends StatelessWidget {
                       //
                       // // withdraw choice radio
                       model.isWithdrawChoice
-                          ? Row(
-                              children: [
-                                model.isShowTrxTsWalletBalance ||
-                                        model.walletUtil.isSpecialUsdt(
-                                            walletInfo.tickerName)
-                                    ? Row(
-                                        children: <Widget>[
-                                          SizedBox(
-                                            height: 10,
-                                            width: 10,
-                                            child: Radio(
-                                                activeColor:
-                                                    globals.primaryColor,
-                                                onChanged: (value) {
-                                                  model.radioButtonSelection(
-                                                      value);
-                                                },
-                                                groupValue: model.groupValue,
-                                                value: 'TRX'),
-                                          ),
-                                          UIHelper.horizontalSpaceSmall,
-                                          Text('TRX Chain',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6),
-                                        ],
-                                      )
-                                    : Row(
+                          ? Container(
+                              margin: EdgeInsets.all(4.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      model.isShowTrxTsWalletBalance ||
+                                              model.walletUtil.isSpecialUsdt(
+                                                  walletInfo.tickerName) ||
+                                              walletInfo.tickerName == 'USDT'
+                                          ? Row(
+                                              children: <Widget>[
+                                                SizedBox(
+                                                  height: 10,
+                                                  width: 20,
+                                                  child: Radio(
+                                                      activeColor:
+                                                          globals.primaryColor,
+                                                      onChanged: (value) {
+                                                        model
+                                                            .radioButtonSelection(
+                                                                value);
+                                                      },
+                                                      groupValue:
+                                                          model.groupValue,
+                                                      value: 'TRX'),
+                                                ),
+                                                UIHelper.horizontalSpaceSmall,
+                                                Text('TRX Chain',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline6),
+                                              ],
+                                            )
+                                          : Row(
+                                              children: <Widget>[
+                                                SizedBox(
+                                                  height: 10,
+                                                  width: 20,
+                                                  child: Radio(
+                                                      //  model.groupValue == 'FAB'? fillColor: MaterialStateColor
+                                                      //       .resolveWith(
+                                                      //           (states) => Colors.blue),
+                                                      activeColor:
+                                                          globals.primaryColor,
+                                                      onChanged: (value) {
+                                                        model
+                                                            .radioButtonSelection(
+                                                                value);
+                                                      },
+                                                      groupValue:
+                                                          model.groupValue,
+                                                      value: 'FAB'),
+                                                ),
+                                                UIHelper.horizontalSpaceSmall,
+                                                Text('FAB Chain',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline6),
+                                              ],
+                                            ),
+
+                                      UIHelper.horizontalSpaceMedium,
+                                      // ETH radio button
+
+                                      Row(
                                         children: <Widget>[
                                           SizedBox(
                                             height: 10,
                                             width: 20,
                                             child: Radio(
-                                                //  model.groupValue == 'FAB'? fillColor: MaterialStateColor
-                                                //       .resolveWith(
-                                                //           (states) => Colors.blue),
                                                 activeColor:
                                                     globals.primaryColor,
                                                 onChanged: (value) {
@@ -256,111 +289,92 @@ class MoveToWalletScreen extends StatelessWidget {
                                                       value);
                                                 },
                                                 groupValue: model.groupValue,
-                                                value: 'FAB'),
+                                                value: 'ETH'),
                                           ),
                                           UIHelper.horizontalSpaceSmall,
-                                          Text('FAB Chain',
+                                          Text('ETH Chain',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline6),
                                         ],
                                       ),
+                                    ],
+                                  ),
+                                  UIHelper.verticalSpaceMedium,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // BNB radio button
+                                      model.isShowBnbTsWalletBalance ||
+                                              model.walletUtil.isSpecialUsdt(
+                                                  walletInfo.tickerName) ||
+                                              model.walletUtil.isSpecialFab(
+                                                  walletInfo.tickerName) ||
+                                              walletInfo.tickerName == 'FAB' ||
+                                              walletInfo.tickerName == 'USDT'
+                                          ? Row(
+                                              children: <Widget>[
+                                                SizedBox(
+                                                  height: 10,
+                                                  width: 20,
+                                                  child: Radio(
+                                                      activeColor:
+                                                          globals.primaryColor,
+                                                      onChanged: (value) {
+                                                        model
+                                                            .radioButtonSelection(
+                                                                value);
+                                                      },
+                                                      groupValue:
+                                                          model.groupValue,
+                                                      value: 'BNB'),
+                                                ),
+                                                UIHelper.horizontalSpaceSmall,
+                                                Text('BNB Chain',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline6),
+                                              ],
+                                            )
+                                          : Container(),
+                                      UIHelper.horizontalSpaceMedium,
 
-                                UIHelper.horizontalSpaceMedium,
-                                // ETH radio button
-                                Row(
-                                  // mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 10,
-                                      width: 20,
-                                      child: Radio(
-                                          activeColor: globals.primaryColor,
-                                          onChanged: (value) {
-                                            model.radioButtonSelection(value);
-                                          },
-                                          groupValue: model.groupValue,
-                                          value: 'ETH'),
-                                    ),
-                                    UIHelper.horizontalSpaceSmall,
-                                    Text('ETH Chain',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6),
-                                  ],
-                                ),
-                                UIHelper.horizontalSpaceMedium,
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    UIHelper.verticalSpaceMedium,
-                                    // BNB radio button
-                                    model.isShowBnbTsWalletBalance ||
-                                            model.walletUtil.isSpecialUsdt(
-                                                walletInfo.tickerName) ||
-                                            model.walletUtil.isSpecialFab(
-                                                walletInfo.tickerName) ||
-                                            walletInfo.tickerName == 'FAB'
-                                        ? Row(
-                                            children: <Widget>[
-                                              SizedBox(
-                                                height: 10,
-                                                width: 10,
-                                                child: Radio(
-                                                    activeColor:
-                                                        globals.primaryColor,
-                                                    onChanged: (value) {
-                                                      model
-                                                          .radioButtonSelection(
-                                                              value);
-                                                    },
-                                                    groupValue:
-                                                        model.groupValue,
-                                                    value: 'BNB'),
-                                              ),
-                                              UIHelper.horizontalSpaceSmall,
-                                              Text('BNB Chain',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6),
-                                            ],
-                                          )
-                                        : Container(),
-                                    UIHelper.verticalSpaceMedium,
-
-                                    // MATIC radio button
-                                    model.isShowPolygonTsWalletBalance ||
-                                            model.walletUtil.isSpecialUsdt(
-                                                walletInfo.tickerName)
-                                        ? Row(
-                                            children: <Widget>[
-                                              SizedBox(
-                                                height: 10,
-                                                width: 10,
-                                                child: Radio(
-                                                    activeColor:
-                                                        globals.primaryColor,
-                                                    onChanged: (value) {
-                                                      model
-                                                          .radioButtonSelection(
-                                                              value);
-                                                    },
-                                                    groupValue:
-                                                        model.groupValue,
-                                                    value: 'POLYGON'),
-                                              ),
-                                              UIHelper.horizontalSpaceSmall,
-                                              Text('POLYGON Chain',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6),
-                                            ],
-                                          )
-                                        : Container(),
-                                  ],
-                                )
-                              ],
+                                      // MATIC radio button
+                                      model.isShowPolygonTsWalletBalance ||
+                                              model.walletUtil.isSpecialUsdt(
+                                                  walletInfo.tickerName) ||
+                                              walletInfo.tickerName == 'USDT'
+                                          ? Row(
+                                              children: <Widget>[
+                                                SizedBox(
+                                                  height: 10,
+                                                  width: 20,
+                                                  child: Radio(
+                                                      activeColor:
+                                                          globals.primaryColor,
+                                                      onChanged: (value) {
+                                                        model
+                                                            .radioButtonSelection(
+                                                                value);
+                                                      },
+                                                      groupValue:
+                                                          model.groupValue,
+                                                      value: 'POLYGON'),
+                                                ),
+                                                UIHelper.horizontalSpaceSmall,
+                                                Text('POLYGON Chain',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline6),
+                                              ],
+                                            )
+                                          : Container(),
+                                    ],
+                                  )
+                                ],
+                              ),
                             )
                           : Container(),
 
@@ -383,7 +397,7 @@ class MoveToWalletScreen extends StatelessWidget {
                             child: model.isBusy
                                 ? const Text('..')
                                 : Text(
-                                    '${model.token.feeWithdraw} ${model.specialTickerForTxHistory.contains('(') ? model.specialTickerForTxHistory.split('(')[0] : model.specialTickerForTxHistory}',
+                                    '${model.token.feeWithdraw} ${model.specialTicker.contains('(') ? model.specialTicker.split('(')[0] : model.specialTicker}',
                                     style:
                                         Theme.of(context).textTheme.headline6),
                           )

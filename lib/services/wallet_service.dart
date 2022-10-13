@@ -1258,14 +1258,16 @@ class WalletService {
           chain: coinName == 'MATICM' ? coinName : tokenType);
 
       log.e('cointype $coinType -- abihex $abiHex');
-    } else if (tokenType == 'POLYGON' && walletUtil.isSpecialUsdt(coinName)) {
+    } else if (tokenType == 'POLYGON' &&
+        (walletUtil.isSpecialUsdt(coinName) || coinName == 'USDT')) {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialToken: true, chain: 'POLYGON');
 
       log.e('cointype $coinType -- abihex $abiHex');
-    } else if (tokenType == 'BNB' && walletUtil.isSpecialUsdt(coinName)) {
+    } else if (tokenType == 'BNB' &&
+        (walletUtil.isSpecialUsdt(coinName) || coinName == 'USDT')) {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,

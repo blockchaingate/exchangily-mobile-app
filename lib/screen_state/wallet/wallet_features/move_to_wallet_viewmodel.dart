@@ -70,7 +70,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   bool isShowBnbTsWalletBalance = false;
   bool isShowPolygonTsWalletBalance = false;
 
-  String specialTickerForTxHistory = '';
+  String specialTicker = '';
   String updateTickerForErc = '';
 
   bool isAlert = false;
@@ -152,8 +152,19 @@ class MoveToWalletViewmodel extends BaseViewModel {
     } else {
       setWithdrawLimit(walletInfo.tickerName);
     }
-    specialTickerForTxHistory = walletUtil
-        .updateSpecialTokensTickerName(walletInfo.tickerName)['tickerName'];
+    if (walletUtil.usdtSpecialTokens.contains(walletInfo.tickerName)) {
+      specialTicker = "USDT";
+    } else if (walletUtil.fabSpecialTokens.contains(walletInfo.tickerName)) {
+      specialTicker = "FAB";
+    } else if (walletUtil.dscSpecialTokens.contains(walletInfo.tickerName)) {
+      specialTicker = "DSC";
+    } else if (walletUtil.bstSpecialTokens.contains(walletInfo.tickerName)) {
+      specialTicker = "BST";
+    } else if (walletUtil.exgSpecialTokens.contains(walletInfo.tickerName)) {
+      specialTicker = "EXG";
+    } else {
+      specialTicker = walletInfo.tickerName;
+    }
 
     await checkGasBalance();
 
@@ -903,7 +914,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
         walletInfo.tickerName == 'EXG') {
       tickerName = 'EXG';
       isWithdrawChoice = true;
-    } else if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
+    } else if (walletUtil.isSpecialUsdt(walletInfo.tickerName) ||
+        walletInfo.tickerName == 'USDT') {
       tickerName = 'USDT';
       isWithdrawChoice = true;
       isShowFabChainBalance = false;
@@ -1058,7 +1070,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
       updateTickerForErc = 'BSTE';
     } else if (walletInfo.tickerName == 'EXG') {
       updateTickerForErc = 'EXGE';
-    } else if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
+    } else if (walletUtil.isSpecialUsdt(walletInfo.tickerName) ||
+        walletInfo.tickerName == 'USDT') {
       updateTickerForErc = 'USDT';
     } else {
       updateTickerForErc = walletInfo.tickerName;
@@ -1083,10 +1096,10 @@ class MoveToWalletViewmodel extends BaseViewModel {
     officialAddress = coinService.getCoinOfficalAddress('ETH');
     var fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
     String updatedTicker = '';
-    if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
+    if (walletUtil.isSpecialUsdt(walletInfo.tickerName) ||
+        walletInfo.tickerName == 'USDT') {
       updatedTicker = 'USDTB';
-    }
-    if (walletInfo.tickerName == 'FAB' ||
+    } else if (walletInfo.tickerName == 'FAB' ||
         walletUtil.isSpecialFab(walletInfo.tickerName)) {
       updatedTicker = 'FABB';
     } else {
@@ -1109,7 +1122,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
     officialAddress = coinService.getCoinOfficalAddress('ETH');
     var fabAddress = await sharedService.getFabAddressFromCoreWalletDatabase();
     String updatedTicker = '';
-    if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
+    if (walletUtil.isSpecialUsdt(walletInfo.tickerName) ||
+        walletInfo.tickerName == 'USDT') {
       updatedTicker = 'USDTM';
     } else {
       updatedTicker = walletInfo.tickerName;
@@ -1157,19 +1171,24 @@ class MoveToWalletViewmodel extends BaseViewModel {
       }
     } else if (value == 'TRX') {
       isShowTrxTsWalletBalance = true;
+      isShowPolygonTsWalletBalance = false;
       isShowFabChainBalance = false;
       isSpeicalTronTokenWithdraw = true;
       log.i('chain type ${walletInfo.tokenType}');
       if (walletInfo.tickerName == 'TRX' && isShowTrxTsWalletBalance) {
         await setWithdrawLimit('TRX');
-      } else if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
+      } else if (walletUtil.isSpecialUsdt(walletInfo.tickerName) ||
+          walletInfo.tickerName == 'USDT') {
         await setWithdrawLimit('USDTX');
         tokenType = 'TRX';
       }
     } else if (value == 'BNB') {
       isShowBnbTsWalletBalance = true;
+      isShowTrxTsWalletBalance = false;
       isShowFabChainBalance = false;
-      if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
+      isShowPolygonTsWalletBalance = false;
+      if (walletUtil.isSpecialUsdt(walletInfo.tickerName) ||
+          walletInfo.tickerName == 'USDT') {
         await setWithdrawLimit('USDTB');
       } else if (walletUtil.isSpecialFab(walletInfo.tickerName) ||
           walletInfo.tickerName == 'FAB') {
@@ -1182,9 +1201,10 @@ class MoveToWalletViewmodel extends BaseViewModel {
       isShowPolygonTsWalletBalance = true;
       isShowFabChainBalance = false;
       isShowBnbTsWalletBalance = false;
-      if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
+      isShowTrxTsWalletBalance = false;
+      if (walletUtil.isSpecialUsdt(walletInfo.tickerName) ||
+          walletInfo.tickerName == 'USDT') {
         await setWithdrawLimit('USDTM');
-        tokenType = 'POLYGON';
       } else {
         await setWithdrawLimit(walletInfo.tickerName);
       }
@@ -1206,7 +1226,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
         await setWithdrawLimit('BSTE');
       } else if (walletInfo.tickerName == 'EXG' && !isShowFabChainBalance) {
         await setWithdrawLimit('EXGE');
-      } else if (walletUtil.isSpecialUsdt(walletInfo.tickerName)) {
+      } else if (walletUtil.isSpecialUsdt(walletInfo.tickerName) ||
+          walletInfo.tickerName == 'USDT') {
         await setWithdrawLimit('USDT');
       } else {
         await setWithdrawLimit(walletInfo.tickerName);
@@ -1380,10 +1401,12 @@ class MoveToWalletViewmodel extends BaseViewModel {
         } else if (coinName == 'EXG' && !isShowFabChainBalance) {
           coinAddress = exgAddress;
           log.i('coin address is EXG address');
-        } else if (coinName == 'USDT' && isShowTrxTsWalletBalance) {
+        } else if ((coinName == 'USDT' || walletUtil.isSpecialUsdt(coinName)) &&
+            isShowTrxTsWalletBalance) {
           coinAddress = await walletService
               .getAddressFromCoreWalletDatabaseByTickerName('TRX');
           log.i('coin address is TRX address');
+          coinName = 'USDTX';
         } else {
           coinAddress = walletInfo.address;
           log.i('coin address is its own wallet info address');
@@ -1408,7 +1431,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
         if (walletInfo.tokenType == 'TRX' ||
             walletInfo.tickerName == 'TRX' ||
-            walletInfo.tickerName == 'USDTX') {
+            walletInfo.tickerName == 'USDTX' ||
+            tokenType == 'TRX' ||
+            coinName == 'USDTX') {
           //      int kanbanGasPrice = environment['chains']['KANBAN']['gasPrice'];
           // int kanbanGasLimit = environment['chains']['KANBAN']['gasLimit'];
           await walletService
