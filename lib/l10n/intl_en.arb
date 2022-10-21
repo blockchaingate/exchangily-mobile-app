@@ -2279,5 +2279,29 @@
       "description": "visitWebsite",
       "type": "text",
       "placeholders": {}
+    },
+    "domain": "Domain",
+    "@domain": {
+      "description": "send_domain",
+      "type": "text",
+      "placeholders": {}
+    },
+    "invalidDomain": "Invalid Domain",
+    "@invalidDomain": {
+      "description": "send_invalidDomain",
+      "type": "text",
+      "placeholders": {}
+    },
+    "addressNotSet": "Address not set",
+    "@addressNotSet": {
+      "description": "send_addressNotSet",
+      "type": "text",
+      "placeholders": {}
+    },
+    "others": "Others",
+    "@others": {
+      "description": "exchange_otherpairs",
+      "type": "text",
+      "placeholders": {}
     }
 }

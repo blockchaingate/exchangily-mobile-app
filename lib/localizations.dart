@@ -2044,6 +2044,24 @@ class AppLocalizations {
     return Intl.message('Visit Website',
         name: 'visitWebsite', desc: 'visitWebsite');
   }
+
+  String get domain {
+    return Intl.message('Domain', name: 'domain', desc: 'send_domain');
+  }
+
+  String get invalidDomain {
+    return Intl.message('Invalid Domain',
+        name: 'invalidDomain', desc: 'send_invalidDomain');
+  }
+
+  String get addressNotSet {
+    return Intl.message('Address not set',
+        name: 'addressNotSet', desc: 'send_addressNotSet');
+  }
+
+  String get others {
+    return Intl.message('Others', name: 'others', desc: 'exchange_otherpairs');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

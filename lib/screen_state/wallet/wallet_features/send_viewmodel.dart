@@ -45,6 +45,7 @@ import 'package:flutter/services.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 
@@ -100,7 +101,8 @@ class SendViewModel extends BaseViewModel {
   double chainBalance = 0.0;
   bool isCustomToken = false;
   CustomTokenModel customToken = CustomTokenModel();
-
+  List<String> domainTlds = [];
+  String userTypedDomain = '';
   // Init State
   initState() async {
     setBusy(true);
@@ -145,7 +147,50 @@ class SendViewModel extends BaseViewModel {
     if (tokenType.isNotEmpty && !isCustomToken) {
       await getNativeChainTickerBalance();
     }
+    domainTlds = await apiService.getDomainSupportedTlds();
     setBusy(false);
+  }
+
+  clearAddress() {
+    receiverWalletAddressTextController.text = '';
+    userTypedDomain = '';
+    notifyListeners();
+  }
+
+  checkDomain(String domainName) async {
+    bool isValidDomainFormat = false;
+
+    if (domainTlds == null || domainTlds.isEmpty) {
+      domainTlds = await apiService.getDomainSupportedTlds();
+    }
+    if ((domainTlds != null || domainTlds.isNotEmpty) &&
+        domainName.contains('.')) {
+      isValidDomainFormat = domainTlds.contains(domainName.split('.')[1]);
+    }
+
+    if (isValidDomainFormat) {
+      setBusyForObject(userTypedDomain, true);
+      var domainInfo = await apiService.getDomainRecord(domainName);
+      log.w('get domain data for $domainName -- $domainInfo');
+      String ticker = walletInfo.tokenType.isEmpty
+          ? walletInfo.tickerName
+          : walletInfo.tokenType;
+      String domainAddress = domainInfo['records']['crypto.$ticker.address'];
+      String owner = domainInfo['meta']['owner'];
+
+      if (domainAddress != null) {
+        receiverWalletAddressTextController.text = domainAddress;
+        userTypedDomain = domainName;
+      } else if ((owner != null && owner.isNotEmpty) && domainAddress == null) {
+        userTypedDomain = AppLocalizations.of(context).addressNotSet;
+      } else {
+        userTypedDomain = AppLocalizations.of(context).invalidDomain;
+      }
+      setBusyForObject(userTypedDomain, false);
+      notifyListeners();
+    } else {
+      log.e('invalid domain format');
+    }
   }
 
   // get native chain ticker balance
@@ -487,7 +532,7 @@ class SendViewModel extends BaseViewModel {
 
           if (txHash.isNotEmpty) {
             log.w('Txhash $txHash');
-            receiverWalletAddressTextController.text = '';
+            clearAddress();
             amountController.text = '';
             isShowErrorDetailsButton = false;
             isShowDetailsMessage = false;

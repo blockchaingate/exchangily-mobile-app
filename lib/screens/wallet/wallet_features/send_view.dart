@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
+import 'package:exchangilymobileapp/constants/font_style.dart' as font_styles;
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_viewmodel.dart';
@@ -19,6 +21,7 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
 
@@ -65,11 +68,7 @@ class SendWalletView extends StatelessWidget {
                     child: Column(
                       // I was using ListView here earlier to solve keyboard overflow error
                       children: <Widget>[
-                        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-          
-                                      Receiver's Wallet Address Container
-          
-          --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+                        // Receiver's Wallet Address Container
 
                         Container(
                           margin: const EdgeInsets.only(bottom: 10),
@@ -81,9 +80,11 @@ class SendWalletView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               Padding(
-                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  padding: const EdgeInsets.only(bottom: 3.0),
                                   child: GestureDetector(
                                     child: TextField(
+                                      onChanged: (value) =>
+                                          model.checkDomain(value),
                                       maxLines: 1,
                                       controller: model
                                           .receiverWalletAddressTextController,
@@ -92,25 +93,84 @@ class SendWalletView extends StatelessWidget {
                                               const UnderlineInputBorder(
                                                   borderSide: BorderSide(
                                                       color: grey, width: 0.5)),
-                                          suffixIcon: IconButton(
-                                            icon:
-                                                const Icon(Icons.content_paste),
-                                            onPressed: () async {
-                                              await model.pasteClipBoardData();
-                                            },
-                                            iconSize: 25,
-                                            color: primaryColor,
+                                          suffixIcon: Container(
+                                            margin: EdgeInsets.only(
+                                              top: 2,
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                model.receiverWalletAddressTextController
+                                                        .text.isNotEmpty
+                                                    ? IconButton(
+                                                        icon: const Icon(
+                                                            Icons.cancel),
+                                                        onPressed: () {
+                                                          model.clearAddress();
+                                                        },
+                                                        iconSize: 18,
+                                                        color: white
+                                                            .withAlpha(190),
+                                                      )
+                                                    : Container(),
+                                                IconButton(
+                                                  icon: const Icon(
+                                                      Icons.content_paste),
+                                                  onPressed: () async {
+                                                    await model
+                                                        .pasteClipBoardData();
+                                                  },
+                                                  iconSize: 22,
+                                                  color: primaryColor,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                           labelText:
                                               AppLocalizations.of(context)
-                                                  .receiverWalletAddress,
+                                                      .receiverWalletAddress +
+                                                  ', ' +
+                                                  'DNS',
                                           labelStyle: Theme.of(context)
                                               .textTheme
                                               .headline6),
                                       style:
-                                          Theme.of(context).textTheme.headline5,
+                                          Theme.of(context).textTheme.headline6,
                                     ),
                                   )),
+                              model.busy(model.userTypedDomain) &&
+                                      model.userTypedDomain.isNotEmpty
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(3.0),
+                                          child: SizedBox(
+                                              width: 15,
+                                              height: 15,
+                                              child: model.sharedService
+                                                  .loadingIndicator()),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
+                              model.userTypedDomain.isNotEmpty &&
+                                      !model.busy(model.userTypedDomain)
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          model.userTypedDomain,
+                                          style:
+                                              headText6.copyWith(color: grey),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
                               TextButton(
                                   style: ButtonStyle(
                                       padding: MaterialStateProperty.all(

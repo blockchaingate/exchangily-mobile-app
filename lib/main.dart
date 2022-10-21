@@ -29,6 +29,7 @@ import 'package:provider/provider.dart';
 import './shared/globals.dart' as globals;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'localizations.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,7 +52,7 @@ Future<void> main() async {
     SystemChannels.textInput
         .invokeMethod('TextInput.hide'); // Hides keyboard initially
     // Force user to use only portrait mode until the development of other screen size design
-
+    await dotenv.load();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
       (_) {
         runApp(

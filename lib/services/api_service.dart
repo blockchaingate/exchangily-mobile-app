@@ -27,6 +27,7 @@ import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../screens/exchange/trade/my_exchange_assets/locker/locker_model.dart';
 import '../utils/string_util.dart' as string_utils;
@@ -67,6 +68,48 @@ class ApiService {
       log.w('postAppUpdate  $parsedTokenList');
     } catch (err) {
       log.e('postAppUpdate CATCH $err');
+      throw Exception(err);
+    }
+  }
+
+  // Get unstoppable supported tlds
+  Future<List<String>> getDomainSupportedTlds() async {
+    var url = "https://resolve.unstoppabledomains.com/supported_tlds";
+    log.i('getDomainSupportedTlds url $url');
+    try {
+      var response = await client.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      });
+      var json = jsonDecode(response.body)['tlds'];
+      json = json.cast<String>();
+      log.w('getDomainSupportedTlds func: json data $json');
+
+      return json;
+    } catch (err) {
+      log.e('getDomainSupportedTlds CATCH $err');
+      throw Exception(err);
+    }
+  }
+
+  // Get unstoppable domain info
+  Future getDomainRecord(String domain) async {
+    var token = dotenv.env['UD_BEARER_TOKEN'];
+    var url = "https://resolve.unstoppabledomains.com/domains/$domain";
+    log.i('getDomainRecord url $url');
+    try {
+      var response = await client.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+      var json = jsonDecode(response.body);
+
+      log.w('getDomainRecord func: json data $json');
+
+      return json;
+    } catch (err) {
+      log.e('getDomainRecord CATCH $err');
       throw Exception(err);
     }
   }

@@ -84,4 +84,5 @@ ios/Flutter/.last_build_id
 ios/Podfile.lock
 ios/build
 .fvm/flutter_sdk
+*.env
 

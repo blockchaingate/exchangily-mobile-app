@@ -2345,5 +2345,29 @@
     "description": "visitWebsite",
     "type": "text",
     "placeholders": {}
+  },
+  "domain": "域",
+  "@domain": {
+    "description": "send_domain",
+    "type": "text",
+    "placeholders": {}
+  },
+  "invalidDomain": "无效的域",
+  "@invalidDomain": {
+    "description": "send_invalidDomain",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addressNotSet": "地址未设置",
+  "@addressNotSet": {
+    "description": "send_addressNotSet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "others": "其他",
+  "@others": {
+    "description": "exchange_otherpairs",
+    "type": "text",
+    "placeholders": {}
   }
 }

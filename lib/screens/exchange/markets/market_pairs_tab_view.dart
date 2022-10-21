@@ -24,7 +24,7 @@ class MarketPairsTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> tabNames = [
       // 'FAV.',
-      'DUSD', 'USDT', 'BTC', 'ETH', 'EXG', 'USDC'
+      'DUSD', 'USDT', 'BTC', 'ETH', 'EXG', 'USDC', 'OTHERS'
     ];
 
     return BaseScreen<MarketPairsTabViewState>(
@@ -98,6 +98,7 @@ class MarketPairsTabView extends StatelessWidget {
                       SliverPersistentHeader(
                         delegate: _SliverAppBarDelegate(
                           TabBar(
+                              isScrollable: true,
                               unselectedLabelColor: const Color(0xffaaaaaa),
                               unselectedLabelStyle:
                                   const TextStyle(fontSize: 10),
