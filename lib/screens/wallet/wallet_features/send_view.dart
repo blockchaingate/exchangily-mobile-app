@@ -140,8 +140,7 @@ class SendWalletView extends StatelessWidget {
                                           Theme.of(context).textTheme.headline6,
                                     ),
                                   )),
-                              model.busy(model.userTypedDomain) &&
-                                      model.userTypedDomain.isNotEmpty
+                              model.busy(model.userTypedDomain)
                                   ? Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,

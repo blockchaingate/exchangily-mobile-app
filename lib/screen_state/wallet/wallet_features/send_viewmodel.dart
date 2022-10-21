@@ -155,11 +155,13 @@ class SendViewModel extends BaseViewModel {
     receiverWalletAddressTextController.text = '';
     userTypedDomain = '';
     notifyListeners();
+    setBusyForObject(userTypedDomain, false);
   }
 
   checkDomain(String domainName) async {
+    setBusyForObject(userTypedDomain, true);
     bool isValidDomainFormat = false;
-
+    userTypedDomain = '';
     if (domainTlds == null || domainTlds.isEmpty) {
       domainTlds = await apiService.getDomainSupportedTlds();
     }
@@ -169,7 +171,6 @@ class SendViewModel extends BaseViewModel {
     }
 
     if (isValidDomainFormat) {
-      setBusyForObject(userTypedDomain, true);
       var domainInfo = await apiService.getDomainRecord(domainName);
       log.w('get domain data for $domainName -- $domainInfo');
       String ticker = walletInfo.tokenType.isEmpty
@@ -186,11 +187,11 @@ class SendViewModel extends BaseViewModel {
       } else {
         userTypedDomain = AppLocalizations.of(context).invalidDomain;
       }
-      setBusyForObject(userTypedDomain, false);
       notifyListeners();
     } else {
       log.e('invalid domain format');
     }
+    setBusyForObject(userTypedDomain, false);
   }
 
   // get native chain ticker balance
