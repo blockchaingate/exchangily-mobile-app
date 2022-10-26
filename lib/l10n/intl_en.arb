@@ -2303,5 +2303,35 @@
       "description": "exchange_otherpairs",
       "type": "text",
       "placeholders": {}
+    },
+    "askPrivacyConsent": "Please read our privacy policy and accept to use the app",
+    "@askPrivacyConsent": {
+      "description": "askPrivacyConsent",
+      "type": "text",
+      "placeholders": {}
+    },
+    "decline": "Decline",
+    "@decline": {
+      "description": "decline",
+      "type": "text",
+      "placeholders": {}
+    },
+    "accept": "Accept",
+    "@accept": {
+      "description": "accept",
+      "type": "text",
+      "placeholders": {}
+    },
+    "userDataUsage": "We do not store or share user data",
+    "@userDataUsage": {
+      "description": "userDataUsage",
+      "type": "text",
+      "placeholders": {}
+    },
+    "privacyPolicy": "Privacy Policy",
+    "@privacyPolicy": {
+      "description": "privacyPolicy",
+      "type": "text",
+      "placeholders": {}
     }
 }

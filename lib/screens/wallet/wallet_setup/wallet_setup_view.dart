@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -174,77 +175,133 @@ class WalletSetupView extends StatelessWidget {
                                       !model.storageService
                                           .hasPhoneProtectionEnabled ||
                                       !model.hasData
-                                  ? Row(children: <Widget>[
-                                      Expanded(
-                                        child: Container(
-                                          margin:
-                                              const EdgeInsets.only(right: 5),
-                                          child: ElevatedButton(
-                                            style: ButtonStyle(
-                                              elevation:
-                                                  MaterialStateProperty.all(5),
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      white),
-                                              shape: MaterialStateProperty.all(
-                                                const StadiumBorder(
-                                                    side: BorderSide(
-                                                        color: primaryColor,
-                                                        width: 2)),
+                                  ? model.storageService.hasPrivacyConsent
+                                      ? Row(children: <Widget>[
+                                          Expanded(
+                                            child: Container(
+                                              margin: const EdgeInsets.only(
+                                                  right: 5),
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                  elevation:
+                                                      MaterialStateProperty.all(
+                                                          5),
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          white),
+                                                  shape:
+                                                      MaterialStateProperty.all(
+                                                    const StadiumBorder(
+                                                        side: BorderSide(
+                                                            color: primaryColor,
+                                                            width: 2)),
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                    AppLocalizations.of(context)
+                                                        .createWallet,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline5
+                                                        .copyWith(
+                                                            color:
+                                                                primaryColor)),
+                                                onPressed: () {
+                                                  if (!model.isBusy) {
+                                                    model.importCreateNav(
+                                                        'create');
+                                                  }
+                                                },
                                               ),
                                             ),
-                                            child: Text(
+                                          ),
+                                          Expanded(
+                                            child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                  elevation:
+                                                      MaterialStateProperty.all(
+                                                          5),
+                                                  shape:
+                                                      MaterialStateProperty.all(
+                                                    const StadiumBorder(
+                                                        side: BorderSide(
+                                                            color: primaryColor,
+                                                            width: 2)),
+                                                  ),
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          primaryColor)),
+                                              child: Text(
                                                 AppLocalizations.of(context)
-                                                    .createWallet,
+                                                    .importWallet,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline5
-                                                    .copyWith(
-                                                        color: primaryColor)),
-                                            onPressed: () {
-                                              if (!model.isBusy) {
-                                                model.importCreateNav('create');
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: ElevatedButton(
-                                          style: ButtonStyle(
-                                              elevation:
-                                                  MaterialStateProperty.all(5),
-                                              shape: MaterialStateProperty.all(
-                                                const StadiumBorder(
-                                                    side: BorderSide(
-                                                        color: primaryColor,
-                                                        width: 2)),
+                                                    .copyWith(color: white),
                                               ),
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      primaryColor)),
-                                          child: Text(
-                                            AppLocalizations.of(context)
-                                                .importWallet,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5
-                                                .copyWith(color: white),
+                                              onPressed: () {
+                                                if (!model.isBusy) {
+                                                  model.importCreateNav(
+                                                      'import');
+                                                }
+                                              },
+                                            ),
                                           ),
-                                          onPressed: () {
-                                            if (!model.isBusy) {
-                                              model.importCreateNav('import');
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                      // TextButton(
-                                      //   child: Text('click'),
-                                      //   onPressed: () => model
-                                      //       .coreWalletDatabaseService
-                                      //       .insert(CoreWalletModel()),
-                                      // )
-                                    ])
+                                          // TextButton(
+                                          //   child: Text('click'),
+                                          //   onPressed: () => model
+                                          //       .coreWalletDatabaseService
+                                          //       .insert(CoreWalletModel()),
+                                          // )
+                                        ])
+                                      : Container(
+                                          child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              AppLocalizations.of(context)
+                                                  .askPrivacyConsent,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(5),
+                                              child: Text(
+                                                AppLocalizations.of(context)
+                                                    .userDataUsage,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5,
+                                              ),
+                                            ),
+                                            UIHelper.verticalSpaceSmall,
+                                            ElevatedButton(
+                                                style: ButtonStyle(
+                                                    elevation:
+                                                        MaterialStateProperty
+                                                            .all(5),
+                                                    shape: MaterialStateProperty
+                                                        .all(
+                                                      const StadiumBorder(
+                                                          side: BorderSide(
+                                                              color:
+                                                                  primaryColor,
+                                                              width: 2)),
+                                                    ),
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(primaryColor)),
+                                                child: Text(
+                                                  AppLocalizations.of(context)
+                                                      .privacyPolicy,
+                                                  style: headText5.copyWith(
+                                                      color: white),
+                                                ),
+                                                onPressed: () => model
+                                                    .showPrivacyConsentWidget()),
+                                          ],
+                                        ))
                                   : Container(),
                             ],
                           ),

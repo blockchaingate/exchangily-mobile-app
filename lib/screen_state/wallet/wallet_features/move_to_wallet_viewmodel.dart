@@ -109,13 +109,14 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
     kanbanTransFee = bigNum2Double(gasPrice * gasLimit);
 
+    _groupValue = 'ETH';
+
     if (walletInfo.tickerName == 'ETH' || walletInfo.tickerName == 'USDT') {
       gasFeeUnit = 'WEI';
     } else if (walletInfo.tickerName == 'FAB') {
       gasFeeUnit = 'LIU';
       feeMeasurement = '10^(-8)';
     }
-    _groupValue = 'ETH';
 
     // ETH
     if (walletInfo.tickerName == 'ETH' || walletInfo.tokenType == 'ETH') {
@@ -940,11 +941,17 @@ class MoveToWalletViewmodel extends BaseViewModel {
       log.w('single coin exchange balance check ${walletInfo.inExchange}');
     });
 
-    if (isWithdrawChoice && isSubmittingTx) {
+    if (isSubmittingTx) {
       log.i(
           'is withdraw choice and is submitting is true-- fetching ts wallet balance of group $_groupValue');
-      if (_groupValue == 'ETH') await getEthChainBalance();
-      if (_groupValue == 'TRX') await getTrxUsdtTsWalletBalance();
+      if (_groupValue == 'ETH') {
+        await getEthChainBalance();
+      }
+      if (_groupValue == 'TRX') {
+        tickerName == 'TRX'
+            ? await getTrxTsWalletBalance()
+            : await getTrxUsdtTsWalletBalance();
+      }
       if (_groupValue == 'BNB') await getBnbTsWalletBalance();
       if (_groupValue == 'POLYGON') await getPolygonTsWalletBalance();
       if (_groupValue == 'FAB') {
@@ -957,7 +964,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   }
 
 /*----------------------------------------------------------------------
-                        TRX 20 TS Wallet Balance
+                        TRX TS Wallet Balance
 ----------------------------------------------------------------------*/
   getTrxTsWalletBalance() async {
     setBusy(true);
@@ -1002,10 +1009,12 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
   getFabBalance() async {
     setBusy(true);
-    String fabAddress = coinService.getCoinOfficalAddress('FAB');
-    await walletService.coinBalanceByAddress('FAB', fabAddress, '').then((res) {
-      log.e('fab res $res');
+    String officialFabAddress = coinService.getCoinOfficalAddress('FAB');
+    await walletService
+        .coinBalanceByAddress('FAB', officialFabAddress, '')
+        .then((res) {
       fabChainBalance = res['balance'];
+      debugPrint('getFabBalance $fabChainBalance');
     });
     setBusy(false);
   }
@@ -1270,94 +1279,89 @@ class MoveToWalletViewmodel extends BaseViewModel {
         setBusy(false);
         return;
       }
-      await getSingleCoinExchangeBal();
-      // if (amount == null ||
-      //     amount > walletInfo.inExchange ||
-      //     amount == 0 ||
-      //     amount.isNegative) {
-      //   sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-      //       AppLocalizations.of(context).pleaseEnterValidNumber,
-      //       isWarning: false);
-      //   setBusy(false);
-      //   return;
-      // }
-
-      if (isWithdrawChoice) {
-        if (groupValue == 'FAB' && amount > fabChainBalance) {
-          sharedService.alertDialog(
-              AppLocalizations.of(context).notice,
-              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                  ' ' +
-                  fabChainBalance.toString() +
-                  '. ' +
-                  AppLocalizations.of(context)
-                      .lowTsWalletBalanceErrorSecondPart,
-              isWarning: false);
-
-          setBusy(false);
-          return;
-        }
-
-        /// show warning like amount should be less than ts wallet balance
-        /// instead of displaying the generic error
-
-        if (groupValue == 'ETH' && amount > ethChainBalance) {
-          sharedService.alertDialog(
-              AppLocalizations.of(context).notice,
-              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                  ' ' +
-                  ethChainBalance.toString() +
-                  '. ' +
-                  AppLocalizations.of(context)
-                      .lowTsWalletBalanceErrorSecondPart,
-              isWarning: false);
-
-          setBusy(false);
-          return;
-        }
-
-        if (groupValue == 'TRX' && amount > trxTsWalletBalance) {
-          sharedService.alertDialog(
-              AppLocalizations.of(context).notice,
-              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                  ' ' +
-                  trxTsWalletBalance.toString() +
-                  '. ' +
-                  AppLocalizations.of(context)
-                      .lowTsWalletBalanceErrorSecondPart,
-              isWarning: false);
-          setBusy(false);
-          return;
-        }
-
-        if (groupValue == 'BNB' && amount > bnbTsWalletBalance) {
-          sharedService.alertDialog(
-              AppLocalizations.of(context).notice,
-              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                  ' ' +
-                  bnbTsWalletBalance.toString() +
-                  '. ' +
-                  AppLocalizations.of(context)
-                      .lowTsWalletBalanceErrorSecondPart,
-              isWarning: false);
-          setBusy(false);
-          return;
-        }
-
-        if (groupValue == 'POLYGON' && amount > polygonTsWalletBalance) {
-          sharedService.alertDialog(
-              AppLocalizations.of(context).notice,
-              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                  ' ' +
-                  polygonTsWalletBalance.toString() +
-                  '. ' +
-                  AppLocalizations.of(context)
-                      .lowTsWalletBalanceErrorSecondPart,
-              isWarning: false);
-          setBusy(false);
-          return;
-        }
+      if (amount == null ||
+          amount > walletInfo.inExchange ||
+          amount == 0 ||
+          amount.isNegative) {
+        sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+            AppLocalizations.of(context).pleaseEnterValidNumber,
+            isWarning: false);
+        setBusy(false);
+        return;
       }
+      await getSingleCoinExchangeBal();
+
+      //  if (isWithdrawChoice) {
+      if (groupValue == 'FAB' && amount > fabChainBalance) {
+        sharedService.alertDialog(
+            AppLocalizations.of(context).notice,
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                ' ' +
+                fabChainBalance.toString() +
+                '. ' +
+                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
+            isWarning: false);
+
+        setBusy(false);
+        return;
+      }
+
+      /// show warning like amount should be less than ts wallet balance
+      /// instead of displaying the generic error
+
+      if (groupValue == 'ETH' && amount > ethChainBalance) {
+        sharedService.alertDialog(
+            AppLocalizations.of(context).notice,
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                ' ' +
+                ethChainBalance.toString() +
+                '. ' +
+                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
+            isWarning: false);
+
+        setBusy(false);
+        return;
+      }
+
+      if (groupValue == 'TRX' && amount > trxTsWalletBalance) {
+        sharedService.alertDialog(
+            AppLocalizations.of(context).notice,
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                ' ' +
+                trxTsWalletBalance.toString() +
+                '. ' +
+                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
+            isWarning: false);
+        setBusy(false);
+        return;
+      }
+
+      if (groupValue == 'BNB' && amount > bnbTsWalletBalance) {
+        sharedService.alertDialog(
+            AppLocalizations.of(context).notice,
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                ' ' +
+                bnbTsWalletBalance.toString() +
+                '. ' +
+                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
+            isWarning: false);
+        setBusy(false);
+        return;
+      }
+
+      if (groupValue == 'POLYGON' && amount > polygonTsWalletBalance) {
+        sharedService.alertDialog(
+            AppLocalizations.of(context).notice,
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                ' ' +
+                polygonTsWalletBalance.toString() +
+                '. ' +
+                AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
+            isWarning: false);
+        setBusy(false);
+        return;
+      }
+      //  }
 
       message = '';
       var res = await _dialogService.showDialog(
@@ -1434,8 +1438,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
             walletInfo.tickerName == 'USDTX' ||
             tokenType == 'TRX' ||
             coinName == 'USDTX') {
-          //      int kanbanGasPrice = environment['chains']['KANBAN']['gasPrice'];
-          // int kanbanGasLimit = environment['chains']['KANBAN']['gasLimit'];
+          int kanbanGasPrice = environment['chains']['KANBAN']['gasPrice'];
+          int kanbanGasLimit = environment['chains']['KANBAN']['gasLimit'];
           await walletService
               .withdrawTron(seed, coinName, coinAddress, tokenType, amount,
                   kanbanPrice, kanbanGasLimit)

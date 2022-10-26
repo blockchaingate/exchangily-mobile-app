@@ -24,6 +24,9 @@ const String payOrderApiRoute = ordersTextApiRoute + "/code/";
 /*----------------------------------------------------------------------
                         Wallet
 ----------------------------------------------------------------------*/
+
+const String exchangilyPrivacyUrl = "https://www.exchangily.com/privacy";
+
 const String appVersionUrl =
     "https://api.coinranklist.com/app-update/exchangily-app-version";
 const String maticGasFeeUrl = "https://gasstation-mumbai.matic.today/v2";

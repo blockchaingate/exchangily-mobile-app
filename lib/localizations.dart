@@ -2062,6 +2062,31 @@ class AppLocalizations {
   String get others {
     return Intl.message('Others', name: 'others', desc: 'exchange_otherpairs');
   }
+
+  String get askPrivacyConsent {
+    return Intl.message(
+        'Please read our privacy policy and accept to use the app',
+        name: 'askPrivacyConsent',
+        desc: 'askPrivacyConsent');
+  }
+
+  String get decline {
+    return Intl.message('Decline', name: 'decline', desc: 'decline');
+  }
+
+  String get accept {
+    return Intl.message('Accept', name: 'accept', desc: 'accept');
+  }
+
+  String get userDataUsage {
+    return Intl.message('We do not store or share user data',
+        name: 'userDataUsage', desc: 'userDataUsage');
+  }
+
+  String get privacyPolicy {
+    return Intl.message('Privacy Policy',
+        name: 'privacyPolicy', desc: 'privacyPolicy');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

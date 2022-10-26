@@ -21,6 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "accept" : MessageLookupByLibrary.simpleMessage("接受"),
     "action" : MessageLookupByLibrary.simpleMessage("行动"),
     "add" : MessageLookupByLibrary.simpleMessage("添加"),
     "addGas" : MessageLookupByLibrary.simpleMessage("加燃料"),
@@ -40,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "amountMissing" : MessageLookupByLibrary.simpleMessage("请输入数量"),
     "announcements" : MessageLookupByLibrary.simpleMessage("公告"),
     "appUpdateNotice" : MessageLookupByLibrary.simpleMessage("App更新提示"),
+    "askPrivacyConsent" : MessageLookupByLibrary.simpleMessage("請閱讀我們的隱私政策並接受使用該應用程式"),
     "askWalletRestore" : MessageLookupByLibrary.simpleMessage("你想恢复现有的钱包吗"),
     "assets" : MessageLookupByLibrary.simpleMessage("我的持仓"),
     "available" : MessageLookupByLibrary.simpleMessage("可用余额"),
@@ -89,6 +91,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "customTokens" : MessageLookupByLibrary.simpleMessage("自定义代币"),
     "date" : MessageLookupByLibrary.simpleMessage("日期"),
     "decimalLimit" : MessageLookupByLibrary.simpleMessage("十进制限制"),
+    "decline" : MessageLookupByLibrary.simpleMessage("拒不"),
     "deleteWallet" : MessageLookupByLibrary.simpleMessage("删除钱包"),
     "deleteWalletConfirmationPopup" : MessageLookupByLibrary.simpleMessage(" 删除钱包确认"),
     "deletingWallet" : MessageLookupByLibrary.simpleMessage("正在删除钱包"),
@@ -254,6 +257,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseUpdateYourAppFrom" : MessageLookupByLibrary.simpleMessage("请更新您的APP"),
     "price" : MessageLookupByLibrary.simpleMessage("价格"),
     "priceChange" : MessageLookupByLibrary.simpleMessage("价格升跌"),
+    "privacyPolicy" : MessageLookupByLibrary.simpleMessage("隐私政策"),
     "quantity" : MessageLookupByLibrary.simpleMessage("数量"),
     "question" : MessageLookupByLibrary.simpleMessage("问题"),
     "reDeposit" : MessageLookupByLibrary.simpleMessage("确认存款"),
@@ -372,6 +376,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "useAsiaNode" : MessageLookupByLibrary.simpleMessage("连接亚洲节点"),
     "useNorthAmericanNode" : MessageLookupByLibrary.simpleMessage("连接北美节点"),
     "userAccessDenied" : MessageLookupByLibrary.simpleMessage("用户访问被拒绝"),
+    "userDataUsage" : MessageLookupByLibrary.simpleMessage("我们不存储或共享用户数据"),
     "userReturnedByPressingBackButton" : MessageLookupByLibrary.simpleMessage("用户按返回键返回"),
     "validationError" : MessageLookupByLibrary.simpleMessage("验证错误"),
     "value" : MessageLookupByLibrary.simpleMessage("价值"),

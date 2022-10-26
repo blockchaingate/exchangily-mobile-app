@@ -2369,5 +2369,35 @@
     "description": "exchange_otherpairs",
     "type": "text",
     "placeholders": {}
+  },
+  "askPrivacyConsent": "請閱讀我們的隱私政策並接受使用該應用程式",
+  "@askPrivacyConsent": {
+    "description": "askPrivacyConsent",
+    "type": "text",
+    "placeholders": {}
+  },
+  "decline": "拒不",
+  "@decline": {
+    "description": "decline",
+    "type": "text",
+    "placeholders": {}
+  },
+  "accept": "接受",
+  "@accept": {
+    "description": "accept",
+    "type": "text",
+    "placeholders": {}
+  },
+  "userDataUsage": "我们不存储或共享用户数据",
+  "@userDataUsage": {
+    "description": "userDataUsage",
+    "type": "text",
+    "placeholders": {}
+  },
+  "privacyPolicy": "隐私政策",
+  "@privacyPolicy": {
+    "description": "privacyPolicy",
+    "type": "text",
+    "placeholders": {}
   }
 }

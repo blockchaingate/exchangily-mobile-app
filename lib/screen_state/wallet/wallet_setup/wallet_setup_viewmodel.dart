@@ -13,6 +13,9 @@
 
 import 'dart:async';
 
+import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
@@ -28,10 +31,12 @@ import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/version_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
+import 'package:exchangilymobileapp/widgets/web_view_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import '../../../localizations.dart';
 import '../../../service_locator.dart';
+import '../../../shared/ui_helpers.dart';
 
 class WalletSetupViewmodel extends BaseViewModel {
   final log = getLogger('WalletSetupViewmodel');
@@ -71,21 +76,91 @@ class WalletSetupViewmodel extends BaseViewModel {
     sharedService.context = context;
 
     checkLanguageFromStorage();
-    await checkExistingWallet();
+
+    if (storageService.hasPrivacyConsent) {
+      await checkExistingWallet();
+    } else {
+      Future.delayed(const Duration(milliseconds: 500), () async {
+        showPrivacyConsentWidget();
+      });
+      return;
+    }
   }
 
-  Future checkLanguageFromStorage() async {
+  checkLanguageFromStorage() {
     String lang = '';
-    setBusy(true);
     lang = storageService.language;
     if (lang == null || lang.isEmpty) {
       log.e('language empty - setting to english');
+
       lang = 'en';
     }
-    AppLocalizations.load(Locale(lang, lang.toUpperCase()));
     storageService.language = lang;
+    AppLocalizations.load(Locale(lang, lang.toUpperCase()));
+  }
 
-    setBusy(false);
+  showPrivacyConsentWidget() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        constraints:
+            BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 120),
+        isDismissible: false,
+        enableDrag: false,
+        // shape: RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.circular(25.0),
+        //   ),
+        backgroundColor: const Color(0xffedeff0),
+        context: context,
+        builder: (BuildContext context) {
+          return SafeArea(
+            child: ListView(
+              children: <Widget>[
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height / 1.33),
+                  child: WebViewWidget(
+                    exchangilyPrivacyUrl,
+                    AppLocalizations.of(context).askPrivacyConsent,
+                  ),
+                ),
+                UIHelper.verticalSpaceSmall,
+                Container(
+                  // margin: const EdgeInsets.all(5),
+                  color: const Color(0xffedeff0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: walletCardColor),
+                          onPressed: (() => navigationService.goBack()),
+                          child: Text(
+                            AppLocalizations.of(context).decline,
+                            style: headText5,
+                          )),
+                      UIHelper.horizontalSpaceMedium,
+                      ElevatedButton(
+                          style:
+                              ElevatedButton.styleFrom(primary: primaryColor),
+                          onPressed: (() => setPrivacyConsent()),
+                          child: Text(
+                            AppLocalizations.of(context).accept,
+                            style: headText5.copyWith(
+                                color: black, fontWeight: FontWeight.w400),
+                          )),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  setPrivacyConsent() {
+    storageService.hasPrivacyConsent = true;
+    navigationService.goBack();
+    checkExistingWallet();
   }
 
   importCreateNav(String actionType) async {

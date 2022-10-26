@@ -12,11 +12,13 @@
 */
 
 import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:stacked/stacked.dart';
@@ -560,6 +562,23 @@ class SettingsContainer extends StatelessWidget {
                         .textTheme
                         .bodyText2
                         .copyWith(color: Colors.red)),
+              ),
+            ),
+            UIHelper.verticalSpaceLarge,
+            Center(
+              child: RichText(
+                text: TextSpan(
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      model.sharedService
+                          .launchInBrowser(Uri.parse(exchangilyPrivacyUrl));
+                    },
+                  text: AppLocalizations.of(context).privacyPolicy,
+                  style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                ),
               ),
             ),
           ]),

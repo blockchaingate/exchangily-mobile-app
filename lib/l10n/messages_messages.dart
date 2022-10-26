@@ -21,6 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "accept" : MessageLookupByLibrary.simpleMessage("Accept"),
     "action" : MessageLookupByLibrary.simpleMessage("Action"),
     "add" : MessageLookupByLibrary.simpleMessage("Add"),
     "addGas" : MessageLookupByLibrary.simpleMessage("Add Gas"),
@@ -41,6 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "amountMissing" : MessageLookupByLibrary.simpleMessage("Amount Missing"),
     "announcements" : MessageLookupByLibrary.simpleMessage("Announcements"),
     "appUpdateNotice" : MessageLookupByLibrary.simpleMessage("App Update Notice"),
+    "askPrivacyConsent" : MessageLookupByLibrary.simpleMessage("Please read our privacy policy and accept to use the app"),
     "askWalletRestore" : MessageLookupByLibrary.simpleMessage("Do you want to restore existing wallet"),
     "assets" : MessageLookupByLibrary.simpleMessage("Assets"),
     "available" : MessageLookupByLibrary.simpleMessage("Available"),
@@ -91,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "customTokens" : MessageLookupByLibrary.simpleMessage("Custom Tokens"),
     "date" : MessageLookupByLibrary.simpleMessage("Date"),
     "decimalLimit" : MessageLookupByLibrary.simpleMessage("Decimal limit"),
+    "decline" : MessageLookupByLibrary.simpleMessage("Decline"),
     "deleteWallet" : MessageLookupByLibrary.simpleMessage("Delete Wallet"),
     "deleteWalletConfirmationPopup" : MessageLookupByLibrary.simpleMessage("Delete wallet confirmation"),
     "deletingWallet" : MessageLookupByLibrary.simpleMessage("Deleting wallet"),
@@ -267,6 +270,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseincludeYourOrderNumber" : MessageLookupByLibrary.simpleMessage("Please include your order number"),
     "price" : MessageLookupByLibrary.simpleMessage("Price"),
     "priceChange" : MessageLookupByLibrary.simpleMessage("Price Change"),
+    "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
     "quantity" : MessageLookupByLibrary.simpleMessage("Quantity"),
     "question" : MessageLookupByLibrary.simpleMessage("Question"),
     "reDeposit" : MessageLookupByLibrary.simpleMessage("Re-Deposit"),
@@ -387,6 +391,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "useAsiaNode" : MessageLookupByLibrary.simpleMessage("Use Asia Node"),
     "useNorthAmericanNode" : MessageLookupByLibrary.simpleMessage("Use North American Node"),
     "userAccessDenied" : MessageLookupByLibrary.simpleMessage("User Access Denied"),
+    "userDataUsage" : MessageLookupByLibrary.simpleMessage("We do not store or share user data"),
     "userReturnedByPressingBackButton" : MessageLookupByLibrary.simpleMessage("User returned by pressing the back button"),
     "validationError" : MessageLookupByLibrary.simpleMessage("Validation Error"),
     "value" : MessageLookupByLibrary.simpleMessage("Value"),
