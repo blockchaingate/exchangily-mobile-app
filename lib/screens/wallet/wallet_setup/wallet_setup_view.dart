@@ -260,20 +260,14 @@ class WalletSetupView extends StatelessWidget {
                                           children: [
                                             Text(
                                               AppLocalizations.of(context)
-                                                  .askPrivacyConsent,
+                                                      .askPrivacyConsent +
+                                                  '. ' +
+                                                  AppLocalizations.of(context)
+                                                      .userDataUsage,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5,
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(5),
-                                              child: Text(
-                                                AppLocalizations.of(context)
-                                                    .userDataUsage,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5,
-                                              ),
+                                              textAlign: TextAlign.center,
                                             ),
                                             UIHelper.verticalSpaceSmall,
                                             ElevatedButton(

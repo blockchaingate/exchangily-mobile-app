@@ -109,7 +109,7 @@ class WalletSetupViewmodel extends BaseViewModel {
         // shape: RoundedRectangleBorder(
         //   borderRadius: BorderRadius.circular(25.0),
         //   ),
-        backgroundColor: const Color(0xffedeff0),
+        backgroundColor: const Color(0xff181439),
         context: context,
         builder: (BuildContext context) {
           return SafeArea(
@@ -126,7 +126,7 @@ class WalletSetupViewmodel extends BaseViewModel {
                 UIHelper.verticalSpaceSmall,
                 Container(
                   // margin: const EdgeInsets.all(5),
-                  color: const Color(0xffedeff0),
+                  color: const Color(0xff181439),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

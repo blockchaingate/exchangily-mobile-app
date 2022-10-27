@@ -2376,7 +2376,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "decline": "拒不",
+  "decline": "拒绝",
   "@decline": {
     "description": "decline",
     "type": "text",

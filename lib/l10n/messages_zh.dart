@@ -91,7 +91,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "customTokens" : MessageLookupByLibrary.simpleMessage("自定义代币"),
     "date" : MessageLookupByLibrary.simpleMessage("日期"),
     "decimalLimit" : MessageLookupByLibrary.simpleMessage("十进制限制"),
-    "decline" : MessageLookupByLibrary.simpleMessage("拒不"),
+    "decline" : MessageLookupByLibrary.simpleMessage("拒绝"),
     "deleteWallet" : MessageLookupByLibrary.simpleMessage("删除钱包"),
     "deleteWalletConfirmationPopup" : MessageLookupByLibrary.simpleMessage(" 删除钱包确认"),
     "deletingWallet" : MessageLookupByLibrary.simpleMessage("正在删除钱包"),

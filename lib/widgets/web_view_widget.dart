@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +35,7 @@ class _WebViewWidgetState extends State<WebViewWidget>
     if (Platform.isAndroid) {
       WebView.platform = SurfaceAndroidWebView();
     }
-    //if (Platform.isIOS) WebView.platform = CupertinoWebView();
+    // if (Platform.isIOS) WebView.platform = CupertinoWebView();
   }
 
   final String _url;
@@ -49,13 +48,6 @@ class _WebViewWidgetState extends State<WebViewWidget>
           body: Stack(
         children: [
           WebView(
-            // onProgress: ((progress) {
-            //   widget.onCallBack(progress);
-            //   setState(() {
-            //     loadingProgress = progress;
-            //   });
-            //   debugPrint('loadingProgress $loadingProgress');
-            // }),
             onPageFinished: (finish) {
               setState(() {
                 isLoading = false;
