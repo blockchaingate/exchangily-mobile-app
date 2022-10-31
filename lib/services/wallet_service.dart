@@ -1804,7 +1804,12 @@ class WalletService {
               Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
           .toDouble();
       if (getTransFeeOnly) {
-        return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
+        return {
+          'txHex': '',
+          'errMsg': '',
+          'transFee': NumberUtil()
+              .truncateDoubleWithoutRouding(transFeeDouble, precision: 8),
+        };
       }
       var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
       amountInTx = BigInt.from(output2);

@@ -225,7 +225,7 @@ Map productionConfig = {
       "gasPrice": 10,
       "gasPriceMax": 200,
       "gasLimit": 21000,
-      "gasLimitToken": 70000
+      "gasLimitToken": 200000
     },
     "MATICM": {
       "chain": "mainnet",
@@ -234,7 +234,7 @@ Map productionConfig = {
       "gasPrice": 10,
       "gasPriceMax": 200,
       "gasLimit": 21000,
-      "gasLimitToken": 70000
+      "gasLimitToken": 200000
     },
     "POLYGON": {
       "chain": "mainnet",
@@ -243,7 +243,7 @@ Map productionConfig = {
       "gasPrice": 10,
       "gasPriceMax": 200,
       "gasLimit": 21000,
-      "gasLimitToken": 70000
+      "gasLimitToken": 200000
     },
     "FAB": {
       "chain": {
