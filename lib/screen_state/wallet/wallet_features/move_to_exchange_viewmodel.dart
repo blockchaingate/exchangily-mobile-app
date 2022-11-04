@@ -162,11 +162,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
       // so that there is fee to pay when transffering non-native tokens
       if (tokenType.isEmpty) {
         if (isMaxAmount) {
-          finalAmount = amount - transFee;
+          finalAmount = (Decimal.parse(amount.toString()) -
+                  Decimal.parse(transFee.toString()))
+              .toDouble();
         } else {
+          finalAmount = (Decimal.parse(transFee.toString()) +
+                  Decimal.parse(amount.toString()))
+              .toDouble();
+
           log.e(
-              'finalAmount ${amount + transFee} = amount $amount  + transFee $transFee');
-          finalAmount = amount + transFee;
+              'final amount ${finalAmount} = amount $amount  + transFee $transFee');
         }
       } else {
         finalAmount = amount;
@@ -178,8 +183,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
         ? isValidAmount = true
         : isValidAmount = false;
     log.i(
-        'Func:amountAfterFee --trans fee $transFee  -- entered amount $amount = finalAmount $finalAmount -- decimal limit final amount ${NumberUtil().truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)} -- isValidAmount $isValidAmount');
+        'Func:amountAfterFee --trans fee $transFee  -- entered amount $amount =  finalAmount $finalAmount -- decimal limit final amount ${NumberUtil().truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)} -- isValidAmount $isValidAmount');
     setBusy(false);
+    //0.025105000000000002
     return NumberUtil()
         .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit);
   }
@@ -334,7 +340,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
     }
     if (transFee > checkTransFeeAgainst &&
         walletInfo.tickerName != 'TRX' &&
-        walletInfo.tickerName != 'USDTX') {
+        walletInfo.tickerName != 'USDTX' &&
+        walletInfo.tokenType != 'TRX') {
       sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).insufficientBalance,
           subtitle:

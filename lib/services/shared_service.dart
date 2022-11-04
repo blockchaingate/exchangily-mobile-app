@@ -133,6 +133,7 @@ class SharedService {
             !pairName.endsWith('DUSD') &&
             !pairName.endsWith('BTC') &&
             !pairName.endsWith('ETH') &&
+            !pairName.endsWith('BNB') &&
             !pairName.endsWith("EXG")) base = 'USDT';
 
     if (pairName == 'USDT' || pairName == 'DUSD') {

@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
+import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
 

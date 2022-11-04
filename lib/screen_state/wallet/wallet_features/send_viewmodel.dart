@@ -16,6 +16,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -302,7 +303,13 @@ class SendViewModel extends BaseViewModel {
         finalAmount = amount;
       } else if (walletInfo.tickerName == 'TRX') {
         transFee = 1.0;
-        finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
+        finalAmount = isMaxAmount
+            ? (Decimal.parse(amount.toString()) -
+                    Decimal.parse(transFee.toString()))
+                .toDouble()
+            : (Decimal.parse(transFee.toString()) +
+                    Decimal.parse(amount.toString()))
+                .toDouble();
       }
       finalAmount <= walletInfo.availableBalance
           ? isValidAmount = true
@@ -313,9 +320,13 @@ class SendViewModel extends BaseViewModel {
       // so that there is fee to pay when transffering non-native tokens
       if (tokenType.isEmpty) {
         if (isMaxAmount) {
-          finalAmount = amount - transFee;
+          finalAmount = (Decimal.parse(amount.toString()) -
+                  Decimal.parse(transFee.toString()))
+              .toDouble();
         } else {
-          finalAmount = amount + transFee;
+          finalAmount = (Decimal.parse(transFee.toString()) +
+                  Decimal.parse(amount.toString()))
+              .toDouble();
         }
       } else {
         finalAmount = amount;

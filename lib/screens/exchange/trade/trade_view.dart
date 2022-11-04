@@ -134,7 +134,7 @@ class TradeView extends StatelessWidget {
                             child: model.sharedService.loadingIndicator(),
                           ))
                         : Container(
-                            child: ListView(children: [
+                            child: ListView(shrinkWrap: true, children: [
                               /// Ticker price stream
                               Container(
                                 margin: const EdgeInsets.only(top: 5.0),
