@@ -1,4 +1,6 @@
 class Constants {
+  static int tronUsdtFee = 40;
+  static int tronFee = 1;
   static const String baseAssetImagesLocalPath = 'assets/images/';
 
   static const String dollarSignImageLocalUrl =

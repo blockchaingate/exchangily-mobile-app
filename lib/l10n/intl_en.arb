@@ -1494,7 +1494,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "deposit": "Deposit",
+    "deposit": "To Dex",
     "@deposit": {
         "description": "deposit",
         "type": "text",
@@ -1530,7 +1530,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "withdraw": "Withdraw",
+    "withdraw": "To Wallet",
     "@withdraw": {
         "description": "transaction_history_withdraw",
         "type": "text",

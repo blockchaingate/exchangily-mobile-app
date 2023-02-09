@@ -19,6 +19,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
@@ -84,6 +85,8 @@ class SendViewModel extends BaseViewModel {
   final gasPriceTextController = TextEditingController();
   final gasLimitTextController = TextEditingController();
   final satoshisPerByteTextController = TextEditingController();
+
+  final trxGasValueTextController = TextEditingController();
   double transFee = 0.0;
   bool transFeeAdvance = false;
   String feeUnit = '';
@@ -252,6 +255,10 @@ class SendViewModel extends BaseViewModel {
             environment["chains"]["BNB"]["gasLimitToken"].toString();
       }
       feeUnit = 'BNB';
+    } else if (coinName == 'USDTX') {
+      trxGasValueTextController.text = Constants.tronUsdtFee.toString();
+    } else if (coinName == 'TRX') {
+      trxGasValueTextController.text = Constants.tronFee.toString();
     } else if (coinName == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();
@@ -477,6 +484,7 @@ class SendViewModel extends BaseViewModel {
                 fromAddr: walletInfo.address,
                 toAddr: toAddress,
                 amount: amount,
+                gasLimit: int.parse(trxGasValueTextController.text),
                 isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
                 tickerName: walletInfo.tickerName,
                 isBroadcast: true)
@@ -837,7 +845,9 @@ class SendViewModel extends BaseViewModel {
           checkSendAmount = false;
         }
       } else if (walletInfo.tickerName == 'TRX') {
-        if (amount + 1 <= walletInfo.availableBalance) {
+        var total =
+            amount.toDouble() + double.parse(trxGasValueTextController.text);
+        if (total <= walletInfo.availableBalance) {
           checkSendAmount = true;
         } else {
           checkSendAmount = false;
@@ -847,11 +857,12 @@ class SendViewModel extends BaseViewModel {
 
         trxBalance = await getTrxBalance();
         log.w('checkAmount trx bal $trxBalance');
-        if (amount <= walletInfo.availableBalance && trxBalance >= 15) {
+        if (amount <= walletInfo.availableBalance &&
+            trxBalance >= double.parse(trxGasValueTextController.text)) {
           checkSendAmount = true;
         } else {
           checkSendAmount = false;
-          if (trxBalance < 15) {
+          if (trxBalance < double.parse(trxGasValueTextController.text)) {
             showSimpleNotification(
                 Center(
                   child: Text(

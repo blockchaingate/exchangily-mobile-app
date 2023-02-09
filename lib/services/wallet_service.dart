@@ -1408,6 +1408,7 @@ class WalletService {
         amount: amount,
         isTrxUsdt: isTrxUsdt,
         tickerName: walletInfo.tickerName,
+        gasLimit: options['gasLimit'],
         isBroadcast: isBroadcast);
 
     log.w('depositTron signed raw tx $rawTxRes');

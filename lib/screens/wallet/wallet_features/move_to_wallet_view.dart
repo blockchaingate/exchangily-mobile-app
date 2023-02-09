@@ -387,6 +387,7 @@ class MoveToWalletScreen extends StatelessWidget {
                         children: <Widget>[
                           Text(
                               AppLocalizations.of(context).withdraw +
+                                  ' ' +
                                   AppLocalizations.of(context).fee,
                               style: Theme.of(context).textTheme.headline6),
                           UIHelper.horizontalSpaceSmall,

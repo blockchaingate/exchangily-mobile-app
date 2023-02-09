@@ -2334,7 +2334,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "unavailable": "不能利用的",
+  "unavailable": "暂时没有价格",
   "@unavailable": {
     "description": "unavailable",
     "type": "text",

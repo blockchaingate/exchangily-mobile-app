@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
@@ -40,6 +41,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   final satoshisPerByteTextController = TextEditingController();
   final kanbanGasPriceTextController = TextEditingController();
   final kanbanGasLimitTextController = TextEditingController();
+  final trxGasValueTextController = TextEditingController();
   double transFee = 0.0;
   double kanbanTransFee = 0.0;
   bool transFeeAdvance = false;
@@ -145,15 +147,12 @@ class MoveToExchangeViewModel extends BaseViewModel {
     // if tron coins then assign fee accordingly
     if (isTrx()) {
       if (walletInfo.tickerName == 'USDTX') {
-        transFee = 15;
+        transFee = double.parse(trxGasValueTextController.text);
         finalAmount = amount;
-        finalAmount <= walletInfo.availableBalance
-            ? isValidAmount = true
-            : isValidAmount = false;
       }
 
       if (walletInfo.tickerName == 'TRX') {
-        transFee = 1.0;
+        transFee = double.parse(trxGasValueTextController.text);
         finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
       }
     } else {
@@ -202,7 +201,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (!isTrx()) await updateTransFee();
     double finalAmount = 0.0;
     if (isTrx()) {
-      transFee = 1;
+      transFee = double.parse(trxGasValueTextController.text);
     }
     if (transFee != 0.0) {
       finalAmount = await amountAfterFee(isMaxAmount: true);
@@ -262,6 +261,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
         gasLimitTextController.text =
             environment["chains"]["POLYGON"]["gasLimitToken"].toString();
       }
+    } else if (coinName == 'USDTX') {
+      trxGasValueTextController.text = Constants.tronUsdtFee.toString();
+    } else if (coinName == 'TRX') {
+      trxGasValueTextController.text = Constants.tronFee.toString();
     } else if (coinName == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();
@@ -390,7 +393,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       bool isCorrectAmount = true;
       await walletService
-          .hasSufficientWalletBalance(15, 'TRX')
+          .hasSufficientWalletBalance(
+              double.parse(trxGasValueTextController.text), 'TRX')
           .then((res) => isCorrectAmount = res);
       log.w('isCorrectAmount $isCorrectAmount');
       if (!isCorrectAmount) {
@@ -406,8 +410,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (walletInfo.tickerName == 'TRX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       bool isCorrectAmount = true;
-      double trxFee = 1.0;
-      if (amount + trxFee > walletInfo.availableBalance) {
+      double totalAmount =
+          amount + double.parse(trxGasValueTextController.text);
+      if (totalAmount > walletInfo.availableBalance) {
         isCorrectAmount = false;
       }
       if (!isCorrectAmount) {
@@ -435,7 +440,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
       }
 
       var gasPrice = int.tryParse(gasPriceTextController.text);
-      var gasLimit = int.tryParse(gasLimitTextController.text);
+      var gasLimit = isTrx()
+          ? int.tryParse(trxGasValueTextController.text)
+          : int.tryParse(gasLimitTextController.text);
       var satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
       var kanbanGasPrice = int.tryParse(kanbanGasPriceTextController.text);
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);

@@ -29,6 +29,7 @@ Future generateTrxTransactionContract(
     @required double amount,
     @required bool isTrxUsdt,
     @required String tickerName,
+    @required int gasLimit,
     @required bool isBroadcast}) async {
   int decimal = 0;
 
@@ -155,7 +156,8 @@ Future generateTrxTransactionContract(
       contract: contract,
       privateKey: privateKey,
       isTrxUsdt: isTrxUsdt,
-      isBroadcast: isBroadcast);
+      isBroadcast: isBroadcast,
+      gasLimit: gasLimit);
   return res;
 }
 
@@ -175,6 +177,7 @@ _generateTrxRawTransaction(
     {@required Tron.Transaction_Contract contract,
     @required Uint8List privateKey,
     @required bool isTrxUsdt,
+    @required int gasLimit,
     @required bool isBroadcast}) async {
   ApiService _apiService = locator<ApiService>();
 // txRaw.SetRefBlockHash(blkhash)
@@ -215,11 +218,11 @@ _generateTrxRawTransaction(
   List<Tron.Transaction_Contract> contractList = [];
   contractList.add(contract);
   Tron.Transaction_raw rawTx;
-  // if trx usdt then add fee limit of 15 trx
-  int feeLimit = 15000000;
+  debugPrint('tron usdt fee $gasLimit');
+  String feeLimit = '${gasLimit}000000';
   isTrxUsdt
       ? rawTx = Tron.Transaction_raw(
-          feeLimit: Int64.parseInt(feeLimit.toString()),
+          feeLimit: Int64.parseInt(feeLimit),
           contract: contractList,
           refBlockHash: refBlockHash,
           refBlockBytes: refBlockBytes,

@@ -125,6 +125,7 @@ class MyApp extends StatelessWidget {
             onGenerateRoute: RouteGenerator.generateRoute,
             title: 'Exchangily Wallet',
             theme: ThemeData(
+              brightness: Brightness.dark,
               appBarTheme: const AppBarTheme(
                 systemOverlayStyle: SystemUiOverlayStyle.light,
               ),
@@ -180,8 +181,6 @@ class MyApp extends StatelessWidget {
                       fontSize: 10.5,
                       color: globals.white,
                       fontWeight: FontWeight.w500)),
-              colorScheme: ColorScheme.fromSwatch()
-                  .copyWith(secondary: globals.secondaryColor),
             ),
             // Removed the home and scaffold because initial route has set
             initialRoute: '/',

@@ -108,7 +108,7 @@ Map devConfig = {
       // },
       "FABLOCK": '0xa7d4a4e23bf7dd7a1e03eda9eb7c28a016fd54aa',
       "EXG": '0x867480ba8e577402fa44f43c33875ce74bdc5df6',
-      "DUSD": '0x78f6bedc7c3d6500e004c6dca19c8d614cfd91ed',
+      "DUSD": '35cb9b675495714909c80c1c11366dc8d396cbe7',
       "USDT": '0x1c35eCBc06ae6061d925A2fC2920779a1896282c',
       "BNB": '0xE90e361892d258F28e3a2E758EEB7E571e370c6f',
       "INB": '0x919c6d21670fe8cEBd1E86a82a1A74E9AA2988F8',
