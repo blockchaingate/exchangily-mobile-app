@@ -171,7 +171,20 @@ class WalletDashboardViewModel extends BaseViewModel {
     await getBalanceForSelectedCustomTokens();
     setBusy(false);
 
-    await versionService.checkVersion(context, isForceUpdate: true);
+    //   try {
+    //   await versionChecker
+    //       .check(
+    //     _context!,
+    //     //test: true, testVersion: "2.3.103"
+    //   )
+    //       .timeout(const Duration(seconds: 2), onTimeout: () {
+    //     debugPrint('time out version checker after waiting for 2 seconds');
+
+    //     setBusy(false);
+    //   });
+    // } catch (err) {
+    //   debugPrint('version checker catch $err');
+    // }
 
     Future.delayed(const Duration(seconds: 2), () async {
       await walletService.storeTokenListUpdatesInDB();

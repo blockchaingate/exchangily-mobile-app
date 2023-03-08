@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -1050,7 +1051,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
     // if ((decimal != null) && (decimal > 0)) {
     //   tokenBalance = ((unlockInt) / BigInt.parse(pow(10, decimal).toString()));
     // } else {
-    tokenBalance = bigNum2Double(unlockInt);
+    tokenBalance = NumberUtil.rawStringToDecimal(unlockInt.toString(),
+            decimalPrecision: token.decimal)
+        .toDouble();
     //   // debugPrint('tokenBalance for EXG==');
     //   // debugPrint(tokenBalance);
     // }

@@ -110,6 +110,18 @@ class NumberUtil {
     return (value * Decimal.fromInt(pow(10, decimalPrecision))).toBigInt();
   }
 
+  static Decimal rawStringToDecimal(String raw, {int decimalPrecision = 18}) {
+    if (raw.isNotEmpty) {
+      Decimal amount = Decimal.parse(raw.toString());
+      var x = Decimal.fromInt((pow(10, decimalPrecision)).toInt());
+      Decimal result = (amount / x);
+
+      return result;
+    } else {
+      return Decimal.zero;
+    }
+  }
+
 // To Big Int
   static toBigInt(amount, [decimalLength]) {
     var numString = amount.toString();
