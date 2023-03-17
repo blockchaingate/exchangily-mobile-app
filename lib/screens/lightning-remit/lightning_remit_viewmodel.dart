@@ -71,7 +71,7 @@ class LightningRemitViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   @override
   Future futureToRun() async {
-    return await apiService.getAssetsBalance(FabUtils().fabToExgAddress(""));
+    return await apiService.getAssetsBalance("");
   }
 
 /*----------------------------------------------------------------------
@@ -184,8 +184,8 @@ class LightningRemitViewmodel extends FutureViewModel {
         context: context1,
         builder: (context1) => Container(
           width: double.infinity,
-          height: 140,
-          margin: const EdgeInsets.symmetric(horizontal: 10.0),
+          height: 200,
+          // margin: const EdgeInsets.symmetric(horizontal: 10.0),
           decoration: BoxDecoration(
             color: grey.withAlpha(300),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),

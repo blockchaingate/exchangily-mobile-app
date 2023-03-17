@@ -349,7 +349,7 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
               border: Border.all(width: 1),
               borderRadius: const BorderRadius.all(Radius.circular(5)),
             ),
-            width: 400,
+            // width: 400,
             height: 220,
             //  color: secondaryColor,
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [

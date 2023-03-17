@@ -41,7 +41,7 @@ Reference:
 
 - In VS code terminal type : <flutter pub global activate fvm>
 - fvm install 2.10.0
-- export PATH="$PATH":"$HOME/.pub-cache/bin" ( if linux terminal gives path error)
+- export PATH="$PATH":"$HOME/.pub-cache/bin" (if terminal gives path error)
 - Add below to .vscode/settings.json
 {
   "dart.flutterSdkPath": ".fvm/flutter_sdk",

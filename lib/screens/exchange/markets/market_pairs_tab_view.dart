@@ -135,18 +135,16 @@ class MarketPairsTabView extends StatelessWidget {
                   },
                   body: isBusy
                       ? Container(
-                          color: Theme.of(context).colorScheme.secondary,
+                          //color: Theme.of(context).colorScheme.secondary,
                           child: Center(
-                            child: model.sharedService.loadingIndicator(),
-                          ))
+                          child: model.sharedService.loadingIndicator(),
+                        ))
                       : Container(
-                          color: Theme.of(context).colorScheme.secondary,
+                          //  color: Theme.of(context).colorScheme.secondary,
                           child: TabBarView(
                               children: marketPairsTabBarView.map((pairList) {
-                            return Container(
-                              child:
-                                  MarketPairPriceDetailView(pairList: pairList),
-                            );
+                            return MarketPairPriceDetailView(
+                                pairList: pairList);
                           }).toList()),
                         ),
                 ),
