@@ -58,8 +58,8 @@ class WalletDashboardView extends StatelessWidget {
           //  await model.retrieveWalletsFromLocalDatabase();
           await model.init();
         },
-        onDispose: () {
-          _refreshController.dispose();
+        onDispose: (WalletDashboardViewModel w) {
+          if (_refreshController != null) _refreshController.dispose();
           debugPrint('_refreshController disposed in wallet dashboard view');
         },
         builder: (context, WalletDashboardViewModel model, child) {

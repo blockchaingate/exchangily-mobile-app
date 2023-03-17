@@ -23,6 +23,7 @@ class LightningRemitView extends StatelessWidget {
         model.context = context;
         model.init();
       },
+      onDispose: (LightningRemitViewmodel v) {},
       builder: (context, model, _) => WillPopScope(
         onWillPop: () async {
           model.onBackButtonPressed();

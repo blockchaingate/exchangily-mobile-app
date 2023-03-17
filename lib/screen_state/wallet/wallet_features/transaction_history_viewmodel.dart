@@ -10,6 +10,7 @@ import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
@@ -149,8 +150,9 @@ class TransactionHistoryViewmodel extends FutureViewModel {
       log.e('custom token CATCH $err');
     }
     if (!isCustomToken) {
-      decimalLimit =
-          await walletService.getSingleCoinWalletDecimalLimit(tickerName);
+      await CoinService()
+          .getSingleTokenData(tickerName)
+          .then((token) => decimalLimit = token.decimal);
       if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     }
     setBusy(false);
@@ -183,9 +185,9 @@ class TransactionHistoryViewmodel extends FutureViewModel {
         .getByNameOrderByDate(tickerName)
         .then((data) async {
       txHistoryToView = data;
-      await walletService
-          .getSingleCoinWalletDecimalLimit(tickerName)
-          .then((data) => decimalLimit = data);
+      await CoinService()
+          .getSingleTokenData(tickerName)
+          .then((token) => decimalLimit = token.decimal);
 
       for (var t in txHistoryToView) {
         log.e(t.toJson);

@@ -131,30 +131,29 @@ class CoinService {
       await getCoinTypeByTickerName(tickerName)
           .then((value) => coinType = value);
     }
-
     try {
+      log.w(
+          ' getSingleTokenData -res $res -- coin type $coinType -- ticker $tickerName');
+      await apiService.getTokenListUpdates().then((newTokens) {
+        for (var j = 0; j < newTokens.length; j++) {
+          if (newTokens[j].coinType == coinType) {
+            res = newTokens[j];
+            log.i('getSingleTokenData new tokens list:  res ${res.toJson()}');
+            break;
+          }
+        }
+      });
+    } catch (err) {
+      log.e('getSingleTokenData old token Catch 1 : $err');
+    }
+
+    if (res == null) {
       log.i('res $res -- coin type $coinType -- ticker $tickerName');
       await apiService.getTokenList().then((tokens) {
         for (var i = 0; i < tokens.length; i++) {
           if (tokens[i].coinType == coinType) {
             res = tokens[i];
             log.i('getSingleTokenData old tokens list:  res ${res.toJson()}');
-            break;
-          }
-        }
-      });
-      //   }
-    } catch (err) {
-      log.e('getSingleTokenData old token Catch 1 : $err');
-    }
-
-    if (res == null) {
-      debugPrint('res $res -- coin type $coinType -- ticker $tickerName');
-      await apiService.getTokenListUpdates().then((newTokens) {
-        for (var j = 0; j < newTokens.length; j++) {
-          if (newTokens[j].coinType == coinType) {
-            res = newTokens[j];
-            log.i('getSingleTokenData new tokens list:  res ${res.toJson()}');
             break;
           }
         }
@@ -229,14 +228,18 @@ class CoinService {
         for (var token in tokens) {
           //    await tokenListDatabaseService.insert(token);
           if (token.tickerName == tickerName) coinType = token.coinType;
+          break;
         }
       });
-      await apiService.getTokenList().then((tokens) {
-        for (var token in tokens) {
-          //    await tokenListDatabaseService.insert(token);
-          if (token.tickerName == tickerName) coinType = token.coinType;
-        }
-      });
+      if (coinType == 0 || coinType == null) {
+        await apiService.getTokenList().then((tokens) {
+          for (var token in tokens) {
+            //    await tokenListDatabaseService.insert(token);
+            if (token.tickerName == tickerName) coinType = token.coinType;
+            break;
+          }
+        });
+      }
     }
     debugPrint('ticker $tickerName -- coin type $coinType');
     return coinType;

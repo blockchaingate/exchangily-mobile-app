@@ -290,38 +290,6 @@ class WalletService {
                       Get decimal data
 ----------------------------------------------------------------------*/
 
-  Future<int> getSingleCoinWalletDecimalLimit(String coinName) async {
-    int res = 0;
-// first look coin in the local storage
-// TODO uncomment code below once save decimaldata in local storage works in wallet service
-    // List<Map<String, int>> decimalDataFromStorage =
-    //     jsonEncode(storageService.walletDecimalList) as List;
-    // decimalDataFromStorage.forEach((decimalDataList) {
-    //   if (decimalDataList.containsKey(coinName))
-    //     res = decimalDataList[coinName];
-    // });
-
-    // if res not found in local storage then call old token list api
-    if (res == null || res == 0) {
-      await apiService.getTokenList().then((token) {
-        for (var token in token) {
-          if (token.tickerName == coinName) res = token.decimal;
-        }
-      });
-    }
-
-    // if res not found in local storage then call new token list api
-    if (res == null || res == 0) {
-      await apiService.getTokenListUpdates().then((token) {
-        for (var token in token) {
-          //    await tokenListDatabaseService.insert(token);
-          if (token.tickerName == coinName) res = token.decimal;
-        }
-      });
-    }
-    return res;
-  }
-
   Future<bool> hasSufficientWalletBalance(
       double amount, String chainType) async {
     bool isValidAmount = true;

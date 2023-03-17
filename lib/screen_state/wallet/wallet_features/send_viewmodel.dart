@@ -142,8 +142,10 @@ class SendViewModel extends BaseViewModel {
       String ticker =
           walletInfo.tickerName == "MATICM" ? "MATIC" : walletInfo.tickerName;
       // both matic(nativ) and matic erc20 have decimal limit of 18
-      decimalLimit =
-          await walletService.getSingleCoinWalletDecimalLimit(ticker);
+
+      await CoinService()
+          .getSingleTokenData(ticker)
+          .then((token) => decimalLimit = token.decimal);
       if (decimalLimit == null || decimalLimit == 0) {
         decimalLimit = 8;
       }
@@ -344,7 +346,7 @@ class SendViewModel extends BaseViewModel {
           : isValidAmount = false;
     }
     log.i(
-        'Func:amountAfterFee --  entered amount $amount + transaction fee $transFee = finalAmount $finalAmount after fee --  wallet bal ${walletInfo.availableBalance} -- isValidAmount $isValidAmount');
+        'Func:amountAfterFee --  entered amount $amount  transaction fee $transFee = finalAmount $finalAmount after fee --  wallet bal ${walletInfo.availableBalance} -- isValidAmount $isValidAmount');
     setBusy(false);
     return NumberUtil()
         .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit);

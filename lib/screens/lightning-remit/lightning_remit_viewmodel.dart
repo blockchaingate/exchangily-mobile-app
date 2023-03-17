@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -70,10 +71,7 @@ class LightningRemitViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   @override
   Future futureToRun() async {
-    return await apiService.getAssetsBalance('');
-
-    //await walletDataBaseService.getAll();
-    //apiService.getTokenList();
+    return await apiService.getAssetsBalance(FabUtils().fabToExgAddress(""));
   }
 
 /*----------------------------------------------------------------------
@@ -95,24 +93,29 @@ class LightningRemitViewmodel extends FutureViewModel {
     setBusy(true);
     if (data == null) return;
     exchangeBalances = data;
-    for (var element in exchangeBalances) {
-      debugPrint(element.toJson().toString());
-      if (element.ticker.isEmpty) {
-        await coinService
-            .getSingleTokenData('', coinType: element.coinType)
-            .then((token) {
-          //storageService.tokenList.forEach((newToken){
 
-          // var json = jsonDecode(newToken);
-          // Token token = Token.fromJson(json);
-          // if (token.tokenType == element.coinType){ debugPrint(token.tickerName);
-          if (token == null) {
-            element.ticker = element.coinType.toString();
-          }
-          element.ticker = token.tickerName; //}
-        });
+    for (var element in exchangeBalances) {
+      log.w('onData ${element.toJson().toString()}');
+      try {
+        if (element.ticker.isEmpty) {
+          await coinService
+              .getSingleTokenData('', coinType: element.coinType)
+              .then((token) {
+            //storageService.tokenList.forEach((newToken){
+
+            // var json = jsonDecode(newToken);
+            // Token token = Token.fromJson(json);
+            // if (token.tokenType == element.coinType){ debugPrint(token.tickerName);
+            if (token == null) {
+              element.ticker = element.coinType.toString();
+            }
+            element.ticker = token.tickerName; //}
+          });
 //element.ticker =tradeService.setTickerNameByType(element.coinType);
-        debugPrint('exchanageBalanceModel tickerName ${element.ticker}');
+          debugPrint('exchanageBalanceModel tickerName ${element.ticker}');
+        }
+      } catch (err) {
+        log.e('catch while getting ticker for ${element.coinType}');
       }
     }
     setBusyForObject(exchangeBalances, false);

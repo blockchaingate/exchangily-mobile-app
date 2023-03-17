@@ -8,6 +8,7 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -94,8 +95,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     } else if (coinName == 'BNB' || tokenType == 'BNB') {
       feeUnit = 'BNB';
     }
-    decimalLimit =
-        await walletService.getSingleCoinWalletDecimalLimit(coinName);
+    await CoinService()
+        .getSingleTokenData(coinName)
+        .then((token) => decimalLimit = token.decimal);
     if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     fabAddress =
         await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');

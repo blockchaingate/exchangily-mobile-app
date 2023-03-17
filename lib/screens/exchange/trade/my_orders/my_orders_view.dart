@@ -29,8 +29,8 @@ class MyOrdersView extends StatelessWidget {
           model.refreshController = _refreshController;
           model.init();
         },
-        onDispose: () {
-          _refreshController.dispose();
+        onDispose: (MyOrdersViewModel m) {
+          if (_refreshController != null) _refreshController.dispose();
           debugPrint('_refreshController disposed in my orders view');
         },
         builder: (context, MyOrdersViewModel model, _) => Container(

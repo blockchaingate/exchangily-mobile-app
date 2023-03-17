@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
@@ -64,8 +65,9 @@ class WalletFeaturesViewModel extends BaseViewModel {
     refreshBalance();
     checkIfCoinIsFavorite();
     setBusy(true);
-    decimalLimit = await walletService
-        .getSingleCoinWalletDecimalLimit(walletInfo.tickerName);
+    await CoinService()
+        .getSingleTokenData(walletInfo.tickerName)
+        .then((token) => decimalLimit = token.decimal);
     if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     setBusy(false);
   }
