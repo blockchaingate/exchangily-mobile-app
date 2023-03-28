@@ -1,4 +1,10 @@
 class Constants {
+  static Pattern regexPattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
+  static Map<String, String> headersText = {"responseType;": "text"};
+  static Map<String, String> headersJson = {
+    'Content-Type': 'application/json; charset=UTF-8',
+  };
+
   static int tronUsdtFee = 40;
   static int tronFee = 1;
   static const String baseAssetImagesLocalPath = 'assets/images/';

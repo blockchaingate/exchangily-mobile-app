@@ -286,10 +286,6 @@ class WalletService {
         'Store token TIME FINISH ${DateTime.now().toLocal().toIso8601String()}');
   }
 
-/*----------------------------------------------------------------------
-                      Get decimal data
-----------------------------------------------------------------------*/
-
   Future<bool> hasSufficientWalletBalance(
       double amount, String chainType) async {
     bool isValidAmount = true;

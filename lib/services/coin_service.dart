@@ -226,17 +226,19 @@ class CoinService {
     } else {
       await apiService.getTokenListUpdates().then((tokens) {
         for (var token in tokens) {
-          //    await tokenListDatabaseService.insert(token);
-          if (token.tickerName == tickerName) coinType = token.coinType;
-          break;
+          if (token.tickerName == tickerName) {
+            coinType = token.coinType;
+            break;
+          }
         }
       });
       if (coinType == 0 || coinType == null) {
         await apiService.getTokenList().then((tokens) {
           for (var token in tokens) {
-            //    await tokenListDatabaseService.insert(token);
-            if (token.tickerName == tickerName) coinType = token.coinType;
-            break;
+            if (token.tickerName == tickerName) {
+              coinType = token.coinType;
+              break;
+            }
           }
         });
       }

@@ -47,7 +47,6 @@ import 'package:flutter/services.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 
@@ -257,7 +256,7 @@ class SendViewModel extends BaseViewModel {
             environment["chains"]["BNB"]["gasLimitToken"].toString();
       }
       feeUnit = 'BNB';
-    } else if (coinName == 'USDTX') {
+    } else if (coinName == 'USDTX' || tokenType == 'TRX') {
       trxGasValueTextController.text = Constants.tronUsdtFee.toString();
     } else if (coinName == 'TRX') {
       trxGasValueTextController.text = Constants.tronFee.toString();
@@ -286,6 +285,12 @@ class SendViewModel extends BaseViewModel {
 
   Future<double> amountAfterFee({bool isMaxAmount = false}) async {
     setBusy(true);
+    var res = NumberUtil.checkRegexAmount(amount);
+    if (!res) {
+      transFee = 0.0;
+      setBusy(false);
+      return 0.0;
+    }
 
     if (amountController.text.isEmpty) {
       transFee = 0.0;
@@ -307,11 +312,11 @@ class SendViewModel extends BaseViewModel {
     if (!isTrx()) await updateTransFee();
     // if tron coins then assign fee accordingly
     if (isTrx()) {
-      if (walletInfo.tickerName == 'USDTX') {
-        transFee = 15;
+      if (walletInfo.tickerName == 'USDTX' || walletInfo.tokenType == 'TRX') {
+        transFee = double.parse(trxGasValueTextController.text);
         finalAmount = amount;
       } else if (walletInfo.tickerName == 'TRX') {
-        transFee = 1.0;
+        transFee = double.parse(trxGasValueTextController.text);
         finalAmount = isMaxAmount
             ? (Decimal.parse(amount.toString()) -
                     Decimal.parse(transFee.toString()))
@@ -487,7 +492,10 @@ class SendViewModel extends BaseViewModel {
                 toAddr: toAddress,
                 amount: amount,
                 gasLimit: int.parse(trxGasValueTextController.text),
-                isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
+                isTrxUsdt: walletInfo.tickerName == 'USDTX' ||
+                        walletInfo.tickerName == 'USDCX'
+                    ? true
+                    : false,
                 tickerName: walletInfo.tickerName,
                 isBroadcast: true)
             .then((res) {
@@ -826,8 +834,12 @@ class SendViewModel extends BaseViewModel {
     Pattern pattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
     log.e(amount);
     var res = RegexValidator(pattern).isValid(amount.toString());
-
     if (res) {
+      if (amountController.text.startsWith('.')) {
+        transFee = 0.0;
+        setBusy(false);
+        return 0.0;
+      }
       if (!isTrx()) {
         log.i('checkAmount ${walletInfo.tickerName}');
 
@@ -854,7 +866,8 @@ class SendViewModel extends BaseViewModel {
         } else {
           checkSendAmount = false;
         }
-      } else if (walletInfo.tickerName == 'USDTX') {
+      } else if (walletInfo.tickerName == 'USDTX' ||
+          walletInfo.tokenType == 'TRX') {
         double trxBalance = 0.0;
 
         trxBalance = await getTrxBalance();

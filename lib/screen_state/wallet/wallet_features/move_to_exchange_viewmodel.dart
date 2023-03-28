@@ -148,7 +148,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (!isTrx()) await updateTransFee();
     // if tron coins then assign fee accordingly
     if (isTrx()) {
-      if (walletInfo.tickerName == 'USDTX') {
+      if (walletInfo.tickerName == 'USDTX' || walletInfo.tokenType == 'TRX') {
         transFee = double.parse(trxGasValueTextController.text);
         finalAmount = amount;
       }
@@ -263,7 +263,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
         gasLimitTextController.text =
             environment["chains"]["POLYGON"]["gasLimitToken"].toString();
       }
-    } else if (coinName == 'USDTX') {
+    } else if (coinName == 'USDTX' || tokenType == 'TRX') {
       trxGasValueTextController.text = Constants.tronUsdtFee.toString();
     } else if (coinName == 'TRX') {
       trxGasValueTextController.text = Constants.tronFee.toString();
@@ -489,7 +489,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
                 mnemonic: mnemonic,
                 walletInfo: walletInfo,
                 amount: amount,
-                isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
+                isTrxUsdt: walletInfo.tickerName == 'USDTX' ||
+                        walletInfo.tickerName == 'USDCX'
+                    ? true
+                    : false,
                 isBroadcast: false,
                 options: option)
             .then((res) {

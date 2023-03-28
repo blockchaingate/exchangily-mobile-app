@@ -1509,12 +1509,13 @@ class WalletDashboardViewModel extends BaseViewModel {
         walletBalancesBody: finalWbb,
       );
       // store in single core database
-      if (finalWbb.isNotEmpty)
+      if (finalWbb.isNotEmpty) {
         await coreWalletDatabaseService.insert(walletCoreModel);
+      }
     } else if (walletBalancesBodyFromDB != null) {
       finalWbb = walletBalancesBodyFromDB['walletBalancesBody'];
     }
-    if (finalWbb == null || finalWbb == '') {
+    if (finalWbb == null || finalWbb.isEmpty) {
       storageService.hasWalletVerified = false;
       navigationService
           .navigateUsingPushNamedAndRemoveUntil(WalletSetupViewRoute);
@@ -1522,17 +1523,20 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     walletBalancesApiRes =
         await apiService.getWalletBalance(jsonDecode(finalWbb));
-    if (walletBalancesApiRes != null)
+    if (walletBalancesApiRes != null) {
       log.w('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
+    }
     if (isProduction && coinsToHideList.isNotEmpty) {
       for (var coinToHideTicker in coinsToHideList) {
         walletBalancesApiRes
             .removeWhere((element) => element.coin == coinToHideTicker);
       }
     }
-    if (walletBalancesApiRes != null)
+    if (walletBalancesApiRes != null) {
       log.i('walletBalances LENGTH ${walletBalancesApiRes.length ?? 0}');
+    }
     wallets = walletBalancesApiRes;
+
     walletsCopy = wallets;
 
     if (currentTabSelection == 0) {

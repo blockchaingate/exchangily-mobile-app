@@ -226,9 +226,10 @@ class MoveToExchangeScreen extends StatelessWidget {
                                 ? Row(
                                     children: [
                                       Text(
-                                          // model.walletInfo.tokenType +
-                                          //     ' ' +
-                                          AppLocalizations.of(context).balance,
+                                          model.walletInfo.tokenType +
+                                              ' ' +
+                                              AppLocalizations.of(context)
+                                                  .balance,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline5),

@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
@@ -8,6 +10,9 @@ import 'package:flutter/widgets.dart';
 class NumberUtil {
   int maxDecimalDigits;
   final log = getLogger('NumberUtil');
+  static checkRegexAmount(double amount) =>
+      RegexValidator(Constants.regexPattern.toString())
+          .isValid(amount.toString());
 
   static int getDecimalLength(double number) {
     String stringNumber = number.toString();

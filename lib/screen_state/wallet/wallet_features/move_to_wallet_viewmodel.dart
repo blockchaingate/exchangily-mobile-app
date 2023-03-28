@@ -84,8 +84,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
   TokenModel token = TokenModel();
   TokenModel ercChainToken = TokenModel();
-  TokenModel bnbChainToken = TokenModel();
   TokenModel mainChainToken = TokenModel();
+  TokenModel bnbChainToken = TokenModel();
   TokenModel polygonChainToken = TokenModel();
 
   bool isSubmittingTx = false;
@@ -1422,9 +1422,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
         //   amount = BigInt.tryParse(amountController.text);
         // }
         if (coinName == 'BCH') {
-          await walletService.getBchAddressDetails(coinAddress).then(
-              (addressDetails) =>
-                  coinAddress = addressDetails['legacyAddress']);
+          await walletService
+              .getBchAddressDetails(coinAddress)
+              .then((addressDetails) =>
+                  coinAddress = addressDetails['legacyAddress'])
+              .catchError((err) {
+            log.e('get bch address details Catch - $err');
+          });
         }
 
         var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);

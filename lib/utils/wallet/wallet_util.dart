@@ -153,7 +153,10 @@ class WalletUtil {
     return fabSpecialTokens.contains(tickerName);
   }
 
-  // get wallet info object with address using single wallet balance
+// --------------------------------------------------------------------
+//    Get wallet info object with address using single wallet balance
+// --------------------------------------------------------------------
+
   Future<WalletInfo> getWalletInfoObjFromWalletBalance(
       WalletBalance wallet) async {
     //FocusScope.of(context).requestFocus(FocusNode());

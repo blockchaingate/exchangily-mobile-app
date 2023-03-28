@@ -62,10 +62,20 @@ Future generateTrxTransactionContract(
           contractAddress = token.contract;
           decimal = token.decimal;
           //   debugPrint('token from token database ${token.toJson()}');
-        } else {
+        } else if (token.tickerName == 'USDTX') {
           await apiService.getTokenListUpdates().then((tokenList) {
             for (var token in tokenList) {
               if (token.tickerName == 'USDTX') {
+                contractAddress = token.contract;
+                decimal = token.decimal;
+                //  debugPrint('token from api ${token.toJson()}');
+              }
+            }
+          });
+        } else if (token.tickerName == 'USDCX') {
+          await apiService.getTokenListUpdates().then((tokenList) {
+            for (var token in tokenList) {
+              if (token.tickerName == 'USDCX') {
                 contractAddress = token.contract;
                 decimal = token.decimal;
                 //  debugPrint('token from api ${token.toJson()}');
