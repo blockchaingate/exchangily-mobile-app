@@ -4,12 +4,10 @@ import 'package:bitbox/bitbox.dart' as bitbox;
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
-import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -1202,7 +1200,7 @@ class WalletService {
       log.e('cointype $coinType -- abihex $abiHex');
     } else if ((coinName == 'FAB' && tokenType == 'BNB') ||
         (coinName == 'FAB' && tokenType == 'ETH') ||
-        (walletUtil.isSpecialFab(coinName) &&
+        (WalletUtil.isSpecialFab(coinName) &&
             (tokenType == 'BNB' || tokenType == 'ETH'))) {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('FAB');
       abiHex = abiUtils.getWithdrawFuncABI(
@@ -1223,7 +1221,7 @@ class WalletService {
 
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (tokenType == 'POLYGON' &&
-        (walletUtil.isSpecialUsdt(coinName) || coinName == 'USDT')) {
+        (WalletUtil.isSpecialUsdt(coinName) || coinName == 'USDT')) {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
@@ -1231,7 +1229,7 @@ class WalletService {
 
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (tokenType == 'BNB' &&
-        (walletUtil.isSpecialUsdt(coinName) || coinName == 'USDT')) {
+        (WalletUtil.isSpecialUsdt(coinName) || coinName == 'USDT')) {
       sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
@@ -1302,8 +1300,9 @@ class WalletService {
 
     int sepcialcoinType;
     var abiHex;
-    if (coinName == 'USDTX') {
-      sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
+    if (coinName == 'USDTX' || coinName == 'USDCX') {
+      sepcialcoinType = await coinService
+          .getCoinTypeByTickerName(coinName == 'USDTX' ? 'USDT' : 'USDC');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialToken: true, chain: tokenType);
@@ -1410,8 +1409,9 @@ class WalletService {
     /// If special deposits then take the coin type of the respective chain coin
     int sepcialcoinType;
     var abiHex;
-    if (walletInfo.tickerName == 'USDTX') {
-      sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
+    if (walletInfo.tickerName == 'USDTX' || walletInfo.tickerName == 'USDCX') {
+      sepcialcoinType = await coinService.getCoinTypeByTickerName(
+          walletInfo.tickerName == 'USDTX' ? 'USDT' : 'USDC');
       abiHex = abiUtils.getDepositFuncABI(
           sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
           chain: walletInfo.tokenType, isSpecialDeposit: true);

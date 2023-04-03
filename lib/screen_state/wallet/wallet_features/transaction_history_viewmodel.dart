@@ -103,6 +103,9 @@ class TransactionHistoryViewmodel extends FutureViewModel {
         } else if (txFromApi.tickerName.toUpperCase() == 'TRON_USDT' &&
             tickerName == 'USDTX') {
           transactionsToDisplay.add(txFromApi);
+        } else if (txFromApi.tickerName.toUpperCase() == 'TRON_USDC' &&
+            tickerName == 'USDCX') {
+          transactionsToDisplay.add(txFromApi);
         } else if (txFromApi.tickerName.toUpperCase() == 'BNB_USDT' &&
             tickerName == 'USDTB') {
           transactionsToDisplay.add(txFromApi);

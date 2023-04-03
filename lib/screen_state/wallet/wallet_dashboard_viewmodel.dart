@@ -565,21 +565,17 @@ class WalletDashboardViewModel extends BaseViewModel {
     var favWalletInfoListCopy = favWallets;
     debugPrint('length ${favWallets.length} -- value $value');
     try {
-      for (var i = 0; i < favWalletInfoListCopy.length; i++) {
-        debugPrint(
-            'favWalletInfoList ${favWallets[i].coin == value.toUpperCase()}');
-        if (favWalletInfoListCopy[i].coin == value.toUpperCase()) {
-          favWallets = [];
-          log.i('favWalletInfoListCopy ${favWalletInfoListCopy[i].toJson()}');
-          favWallets.add(favWalletInfoListCopy[i]);
-          setBusyForObject(favWallets, false);
-          break;
-        } else {
-          favWallets = [];
-          favWallets = favWalletInfoListCopy;
-          break;
-        }
+      if (value.isNotEmpty) {
+        favWallets = [];
+        favWallets = favWalletInfoListCopy
+            .where((element) =>
+                element.coin.toLowerCase().contains(value.toLowerCase()))
+            .toList();
+      } else {
+        favWallets = [];
+        favWallets = favWalletInfoListCopy;
       }
+
       // tabBarViewHeight = MediaQuery.of(context).viewInsets.bottom == 0
       //     ? MediaQuery.of(context).size.height / 2 - 250
       //     : MediaQuery.of(context).size.height / 2;
@@ -1032,17 +1028,14 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     debugPrint('length ${walletsCopy.length} -- value $value');
     for (var i = 0; i < walletsCopy.length; i++) {
-      if (walletsCopy[i].coin.toUpperCase() == value.toUpperCase()) {
+      if (value.isNotEmpty) {
         setBusy(true);
-        wallets = [];
-        // String holder =
-        //     NumberUtil.currencyFormat(walletInfoCopy[i].usdValue, 2);
-        // formattedUsdValueList.add(holder);
-        wallets.add(walletsCopy[i]);
-        // debugPrint(
-        //     'matched wallet ${walletInfoCopy[i].toJson()} --  wallet info length ${walletInfo.length}');
+        wallets = walletsCopy
+            .where((element) =>
+                element.coin.toLowerCase().contains(value.toLowerCase()))
+            .toList();
+
         setBusy(false);
-        break;
       } else {
         wallets = walletsCopy;
       }

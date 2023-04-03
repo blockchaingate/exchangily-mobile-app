@@ -11,10 +11,12 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_wallet_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -163,9 +165,13 @@ class MoveToWalletScreen extends StatelessWidget {
                                 ? Text('USDT'.toUpperCase(),
                                     style:
                                         Theme.of(context).textTheme.subtitle2)
-                                : Text(model.specialTicker.toUpperCase(),
-                                    style:
-                                        Theme.of(context).textTheme.subtitle2),
+                                : walletInfo.tickerName == 'USDCX'
+                                    ? Text('USDC'.toUpperCase(),
+                                        style: subText2)
+                                    : Text(model.specialTicker.toUpperCase(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2),
                           ),
                           model.isWithdrawChoice
                               ? SizedBox(
@@ -218,7 +224,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                   Row(
                                     children: [
                                       model.isShowTrxTsWalletBalance ||
-                                              model.walletUtil.isSpecialUsdt(
+                                              WalletUtil.isSpecialUsdt(
                                                   walletInfo.tickerName) ||
                                               walletInfo.tickerName == 'USDT'
                                           ? Row(
@@ -308,9 +314,9 @@ class MoveToWalletScreen extends StatelessWidget {
                                     children: [
                                       // BNB radio button
                                       model.isShowBnbTsWalletBalance ||
-                                              model.walletUtil.isSpecialUsdt(
+                                              WalletUtil.isSpecialUsdt(
                                                   walletInfo.tickerName) ||
-                                              model.walletUtil.isSpecialFab(
+                                              WalletUtil.isSpecialFab(
                                                   walletInfo.tickerName) ||
                                               walletInfo.tickerName == 'FAB' ||
                                               walletInfo.tickerName == 'USDT'
@@ -343,7 +349,7 @@ class MoveToWalletScreen extends StatelessWidget {
 
                                       // MATIC radio button
                                       model.isShowPolygonTsWalletBalance ||
-                                              model.walletUtil.isSpecialUsdt(
+                                              WalletUtil.isSpecialUsdt(
                                                   walletInfo.tickerName) ||
                                               walletInfo.tickerName == 'USDT'
                                           ? Row(

@@ -136,23 +136,29 @@ class WalletUtil {
     'Genesis Vision',
     'Binance Coin'
   ];
-  List<String> allUsdtTokens = ["USDT", "USDTX", "USDCX", "USDTB", "USDTM"];
+  static List<String> allUsdtTokens = [
+    "USDT",
+    "USDTX",
+    "USDCX",
+    "USDTB",
+    "USDTM"
+  ];
   List<String> usdtSpecialTokens = ["USDTX", "USDTB", "USDTM"];
   List<String> fabSpecialTokens = ["FABE", "FABB"];
   List<String> exgSpecialTokens = ["EXGE"];
   List<String> bstSpecialTokens = ["BSTE"];
   List<String> dscSpecialTokens = ["DSCE"];
+  static List<String> allUsdcTokens = ["USDC", "USDCX"];
+  static List<String> allFabTokens = ["FABE", "FABB", "FAB"];
 
-  bool isSpecialUsdt(String tickerName) {
-    var res = usdtSpecialTokens.contains(tickerName);
-    log.w('isSpecialUsdt - ticker $tickerName = res $res');
-    return res;
-  }
+  static bool isSpecialUsdc(String tickerName) =>
+      allUsdcTokens.contains(tickerName);
 
-  bool isSpecialFab(String tickerName) {
-    return fabSpecialTokens.contains(tickerName);
-  }
+  static bool isSpecialUsdt(String tickerName) =>
+      allUsdtTokens.contains(tickerName);
 
+  static bool isSpecialFab(String tickerName) =>
+      allFabTokens.contains(tickerName);
 // --------------------------------------------------------------------
 //    Get wallet info object with address using single wallet balance
 // --------------------------------------------------------------------
