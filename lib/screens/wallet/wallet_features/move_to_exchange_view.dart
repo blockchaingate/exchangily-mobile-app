@@ -10,7 +10,9 @@
 * Author: ken.qiu@exchangily.com and barry_ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
@@ -76,6 +78,9 @@ class MoveToExchangeScreen extends StatelessWidget {
                       activatedNegativeValues: false)
                 ],
                 onChanged: (String amount) {
+                  model.amount = NumberUtil.decimalLimiter(
+                      Decimal.parse(amount),
+                      decimalPlaces: model.decimalLimit);
                   model.amountAfterFee();
                 },
                 decoration: InputDecoration(
@@ -190,7 +195,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                                     left:
                                                         5), // padding left to keep some space from the text
                                                 child: Text(
-                                                    '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, precision: 6).toString()} ${model.feeUnit}',
+                                                    '${NumberUtil.decimalLimiter(model.chainBalance, decimalPlaces: 6).toString()} ${model.feeUnit}',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline6),
@@ -214,7 +219,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                       left:
                                           5), // padding left to keep some space from the text
                                   child: Text(
-                                      '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 6).toString()} ${model.feeUnit}',
+                                      '${NumberUtil.decimalLimiter(model.transFee, decimalPlaces: 6).toString()} ${model.feeUnit}',
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline6),
@@ -238,7 +243,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                             left:
                                                 5), // padding left to keep some space from the text
                                         child: Text(
-                                            '${NumberUtil().truncateDoubleWithoutRouding(model.chainBalance, precision: 6).toString()} ${model.feeUnit}',
+                                            '${NumberUtil.decimalLimiter(model.chainBalance, decimalPlaces: 6).toString()} ${model.feeUnit}',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline6),
@@ -260,7 +265,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                             left:
                                 5), // padding left to keep some space from the text
                         child: Text(
-                            '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 6).toString()} GAS',
+                            '${NumberUtil.decimalLimiter(model.kanbanTransFee, decimalPlaces: 6).toString()} GAS',
                             style: Theme.of(context).textTheme.headline6),
                       )
                     ],
@@ -309,7 +314,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                     if (fee.isNotEmpty) {
                                       model.trxGasValueTextController.text =
                                           fee.toString();
-                                      model.transFee = double.parse(fee);
+                                      model.transFee = Decimal.parse(fee);
                                       model.notifyListeners();
                                     }
                                   },
@@ -663,7 +668,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                 color: globals.primaryColor,
                 textColor: Colors.white,
                 onPressed: () {
-                  if (model.isValidAmount && model.amount != 0.0) {
+                  if (model.isValidAmount &&
+                      model.amount != Constants.decimalZero) {
                     model.checkPass();
                   }
                 },
@@ -676,7 +682,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                         ))
                     : Text(AppLocalizations.of(context).confirm,
                         style: Theme.of(context).textTheme.button.copyWith(
-                            color: model.isValidAmount && model.amount != 0.0
+                            color: model.isValidAmount &&
+                                    model.amount != Constants.decimalZero
                                 ? white
                                 : grey)),
               ),

@@ -32,6 +32,7 @@ class LocalStorageService {
   static const String singleCustomTokenDataKey = 'customTokenDataKey';
   static const String cameraOpenKey = 'CameraOpenKey';
   static const String privacyConsentKey = 'privacyConsentKey';
+  static const String tokenListDbUpdateTimeKey = 'tokenListDbUpdateTimeKey';
 
 /*----------------------------------------------------------------------
                   Instance
@@ -93,6 +94,11 @@ class LocalStorageService {
     }
     return objLength;
   }
+
+  String get tokenListDBUpdateTime =>
+      _getFromDisk(tokenListDbUpdateTimeKey) ?? '';
+  set tokenListDBUpdateTime(String value) =>
+      _saveToDisk(tokenListDbUpdateTimeKey, value);
 
   bool get hasPrivacyConsent => _getFromDisk(privacyConsentKey) ?? false;
   set hasPrivacyConsent(bool value) => _saveToDisk(privacyConsentKey, value);

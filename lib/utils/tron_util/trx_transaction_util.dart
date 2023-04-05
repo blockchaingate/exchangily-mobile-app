@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
@@ -26,7 +27,7 @@ Future generateTrxTransactionContract(
     {@required Uint8List privateKey,
     @required String fromAddr,
     @required String toAddr,
-    @required double amount,
+    @required Decimal amount,
     @required bool isTrxUsdt,
     @required String tickerName,
     @required int gasLimit,
@@ -43,8 +44,8 @@ Future generateTrxTransactionContract(
   // debugPrint(
   //    'base58 address toAddress to hex ${StringUtil.uint8ListToHex(toAddress)}');
   // 4103b01c144f4e41c22b411c2997fbcdfae4fc9c2e
-
-  var amountToBigInt = BigInt.from(amount * 1e6);
+  var intAmount = amount * Decimal.parse(1e6.toString());
+  var amountToBigInt = intAmount.toBigInt();
   Int64 bigIntAmountToInt64 = Int64.parseInt(amountToBigInt.toString());
 
   // debugPrint('original amount - $amount and int64 res $bigIntAmountToInt64');

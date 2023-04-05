@@ -251,9 +251,58 @@ class WalletService {
     return address;
   }
 
-  storeTokenListUpdatesInDB() async {
+  saveTokenListUpdatesInDB() async {
+    debugPrint(
+        'saveTokenListUpdatesInDB TIME START ${DateTime.now().toLocal().toIso8601String()}');
+
+    await getTokenListUpdates().then((newTokenListFromTokenUpdateApi) async {
+      if (newTokenListFromTokenUpdateApi != null &&
+          newTokenListFromTokenUpdateApi.isNotEmpty) {
+        await tokenListDatabaseService.deleteDb().whenComplete(() => log.e(
+            'token list database cleared before inserting updated token data from api'));
+
+        /// Fill the token list database with new data from the api
+
+        for (var singleNewToken in newTokenListFromTokenUpdateApi) {
+          await tokenListDatabaseService.insert(singleNewToken);
+        }
+      }
+    });
+    debugPrint(
+        'saveTokenListUpdatesInDB TIME FINISH ${DateTime.now().toLocal().toIso8601String()}');
+  }
+
+  initializeTokenListDBUpdateTime() {
+    // Get the current value from storage
+    String storedValue = storageService.tokenListDBUpdateTime;
+
+    // Check if the stored value is empty or invalid
+    if (storedValue == null || storedValue.isEmpty) {
+      // If it's empty or invalid, set the current time as the initial value
+      String currentTime = DateTime.now().toLocal().toIso8601String();
+      storageService.tokenListDBUpdateTime = currentTime;
+    }
+    log.i(
+        'initializeTokenListDBUpdateTime storageService.tokenListDBUpdateTime ${storageService.tokenListDBUpdateTime}');
+  }
+
+  bool isMoreThan24HoursSinceLastUpdate(
+      String lastUpdateTimeFromDB, String currentTime) {
+    final lastUpdateTimeFromDBDateTime = DateTime.parse(lastUpdateTimeFromDB);
+    final currentTimeDateTime = DateTime.parse(currentTime);
+    var diff = currentTimeDateTime.difference(lastUpdateTimeFromDBDateTime);
+    log.i(
+        'isMoreThan24HoursSinceLastUpdate currentTimeDateTime $currentTimeDateTime -- diff.inMinutes ${diff.inHours}');
+    var result = diff.inHours > 24;
+    log.w('isMoreThan24HoursSinceLastUpdate $result');
+
+    return result;
+  }
+
+  Future<void> updateTokenListDb() async {
     debugPrint(
         'Store token TIME START ${DateTime.now().toLocal().toIso8601String()}');
+    initializeTokenListDBUpdateTime();
     List existingTokensInTokenDatabase;
     try {
       existingTokensInTokenDatabase = await tokenListDatabaseService.getAll();
@@ -261,12 +310,16 @@ class WalletService {
       existingTokensInTokenDatabase = [];
       log.e('getTokenList tokenListDatabaseService.getAll CATCH err $err');
     }
-    await getTokenListUpdates().then((newTokenListFromTokenUpdateApi) async {
-      if (newTokenListFromTokenUpdateApi != null &&
-          newTokenListFromTokenUpdateApi.isNotEmpty) {
-        existingTokensInTokenDatabase ??= [];
+
+    await apiService
+        .getTokenListUpdates()
+        .then((newTokenListFromTokenUpdateApi) async {
+      if (newTokenListFromTokenUpdateApi.isNotEmpty) {
         if (existingTokensInTokenDatabase.length !=
-            newTokenListFromTokenUpdateApi.length) {
+                newTokenListFromTokenUpdateApi.length ||
+            isMoreThan24HoursSinceLastUpdate(
+                storageService.tokenListDBUpdateTime,
+                DateTime.now().toLocal().toIso8601String())) {
           await tokenListDatabaseService.deleteDb().whenComplete(() => log.e(
               'token list database cleared before inserting updated token data from api'));
 
@@ -275,6 +328,8 @@ class WalletService {
           for (var singleNewToken in newTokenListFromTokenUpdateApi) {
             await tokenListDatabaseService.insert(singleNewToken);
           }
+          storageService.tokenListDBUpdateTime =
+              DateTime.now().toLocal().toIso8601String();
         } else {
           log.i('storeTokenListInDB -- local token db same length as api\'s ');
         }
@@ -1341,7 +1396,7 @@ class WalletService {
   Future depositTron(
       {String mnemonic,
       WalletInfo walletInfo,
-      double amount,
+      Decimal amount,
       bool isTrxUsdt,
       bool isBroadcast,
       @required options}) async {

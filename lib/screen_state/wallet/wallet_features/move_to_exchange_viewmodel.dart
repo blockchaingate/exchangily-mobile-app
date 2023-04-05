@@ -43,25 +43,25 @@ class MoveToExchangeViewModel extends BaseViewModel {
   final kanbanGasPriceTextController = TextEditingController();
   final kanbanGasLimitTextController = TextEditingController();
   final trxGasValueTextController = TextEditingController();
-  double transFee = 0.0;
-  double kanbanTransFee = 0.0;
+  Decimal transFee = Constants.decimalZero;
+  Decimal kanbanTransFee = Constants.decimalZero;
   bool transFeeAdvance = false;
   String coinName = '';
   String tokenType = '';
   String message = '';
   final amountController = TextEditingController();
   //bool isValid = false;
-  double gasAmount = 0.0;
+  Decimal gasAmount = Constants.decimalZero;
   bool isShowErrorDetailsButton = false;
   bool isShowDetailsMessage = false;
   String serverError = '';
   String specialTicker = '';
   var res;
-  double amount = 0.0;
+  Decimal amount = Constants.decimalZero;
   String feeUnit = '';
   final coinUtils = CoinUtils();
   int decimalLimit = 8;
-  double chainBalance = 0.0;
+  Decimal chainBalance = Constants.decimalZero;
   String fabAddress = '';
   bool isValidAmount = true;
   var walletUtil = WalletUtil();
@@ -114,7 +114,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     var _tokenType = tokenType == 'POLYGON' ? 'MATICM' : tokenType;
     await apiService
         .getSingleWalletBalance(fabAddress, _tokenType, walletInfo.address)
-        .then((walletBalance) => chainBalance = walletBalance.first.balance);
+        .then((walletBalance) => chainBalance = NumberUtil.roundDecimal(
+            Decimal.parse(walletBalance.first.balance.toString()),
+            decimalLimit));
   }
 
   showDetailsMessageToggle() {
@@ -126,35 +128,33 @@ class MoveToExchangeViewModel extends BaseViewModel {
 /*---------------------------------------------------
                   Amount After fee
 --------------------------------------------------- */
-  Future<double> amountAfterFee({bool isMaxAmount = false}) async {
+  Future<Decimal> amountAfterFee({bool isMaxAmount = false}) async {
     setBusy(true);
     if (amountController.text == '.') {
       setBusy(false);
-      return 0.0;
+      return Constants.decimalZero;
     }
     if (amountController.text.isEmpty) {
-      transFee = 0.0;
-      kanbanTransFee = 0.0;
+      transFee = Constants.decimalZero;
+      kanbanTransFee = Constants.decimalZero;
       setBusy(false);
-      return 0.0;
+      return Constants.decimalZero;
     }
-    amount = NumberUtil().truncateDoubleWithoutRouding(
-        double.parse(amountController.text),
-        precision: decimalLimit);
+
     log.w('amountAfterFee func: amount $amount');
 
-    double finalAmount = 0.0;
+    Decimal finalAmount = Constants.decimalZero;
     // update if transfee is 0
     if (!isTrx()) await updateTransFee();
     // if tron coins then assign fee accordingly
     if (isTrx()) {
       if (walletInfo.tickerName == 'USDTX' || walletInfo.tokenType == 'TRX') {
-        transFee = double.parse(trxGasValueTextController.text);
+        transFee = Decimal.parse(trxGasValueTextController.text);
         finalAmount = amount;
       }
 
       if (walletInfo.tickerName == 'TRX') {
-        transFee = double.parse(trxGasValueTextController.text);
+        transFee = Decimal.parse(trxGasValueTextController.text);
         finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
       }
     } else {
@@ -163,13 +163,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
       // so that there is fee to pay when transffering non-native tokens
       if (tokenType.isEmpty) {
         if (isMaxAmount) {
-          finalAmount = (Decimal.parse(amount.toString()) -
-                  Decimal.parse(transFee.toString()))
-              .toDouble();
+          finalAmount = amount - transFee;
         } else {
-          finalAmount = (Decimal.parse(transFee.toString()) +
-                  Decimal.parse(amount.toString()))
-              .toDouble();
+          finalAmount = transFee + amount;
 
           log.e(
               'final amount ${finalAmount} = amount $amount  + transFee $transFee');
@@ -178,17 +174,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
         finalAmount = amount;
       }
     }
-    finalAmount = NumberUtil()
-        .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit);
-    finalAmount <= walletInfo.availableBalance
+    finalAmount =
+        NumberUtil.decimalLimiter(finalAmount, decimalPlaces: decimalLimit);
+    finalAmount <= Decimal.parse(walletInfo.availableBalance.toString())
         ? isValidAmount = true
         : isValidAmount = false;
     log.i(
-        'Func:amountAfterFee --trans fee $transFee  -- entered amount $amount =  finalAmount $finalAmount -- decimal limit final amount ${NumberUtil().truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)} -- isValidAmount $isValidAmount');
+        'Func:amountAfterFee --trans fee $transFee  -- entered amount $amount =  finalAmount $finalAmount --  -- isValidAmount $isValidAmount');
     setBusy(false);
     //0.025105000000000002
-    return NumberUtil()
-        .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit);
+    return NumberUtil.decimalLimiter(finalAmount, decimalPlaces: decimalLimit);
   }
 
 /*---------------------------------------------------
@@ -197,19 +192,19 @@ class MoveToExchangeViewModel extends BaseViewModel {
   fillMaxAmount() async {
     setBusy(true);
 
-    amount = walletInfo.availableBalance;
+    amount = NumberUtil.parseDoubleToDecimal(walletInfo.availableBalance);
     amountController.text = amount.toString();
 
     if (!isTrx()) await updateTransFee();
-    double finalAmount = 0.0;
+    Decimal finalAmount = Constants.decimalZero;
     if (isTrx()) {
-      transFee = double.parse(trxGasValueTextController.text);
+      transFee = Decimal.parse(trxGasValueTextController.text);
     }
-    if (transFee != 0.0) {
+    if (transFee != Constants.decimalZero) {
       finalAmount = await amountAfterFee(isMaxAmount: true);
-      amountController.text = NumberUtil()
-          .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)
-          .toString();
+      amountController.text =
+          NumberUtil.decimalLimiter(finalAmount, decimalPlaces: decimalLimit)
+              .toString();
     } else {
       sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).insufficientGasAmount);
@@ -285,9 +280,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
     var kanbanTransFeeDouble = (Decimal.parse(kanbanPrice.toString()) *
-            Decimal.parse(kanbanGasLimit.toString()) /
-            Decimal.parse('1e18'))
-        .toDouble();
+        Decimal.parse(kanbanGasLimit.toString()) /
+        Decimal.parse('1e18'));
     kanbanTransFee = kanbanTransFeeDouble;
   }
 
@@ -298,8 +292,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
   getGasBalance() async {
     String address = await sharedService.getExgAddressFromWalletDatabase();
     await walletService.gasBalance(address).then((data) {
-      gasAmount = data;
-      if (gasAmount == 0) {
+      gasAmount = NumberUtil.parseDoubleToDecimal(data);
+      if (gasAmount == Constants.decimalZero) {
         sharedService.alertDialog(
           AppLocalizations.of(context).notice,
           AppLocalizations.of(context).insufficientGasAmount,
@@ -329,7 +323,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    if (gasAmount == 0.0 || gasAmount < kanbanTransFee || transFee == 0.0) {
+    if (gasAmount == Constants.decimalZero ||
+        gasAmount < kanbanTransFee ||
+        transFee == Constants.decimalZero) {
       sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).notice,
           subtitle: AppLocalizations.of(context).insufficientGasAmount);
@@ -358,14 +354,15 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     await refreshBalance();
 
-    double finalAmount = 0.0;
+    Decimal finalAmount = Constants.decimalZero;
     if (!isTrx()) {
       finalAmount = await amountAfterFee();
     }
 
     if (amount == null ||
-        finalAmount > walletInfo.availableBalance ||
-        amount == 0 ||
+        finalAmount >
+            NumberUtil.parseDoubleToDecimal(walletInfo.availableBalance) ||
+        amount == Constants.decimalZero ||
         amount.isNegative) {
       log.e(
           'amount $amount --- final amount with fee: $finalAmount -- wallet bal: ${walletInfo.availableBalance}');
@@ -379,8 +376,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     /// check chain balance to check
     /// whether native token has enough balance to cover transaction fee
     if (tokenType.isNotEmpty) {
-      bool hasSufficientChainBalance = await walletService
-          .hasSufficientWalletBalance(transFee, walletInfo.tokenType);
+      bool hasSufficientChainBalance =
+          await walletService.hasSufficientWalletBalance(
+              transFee.toDouble(), walletInfo.tokenType);
       if (!hasSufficientChainBalance) {
         log.e('Chain $tokenType -- insufficient balance');
         sharedService.sharedSimpleNotification(walletInfo.tokenType,
@@ -412,9 +410,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (walletInfo.tickerName == 'TRX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       bool isCorrectAmount = true;
-      double totalAmount =
-          amount + double.parse(trxGasValueTextController.text);
-      if (totalAmount > walletInfo.availableBalance) {
+      Decimal totalAmount =
+          amount + Decimal.parse(trxGasValueTextController.text);
+      if (totalAmount >
+          NumberUtil.parseDoubleToDecimal(walletInfo.availableBalance)) {
         isCorrectAmount = false;
       }
       if (!isCorrectAmount) {
@@ -543,7 +542,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       else {
         await walletService
             .depositDo(seed, walletInfo.tickerName, walletInfo.tokenType,
-                finalAmount, option)
+                finalAmount.toDouble(), option)
             .then((ret) {
           log.w('deposit res $ret');
 
@@ -661,9 +660,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     //amount = double.tryParse(amountController.text);
 
-    if (to == null || amount == null || amount <= 0) {
-      transFee = 0.0;
-      kanbanTransFee = 0.0;
+    if (to == null || amount == null || amount <= Constants.decimalZero) {
+      transFee = Constants.decimalZero;
+      kanbanTransFee = Constants.decimalZero;
       setBusy(false);
       return;
     }
@@ -688,16 +687,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
             [0],
             [address],
             to,
-            amount,
+            amount.toDouble(),
             options,
             false)
         .then((ret) async {
       log.w('updateTransFee $ret');
       if (ret != null && ret['transFee'] != null) {
-        transFee = NumberUtil()
-            .truncateDoubleWithoutRouding(ret['transFee'], precision: 8);
+        transFee = NumberUtil.roundStringToDecimal(ret['transFee'].toString(),
+            decimalPlaces: 8);
         log.i('transfee $transFee -- kanbanTransFee $kanbanTransFee');
-        await setFee();
+        //  await setFee();
         setBusy(false);
       }
 

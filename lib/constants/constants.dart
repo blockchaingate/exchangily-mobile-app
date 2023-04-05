@@ -1,3 +1,5 @@
+import 'package:decimal/decimal.dart';
+
 class Constants {
   static Pattern regexPattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
   static Map<String, String> headersText = {"responseType;": "text"};
@@ -7,6 +9,7 @@ class Constants {
 
   static int tronUsdtFee = 40;
   static int tronFee = 1;
+  static Decimal decimalZero = Decimal.zero;
   static const String baseAssetImagesLocalPath = 'assets/images/';
 
   static const String dollarSignImageLocalUrl =

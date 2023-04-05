@@ -490,7 +490,7 @@ class SendViewModel extends BaseViewModel {
                 privateKey: privateKey,
                 fromAddr: walletInfo.address,
                 toAddr: toAddress,
-                amount: amount,
+                amount: NumberUtil.parseDoubleToDecimal(amount),
                 gasLimit: int.parse(trxGasValueTextController.text),
                 isTrxUsdt: walletInfo.tickerName == 'USDTX' ||
                         walletInfo.tickerName == 'USDCX'

@@ -14,6 +14,55 @@ class NumberUtil {
       RegexValidator(Constants.regexPattern.toString())
           .isValid(amount.toString());
 
+  static Decimal roundDecimal(Decimal value, int decimalPlaces) {
+    Decimal multiplier = Decimal.parse(pow(10, decimalPlaces).toString());
+    Decimal roundedValue = ((value * multiplier).truncate() / multiplier);
+    // .toDecimal(scaleOnInfinitePrecision: decimalPlaces);
+    return roundedValue;
+  }
+
+  static double roundDouble(double value, {int decimalPlaces = 2}) {
+    if (value != 0) {
+      Decimal decimalValue = Decimal.parse(value.toString());
+
+      return roundDecimal(decimalValue, decimalPlaces).toDouble();
+    } else {
+      return value;
+    }
+  }
+
+  static Decimal roundStringToDecimal(String value, {int decimalPlaces = 2}) {
+    if (value.isNotEmpty) {
+      Decimal decimalValue = Decimal.parse(value);
+
+      return roundDecimal(decimalValue, decimalPlaces);
+    } else {
+      return Constants.decimalZero;
+    }
+  }
+
+  // create function parse double to decimal
+  static Decimal parseDoubleToDecimal(double value) {
+    // add error handling for double that if it is null or not a number or not a double or empty
+    if (value == null ||
+        value.isNaN ||
+        value.isInfinite ||
+        value.toString().isEmpty) return Constants.decimalZero;
+    return Decimal.parse(value.toString());
+  }
+
+  /// Breaks at precision 19
+  static Decimal decimalLimiter(Decimal input, {int decimalPlaces = 2}) {
+    var finalRes = Constants.decimalZero;
+
+    if (input != Constants.decimalZero) {
+      finalRes = roundDecimal(input, decimalPlaces);
+    }
+
+    debugPrint('finalRes $finalRes');
+    return finalRes;
+  }
+
   static int getDecimalLength(double number) {
     String stringNumber = number.toString();
     int decimalLength = 0;
