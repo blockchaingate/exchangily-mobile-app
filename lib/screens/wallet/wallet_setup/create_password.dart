@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_viewmodel.dart';
 import 'package:exchangilymobileapp/widgets/wallet/toggle_password_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
@@ -133,7 +134,6 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                                     Widget Password
-
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   Widget _buildPasswordTextField(CreatePasswordViewModel model) {
@@ -163,9 +163,19 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     padding: const EdgeInsets.only(right: 0),
                     child: model.checkPasswordConditions &&
                             model.password.isNotEmpty
-                        ? const Icon(Icons.check, color: primaryColor)
-                        : const Icon(Icons.clear, color: grey)),
-                TogglePasswordWidget(model)
+                        ? const Icon(
+                            Icons.check,
+                            color: primaryColor,
+                            size: 18,
+                          )
+                        : const Icon(
+                            CupertinoIcons.xmark_circle_fill,
+                            color: grey,
+                            size: 18,
+                          )),
+                TogglePasswordWidget(
+                    isShow: model.isShowPassword,
+                    togglePassword: model.togglePassword)
               ],
             ),
             labelText: AppLocalizations.of(context).enterPassword,
@@ -211,9 +221,19 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     padding: const EdgeInsets.only(right: 0),
                     child: model.checkConfirmPasswordConditions &&
                             model.password.isNotEmpty
-                        ? const Icon(Icons.check, color: primaryColor)
-                        : const Icon(Icons.clear, color: grey)),
-                TogglePasswordWidget(model)
+                        ? const Icon(
+                            Icons.check,
+                            color: primaryColor,
+                            size: 18,
+                          )
+                        : const Icon(
+                            CupertinoIcons.xmark_circle_fill,
+                            color: grey,
+                            size: 18,
+                          )),
+                TogglePasswordWidget(
+                    isShow: model.isShowPassword,
+                    togglePassword: model.togglePassword)
               ],
             ),
             labelText: AppLocalizations.of(context).confirmPassword,

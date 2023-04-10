@@ -230,8 +230,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                           ? Row(
                                               children: <Widget>[
                                                 SizedBox(
-                                                  height: 10,
-                                                  width: 20,
+                                                  height: model.radioHeight,
+                                                  width: model.radioWidth,
                                                   child: Radio(
                                                       activeColor:
                                                           globals.primaryColor,
@@ -254,8 +254,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                           : Row(
                                               children: <Widget>[
                                                 SizedBox(
-                                                  height: 10,
-                                                  width: 20,
+                                                  height: model.radioHeight,
+                                                  width: model.radioWidth,
                                                   child: Radio(
                                                       //  model.groupValue == 'FAB'? fillColor: MaterialStateColor
                                                       //       .resolveWith(
@@ -285,8 +285,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                       Row(
                                         children: <Widget>[
                                           SizedBox(
-                                            height: 10,
-                                            width: 20,
+                                            height: model.radioHeight,
+                                            width: model.radioWidth,
                                             child: Radio(
                                                 activeColor:
                                                     globals.primaryColor,
@@ -323,8 +323,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                           ? Row(
                                               children: <Widget>[
                                                 SizedBox(
-                                                  height: 10,
-                                                  width: 20,
+                                                  height: model.radioHeight,
+                                                  width: model.radioWidth,
                                                   child: Radio(
                                                       activeColor:
                                                           globals.primaryColor,
@@ -355,8 +355,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                           ? Row(
                                               children: <Widget>[
                                                 SizedBox(
-                                                  height: 10,
-                                                  width: 20,
+                                                  height: model.radioHeight,
+                                                  width: model.radioWidth,
                                                   child: Radio(
                                                       activeColor:
                                                           globals.primaryColor,

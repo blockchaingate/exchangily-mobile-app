@@ -92,6 +92,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
   var tokenType;
   var walletUtil = WalletUtil();
 
+  final double radioHeight = 20;
+  final double radioWidth = 30;
+
 /*---------------------------------------------------
                       INIT
 --------------------------------------------------- */

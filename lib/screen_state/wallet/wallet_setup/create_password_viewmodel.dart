@@ -49,10 +49,9 @@ class CreatePasswordViewModel extends BaseViewModel {
   final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   bool isShowPassword = false;
 
-  togglePassword() {
-    setBusyForObject(isShowPassword, true);
-    isShowPassword = !isShowPassword;
-    setBusyForObject(isShowPassword, false);
+  togglePassword(bool value) {
+    isShowPassword = value;
+    notifyListeners();
   }
 
   Future createOfflineWallets() async {
