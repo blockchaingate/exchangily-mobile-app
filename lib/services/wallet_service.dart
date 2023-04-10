@@ -292,7 +292,7 @@ class WalletService {
     final currentTimeDateTime = DateTime.parse(currentTime);
     var diff = currentTimeDateTime.difference(lastUpdateTimeFromDBDateTime);
     log.i(
-        'isMoreThan24HoursSinceLastUpdate currentTimeDateTime $currentTimeDateTime -- diff.inMinutes ${diff.inHours}');
+        'isMoreThan24HoursSinceLastUpdate currentTimeDateTime $currentTimeDateTime -- diff.hours ${diff.inHours}');
     var result = diff.inHours > 24;
     log.w('isMoreThan24HoursSinceLastUpdate $result');
 

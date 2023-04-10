@@ -130,61 +130,59 @@ class MoveToExchangeViewModel extends BaseViewModel {
 --------------------------------------------------- */
   Future<Decimal> amountAfterFee({bool isMaxAmount = false}) async {
     setBusy(true);
-    if (amountController.text == '.') {
+
+    if (amountController.text == '.' || amountController.text.isEmpty) {
       setBusy(false);
-      return Constants.decimalZero;
-    }
-    if (amountController.text.isEmpty) {
       transFee = Constants.decimalZero;
       kanbanTransFee = Constants.decimalZero;
-      setBusy(false);
       return Constants.decimalZero;
     }
 
     log.w('amountAfterFee func: amount $amount');
-
+    isValidAmount = true;
     Decimal finalAmount = Constants.decimalZero;
-    // update if transfee is 0
-    if (!isTrx()) await updateTransFee();
-    // if tron coins then assign fee accordingly
-    if (isTrx()) {
-      if (walletInfo.tickerName == 'USDTX' || walletInfo.tokenType == 'TRX') {
-        transFee = Decimal.parse(trxGasValueTextController.text);
-        finalAmount = amount;
-      }
 
-      if (walletInfo.tickerName == 'TRX') {
-        transFee = Decimal.parse(trxGasValueTextController.text);
-        finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
-      }
+    // Update transaction fee if it is not a TRX transfer
+    if (!isTrx()) {
+      await updateTransFee();
     } else {
-      // in any token transfer, gas fee is paid in native tokens so
-      // in case of non-native tokens, need to check the balance of native tokens
-      // so that there is fee to pay when transffering non-native tokens
-      if (tokenType.isEmpty) {
-        if (isMaxAmount) {
-          finalAmount = amount - transFee;
-        } else {
-          finalAmount = transFee + amount;
-
-          log.e(
-              'final amount ${finalAmount} = amount $amount  + transFee $transFee');
-        }
-      } else {
-        finalAmount = amount;
-      }
+      transFee = Decimal.parse(trxGasValueTextController.text);
     }
+
+    // Calculate the final amount based on whether it is a max amount transfer or not
+    finalAmount = isMaxAmount ? amount - transFee : amount;
     finalAmount =
         NumberUtil.decimalLimiter(finalAmount, decimalPlaces: decimalLimit);
-    finalAmount <= Decimal.parse(walletInfo.availableBalance.toString())
-        ? isValidAmount = true
-        : isValidAmount = false;
+
+    // For native tokens
+    if (tokenType.isEmpty) {
+      // Check if the user has enough balance for the fee and the amount they want to send
+      if (NumberUtil.parseDoubleToDecimal(walletInfo.availableBalance) <
+          amount + transFee) {
+        log.e(
+            'Insufficient balance for the transaction. Required balance: ${amount + transFee}');
+        isValidAmount = false;
+        return Constants.decimalZero;
+      }
+    } else {
+      // For non-native tokens
+      // Check if the user has enough native token balance to pay for the gas fee
+      if (NumberUtil.parseDoubleToDecimal(walletInfo.availableBalance) <
+          transFee) {
+        isValidAmount = false;
+        log.e(
+            'Insufficient native token balance for the transaction. Required balance for gas fee: $transFee');
+        return Constants.decimalZero;
+      }
+    }
+
     log.i(
-        'Func:amountAfterFee --trans fee $transFee  -- entered amount $amount =  finalAmount $finalAmount --  -- isValidAmount $isValidAmount');
+        'Func:amountAfterFee --trans fee $transFee -- entered amount $amount = finalAmount $finalAmount -- isValidAmount $isValidAmount');
     setBusy(false);
-    //0.025105000000000002
-    return NumberUtil.decimalLimiter(finalAmount, decimalPlaces: decimalLimit);
+    return finalAmount;
   }
+
+  //0.025105000000000002
 
 /*---------------------------------------------------
                   Fill Max Amount
@@ -333,16 +331,13 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    var checkTransFeeAgainst;
+    Decimal feeBalance = Constants.decimalZero;
     if (tokenType.isEmpty) {
-      checkTransFeeAgainst = walletInfo.availableBalance;
+      feeBalance = NumberUtil.parseDoubleToDecimal(walletInfo.availableBalance);
     } else {
-      checkTransFeeAgainst = chainBalance;
+      feeBalance = chainBalance;
     }
-    if (transFee > checkTransFeeAgainst &&
-        walletInfo.tickerName != 'TRX' &&
-        walletInfo.tickerName != 'USDTX' &&
-        walletInfo.tokenType != 'TRX') {
+    if (transFee > feeBalance && !isTrx()) {
       sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).insufficientBalance,
           subtitle:
@@ -358,12 +353,20 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (!isTrx()) {
       finalAmount = await amountAfterFee();
     }
-
     if (amount == null ||
-        finalAmount >
-            NumberUtil.parseDoubleToDecimal(walletInfo.availableBalance) ||
         amount == Constants.decimalZero ||
         amount.isNegative) {
+      log.e(
+          'amount $amount --- final amount with fee: $finalAmount -- wallet bal: ${walletInfo.availableBalance}');
+      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).pleaseEnterValidNumber,
+          isWarning: false);
+      setBusy(false);
+      return;
+    }
+
+    if (finalAmount >
+        NumberUtil.parseDoubleToDecimal(walletInfo.availableBalance)) {
       log.e(
           'amount $amount --- final amount with fee: $finalAmount -- wallet bal: ${walletInfo.availableBalance}');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,

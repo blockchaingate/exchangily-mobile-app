@@ -291,7 +291,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                                                 value: 'TRX'),
                                           ),
                                           UIHelper.horizontalSpaceSmall,
-                                          Text('TRC20', style: headText6),
+                                          Text('TRX', style: headText6),
                                         ],
                                       )
                                     : Row(
@@ -591,7 +591,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                         value: 'TRX'),
                   ),
                   UIHelper.horizontalSpaceSmall,
-                  Text('TRC20', style: headText6),
+                  Text('TRX', style: headText6),
                 ],
               )
             : Row(

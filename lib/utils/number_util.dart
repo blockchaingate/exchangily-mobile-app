@@ -41,7 +41,15 @@ class NumberUtil {
     }
   }
 
-  // create function parse double to decimal
+  static Decimal parseStringToDecimal(String value) {
+    // add error handling for string that if it is null or not a number or not a double or empty
+    if (value == null ||
+        value.isEmpty ||
+        value.toString().isEmpty ||
+        value.toString().contains('e')) return Constants.decimalZero;
+    return Decimal.parse(value);
+  }
+
   static Decimal parseDoubleToDecimal(double value) {
     // add error handling for double that if it is null or not a number or not a double or empty
     if (value == null ||

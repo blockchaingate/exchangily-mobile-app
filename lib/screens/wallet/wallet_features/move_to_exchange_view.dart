@@ -78,9 +78,9 @@ class MoveToExchangeScreen extends StatelessWidget {
                       activatedNegativeValues: false)
                 ],
                 onChanged: (String amount) {
-                  model.amount = NumberUtil.decimalLimiter(
-                      Decimal.parse(amount),
-                      decimalPlaces: model.decimalLimit);
+                  model.amount = NumberUtil.parseStringToDecimal(
+                    amount,
+                  );
                   model.amountAfterFee();
                 },
                 decoration: InputDecoration(
