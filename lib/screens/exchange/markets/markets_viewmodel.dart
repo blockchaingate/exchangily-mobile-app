@@ -124,7 +124,10 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
         'MTLUSDT',
         'POWRUSDT',
         'ELFUSDT',
-        'HOTUSDT'
+        'HOTUSDT',
+        'TWBTCDUSD',
+        'TWBTCFAB',
+        'TWBTCUSDT'
       ];
       for (var coin in coinsToRemove) {
         priceList.prices.removeWhere((item) => item.symbol.contains(coin));

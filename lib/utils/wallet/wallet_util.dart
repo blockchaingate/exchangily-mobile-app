@@ -257,7 +257,7 @@ class WalletUtil {
       tickerName = 'MATIC(POLYGON)';
       logoTicker = 'MATICM';
     } else if (tickerName.toUpperCase() == 'USDTM') {
-      tickerName = 'USDT(MATIC)';
+      tickerName = 'USDT(POLYGON)';
       logoTicker = 'USDTM';
     } else if (tickerName.toUpperCase() == 'FABB') {
       tickerName = 'FAB(BNB)';

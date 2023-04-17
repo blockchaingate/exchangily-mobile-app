@@ -911,7 +911,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
         walletInfo.tickerName == 'BST') {
       tickerName = 'BST';
       isWithdrawChoice = true;
-    } else if (WalletUtil.isSpecialFab(tickerName)) {
+    } else if (WalletUtil.isSpecialFab(walletInfo.tickerName)) {
       tickerName = 'FAB';
       isWithdrawChoice = true;
     } else if (walletInfo.tickerName == 'EXGE' ||
@@ -924,8 +924,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
       isWithdrawChoice = true;
       isShowFabChainBalance = false;
     } else if (WalletUtil.isSpecialUsdc(walletInfo.tickerName) ||
-        walletInfo.tickerName == 'USDc') {
-      tickerName = 'USDc';
+        walletInfo.tickerName == 'USDC') {
+      tickerName = 'USDC';
       isWithdrawChoice = true;
       isShowFabChainBalance = false;
     } else if (walletInfo.tickerName == 'MATICM') {
