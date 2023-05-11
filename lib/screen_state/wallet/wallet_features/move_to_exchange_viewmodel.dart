@@ -379,9 +379,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     /// check chain balance to check
     /// whether native token has enough balance to cover transaction fee
     if (tokenType.isNotEmpty) {
-      bool hasSufficientChainBalance =
-          await walletService.hasSufficientWalletBalance(
-              transFee.toDouble(), walletInfo.tokenType);
+      var _tokenType = tokenType == 'POLYGON' ? 'MATICM' : tokenType;
+      bool hasSufficientChainBalance = await walletService
+          .hasSufficientWalletBalance(transFee.toDouble(), _tokenType);
       if (!hasSufficientChainBalance) {
         log.e('Chain $tokenType -- insufficient balance');
         sharedService.sharedSimpleNotification(walletInfo.tokenType,
