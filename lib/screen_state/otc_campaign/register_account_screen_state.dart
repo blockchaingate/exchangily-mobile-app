@@ -13,21 +13,21 @@ import 'package:flutter/services.dart';
 
 class CampaignRegisterAccountScreenState extends BaseState {
   final log = getLogger('RegisterScreenState');
-  CampaignService campaignService = locator<CampaignService>();
-  NavigationService navigationService = locator<NavigationService>();
-  SharedService sharedService = locator<SharedService>();
+  CampaignService? campaignService = locator<CampaignService>();
+  NavigationService? navigationService = locator<NavigationService>();
+  SharedService? sharedService = locator<SharedService>();
 
-  BuildContext context;
-  bool passwordMatch;
+  late BuildContext context;
+  late bool passwordMatch;
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
   final confirmPasswordTextController = TextEditingController();
   final referralCodeTextController = TextEditingController();
   final exgWalletAddressTextController = TextEditingController();
-  User user;
+  late User user;
   bool isPasswordTextVisible = false;
-  CampaignUserData userData;
-  final walletService = locator<WalletService>();
+  CampaignUserData? userData;
+  final WalletService? walletService = locator<WalletService>();
 
   init() async {
     await getExgWalletAddr();
@@ -36,22 +36,22 @@ class CampaignRegisterAccountScreenState extends BaseState {
   // Get exg wallet address
   getExgWalletAddr() async {
     exgWalletAddressTextController.text =
-        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
+        (await walletService!.getAddressFromCoreWalletDatabaseByTickerName('EXG'))!;
     log.w('Exg wallet address ${exgWalletAddressTextController.text}');
   }
 
-  Future<CampaignUserData> register(User user) async {
+  Future<CampaignUserData?> register(User user) async {
     setBusy(true);
-    await campaignService
+    await campaignService!
         .registerAccount(user, referralCodeTextController.text,
             exgWalletAddressTextController.text)
         .then((res) async {
       // String loginToken = res['token'];
-      String error = res['message'];
+      String? error = res['message'];
       if (res != null && (error == null || error == '')) {
-        sharedService.alertDialog(
-            AppLocalizations.of(context).registrationSuccessful,
-            AppLocalizations.of(context)
+        sharedService!.alertDialog(
+            AppLocalizations.of(context)!.registrationSuccessful,
+            AppLocalizations.of(context)!
                 .pleaseCheckYourEmailToActivateYourAccount,
             path: '/campaignLogin');
         // await campaignService.saveCampaignUserDataLocally(loginToken, userData);
@@ -73,16 +73,16 @@ class CampaignRegisterAccountScreenState extends BaseState {
     setBusy(true);
     matchPassword();
     if (emailTextController.text.isEmpty) {
-      setErrorMessage(AppLocalizations.of(context).pleaseEnterYourEmailAddress);
+      setErrorMessage(AppLocalizations.of(context)!.pleaseEnterYourEmailAddress);
     } else if (passwordTextController.text.isEmpty) {
-      setErrorMessage(AppLocalizations.of(context).pleaseFillYourPassword);
+      setErrorMessage(AppLocalizations.of(context)!.pleaseFillYourPassword);
     } else if (confirmPasswordTextController.text.isEmpty) {
-      setErrorMessage(AppLocalizations.of(context).confirmPasswordFieldIsEmpty);
+      setErrorMessage(AppLocalizations.of(context)!.confirmPasswordFieldIsEmpty);
     } else if (exgWalletAddressTextController.text.isEmpty) {
-      setErrorMessage(AppLocalizations.of(context).exgWalletAddressIsRequired);
+      setErrorMessage(AppLocalizations.of(context)!.exgWalletAddressIsRequired);
     } else if (!passwordMatch) {
       setErrorMessage(
-          AppLocalizations.of(context).bothPasswordFieldsShouldMatch);
+          AppLocalizations.of(context)!.bothPasswordFieldsShouldMatch);
     } else {
       setErrorMessage('');
       user = User(
@@ -108,8 +108,8 @@ class CampaignRegisterAccountScreenState extends BaseState {
   // Paste exg address
 
   pasteClipboardText() async {
-    ClipboardData data = await Clipboard.getData(Clipboard.kTextPlain);
+    ClipboardData data = (await Clipboard.getData(Clipboard.kTextPlain))!;
 
-    exgWalletAddressTextController.text = data.text;
+    exgWalletAddressTextController.text = data.text!;
   }
 }

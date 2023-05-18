@@ -1,35 +1,35 @@
 class CampaignOrder {
-  String _orderId;
-  String _memberId;
-  String _orderNumber;
-  String _walletAdd; // Wallet EXG address
-  String _status;
-  String _txId;
-  double _quantity;
-  String _paymentType;
-  String _note;
-  String _officialNote;
-  bool _active;
-  String _createdTime;
-  double _price;
-  double _payableAmount;
+  String? _orderId;
+  String? _memberId;
+  String? _orderNumber;
+  String? _walletAdd; // Wallet EXG address
+  String? _status;
+  String? _txId;
+  double? _quantity;
+  String? _paymentType;
+  String? _note;
+  String? _officialNote;
+  bool? _active;
+  String? _createdTime;
+  double? _price;
+  double? _payableAmount;
 
   CampaignOrder(
       {
       //    String orderId,
-      String memberId,
+      String? memberId,
       //   String orderNumber,
-      String walletAdd, // Wallet EXG address
+      String? walletAdd, // Wallet EXG address
       //   String status,
-      String txId,
-      double quantity,
-      String paymentType,
+      String? txId,
+      double? quantity,
+      String? paymentType,
       //  String note,
       //  String officialNote,
       //  bool active,
       //  String createdTime,
-      double price,
-      double payableAmount}) {
+      double? price,
+      double? payableAmount}) {
     // this._orderId = orderId ?? '';
     _memberId = memberId;
     //  this._orderNumber = orderNumber ?? '';
@@ -88,8 +88,8 @@ class CampaignOrder {
   //   this._orderId = orderId;
   // }
 
-  String get memberId => _memberId;
-  set memberId(String memberId) {
+  String? get memberId => _memberId;
+  set memberId(String? memberId) {
     _memberId = memberId;
   }
 
@@ -98,8 +98,8 @@ class CampaignOrder {
   //   this._orderNumber = orderNumber;
   // }
 
-  String get walletAdd => _walletAdd;
-  set walletAdd(String walletAdd) {
+  String? get walletAdd => _walletAdd;
+  set walletAdd(String? walletAdd) {
     _walletAdd = walletAdd;
   }
 
@@ -108,18 +108,18 @@ class CampaignOrder {
   //   this._status = status;
   // }
 
-  String get txId => _txId;
-  set txId(String txId) {
+  String? get txId => _txId;
+  set txId(String? txId) {
     _txId = txId;
   }
 
-  double get quantity => _quantity;
-  set quantity(double quantity) {
+  double? get quantity => _quantity;
+  set quantity(double? quantity) {
     _quantity = quantity;
   }
 
-  String get paymentType => _paymentType;
-  set paymentType(String paymentType) {
+  String? get paymentType => _paymentType;
+  set paymentType(String? paymentType) {
     _paymentType = paymentType;
   }
 
@@ -143,13 +143,13 @@ class CampaignOrder {
   //   this._createdTime = createdTime;
   // }
 
-  double get price => _price;
-  set price(double price) {
+  double? get price => _price;
+  set price(double? price) {
     _price = price;
   }
 
-  double get payableAmount => _payableAmount;
-  set payableAmount(double payableAmount) {
+  double? get payableAmount => _payableAmount;
+  set payableAmount(double? payableAmount) {
     _payableAmount = payableAmount;
   }
 }

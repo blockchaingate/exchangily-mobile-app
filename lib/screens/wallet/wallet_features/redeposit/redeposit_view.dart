@@ -24,9 +24,9 @@ import '../../../../utils/string_util.dart';
 
 // {"success":true,"data":{"transactionID":"7f9d1b3fad00afa85076d28d46fd3457f66300989086b95c73ed84e9b3906de8"}}
 class Redeposit extends StatelessWidget {
-  final WalletInfo walletInfo;
+  final WalletInfo? walletInfo;
 
-  const Redeposit({Key key, this.walletInfo}) : super(key: key);
+  const Redeposit({Key? key, this.walletInfo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class Redeposit extends StatelessWidget {
           appBar: AppBar(
             centerTitle: true,
             title: Text(
-              '${AppLocalizations.of(context).redeposit}  ${walletInfo.tickerName}  ${AppLocalizations.of(context).toExchange}',
+              '${AppLocalizations.of(context)!.redeposit}  ${walletInfo!.tickerName}  ${AppLocalizations.of(context)!.toExchange}',
               style: Theme.of(context).textTheme.headline4,
             ),
             backgroundColor: const Color(0XFF1f2233),
@@ -52,7 +52,7 @@ class Redeposit extends StatelessWidget {
             child: ListView(
               children: <Widget>[
                 model.isBusy && !model.isConfirmButtonPressed
-                    ? model.sharedService.loadingIndicator()
+                    ? model.sharedService!.loadingIndicator()
                     : Container(
                         color: grey.withOpacity(.2),
                         child: Column(
@@ -62,7 +62,7 @@ class Redeposit extends StatelessWidget {
                                     title: Row(
                                       children: <Widget>[
                                         Text(
-                                            AppLocalizations.of(context).amount,
+                                            AppLocalizations.of(context)!.amount,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline4),
@@ -79,11 +79,11 @@ class Redeposit extends StatelessWidget {
                                     activeColor: primaryColor,
                                     value: redepositItem['transactionID'],
                                     groupValue: model.errDepositTransactionID,
-                                    onChanged: (val) {
+                                    onChanged: (dynamic val) {
                                       model.setBusy(true);
                                       model.errDepositTransactionID = val;
                                       debugPrint('valllll=' +
-                                          model.errDepositTransactionID);
+                                          model.errDepositTransactionID!);
                                       model.setBusy(false);
                                     },
                                   ))
@@ -98,8 +98,8 @@ class Redeposit extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(
-                            AppLocalizations.of(context).walletbalance +
-                                ' ${model.walletInfo.availableBalance}',
+                            AppLocalizations.of(context)!.walletbalance +
+                                ' ${model.walletInfo!.availableBalance}',
                             style: Theme.of(context).textTheme.headline5,
                           ),
                           Padding(
@@ -107,7 +107,7 @@ class Redeposit extends StatelessWidget {
                               horizontal: 10,
                             ),
                             child: Text(
-                              walletInfo.tickerName.toUpperCase(),
+                              walletInfo!.tickerName!.toUpperCase(),
                               style: Theme.of(context).textTheme.headline5,
                             ),
                           )
@@ -116,7 +116,7 @@ class Redeposit extends StatelessWidget {
                       UIHelper.verticalSpaceSmall,
                       Row(
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).kanbanGasFee,
+                          Text(AppLocalizations.of(context)!.kanbanGasFee,
                               style: Theme.of(context).textTheme.headline5),
                           UIHelper.horizontalSpaceSmall,
                           Text(
@@ -128,7 +128,7 @@ class Redeposit extends StatelessWidget {
                       // Switch Row
                       Row(
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).advance,
+                          Text(AppLocalizations.of(context)!.advance,
                               style: Theme.of(context).textTheme.headline5),
                           Switch(
                             value: model.transFeeAdvance,
@@ -152,7 +152,7 @@ class Redeposit extends StatelessWidget {
                                   Expanded(
                                     flex: 3,
                                     child: Text(
-                                        AppLocalizations.of(context)
+                                        AppLocalizations.of(context)!
                                             .kanbanGasPrice,
                                         style: Theme.of(context)
                                             .textTheme
@@ -189,7 +189,7 @@ class Redeposit extends StatelessWidget {
                                   Expanded(
                                     flex: 3,
                                     child: Text(
-                                        AppLocalizations.of(context)
+                                        AppLocalizations.of(context)!
                                             .kanbanGasLimit,
                                         style: Theme.of(context)
                                             .textTheme
@@ -227,10 +227,10 @@ class Redeposit extends StatelessWidget {
                     ],
                   ),
                 ),
-                model.errorMessage != null || model.errorMessage.isNotEmpty
+                model.errorMessage != null || model.errorMessage!.isNotEmpty
                     ? Center(
                         child: Text(
-                        model.errorMessage,
+                        model.errorMessage!,
                         style: TextStyle(color: red),
                       ))
                     : Container(),
@@ -243,9 +243,9 @@ class Redeposit extends StatelessWidget {
                     model.checkPass();
                   },
                   child: model.isBusy && model.isConfirmButtonPressed
-                      ? model.sharedService.loadingIndicator()
+                      ? model.sharedService!.loadingIndicator()
                       : Text(
-                          AppLocalizations.of(context).confirm,
+                          AppLocalizations.of(context)!.confirm,
                           style: Theme.of(context).textTheme.button,
                         ),
                 ),

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 
 class OtcScreen extends StatelessWidget {
-  const OtcScreen({Key key}) : super(key: key);
+  const OtcScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class OtcScreen extends StatelessWidget {
                                     'Merchant:',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5
+                                        .headline5!
                                         .copyWith(
                                             color: globals.grey,
                                             fontWeight: FontWeight.bold),
@@ -74,7 +74,7 @@ class OtcScreen extends StatelessWidget {
                                     'Quantity:',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5
+                                        .headline5!
                                         .copyWith(
                                             color: globals.grey,
                                             fontWeight: FontWeight.bold),
@@ -83,7 +83,7 @@ class OtcScreen extends StatelessWidget {
                                     'Price:',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5
+                                        .headline5!
                                         .copyWith(
                                             color: globals.grey,
                                             fontWeight: FontWeight.bold),
@@ -92,7 +92,7 @@ class OtcScreen extends StatelessWidget {
                                     'Limits:',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5
+                                        .headline5!
                                         .copyWith(
                                             color: globals.grey,
                                             fontWeight: FontWeight.bold),
@@ -101,7 +101,7 @@ class OtcScreen extends StatelessWidget {
                                     'Payment:',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5
+                                        .headline5!
                                         .copyWith(
                                             color: globals.grey,
                                             fontWeight: FontWeight.bold),
@@ -122,7 +122,7 @@ class OtcScreen extends StatelessWidget {
                                       'Paul Liu',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline5
+                                          .headline5!
                                           .copyWith(
                                               fontWeight: FontWeight.bold),
                                     ),
@@ -146,7 +146,7 @@ class OtcScreen extends StatelessWidget {
                                     '21000--3212154',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5
+                                        .headline5!
                                         .copyWith(color: globals.grey),
                                   ),
                                   // Payment icons
@@ -194,7 +194,8 @@ class OtcScreen extends StatelessWidget {
                                       // First column element is merchant rating
                                       Container(
                                         height: 25, // to align with name row
-                                        padding: const EdgeInsets.only(top: 5.0),
+                                        padding:
+                                            const EdgeInsets.only(top: 5.0),
                                         child: Row(
                                           children: const <Widget>[
                                             Icon(Icons.star,
@@ -219,23 +220,30 @@ class OtcScreen extends StatelessWidget {
                                                   TargetPlatform.iOS
                                               ? Center(
                                                   child: CupertinoButton(
-                                                      child: Text(AppLocalizations.of(context).buy,
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .headline5),
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .buy,
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headlineSmall),
                                                       onPressed: () {}),
                                                 )
                                               : Center(
-                                                  child: RaisedButton(
-                                                    color: globals.buyPrice,
+                                                  child: ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          globals.buyPrice,
+                                                    ),
+                                                    onPressed: () {},
                                                     child: Text(
                                                       'Buy',
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .headline4,
+                                                          .headlineMedium,
                                                     ),
-                                                    onPressed: () {},
                                                   ),
                                                 )),
                                     ]))

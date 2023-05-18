@@ -11,34 +11,31 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:bip32/bip32.dart' as bip32;
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:bip32/bip32.dart' as bip_32;
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
-import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
-import 'package:flutter/widgets.dart';
-import './eth_util.dart';
-
-//import '../packages/bip32/bip32_base.dart' as bip32;
-
-//import '../packages/bip32/utils/ecurve.dart' as ecc;
-import 'package:hex/hex.dart';
-import '../utils/string_util.dart';
-import '../environments/environment.dart';
-import './btc_util.dart';
-import "package:pointycastle/pointycastle.dart";
-import 'dart:typed_data';
-import 'dart:convert';
-import "package:pointycastle/ecc/curves/secp256k1.dart";
-import "package:pointycastle/digests/sha256.dart";
-import "package:pointycastle/signers/ecdsa_signer.dart";
-import 'package:pointycastle/macs/hmac.dart';
-import 'varuint.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
     as tron_address_util;
+import 'package:flutter/widgets.dart';
+import 'package:hex/hex.dart';
+import "package:pointycastle/digests/sha256.dart";
+import "package:pointycastle/ecc/curves/secp256k1.dart";
+import 'package:pointycastle/macs/hmac.dart';
+import "package:pointycastle/pointycastle.dart";
+import "package:pointycastle/signers/ecdsa_signer.dart";
 import 'package:web3dart/crypto.dart' as crypto_web3;
-import 'package:exchangilymobileapp/constants/constants.dart';
+
+import './btc_util.dart';
+import './eth_util.dart';
+import '../environments/environment.dart';
+import '../utils/string_util.dart';
+import 'varuint.dart';
 
 final ECDomainParameters _params = ECCurve_secp256k1();
 final BigInt _halfCurveOrder = _params.n >> 1;
@@ -151,8 +148,8 @@ class CoinUtils {
   }
 
   Uint8List hash256(Uint8List buffer) {
-    Uint8List _tmp = SHA256Digest().process(buffer);
-    return SHA256Digest().process(_tmp);
+    Uint8List tmp = SHA256Digest().process(buffer);
+    return SHA256Digest().process(tmp);
   }
 
   encodeSignature(signature, recovery, compressed, segwitType) {
@@ -211,7 +208,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 
     final publicKey =
         crypto_web3.bytesToInt(crypto_web3.privateKeyBytesToPublic(privateKey));
-    debugPrint("publicKey: " + publicKey.toString());
+    debugPrint("publicKey: $publicKey");
 
     //Implementation for calculating v naively taken from there, I don't understand
     //any of this.
@@ -225,7 +222,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       }
     }
 
-    debugPrint('recId====' + recId.toString());
+    debugPrint('recId====$recId');
     if (recId == -1) {
       throw Exception(
           'Could not construct a recoverable key. This should never happen');
@@ -234,7 +231,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     return crypto_web3.MsgSignature(sig.r, sig.s, recId);
   }
 
-  BigInt _recoverFromSignature(
+  BigInt? _recoverFromSignature(
       int recId, ECSignature sig, Uint8List msg, ECDomainParameters params) {
     final n = params.n;
     final i = BigInt.from(recId ~/ 2);
@@ -246,8 +243,8 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
         radix: 16);
     if (x.compareTo(prime) >= 0) return null;
 
-    final R = _decompressKey(x, (recId & 1) == 1, params.curve);
-    if (!(R * n).isInfinity) return null;
+    final R = _decompressKey(x, (recId & 1) == 1, params.curve)!;
+    if (!(R * n)!.isInfinity) return null;
 
     final e = crypto_web3.bytesToInt(msg);
 
@@ -256,7 +253,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     final srInv = (rInv * sig.s) % n;
     final eInvrInv = (rInv * eInv) % n;
 
-    final q = (params.G * eInvrInv) + (R * srInv);
+    final q = ((params.G * eInvrInv)! + (R * srInv))!;
 
     final bytes = q.getEncoded(false);
     return crypto_web3.bytesToInt(bytes.sublist(1));
@@ -268,7 +265,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     return Uint8List.fromList(data);
   }
 
-  ECPoint _decompressKey(BigInt xBN, bool yBit, ECCurve c) {
+  ECPoint? _decompressKey(BigInt xBN, bool yBit, ECCurve c) {
     List<int> x9IntegerToBytes(BigInt s, int qLength) {
       //https://github.com/bcgit/bc-java/blob/master/core/src/main/java/org/bouncycastle/asn1/x9/X9IntegerConverter.java#L45
       final bytes = crypto_web3.intToBytes(s);
@@ -303,9 +300,10 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
   }
 
   Future<Uint8List> signBtcMessageWith(originalMessage, Uint8List privateKey,
-      {int chainId, var network}) async {
+      {int? chainId, var network}) async {
     debugPrint('signBtcMessageWith begin');
-    Uint8List messageHash = magicHash(originalMessage, network);
+    // Uint8List messageHash = magicHash(originalMessage, network);
+    Uint8List messageHash = Uint8List(2332);
 
     debugPrint('network=');
     debugPrint(network.toString());
@@ -342,9 +340,9 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
   }
 
   Future<Uint8List> signDogeMessageWith(originalMessage, Uint8List privateKey,
-      {int chainId, var network}) async {
+      {int? chainId, var network}) async {
     debugPrint('signDogeMessageWith');
-    Uint8List messageHash = magicHashDoge(originalMessage, network);
+    Uint8List messageHash = magicHashDoge(originalMessage);
     //messageHash.insert(1, 25);
     debugPrint('network=');
     debugPrint(network);
@@ -381,9 +379,9 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
   }
 
   Future<Uint8List> signPersonalMessageWith(
-      String _messagePrefix, Uint8List privateKey, Uint8List payload,
-      {int chainId}) async {
-    final prefix = _messagePrefix + payload.length.toString();
+      String messagePrefix, Uint8List privateKey, Uint8List payload,
+      {int? chainId}) async {
+    final prefix = messagePrefix + payload.length.toString();
     final prefixBytes = ascii.encode(prefix);
 
     // will be a Uint8List, see the documentation of Uint8List.+
@@ -395,8 +393,8 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
     // be aware that signature.v already is recovery + 27
-    debugPrint('signature.v=======' + signature.v.toString());
-    debugPrint('chainId=' + chainId.toString());
+    debugPrint('signature.v=======${signature.v}');
+    debugPrint('chainId=$chainId');
 
     /*
   final chainIdV =
@@ -404,7 +402,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 
    */
     final chainIdV = signature.v + 27;
-    debugPrint('chainIdV=' + chainIdV.toString());
+    debugPrint('chainIdV=$chainIdV');
     signature = crypto_web3.MsgSignature(signature.r, signature.s, chainIdV);
 
     final r = _padTo32(crypto_web3.intToBytes(signature.r));
@@ -416,9 +414,9 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     //return credential.sign(concat, chainId: chainId);
   }
 
-  Uint8List magicHash(String message, [NetworkType network]) {
+  Uint8List magicHash(String message, [NetworkType? network]) {
     network = network ?? bitcoin;
-    Uint8List messagePrefix = utf8.encode(network.messagePrefix);
+    List<int> messagePrefix = utf8.encode(network.messagePrefix);
     debugPrint('messagePrefix===');
     debugPrint(messagePrefix.toString());
     int messageVISize = encodingLength(message.length);
@@ -434,9 +432,9 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     return hash256(buffer);
   }
 
-  Uint8List magicHashDoge(String message, [NetworkType network]) {
+  Uint8List magicHashDoge(String message, [NetworkType? network]) {
     network = network ?? bitcoin;
-    Uint8List messagePrefix = utf8.encode(network.messagePrefix);
+    List<int> messagePrefix = utf8.encode(network.messagePrefix);
 
     int messageVISize = encodingLength(message.length);
 
@@ -464,7 +462,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     var v = '';
 
     var signedMess;
-    if (coinName == 'TRX' || tokenType == 'TRX' || tokenType == 'TRON') {
+    if (coinName == 'TRX' || tokenType == 'TRX') {
       var privateKey = tron_address_util.generateTrxPrivKeyBySeed(seed);
       //var bytes = CryptoWeb3.hexToBytes(originalMessage);
 
@@ -483,23 +481,22 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 
     // other coins signed message
     else if (coinName == 'ETH' || tokenType == 'ETH') {
-      final root = bip32.BIP32.fromSeed(seed);
+      final root = bip_32.BIP32.fromSeed(seed);
       var coinType = environment["CoinType"]["ETH"];
-      final ethCoinChild =
-          root.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
+      final ethCoinChild = root.derivePath("m/44'/$coinType'/0'/0/0");
       var privateKey = ethCoinChild.privateKey;
       //var credentials = EthPrivateKey.fromHex(privateKey);
       //var credentials = EthPrivateKey(privateKey);
 
       var chainId = environment["chains"]["ETH"]["chainId"];
       // chainId = 0;
-      debugPrint('chainId==' + chainId.toString());
+      debugPrint('chainId==$chainId');
 
       // var signedMessOrig = await credentials
       //    .signPersonalMessage(stringToUint8List(originalMessage), chainId: chainId);
 
       signedMess = await signPersonalMessageWith(Constants.EthMessagePrefix,
-          privateKey, stringToUint8List(originalMessage),
+          privateKey!, stringToUint8List(originalMessage),
           chainId: chainId);
       String ss = HEX.encode(signedMess);
       //String ss2 = HEX.encode(signedMessOrig);
@@ -509,16 +506,15 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       r = ss.substring(0, 64);
       s = ss.substring(64, 128);
       v = ss.substring(128);
-      debugPrint('v=' + v);
+      debugPrint('v=$v');
     } else if (coinName == 'BNB' ||
         tokenType == 'BNB' ||
         coinName == 'MATICM' ||
         tokenType == 'MATICM' ||
         tokenType == 'POLYGON') {
-      final root = bip32.BIP32.fromSeed(seed);
+      final root = bip_32.BIP32.fromSeed(seed);
       var coinType = environment["CoinType"]["ETH"];
-      final ethCoinChild =
-          root.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
+      final ethCoinChild = root.derivePath("m/44'/$coinType'/0'/0/0");
       var privateKey = ethCoinChild.privateKey;
       //var credentials = EthPrivateKey.fromHex(privateKey);
       //var credentials = EthPrivateKey(privateKey);
@@ -530,13 +526,13 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       }
 
       // chainId = 0;
-      debugPrint('chainId==' + chainId.toString());
+      debugPrint('chainId==$chainId');
 
       // var signedMessOrig = await credentials
       //    .signPersonalMessage(stringToUint8List(originalMessage), chainId: chainId);
 
       signedMess = await signPersonalMessageWith(Constants.EthMessagePrefix,
-          privateKey, stringToUint8List(originalMessage),
+          privateKey!, stringToUint8List(originalMessage),
           chainId: chainId);
       String ss = HEX.encode(signedMess);
       //String ss2 = HEX.encode(signedMessOrig);
@@ -546,7 +542,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       r = ss.substring(0, 64);
       s = ss.substring(64, 128);
       v = ss.substring(128);
-      debugPrint('v=' + v);
+      debugPrint('v=$v');
     } else if (coinName == 'FAB' ||
         coinName == 'BTC' ||
         coinName == 'LTC' ||
@@ -561,11 +557,11 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       } else if (coinName == 'DOGE') {
         network = environment["chains"]['DOGE']["network"];
       }
-      final root2 = bip32.BIP32.fromSeed(
+      final root2 = bip_32.BIP32.fromSeed(
           seed,
-          bip32.NetworkType(
+          bip_32.NetworkType(
               wif: network.wif,
-              bip32: bip32.Bip32Type(
+              bip32: bip_32.Bip32Type(
                   public: network.bip32.public,
                   private: network.bip32.private)));
 
@@ -582,18 +578,17 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       if (coinName == 'BCH') {
         coinType = environment["CoinType"]["BCH"];
       }
-      var bitCoinChild =
-          root2.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
+      var bitCoinChild = root2.derivePath("m/44'/$coinType'/0'/0/0");
       //var btcWallet =
       //    hdWallet.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
       var privateKey = bitCoinChild.privateKey;
       // var credentials = EthPrivateKey(privateKey);
 
       if (coinName == 'DOGE') {
-        signedMess = await signDogeMessageWith(originalMessage, privateKey,
+        signedMess = await signDogeMessageWith(originalMessage, privateKey!,
             network: network);
       } else {
-        signedMess = await signBtcMessageWith(originalMessage, privateKey,
+        signedMess = await signBtcMessageWith(originalMessage, privateKey!,
             network: network);
       }
 
@@ -635,16 +630,16 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     return {'r': r, 's': s, 'v': v};
   }
 
-  getOfficalAddress(String coinName, {String tokenType = ''}) {
+  getOfficalAddress(String? coinName, {String? tokenType = ''}) {
     if (tokenType == 'FAB') {
-      String fabTokensOfficialAddress =
+      String? fabTokensOfficialAddress =
           environment['addresses']['exchangilyOfficial'][0]['address'];
       debugPrint(
           'fabTokensOfficialAddress $fabTokensOfficialAddress for $coinName');
       return fabTokensOfficialAddress;
     }
     if (tokenType == 'TRX' || tokenType == 'TRON') {
-      String trxTokensOfficialAddress =
+      String? trxTokensOfficialAddress =
           environment['addresses']['exchangilyOfficial'][9]['address'];
       debugPrint(
           'TRXTokensOfficialAddress $trxTokensOfficialAddress for $coinName');
@@ -676,7 +671,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       var address = environment['addresses']['exchangilyOfficial']
           .where((addr) => addr['name'] == coinName)
           .toList();
-      String majorsOfficialAddress =
+      String? majorsOfficialAddress =
           (address as List).isNotEmpty ? address[0]['address'] : '';
       debugPrint(
           'majors official address $majorsOfficialAddress for $coinName');
@@ -699,9 +694,9 @@ getAddressForCoin(root, 'EXG', tokenType: 'FAB');
           btcUtils.getBtcNode(root, tickerName: tickerName, index: index);
       return btcUtils.getBtcAddressForNode(node, tickerName: tickerName);
     } else if (tickerName == 'LTC') {
-      return generateLtcAddress(root);
+      return null;
     } else if (tickerName == 'DOGE') {
-      return generateDogeAddress(root);
+      return null;
     } else if ((tickerName == 'ETH') || (tokenType == 'ETH')) {
       var node = ethUtils.getEthNode(root, index: index);
       return await ethUtils.getEthAddressForNode(node);
@@ -715,26 +710,26 @@ getAddressForCoin(root, 'EXG', tokenType: 'FAB');
       var pass1 = sha256.process(fabPublicKey);
       Digest ripemd160 = Digest("RIPEMD-160");
       var pass2 = ripemd160.process(pass1);
-      var fabTokenAddr = '0x' + HEX.encode(pass2);
+      var fabTokenAddr = '0x${HEX.encode(pass2)}';
       return fabTokenAddr;
     }
     return '';
   }
 
 // Future Coin Balances With Addresses
-  Future getCoinBalanceByAddress(String coinName, String address,
+  Future getCoinBalanceByAddress(String coinName, String? address,
       {tokenType = ''}) async {
     try {
       if (coinName == 'BTC') {
-        return await btcUtils.getBtcBalanceByAddress(address);
+        return await btcUtils.getBtcBalanceByAddress(address!);
       } else if (coinName == 'LTC') {
         return await ltcUtils.getLtcBalanceByAddress(address);
       } else if (coinName == 'ETH') {
-        return await ethUtils.getEthBalanceByAddress(address);
+        return await ethUtils.getEthBalanceByAddress(address!);
       } else if (coinName == 'FAB') {
-        return await fabUtils.getFabBalanceByAddress(address);
+        return await fabUtils.getFabBalanceByAddress(address!);
       } else if (tokenType == 'ETH') {
-        return await ethUtils.getEthTokenBalanceByAddress(address, coinName);
+        return await ethUtils.getEthTokenBalanceByAddress(address!, coinName);
       } else if (tokenType == 'FAB') {
         return await fabUtils.getFabTokenBalanceByAddress(address, coinName);
       }
@@ -760,7 +755,9 @@ getAddressForCoin(root, 'EXG', tokenType: 'FAB');
       } else if (tokenType == 'FAB') {
         return await fabUtils.getFabTokenBalanceByAddress(address, coinName);
       }
-    } catch (e) {}
+    } catch (e) {
+      log.e('getCoinBalanceByAddress $e');
+    }
 
     return {'balance': -1.0, 'lockbalance': -1.0};
   }

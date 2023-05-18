@@ -11,7 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
 
 class EventsView extends StatelessWidget {
-  const EventsView({Key key}) : super(key: key);
+  const EventsView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class EventsView extends StatelessWidget {
                           child: Row(
                             children: [
                               Text(
-                                AppLocalizations.of(context).announcements,
+                                AppLocalizations.of(context)!.announcements,
                                 style: const TextStyle(color: white),
                               ),
                               const Padding(
@@ -75,7 +75,7 @@ class EventsView extends StatelessWidget {
                             ),
                             child: Row(
                               children: [
-                                Text(AppLocalizations.of(context).blog),
+                                Text(AppLocalizations.of(context)!.blog),
                                 const Padding(
                                   padding:
                                       EdgeInsets.only(left: 5.0, bottom: 5.0),
@@ -95,7 +95,7 @@ class EventsView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: model.isBusy
-                          ? model.sharedService.loadingIndicator()
+                          ? model.sharedService!.loadingIndicator()
                           : Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -103,14 +103,14 @@ class EventsView extends StatelessWidget {
                                   text: TextSpan(
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        model.sharedService.launchInBrowser(
+                                        model.sharedService!.launchInBrowser(
                                             Uri.parse(model.url));
                                       },
-                                    text: AppLocalizations.of(context)
+                                    text: AppLocalizations.of(context)!
                                         .visitWebsite,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .bodyText1
+                                        .bodyText1!
                                         .copyWith(
                                           color: Colors.blue,
                                           decoration: TextDecoration.underline,

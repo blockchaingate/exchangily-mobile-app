@@ -14,35 +14,35 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
 class CampaignInstructionsScreenState extends BaseState {
   final log = getLogger('CampaignInstructionsScreenState');
-  LocalStorageService localStorageService = locator<LocalStorageService>();
-  NavigationService navigationService = locator<NavigationService>();
-  CampaignService campaignService = locator<CampaignService>();
-  SharedService sharedService = locator<SharedService>();
-  PdfViewerService pdfViewerService = locator<PdfViewerService>();
-  UserSettingsDatabaseService userSettingsDatabaseService =
+  LocalStorageService? localStorageService = locator<LocalStorageService>();
+  NavigationService? navigationService = locator<NavigationService>();
+  CampaignService? campaignService = locator<CampaignService>();
+  SharedService? sharedService = locator<SharedService>();
+  PdfViewerService? pdfViewerService = locator<PdfViewerService>();
+  UserSettingsDatabaseService? userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();
 
-  CampaignUserData userData;
-  BuildContext context;
+  CampaignUserData? userData;
+  BuildContext? context;
   bool isGuideReady = false;
 
   //Campaign data
-  List campaignInfoList;
-  ApiService apiService = locator<ApiService>();
-  String lang = '';
+  List? campaignInfoList;
+  ApiService? apiService = locator<ApiService>();
+  String? lang = '';
   bool hasApiError = false;
   // Init state
   initState() async {
     // circular indicator is still not working when page first loads
     setBusy(true);
     log.e(busy);
-    sharedService.context = context;
-    var loginToken = await campaignService.getSavedLoginTokenFromLocalStorage();
+    sharedService!.context = context;
+    var loginToken = await campaignService!.getSavedLoginTokenFromLocalStorage();
     log.w('token $loginToken');
     if (loginToken != '' && loginToken != null) {
-      await campaignService.getMemberProfile(loginToken).then((res) async {
+      await campaignService!.getMemberProfile(loginToken).then((res) async {
         if (res != null) {
-          await campaignService.getUserDataFromDatabase().then((res) {
+          await campaignService!.getUserDataFromDatabase().then((res) {
             if (res != null) {
               userData = res;
               navigateTo('/campaignDashboard');
@@ -50,11 +50,11 @@ class CampaignInstructionsScreenState extends BaseState {
           });
         } else if (res == null) {
           navigateTo('/campaignLogin',
-              errorMessage: AppLocalizations.of(context).sessionExpired);
+              errorMessage: AppLocalizations.of(context!)!.sessionExpired);
         }
       }).catchError((err) {
         log.e('getMemberProfile catch');
-        setErrorMessage(AppLocalizations.of(context).serverError);
+        setErrorMessage(AppLocalizations.of(context!)!.serverError);
         setBusy(false);
       });
 
@@ -62,7 +62,7 @@ class CampaignInstructionsScreenState extends BaseState {
       /// show the svg images
     } else {
       // lang = localStorageService.language;
-      await userSettingsDatabaseService.getLanguage().then((value) {
+      await userSettingsDatabaseService!.getLanguage().then((value) {
         debugPrint('value $value');
         lang = value;
       });
@@ -70,7 +70,7 @@ class CampaignInstructionsScreenState extends BaseState {
       log.i('lang $lang');
       var eventContent;
 
-      eventContent = await apiService.getEvents();
+      eventContent = await apiService!.getEvents();
 
       log.i("Got Event!!! $eventContent");
       if (eventContent == "error") {
@@ -91,11 +91,11 @@ class CampaignInstructionsScreenState extends BaseState {
   }
 
   navigateTo(String route, {String errorMessage = ''}) {
-    navigationService.navigateUsingpopAndPushedNamed(route,
+    navigationService!.navigateUsingpopAndPushedNamed(route,
         arguments: errorMessage);
   }
 
   onBackButtonPressed() async {
-    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+    navigationService!.navigateUsingpopAndPushedNamed('/dashboard');
   }
 }

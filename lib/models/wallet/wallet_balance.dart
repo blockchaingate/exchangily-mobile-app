@@ -1,9 +1,9 @@
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
 class UsdValue {
-  double _usd;
+  double? _usd;
 
-  UsdValue({double usd}) {
+  UsdValue({double? usd}) {
     _usd = usd ?? 0.0;
   }
 
@@ -23,8 +23,8 @@ class UsdValue {
     return data;
   }
 
-  double get usd => _usd;
-  set usd(double usd) {
+  double? get usd => _usd;
+  set usd(double? usd) {
     _usd = usd;
   }
 }
@@ -34,20 +34,20 @@ class UsdValue {
 ----------------------------------------------------------------------*/
 
 class DepositErr {
-  int _coinType;
-  String _transactionID;
-  double _amount;
-  String _v;
-  String _r;
-  String _s;
+  int? _coinType;
+  String? _transactionID;
+  double? _amount;
+  String? _v;
+  String? _r;
+  String? _s;
 
   DepositErr(
-      {int coinType,
-      String transactionID,
-      double amount,
-      String v,
-      String r,
-      String s}) {
+      {int? coinType,
+      String? transactionID,
+      double? amount,
+      String? v,
+      String? r,
+      String? s}) {
     _coinType = coinType;
     _transactionID = transactionID;
     _amount = amount ?? 0.0;
@@ -85,24 +85,24 @@ class DepositErr {
 ----------------------------------------------------------------------*/
 
 class WalletBalance {
-  String _coin;
-  double _balance;
-  double _unconfirmedBalance;
-  double _lockBalance;
-  UsdValue _usdValue;
-  List<DepositErr> _depositErr;
-  double _unlockedExchangeBalance;
-  double _lockedExchangeBalance;
+  String? _coin;
+  double? _balance;
+  double? _unconfirmedBalance;
+  double? _lockBalance;
+  UsdValue? _usdValue;
+  List<DepositErr>? _depositErr;
+  double? _unlockedExchangeBalance;
+  double? _lockedExchangeBalance;
 
   WalletBalance(
-      {String coin,
-      double balance,
-      double unconfirmedBalance,
-      double lockBalance,
-      UsdValue usdValue,
-      List<DepositErr> depositErr,
-      double unlockedExchangeBalance,
-      double lockedExchangeBalance}) {
+      {String? coin,
+      double? balance,
+      double? unconfirmedBalance,
+      double? lockBalance,
+      UsdValue? usdValue,
+      List<DepositErr>? depositErr,
+      double? unlockedExchangeBalance,
+      double? lockedExchangeBalance}) {
     _coin = coin;
     _balance = balance ?? 0.0;
     _unconfirmedBalance = unconfirmedBalance ?? 0.0;
@@ -115,7 +115,7 @@ class WalletBalance {
 
   factory WalletBalance.fromJson(Map<String, dynamic> json) {
     List<DepositErr> depositErrList = [];
-    var depositErrFromJsonAsList = json['depositErr'] as List;
+    var depositErrFromJsonAsList = json['depositErr'] as List?;
     if (depositErrFromJsonAsList != null) {
       depositErrList =
           depositErrFromJsonAsList.map((e) => DepositErr.fromJson(e)).toList();
@@ -159,10 +159,10 @@ class WalletBalance {
     data['unconfirmedBalance'] = _unconfirmedBalance;
     data['lockBalance'] = _lockBalance;
     if (_usdValue != null) {
-      data['usdValue'] = _usdValue.toJson();
+      data['usdValue'] = _usdValue!.toJson();
     }
     if (_depositErr != null) {
-      data['depositErr'] = _depositErr.map((v) => v.toJson()).toList();
+      data['depositErr'] = _depositErr!.map((v) => v.toJson()).toList();
     }
     data['unlockedExchangeBalance'] = _unlockedExchangeBalance;
     data['lockedExchangeBalance'] = _lockedExchangeBalance;
@@ -170,52 +170,52 @@ class WalletBalance {
   }
 
   double balanceInUsd() {
-    return balance * usdValue.usd;
+    return balance! * usdValue!.usd!;
   }
 
-  String get coin => _coin;
-  set coin(String coin) {
+  String? get coin => _coin;
+  set coin(String? coin) {
     _coin = coin;
   }
 
-  double get balance => _balance;
-  set balance(double balance) {
+  double? get balance => _balance;
+  set balance(double? balance) {
     _balance = balance;
   }
 
-  double get unconfirmedBalance => _unconfirmedBalance;
-  set unconfirmedBalance(double unconfirmedBalance) {
+  double? get unconfirmedBalance => _unconfirmedBalance;
+  set unconfirmedBalance(double? unconfirmedBalance) {
     _unconfirmedBalance = unconfirmedBalance;
   }
 
-  double get lockBalance => _lockBalance;
-  set lockBalance(double lockBalance) {
+  double? get lockBalance => _lockBalance;
+  set lockBalance(double? lockBalance) {
     _lockBalance = lockBalance;
   }
 
-  UsdValue get usdValue => _usdValue;
-  set usdValue(UsdValue usdValue) {
+  UsdValue? get usdValue => _usdValue;
+  set usdValue(UsdValue? usdValue) {
     _usdValue = usdValue;
   }
 
-  List<DepositErr> get depositErr => _depositErr;
-  set depositErr(List<DepositErr> depositErr) {
+  List<DepositErr>? get depositErr => _depositErr;
+  set depositErr(List<DepositErr>? depositErr) {
     _depositErr = depositErr;
   }
 
-  double get unlockedExchangeBalance => _unlockedExchangeBalance;
-  set unlockedExchangeBalance(double unlockedExchangeBalance) {
+  double? get unlockedExchangeBalance => _unlockedExchangeBalance;
+  set unlockedExchangeBalance(double? unlockedExchangeBalance) {
     _unlockedExchangeBalance = unlockedExchangeBalance;
   }
 
-  double get lockedExchangeBalance => _lockedExchangeBalance;
-  set lockedExchangeBalance(double lockedExchangeBalance) {
+  double? get lockedExchangeBalance => _lockedExchangeBalance;
+  set lockedExchangeBalance(double? lockedExchangeBalance) {
     _lockedExchangeBalance = lockedExchangeBalance;
   }
 }
 
 class WalletBalanceList {
-  final List<WalletBalance> walletBalances;
+  final List<WalletBalance>? walletBalances;
   WalletBalanceList({this.walletBalances});
 
   factory WalletBalanceList.fromJson(List<dynamic> parsedJson) {

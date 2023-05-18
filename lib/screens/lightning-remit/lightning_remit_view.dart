@@ -12,7 +12,7 @@ import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LightningRemitView extends StatelessWidget {
-  const LightningRemitView({Key key}) : super(key: key);
+  const LightningRemitView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class LightningRemitView extends StatelessWidget {
         model.context = context;
         model.init();
       },
-      onDispose: (LightningRemitViewmodel v) {},
+      onDispose: (viewModel) {},
       builder: (context, model, _) => WillPopScope(
         onWillPop: () async {
           model.onBackButtonPressed();
@@ -45,7 +45,7 @@ class LightningRemitView extends StatelessWidget {
               }
             },
             child: model.busy(model.exchangeBalances) || model.isBusy
-                ? model.sharedService.loadingIndicator()
+                ? model.sharedService!.loadingIndicator()
                 : Container(
                     color: secondaryColor,
                     margin: const EdgeInsets.only(top: 40),
@@ -101,20 +101,20 @@ class LightningRemitView extends StatelessWidget {
                                                   ),
                                                   title: Text(
                                                       AppLocalizations.of(
-                                                              context)
+                                                              context)!
                                                           .noCoinBalance,
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .bodyText2),
                                                   subtitle: Text(
                                                       AppLocalizations.of(
-                                                              context)
+                                                              context)!
                                                           .transferFundsToExchangeUsingDepositButton,
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .subtitle2))
                                               : Text(
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                       .selectCoin,
                                                   textAlign: TextAlign.start,
                                                   style: Theme.of(context)
@@ -123,7 +123,7 @@ class LightningRemitView extends StatelessWidget {
                                                 ),
                                         ),
                                         value: model.tickerName,
-                                        onChanged: (newValue) {
+                                        onChanged: (dynamic newValue) {
                                           model.updateSelectedTickername(
                                               newValue);
                                         },
@@ -140,7 +140,7 @@ class LightningRemitView extends StatelessWidget {
                                                             TextAlign.center,
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .headline5
+                                                            .headline5!
                                                             .copyWith(
                                                                 fontWeight:
                                                                     FontWeight
@@ -152,7 +152,7 @@ class LightningRemitView extends StatelessWidget {
                                                           .toString(),
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .headline5
+                                                          .headline5!
                                                           .copyWith(
                                                               color: grey,
                                                               fontWeight:
@@ -180,7 +180,7 @@ class LightningRemitView extends StatelessWidget {
                                         padding:
                                             const EdgeInsets.only(left: 10),
                                         alignment: Alignment.centerLeft,
-                                        tooltip: AppLocalizations.of(context)
+                                        tooltip: AppLocalizations.of(context)!
                                             .scanBarCode,
                                         icon: Icon(
                                           Icons.camera_alt,
@@ -204,14 +204,14 @@ class LightningRemitView extends StatelessWidget {
                                         borderSide: BorderSide(
                                             color: Color(0XFF871fff),
                                             width: 0.5)),
-                                    hintText: AppLocalizations.of(context)
+                                    hintText: AppLocalizations.of(context)!
                                         .receiverWalletAddress,
                                     hintStyle:
                                         Theme.of(context).textTheme.headline5),
                                 controller: model.addressController,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.bold)),
 
 /*----------------------------------------------------------------------------------------------------
@@ -228,14 +228,14 @@ class LightningRemitView extends StatelessWidget {
                                         borderSide: BorderSide(
                                             color: Color(0XFF871fff),
                                             width: 0.5)),
-                                    hintText: AppLocalizations.of(context)
+                                    hintText: AppLocalizations.of(context)!
                                         .enterAmount,
                                     hintStyle:
                                         Theme.of(context).textTheme.headline5),
                                 controller: model.amountController,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.bold)),
                             UIHelper.verticalSpaceMedium,
 /*----------------------------------------------------------------------------------------------------
@@ -246,20 +246,31 @@ class LightningRemitView extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: Container(
-                                    decoration: model.sharedService
+                                    decoration: model.sharedService!
                                         .gradientBoxDecoration(),
-                                    child: FlatButton(
-                                      textColor: Colors.white,
+                                    child: TextButton(
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Colors.transparent,
+                                        padding: const EdgeInsets.all(0),
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(0)),
+                                          side: BorderSide(
+                                              color: Colors.white, width: 2),
+                                        ),
+                                      ),
                                       onPressed: () {
                                         model.isBusy
                                             ? debugPrint('busy')
                                             : model.transfer();
                                       },
                                       child: Text(
-                                          AppLocalizations.of(context).send,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline4),
+                                        AppLocalizations.of(context)!.send,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineMedium,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -278,7 +289,7 @@ class LightningRemitView extends StatelessWidget {
                                           : model.showBarcode();
                                     },
                                     child: Text(
-                                        AppLocalizations.of(context).receive,
+                                        AppLocalizations.of(context)!.receive,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline4),
@@ -318,7 +329,7 @@ class LightningRemitView extends StatelessWidget {
                       model.isBusy
                           ? Align(
                               alignment: Alignment.center,
-                              child: model.sharedService
+                              child: model.sharedService!
                                   .stackFullScreenLoadingIndicator())
                           : Container()
                     ]),
@@ -332,9 +343,9 @@ class LightningRemitView extends StatelessWidget {
 }
 
 class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
-  const CoinListBottomSheetFloatingActionButton({Key key, this.model})
+  const CoinListBottomSheetFloatingActionButton({Key? key, this.model})
       : super(key: key);
-  final LightningRemitViewmodel model;
+  final LightningRemitViewmodel? model;
 
   @override
   Widget build(BuildContext context) {
@@ -355,23 +366,23 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Padding(
                 padding: const EdgeInsets.only(right: 5.0),
-                child: model.exchangeBalances.isEmpty
-                    ? Text(AppLocalizations.of(context).noCoinBalance)
+                child: model!.exchangeBalances.isEmpty
+                    ? Text(AppLocalizations.of(context)!.noCoinBalance)
                     : Text(
                         //model.tickerName == ''
                         // ? AppLocalizations.of(context).selectCoin
                         // :
-                        model.tickerName),
+                        model!.tickerName!),
               ),
-              Text(model.quantity == 0.0 ? '' : model.quantity.toString()),
-              model.exchangeBalances.isNotEmpty
+              Text(model!.quantity == 0.0 ? '' : model!.quantity.toString()),
+              model!.exchangeBalances.isNotEmpty
                   ? const Icon(Icons.arrow_drop_down)
                   : Container()
             ]),
           ),
           onPressed: () {
-            if (model.exchangeBalances.isNotEmpty) {
-              model.coinListBottomSheet(context);
+            if (model!.exchangeBalances.isNotEmpty) {
+              model!.coinListBottomSheet(context);
             }
           }),
     );
@@ -381,8 +392,8 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
 // transaction history
 
 class TxHistoryView extends StatelessWidget {
-  final List<TransactionHistory> transactionHistory;
-  final LightningRemitViewmodel model;
+  final List<TransactionHistory>? transactionHistory;
+  final LightningRemitViewmodel? model;
   const TxHistoryView({this.transactionHistory, this.model});
   @override
   Widget build(BuildContext context) {
@@ -393,7 +404,7 @@ class TxHistoryView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(AppLocalizations.of(context).transactionHistory,
+        title: Text(AppLocalizations.of(context)!.transactionHistory,
             style: Theme.of(context).textTheme.headline3),
         backgroundColor: secondaryColor,
       ),
@@ -402,7 +413,7 @@ class TxHistoryView extends StatelessWidget {
             padding: const EdgeInsets.all(4.0),
             child: Column(
               children: <Widget>[
-                for (var transaction in transactionHistory)
+                for (var transaction in transactionHistory!)
                   Card(
                     elevation: 4,
                     child: Container(
@@ -419,7 +430,7 @@ class TxHistoryView extends StatelessWidget {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 3.0),
-                                  child: Text(transaction.tickerName,
+                                  child: Text(transaction.tickerName!,
                                       style: Theme.of(context)
                                           .textTheme
                                           .subtitle2),
@@ -459,24 +470,24 @@ class TxHistoryView extends StatelessWidget {
                                             text: transaction.tickerChainTxId,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .subtitle2
+                                                .subtitle2!
                                                 .copyWith(
                                                     decoration: TextDecoration
                                                         .underline,
                                                     color: primaryColor),
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () {
-                                                model.copyAddress(transaction
+                                                model!.copyAddress(transaction
                                                     .tickerChainTxId);
-                                                model.openExplorer(transaction
-                                                    .tickerChainTxId);
+                                                model!.openExplorer(transaction
+                                                    .tickerChainTxId!);
                                               }),
                                       ),
                                     ),
                                     IconButton(
                                       icon: Icon(Icons.copy_outlined,
                                           color: white, size: 16),
-                                      onPressed: () => model.copyAddress(
+                                      onPressed: () => model!.copyAddress(
                                           transaction.tickerChainTxId),
                                     )
                                   ],
@@ -484,10 +495,10 @@ class TxHistoryView extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5.0),
                                   child: Text(
-                                    transaction.date.substring(0, 19),
+                                    transaction.date!.substring(0, 19),
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5
+                                        .headline5!
                                         .copyWith(fontWeight: FontWeight.w400),
                                   ),
                                 ),
@@ -500,17 +511,17 @@ class TxHistoryView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(AppLocalizations.of(context).quantity,
+                              Text(AppLocalizations.of(context)!.quantity,
                                   style: Theme.of(context).textTheme.subtitle2),
                               Text(
-                                transaction.quantity.toStringAsFixed(
+                                transaction.quantity!.toStringAsFixed(
                                     // model
                                     //   .decimalConfig
                                     //   .quantityDecimal
                                     2),
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w400),
                               )
                             ],

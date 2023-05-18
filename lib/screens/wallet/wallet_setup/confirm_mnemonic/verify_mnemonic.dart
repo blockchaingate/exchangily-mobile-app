@@ -17,11 +17,11 @@ import 'package:exchangilymobileapp/localizations.dart';
 
 class VerifyMnemonicWalletView extends StatelessWidget {
   final List<TextEditingController> mnemonicTextController;
-  final String validationMessage;
-  final int count;
+  final String? validationMessage;
+  final int? count;
 
   const VerifyMnemonicWalletView(
-      {@required this.mnemonicTextController,
+      {required this.mnemonicTextController,
       this.validationMessage,
       this.count});
 
@@ -37,7 +37,7 @@ class VerifyMnemonicWalletView extends StatelessWidget {
             children: <Widget>[
               Expanded(
                   child: Text(
-                AppLocalizations.of(context).warningImportOrConfirmMnemonic,
+                AppLocalizations.of(context)!.warningImportOrConfirmMnemonic,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline4,
               )),
@@ -52,7 +52,7 @@ class VerifyMnemonicWalletView extends StatelessWidget {
                   crossAxisSpacing: 10,
                   shrinkWrap: true,
                   childAspectRatio: 2,
-                  children: _buildTextGrid(count, mnemonicTextController))),
+                  children: _buildTextGrid(count!, mnemonicTextController))),
         ],
       ),
     );

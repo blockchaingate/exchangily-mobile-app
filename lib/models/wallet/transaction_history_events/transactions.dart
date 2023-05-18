@@ -1,8 +1,8 @@
 class Transactions {
-  String chain;
-  String transactionId;
-  String timestamp;
-  String status;
+  String? chain;
+  String? transactionId;
+  String? timestamp;
+  String? status;
 
   Transactions({
     this.chain,
@@ -18,10 +18,10 @@ class Transactions {
 
   factory Transactions.fromJson(Map<String, dynamic> json) {
     return Transactions(
-      chain: json['chain'] as String,
-      transactionId: json['transactionId'] as String,
-      timestamp: json['timestamp'] as String,
-      status: json['status'] as String,
+      chain: json['chain'] as String?,
+      transactionId: json['transactionId'] as String?,
+      timestamp: json['timestamp'] as String?,
+      status: json['status'] as String?,
     );
   }
 

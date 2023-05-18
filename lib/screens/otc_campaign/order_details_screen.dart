@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignOrderDetailsScreen extends StatelessWidget {
-  final List<OrderInfo> orderInfoList;
-  const CampaignOrderDetailsScreen({Key key, this.orderInfoList})
+  final List<OrderInfo>? orderInfoList;
+  const CampaignOrderDetailsScreen({Key? key, this.orderInfoList})
       : super(key: key);
 
   @override
@@ -23,7 +23,7 @@ class CampaignOrderDetailsScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).orderDetails,
+          title: Text(AppLocalizations.of(context)!.orderDetails,
               style: Theme.of(context).textTheme.headline4),
         ),
         body: SingleChildScrollView(
@@ -37,18 +37,18 @@ class CampaignOrderDetailsScreen extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                       flex: 2,
-                      child: Text(AppLocalizations.of(context).date,
+                      child: Text(AppLocalizations.of(context)!.date,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyText1),
                     ),
                     Expanded(
                         flex: 3,
-                        child: Text(AppLocalizations.of(context).quantity,
+                        child: Text(AppLocalizations.of(context)!.quantity,
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.bodyText1)),
                     Expanded(
                       flex: 2,
-                      child: Text(AppLocalizations.of(context).status,
+                      child: Text(AppLocalizations.of(context)!.status,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyText1),
                     )
@@ -60,7 +60,7 @@ class CampaignOrderDetailsScreen extends StatelessWidget {
                         height: MediaQuery.of(context).size.height - 150,
                         child: ListView.builder(
                           scrollDirection: Axis.vertical,
-                          itemCount: orderInfoList.length,
+                          itemCount: orderInfoList!.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             return Container(
@@ -73,7 +73,7 @@ class CampaignOrderDetailsScreen extends StatelessWidget {
                                   Expanded(
                                     flex: 2,
                                     child: Text(
-                                        orderInfoList[index].dateCreated,
+                                        orderInfoList![index].dateCreated!,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1),
@@ -82,8 +82,8 @@ class CampaignOrderDetailsScreen extends StatelessWidget {
                                   Expanded(
                                     flex: 2,
                                     child: Text(
-                                        orderInfoList[index]
-                                            .quantity
+                                        orderInfoList![index]
+                                            .quantity!
                                             .toStringAsFixed(3),
                                         textAlign: TextAlign.start,
                                         style: Theme.of(context)
@@ -92,7 +92,7 @@ class CampaignOrderDetailsScreen extends StatelessWidget {
                                   ),
                                   Expanded(
                                     flex: 1,
-                                    child: Text(orderInfoList[index].status,
+                                    child: Text(orderInfoList![index].status!,
                                         textAlign: TextAlign.start,
                                         style: Theme.of(context)
                                             .textTheme

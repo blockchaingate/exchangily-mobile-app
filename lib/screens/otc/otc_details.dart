@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 
 class OtcDetailsScreen extends StatelessWidget {
-  const OtcDetailsScreen({Key key}) : super(key: key);
+  const OtcDetailsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class OtcDetailsScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
             centerTitle: true,
-            title: Text('OTC ${AppLocalizations.of(context).details}'),
+            title: Text('OTC ${AppLocalizations.of(context)!.details}'),
             backgroundColor: globals.secondaryColor),
         body: Container(
             padding: const EdgeInsets.all(5.0),
@@ -28,8 +28,8 @@ class OtcDetailsScreen extends StatelessWidget {
                 Card(
                   elevation: 4,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 5.0),
                     color: globals.walletCardColor,
                     // height: 110,
                     child: Column(
@@ -115,8 +115,8 @@ class OtcDetailsScreen extends StatelessWidget {
                 Card(
                   elevation: 4,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 5.0),
                     color: globals.walletCardColor,
                     // height: 110,
                     child: Column(
@@ -211,8 +211,8 @@ class OtcDetailsScreen extends StatelessWidget {
                   color: globals.walletCardColor,
                   elevation: 4,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 5.0),
                     child: Column(
                       children: <Widget>[
                         // Quantity container row
@@ -223,7 +223,7 @@ class OtcDetailsScreen extends StatelessWidget {
                                 Container(
                                     //  width: 50,
                                     child: Text(
-                                        AppLocalizations.of(context).quantity,
+                                        AppLocalizations.of(context)!.quantity,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5)),
@@ -237,7 +237,8 @@ class OtcDetailsScreen extends StatelessWidget {
                                       keyboardType: TextInputType
                                           .number, // numnber keyboard
                                       decoration: InputDecoration(
-                                          contentPadding: const EdgeInsets.all(10.0),
+                                          contentPadding:
+                                              const EdgeInsets.all(10.0),
                                           border: const OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.elliptical(2, 2))),
@@ -245,8 +246,9 @@ class OtcDetailsScreen extends StatelessWidget {
                                           fillColor: globals.grey.withAlpha(75),
                                           isDense: true,
                                           focusedBorder: UnderlineInputBorder(
-                                              borderRadius: const BorderRadius.all(
-                                                  Radius.elliptical(2, 2)),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.elliptical(2, 2)),
                                               borderSide: BorderSide(
                                                   color: globals.primaryColor,
                                                   width: 2)),
@@ -270,7 +272,7 @@ class OtcDetailsScreen extends StatelessWidget {
                                 Container(
                                     //  width: 50,
                                     child: Text(
-                                        AppLocalizations.of(context).amount,
+                                        AppLocalizations.of(context)!.amount,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5)),
@@ -284,7 +286,8 @@ class OtcDetailsScreen extends StatelessWidget {
                                       keyboardType: TextInputType
                                           .number, // numnber keyboard
                                       decoration: InputDecoration(
-                                          contentPadding: const EdgeInsets.all(10.0),
+                                          contentPadding:
+                                              const EdgeInsets.all(10.0),
                                           border: const OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.elliptical(2, 2))),
@@ -293,8 +296,9 @@ class OtcDetailsScreen extends StatelessWidget {
                                               globals.grey.withAlpha(105),
                                           isDense: true,
                                           focusedBorder: UnderlineInputBorder(
-                                              borderRadius: const BorderRadius.all(
-                                                  Radius.elliptical(2, 2)),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.elliptical(2, 2)),
                                               borderSide: BorderSide(
                                                   color: globals.primaryColor,
                                                   width: 2)),
@@ -321,11 +325,12 @@ class OtcDetailsScreen extends StatelessWidget {
                                           TargetPlatform.iOS
                                       ? Center(
                                           child: CupertinoButton(
-                                              padding: const EdgeInsets.all(5.0),
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
                                               color:
                                                   globals.grey.withAlpha(105),
                                               child: Text(
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                       .cancel,
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -333,15 +338,19 @@ class OtcDetailsScreen extends StatelessWidget {
                                               onPressed: () {}),
                                         )
                                       : Center(
-                                          child: RaisedButton(
-                                            padding: const EdgeInsets.all(5.0),
-                                            color: globals.grey.withAlpha(105),
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              backgroundColor:
+                                                  globals.grey.withAlpha(105),
+                                            ),
                                             child: Text(
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                   .cancel,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline4,
+                                                  .headlineMedium,
                                             ),
                                             onPressed: () {},
                                           ),
@@ -353,27 +362,32 @@ class OtcDetailsScreen extends StatelessWidget {
                                       ? Center(
                                           child: CupertinoButton(
                                               color: globals.primaryColor,
-                                              padding: const EdgeInsets.all(5.0),
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
                                               child: Text(
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                       .confirm,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline5),
+                                                      .headlineSmall),
                                               onPressed: () {}),
                                         )
                                       : Center(
-                                          child: RaisedButton(
-                                            padding: const EdgeInsets.all(5.0),
-                                            color: globals.primaryColor,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              backgroundColor:
+                                                  globals.primaryColor,
+                                            ),
+                                            onPressed: () {},
                                             child: Text(
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                   .confirm,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline4,
+                                                  .headlineMedium,
                                             ),
-                                            onPressed: () {},
                                           ),
                                         )),
                             ],

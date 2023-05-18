@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PdfViewerService {
-  String path;
+  String? path;
   final String guideEnglishPdf = 'assets/pdf/campaign/guide-en.pdf';
   final String guideChinesePdf = 'assets/pdf/campaign/guide-cn.pdf';
 

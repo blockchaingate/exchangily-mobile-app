@@ -10,8 +10,8 @@ import 'package:local_auth/error_codes.dart' as auth_error;
 class LocalAuthService {
   final log = getLogger('LocalAuthService');
 
-  final NavigationService navigationService = locator<NavigationService>();
-  final localStorageService = locator<LocalStorageService>();
+  final NavigationService? navigationService = locator<NavigationService>();
+  final LocalStorageService? localStorageService = locator<LocalStorageService>();
 
   final _auth = LocalAuthentication();
 
@@ -35,8 +35,8 @@ class LocalAuthService {
     // &&
 
     //     navigationService.currentRoute() != SettingViewRoute
-    if (localStorageService.hasAppGoneInTheBackgroundKey) {
-      navigationService.navigateUsingPushReplacementNamed(WalletSetupViewRoute);
+    if (localStorageService!.hasAppGoneInTheBackgroundKey) {
+      navigationService!.navigateUsingPushReplacementNamed(WalletSetupViewRoute);
     }
     _auth.stopAuthentication();
   }
@@ -62,15 +62,15 @@ class LocalAuthService {
       await _auth
           .authenticate(
         localizedReason: 'Authenticate to access the wallet',
-        useErrorDialogs: true,
+        // useErrorDialogs: true,
         //  stickyAuth: true,
       )
           .then((res) {
         _hasAuthorized = res;
-        localStorageService.hasPhoneProtectionEnabled = true;
-        localStorageService.hasCancelledBiometricAuth = false;
+        localStorageService!.hasPhoneProtectionEnabled = true;
+        localStorageService!.hasCancelledBiometricAuth = false;
         if (_hasAuthorized) {
-          localStorageService.hasAppGoneInTheBackgroundKey = false;
+          localStorageService!.hasAppGoneInTheBackgroundKey = false;
         }
         log.w('_hasAuthorized  $_hasAuthorized');
       });
@@ -80,9 +80,9 @@ class LocalAuthService {
       if (e.code == auth_error.notAvailable ||
           e.code == auth_error.notEnrolled ||
           e.code == auth_error.passcodeNotSet) {
-        localStorageService.hasCancelledBiometricAuth = false;
-        localStorageService.hasInAppBiometricAuthEnabled = false;
-        localStorageService.hasPhoneProtectionEnabled = false;
+        localStorageService!.hasCancelledBiometricAuth = false;
+        localStorageService!.hasInAppBiometricAuthEnabled = false;
+        localStorageService!.hasPhoneProtectionEnabled = false;
       } else if (e.code == 'auth_in_progress') {
         _authInProgress = true;
         return false;
@@ -98,23 +98,23 @@ class LocalAuthService {
       log.e('catch $e');
     }
     log.w(
-        '_hasAuthenticated $_hasAuthorized -- _authInProgress $_authInProgress --  storageService.hasInAppBiometricAuthEnabled ${localStorageService.hasInAppBiometricAuthEnabled} --  _isLockedOutPerm $_isLockedOutPerm -- _isLockedOut $_isLockedOut --  hasPhoneProtectionEnabled ${localStorageService.hasPhoneProtectionEnabled}');
+        '_hasAuthenticated $_hasAuthorized -- _authInProgress $_authInProgress --  storageService.hasInAppBiometricAuthEnabled ${localStorageService!.hasInAppBiometricAuthEnabled} --  _isLockedOutPerm $_isLockedOutPerm -- _isLockedOut $_isLockedOut --  hasPhoneProtectionEnabled ${localStorageService!.hasPhoneProtectionEnabled}');
     if (!isLockedOut && !isLockedOutPerm && !_hasAuthorized) {
       _isCancelled = true;
-      localStorageService.hasCancelledBiometricAuth = true;
+      localStorageService!.hasCancelledBiometricAuth = true;
       // if (navigationService.currentRoute() != WalletSetupViewRoute) {
       //   navigationService.navigateUsingpopAndPushedNamed(WalletSetupViewRoute);
       // }
     }
     if (_isCancelled &&
-        localStorageService.hasPhoneProtectionEnabled &&
-        localStorageService.hasInAppBiometricAuthEnabled) {
+        localStorageService!.hasPhoneProtectionEnabled &&
+        localStorageService!.hasInAppBiometricAuthEnabled) {
       cancelAuthentication();
     }
 
     _authInProgress = false;
     log.i(
-        '_hasAuthenticated $_hasAuthorized -- _authInProgress $_authInProgress --  _isLockedOutPerm $_isLockedOutPerm -- _isLockedOut $_isLockedOut --  hasPhoneProtectionEnabled ${localStorageService.hasPhoneProtectionEnabled}');
+        '_hasAuthenticated $_hasAuthorized -- _authInProgress $_authInProgress --  _isLockedOutPerm $_isLockedOutPerm -- _isLockedOut $_isLockedOut --  hasPhoneProtectionEnabled ${localStorageService!.hasPhoneProtectionEnabled}');
     return _hasAuthorized;
   }
 }

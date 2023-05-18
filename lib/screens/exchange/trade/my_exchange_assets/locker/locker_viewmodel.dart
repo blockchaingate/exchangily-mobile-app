@@ -24,22 +24,22 @@ class LockerViewModel extends ReactiveViewModel {
   final log = getLogger('LockerViewModel');
 
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [_exchangeBalanceService];
+  List<ReactiveServiceMixin> get reactiveServices => [_exchangeBalanceService!];
 
-  BuildContext context;
-  SharedService sharedService = locator<SharedService>();
-  WalletService walletService = locator<WalletService>();
-  ApiService apiService = locator<ApiService>();
-  var storageService = locator<LocalStorageService>();
-  final _dialogService = locator<DialogService>();
-  final coinService = locator<CoinService>();
-  final _exchangeBalanceService = locator<ExchangeBalanceService>();
+  late BuildContext context;
+  SharedService? sharedService = locator<SharedService>();
+  WalletService? walletService = locator<WalletService>();
+  ApiService? apiService = locator<ApiService>();
+  LocalStorageService? storageService = locator<LocalStorageService>();
+  final DialogService? _dialogService = locator<DialogService>();
+  final CoinService? coinService = locator<CoinService>();
+  final ExchangeBalanceService? _exchangeBalanceService = locator<ExchangeBalanceService>();
 
   var abiUtils = AbiUtils();
   var kanbanUtils = KanbanUtils();
 
-  List<LockerModel> get lockers => _exchangeBalanceService.lockers;
-  String exgAddress = '';
+  List<LockerModel> get lockers => _exchangeBalanceService!.lockers;
+  String? exgAddress = '';
 
   @override
   void dispose() {
@@ -49,7 +49,7 @@ class LockerViewModel extends ReactiveViewModel {
 
   void init() async {
     setBusy(true);
-    exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+    exgAddress = await sharedService!.getExgAddressFromWalletDatabase();
 
     await getLockersData();
     setBusy(false);
@@ -57,19 +57,19 @@ class LockerViewModel extends ReactiveViewModel {
 
   getLockersData() async {
     setBusyForObject(lockers, true);
-    if (exgAddress.isEmpty) {
-      exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+    if (exgAddress!.isEmpty) {
+      exgAddress = await sharedService!.getExgAddressFromWalletDatabase();
     }
 
-    await _exchangeBalanceService.getLockers(exgAddress);
+    await _exchangeBalanceService!.getLockers(exgAddress!);
 
     if (lockers.isNotEmpty) {
       for (var locker in lockers) {
         String tickerNameByCointype = newCoinTypeMap[locker.coinType] ?? '';
         if (tickerNameByCointype.isEmpty) {
-          var tokenRes = await coinService.getSingleTokenData('',
-              coinType: locker.coinType);
-          if (tokenRes.tickerName.isNotEmpty) {
+          var tokenRes = (await coinService!.getSingleTokenData('',
+              coinType: locker.coinType))!;
+          if (tokenRes.tickerName!.isNotEmpty) {
             locker.tickerName = tokenRes.tickerName;
           }
         } else {
@@ -85,33 +85,33 @@ class LockerViewModel extends ReactiveViewModel {
     var abiUtils = AbiUtils();
     var kanbanUtils = KanbanUtils();
 
-    var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
+    var res = await _dialogService!.showDialog(
+        title: AppLocalizations.of(context)!.enterPassword,
         description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm);
+            AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
+        buttonTitle: AppLocalizations.of(context)!.confirm);
 
-    if (res.confirmed) {
-      String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
-      String mnemonic = res.returnedText;
-      Uint8List seed = walletService.generateSeed(mnemonic);
+    if (res.confirmed!) {
+      String exgAddress = (await sharedService!.getExgAddressFromWalletDatabase())!;
+      String? mnemonic = res.returnedText;
+      Uint8List seed = walletService!.generateSeed(mnemonic);
 
       var keyPairKanban = getExgKeyPair(Uint8List.fromList(seed));
       debugPrint('keyPairKanban $keyPairKanban');
 
-      int kanbanGasPrice = environment["chains"]["KANBAN"]["gasPrice"];
-      int kanbanGasLimit = environment["chains"]["KANBAN"]["gasLimit"];
+      int? kanbanGasPrice = environment["chains"]["KANBAN"]["gasPrice"];
+      int? kanbanGasLimit = environment["chains"]["KANBAN"]["gasLimit"];
 
       var nonce = await kanbanUtils.getNonce(exgAddress);
 
       var abiHex =
-          abiUtils.construcUnlockAbiHex(selectedLocker.id, selectedLocker.user);
+          abiUtils.construcUnlockAbiHex(selectedLocker.id!, selectedLocker.user!);
       var txKanbanHex;
       try {
         txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
             abiHex,
             HEX.encode(keyPairKanban["privateKey"]),
-            selectedLocker.address,
+            selectedLocker.address!,
             nonce,
             kanbanGasPrice,
             kanbanGasLimit);
@@ -126,33 +126,33 @@ class LockerViewModel extends ReactiveViewModel {
   }
 
   lockCoins(LockerModel selectedLocker) async {
-    var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
+    var res = await _dialogService!.showDialog(
+        title: AppLocalizations.of(context)!.enterPassword,
         description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm);
+            AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
+        buttonTitle: AppLocalizations.of(context)!.confirm);
 
-    if (res.confirmed) {
-      String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
-      String mnemonic = res.returnedText;
-      Uint8List seed = walletService.generateSeed(mnemonic);
+    if (res.confirmed!) {
+      String exgAddress = (await sharedService!.getExgAddressFromWalletDatabase())!;
+      String? mnemonic = res.returnedText;
+      Uint8List seed = walletService!.generateSeed(mnemonic);
 
       var keyPairKanban = getExgKeyPair(Uint8List.fromList(seed));
       debugPrint('keyPairKanban $keyPairKanban');
 
-      int kanbanGasPrice = environment["chains"]["KANBAN"]["gasPrice"];
-      int kanbanGasLimit = environment["chains"]["KANBAN"]["gasLimit"];
+      int? kanbanGasPrice = environment["chains"]["KANBAN"]["gasPrice"];
+      int? kanbanGasLimit = environment["chains"]["KANBAN"]["gasLimit"];
 
       var nonce = await kanbanUtils.getNonce(exgAddress);
 
       var abiHex =
-          abiUtils.construcUnlockAbiHex(selectedLocker.id, selectedLocker.user);
+          abiUtils.construcUnlockAbiHex(selectedLocker.id!, selectedLocker.user!);
       var txKanbanHex;
       try {
         txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
             abiHex,
             HEX.encode(keyPairKanban["privateKey"]),
-            selectedLocker.address,
+            selectedLocker.address!,
             nonce,
             kanbanGasPrice,
             kanbanGasLimit);

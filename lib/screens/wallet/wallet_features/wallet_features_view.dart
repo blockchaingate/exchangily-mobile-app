@@ -25,15 +25,15 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class WalletFeaturesView extends StatelessWidget {
-  final WalletInfo walletInfo;
-  WalletFeaturesView({Key key, this.walletInfo}) : super(key: key);
+  final WalletInfo? walletInfo;
+  WalletFeaturesView({Key? key, this.walletInfo}) : super(key: key);
   final log = getLogger('WalletFeatures');
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => WalletFeaturesViewModel(),
-      onModelReady: (model) {
+      onModelReady: (dynamic model) {
         model.walletInfo = walletInfo;
         model.context = context;
         model.init();
@@ -77,7 +77,7 @@ class WalletFeaturesView extends StatelessWidget {
                                 onPressed: () {
                                   //Navigator.pop(context);
                                   // Navigator.of(context, rootNavigator: true).pop('dialog');
-                                  model.navigationService
+                                  model.navigationService!
                                       .navigateTo(DashboardViewRoute);
                                 })),
                         Align(
@@ -92,7 +92,7 @@ class WalletFeaturesView extends StatelessWidget {
                                   : const Icon(Icons.star_border_outlined,
                                       color: yellow, size: 22),
                               onPressed: () => model.updateFavWalletCoinsList(
-                                  model.walletInfo.tickerName),
+                                  model.walletInfo!.tickerName),
                             ),
                           ),
                         ),
@@ -111,7 +111,7 @@ class WalletFeaturesView extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 5),
                             child: Row(
                               children: <Widget>[
-                                Text(model.specialTicker,
+                                Text(model.specialTicker!,
                                     style:
                                         Theme.of(context).textTheme.subtitle1),
                                 const Icon(
@@ -119,7 +119,7 @@ class WalletFeaturesView extends StatelessWidget {
                                   size: 17,
                                   color: white,
                                 ),
-                                Text(walletInfo.name ?? '',
+                                Text(walletInfo!.name ?? '',
                                     style:
                                         Theme.of(context).textTheme.subtitle1)
                               ],
@@ -193,7 +193,7 @@ class WalletFeaturesView extends StatelessWidget {
                               child: _featuresCard(context, 4, model),
                             )
                           : Container(),
-                      walletInfo.tickerName == 'FAB'
+                      walletInfo!.tickerName == 'FAB'
                           ? Container(
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 30),
@@ -270,8 +270,8 @@ class WalletFeaturesView extends StatelessWidget {
 
   Widget _buildTotalBalanceCard(
       context, WalletFeaturesViewModel model, walletInfo) {
-    String message = AppLocalizations.of(context).sameBalanceNote;
-    String nativeTicker = model.specialTicker.split('(')[0];
+    String message = AppLocalizations.of(context)!.sameBalanceNote;
+    String nativeTicker = model.specialTicker!.split('(')[0];
     return Card(
         elevation: model.elevation,
         color: walletCardColor,
@@ -290,10 +290,10 @@ class WalletFeaturesView extends StatelessWidget {
                       flex: 4,
                       child: Text(
                         //  '${model.specialTicker} ' +
-                        AppLocalizations.of(context).totalBalance,
+                        AppLocalizations.of(context)!.totalBalance,
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle1
+                            .subtitle1!
                             .copyWith(color: buyPrice),
                       ),
                     ),
@@ -306,7 +306,7 @@ class WalletFeaturesView extends StatelessWidget {
                         child: model.isBusy
                             ? SizedBox(
                                 height: 20,
-                                child: model.sharedService.loadingIndicator())
+                                child: model.sharedService!.loadingIndicator())
                             : const Center(
                                 child: Icon(
                                   Icons.refresh,
@@ -319,11 +319,11 @@ class WalletFeaturesView extends StatelessWidget {
                     Expanded(
                       flex: 4,
                       child: Text(
-                        '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.usdValue).toString()} USD',
+                        '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.usdValue).toString()} USD',
                         textAlign: TextAlign.right,
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle1
+                            .subtitle1!
                             .copyWith(color: buyPrice),
                       ),
                     )
@@ -339,26 +339,26 @@ class WalletFeaturesView extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(AppLocalizations.of(context).walletbalance,
+                    Text(AppLocalizations.of(context)!.walletbalance,
                         style: Theme.of(context).textTheme.subtitle1),
                     Text(
-                        '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
+                        '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.availableBalance, precision: model.decimalLimit!).toString()} ${model.specialTicker}',
                         style: Theme.of(context).textTheme.bodyText1),
                   ],
                 ),
               ),
               // Middle column row containes unconfirmed wallet balance.
-              model.walletInfo.tickerName == 'FAB'
+              model.walletInfo!.tickerName == 'FAB'
                   ? Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 5.0, vertical: 5.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).unConfirmedBalance,
+                          Text(AppLocalizations.of(context)!.unConfirmedBalance,
                               style: Theme.of(context).textTheme.bodyText1),
                           Text(
-                              '${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
+                              '${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance!, precision: model.decimalLimit!).toString()} ${model.specialTicker}',
                               style: Theme.of(context).textTheme.bodyText1),
                         ],
                       ),
@@ -374,20 +374,20 @@ class WalletFeaturesView extends StatelessWidget {
                     Expanded(
                       flex: 4,
                       child: Text(
-                          '${AppLocalizations.of(context).inExchange} ${model.specialTicker.contains('(') && model.walletInfo.tickerName != 'USDT' && model.walletInfo.tickerName != 'MATICM' ? '\n' + message + ' ' + nativeTicker : ''}',
+                          '${AppLocalizations.of(context)!.inExchange} ${model.specialTicker!.contains('(') && model.walletInfo!.tickerName != 'USDT' && model.walletInfo!.tickerName != 'MATICM' ? '\n' + message + ' ' + nativeTicker : ''}',
                           style: Theme.of(context).textTheme.subtitle1),
                     ),
                     Expanded(
                         flex: 4,
                         child: Text(
-                            '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, precision: model.decimalLimit).toString()} ${model.specialTicker}',
+                            '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.inExchange!, precision: model.decimalLimit!).toString()} ${model.specialTicker}',
                             textAlign: TextAlign.right,
                             style: Theme.of(context).textTheme.subtitle1)),
                   ],
                 ),
               ),
               // Last container locked wallet balance
-              model.walletInfo.lockedBalance != 0.0
+              model.walletInfo!.lockedBalance != 0.0
                   ? Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 5.0, vertical: 2.0),
@@ -397,13 +397,13 @@ class WalletFeaturesView extends StatelessWidget {
                           Expanded(
                             flex: 4,
                             child: Text(
-                                '${AppLocalizations.of(context).totalLockedBalance} ${model.specialTicker.contains('(') && model.walletInfo.tickerName != 'USDT' ? '\n' + message + ' ' + nativeTicker : ''}',
+                                '${AppLocalizations.of(context)!.totalLockedBalance} ${model.specialTicker!.contains('(') && model.walletInfo!.tickerName != 'USDT' ? '\n' + message + ' ' + nativeTicker : ''}',
                                 style: Theme.of(context).textTheme.subtitle1),
                           ),
                           Expanded(
                               flex: 4,
                               child: Text(
-                                  '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.lockedBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
+                                  '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.lockedBalance!, precision: model.decimalLimit!).toString()} ${model.specialTicker}',
                                   textAlign: TextAlign.right,
                                   style:
                                       Theme.of(context).textTheme.subtitle1)),
@@ -427,7 +427,7 @@ class WalletFeaturesView extends StatelessWidget {
                   model.features[index].route != '')
               ? () {
                   var route = model.features[index].route;
-                  model.navigationService
+                  model.navigationService!
                       .navigateTo('/$route', arguments: model.walletInfo);
                 }
               : null,

@@ -45,10 +45,10 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
   final log = getLogger('TradeService');
-  final ApiService _api = locator<ApiService>();
-  ConfigService configService = locator<ConfigService>();
+  final ApiService? _api = locator<ApiService>();
+  ConfigService? configService = locator<ConfigService>();
 
-  LocalStorageService storageService = locator<LocalStorageService>();
+  LocalStorageService? storageService = locator<LocalStorageService>();
   var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
   //static String basePath = environment['websocket'];
 
@@ -58,29 +58,29 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   final RxValue<bool> _isOrderbookLoaded = RxValue<bool>(false);
   bool get isOrderbookLoaded => _isOrderbookLoaded.value;
 
-  final RxValue<double> _price = RxValue<double>(0.0);
-  double get price => _price.value;
+  final RxValue<double?> _price = RxValue<double?>(0.0);
+  double? get price => _price.value;
 
-  final RxValue<double> _quantity = RxValue<double>(0.0);
-  double get quantity => _quantity.value;
+  final RxValue<double?> _quantity = RxValue<double?>(0.0);
+  double? get quantity => _quantity.value;
 
-  final RxValue<String> _interval = RxValue<String>('24h');
-  String get interval => _interval.value;
+  final RxValue<String?> _interval = RxValue<String?>('24h');
+  String? get interval => _interval.value;
 
   final RxValue<bool> _isTradingChartModelBusy = RxValue<bool>(false);
   bool get isTradingChartModelBusy => _isTradingChartModelBusy.value;
 
-  Stream tickerStream;
-  Stream allPriceStream;
+  late Stream tickerStream;
+  Stream? allPriceStream;
 
   final RxValue<bool> _isRefreshBalance = RxValue<bool>(false);
   bool get isRefreshBalance => _isRefreshBalance.value;
 
-  String setTickerNameByType(type) {
-    String res = '';
+  String? setTickerNameByType(type) {
+    String? res = '';
     //return
     //  await tokenListDatabaseService.getTickerNameByCoinType(type).then((token) {
-    for (var element in storageService.tokenList) {
+    for (var element in storageService!.tokenList) {
       var json = jsonDecode(element);
       TokenModel token = TokenModel.fromJson(json);
       if (token.coinType == type) {
@@ -103,7 +103,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 /*----------------------------------------------------------------------
                     set Trading Chart Interval
 ----------------------------------------------------------------------*/
-  void setTradingChartInterval(String v, bool isBusy) {
+  void setTradingChartInterval(String? v, bool isBusy) {
     _isTradingChartModelBusy.value = isBusy;
     _interval.value = v;
     log.w(
@@ -116,13 +116,13 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 		        - {txhash:'',status:0x1 or 0x0}
 		        - error will be any string
 ----------------------------------------------------------------------*/
-  Future getTxStatus(String txHash) async {
+  Future getTxStatus(String? txHash) async {
     String url =
-        configService.getKanbanBaseUrl() + txStatusStatusRoute + '/$txHash';
+        configService!.getKanbanBaseUrl()! + txStatusStatusRoute + '/$txHash';
     log.e('getTxStatus url $url');
     var res;
     try {
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       if (response.body != null) {
         res = jsonDecode(response.body);
         // json['message'] != null
@@ -146,7 +146,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 /*----------------------------------------------------------------------
                     Set price and quantity
 ----------------------------------------------------------------------*/
-  void setPriceQuantityValues(double p, double q) {
+  void setPriceQuantityValues(double? p, double? q) {
     _price.value = p;
     _quantity.value = q;
     log.w('$price, $quantity');
@@ -200,7 +200,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
   IOWebSocketChannel tickerDataChannel(String pair, {String interval = '24'}) {
-    var wsStringUrl = configService.getKanbanBaseWSUrl() +
+    var wsStringUrl = configService!.getKanbanBaseWSUrl()! +
         tickerWSRoute +
         pair +
         '@' +
@@ -237,7 +237,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
   IOWebSocketChannel getAllPriceChannel() {
-    var wsStringUrl = configService.getKanbanBaseWSUrl() + allPricesWSRoute;
+    var wsStringUrl = configService!.getKanbanBaseWSUrl()! + allPricesWSRoute;
     log.e('getAllPriceChannelUrl $wsStringUrl');
 
     IOWebSocketChannel channel = IOWebSocketChannel.connect(wsStringUrl);
@@ -264,7 +264,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel marketTradesChannel(String pair) {
     try {
-      var wsString = configService.getKanbanBaseWSUrl() + tradesWSRoute + pair;
+      var wsString = configService!.getKanbanBaseWSUrl()! + tradesWSRoute + pair;
       log.i('marketTradesChannel URL $wsString');
       IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
       return channel;
@@ -292,7 +292,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel orderbookChannel(String pair) {
     try {
-      var wsString = configService.getKanbanBaseWSUrl() + ordersWSRoute + pair;
+      var wsString = configService!.getKanbanBaseWSUrl()! + ordersWSRoute + pair;
       log.i('ordersChannel Url $wsString');
       // if not put the IOWebSoketChannel.connect to variable channel and
       // directly returns it then in the multiple stream it doesn't work
@@ -304,9 +304,9 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     }
   }
 
-  Future<double> getCoinMarketPrice(String name) async {
-    double currentUsdValue;
-    var data = await _api.getCoinCurrencyUsdPrice();
+  Future<double?> getCoinMarketPrice(String name) async {
+    double? currentUsdValue;
+    var data = await _api!.getCoinCurrencyUsdPrice();
 
     currentUsdValue = data['data'][name.toUpperCase()]['USD'];
     debugPrint('Current market price $currentUsdValue');
@@ -328,11 +328,11 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 //   }
 
   // Get my orders by tickername
-  Future<List<OrderModel>> getMyOrdersByTickerName(
+  Future<List<OrderModel>?> getMyOrdersByTickerName(
       String exgAddress, String tickerName) async {
     OrderList orderList;
     try {
-      var data = await _api.getMyOrdersPagedByFabHexAddressAndTickerName(
+      var data = await _api!.getMyOrdersPagedByFabHexAddressAndTickerName(
           exgAddress, tickerName);
       debugPrint(data.toString());
       if (data != null) {
@@ -349,15 +349,15 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   // Market Pair Group Price List
   marketPairPriceGroups(pairPriceList) {
-    List<List<Price>> marketPairsGroupList = [];
-    List<Price> usdtPairsList = [];
-    List<Price> dusdPairsList = [];
-    List<Price> btcPairsList = [];
-    List<Price> ethPairsList = [];
-    List<Price> exgPairsList = [];
-    List<Price> usdcPairsList = [];
-    List<Price> bnbPairsList = [];
-    List<Price> btcFabExgUsdtPriceList = [];
+    List<List<Price?>> marketPairsGroupList = [];
+    List<Price?> usdtPairsList = [];
+    List<Price?> dusdPairsList = [];
+    List<Price?> btcPairsList = [];
+    List<Price?> ethPairsList = [];
+    List<Price?> exgPairsList = [];
+    List<Price?> usdcPairsList = [];
+    List<Price?> bnbPairsList = [];
+    List<Price?> btcFabExgUsdtPriceList = [];
     for (var pair in pairPriceList) {
       if (pair.symbol.endsWith("USDT")) {
         if (pair.symbol == 'BTCUSDT' ||

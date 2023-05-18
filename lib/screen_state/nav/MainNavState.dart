@@ -12,24 +12,24 @@ class MainNavState extends BaseState {
   bool isVisible = false;
   String mnemonic = '';
   final log = getLogger('LanguageScreenState');
-  DialogService dialogService = locator<DialogService>();
-  WalletService walletService = locator<WalletService>();
+  DialogService? dialogService = locator<DialogService>();
+  WalletService? walletService = locator<WalletService>();
 
-  SharedService sharedService = locator<SharedService>();
+  SharedService? sharedService = locator<SharedService>();
 
-  final NavigationService navigationService = locator<NavigationService>();
+  final NavigationService? navigationService = locator<NavigationService>();
   List<String> languages = ['English', 'Chinese'];
-  String selectedLanguage;
+  String? selectedLanguage;
   // bool result = false;
   @override
   String errorMessage = '';
-  DialogResponse dialogResponse;
-  BuildContext context;
+  DialogResponse? dialogResponse;
+  BuildContext? context;
   // String versionName = '';
   // String versionCode = '';
   // bool isDialogDisplay = false;
   // bool isDeleting = false;
-  ScrollController scrollController;
+  ScrollController? scrollController;
 
   init() {}
 

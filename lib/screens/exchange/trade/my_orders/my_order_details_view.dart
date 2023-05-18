@@ -9,7 +9,7 @@ import 'package:stacked/stacked.dart';
 import 'my_orders_viewmodel.dart';
 
 class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
-  final List<OrderModel> orders;
+  final List<OrderModel>? orders;
   const MyOrderDetailsView({this.orders});
 
   @override
@@ -17,10 +17,10 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
     return model.isBusy
         ? const ShimmerLayout(layoutType: 'marketTrades')
         : ListView.builder(
-            itemCount: orders.length,
+            itemCount: orders!.length,
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
-              var order = orders[index];
+              var order = orders![index];
               return Row(
                 children: [
                   Expanded(
@@ -30,12 +30,12 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                   Expanded(
                       flex: 1,
                       child: Text(
-                          order.bidOrAsk
-                              ? AppLocalizations.of(context).buy
-                              : AppLocalizations.of(context).sell,
-                          style: Theme.of(context).textTheme.headline6.copyWith(
+                          order.bidOrAsk!
+                              ? AppLocalizations.of(context)!.buy
+                              : AppLocalizations.of(context)!.sell,
+                          style: Theme.of(context).textTheme.headline6!.copyWith(
                                 color: Color(
-                                    (order.bidOrAsk) ? 0xFF0da88b : 0xFFe2103c),
+                                    order.bidOrAsk! ? 0xFF0da88b : 0xFFe2103c),
                               ))),
                   Expanded(
                       flex: 2,
@@ -52,7 +52,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
                       flex: 1,
-                      child: order.isActive
+                      child: order.isActive!
                           ? model.isBusy
                               ? const CircularProgressIndicator()
                               : IconButton(

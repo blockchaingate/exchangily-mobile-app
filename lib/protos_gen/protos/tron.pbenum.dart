@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: protos/tron.proto
 //
-// @dart = 2.7
+
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
 
 // ignore_for_file: UNDEFINED_SHOWN_NAME
@@ -85,7 +85,7 @@ class Transaction_Contract_ContractType extends $pb.ProtobufEnum {
   ];
 
   static final $core.Map<$core.int, Transaction_Contract_ContractType> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static Transaction_Contract_ContractType valueOf($core.int value) => _byValue[value];
+  static Transaction_Contract_ContractType? valueOf($core.int value) => _byValue[value];
 
   const Transaction_Contract_ContractType._($core.int v, $core.String n) : super(v, n);
 }
@@ -100,7 +100,7 @@ class Transaction_Result_code extends $pb.ProtobufEnum {
   ];
 
   static final $core.Map<$core.int, Transaction_Result_code> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static Transaction_Result_code valueOf($core.int value) => _byValue[value];
+  static Transaction_Result_code? valueOf($core.int value) => _byValue[value];
 
   const Transaction_Result_code._($core.int v, $core.String n) : super(v, n);
 }

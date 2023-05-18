@@ -10,8 +10,8 @@ import 'package:stacked/stacked.dart';
 
 class TotalBalanceCardWidget
     extends ViewModelBuilderWidget<WalletDashboardViewModel> {
-  final Widget logo;
-  final String title;
+  final Widget? logo;
+  final String? title;
 
   const TotalBalanceCardWidget({this.logo, this.title});
   @override
@@ -41,7 +41,7 @@ class TotalBalanceCardWidget
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     //Announcement Widget
-                    Expanded(flex: 1, child: logo),
+                    Expanded(flex: 1, child: logo!),
                     model.swiperWidgetIndex == 2
                         ? Container()
                         : Expanded(
@@ -49,10 +49,10 @@ class TotalBalanceCardWidget
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                Text(title,
+                                Text(title!,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline4
+                                        .headline4!
                                         .copyWith(fontWeight: FontWeight.w400)),
                                 model.isBusy
                                     ? Shimmer.fromColors(
@@ -70,7 +70,7 @@ class TotalBalanceCardWidget
                                         textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .subtitle1
+                                            .subtitle1!
                                             .copyWith(
                                                 fontWeight: FontWeight.w400)),
                               ],

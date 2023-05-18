@@ -21,29 +21,29 @@ import 'locker/locker_model.dart';
 
 class MyExchangeAssetsViewModel extends ReactiveViewModel {
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [_exchangeBalanceService];
+  List<ReactiveServiceMixin> get reactiveServices => [_exchangeBalanceService!];
 
   final log = getLogger('MyExchangeAssetsViewModel');
   List myExchangeAssets = [];
-  BuildContext context;
-  WalletService walletService = locator<WalletService>();
-  SharedService sharedService = locator<SharedService>();
-  TokenInfoDatabaseService tokenListDatabaseService =
+  BuildContext? context;
+  WalletService? walletService = locator<WalletService>();
+  SharedService? sharedService = locator<SharedService>();
+  TokenInfoDatabaseService? tokenListDatabaseService =
       locator<TokenInfoDatabaseService>();
-  ApiService apiService = locator<ApiService>();
-  ExchangeBalanceModel exchangeBalance = ExchangeBalanceModel();
-  List<ExchangeBalanceModel> exchangeBalances = [];
-  var storageService = locator<LocalStorageService>();
-  final coinService = locator<CoinService>();
-  final _dialogService = locator<DialogService>();
-  final _exchangeBalanceService = locator<ExchangeBalanceService>();
+  ApiService? apiService = locator<ApiService>();
+  ExchangeBalanceModel? exchangeBalance = ExchangeBalanceModel();
+  List<ExchangeBalanceModel>? exchangeBalances = [];
+  LocalStorageService? storageService = locator<LocalStorageService>();
+  final CoinService? coinService = locator<CoinService>();
+  final DialogService? _dialogService = locator<DialogService>();
+  final ExchangeBalanceService? _exchangeBalanceService = locator<ExchangeBalanceService>();
 
   String logoUrl = walletCoinsLogoUrl;
 
   List<LockerModel> lockers = [];
   int currentTabSelection = 0;
   bool isUnlocking = false;
-  String exgAddress = '';
+  String? exgAddress = '';
 
   @override
   void dispose() {
@@ -53,7 +53,7 @@ class MyExchangeAssetsViewModel extends ReactiveViewModel {
 
   void init() async {
     setBusy(true);
-    exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+    exgAddress = await sharedService!.getExgAddressFromWalletDatabase();
     await getExchangeBalances();
 
     setBusy(false);
@@ -62,12 +62,12 @@ class MyExchangeAssetsViewModel extends ReactiveViewModel {
   getExchangeBalances() async {
     setBusyForObject(exchangeBalances, true);
 
-    exchangeBalances = await apiService.getAssetsBalance('');
+    exchangeBalances = await apiService!.getAssetsBalance('');
 
-    for (var element in exchangeBalances) {
+    for (var element in exchangeBalances!) {
       debugPrint(element.toJson().toString());
-      if (element.ticker.isEmpty) {
-        await tokenListDatabaseService
+      if (element.ticker!.isEmpty) {
+        await tokenListDatabaseService!
             .getTickerNameByCoinType(element.coinType)
             .then((ticker) {
           // storageService.tokenList.forEach((newToken){
@@ -86,7 +86,7 @@ class MyExchangeAssetsViewModel extends ReactiveViewModel {
       }
     }
     setBusyForObject(exchangeBalances, false);
-    for (var element in exchangeBalances) {
+    for (var element in exchangeBalances!) {
       log.w(element.toJson());
     }
   }
@@ -98,7 +98,7 @@ class MyExchangeAssetsViewModel extends ReactiveViewModel {
     if (tabIndex == 0) {
       await getExchangeBalances();
     } else if (tabIndex == 1) {
-      _exchangeBalanceService.setRefreshLockerBalances(true);
+      _exchangeBalanceService!.setRefreshLockerBalances(true);
     }
     setBusy(false);
   }
@@ -107,17 +107,17 @@ class MyExchangeAssetsViewModel extends ReactiveViewModel {
     setBusy(true);
 
     await getSingleCoinExchangeBalance(tickerName).then((value) {
-      debugPrint('exchangeBalance using api ${value.toJson()}');
+      debugPrint('exchangeBalance using api ${value!.toJson()}');
       exchangeBalance = value;
     });
-    if (exchangeBalance.lockedAmount == null) {
-      for (var coin in exchangeBalances) {
+    if (exchangeBalance!.lockedAmount == null) {
+      for (var coin in exchangeBalances!) {
         if (coin.ticker == tickerName) {
           log.w('singleCoinExchangeBalance $coin');
-          exchangeBalance.unlockedAmount = coin.unlockedAmount;
-          exchangeBalance.lockedAmount = coin.lockedAmount;
+          exchangeBalance!.unlockedAmount = coin.unlockedAmount;
+          exchangeBalance!.lockedAmount = coin.lockedAmount;
           debugPrint(
-              'exchangeBalance using all coins for loop ${exchangeBalance.toJson()}');
+              'exchangeBalance using all coins for loop ${exchangeBalance!.toJson()}');
         }
       }
     }
@@ -125,8 +125,8 @@ class MyExchangeAssetsViewModel extends ReactiveViewModel {
     return exchangeBalance;
   }
 
-  Future<ExchangeBalanceModel> getSingleCoinExchangeBalance(
+  Future<ExchangeBalanceModel?> getSingleCoinExchangeBalance(
       String tickerName) async {
-    return await apiService.getSingleCoinExchangeBalance(tickerName);
+    return await apiService!.getSingleCoinExchangeBalance(tickerName);
   }
 }

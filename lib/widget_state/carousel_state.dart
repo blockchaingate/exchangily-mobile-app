@@ -7,17 +7,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CarouselWidgetState extends BaseState {
   final log = getLogger('CarouselWidgetState');
-  final storageService = locator<LocalStorageService>();
+  final LocalStorageService? storageService = locator<LocalStorageService>();
 
-  BuildContext context;
+  BuildContext? context;
 
-  String lang = '';
+  String? lang = '';
   // Init state
   initState() async {
     setBusy(true);
     // lang = storageService.language;
 
-    lang = storageService.language;
+    lang = storageService!.language;
     setBusy(false);
   }
 }

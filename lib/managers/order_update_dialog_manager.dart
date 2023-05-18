@@ -22,15 +22,15 @@ import '../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/localizations.dart';
 
 class OrderUpdateDialogManager extends StatefulWidget {
-  final Widget child;
-  const OrderUpdateDialogManager({Key key, this.child}) : super(key: key);
+  final Widget? child;
+  const OrderUpdateDialogManager({Key? key, this.child}) : super(key: key);
 
   @override
-  _OrderUpdateDialogManagerState createState() =>
-      _OrderUpdateDialogManagerState();
+  OrderUpdateDialogManagerState createState() =>
+      OrderUpdateDialogManagerState();
 }
 
-class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
+class OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
   final log = getLogger('OrderUpdateDialogManager');
   final DialogService _dialogService = locator<DialogService>();
   TextEditingController controller = TextEditingController();
@@ -45,7 +45,7 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return widget.child!;
   }
 
   void _showdOrderUpdateDialog(DialogRequest request) {
@@ -54,10 +54,10 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
             animationType: AnimationType.grow,
             isOverlayTapDismiss: true,
             backgroundColor: globals.priceColor,
-            descStyle: Theme.of(context).textTheme.bodyText1,
+            descStyle: Theme.of(context).textTheme.bodyText1!,
             titleStyle: Theme.of(context)
                 .textTheme
-                .headline3
+                .headline3!
                 .copyWith(fontWeight: FontWeight.bold)),
         context: context,
         title: request.title,
@@ -76,13 +76,13 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
               decoration: InputDecoration(
                 labelStyle: Theme.of(context)
                     .textTheme
-                    .bodyText1
+                    .bodyText1!
                     .copyWith(color: globals.white),
                 icon: Icon(
                   Icons.event_note,
                   color: globals.primaryColor,
                 ),
-                labelText: AppLocalizations.of(context).paymentDescription,
+                labelText: AppLocalizations.of(context)!.paymentDescription,
               ),
             ),
           ],
@@ -94,7 +94,7 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
               FocusScope.of(context).requestFocus(FocusNode());
             },
             child: Text(
-              request.buttonTitle,
+              request.buttonTitle!,
               style: Theme.of(context).textTheme.headline4,
             ),
           ),
@@ -104,7 +104,7 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
               FocusScope.of(context).requestFocus(FocusNode());
             },
             child: Text(
-              request.cancelButton,
+              request.cancelButton!,
               style: Theme.of(context).textTheme.headline4,
             ),
           )

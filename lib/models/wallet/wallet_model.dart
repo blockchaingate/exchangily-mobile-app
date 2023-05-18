@@ -27,27 +27,27 @@ class WalletFeatureName {
 // Wallet Model
 
 class WalletInfo {
-  int _id;
-  String _name;
-  String _tickerName;
-  String _tokenType;
-  String _address;
-  double _lockedBalance;
-  double _availableBalance;
-  double _usdValue;
-  double _inExchange;
+  int? _id;
+  String? _name;
+  String? _tickerName;
+  String? _tokenType;
+  String? _address;
+  double? _lockedBalance;
+  double? _availableBalance;
+  double? _usdValue;
+  double? _inExchange;
   //PairDecimalConfig _pairDecimalConfig;
 
   WalletInfo(
-      {int id,
-      String tickerName,
-      String tokenType,
-      String address,
-      double lockedBalance,
-      double availableBalance,
-      double usdValue,
-      String name,
-      double inExchange
+      {int? id,
+      String? tickerName,
+      String? tokenType,
+      String? address,
+      double? lockedBalance,
+      double? availableBalance,
+      double? usdValue,
+      String? name,
+      double? inExchange
       //PairDecimalConfig pairDecimalConfig
       }) {
     _id = id;
@@ -70,18 +70,18 @@ class WalletInfo {
     //       .map((e) => PairDecimalConfig.fromJson(e))
     //       .toList();
     // }
-    double ab = json['availableBalance'] as double;
+    double? ab = json['availableBalance'] as double?;
 
     return WalletInfo(
-      id: json['id'] as int,
-      tickerName: json['tickerName'] as String,
-      tokenType: json['tokenType'] as String,
-      address: json['address'] as String,
+      id: json['id'] as int?,
+      tickerName: json['tickerName'] as String?,
+      tokenType: json['tokenType'] as String?,
+      address: json['address'] as String?,
       lockedBalance: json['lockedBalance'],
       availableBalance: ab,
-      usdValue: json['usdValue'] as double,
-      name: json['name'] as String,
-      inExchange: json['inExchange'] as double,
+      usdValue: json['usdValue'] as double?,
+      name: json['name'] as String?,
+      inExchange: json['inExchange'] as double?,
 
       //  pairDecimalConfig:
       //   PairDecimalConfig.fromJson(json['pairDecimalConfig'])
@@ -107,36 +107,36 @@ class WalletInfo {
     return data;
   }
 
-  int get id => _id;
+  int? get id => _id;
 
-  set id(int id) {
+  set id(int? id) {
     _id = id;
   }
 
-  String get tickerName => _tickerName;
+  String? get tickerName => _tickerName;
 
-  set tickerName(String tickerName) {
+  set tickerName(String? tickerName) {
     _tickerName = tickerName;
   }
 
-  String get tokenType => _tokenType;
+  String? get tokenType => _tokenType;
 
-  set tokenType(String tokenType) {
+  set tokenType(String? tokenType) {
     _tokenType = tokenType;
   }
 
-  String get address => _address;
+  String? get address => _address;
 
-  set address(String address) {
+  set address(String? address) {
     _address = address;
   }
 
-  double get lockedBalance => _lockedBalance;
-  set lockedBalance(double lockedBalance) {
+  double? get lockedBalance => _lockedBalance;
+  set lockedBalance(double? lockedBalance) {
     _lockedBalance = lockedBalance;
   }
 
-  double get availableBalance => _availableBalance;
+  double get availableBalance => _availableBalance!;
 
   set availableBalance(double availableBalance) {
     if (availableBalance.isNegative) {
@@ -146,7 +146,7 @@ class WalletInfo {
     }
   }
 
-  double get usdValue => _usdValue;
+  double get usdValue => _usdValue!;
 
   set usdValue(double usdValue) {
     if (usdValue.isNegative) {
@@ -156,14 +156,14 @@ class WalletInfo {
     }
   }
 
-  String get name => _name;
+  String? get name => _name;
 
-  set name(String name) {
+  set name(String? name) {
     _name = name;
   }
 
-  double get inExchange => _inExchange;
-  set inExchange(double inExchange) {
+  double? get inExchange => _inExchange;
+  set inExchange(double? inExchange) {
     _inExchange = inExchange;
   }
 
@@ -178,7 +178,7 @@ class WalletInfo {
 }
 
 class WalletInfoList {
-  final List<WalletInfo> wallets;
+  final List<WalletInfo>? wallets;
   WalletInfoList({this.wallets});
 
   factory WalletInfoList.fromJson(List<dynamic> parsedJson) {

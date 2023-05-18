@@ -12,14 +12,15 @@ class WebViewWidget extends StatefulWidget {
   const WebViewWidget(this.url, this.title);
 
   @override
-  State<WebViewWidget> createState() => _WebViewWidgetState(this.url);
+  State<WebViewWidget> createState() => WebViewWidgetState(url);
 }
 
-class _WebViewWidgetState extends State<WebViewWidget>
+// -----------------------------------burayi ac ----------------------------------------
+class WebViewWidgetState extends State<WebViewWidget>
     with TickerProviderStateMixin {
   bool isLoading = true;
   int loadingProgress = 0;
-  AnimationController animationController;
+  late AnimationController animationController;
   @override
   void dispose() {
     animationController.dispose();
@@ -40,7 +41,7 @@ class _WebViewWidgetState extends State<WebViewWidget>
 
   final String _url;
   final _key = UniqueKey();
-  _WebViewWidgetState(this._url);
+  WebViewWidgetState(this._url);
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -66,6 +67,7 @@ class _WebViewWidgetState extends State<WebViewWidget>
             //    ).toString(),
           ),
           Visibility(
+            visible: isLoading,
             child: Center(
                 child: CircularProgressIndicator(
               color: primaryColor,
@@ -74,7 +76,6 @@ class _WebViewWidgetState extends State<WebViewWidget>
               //  value: double.parse(loadingProgress.toString()) / 100,
               semanticsValue: loadingProgress.toString(),
             )),
-            visible: isLoading,
           )
         ],
       )),

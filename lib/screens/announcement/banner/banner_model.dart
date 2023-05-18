@@ -1,13 +1,13 @@
 class Banner {
-  List<Desc> title;
-  List<Desc> subtitle;
-  String sId;
-  String appId;
-  List<Desc> desc;
-  String imageUrl;
-  String imageAlt;
-  int sequence;
-  String dateCreated;
+  List<Desc>? title;
+  List<Desc>? subtitle;
+  String? sId;
+  String? appId;
+  List<Desc>? desc;
+  String? imageUrl;
+  String? imageAlt;
+  int? sequence;
+  String? dateCreated;
 
   Banner(
       {this.title,
@@ -24,13 +24,13 @@ class Banner {
     if (json['title'] != null) {
       title = <Desc>[];
       json['title'].forEach((v) {
-        title.add(Desc.fromJson(v));
+        title!.add(Desc.fromJson(v));
       });
     }
     if (json['subtitle'] != null) {
       subtitle = <Desc>[];
       json['subtitle'].forEach((v) {
-        subtitle.add(Desc.fromJson(v));
+        subtitle!.add(Desc.fromJson(v));
       });
     }
     sId = json['_id'];
@@ -38,7 +38,7 @@ class Banner {
     if (json['desc'] != null) {
       desc = <Desc>[];
       json['desc'].forEach((v) {
-        desc.add(Desc.fromJson(v));
+        desc!.add(Desc.fromJson(v));
       });
     }
     imageUrl = json['imageUrl'];
@@ -50,15 +50,15 @@ class Banner {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (title != null) {
-      data['title'] = title.map((v) => v.toJson()).toList();
+      data['title'] = title!.map((v) => v.toJson()).toList();
     }
     if (subtitle != null) {
-      data['subtitle'] = subtitle.map((v) => v.toJson()).toList();
+      data['subtitle'] = subtitle!.map((v) => v.toJson()).toList();
     }
     data['_id'] = sId;
     data['appId'] = appId;
     if (desc != null) {
-      data['desc'] = desc.map((v) => v.toJson()).toList();
+      data['desc'] = desc!.map((v) => v.toJson()).toList();
     }
     data['imageUrl'] = imageUrl;
     data['imageAlt'] = imageAlt;
@@ -69,8 +69,8 @@ class Banner {
 }
 
 class Desc {
-  String lan;
-  String text;
+  String? lan;
+  String? text;
 
   Desc({this.lan, this.text});
 

@@ -15,10 +15,9 @@ import 'package:exchangilymobileapp/widgets/youtube_list_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:path/path.dart';
 
 class CampaignInstructionScreen extends StatelessWidget {
-  const CampaignInstructionScreen({Key key, this.newPage = true})
+  const CampaignInstructionScreen({Key? key, this.newPage = true})
       : super(key: key);
   final bool newPage;
 
@@ -58,14 +57,15 @@ class CampaignInstructionScreen extends StatelessWidget {
                         text: TextSpan(
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              model.sharedService.launchInBrowser(
+                              model.sharedService!.launchInBrowser(
                                   Uri.parse(exchangilyAnnouncementUrl));
                             },
-                          text: AppLocalizations.of(context).visitWebsite,
-                          style: Theme.of(context).textTheme.bodyText1.copyWith(
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
-                              ),
+                          text: AppLocalizations.of(context)!.visitWebsite,
+                          style:
+                              Theme.of(context).textTheme.bodyText1!.copyWith(
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                  ),
                         ),
                       ),
                       const Padding(
@@ -77,7 +77,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                       )
                     ],
                   ),
-                  onPressed: () => model.sharedService
+                  onPressed: () => model.sharedService!
                       .launchInBrowser(Uri.parse(exchangilyAnnouncementUrl)),
                 ),
               ),
@@ -109,7 +109,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                       ? Container(
                           child: Center(
                             child: Text(
-                              AppLocalizations.of(context)
+                              AppLocalizations.of(context)!
                                       .serverBusy
                                       .toString() +
                                   "...",
@@ -117,7 +117,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                             ),
                           ),
                         )
-                      : model.campaignInfoList.isEmpty
+                      : model.campaignInfoList!.isEmpty
                           ? Center(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -134,7 +134,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                       height: 5,
                                     ),
                                     Text(
-                                      AppLocalizations.of(context).noEventNote,
+                                      AppLocalizations.of(context)!.noEventNote,
                                       textAlign: TextAlign.center,
                                       style:
                                           const TextStyle(color: Colors.white),
@@ -157,7 +157,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                           child: Row(
                                             children: [
                                               Text(
-                                                AppLocalizations.of(context)
+                                                AppLocalizations.of(context)!
                                                     .announcements,
                                                 style: TextStyle(color: white),
                                               ),
@@ -185,7 +185,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                               primary: primaryColor),
                                           child: Row(
                                             children: [
-                                              Text(AppLocalizations.of(context)
+                                              Text(AppLocalizations.of(context)!
                                                   .blog),
                                               const Padding(
                                                 padding: EdgeInsets.only(
@@ -214,9 +214,9 @@ class CampaignInstructionScreen extends StatelessWidget {
                           : ListView.builder(
                               padding:
                                   const EdgeInsets.fromLTRB(10, 10, 10, 60),
-                              itemCount: model.campaignInfoList.length,
+                              itemCount: model.campaignInfoList!.length,
                               itemBuilder: (context, index) {
-                                if (model.campaignInfoList[index]["status"] ==
+                                if (model.campaignInfoList![index]["status"] ==
                                         "active"
                                     //     &&
                                     // model.campaignInfoList[index]
@@ -230,91 +230,170 @@ class CampaignInstructionScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(5),
                                         child: InkWell(
                                           onTap: () {
-                                            if (!model.campaignInfoList[index]
+                                            if (!model.campaignInfoList![index]
                                                 .containsKey("type")) {
                                               Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CampaignSingle(model
-                                                                  .campaignInfoList[
-                                                              index]["id"])));
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CampaignSingle(model
+                                                              .campaignInfoList![
+                                                          index]["id"]),
+                                                ),
+                                              );
                                             } else {
                                               debugPrint("Event type: " +
-                                                  model.campaignInfoList[index]
+                                                  model.campaignInfoList![index]
                                                       ["type"]);
 
                                               switch (
-                                                  model.campaignInfoList[index]
+                                                  model.campaignInfoList![index]
                                                       ["type"]) {
                                                 case "flutterPage":
-                                                  return Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              CampaignSingle(
-                                                                  model.campaignInfoList[
-                                                                          index]
-                                                                      ["id"])));
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CampaignSingle(model
+                                                                  .campaignInfoList![
+                                                              index]["id"]),
+                                                    ),
+                                                  );
                                                   break;
                                                 case "webPage":
-                                                  return Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder:
-                                                              (context) =>
-                                                                  WebViewPage(
-                                                                    url: model.campaignInfoList[
-                                                                            index]
-                                                                        [model
-                                                                            .lang]["url"],
-                                                                    title: model
-                                                                            .campaignInfoList[index]
-                                                                        [model
-                                                                            .lang]["title"],
-                                                                  )));
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          WebViewPage(
+                                                        url:
+                                                            model.campaignInfoList![
+                                                                        index]
+                                                                    [model.lang]
+                                                                ["url"],
+                                                        title:
+                                                            model.campaignInfoList![
+                                                                        index]
+                                                                    [model.lang]
+                                                                ["title"],
+                                                      ),
+                                                    ),
+                                                  );
                                                   break;
-                                                // case "video":
-                                                //   return Navigator.push(
-                                                //       context,
-                                                //       MaterialPageRoute(
-                                                //           builder: (context) =>
-                                                //               VideoPage(
-                                                //                   videoObj: model
-                                                //                               .campaignInfoList[
-                                                //                           index]
-                                                //                       [model
-                                                //                           .lang])));
-                                                //   break;
                                                 case "youtube":
-                                                  return Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              YoutubePage(
-                                                                  videoObj: model
-                                                                              .campaignInfoList[
-                                                                          index]
-                                                                      [model
-                                                                          .lang])));
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          YoutubePage(
+                                                        videoObj: model
+                                                                .campaignInfoList![
+                                                            index][model.lang],
+                                                      ),
+                                                    ),
+                                                  );
                                                   break;
                                                 case "youtubeList":
-                                                  return Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              YoutubeListPage(
-                                                                  videoObj: model
-                                                                              .campaignInfoList[
-                                                                          index]
-                                                                      [model
-                                                                          .lang])));
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          YoutubeListPage(
+                                                        videoObj: model
+                                                                .campaignInfoList![
+                                                            index][model.lang],
+                                                      ),
+                                                    ),
+                                                  );
                                                   break;
                                                 default:
-                                                  return null;
+                                                  return;
                                               }
                                             }
                                           },
+
+                                          // onTap: () {
+                                          //   if (!model.campaignInfoList![index]
+                                          //       .containsKey("type")) {
+                                          //     Navigator.push(
+                                          //         context,
+                                          //         MaterialPageRoute(
+                                          //             builder: (context) =>
+                                          //                 CampaignSingle(model
+                                          //                         .campaignInfoList![
+                                          //                     index]["id"])));
+                                          //   } else {
+                                          //     debugPrint("Event type: " +
+                                          //         model.campaignInfoList![index]
+                                          //             ["type"]);
+
+                                          //     switch (
+                                          //         model.campaignInfoList![index]
+                                          //             ["type"]) {
+                                          //       case "flutterPage":
+                                          //         return Navigator.push(
+                                          //             context,
+                                          //             MaterialPageRoute(
+                                          //                 builder: (context) =>
+                                          //                     CampaignSingle(
+                                          //                         model.campaignInfoList![
+                                          //                                 index]
+                                          //                             ["id"])));
+                                          //       case "webPage":
+                                          //         return Navigator.push(
+                                          //             context,
+                                          //             MaterialPageRoute(
+                                          //                 builder:
+                                          //                     (context) =>
+                                          //                         WebViewPage(
+                                          //                           url: model.campaignInfoList![
+                                          //                                   index]
+                                          //                               [model
+                                          //                                   .lang]["url"],
+                                          //                           title: model
+                                          //                                   .campaignInfoList![index]
+                                          //                               [model
+                                          //                                   .lang]["title"],
+                                          //                         )));
+                                          //       // case "video":
+                                          //       //   return Navigator.push(
+                                          //       //       context,
+                                          //       //       MaterialPageRoute(
+                                          //       //           builder: (context) =>
+                                          //       //               VideoPage(
+                                          //       //                   videoObj: model
+                                          //       //                               .campaignInfoList[
+                                          //       //                           index]
+                                          //       //                       [model
+                                          //       //                           .lang])));
+                                          //       //   break;
+                                          //       case "youtube":
+                                          //         return Navigator.push(
+                                          //             context,
+                                          //             MaterialPageRoute(
+                                          //                 builder: (context) =>
+                                          //                     YoutubePage(
+                                          //                         videoObj: model
+                                          //                                     .campaignInfoList![
+                                          //                                 index]
+                                          //                             [model
+                                          //                                 .lang])));
+                                          //       case "youtubeList":
+                                          //         return Navigator.push(
+                                          //             context,
+                                          //             MaterialPageRoute(
+                                          //                 builder: (context) =>
+                                          //                     YoutubeListPage(
+                                          //                         videoObj: model
+                                          //                                     .campaignInfoList![
+                                          //                                 index]
+                                          //                             [model
+                                          //                                 .lang])));
+                                          //       default:
+                                          //         return null;
+                                          //     }
+                                          //   }
+                                          // },
                                           child: Container(
                                             decoration: const BoxDecoration(
                                               color: walletCardColor,
@@ -324,7 +403,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                 AspectRatio(
                                                   aspectRatio: 2.5 / 1,
                                                   child: CacheImage(
-                                                    model.campaignInfoList[
+                                                    model.campaignInfoList![
                                                         index]["coverImage"],
                                                     fit: BoxFit.cover,
                                                   ),
@@ -340,7 +419,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                             .start,
                                                     children: <Widget>[
                                                       Text(
-                                                          model.campaignInfoList[
+                                                          model.campaignInfoList![
                                                                           index]
                                                                       [
                                                                       model
@@ -350,7 +429,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                           style: Theme.of(
                                                                   context)
                                                               .textTheme
-                                                              .headline3
+                                                              .headline3!
                                                               .copyWith(
                                                                   fontWeight:
                                                                       FontWeight
@@ -359,14 +438,14 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                         height: 10,
                                                       ),
                                                       Text(
-                                                          model.campaignInfoList[
+                                                          model.campaignInfoList![
                                                                               index]
                                                                           [model
                                                                               .lang]
                                                                       [
                                                                       "startDate"] +
                                                                   " - " +
-                                                                  model.campaignInfoList[
+                                                                  model.campaignInfoList![
                                                                               index]
                                                                           [model
                                                                               .lang]
@@ -381,7 +460,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                         height: 10,
                                                       ),
                                                       Text(
-                                                          model.campaignInfoList[
+                                                          model.campaignInfoList![
                                                                           index]
                                                                       [
                                                                       model

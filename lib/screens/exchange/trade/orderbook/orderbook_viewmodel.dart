@@ -9,18 +9,18 @@ import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:stacked/stacked.dart';
 
 class OrderbookViewModel extends StreamViewModel {
-  final String tickerName;
+  final String? tickerName;
   OrderbookViewModel({this.tickerName});
 
   final log = getLogger('OrderbookViewModel');
 
-  TradeService tradeService = locator<TradeService>();
-  SharedService sharedService = locator<SharedService>();
+  TradeService? tradeService = locator<TradeService>();
+  SharedService? sharedService = locator<SharedService>();
   Orderbook orderbook = Orderbook();
   PairDecimalConfig decimalConfig = PairDecimalConfig();
 
   @override
-  Stream get stream => tradeService.getOrderBookStreamByTickerName(tickerName);
+  Stream get stream => tradeService!.getOrderBookStreamByTickerName(tickerName!);
 
   @override
   transformData(data) {
@@ -28,7 +28,7 @@ class OrderbookViewModel extends StreamViewModel {
     var jsonDynamic = jsonDecode(data);
     orderbook = Orderbook.fromJson(jsonDynamic);
     log.e(
-        'OrderBook result  -- ${orderbook.buyOrders.length} ${orderbook.sellOrders.length}');
+        'OrderBook result  -- ${orderbook.buyOrders!.length} ${orderbook.sellOrders!.length}');
   }
 
   @override
@@ -44,7 +44,7 @@ class OrderbookViewModel extends StreamViewModel {
     // }
     fillTextFields(orderbook.price, orderbook.quantity);
     log.w('orderbook data ready $dataReady');
-    if (dataReady) tradeService.setOrderbookLoadedStatus(true);
+    if (dataReady) tradeService!.setOrderbookLoadedStatus(true);
   }
 
   @override
@@ -55,8 +55,8 @@ class OrderbookViewModel extends StreamViewModel {
   @override
   void onCancel() {
     log.e('Orderbook Stream closed');
-    tradeService
-        .orderbookChannel(tickerName)
+    tradeService!
+        .orderbookChannel(tickerName!)
         .sink
         .close()
         .then((value) => log.w('Orderbook channel closed'));
@@ -71,8 +71,8 @@ class OrderbookViewModel extends StreamViewModel {
 ----------------------------------------------------------------------*/
 
   getDecimalPairConfig() async {
-    await sharedService
-        .getSinglePairDecimalConfig(tickerName)
+    await sharedService!
+        .getSinglePairDecimalConfig(tickerName!)
         .then((decimalValues) {
       decimalConfig = decimalValues;
       log.i(
@@ -85,8 +85,8 @@ class OrderbookViewModel extends StreamViewModel {
 /*----------------------------------------------------------------------
                     Set price and quantity
 ----------------------------------------------------------------------*/
-  fillTextFields(double p, double q) {
-    tradeService.setPriceQuantityValues(p, q);
+  fillTextFields(double? p, double? q) {
+    tradeService!.setPriceQuantityValues(p, q);
     log.i('fillTextFields $p--$q');
   }
 }

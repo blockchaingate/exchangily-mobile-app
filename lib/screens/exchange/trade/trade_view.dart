@@ -19,8 +19,8 @@ import 'orderbook/orderbook_view.dart';
 import 'package:flutter/cupertino.dart';
 
 class TradeView extends StatelessWidget {
-  final Price pairPriceByRoute;
-  TradeView({Key key, this.pairPriceByRoute}) : super(key: key);
+  final Price? pairPriceByRoute;
+  TradeView({Key? key, this.pairPriceByRoute}) : super(key: key);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ class TradeView extends StatelessWidget {
                       },
                     ),
                     title: Text(
-                      model.updateTickerName(pairPriceByRoute.symbol),
+                      model.updateTickerName(pairPriceByRoute!.symbol!),
                       style: Theme.of(context).textTheme.headline4,
                     ),
                     centerTitle: true,
@@ -124,14 +124,14 @@ class TradeView extends StatelessWidget {
                     ? Container(
                         child: Center(
                         child: Text(
-                          AppLocalizations.of(context).serverError,
+                          AppLocalizations.of(context)!.serverError,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ))
                     : model.isBusy && model.isDisposing
                         ? Container(
                             child: Center(
-                            child: model.sharedService.loadingIndicator(),
+                            child: model.sharedService!.loadingIndicator(),
                           ))
                         : Container(
                             child: ListView(shrinkWrap: true, children: [
@@ -163,7 +163,7 @@ class TradeView extends StatelessWidget {
                                   : Container(
                                       child: LoadHTMLFileToWEbView(
                                         model.updateTickerName(
-                                            pairPriceByRoute.symbol),
+                                            pairPriceByRoute!.symbol!),
                                       ),
                                     ),
                               //: CircularProgressIndicator(),
@@ -190,44 +190,44 @@ class TradeView extends StatelessWidget {
 
                                           tabs: [
                                             Text(
-                                                AppLocalizations.of(context)
+                                                AppLocalizations.of(context)!
                                                     .orderBook,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText1
+                                                    .bodyText1!
                                                     .copyWith(
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         decorationThickness:
                                                             3)),
                                             Text(
-                                                AppLocalizations.of(context)
+                                                AppLocalizations.of(context)!
                                                     .marketTrades,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText1
+                                                    .bodyText1!
                                                     .copyWith(
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         decorationThickness:
                                                             3)),
                                             Text(
-                                                AppLocalizations.of(context)
+                                                AppLocalizations.of(context)!
                                                     .myOrders,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText1
+                                                    .bodyText1!
                                                     .copyWith(
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         decorationThickness:
                                                             3)),
                                             Text(
-                                                AppLocalizations.of(context)
+                                                AppLocalizations.of(context)!
                                                     .assets,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText1
+                                                    .bodyText1!
                                                     .copyWith(
                                                         fontWeight:
                                                             FontWeight.w500,
@@ -275,7 +275,7 @@ class TradeView extends StatelessWidget {
 
                                             MyOrdersView(
                                                 tickerName:
-                                                    pairPriceByRoute.symbol),
+                                                    pairPriceByRoute!.symbol),
                                             // My Exchange Asssets
                                             // model.busy(model.myExchangeAssets)
                                             //     ? Container(
@@ -338,39 +338,43 @@ class TradeView extends StatelessWidget {
                             flex: 1,
                             child: Container(
                               margin: const EdgeInsets.only(right: 2.0),
-                              child: FlatButton(
-                                padding: const EdgeInsets.all(0),
-                                color: buyPrice,
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  backgroundColor: buyPrice,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      side: const BorderSide(
+                                          color: buyPrice, width: 1)),
+                                ),
                                 onPressed: () {
                                   if (model.currentPairPrice != null &&
                                       !model.isBusy) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => BuySellView(
-                                              //   orderbook: model.orderbook,
-                                              pairSymbolWithSlash:
-                                                  model.pairSymbolWithSlash,
-                                              bidOrAsk: true,
-                                              tickerName:
-                                                  pairPriceByRoute.symbol)),
+                                        builder: (context) => BuySellView(
+                                            pairSymbolWithSlash:
+                                                model.pairSymbolWithSlash,
+                                            bidOrAsk: true,
+                                            tickerName:
+                                                pairPriceByRoute!.symbol),
+                                      ),
                                     );
                                   }
                                 },
-                                child: Text(AppLocalizations.of(context).buy,
-                                    style:
-                                        TextStyle(fontSize: 13, color: white)),
+                                child: Text(
+                                  AppLocalizations.of(context)!.buy,
+                                  style: const TextStyle(
+                                      fontSize: 13, color: Colors.white),
+                                ),
                               ),
                             )),
                         // Sell button
                         const SizedBox(width: 5),
                         Flexible(
                             flex: 1,
-                            child: RaisedButton(
-                              padding: const EdgeInsets.all(0),
-                              color: sellPrice,
-                              shape: StadiumBorder(
-                                  side: BorderSide(color: sellPrice, width: 1)),
+                            child: ElevatedButton(
                               onPressed: () {
                                 if (model.currentPairPrice != null &&
                                     !model.isBusy) {
@@ -383,13 +387,26 @@ class TradeView extends StatelessWidget {
                                                 model.pairSymbolWithSlash,
                                             bidOrAsk: false,
                                             tickerName:
-                                                pairPriceByRoute.symbol)),
+                                                pairPriceByRoute!.symbol)),
                                   );
                                 }
                               },
-                              child: Text(AppLocalizations.of(context).sell,
-                                  style: const TextStyle(
-                                      fontSize: 13, color: Colors.white)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: sellPrice,
+                                shape: const StadiumBorder(
+                                  side: BorderSide(
+                                    color: sellPrice,
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context)!.sell,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ))
                       ],
                     )),

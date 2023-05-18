@@ -26,10 +26,10 @@ import 'package:stacked/stacked.dart';
 
 class BuySellView extends StatelessWidget {
   BuySellView(
-      {Key key, this.bidOrAsk, this.pairSymbolWithSlash, this.tickerName})
+      {Key? key, this.bidOrAsk, this.pairSymbolWithSlash, this.tickerName})
       : super(key: key);
-  final bool bidOrAsk;
-  final String pairSymbolWithSlash;
+  final bool? bidOrAsk;
+  final String? pairSymbolWithSlash;
   final tickerName;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -49,7 +49,7 @@ class BuySellView extends StatelessWidget {
 
           model.pairSymbolWithSlash = pairSymbolWithSlash;
           // sharedService.context = context;
-          model.splitPair(pairSymbolWithSlash);
+          model.splitPair(pairSymbolWithSlash!);
           // model.setDefaultGasPrice();
           // await model.retrieveWallets();
           // await model.getDecimalPairConfig();
@@ -67,7 +67,7 @@ class BuySellView extends StatelessWidget {
               },
               onComplete: (index, key) {
                 debugPrint('onComplete: $index, $key');
-                model.storageService.isShowCaseView = false;
+                model.storageService!.isShowCaseView = false;
               },
               builder: Builder(
                 builder: (context) => Stack(
@@ -163,7 +163,7 @@ class BuySellView extends StatelessWidget {
                                                         // ),
                                                         child: Text(
                                                             AppLocalizations.of(
-                                                                    context)
+                                                                    context)!
                                                                 .price,
                                                             style: Theme.of(
                                                                     context)
@@ -186,7 +186,7 @@ class BuySellView extends StatelessWidget {
                                                         // ),
                                                         child: Text(
                                                             AppLocalizations.of(
-                                                                    context)
+                                                                    context)!
                                                                 .quantity,
                                                             style: Theme.of(
                                                                     context)
@@ -195,7 +195,7 @@ class BuySellView extends StatelessWidget {
                                                   ],
                                                 ),
                                                 buildVerticalOrderbookColumn(
-                                                    model.orderbook.sellOrders,
+                                                    model.orderbook.sellOrders!,
                                                     false,
                                                     model),
                                                 Container(
@@ -230,7 +230,7 @@ class BuySellView extends StatelessWidget {
                                                       ],
                                                     )),
                                                 buildVerticalOrderbookColumn(
-                                                    model.orderbook.buyOrders,
+                                                    model.orderbook.buyOrders!,
                                                     true,
                                                     model)
                                               ],
@@ -265,7 +265,7 @@ class BuySellView extends StatelessWidget {
                       //
                     ]),
                     model.isBusy
-                        ? model.sharedService.stackFullScreenLoadingIndicator()
+                        ? model.sharedService!.stackFullScreenLoadingIndicator()
                         : Container(),
                   ],
                 ),
@@ -283,7 +283,7 @@ class BuySellView extends StatelessWidget {
         Container(
             decoration: BoxDecoration(
               border: Border(
-                  bottom: model.bidOrAsk
+                  bottom: model.bidOrAsk!
                       ? const BorderSide(width: 2.0, color: primaryColor)
                       : BorderSide.none),
             ),
@@ -294,9 +294,9 @@ class BuySellView extends StatelessWidget {
                   model.selectBuySellTab(true);
                 },
                 child: Text(
-                  AppLocalizations.of(context).buy,
+                  AppLocalizations.of(context)!.buy,
                   style: TextStyle(
-                      color: model.bidOrAsk
+                      color: model.bidOrAsk!
                           ? const Color(0XFF871fff)
                           : Colors.white,
                       fontSize: 14.0),
@@ -304,7 +304,7 @@ class BuySellView extends StatelessWidget {
         Container(
             decoration: BoxDecoration(
               border: Border(
-                  bottom: model.bidOrAsk
+                  bottom: model.bidOrAsk!
                       ? BorderSide.none
                       : const BorderSide(width: 2.0, color: Color(0XFF871fff))),
             ),
@@ -315,9 +315,9 @@ class BuySellView extends StatelessWidget {
                   model.selectBuySellTab(false);
                 },
                 child: Text(
-                  AppLocalizations.of(context).sell,
+                  AppLocalizations.of(context)!.sell,
                   style: TextStyle(
-                      color: model.bidOrAsk
+                      color: model.bidOrAsk!
                           ? Colors.white
                           : const Color(0XFF871fff),
                       fontSize: 14.0),
@@ -482,8 +482,8 @@ Column buildVerticalOrderbookColumn(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                      order.price.toStringAsFixed(
-                          model.singlePairDecimalConfig.priceDecimal),
+                      order.price!.toStringAsFixed(
+                          model.singlePairDecimalConfig.priceDecimal!),
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
@@ -494,9 +494,9 @@ Column buildVerticalOrderbookColumn(
                       color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                       child: Text(
                           NumberUtil()
-                              .truncateDoubleWithoutRouding(order.quantity,
+                              .truncateDoubleWithoutRouding(order.quantity!,
                                   precision:
-                                      model.singlePairDecimalConfig.qtyDecimal)
+                                      model.singlePairDecimalConfig.qtyDecimal!)
                               .toString(),
                           style: const TextStyle(
                               fontWeight: FontWeight.w600,
@@ -601,7 +601,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             maxLines: 1,
             controller: model.priceTextController,
             decoration: InputDecoration(
-                labelText: AppLocalizations.of(context).price,
+                labelText: AppLocalizations.of(context)!.price,
                 labelStyle: Theme.of(context).textTheme.headline6),
             style: Theme.of(context).textTheme.headline5,
           ),
@@ -627,7 +627,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             maxLines: 1,
             controller: model.quantityTextController,
             decoration: InputDecoration(
-                labelText: AppLocalizations.of(context).quantity,
+                labelText: AppLocalizations.of(context)!.quantity,
                 labelStyle: Theme.of(context).textTheme.headline6),
             style: Theme.of(context).textTheme.headline5,
           ),
@@ -652,7 +652,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             Padding(
               padding: const EdgeInsets.only(right: 3.0),
               child: Text(
-                AppLocalizations.of(context).amount,
+                AppLocalizations.of(context)!.amount,
                 style: const TextStyle(color: Colors.grey, fontSize: 12.0),
               ),
             ),
@@ -661,26 +661,12 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             Expanded(
               child: model.bidOrAsk == true
                   ? Text(
-                      NumberUtil()
-                              .truncateDoubleWithoutRouding(
-                                  model.transactionAmount,
-                                  precision:
-                                      model.singlePairDecimalConfig.qtyDecimal)
-                              .toString() +
-                          " " +
-                          model.baseCoinName,
+                      "${NumberUtil().truncateDoubleWithoutRouding(model.transactionAmount, precision: model.singlePairDecimalConfig.qtyDecimal!)} ${model.baseCoinName!}",
                       textAlign: TextAlign.end,
                       style:
                           const TextStyle(color: Colors.grey, fontSize: 12.0))
                   : Text(
-                      NumberUtil()
-                              .truncateDoubleWithoutRouding(
-                                  model.transactionAmount,
-                                  precision:
-                                      model.singlePairDecimalConfig.qtyDecimal)
-                              .toString() +
-                          " " +
-                          model.baseCoinName,
+                      "${NumberUtil().truncateDoubleWithoutRouding(model.transactionAmount, precision: model.singlePairDecimalConfig.qtyDecimal!)} ${model.baseCoinName!}",
                       textAlign: TextAlign.end,
                       style:
                           const TextStyle(color: Colors.grey, fontSize: 12.0)),
@@ -692,8 +678,8 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
         model.isBusy ||
                 model.targetCoinExchangeBalance == null ||
                 model.baseCoinExchangeBalance == null ||
-                model.baseCoinExchangeBalance.unlockedAmount == null ||
-                model.targetCoinExchangeBalance.unlockedAmount == null
+                model.baseCoinExchangeBalance!.unlockedAmount == null ||
+                model.targetCoinExchangeBalance!.unlockedAmount == null
             ? const Center(child: CupertinoActivityIndicator())
             : BalanceRowWidget(model: model),
         UIHelper.verticalSpaceSmall,
@@ -702,7 +688,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context).kanbanGasFee,
+              AppLocalizations.of(context)!.kanbanGasFee,
               style: const TextStyle(color: Colors.grey, fontSize: 12.0),
             ),
             Padding(
@@ -724,7 +710,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context).advance,
+              AppLocalizations.of(context)!.advance,
               style: const TextStyle(color: Colors.grey, fontSize: 12.0),
             ),
             SizedBox(
@@ -755,7 +741,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      AppLocalizations.of(context).kanbanGasPrice,
+                      AppLocalizations.of(context)!.kanbanGasPrice,
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     UIHelper.horizontalSpaceSmall,
@@ -783,7 +769,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                 Row(
                   children: <Widget>[
                     Text(
-                      AppLocalizations.of(context).kanbanGasLimit,
+                      AppLocalizations.of(context)!.kanbanGasLimit,
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     UIHelper.horizontalSpaceSmall,
@@ -821,7 +807,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                 )),
                 padding: MaterialStateProperty.all(
                     const EdgeInsets.symmetric(horizontal: 12.0)),
-                backgroundColor: model.bidOrAsk
+                backgroundColor: model.bidOrAsk!
                     ? MaterialStateProperty.all(const Color(0xFF0da88b))
                     : MaterialStateProperty.all(const Color(0xFFe2103c)),
               ),
@@ -829,12 +815,12 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                 model.checkPass(context);
               },
               child: model.isBusy
-                  ? Text(AppLocalizations.of(context).loading,
+                  ? Text(AppLocalizations.of(context)!.loading,
                       style: Theme.of(context).textTheme.headline4)
                   : Text(
-                      model.bidOrAsk
-                          ? AppLocalizations.of(context).buy
-                          : AppLocalizations.of(context).sell,
+                      model.bidOrAsk!
+                          ? AppLocalizations.of(context)!.buy
+                          : AppLocalizations.of(context)!.sell,
                       style: Theme.of(context).textTheme.headline4)),
         )
       ],
@@ -843,28 +829,28 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
 }
 
 class BalanceRowWidget extends StatelessWidget {
-  const BalanceRowWidget({Key key, this.model}) : super(key: key);
-  final BuySellViewModel model;
+  const BalanceRowWidget({Key? key, this.model}) : super(key: key);
+  final BuySellViewModel? model;
   @override
   Widget build(BuildContext context) {
-    model.showcaseEvent(context);
+    model!.showcaseEvent(context);
     return Container(
-        child: model.isBusy &&
-                model.storageService.isShowCaseView &&
-                (model.targetCoinExchangeBalance.unlockedAmount == 0.0 ||
-                    model.baseCoinExchangeBalance.unlockedAmount < 1.0)
+        child: model!.isBusy &&
+                model!.storageService!.isShowCaseView &&
+                (model!.targetCoinExchangeBalance!.unlockedAmount == 0.0 ||
+                    model!.baseCoinExchangeBalance!.unlockedAmount! < 1.0)
             ? Showcase(
-                key: model.globalKeyOne,
-                description: AppLocalizations.of(context).buySellInstruction1,
-                child: buildTransferRow(context, model))
-            : buildTransferRow(context, model));
+                key: model!.globalKeyOne,
+                description: AppLocalizations.of(context)!.buySellInstruction1,
+                child: buildTransferRow(context, model!))
+            : buildTransferRow(context, model!));
   }
 
   Row buildTransferRow(BuildContext context, BuySellViewModel model) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(AppLocalizations.of(context).balance,
+        Text(AppLocalizations.of(context)!.balance,
             style: const TextStyle(color: primaryColor, fontSize: 13.0)),
         // First Check if Object is null
         // model.targetCoinExchangeBalance == null ||
@@ -880,31 +866,15 @@ class BalanceRowWidget extends StatelessWidget {
         model.isRefreshBalance
             ? model.refreshBalanceAfterCancellingOrder()
             : Container(
-                child: model.bidOrAsk
+                child: model.bidOrAsk!
                     ? Text(
-                        NumberUtil()
-                                .truncateDoubleWithoutRouding(
-                                    model
-                                        .baseCoinExchangeBalance.unlockedAmount,
-                                    precision: model
-                                        .singlePairDecimalConfig.qtyDecimal)
-                                .toString() +
-                            " " +
-                            model.baseCoinName,
+                        "${NumberUtil().truncateDoubleWithoutRouding(model.baseCoinExchangeBalance!.unlockedAmount!, precision: model.singlePairDecimalConfig.qtyDecimal!)} ${model.baseCoinName!}",
                         style: const TextStyle(
                             color: primaryColor, fontSize: 13.0))
                     :
                     // ?  model.targetCoinExchangeBalance.unlockAmount == null?textDemoWidget():
                     Text(
-                        NumberUtil()
-                                .truncateDoubleWithoutRouding(
-                                    model.targetCoinExchangeBalance
-                                        .unlockedAmount,
-                                    precision: model
-                                        .singlePairDecimalConfig.qtyDecimal)
-                                .toString() +
-                            " " +
-                            model.targetCoinName,
+                        "${NumberUtil().truncateDoubleWithoutRouding(model.targetCoinExchangeBalance!.unlockedAmount!, precision: model.singlePairDecimalConfig.qtyDecimal!)} ${model.targetCoinName!}",
                         style: const TextStyle(
                             color: primaryColor, fontSize: 13.0)),
               )

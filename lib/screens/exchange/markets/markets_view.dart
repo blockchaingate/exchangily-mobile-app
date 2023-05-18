@@ -19,8 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class MarketsView extends StatelessWidget {
-  const MarketsView({Key key, this.hideSlider = true}) : super(key: key);
-  final bool hideSlider;
+  const MarketsView({Key? key, this.hideSlider = true}) : super(key: key);
+  final bool? hideSlider;
 
   @override
   Widget build(BuildContext context) {

@@ -10,9 +10,11 @@
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
+
+// -----------------------------------burayi ac ----------------------------------------
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:bip39/bip39.dart' as bip39;
+// import 'package:bip39/bip39.dart' as bip39;
 import 'package:overlay_support/overlay_support.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
@@ -40,7 +42,7 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
   bool isTap = true;
   List<String> tappedMnemonicList = [];
   List<String> shuffledList = [];
-  final navigationService = locator<NavigationService>();
+  final NavigationService? navigationService = locator<NavigationService>();
   List<int> lastIndexList = [];
 /*----------------------------------------------------------------------
                     init
@@ -53,7 +55,7 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
                     onBackButtonPressed
 ----------------------------------------------------------------------*/
   onBackButtonPressed() async {
-    await navigationService.navigateTo(BackupMnemonicViewRoute);
+    await navigationService!.navigateTo(BackupMnemonicViewRoute);
   }
 
 /*----------------------------------------------------------------------
@@ -194,29 +196,29 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
           userTypedMnemonicList[10] != '' &&
           userTypedMnemonicList[11] != '') {
         listToStringMnemonic = userTypedMnemonicList.join(' ');
-        bool isValid = bip39.validateMnemonic(listToStringMnemonic);
-        if (isValid) {
-          importWallet(listToStringMnemonic, context);
-        } else {
-          showSimpleNotification(
-              Text(AppLocalizations.of(context).invalidMnemonic,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline4
-                      .copyWith(color: red, fontWeight: FontWeight.bold)),
-              position: NotificationPosition.bottom,
-              subtitle: Text(AppLocalizations.of(context)
-                  .pleaseFillAllTheTextFieldsCorrectly));
-        }
+        // bool isValid = bip39.validateMnemonic(listToStringMnemonic);
+        // if (isValid) {
+        //   importWallet(listToStringMnemonic, context);
+        // } else {
+        //   showSimpleNotification(
+        //       Text(AppLocalizations.of(context).invalidMnemonic,
+        //           style: Theme.of(context)
+        //               .textTheme
+        //               .headline4
+        //               .copyWith(color: red, fontWeight: FontWeight.bold)),
+        //       position: NotificationPosition.bottom,
+        //       subtitle: Text(AppLocalizations.of(context)
+        //           .pleaseFillAllTheTextFieldsCorrectly));
+        // }
       } else {
         showSimpleNotification(
-            Text(AppLocalizations.of(context).invalidMnemonic,
+            Text(AppLocalizations.of(context)!.invalidMnemonic,
                 style: Theme.of(context)
                     .textTheme
-                    .headline4
+                    .headline4!
                     .copyWith(color: red, fontWeight: FontWeight.bold)),
             position: NotificationPosition.bottom,
-            subtitle: Text(AppLocalizations.of(context)
+            subtitle: Text(AppLocalizations.of(context)!
                 .pleaseFillAllTheTextFieldsCorrectly));
       }
     } else {
@@ -235,26 +237,26 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
   createWallet(context) {
     if (listEquals(randomMnemonicList, userTypedMnemonicList)) {
       listToStringMnemonic = randomMnemonicList.join(' ');
-      bool isValid = bip39.validateMnemonic(listToStringMnemonic);
-      if (isValid) {
-        var args = {'mnemonic': listToStringMnemonic, 'isImport': false};
-        Navigator.of(context).pushNamed('/createPassword', arguments: args);
-      } else {
-        showSimpleNotification(
-            Text(AppLocalizations.of(context).invalidMnemonic,
-                style:
-                    Theme.of(context).textTheme.headline4.copyWith(color: red)),
-            position: NotificationPosition.bottom,
-            subtitle: Text(AppLocalizations.of(context)
-                .pleaseFillAllTheTextFieldsCorrectly));
-      }
+      // bool isValid = bip39.validateMnemonic(listToStringMnemonic);
+      // if (isValid) {
+      //   var args = {'mnemonic': listToStringMnemonic, 'isImport': false};
+      //   Navigator.of(context).pushNamed('/createPassword', arguments: args);
+      // } else {
+      //   showSimpleNotification(
+      //       Text(AppLocalizations.of(context).invalidMnemonic,
+      //           style:
+      //               Theme.of(context).textTheme.headline4.copyWith(color: red)),
+      //       position: NotificationPosition.bottom,
+      //       subtitle: Text(AppLocalizations.of(context)
+      //           .pleaseFillAllTheTextFieldsCorrectly));
+      // }
     } else {
       showSimpleNotification(
-          Text(AppLocalizations.of(context).invalidMnemonic,
+          Text(AppLocalizations.of(context)!.invalidMnemonic,
               style:
-                  Theme.of(context).textTheme.headline4.copyWith(color: red)),
+                  Theme.of(context).textTheme.headline4!.copyWith(color: red)),
           position: NotificationPosition.bottom,
-          subtitle: Text(AppLocalizations.of(context)
+          subtitle: Text(AppLocalizations.of(context)!
               .pleaseFillAllTheTextFieldsCorrectly));
     }
   }

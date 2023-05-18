@@ -12,13 +12,13 @@ import '../base_state.dart';
 
 class MarketPairsTabViewState extends BaseState {
   final log = getLogger('MarketPairsTabViewState');
-  List images;
-  ApiService apiService = locator<ApiService>();
-  SharedService sharedService = locator<SharedService>();
-  LocalStorageService storageService = locator<LocalStorageService>();
+  List? images;
+  ApiService? apiService = locator<ApiService>();
+  SharedService? sharedService = locator<SharedService>();
+  LocalStorageService? storageService = locator<LocalStorageService>();
   //final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
-  BuildContext context;
-  String lang = 'en';
+  BuildContext? context;
+  String? lang = 'en';
 
   final List imagesLocal = [
     {
@@ -30,9 +30,9 @@ class MarketPairsTabViewState extends BaseState {
 
   init() async {
     setBusy(true);
-    var result = await apiService.getSliderImages();
+    var result = await apiService!.getSliderImages();
 
-    lang = storageService.language;
+    lang = storageService!.language;
 
     debugPrint('lang $lang --');
     if (lang == null) {

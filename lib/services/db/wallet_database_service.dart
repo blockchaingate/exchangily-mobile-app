@@ -35,17 +35,17 @@ class WalletDatabaseService {
   final String columnInExchange = 'inExchange';
 
   static const _databaseVersion = 3;
-  static Future<Database> _database;
+  static Future<Database>? _database;
   String path = '';
 
-  Future<Database> initDb() async {
-    if (_database != null) return _database;
+  Future<Database>? initDb() async {
+    if (_database != null) return _database!;
     var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
     log.w('initDB $path');
     _database =
         openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
-    return _database;
+    return _database!;
   }
 
   openDB() {
@@ -72,7 +72,7 @@ class WalletDatabaseService {
   Future<List<WalletInfo>> getAll() async {
     //await deleteDb();
     // await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
     log.w('getall $db');
 
     // res is giving me the same output in the log whether i map it or just take var res
@@ -87,7 +87,7 @@ class WalletDatabaseService {
 // Insert Data In The Database
   Future insert(WalletInfo walletInfo) async {
     await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
 
     int id = await db.insert(tableName, walletInfo.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
@@ -96,56 +96,56 @@ class WalletDatabaseService {
   }
 
   // Get Single Wallet By Name
-  Future<WalletInfo> getByName(String name) async {
-    final Database db = await _database;
+  Future<WalletInfo?> getByName(String name) async {
+    final Database db = (await _database)!;
     List<Map> res =
         await db.query(tableName, where: 'name= ?', whereArgs: [name]);
     log.w('ID - $name --- $res');
     if (res.isNotEmpty) {
-      return WalletInfo.fromJson((res.first));
+      return WalletInfo.fromJson(res.first as Map<String, dynamic>);
     }
     return null;
   }
 
   // Get Single Wallet By tickerName
-  Future<WalletInfo> getWalletBytickerName(String tickerName) async {
-    final Database db = await _database;
+  Future<WalletInfo?> getWalletBytickerName(String tickerName) async {
+    final Database db = (await _database)!;
     List<Map> res = await db
         .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);
     log.w('tickerName - $tickerName --res - $res');
     if (res.isNotEmpty) {
-      return WalletInfo.fromJson((res.first));
+      return WalletInfo.fromJson(res.first as Map<String, dynamic>);
     }
     return null;
   }
 
   // Get Single Wallet By Id
   Future getById(int id) async {
-    final Database db = await _database;
+    final Database db = (await _database)!;
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     // log.w('ID - $id --- $res');
     if (res.isNotEmpty) {
-      return WalletInfo.fromJson((res.first));
+      return WalletInfo.fromJson(res.first as Map<String, dynamic>);
     }
     return null;
   }
 
   // Delete Single Object From Database By Id
   Future<void> deleteWallet(int id) async {
-    final db = await _database;
+    final db = (await _database)!;
     await db.delete(tableName, where: "id = ?", whereArgs: [id]);
   }
 
   // Delete Single Object From Database By tickerName
   Future<void> deleteWalletByTickerName(String tickerName) async {
-    final db = await _database;
+    final db = (await _database)!;
     await db
         .delete(tableName, where: "tickerName = ?", whereArgs: [tickerName]);
   }
 
   // Update database
   Future<void> update(WalletInfo walletInfo) async {
-    final Database db = await _database;
+    final Database db = (await _database)!;
 
     await db
         .update(
@@ -162,7 +162,7 @@ class WalletDatabaseService {
 
   // Close Database
   Future closeDb() async {
-    var db = await _database;
+    var db = (await _database)!;
     return db.close();
   }
 

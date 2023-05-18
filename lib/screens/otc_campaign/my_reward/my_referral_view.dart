@@ -9,13 +9,13 @@ import 'package:shimmer/shimmer.dart';
 import '../../../shared/globals.dart' as globals;
 
 class MyReferralView extends StatelessWidget {
-  final List<String> referralDetails;
-  const MyReferralView({Key key, this.referralDetails}) : super(key: key);
+  final List<String>? referralDetails;
+  const MyReferralView({Key? key, this.referralDetails}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     debugPrint(
-        'rewardDetails $referralDetails== members length ${referralDetails.length}');
+        'rewardDetails $referralDetails== members length ${referralDetails!.length}');
     return BaseScreen<TeamRewardDetailsScreenState>(
       onModelReady: (model) async {
         //  model.teamValueAndRewardWithToken = teamRewardDetails;
@@ -24,7 +24,7 @@ class MyReferralView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).memberDetails,
+          title: Text(AppLocalizations.of(context)!.memberDetails,
               style: Theme.of(context).textTheme.headline4),
         ),
         body: Container(
@@ -39,7 +39,7 @@ class MyReferralView extends StatelessWidget {
                 height: UIHelper.getScreenFullHeight(context),
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: referralDetails.length,
+                  itemCount: referralDetails!.length,
                   itemBuilder: (BuildContext context, int index) {
                     int i = index + 1;
                     return Card(
@@ -58,7 +58,7 @@ class MyReferralView extends StatelessWidget {
                                 )),
                             Expanded(
                                 flex: 7,
-                                child: Text(referralDetails[index].toString(),
+                                child: Text(referralDetails![index].toString(),
                                     style:
                                         Theme.of(context).textTheme.headline5)),
                           ],

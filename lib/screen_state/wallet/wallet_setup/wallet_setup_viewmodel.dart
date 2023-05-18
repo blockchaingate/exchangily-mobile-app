@@ -40,28 +40,28 @@ import '../../../shared/ui_helpers.dart';
 
 class WalletSetupViewmodel extends BaseViewModel {
   final log = getLogger('WalletSetupViewmodel');
-  SharedService sharedService = locator<SharedService>();
-  final walletDatabaseService = locator<WalletDatabaseService>();
-  WalletService walletService = locator<WalletService>();
-  final NavigationService navigationService = locator<NavigationService>();
-  final authService = locator<LocalAuthService>();
-  final storageService = locator<LocalStorageService>();
-  final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
-  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+  SharedService? sharedService = locator<SharedService>();
+  final WalletDatabaseService? walletDatabaseService = locator<WalletDatabaseService>();
+  WalletService? walletService = locator<WalletService>();
+  final NavigationService? navigationService = locator<NavigationService>();
+  final LocalAuthService? authService = locator<LocalAuthService>();
+  final LocalStorageService? storageService = locator<LocalStorageService>();
+  final CoreWalletDatabaseService? coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+  TransactionHistoryDatabaseService? transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-  TokenInfoDatabaseService tokenListDatabaseService =
+  TokenInfoDatabaseService? tokenListDatabaseService =
       locator<TokenInfoDatabaseService>();
 
-  UserSettingsDatabaseService userSettingsDatabaseService =
+  UserSettingsDatabaseService? userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();
 
-  VersionService versionService = locator<VersionService>();
-  final dialogService = locator<DialogService>();
+  VersionService? versionService = locator<VersionService>();
+  final DialogService? dialogService = locator<DialogService>();
 
-  BuildContext context;
+  BuildContext? context;
   bool isWallet = false;
   String errorMessage = '';
-  get hasAuthenticated => authService.hasAuthorized;
+  get hasAuthenticated => authService!.hasAuthorized;
 
   bool isWalletVerifySuccess = false;
   bool isDeleting = false;
@@ -73,11 +73,11 @@ class WalletSetupViewmodel extends BaseViewModel {
   bool hasData = false;
   // init
   init() async {
-    sharedService.context = context;
+    sharedService!.context = context;
 
     checkLanguageFromStorage();
 
-    if (storageService.hasPrivacyConsent) {
+    if (storageService!.hasPrivacyConsent) {
       await checkExistingWallet();
     } else {
       Future.delayed(const Duration(milliseconds: 500), () async {
@@ -88,14 +88,14 @@ class WalletSetupViewmodel extends BaseViewModel {
   }
 
   checkLanguageFromStorage() {
-    String lang = '';
-    lang = storageService.language;
+    String? lang = '';
+    lang = storageService!.language;
     if (lang == null || lang.isEmpty) {
       log.e('language empty - setting to english');
 
       lang = 'en';
     }
-    storageService.language = lang;
+    storageService!.language = lang;
     AppLocalizations.load(Locale(lang, lang.toUpperCase()));
   }
 
@@ -103,14 +103,14 @@ class WalletSetupViewmodel extends BaseViewModel {
     showModalBottomSheet(
         isScrollControlled: true,
         constraints:
-            BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 120),
+            BoxConstraints(maxHeight: MediaQuery.of(context!).size.height - 120),
         isDismissible: false,
         enableDrag: false,
         // shape: RoundedRectangleBorder(
         //   borderRadius: BorderRadius.circular(25.0),
         //   ),
         backgroundColor: const Color(0xff181439),
-        context: context,
+        context: context!,
         builder: (BuildContext context) {
           return SafeArea(
             child: ListView(
@@ -120,7 +120,7 @@ class WalletSetupViewmodel extends BaseViewModel {
                       maxHeight: MediaQuery.of(context).size.height / 1.33),
                   child: WebViewWidget(
                     exchangilyPrivacyUrl,
-                    AppLocalizations.of(context).askPrivacyConsent,
+                    AppLocalizations.of(context)!.askPrivacyConsent,
                   ),
                 ),
                 UIHelper.verticalSpaceSmall,
@@ -133,9 +133,9 @@ class WalletSetupViewmodel extends BaseViewModel {
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               primary: walletCardColor),
-                          onPressed: (() => navigationService.goBack()),
+                          onPressed: (() => navigationService!.goBack()),
                           child: Text(
-                            AppLocalizations.of(context).decline,
+                            AppLocalizations.of(context)!.decline,
                             style: headText5,
                           )),
                       UIHelper.horizontalSpaceMedium,
@@ -144,7 +144,7 @@ class WalletSetupViewmodel extends BaseViewModel {
                               ElevatedButton.styleFrom(primary: primaryColor),
                           onPressed: (() => setPrivacyConsent()),
                           child: Text(
-                            AppLocalizations.of(context).accept,
+                            AppLocalizations.of(context)!.accept,
                             style: headText5.copyWith(
                                 color: black, fontWeight: FontWeight.w400),
                           )),
@@ -158,34 +158,34 @@ class WalletSetupViewmodel extends BaseViewModel {
   }
 
   setPrivacyConsent() {
-    storageService.hasPrivacyConsent = true;
-    navigationService.goBack();
+    storageService!.hasPrivacyConsent = true;
+    navigationService!.goBack();
     checkExistingWallet();
   }
 
   importCreateNav(String actionType) async {
     // check if there is any pre existing wallet data
-    String coreWalletDbData = '';
+    String? coreWalletDbData = '';
     try {
-      coreWalletDbData = await coreWalletDatabaseService.getEncryptedMnemonic();
+      coreWalletDbData = (await coreWalletDatabaseService!.getEncryptedMnemonic())!;
     } catch (err) {
       coreWalletDbData = '';
       log.e('importCreateNav importCreateNav CATCH err $err');
     }
-    if (storageService.walletBalancesBody.isNotEmpty ||
+    if (storageService!.walletBalancesBody.isNotEmpty ||
         coreWalletDbData.isNotEmpty)
     // also show the user a dialog that there is pre existing wallet
     // data, do you want to restore that wallet or not?
     {
-      await dialogService
+      await dialogService!
           .showVerifyDialog(
-              title: AppLocalizations.of(context).existingWalletFound,
-              secondaryButton: AppLocalizations.of(context).restore,
-              description: '${AppLocalizations.of(context).askWalletRestore}?',
-              buttonTitle: AppLocalizations.of(context)
+              title: AppLocalizations.of(context!)!.existingWalletFound,
+              secondaryButton: AppLocalizations.of(context!)!.restore,
+              description: '${AppLocalizations.of(context!)!.askWalletRestore}?',
+              buttonTitle: AppLocalizations.of(context!)!
                   .importWallet) // want to ask whether i should show Delete & Import
           .then((res) async {
-        if (res.confirmed) {
+        if (res.confirmed!) {
           // confirmed means import wallet true
           // delete the existing wallet data
           // then import
@@ -194,32 +194,32 @@ class WalletSetupViewmodel extends BaseViewModel {
           await deleteWallet().whenComplete(() {
             // if not then just navigate to the route
             if (actionType == 'import') {
-              navigationService.navigateTo(ImportWalletViewRoute,
+              navigationService!.navigateTo(ImportWalletViewRoute,
                   arguments: actionType);
             } else if (actionType == 'create') {
-              navigationService.navigateTo(BackupMnemonicViewRoute);
+              navigationService!.navigateTo(BackupMnemonicViewRoute);
             }
           }).catchError((err) {
             log.e('Existing wallet deletion could not be completed');
           });
         } else if (res.returnedText == 'wrong password') {
-          sharedService.sharedSimpleNotification(
-              AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
-        } else if (!res.confirmed && res.returnedText != 'Closed') {
+          sharedService!.sharedSimpleNotification(
+              AppLocalizations.of(context!)!.pleaseProvideTheCorrectPassword);
+        } else if (!res.confirmed! && res.returnedText != 'Closed') {
           // if user wants to restore that then call check existing wallet func
           await checkExistingWallet();
         }
       });
     } else {
-      await transactionHistoryDatabaseService
+      await transactionHistoryDatabaseService!
           .deleteDb()
           .whenComplete(() => log.e('transaction history database deleted!!'))
           .catchError((err) => log.e('tx history database CATCH $err'));
       if (actionType == 'import') {
-        navigationService.navigateTo(ImportWalletViewRoute,
+        navigationService!.navigateTo(ImportWalletViewRoute,
             arguments: actionType);
       } else if (actionType == 'create') {
-        navigationService.navigateTo(BackupMnemonicViewRoute);
+        navigationService!.navigateTo(BackupMnemonicViewRoute);
       }
     }
   }
@@ -231,7 +231,7 @@ class WalletSetupViewmodel extends BaseViewModel {
     setBusyForObject(isDeleting, true);
     log.w('deleting wallet');
     try {
-      await walletService.deleteWallet();
+      await walletService!.deleteWallet();
 
       setBusyForObject(isDeleting, false);
     } catch (err) {
@@ -241,28 +241,28 @@ class WalletSetupViewmodel extends BaseViewModel {
   }
 
   verifyWallet() async {
-    var res = await dialogService.showVerifyDialog(
-        title: AppLocalizations.of(context).walletUpdateNoticeTitle,
-        secondaryButton: AppLocalizations.of(context).cancel,
-        description: AppLocalizations.of(context).walletUpdateNoticeDecription,
-        buttonTitle: AppLocalizations.of(context).confirm);
-    if (!res.confirmed) {
+    var res = await dialogService!.showVerifyDialog(
+        title: AppLocalizations.of(context!)!.walletUpdateNoticeTitle,
+        secondaryButton: AppLocalizations.of(context!)!.cancel,
+        description: AppLocalizations.of(context!)!.walletUpdateNoticeDecription,
+        buttonTitle: AppLocalizations.of(context!)!.confirm);
+    if (!res.confirmed!) {
       setBusy(false);
 
       return;
     } else {
       isVerifying = true;
-      var res = await dialogService.showDialog(
-          title: AppLocalizations.of(context).enterPassword,
+      var res = await dialogService!.showDialog(
+          title: AppLocalizations.of(context!)!.enterPassword,
           description:
-              AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-          buttonTitle: AppLocalizations.of(context).confirm);
-      if (res.confirmed) {
+              AppLocalizations.of(context!)!.dialogManagerTypeSamePasswordNote,
+          buttonTitle: AppLocalizations.of(context!)!.confirm);
+      if (res.confirmed!) {
         var walletVerificationRes =
-            await walletService.verifyWalletAddresses(res.returnedText);
-        storageService.hasWalletVerified = true;
-        isWalletVerifySuccess = walletVerificationRes['fabAddressCheck'] &&
-            walletVerificationRes['trxAddressCheck'];
+            await walletService!.verifyWalletAddresses(res.returnedText);
+        storageService!.hasWalletVerified = true;
+        isWalletVerifySuccess = walletVerificationRes['fabAddressCheck']! &&
+            walletVerificationRes['trxAddressCheck']!;
         isHideIcon = false;
         // if wallet verification is true then fill encrypted mnemonic and
         // addresses in the new corewalletdatabase
@@ -281,19 +281,19 @@ class WalletSetupViewmodel extends BaseViewModel {
             setBusyForObject(isHideIcon, false);
           });
           isWalletVerifySuccess = false;
-          storageService.hasWalletVerified = false;
+          storageService!.hasWalletVerified = false;
           setBusy(false);
           // show popup
           // if wallet verification failed then generate warning
           // to delete and re-import the wallet
           // show the warning in the UI and underneath a delete wallet button
           // which will delete the wallet data and navigate to create/import view
-          sharedService.context = context;
-          await dialogService
+          sharedService!.context = context;
+          await dialogService!
               .showVerifyDialog(
-                  title: AppLocalizations.of(context).walletVerificationFailed,
+                  title: AppLocalizations.of(context!)!.walletVerificationFailed,
                   description: '',
-                  buttonTitle: AppLocalizations.of(context).deleteWallet,
+                  buttonTitle: AppLocalizations.of(context!)!.deleteWallet,
                   secondaryButton: '')
               .then((isDelete) async {
             await deleteWallet();
@@ -307,8 +307,8 @@ class WalletSetupViewmodel extends BaseViewModel {
         log.e('Wrong pass');
         setBusy(false);
 
-        sharedService.sharedSimpleNotification(
-            AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
+        sharedService!.sharedSimpleNotification(
+            AppLocalizations.of(context!)!.pleaseProvideTheCorrectPassword);
       }
     }
   }
@@ -316,9 +316,9 @@ class WalletSetupViewmodel extends BaseViewModel {
   Future checkExistingWallet() async {
     setBusy(true);
 
-    String coreWalletDbData;
+    String? coreWalletDbData;
     try {
-      coreWalletDbData = await coreWalletDatabaseService.getEncryptedMnemonic();
+      coreWalletDbData = await coreWalletDatabaseService!.getEncryptedMnemonic();
     } catch (err) {
       coreWalletDbData = '';
       log.e('checkExistingWallet func: getEncryptedMnemonic CATCH err $err');
@@ -328,17 +328,17 @@ class WalletSetupViewmodel extends BaseViewModel {
       log.w('coreWalletDbData is null or empty');
       List walletDatabase;
       try {
-        await walletDatabaseService.initDb();
-        walletDatabase = await walletDatabaseService.getAll();
+        await walletDatabaseService!.initDb();
+        walletDatabase = await walletDatabaseService!.getAll();
       } catch (err) {
         walletDatabase = [];
       }
       // CHECK TO VERIFY IF OLD DATA IS SAVED IN STORAGE
-      if (storageService.walletBalancesBody.isNotEmpty ||
+      if (storageService!.walletBalancesBody.isNotEmpty ||
           walletDatabase.isNotEmpty) {
         // ask user's permission to verify the wallet addresses
         // show dialog to user for this reason
-        if (!storageService.hasWalletVerified) {
+        if (!storageService!.hasWalletVerified) {
           await verifyWallet();
         } else {
           isVerifying = false;
@@ -366,24 +366,24 @@ class WalletSetupViewmodel extends BaseViewModel {
     isWalletVerifySuccess = true;
     isWallet = true;
     // add here the biometric check
-    if (storageService.hasInAppBiometricAuthEnabled) {
-      if (!authService.isCancelled) await authService.authenticateApp();
+    if (storageService!.hasInAppBiometricAuthEnabled) {
+      if (!authService!.isCancelled) await authService!.authenticateApp();
       if (hasAuthenticated) {
-        navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
-        storageService.hasAppGoneInTheBackgroundKey = false;
+        navigationService!.navigateUsingpopAndPushedNamed(DashboardViewRoute);
+        storageService!.hasAppGoneInTheBackgroundKey = false;
       }
-      if (authService.isCancelled || !hasAuthenticated) {
+      if (authService!.isCancelled || !hasAuthenticated) {
         isWallet = false;
         setBusy(false);
-        authService.setIsCancelledValueFalse();
+        authService!.setIsCancelledValueFalse();
         return;
       }
       // bool isDeviceSupported = await authService.isDeviceSupported();
-      if (!storageService.hasPhoneProtectionEnabled) {
-        navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
+      if (!storageService!.hasPhoneProtectionEnabled) {
+        navigationService!.navigateUsingpopAndPushedNamed(DashboardViewRoute);
       }
     } else {
-      navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
+      navigationService!.navigateUsingpopAndPushedNamed(DashboardViewRoute);
     }
     setBusy(false);
 

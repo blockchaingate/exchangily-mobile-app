@@ -1,15 +1,15 @@
 import 'package:decimal/decimal.dart';
 
 class LockerModel {
-  String sId;
-  String id;
-  String address;
-  String user;
-  int coinType;
-  Decimal amount;
-  int releaseBlock;
-  String createBy;
-  String tickerName;
+  String? sId;
+  String? id;
+  String? address;
+  String? user;
+  int? coinType;
+  Decimal? amount;
+  int? releaseBlock;
+  String? createBy;
+  String? tickerName;
 
   LockerModel(
       {this.sId,
@@ -49,7 +49,7 @@ class LockerModel {
 }
 
 class LockerModelList {
-  final List<LockerModel> lockers;
+  final List<LockerModel>? lockers;
   LockerModelList({this.lockers});
 
   factory LockerModelList.fromJson(List<dynamic> parsedJson) {

@@ -14,9 +14,9 @@
 */
 
 class DialogResponse {
-  final String returnedText;
-  final bool confirmed;
-  final bool isRequiredUpdate;
+  final String? returnedText;
+  final bool? confirmed;
+  final bool? isRequiredUpdate;
 
   DialogResponse({this.returnedText, this.confirmed, this.isRequiredUpdate});
 }

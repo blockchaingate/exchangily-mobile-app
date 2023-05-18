@@ -11,22 +11,24 @@
 *----------------------------------------------------------------------
 */
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui';
+
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/font_style.dart';
+//import 'package:url_launcher/url_launcher.dart';
+
+import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
-import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -35,28 +37,27 @@ import 'package:flutter/services.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:package_info/package_info.dart';
-//import 'package:url_launcher/url_launcher.dart';
-
-import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../localizations.dart';
 import '../shared/globals.dart' as globals;
 
 class SharedService {
-  BuildContext context;
+  BuildContext? context;
   final log = getLogger('SharedService');
-  final storageService = locator<LocalStorageService>();
-  NavigationService navigationService = locator<NavigationService>();
-  final tokenListDatabaseService = locator<TokenInfoDatabaseService>();
-  DecimalConfigDatabaseService decimalConfigDatabaseService =
+  final LocalStorageService? storageService = locator<LocalStorageService>();
+  NavigationService? navigationService = locator<NavigationService>();
+  final TokenInfoDatabaseService? tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
+  DecimalConfigDatabaseService? decimalConfigDatabaseService =
       locator<DecimalConfigDatabaseService>();
-  final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+  final CoreWalletDatabaseService? coreWalletDatabaseService =
+      locator<CoreWalletDatabaseService>();
 
-  Future<ClipboardData> pasteClipBoardData() async {
-    ClipboardData data;
+  Future<ClipboardData?> pasteClipBoardData() async {
+    ClipboardData? data;
     if (data != null) {
-      data = await Clipboard.getData(Clipboard.kTextPlain);
+      data = (await Clipboard.getData(Clipboard.kTextPlain))!;
     }
     return data;
   }
@@ -86,8 +87,8 @@ class SharedService {
 
   inCorrectpasswordNotification(context) {
     sharedSimpleNotification(
-      AppLocalizations.of(context).passwordMismatch,
-      subtitle: AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+      AppLocalizations.of(context)!.passwordMismatch,
+      subtitle: AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword,
     );
   }
 
@@ -99,7 +100,7 @@ class SharedService {
     if (smartContractAddress == null) {
       debugPrint(
           '$tickerName contract is null so fetching from token database');
-      await tokenListDatabaseService
+      await tokenListDatabaseService!
           .getContractAddressByTickerName(tickerName)
           .then((value) {
         if (value != null) {
@@ -121,7 +122,7 @@ class SharedService {
 
   Future<PairDecimalConfig> getSinglePairDecimalConfig(String pairName,
       {String base = ''}) async {
-    final apiService = locator<ApiService>();
+    final ApiService? apiService = locator<ApiService>();
     PairDecimalConfig singlePairDecimalConfig = PairDecimalConfig();
     log.i('tickername $pairName -- endswith usdt ${pairName.endsWith('USDT')}');
 
@@ -141,7 +142,7 @@ class SharedService {
           PairDecimalConfig(name: pairName, priceDecimal: 2, qtyDecimal: 2);
     } else {
       log.i('base $base');
-      await apiService.getPairDecimalConfig().then((res) {
+      await apiService!.getPairDecimalConfig().then((res) {
         if (res != null) {
           singlePairDecimalConfig =
               res.firstWhere((element) => element.name == pairName + base);
@@ -197,22 +198,22 @@ class SharedService {
       Get EXG address from wallet database
 --------------------------------------------------- */
 
-  Future<String> getExgAddressFromWalletDatabase() async {
-    return await coreWalletDatabaseService.getWalletAddressByTickerName('EXG');
+  Future<String?> getExgAddressFromWalletDatabase() async {
+    return await coreWalletDatabaseService!.getWalletAddressByTickerName('EXG');
   }
 /*---------------------------------------------------
       Get FAB address from wallet database
 --------------------------------------------------- */
 
-  Future<String> getFabAddressFromCoreWalletDatabase() async {
-    return await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
+  Future<String?> getFabAddressFromCoreWalletDatabase() async {
+    return await coreWalletDatabaseService!.getWalletAddressByTickerName('FAB');
   }
 
 /*---------------------------------------------------
       Get EXG Official address
 --------------------------------------------------- */
 
-  String getExgOfficialAddress() {
+  String? getExgOfficialAddress() {
     return environment['addresses']['exchangilyOfficial'][0]['address'];
   }
 
@@ -279,8 +280,8 @@ class SharedService {
 
   Widget stackFullScreenLoadingIndicator() {
     return Container(
-        height: UIHelper.getScreenFullHeight(context),
-        width: UIHelper.getScreenFullWidth(context),
+        height: UIHelper.getScreenFullHeight(context!),
+        width: UIHelper.getScreenFullWidth(context!),
         color: primaryColor.withOpacity(0.5),
         child: loadingIndicator());
   }
@@ -329,9 +330,9 @@ class SharedService {
                           getCurrentRouteName
 -------------------------------------------------------------------------------------*/
 
-  String getCurrentRouteName(BuildContext context) {
-    String routeName = '';
-    routeName = ModalRoute.of(context).settings.name;
+  String? getCurrentRouteName(BuildContext context) {
+    String? routeName = '';
+    routeName = ModalRoute.of(context)!.settings.name;
     log.w('$routeName in getCurrentRouteName');
     return routeName;
   }
@@ -342,9 +343,9 @@ class SharedService {
 
   onBackButtonPressed(String route) async {
     log.w(
-        'back button pressed, is final route ${navigationService.isFinalRoute()} - $route');
+        'back button pressed, is final route ${navigationService!.isFinalRoute()} - $route');
 
-    navigationService.navigateUsingpopAndPushedNamed(route);
+    navigationService!.navigateUsingpopAndPushedNamed(route);
   }
 
   // Future<bool> dialogAcceptOrReject(
@@ -396,65 +397,63 @@ class SharedService {
   //       });
   // }
 
-  Future<bool> closeApp() async {
+  Future<bool?> closeApp() async {
     return showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                elevation: 10,
-                backgroundColor: globals.walletCardColor.withOpacity(0.85),
-                titleTextStyle: Theme.of(context)
-                    .textTheme
-                    .headline5
-                    .copyWith(fontWeight: FontWeight.bold),
-                contentTextStyle: const TextStyle(color: globals.grey),
-                content: Text(
-                  // add here cupertino widget to check in these small widgets first then the entire app
-                  '${AppLocalizations.of(context).closeTheApp}?',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 14),
+        context: context!,
+        builder: (context) {
+          return AlertDialog(
+            elevation: 10,
+            backgroundColor: globals.walletCardColor.withOpacity(0.85),
+            titleTextStyle: Theme.of(context)
+                .textTheme
+                .headlineSmall!
+                .copyWith(fontWeight: FontWeight.bold),
+            contentTextStyle: const TextStyle(color: globals.grey),
+            content: Text(
+              // add here cupertino widget to check in these small widgets first then the entire app
+              '${AppLocalizations.of(context)!.closeTheApp}?',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 14),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text(
+                  AppLocalizations.of(context)!.no,
+                  style: TextStyle(color: white, fontSize: 12),
                 ),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text(
-                      AppLocalizations.of(context).no,
-                      style: TextStyle(color: white, fontSize: 12),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                  ),
-                  TextButton(
-                    child: Text(AppLocalizations.of(context).yes,
-                        style: TextStyle(color: yellow, fontSize: 12)),
-                    onPressed: () {
-                      SystemChannels.platform
-                          .invokeMethod('SystemNavigator.pop');
-                    },
-                  )
-                ],
-              );
-            }) ??
-        false;
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              TextButton(
+                child: Text(AppLocalizations.of(context)!.yes,
+                    style: TextStyle(color: yellow, fontSize: 12)),
+                onPressed: () {
+                  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                },
+              )
+            ],
+          );
+        });
   }
 
 /*-------------------------------------------------------------------------------------
                           Alert dialog
 -------------------------------------------------------------------------------------*/
-  alertDialog(String title, String message,
+  alertDialog(String title, String? message,
       {bool isWarning = false,
-      String path,
+      String? path,
       dynamic arguments,
       bool isCopyTxId = false,
       bool isDismissible = true,
       bool isUpdate = false,
       bool isLater = false,
       bool isWebsite = false,
-      String stringData}) async {
-    bool checkBoxValue = false;
+      String? stringData}) async {
+    bool? checkBoxValue = false;
     showDialog(
         barrierDismissible: isDismissible,
-        context: context,
+        context: context!,
         builder: (context) {
           return AlertDialog(
             titlePadding: const EdgeInsets.all(0),
@@ -486,13 +485,13 @@ class SharedService {
                           horizontal: 12.0, vertical: 6.0),
                       child: Text(
                           // add here cupertino widget to check in these small widgets first then the entire app
-                          message,
+                          message!,
                           textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.headline5),
+                          style: Theme.of(context).textTheme.headlineSmall),
                     ),
                     // Do not show checkbox and text does not require to show on all dialogs
                     Visibility(
-                      visible: isWarning ?? true,
+                      visible: isWarning,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
@@ -501,16 +500,17 @@ class SharedService {
                                   MaterialTapTargetSize.shrinkWrap,
                               value: checkBoxValue,
                               activeColor: globals.primaryColor,
-                              onChanged: (bool value) async {
+                              onChanged: (bool? value) async {
                                 setState(() => checkBoxValue = value);
 
                                 /// user click on do not show which is negative means false
                                 /// so to make it work it needs to be opposite of the orginal value
-                                storageService.isNoticeDialogDisplay =
-                                    !checkBoxValue;
+                                storageService!.isNoticeDialogDisplay =
+                                    !checkBoxValue!;
                               }),
                           Text(
-                            AppLocalizations.of(context).doNotShowTheseWarnings,
+                            AppLocalizations.of(context)!
+                                .doNotShowTheseWarnings,
                             style: Theme.of(context).textTheme.headline6,
                           ),
                         ],
@@ -535,7 +535,7 @@ class SharedService {
                       child: RichText(
                         text: TextSpan(
                             text:
-                                AppLocalizations.of(context).taphereToCopyTxId,
+                                AppLocalizations.of(context)!.taphereToCopyTxId,
                             style: TextStyle(
                                 fontSize: 12,
                                 decoration: TextDecoration.underline,
@@ -564,8 +564,8 @@ class SharedService {
                             child: Center(
                               child: Text(
                                 isLater
-                                    ? AppLocalizations.of(context).later
-                                    : AppLocalizations.of(context).close,
+                                    ? AppLocalizations.of(context)!.later
+                                    : AppLocalizations.of(context)!.close,
                                 style: const TextStyle(
                                     color: Colors.white, fontSize: 12),
                               ),
@@ -576,7 +576,7 @@ class SharedService {
                               } else {
                                 debugPrint('PATH $path');
                                 Navigator.of(context).pop(false);
-                                navigationService
+                                navigationService!
                                     .navigateUsingpopAndPushedNamed(path,
                                         arguments: arguments);
                               }
@@ -584,41 +584,52 @@ class SharedService {
                           ),
                           UIHelper.horizontalSpaceSmall,
                           isWebsite
-                              ? FlatButton(
-                                  color: primaryColor,
-                                  padding: const EdgeInsets.all(5),
-                                  child: Center(
-                                    child: Text(
-                                      AppLocalizations.of(context).website,
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 12),
-                                    ),
+                              ? TextButton(
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            primaryColor),
+                                    padding: MaterialStateProperty.all<
+                                            EdgeInsetsGeometry>(
+                                        const EdgeInsets.all(5)),
                                   ),
                                   onPressed: () {
-                                    // launchURL(stringData);
+// launchURL(stringData);
                                     Navigator.of(context).pop(false);
                                   },
+                                  child: Text(
+                                    AppLocalizations.of(context)!.website,
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 12),
+                                  ),
                                 )
                               : Container(),
                           UIHelper.horizontalSpaceSmall,
                           isUpdate
-                              ? FlatButton(
-                                  color: green,
-                                  padding: const EdgeInsets.all(5),
-                                  child: Center(
-                                    child: Text(
-                                      AppLocalizations.of(context).updateNow,
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 12),
-                                    ),
+                              ? TextButton(
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all(green),
+                                    padding: MaterialStateProperty.all(
+                                        const EdgeInsets.all(5)),
                                   ),
                                   onPressed: () {
                                     LaunchReview.launch(
-                                        androidAppId: "com.exchangily.wallet",
-                                        iOSAppId: "com.exchangily.app",
-                                        writeReview: false);
+                                      androidAppId: "com.exchangily.wallet",
+                                      iOSAppId: "com.exchangily.app",
+                                      writeReview: false,
+                                    );
                                     Navigator.of(context).pop(false);
                                   },
+                                  child: Center(
+                                    child: Text(
+                                      AppLocalizations.of(context)!.updateNow,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
                                 )
                               : Container(),
                         ],
@@ -632,13 +643,13 @@ class SharedService {
 
   // Language
   Future checkLanguage() async {
-    String lang = '';
+    String? lang = '';
 
-    lang = storageService.language;
+    lang = storageService!.language;
     if (lang == null || lang == '') {
       debugPrint('language empty');
     } else {
-      Navigator.pushNamed(context, '/walletSetup');
+      Navigator.pushNamed(context!, '/walletSetup');
     }
   }
 
@@ -669,7 +680,7 @@ class SharedService {
 
   copyAddress(context, text) {
     Clipboard.setData(ClipboardData(text: text));
-    sharedSimpleNotification(AppLocalizations.of(context).addressCopied,
+    sharedSimpleNotification(AppLocalizations.of(context)!.addressCopied,
         isError: false);
   }
 
@@ -677,12 +688,13 @@ class SharedService {
                   Save and Share PNG
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Future<Uint8List> capturePng({GlobalKey globalKey}) async {
+  Future<Uint8List?> capturePng({required GlobalKey globalKey}) async {
     try {
       RenderRepaintBoundary boundary =
-          globalKey.currentContext.findRenderObject();
+          globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       var image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
+      ByteData byteData =
+          (await image.toByteData(format: ImageByteFormat.png))!;
       Uint8List pngBytes = byteData.buffer.asUint8List();
       return pngBytes;
     } catch (e) {

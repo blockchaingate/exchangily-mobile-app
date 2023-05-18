@@ -7,32 +7,32 @@ import "overview-block.dart";
 import '../../../shared/globals.dart' as globals;
 
 class MarketOverview extends StatefulWidget {
-  final List<Price> data;
-  const MarketOverview({Key key, this.data}) : super(key: key);
+  final List<Price>? data;
+  const MarketOverview({Key? key, this.data}) : super(key: key);
   @override
   MarketOverviewState createState() => MarketOverviewState();
 }
 
 class MarketOverviewState extends State<MarketOverview> {
-  double btcUsdtPrice;
-  double btcUsdtChange;
-  double exgUsdtPrice;
-  double exgUsdtChange;
-  double fabUsdtPrice;
-  double fabUsdtChange;
+  double? btcUsdtPrice;
+  double? btcUsdtChange;
+  double? exgUsdtPrice;
+  double? exgUsdtChange;
+  double? fabUsdtPrice;
+  double? fabUsdtChange;
   @override
   void initState() {
     super.initState();
     updatePrices(widget.data);
   }
 
-  void updatePrices(List<Price> prices) {
-    var btcUsdtP = 0.0;
-    var btcUsdtC = 0.0;
-    var exgUsdtP = 0.0;
-    var exgUsdtC = 0.0;
-    var fabUsdtP = 0.0;
-    var fabUsdtC = 0.0;
+  void updatePrices(List<Price>? prices) {
+    double? btcUsdtP = 0.0;
+    double? btcUsdtC = 0.0;
+    double? exgUsdtP = 0.0;
+    double? exgUsdtC = 0.0;
+    double? fabUsdtP = 0.0;
+    double? fabUsdtC = 0.0;
     if (prices != null) {
       for (var i = 0; i < prices.length; i++) {
         var item = prices[i];

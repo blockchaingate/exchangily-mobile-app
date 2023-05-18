@@ -28,17 +28,17 @@ class DecimalConfigDatabaseService {
   final String columnQtyDecimal = 'qtyDecimal';
 
   static const _databaseVersion = 5;
-  static Future<Database> _database;
+  static Future<Database>? _database;
   String path = '';
 
-  Future<Database> initDb() async {
-    if (_database != null) return _database;
+  Future<Database>? initDb() async {
+    if (_database != null) return _database!;
     var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
     log.w(path);
     _database =
         openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
-    return _database;
+    return _database!;
   }
 
   void _onCreate(Database db, int version) async {
@@ -54,7 +54,7 @@ class DecimalConfigDatabaseService {
 
   Future<List<PairDecimalConfig>> getAll() async {
     await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
     log.w('getall $db');
 
     // res is giving me the same output in the log whether i map it or just take var res
@@ -69,7 +69,7 @@ class DecimalConfigDatabaseService {
 // Insert Data In The Database
   Future insert(PairDecimalConfig decimalConfig) async {
     await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
     int id = await db.insert(tableName, decimalConfig.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
     return id;
@@ -78,7 +78,7 @@ class DecimalConfigDatabaseService {
   // Get Single Setting By Name
   Future<PairDecimalConfig> getByName(String name) async {
     await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
     List<Map> res =
         await db.query(tableName, where: 'name= ?', whereArgs: [name]);
     log.w('Name - $name --- $res');
@@ -87,12 +87,12 @@ class DecimalConfigDatabaseService {
     //     ? res.map((f) => PairDecimalConfig.fromJson(f)).toList()
     //     : [];
     // return list;
-    return PairDecimalConfig.fromJson((res.first));
+    return PairDecimalConfig.fromJson(res.first as Map<String, dynamic>);
   }
 
   // Close Database
   Future closeDb() async {
-    var db = await _database;
+    var db = (await _database)!;
     return db.close();
   }
 

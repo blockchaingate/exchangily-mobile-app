@@ -17,9 +17,9 @@ class Erc20Util {
     };
     var errMsg = '';
     log.i('url $baseUrl -- body $body');
-    String txHash;
+    String? txHash;
     try {
-      var response = await client.post(baseUrl,
+      var response = await client.post(Uri.parse(baseUrl),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -40,7 +40,7 @@ class Erc20Util {
     return {'txHash': txHash, 'errMsg': errMsg};
   }
 
-  Future getNonce({String baseUrl, String smartContractAddress}) async {
+  Future getNonce({required String baseUrl, String? smartContractAddress}) async {
     var body = {
       "jsonrpc": "2.0",
       "method": "eth_getTransactionCount",
@@ -51,7 +51,7 @@ class Erc20Util {
     debugPrint('url $baseUrl -- body $body');
     int nonce = 0;
     try {
-      var response = await client.post(baseUrl,
+      var response = await client.post(Uri.parse(baseUrl),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -79,7 +79,7 @@ class Erc20Util {
     try {
       var jsonString = jsonEncode(body);
       log.i('jsonString $jsonString');
-      var response = await client.post(baseUrl,
+      var response = await client.post(Uri.parse(baseUrl),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -111,7 +111,7 @@ class Erc20Util {
     debugPrint('url $baseUrl -- body $body');
     int nonce = 0;
     try {
-      var response = await client.post(baseUrl,
+      var response = await client.post(Uri.parse(baseUrl),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -136,7 +136,7 @@ class Erc20Util {
     var balanceIe8 = 0.0;
     var balance1e6 = 0.0;
     try {
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       var balance = jsonDecode(response.body);
       balanceIe8 = double.parse(balance['balance']) / 1e8;
       balance1e6 = double.parse(balance['balance']) / 1e6;

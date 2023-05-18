@@ -51,14 +51,14 @@ class AbiUtils {
 
     // convert decimal to big int
     // then convert big int amount to radix string
-    var amountHex = NumberUtil.decimalToBigInt(locker.amount).toRadixString(16);
+    var amountHex = NumberUtil.decimalToBigInt(locker.amount!).toRadixString(16);
 
     var abiHex = Constants.unlockAbiSignature +
-        fixLength(trimHexPrefix(locker.id), 64) +
-        fixLength(trimHexPrefix(locker.user), 64) +
-        fixLength(locker.coinType.toRadixString(16), 64) +
+        fixLength(trimHexPrefix(locker.id!), 64) +
+        fixLength(trimHexPrefix(locker.user!), 64) +
+        fixLength(locker.coinType!.toRadixString(16), 64) +
         fixLength(trimHexPrefix(amountHex), 64) +
-        fixLength(locker.releaseBlock.toRadixString(16), 64);
+        fixLength(locker.releaseBlock!.toRadixString(16), 64);
 
     debugPrint('construcLockAbiHex abi $abiHex');
     return abiHex;
@@ -66,7 +66,7 @@ class AbiUtils {
 
   // withdraw abi
   getWithdrawFuncABI(coinType, amountInLink, addressInWallet,
-      {String chain = '', bool isSpecialToken = false}) {
+      {String? chain = '', bool isSpecialToken = false}) {
     var abiHex = Constants.WithdrawSignatureAbi;
     if (isSpecialToken) {
       var hexaDecimalCoinType = fix8LengthCoinType(coinType.toRadixString(16));
@@ -116,17 +116,17 @@ class AbiUtils {
   /// 000000000000000000000000d46d7e8d5a9f482aeeb0918bef6a10445159f297 address
   /// 2857102e23b772dfd59fe9f230bdb48f14844503de678288fde836f85aef2b96 signature r
   /// 04cd779f635338951c9003b3062e601a551116ca104d878d17edb341b932fc78 signature s
-  getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
+  getDepositFuncABI(int? coinType, String txHash, BigInt amountInLink,
       String addressInKanban, signedMessage,
-      {String chain = '', bool isSpecialDeposit = false}) {
+      {String? chain = '', bool isSpecialDeposit = false}) {
     var abiHex = Constants.DepositSignatureAbi;
     abiHex += trimHexPrefix(signedMessage["v"]);
     if (isSpecialDeposit) {
       // coin type of coins converting int to hex for instance 458753 becomes 00070001
-      var hexaDecimalCoinType = fix8LengthCoinType(coinType.toRadixString(16));
+      var hexaDecimalCoinType = fix8LengthCoinType(coinType!.toRadixString(16));
       abiHex += specialFixLength(hexaDecimalCoinType, 62, chain);
     } else {
-      abiHex += fixLength(coinType.toRadixString(16), 62);
+      abiHex += fixLength(coinType!.toRadixString(16), 62);
     }
     abiHex += trimHexPrefix(txHash);
     var amountHex = amountInLink.toRadixString(16);
@@ -151,7 +151,7 @@ class AbiUtils {
     log.w('getAmountFromDepositAbiHex -- amountInTx bigint $amountInTx');
   }
 
-  specialFixLength(String hexaDecimalCoinType, int length, String chain) {
+  specialFixLength(String hexaDecimalCoinType, int length, String? chain) {
     var retStr = '';
     int hexaDecimalCoinTypeLength = hexaDecimalCoinType.length;
     debugPrint('hexaDecimalCoinType $hexaDecimalCoinTypeLength');
@@ -236,20 +236,20 @@ class AbiUtils {
     return abiHex;
   }
 
-  List<dynamic> _encodeToRlp(Transaction transaction, MsgSignature signature) {
+  List<dynamic> _encodeToRlp(Transaction transaction, MsgSignature? signature) {
     final list = [
       transaction.nonce,
-      transaction.gasPrice.getInWei,
+      transaction.gasPrice!.getInWei,
       transaction.maxGas,
     ];
 
     if (transaction.to != null) {
-      list.add(transaction.to.addressBytes);
+      list.add(transaction.to!.addressBytes);
     } else {
       list.add('');
     }
 
-    list.add(transaction.value.getInWei);
+    list.add(transaction.value!.getInWei);
     // list.add(''); // removed cointype
     list.add(transaction.data);
 
@@ -270,7 +270,7 @@ class AbiUtils {
   }
 
   Future signAbiHexWithPrivateKey(String abiHex, String privateKey,
-      String coinPoolAddress, int nonce, int gasPrice, int gasLimit) async {
+      String coinPoolAddress, int? nonce, int? gasPrice, int? gasLimit) async {
     var chainId = environment["chains"]["KANBAN"]["chainId"];
     //var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
 
@@ -286,7 +286,7 @@ class AbiUtils {
         maxGas: gasLimit,
         nonce: nonce,
         value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
-        data: HEX.decode(abiHex));
+        data: HEX.decode(abiHex) as Uint8List?);
     final innerSignature = chainId == null
         ? null
         : MsgSignature(BigInt.zero, BigInt.zero, chainId);

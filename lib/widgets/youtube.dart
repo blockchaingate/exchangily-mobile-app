@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class YoutubePage extends StatefulWidget {
-  final Map videoObj;
+  final Map? videoObj;
 
-  const YoutubePage({@required this.videoObj});
+  const YoutubePage({required this.videoObj});
 
   @override
   _YoutubePageState createState() => _YoutubePageState();
 }
 
 class _YoutubePageState extends State<YoutubePage> {
-  YoutubePlayerController _controller;
+  late YoutubePlayerController _controller;
 
   @override
   void initState() {
     _controller = YoutubePlayerController(
-      initialVideoId: widget.videoObj["youtubeID"],
+      initialVideoId: widget.videoObj!["youtubeID"],
     );
     super.initState();
   }
@@ -31,7 +31,7 @@ class _YoutubePageState extends State<YoutubePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(widget.videoObj["title"])),
+        appBar: AppBar(title: Text(widget.videoObj!["title"])),
         body: ListView(
           children: [
             SizedBox(
@@ -48,16 +48,16 @@ class _YoutubePageState extends State<YoutubePage> {
             Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  widget.videoObj["title"],
+                  widget.videoObj!["title"],
                   style: Theme.of(context)
                       .textTheme
-                      .headline1
+                      .headline1!
                       .copyWith(fontWeight: FontWeight.bold),
                 )),
             const SizedBox(height: 10),
             Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(widget.videoObj["desc"],
+                child: Text(widget.videoObj!["desc"],
                     style: const TextStyle(
                       color: Colors.white,
                     )))

@@ -1,16 +1,16 @@
 // symbol, logo, tokenId are probably what you want
 // they are fab tokens like EXG
 class CustomTokenModel {
-  String owner;
-  String name;
-  String symbol;
-  String logo;
-  String totalSupply;
-  String txid;
-  String tokenId; // smart contract address
-  String status;
-  int decimal;
-  double balance;
+  String? owner;
+  String? name;
+  String? symbol;
+  String? logo;
+  String? totalSupply;
+  String? txid;
+  String? tokenId; // smart contract address
+  String? status;
+  int? decimal;
+  double? balance;
 
   CustomTokenModel(
       {this.owner,
@@ -54,7 +54,7 @@ class CustomTokenModel {
 }
 
 class CustomTokenModelList {
-  final List<CustomTokenModel> customTokens;
+  final List<CustomTokenModel>? customTokens;
   CustomTokenModelList({this.customTokens});
 
   factory CustomTokenModelList.fromJson(List<dynamic> parsedJson) {

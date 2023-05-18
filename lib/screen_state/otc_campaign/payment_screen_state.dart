@@ -33,49 +33,49 @@ import '../../shared/globals.dart' as globals;
 
 class CampaignPaymentScreenState extends BaseState {
   final log = getLogger('PaymentScreenState');
-  final NavigationService _navigationService = locator<NavigationService>();
-  DialogService dialogService = locator<DialogService>();
-  WalletService walletService = locator<WalletService>();
-  SharedService sharedService = locator<SharedService>();
-  CampaignService campaignService = locator<CampaignService>();
-  TokenInfoDatabaseService tokenListDatabaseService =
+  final NavigationService? _navigationService = locator<NavigationService>();
+  DialogService? dialogService = locator<DialogService>();
+  WalletService? walletService = locator<WalletService>();
+  SharedService? sharedService = locator<SharedService>();
+  CampaignService? campaignService = locator<CampaignService>();
+  TokenInfoDatabaseService? tokenListDatabaseService =
       locator<TokenInfoDatabaseService>();
-  CampaignUserDatabaseService campaignUserDatabaseService =
+  CampaignUserDatabaseService? campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
-  final ApiService _apiService = locator<ApiService>();
+  final ApiService? _apiService = locator<ApiService>();
 
   final sendAmountTextController = TextEditingController();
-  String _groupValue;
+  String? _groupValue;
   get groupValue => _groupValue;
   String prodUsdtWalletAddress = Constants.prodUsdtWalletAddress;
   String testUsdtWalletAddress = Constants.testUsdtWalletAddress;
-  BuildContext context;
+  BuildContext? context;
   String tickerName = '';
   String tokenType = '';
   var options = {};
-  int gasPrice = environment["chains"]["ETH"]["gasPrice"];
-  int gasLimit = environment["chains"]["ETH"]["gasLimitToken"];
+  int? gasPrice = environment["chains"]["ETH"]["gasPrice"];
+  int? gasLimit = environment["chains"]["ETH"]["gasLimitToken"];
   int satoshisPerBytes = 50;
   bool checkSendAmount = false;
   WalletBalance walletBalances = WalletBalance();
-  String exgWalletAddress = '';
-  CampaignUserData userData;
-  CampaignOrder campaignOrder;
+  String? exgWalletAddress = '';
+  CampaignUserData? userData;
+  late CampaignOrder campaignOrder;
   List<String> orderStatusList = [];
   List<OrderInfo> orderInfoList = [];
   List<OrderInfo> orderListFromApi = [];
   List<String> uiOrderStatusList = [];
-  Color containerListColor;
+  Color? containerListColor;
   double orderInfoContainerHeight = 5;
-  double tokenPurchaseQuantity = 0;
+  double? tokenPurchaseQuantity = 0;
   List<String> currencies = ['USD', 'CAD'];
-  String selectedCurrency;
+  String? selectedCurrency;
   bool isConfirming = false;
   bool isTokenCalc = false;
   TextEditingController updateOrderDescriptionController =
       TextEditingController();
-  double price = 0;
-  Map<String, dynamic> passOrderList;
+  double? price = 0;
+  Map<String, dynamic>? passOrderList;
   double usdtUnconfirmedOrderQuantity = 0;
   double transportationFee = 0.0;
 
@@ -93,17 +93,17 @@ class CampaignPaymentScreenState extends BaseState {
                 Initial logic
 ----------------------------------------------------------------------*/
   initState() async {
-    var gasPriceReal = await walletService.getEthGasPrice();
-    if (gasPrice < gasPriceReal) {
+    var gasPriceReal = await walletService!.getEthGasPrice();
+    if (gasPrice! < gasPriceReal) {
       gasPrice = gasPriceReal;
     }
     setBusy(true);
-    sharedService.context = context;
+    sharedService!.context = context;
     resetLists();
     await getCampaignOrdeList();
     selectedCurrency = currencies[0];
     exgWalletAddress =
-        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
+        await walletService!.getAddressFromCoreWalletDatabaseByTickerName('EXG');
     setBusy(false);
   }
 
@@ -135,15 +135,15 @@ class CampaignPaymentScreenState extends BaseState {
     _groupValue = value;
     if (value != 'USD') {
       //await getWallet();
-      transportationFee = gasPrice * gasLimit / 1e9;
+      transportationFee = gasPrice! * gasLimit! / 1e9;
     }
-    FocusScope.of(context).requestFocus(FocusNode());
+    FocusScope.of(context!).requestFocus(FocusNode());
     setErrorMessage('');
     setBusy(false);
   }
 
   navigateToDashboard() {
-    _navigationService.navigateTo('/campaignDashboard');
+    _navigationService!.navigateTo('/campaignDashboard');
   }
 
 /*----------------------------------------------------------------------
@@ -153,27 +153,27 @@ class CampaignPaymentScreenState extends BaseState {
   verifyWalletPassword(double amount) async {
     setBusy(true);
     log.w(('Sending payment amount $amount'));
-    var dialogResponse = await dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
+    var dialogResponse = await dialogService!.showDialog(
+        title: AppLocalizations.of(context!)!.enterPassword,
         description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm);
-    if (dialogResponse.confirmed) {
+            AppLocalizations.of(context!)!.dialogManagerTypeSamePasswordNote,
+        buttonTitle: AppLocalizations.of(context!)!.confirm);
+    if (dialogResponse.confirmed!) {
       isConfirming = true;
-      String mnemonic = dialogResponse.returnedText;
-      Uint8List seed = walletService.generateSeed(mnemonic);
+      String? mnemonic = dialogResponse.returnedText;
+      Uint8List seed = walletService!.generateSeed(mnemonic);
 
       if (tickerName == 'USDT') {
         tokenType = 'ETH';
       } else if (tickerName == 'EXG') {
         tokenType = 'FAB';
       }
-      String contractAddr =
+      String? contractAddr =
           environment["addresses"]["smartContract"][tickerName];
       if (contractAddr == null) {
-        await tokenListDatabaseService
+        await tokenListDatabaseService!
             .getContractAddressByTickerName(tickerName)
-            .then((value) => contractAddr = '0x' + value);
+            .then((value) => contractAddr = '0x' + value!);
       }
 
       options = {
@@ -188,28 +188,28 @@ class CampaignPaymentScreenState extends BaseState {
           ? address = prodUsdtWalletAddress
           : address = testUsdtWalletAddress;
 
-      await walletService
+      await walletService!
           .sendTransaction(
               tickerName, seed, [0], [], address, amount, options, true)
           .then((res) async {
         log.w('Result $res');
         String txHash = res["txHash"];
-        String errorMessage = res["errMsg"];
+        String? errorMessage = res["errMsg"];
         // Transaction success
         if (txHash.isNotEmpty) {
           log.w('TXhash $txHash');
           sendAmountTextController.text = '';
           await createCampaignOrder(txHash, tokenPurchaseQuantity);
-          sharedService.alertDialog(
-              AppLocalizations.of(context).sendTransactionComplete,
-              '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
+          sharedService!.alertDialog(
+              AppLocalizations.of(context!)!.sendTransactionComplete,
+              '$tickerName ${AppLocalizations.of(context!)!.isOnItsWay}',
               isWarning: false);
         }
         // There is an error
-        else if (errorMessage.isNotEmpty) {
+        else if (errorMessage!.isNotEmpty) {
           log.e('Coin send Error Message: $errorMessage');
-          sharedService.alertDialog(AppLocalizations.of(context).genericError,
-              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+          sharedService!.alertDialog(AppLocalizations.of(context!)!.genericError,
+              '$tickerName ${AppLocalizations.of(context!)!.transanctionFailed}',
               isWarning: false);
           setBusy(false);
           isConfirming = false;
@@ -217,8 +217,8 @@ class CampaignPaymentScreenState extends BaseState {
         // Both txhash and error message is empty
         else if (txHash == '' && errorMessage == '') {
           log.w('Both TxHash and Error Message are empty $errorMessage');
-          sharedService.alertDialog(AppLocalizations.of(context).genericError,
-              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+          sharedService!.alertDialog(AppLocalizations.of(context!)!.genericError,
+              '$tickerName ${AppLocalizations.of(context!)!.transanctionFailed}',
               isWarning: false);
           setBusy(false);
           isConfirming = false;
@@ -231,14 +231,14 @@ class CampaignPaymentScreenState extends BaseState {
         setBusy(false);
         isConfirming = false;
         setErrorMessage(
-            AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
+            AppLocalizations.of(context!)!.serverTimeoutPleaseTryAgainLater);
         return '';
       })
           // Coin send catch
           .catchError((error) {
         log.e('In coin send Catch error - $error');
-        sharedService.alertDialog(AppLocalizations.of(context).genericError,
-            '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+        sharedService!.alertDialog(AppLocalizations.of(context!)!.genericError,
+            '$tickerName ${AppLocalizations.of(context!)!.transanctionFailed}',
             isWarning: false);
         setBusy(false);
         isConfirming = false;
@@ -246,7 +246,7 @@ class CampaignPaymentScreenState extends BaseState {
     } else if (dialogResponse.returnedText != 'Closed') {
       setBusy(false);
       setErrorMessage(
-          AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
+          AppLocalizations.of(context!)!.pleaseProvideTheCorrectPassword);
     }
     isConfirming = false;
     setBusy(false);
@@ -256,22 +256,22 @@ class CampaignPaymentScreenState extends BaseState {
                 Create campaign order after payment
 ----------------------------------------------------------------------*/
 
-  createCampaignOrder(String txHash, double quantity) async {
+  createCampaignOrder(String txHash, double? quantity) async {
     setBusy(true);
 
     // get login token from local storage to get the userData from local database
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String loginToken = prefs.getString('loginToken');
+    String? loginToken = prefs.getString('loginToken');
 
     // get the userdata from local database using login token
-    await campaignUserDatabaseService
+    await campaignUserDatabaseService!
         .getUserDataByToken(loginToken)
         .then((res) {
       userData = res;
 
       // contructing campaign order object to send to buy coin api request
       campaignOrder = CampaignOrder(
-          memberId: userData.id,
+          memberId: userData!.id,
           walletAdd: exgWalletAddress,
           paymentType: _groupValue,
           txId: txHash,
@@ -280,28 +280,28 @@ class CampaignPaymentScreenState extends BaseState {
     }).catchError((err) => log.e('Campaign database service catch $err'));
 
     // calling api and passing the campaign order object
-    await campaignService.createCampaignOrder(campaignOrder).then((res) async {
+    await campaignService!.createCampaignOrder(campaignOrder).then((res) async {
       log.w(res);
       if (res == null) {
-        setErrorMessage(AppLocalizations.of(context).serverError);
+        setErrorMessage(AppLocalizations.of(context!)!.serverError);
         return;
       } else if (res['message'] != null) {
         setBusy(false);
         isConfirming = false;
-        setErrorMessage(AppLocalizations.of(context).createOrderFailed);
+        setErrorMessage(AppLocalizations.of(context!)!.createOrderFailed);
       } else {
         // If order gets success
         log.e(res['orderNum']);
         var orderNumber = res['orderNum'];
         // If USD order then show order numer
         if (_groupValue == 'USD') {
-          sharedService.alertDialog(
-              AppLocalizations.of(context).orderCreatedSuccessfully,
-              '${AppLocalizations.of(context).orderCreatedSuccessfully} $orderNumber ${AppLocalizations.of(context).afterHyphenWhenYouMakePayment}',
+          sharedService!.alertDialog(
+              AppLocalizations.of(context!)!.orderCreatedSuccessfully,
+              '${AppLocalizations.of(context!)!.orderCreatedSuccessfully} $orderNumber ${AppLocalizations.of(context!)!.afterHyphenWhenYouMakePayment}',
               isWarning: false);
         } else {
-          sharedService.alertDialog(AppLocalizations.of(context).success,
-              AppLocalizations.of(context).yourOrderHasBeenCreated,
+          sharedService!.alertDialog(AppLocalizations.of(context!)!.success,
+              AppLocalizations.of(context!)!.yourOrderHasBeenCreated,
               isWarning: false);
         }
         await getCampaignOrdeList();
@@ -321,30 +321,30 @@ class CampaignPaymentScreenState extends BaseState {
 
   getCampaignOrdeList() async {
     setBusy(true);
-    await campaignService
+    await campaignService!
         .getUserDataFromDatabase()
         .then((res) => userData = res);
     if (userData == null) return false;
-    await campaignService.getOrdersById(userData.id).then((orderList) {
+    await campaignService!.getOrdersById(userData!.id!).then((orderList) {
       if (orderList != null) {
         resetLists();
         orderListFromApi = orderList;
         log.w('orderListFromApi length ${orderListFromApi.length}');
         orderStatusList = [
           "",
-          AppLocalizations.of(context).waiting,
-          AppLocalizations.of(context).paid,
-          AppLocalizations.of(context).paymentReceived,
-          AppLocalizations.of(context).failed,
-          AppLocalizations.of(context).orderCancelled,
+          AppLocalizations.of(context!)!.waiting,
+          AppLocalizations.of(context!)!.paid,
+          AppLocalizations.of(context!)!.paymentReceived,
+          AppLocalizations.of(context!)!.failed,
+          AppLocalizations.of(context!)!.orderCancelled,
         ];
         usdtUnconfirmedOrderQuantity = 0;
         for (int i = 0; i < orderListFromApi.length; i++) {
           var status = orderListFromApi[i].status;
           if (status == "1") {
-            addOrderInTheList(i, int.parse(status));
+            addOrderInTheList(i, int.parse(status!));
           } else if (status == "2") {
-            addOrderInTheList(i, int.parse(status));
+            addOrderInTheList(i, int.parse(status!));
           }
         }
         // Gives height to order list container
@@ -352,7 +352,7 @@ class CampaignPaymentScreenState extends BaseState {
         log.w('${orderInfoList.length} - ${uiOrderStatusList.length}');
       } else {
         log.e('Api result null');
-        setErrorMessage(AppLocalizations.of(context).loadOrdersFailed);
+        setErrorMessage(AppLocalizations.of(context!)!.loadOrdersFailed);
         setBusy(false);
       }
     }).catchError((err) {
@@ -364,7 +364,7 @@ class CampaignPaymentScreenState extends BaseState {
 
   // Add order in the order list
   addOrderInTheList(int i, int status) {
-    String formattedDate = formatStringDate(orderListFromApi[i].dateCreated);
+    String formattedDate = formatStringDate(orderListFromApi[i].dateCreated!);
     // needed to declare orderListFromApi globally due to this funtion to keep the code DRY
     orderListFromApi[i].dateCreated = formattedDate;
     uiOrderStatusList.add(orderStatusList[status]);
@@ -372,7 +372,7 @@ class CampaignPaymentScreenState extends BaseState {
     log.w(orderListFromApi[i].toJson());
     if (orderListFromApi[i].txId != '') {
       usdtUnconfirmedOrderQuantity =
-          usdtUnconfirmedOrderQuantity + orderListFromApi[i].quantity;
+          usdtUnconfirmedOrderQuantity + orderListFromApi[i].quantity!;
     }
     log.e(
         'add order in the list totalOrderAmount $usdtUnconfirmedOrderQuantity');
@@ -382,22 +382,22 @@ class CampaignPaymentScreenState extends BaseState {
                     Update order
 ----------------------------------------------------------------------*/
 
-  updateOrder(String id, String quantity) {
+  updateOrder(String? id, String quantity) {
     Alert(
         style: AlertStyle(
             animationType: AnimationType.grow,
             isOverlayTapDismiss: true,
             backgroundColor: globals.walletCardColor,
-            descStyle: Theme.of(context).textTheme.bodyText1,
-            titleStyle: Theme.of(context)
+            descStyle: Theme.of(context!).textTheme.bodyText1!,
+            titleStyle: Theme.of(context!)
                 .textTheme
-                .headline4
+                .headline4!
                 .copyWith(decoration: TextDecoration.underline)),
-        context: context,
-        title: AppLocalizations.of(context).updateYourOrderStatus,
+        context: context!,
+        title: AppLocalizations.of(context!)!.updateYourOrderStatus,
         closeFunction: () {
-          Navigator.of(context, rootNavigator: true).pop();
-          FocusScope.of(context).requestFocus(FocusNode());
+          Navigator.of(context!, rootNavigator: true).pop();
+          FocusScope.of(context!).requestFocus(FocusNode());
         },
         content: Column(
           children: <Widget>[
@@ -405,13 +405,13 @@ class CampaignPaymentScreenState extends BaseState {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  AppLocalizations.of(context).quantity,
-                  style: Theme.of(context).textTheme.bodyText1,
+                  AppLocalizations.of(context!)!.quantity,
+                  style: Theme.of(context!).textTheme.bodyText1,
                 ),
                 UIHelper.horizontalSpaceSmall,
                 Text(
                   quantity,
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context!).textTheme.bodyText1,
                 ),
               ],
             ),
@@ -423,14 +423,14 @@ class CampaignPaymentScreenState extends BaseState {
               controller: updateOrderDescriptionController,
               obscureText: false,
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context).paymentDescription,
-                hintStyle: Theme.of(context).textTheme.bodyText1,
-                labelStyle: Theme.of(context).textTheme.headline6,
+                hintText: AppLocalizations.of(context!)!.paymentDescription,
+                hintStyle: Theme.of(context!).textTheme.bodyText1,
+                labelStyle: Theme.of(context!).textTheme.headline6,
                 icon: Icon(
                   Icons.event_note,
                   color: globals.primaryColor,
                 ),
-                labelText: AppLocalizations.of(context).paymentDescriptionNote,
+                labelText: AppLocalizations.of(context!)!.paymentDescriptionNote,
               ),
             ),
             // isDescription
@@ -448,20 +448,20 @@ class CampaignPaymentScreenState extends BaseState {
                 log.w(test);
               } else {
                 setBusy(true);
-                await campaignService
+                await campaignService!
                     .updateCampaignOrder(
                         id, updateOrderDescriptionController.text, "2")
                     .then((value) => log.w('update campaign $value'))
                     .catchError((err) => log.e('update campaign $err'));
-                Navigator.of(context, rootNavigator: true).pop();
+                Navigator.of(context!, rootNavigator: true).pop();
                 updateOrderDescriptionController.text = '';
                 await getCampaignOrdeList();
-                sharedService.sharedSimpleNotification(
-                    AppLocalizations.of(context).updateStatus,
+                sharedService!.sharedSimpleNotification(
+                    AppLocalizations.of(context!)!.updateStatus,
                     subtitle:
-                        AppLocalizations.of(context).orderUpdateNotification,
+                        AppLocalizations.of(context!)!.orderUpdateNotification,
                     isError: false);
-                FocusScope.of(context).requestFocus(FocusNode());
+                FocusScope.of(context!).requestFocus(FocusNode());
                 setBusy(false);
               }
             },
@@ -469,10 +469,10 @@ class CampaignPaymentScreenState extends BaseState {
               padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 7),
               // model.busy is not working here and same reason that it does not show the error when desc field is empty
               child: busy
-                  ? Text(AppLocalizations.of(context).loading)
+                  ? Text(AppLocalizations.of(context!)!.loading)
                   : Text(
-                      AppLocalizations.of(context).confirmPayment,
-                      style: Theme.of(context).textTheme.headline5,
+                      AppLocalizations.of(context!)!.confirmPayment,
+                      style: Theme.of(context!).textTheme.headline5,
                     ),
             ),
           ),
@@ -481,24 +481,24 @@ class CampaignPaymentScreenState extends BaseState {
           DialogButton(
             color: globals.primaryColor,
             onPressed: () async {
-              await campaignService
+              await campaignService!
                   .updateCampaignOrder(
                       id, updateOrderDescriptionController.text, "5")
                   .then((value) => log.w('update campaign cancel $value'))
                   .catchError((err) => log.e('update campaign cancel $err'));
-              Navigator.of(context, rootNavigator: true).pop();
+              Navigator.of(context!, rootNavigator: true).pop();
               updateOrderDescriptionController.text = '';
               await getCampaignOrdeList();
-              FocusScope.of(context).requestFocus(FocusNode());
-              sharedService.sharedSimpleNotification(
-                  AppLocalizations.of(context).updateStatus,
+              FocusScope.of(context!).requestFocus(FocusNode());
+              sharedService!.sharedSimpleNotification(
+                  AppLocalizations.of(context!)!.updateStatus,
                   subtitle:
-                      AppLocalizations.of(context).orderCancelledNotification,
+                      AppLocalizations.of(context!)!.orderCancelledNotification,
                   isError: false);
             },
             child: Text(
-              AppLocalizations.of(context).cancelOrder,
-              style: Theme.of(context).textTheme.headline5,
+              AppLocalizations.of(context!)!.cancelOrder,
+              style: Theme.of(context!).textTheme.headline5,
             ),
           ),
         ]).show();
@@ -510,7 +510,7 @@ class CampaignPaymentScreenState extends BaseState {
   checkFields(context) async {
     log.i('checking fields');
     if (sendAmountTextController.text == '' || _groupValue == null) {
-      setErrorMessage(AppLocalizations.of(context).pleaseFillAllTheFields);
+      setErrorMessage(AppLocalizations.of(context)!.pleaseFillAllTheFields);
       return;
     }
     setErrorMessage('');
@@ -524,12 +524,12 @@ class CampaignPaymentScreenState extends BaseState {
     } else {
       if (amount == null ||
           !checkSendAmount ||
-          amount > walletBalances.balance ||
+          amount > walletBalances.balance! ||
           !isBalanceAvailabeForOrder()) {
         log.e('$usdtUnconfirmedOrderQuantity');
-        setErrorMessage(AppLocalizations.of(context).pleaseEnterValidNumber);
-        sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-            AppLocalizations.of(context).pleaseEnterAmountLessThanYourWallet,
+        setErrorMessage(AppLocalizations.of(context)!.pleaseEnterValidNumber);
+        sharedService!.alertDialog(AppLocalizations.of(context)!.invalidAmount,
+            AppLocalizations.of(context)!.pleaseEnterAmountLessThanYourWallet,
             isWarning: false);
       } else {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -571,10 +571,10 @@ class CampaignPaymentScreenState extends BaseState {
   checkAmount(amount) async {
     setBusy(true);
     Pattern pattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
-    var res = RegexValidator(pattern).isValid(amount);
+    var res = RegexValidator(pattern as String).isValid(amount);
     checkSendAmount = res;
     if (!checkSendAmount) {
-      setErrorMessage(AppLocalizations.of(context).invalidAmount);
+      setErrorMessage(AppLocalizations.of(context!)!.invalidAmount);
     } else {
       setErrorMessage('');
       double castedAmount = double.parse(amount);
@@ -587,7 +587,7 @@ class CampaignPaymentScreenState extends BaseState {
                     Order List color
 ----------------------------------------------------------------------*/
   // Order list container color according to even/odd index input from the UI list builder
-  Color evenOrOddColor(int index) {
+  Color? evenOrOddColor(int index) {
     index.isOdd
         ? containerListColor = globals.walletCardColor
         : containerListColor = globals.grey.withAlpha(20);
@@ -598,17 +598,17 @@ class CampaignPaymentScreenState extends BaseState {
     Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
 ----------------------------------------------------------------------*/
 
-  Future<double> getUsdValue() async {
+  Future<double?> getUsdValue() async {
     setBusy(true);
-    double usdPrice = 0;
-    await _apiService.getCoinCurrencyUsdPrice().then((res) {
+    double? usdPrice = 0;
+    await _apiService!.getCoinCurrencyUsdPrice().then((res) {
       if (res != null) {
         log.w(res['data']['EXG']['USD']);
         log.e(selectedCurrency);
-        double exgUsdValue = res['data']['EXG']['USD'];
+        double? exgUsdValue = res['data']['EXG']['USD'];
         if (selectedCurrency == 'CAD') {
           double cadUsdValue = res['data']['CAD']['USD'];
-          usdPrice = (1 / cadUsdValue) * exgUsdValue;
+          usdPrice = (1 / cadUsdValue) * exgUsdValue!;
           log.i('in if $usdPrice');
         } else {
           usdPrice = exgUsdValue;
@@ -640,10 +640,10 @@ class CampaignPaymentScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   bool isBalanceAvailabeForOrder() {
-    double amount = usdtUnconfirmedOrderQuantity * price;
+    double amount = usdtUnconfirmedOrderQuantity * price!;
     log.e(
         'usdtUnconfirmedOrderQuantity $usdtUnconfirmedOrderQuantity - price $price - Amount $amount - Wallet bal ${walletBalances.balance}');
-    if (amount > walletBalances.balance) return false;
+    if (amount > walletBalances.balance!) return false;
     return true;
   }
 }

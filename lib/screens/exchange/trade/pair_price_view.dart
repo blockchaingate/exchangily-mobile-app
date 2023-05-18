@@ -9,17 +9,17 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PairPriceView extends StatelessWidget {
-  final Price pairPrice;
-  final bool isBusy;
-  final PairDecimalConfig decimalConfig;
-  final double usdValue;
+  final Price? pairPrice;
+  final bool? isBusy;
+  final PairDecimalConfig? decimalConfig;
+  final double? usdValue;
   const PairPriceView(
-      {Key key, this.pairPrice, this.isBusy, this.decimalConfig, this.usdValue})
+      {Key? key, this.pairPrice, this.isBusy, this.decimalConfig, this.usdValue})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return isBusy
+    return isBusy!
         ? Shimmer.fromColors(
             child: buildContainer(context),
             baseColor: grey,
@@ -39,7 +39,7 @@ class PairPriceView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Text(
-                    pairPrice.price.toStringAsFixed(decimalConfig.priceDecimal),
+                    pairPrice!.price!.toStringAsFixed(decimalConfig!.priceDecimal!),
                     style: TextStyle(fontSize: 30, color: priceColor)),
                 Column(
                   children: [
@@ -50,22 +50,22 @@ class PairPriceView extends StatelessWidget {
                     //     style: Theme.of(context).textTheme.headline3),
                     Row(
                       children: [
-                        Text(pairPrice.changeValue.toStringAsFixed(2),
+                        Text(pairPrice!.changeValue!.toStringAsFixed(2),
                             style: Theme.of(context)
                                 .textTheme
-                                .headline5
+                                .headline5!
                                 .copyWith(
                                     color: Color(
-                                        pairPrice.close > pairPrice.open
+                                        pairPrice!.close! > pairPrice!.open!
                                             ? 0XFF0da88b
                                             : 0XFFe2103c))),
                         UIHelper.horizontalSpaceSmall,
-                        Text(pairPrice.change.toStringAsFixed(2) + "%",
+                        Text(pairPrice!.change!.toStringAsFixed(2) + "%",
                             style: Theme.of(context)
                                 .textTheme
-                                .headline5
+                                .headline5!
                                 .copyWith(
-                                    color: Color(pairPrice.change >= 0
+                                    color: Color(pairPrice!.change! >= 0
                                         ? 0XFF0da88b
                                         : 0XFFe2103c))),
                       ],
@@ -78,7 +78,7 @@ class PairPriceView extends StatelessWidget {
           // Change Price Value Row
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
-            color: isBusy ? Colors.transparent : walletCardColor,
+            color: isBusy! ? Colors.transparent : walletCardColor,
 
             // color: Colors.redAccent,
 
@@ -91,17 +91,17 @@ class PairPriceView extends StatelessWidget {
                   UIHelper.horizontalSpaceMedium,
                   Expanded(
                     flex: 2,
-                    child: Text(AppLocalizations.of(context).volume,
+                    child: Text(AppLocalizations.of(context)!.volume,
                         style: Theme.of(context).textTheme.subtitle2),
                   ),
                   Expanded(
                     flex: 2,
-                    child: Text(AppLocalizations.of(context).low.toString(),
+                    child: Text(AppLocalizations.of(context)!.low.toString(),
                         style: Theme.of(context).textTheme.subtitle2),
                   ),
                   Expanded(
                     flex: 2,
-                    child: Text(AppLocalizations.of(context).high.toString(),
+                    child: Text(AppLocalizations.of(context)!.high.toString(),
                         style: Theme.of(context).textTheme.subtitle2),
                   ),
                 ],
@@ -116,22 +116,22 @@ class PairPriceView extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: Text(
-                        pairPrice.volume
-                            .toStringAsFixed(decimalConfig.priceDecimal),
+                        pairPrice!.volume!
+                            .toStringAsFixed(decimalConfig!.priceDecimal!),
                         style: Theme.of(context).textTheme.headline6),
                   ),
                   Expanded(
                     flex: 2,
                     child: Text(
-                        pairPrice.low
-                            .toStringAsFixed(decimalConfig.priceDecimal),
+                        pairPrice!.low!
+                            .toStringAsFixed(decimalConfig!.priceDecimal!),
                         style: Theme.of(context).textTheme.headline6),
                   ),
                   Expanded(
                       flex: 2,
                       child: Text(
-                          pairPrice.high
-                              .toStringAsFixed(decimalConfig.priceDecimal),
+                          pairPrice!.high!
+                              .toStringAsFixed(decimalConfig!.priceDecimal!),
                           style: Theme.of(context).textTheme.headline6)),
                 ],
               ),

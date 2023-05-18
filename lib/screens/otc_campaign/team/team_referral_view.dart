@@ -10,7 +10,7 @@ import '../../../shared/globals.dart' as globals;
 
 class CampaignTeamReferralView extends StatelessWidget {
   final rewardDetails;
-  const CampaignTeamReferralView({Key key, this.rewardDetails})
+  const CampaignTeamReferralView({Key? key, this.rewardDetails})
       : super(key: key);
 
   @override
@@ -25,7 +25,7 @@ class CampaignTeamReferralView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).memberDetails,
+          title: Text(AppLocalizations.of(context)!.memberDetails,
               style: Theme.of(context).textTheme.headline4),
         ),
         body: Container(
@@ -39,7 +39,7 @@ class CampaignTeamReferralView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Center(
-                      child: Text(AppLocalizations.of(context).teamLeader,
+                      child: Text(AppLocalizations.of(context)!.teamLeader,
                           style: Theme.of(context).textTheme.headline5)),
                   Center(
                       child: Text(rewardDetails['name']['email'].toString(),

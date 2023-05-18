@@ -12,26 +12,26 @@
 */
 
 class Price {
-  String _symbol;
-  double _price;
-  double _high;
-  double _low;
-  double _open;
-  double _close;
-  double _volume;
-  double _change;
-  double _changeValue;
+  String? _symbol;
+  double? _price;
+  double? _high;
+  double? _low;
+  double? _open;
+  double? _close;
+  double? _volume;
+  double? _change;
+  double? _changeValue;
 
   Price(
-      {String symbol,
-      double price,
-      double high,
-      double low,
-      double open,
-      double close,
-      double volume,
-      double change,
-      double changeValue}) {
+      {String? symbol,
+      double? price,
+      double? high,
+      double? low,
+      double? open,
+      double? close,
+      double? volume,
+      double? change,
+      double? changeValue}) {
     _symbol = symbol ?? '';
     _price = price ?? 0.0;
     _high = high ?? 0.0;
@@ -82,54 +82,54 @@ class Price {
     return data;
   }
 
-  String get symbol => _symbol;
-  set symbol(String symbol) {
+  String? get symbol => _symbol;
+  set symbol(String? symbol) {
     _symbol = symbol;
   }
 
-  double get price => _price;
-  set price(double price) {
+  double? get price => _price;
+  set price(double? price) {
     _price = price;
   }
 
-  double get high => _high;
-  set high(double high) {
+  double? get high => _high;
+  set high(double? high) {
     _high = high;
   }
 
-  double get low => _low;
-  set low(double low) {
+  double? get low => _low;
+  set low(double? low) {
     _low = low;
   }
 
-  double get open => _open;
-  set open(double open) {
+  double? get open => _open;
+  set open(double? open) {
     _open = open;
   }
 
-  double get close => _close;
-  set close(double close) {
+  double? get close => _close;
+  set close(double? close) {
     _close = close;
   }
 
-  double get volume => _volume;
-  set volume(double volume) {
+  double? get volume => _volume;
+  set volume(double? volume) {
     _volume = volume;
   }
 
-  double get changeValue => _changeValue;
-  set changeValue(double changeValue) {
+  double? get changeValue => _changeValue;
+  set changeValue(double? changeValue) {
     _changeValue = changeValue;
   }
 
-  double get change => _change;
-  set change(double change) {
+  double? get change => _change;
+  set change(double? change) {
     _change = change;
   }
 }
 
 class PriceList {
-  final List<Price> prices;
+  final List<Price>? prices;
   PriceList({this.prices});
   factory PriceList.fromJson(List<dynamic> parsedJson) {
     List<Price> prices = <Price>[];

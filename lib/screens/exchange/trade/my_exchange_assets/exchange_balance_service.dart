@@ -14,7 +14,7 @@ class ExchangeBalanceService with ReactiveServiceMixin {
   final log = getLogger('ExchangeBalanceService');
 
   final client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
-  ConfigService configService = locator<ConfigService>();
+  ConfigService? configService = locator<ConfigService>();
 
   List<LockerModel> _lockers = [];
   List<LockerModel> get lockers => _lockers;
@@ -32,14 +32,14 @@ class ExchangeBalanceService with ReactiveServiceMixin {
     log.w('setRefreshLockerBalances ${_refreshLockerBalances.value}');
   }
 
-  Future<int> getLockerCount(
+  Future<int?> getLockerCount(
     String exgAddress,
   ) async {
     String url = lockerApiUrl + exgAddress + totalCountTextApiRoute;
-    int referralCount = 0;
+    int? referralCount = 0;
     log.i('getLockerCount url $url');
     try {
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       if (response.statusCode == 200 || response.statusCode == 201) {
         var json = jsonDecode(response.body);
 
@@ -61,7 +61,7 @@ class ExchangeBalanceService with ReactiveServiceMixin {
     }
   }
 
-  Future<List<LockerModel>> getLockers(String exgAddress,
+  Future<List<LockerModel>?> getLockers(String exgAddress,
       {int pageSize = 10, int pageNumber = 0}) async {
     if (pageNumber != 0) {
       pageNumber = pageNumber - 1;
@@ -69,7 +69,7 @@ class ExchangeBalanceService with ReactiveServiceMixin {
     String url = lockerApiUrl + exgAddress + '/$pageSize/$pageNumber';
     log.i('getLockerInfo url $url');
     try {
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       log.w('response ${response.body}');
       var json = jsonDecode(response.body);
 
@@ -78,7 +78,7 @@ class ExchangeBalanceService with ReactiveServiceMixin {
       LockerModelList lockerModelList =
           LockerModelList.fromJson(parsedTokenList);
       log.w(
-          'getLockerInfo func: lockerModelList length ${lockerModelList.lockers.length}');
+          'getLockerInfo func: lockerModelList length ${lockerModelList.lockers!.length}');
       setRefreshLockerBalances(true);
       return lockerModelList.lockers;
     } catch (err) {

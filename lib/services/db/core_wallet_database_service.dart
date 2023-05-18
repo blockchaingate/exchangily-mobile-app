@@ -31,21 +31,21 @@ class CoreWalletDatabaseService {
   final String columnWalletBalancesBody = "walletBalancesBody";
 
   static const _databaseVersion = 1;
-  static Future<Database> _database;
+  static Future<Database>? _database;
   String path = '';
 
-  Future<Database> initDb() async {
+  Future<Database>? initDb() async {
     if (_database != null) {
       log.i('init db -- ${_database.toString()}');
 
-      return _database;
+      return _database!;
     }
     var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
     log.w('initDB $path');
     _database =
         openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
-    return _database;
+    return _database!;
   }
 
   openDB() {
@@ -65,7 +65,7 @@ class CoreWalletDatabaseService {
 
   Future<CoreWalletModel> getAll() async {
     await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
     log.w('getall $db');
 
     // res is giving me the same output in the log whether i map it or just take var res
@@ -82,7 +82,7 @@ class CoreWalletDatabaseService {
 
   // Update database
   Future<void> update(CoreWalletModel coreWalletModel) async {
-    final Database db = await _database;
+    final Database db = (await _database)!;
     await db.update(
       tableName,
       coreWalletModel.toJson(),
@@ -95,7 +95,7 @@ class CoreWalletDatabaseService {
 // Insert Data In The Database
   Future insert(CoreWalletModel walletCoreModel) async {
     await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
     try {
       int id = await db.insert(tableName, walletCoreModel.toJson(),
           conflictAlgorithm: ConflictAlgorithm.replace);
@@ -112,13 +112,13 @@ class CoreWalletDatabaseService {
   }
 
   // Get encrypted mnemonic
-  Future<String> getEncryptedMnemonic() async {
+  Future<String?> getEncryptedMnemonic() async {
     await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
     //  if (db == null) await initDb();
-    String encryptedMnemonic = '';
+    String? encryptedMnemonic = '';
     List<Map> res = await db.query(tableName, columns: [columnMnemonic]);
-    if (res.isNotEmpty) if (res[0]['mnemonic'] != null) {
+    if (res.isNotEmpty && res[0]['mnemonic'] != null) {
       log.i('Encrypted Mnemonic --- ${res.first}');
       encryptedMnemonic = res.first['mnemonic'];
     }
@@ -127,11 +127,11 @@ class CoreWalletDatabaseService {
   }
 
   // Get wallet balance body
-  Future<Map<dynamic, dynamic>> getWalletBalancesBody() async {
+  Future<Map<dynamic, dynamic>?> getWalletBalancesBody() async {
     await initDb();
-    final Database db = await _database;
-    Map finalRes;
-    List<Map> res =
+    final Database db = (await _database)!;
+    Map? finalRes;
+    List<Map>? res =
         await db.query(tableName, columns: [columnWalletBalancesBody]);
     try {
       log.i('wallet balances body --- ${res.first}');
@@ -139,16 +139,15 @@ class CoreWalletDatabaseService {
     } catch (err) {
       res = null;
     }
-
-    return finalRes;
+    return finalRes!;
   }
 
   // getWalletAddressByTickerName
-  Future<String> getWalletAddressByTickerName(String tickerName) async {
-    final Database db = await _database;
+  Future<String?> getWalletAddressByTickerName(String tickerName) async {
+    final Database db = (await _database)!;
 
     var fabUtils = FabUtils();
-    String address = '';
+    String? address = '';
     String passedTicker = '';
     List<Map> res =
         await db.query(tableName, columns: [columnWalletBalancesBody]);
@@ -159,9 +158,9 @@ class CoreWalletDatabaseService {
 
     address = jsonToMap(
         res.first['walletBalancesBody'], '${tickerName.toLowerCase()}Address');
-    String finalRes = '';
+    String? finalRes = '';
     finalRes =
-        passedTicker == 'EXG' ? fabUtils.fabToExgAddress(address) : address;
+        passedTicker == 'EXG' ? fabUtils.fabToExgAddress(address!) : address!;
     log.i(
         '${passedTicker.isEmpty ? tickerName : passedTicker} address ---finalRes $finalRes');
     return finalRes;
@@ -173,7 +172,7 @@ class CoreWalletDatabaseService {
 
   // Close Database
   Future closeDb() async {
-    var db = await _database;
+    var db = (await _database)!;
     return db.close();
   }
 

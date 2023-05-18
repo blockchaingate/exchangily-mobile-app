@@ -90,7 +90,7 @@ decodeBase58Address(address) {
     debugPrint('versionByte===');
     debugPrint(versionByte.toString());
     if (versionByte ==
-        VERSION_BYTE[Format['Legacy']][Network['Mainnet']][Type['P2PKH']]) {
+        VERSION_BYTE[Format['Legacy']]![Network['Mainnet']]![Type['P2PKH']]) {
       return {
         'hash': hash,
         'format': Format['Legacy'],
@@ -98,7 +98,7 @@ decodeBase58Address(address) {
         'type': Type['P2PKH']
       };
     } else if (versionByte ==
-        VERSION_BYTE[Format['Legacy']][Network['Testnet']][Type['P2PKH']]) {
+        VERSION_BYTE[Format['Legacy']]![Network['Testnet']]![Type['P2PKH']]) {
       debugPrint('go this way');
       return {
         'hash': hash,
@@ -109,7 +109,7 @@ decodeBase58Address(address) {
     }
 
     if (versionByte ==
-        VERSION_BYTE[Format['Kbpay']][Network['Mainnet']][Type['P2PKH']]) {
+        VERSION_BYTE[Format['Kbpay']]![Network['Mainnet']]![Type['P2PKH']]) {
       return {
         'hash': hash,
         'format': Format['Kbpay'],
@@ -117,7 +117,7 @@ decodeBase58Address(address) {
         'type': Type['P2PKH']
       };
     } else if (versionByte ==
-        VERSION_BYTE[Format['Kbpay']][Network['Testnet']][Type['P2PKH']]) {
+        VERSION_BYTE[Format['Kbpay']]![Network['Testnet']]![Type['P2PKH']]) {
       return {
         'hash': hash,
         'format': Format['Kbpay'],
@@ -133,7 +133,7 @@ decodeBase58Address(address) {
 
 encodeAsLegacy(decoded) {
   var versionByte =
-      VERSION_BYTE[Format['Legacy']][decoded['network']][decoded['type']];
+      VERSION_BYTE[Format['Legacy']]![decoded['network']]![decoded['type']]!;
   var buffer = Uint8List(decoded['hash'].length + 1);
   buffer[0] = versionByte;
   for (var i = 0; i < decoded['hash'].length; i++) {
@@ -147,7 +147,7 @@ encodeAsKbpay(decoded) {
   debugPrint('decoded=');
   debugPrint(decoded.toString());
   var versionByte =
-      VERSION_BYTE[Format['Kbpay']][decoded['network']][decoded['type']];
+      VERSION_BYTE[Format['Kbpay']]![decoded['network']]![decoded['type']]!;
 
   //var buffer = Uint8List.fromList(decoded['hash']);
   var buffer = Uint8List(decoded['hash'].length + 1);

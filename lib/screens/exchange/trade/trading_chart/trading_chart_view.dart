@@ -39,12 +39,12 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => TradingChartViewModel(),
-      onModelReady: (model) {
+      onModelReady: (dynamic model) {
         model.init();
       },
       builder: (context, TradingChartViewModel model, _) => Column(
         children: [
-          model.isTradingChartModelBusy ?? false
+          model.isTradingChartModelBusy
               ? Container(
                   color: grey,
                   padding: const EdgeInsets.all(0),
@@ -73,15 +73,18 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext context, int index) {
                       String key = model.intervalMap.keys.elementAt(index);
-                      return FlatButton(
-                        padding: const EdgeInsets.symmetric(horizontal: 0),
-                        textColor:
-                            model.intervalMap[key] == model.tradingChartInterval
-                                ? primaryColor
-                                : white,
-                        child: Text(key, style: model.fontTheme),
+                      return TextButton(
+                        style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 0)),
                         onPressed: () =>
                             model.updateChartInterval(model.intervalMap[key]),
+                        child: Text(
+                          key,
+                          style: model.intervalMap[key] ==
+                                  model.tradingChartInterval
+                              ? model.fontTheme.copyWith(color: primaryColor)
+                              : model.fontTheme.copyWith(color: white),
+                        ),
                       );
                     }),
               )),
@@ -106,11 +109,11 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
         .replaceAll('BTC', pairArray[0])
         .replaceAll('USDT', pairArray[1])
         .replaceAll('en_US', lang)
-        .replaceAll('30m', model.tradingChartInterval)
+        .replaceAll('30m', model.tradingChartInterval!)
         .replaceAll('https://kanbantest.fabcoinapi.com/',
-            model.configService.getKanbanBaseUrl())
+            model.configService!.getKanbanBaseUrl()!)
         .replaceAll('wss://kanbantest.fabcoinapi.com/ws/',
-            model.configService.getKanbanBaseWSUrl());
+            model.configService!.getKanbanBaseWSUrl()!);
 
     model.webViewController.loadUrl(Uri.dataFromString(fileText,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))

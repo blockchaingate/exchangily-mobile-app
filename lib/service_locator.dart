@@ -105,7 +105,7 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => VersionService());
 
   // LocalStorageService Singelton
-  var instance = await LocalStorageService.getInstance();
+  var instance = (await LocalStorageService.getInstance())!;
   locator.registerSingleton<LocalStorageService>(instance);
 
   // Factory returns the new instance

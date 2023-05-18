@@ -8,7 +8,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignRegisterAccountScreen extends StatelessWidget {
-  const CampaignRegisterAccountScreen({Key key}) : super(key: key);
+  const CampaignRegisterAccountScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context).register,
+            AppLocalizations.of(context)!.register,
             style: Theme.of(context).textTheme.headline3,
           ),
           centerTitle: true,
@@ -55,10 +55,10 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                       Icons.email,
                                       size: 16,
                                       semanticLabel:
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                               .enterYourEmail,
                                     ),
-                                    labelText: AppLocalizations.of(context)
+                                    labelText: AppLocalizations.of(context)!
                                         .enterYourEmail,
                                     labelStyle:
                                         Theme.of(context).textTheme.headline6),
@@ -83,13 +83,13 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                           icon: const Icon(
                                               Icons.enhanced_encryption),
                                           iconSize: 16,
-                                          tooltip: AppLocalizations.of(context)
+                                          tooltip: AppLocalizations.of(context)!
                                               .showPassword,
                                           onPressed: () {
                                             model.showPasswordText(false);
                                           },
                                         ),
-                                        labelText: AppLocalizations.of(context)
+                                        labelText: AppLocalizations.of(context)!
                                             .enterPassword,
                                         labelStyle: Theme.of(context)
                                             .textTheme
@@ -109,13 +109,13 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                           icon:
                                               const Icon(Icons.remove_red_eye),
                                           iconSize: 16,
-                                          tooltip: AppLocalizations.of(context)
+                                          tooltip: AppLocalizations.of(context)!
                                               .showPassword,
                                           onPressed: () {
                                             model.showPasswordText(true);
                                           },
                                         ),
-                                        labelText: AppLocalizations.of(context)
+                                        labelText: AppLocalizations.of(context)!
                                             .enterPassword,
                                         labelStyle: Theme.of(context)
                                             .textTheme
@@ -139,7 +139,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                       color: globals.white54,
                                     ),
                                     decoration: InputDecoration(
-                                        labelText: AppLocalizations.of(context)
+                                        labelText: AppLocalizations.of(context)!
                                             .confirmPassword,
                                         labelStyle: Theme.of(context)
                                             .textTheme
@@ -156,7 +156,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                       color: globals.white54,
                                     ),
                                     decoration: InputDecoration(
-                                        labelText: AppLocalizations.of(context)
+                                        labelText: AppLocalizations.of(context)!
                                             .confirmPassword,
                                         labelStyle: Theme.of(context)
                                             .textTheme
@@ -177,7 +177,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                 },
                                 controller:
                                     model.exgWalletAddressTextController,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: globals.white54,
                                 ),
                                 decoration: InputDecoration(
@@ -189,10 +189,10 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                         model.pasteClipboardText();
                                       },
                                     ),
-                                    labelText: AppLocalizations.of(context)
+                                    labelText: AppLocalizations.of(context)!
                                         .pasteExgAddress,
                                     labelStyle:
-                                        Theme.of(context).textTheme.headline6),
+                                        Theme.of(context).textTheme.titleLarge),
                               ))
                         ],
                       ),
@@ -206,7 +206,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                   debugPrint(value.toString());
                                 },
                                 controller: model.referralCodeTextController,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: globals.white54,
                                 ),
                                 decoration: InputDecoration(
@@ -214,13 +214,13 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                       Icons.device_hub,
                                       size: 16,
                                       semanticLabel:
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                               .referralCode,
                                     ),
-                                    labelText: AppLocalizations.of(context)
+                                    labelText: AppLocalizations.of(context)!
                                         .referralCode,
                                     labelStyle:
-                                        Theme.of(context).textTheme.headline6),
+                                        Theme.of(context).textTheme.titleLarge),
                               ))
                         ],
                       ),
@@ -251,17 +251,22 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                             flex: 2,
                             child: Container(
                               margin: const EdgeInsets.only(right: 5),
-                              child: RaisedButton(
-                                padding: const EdgeInsets.all(2.0),
-                                elevation: 5,
-                                focusElevation: 5,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.all(2.0),
+                                  backgroundColor: Theme.of(context).cardColor,
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0)),
+                                ),
                                 child: Text(
-                                    AppLocalizations.of(context)
+                                    AppLocalizations.of(context)!
                                             .alreadyHaveAnAccount +
                                         '?',
                                     textAlign: TextAlign.center,
-                                    style:
-                                        Theme.of(context).textTheme.headline4),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium),
                                 onPressed: () {
                                   Navigator.of(context)
                                       .pushNamed('/campaignLogin');
@@ -271,27 +276,33 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                           ),
                           Expanded(
                             flex: 1,
-                            child: RaisedButton(
-                              padding: const EdgeInsets.all(2.0),
-                              elevation: 5,
-                              shape: StadiumBorder(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.all(2.0),
+                                backgroundColor: globals.secondaryColor,
+                                elevation: 5,
+                                shape: const StadiumBorder(
                                   side: BorderSide(
-                                      color: globals.primaryColor, width: 2)),
-                              color: globals.secondaryColor,
+                                    color: globals.primaryColor,
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
                               child: model.busy == true
                                   ? Shimmer.fromColors(
                                       baseColor: globals.primaryColor,
                                       highlightColor: globals.grey,
                                       child: Text(
-                                        (AppLocalizations.of(context).signUp),
+                                        (AppLocalizations.of(context)!.signUp),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline4,
+                                            .headlineMedium,
                                       ))
                                   : Text(
-                                      (AppLocalizations.of(context).signUp),
-                                      style:
-                                          Theme.of(context).textTheme.headline4,
+                                      (AppLocalizations.of(context)!.signUp),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium,
                                     ),
                               onPressed: () {
                                 model.checkInputValues();

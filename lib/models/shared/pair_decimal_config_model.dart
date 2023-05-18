@@ -1,14 +1,14 @@
 // Pair decimal config
 
 class PairDecimalConfig {
-  String _name;
-  int _priceDecimal;
-  int _qtyDecimal;
+  String? _name;
+  int? _priceDecimal;
+  int? _qtyDecimal;
 
   PairDecimalConfig({
-    String name,
-    int priceDecimal,
-    int qtyDecimal,
+    String? name,
+    int? priceDecimal,
+    int? qtyDecimal,
   }) {
     _priceDecimal = priceDecimal ?? 4;
     _qtyDecimal = qtyDecimal ?? 6;
@@ -26,26 +26,26 @@ class PairDecimalConfig {
         qtyDecimal: json['qtyDecimal']);
   }
 
-  int get priceDecimal => _priceDecimal;
-  set priceDecimal(int priceDecimal) {
+  int? get priceDecimal => _priceDecimal;
+  set priceDecimal(int? priceDecimal) {
     _priceDecimal = priceDecimal;
   }
 
-  int get qtyDecimal => _qtyDecimal;
+  int? get qtyDecimal => _qtyDecimal;
 
-  set qtyDecimal(int qtyDecimal) {
+  set qtyDecimal(int? qtyDecimal) {
     _qtyDecimal = qtyDecimal;
   }
 
-  String get name => _name;
+  String? get name => _name;
 
-  set name(String name) {
+  set name(String? name) {
     _name = name;
   }
 }
 
 class PairDecimalConfigList {
-  final List<PairDecimalConfig> pairList;
+  final List<PairDecimalConfig>? pairList;
   PairDecimalConfigList({this.pairList});
 
   factory PairDecimalConfigList.fromJson(List<dynamic> parsedJson) {

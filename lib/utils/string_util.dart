@@ -95,7 +95,7 @@ trimHexPrefix(String str) {
 }
 
 number2Buffer(numVal) {
-  List<int> buffer = [];
+  List<int?> buffer = [];
   var neg = (numVal < 0);
   numVal = numVal.abs();
   while (numVal > 0) {
@@ -104,7 +104,7 @@ number2Buffer(numVal) {
     numVal = numVal >> 8;
   }
 
-  var top = buffer[buffer.length - 1];
+  var top = buffer[buffer.length - 1]!;
   if (top & 0x80 != 0) {
     buffer.add(neg ? 0x80 : 0x00);
   } else if (neg) {
@@ -161,7 +161,7 @@ fixLength(String str, int length) {
   }
 }
 
-doubleAdd(double d1, double d2) {
+doubleAdd(double? d1, double? d2) {
   var d = Decimal.parse(d1.toString()) + Decimal.parse(d2.toString());
   return d.toDouble();
 }

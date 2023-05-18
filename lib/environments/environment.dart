@@ -1,8 +1,8 @@
-import 'package:bitcoin_flutter/bitcoin_flutter.dart' as bitcoin_flutter;
+// import 'package:bitcoin_flutter/bitcoin_flutter.dart' as bitcoin_flutter;
 import 'package:exchangilymobileapp/environments/environment_type.dart';
-import 'package:exchangilymobileapp/utils/ltc_util.dart';
-import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
+import 'package:bitcoin_flutter/bitcoin_flutter.dart' as bitcoin_flutter;
 
+// -----------------------------------burayi ac ----------------------------------------
 Map devConfig = {
   "decimal": {'priceDecimal': 6, 'volDecimal': 4},
   "chains": {
@@ -11,17 +11,17 @@ Map devConfig = {
       "satoshisPerBytes": 100,
       "bytesPerInput": 152
     },
-    "LTC": {
-      "network": liteCoinTestnetNetwork,
-      "satoshisPerBytes": 400,
-      "bytesPerInput": 155
-    },
-    "BCH": {"testnet": true, "satoshisPerBytes": 9, "bytesPerInput": 155},
-    "DOGE": {
-      "network": dogeCoinTestnetNetwork,
-      "satoshisPerBytes": 800000,
-      "bytesPerInput": 152
-    },
+    // "LTC": {
+    //   "network": liteCoinTestnetNetwork,
+    //   "satoshisPerBytes": 400,
+    //   "bytesPerInput": 155
+    // },
+    // "BCH": {"testnet": true, "satoshisPerBytes": 9, "bytesPerInput": 155},
+    // "DOGE": {
+    //   "network": dogeCoinTestnetNetwork,
+    //   "satoshisPerBytes": 800000,
+    //   "bytesPerInput": 152
+    // },
     "ETH": {
       "chain": 'ropsten',
       "hardfork": 'byzantium',
@@ -195,17 +195,17 @@ Map productionConfig = {
       "satoshisPerBytes": 100,
       "bytesPerInput": 152
     },
-    "LTC": {
-      "network": liteCoinMainnetNetwork,
-      "satoshisPerBytes": 400,
-      "bytesPerInput": 152
-    },
-    "BCH": {"testnet": false, "satoshisPerBytes": 9, "bytesPerInput": 155},
-    "DOGE": {
-      "network": dogeCoinMainnetNetwork,
-      "satoshisPerBytes": 800000,
-      "bytesPerInput": 152
-    },
+    // "LTC": {
+    //   "network": liteCoinMainnetNetwork,
+    //   "satoshisPerBytes": 400,
+    //   "bytesPerInput": 152
+    // },
+    // "BCH": {"testnet": false, "satoshisPerBytes": 9, "bytesPerInput": 155},
+    // "DOGE": {
+    //   "network": dogeCoinMainnetNetwork,
+    //   "satoshisPerBytes": 800000,
+    //   "bytesPerInput": 152
+    // },
     "ETH": {
       "chain": 'mainnet',
       "hardfork": 'byzantium',

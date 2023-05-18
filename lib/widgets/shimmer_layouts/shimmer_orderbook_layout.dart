@@ -3,7 +3,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
 class ShimmerOrderbookLayout extends StatelessWidget {
-  const ShimmerOrderbookLayout({Key key}) : super(key: key);
+  const ShimmerOrderbookLayout({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

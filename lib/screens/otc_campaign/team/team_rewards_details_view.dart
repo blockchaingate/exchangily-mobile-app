@@ -8,8 +8,8 @@ import 'package:shimmer/shimmer.dart';
 import '../../../shared/globals.dart' as globals;
 
 class TeamRewardDetailsView extends StatelessWidget {
-  final List team;
-  const TeamRewardDetailsView({Key key, this.team}) : super(key: key);
+  final List? team;
+  const TeamRewardDetailsView({Key? key, this.team}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class TeamRewardDetailsView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).teamDetails,
+          title: Text(AppLocalizations.of(context)!.teamDetails,
               style: Theme.of(context).textTheme.headline4),
         ),
         body: SingleChildScrollView(
@@ -35,34 +35,34 @@ class TeamRewardDetailsView extends StatelessWidget {
                       Expanded(
                           flex: 1,
                           child: Center(
-                              child: Text(AppLocalizations.of(context).team,
+                              child: Text(AppLocalizations.of(context)!.team,
                                   style:
                                       Theme.of(context).textTheme.subtitle2))),
                       Expanded(
                           flex: 1,
                           child: Center(
-                              child: Text(AppLocalizations.of(context).members,
+                              child: Text(AppLocalizations.of(context)!.members,
                                   style:
                                       Theme.of(context).textTheme.subtitle2))),
                       Expanded(
                           flex: 2,
                           child: Center(
                               child: Text(
-                                  AppLocalizations.of(context).totalValue,
+                                  AppLocalizations.of(context)!.totalValue,
                                   style:
                                       Theme.of(context).textTheme.subtitle2))),
                       Expanded(
                           flex: 2,
                           child: Center(
                               child: Text(
-                                  AppLocalizations.of(context).totalQuantity,
+                                  AppLocalizations.of(context)!.totalQuantity,
                                   style:
                                       Theme.of(context).textTheme.subtitle2))),
                       Expanded(
                           flex: 1,
                           child: Center(
                               child: Text(
-                                  AppLocalizations.of(context).percentage,
+                                  AppLocalizations.of(context)!.percentage,
                                   style:
                                       Theme.of(context).textTheme.subtitle2)))
                     ],
@@ -74,7 +74,7 @@ class TeamRewardDetailsView extends StatelessWidget {
                           baseColor: globals.primaryColor,
                           highlightColor: globals.grey,
                           child: Text(
-                            (AppLocalizations.of(context).loading),
+                            (AppLocalizations.of(context)!.loading),
                             style: Theme.of(context).textTheme.headline5,
                           ))
                       : team != null
@@ -82,14 +82,14 @@ class TeamRewardDetailsView extends StatelessWidget {
                               height: UIHelper.getScreenFullHeight(context),
                               child: ListView.builder(
                                 shrinkWrap: true,
-                                itemCount: team.length,
+                                itemCount: team!.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   int i = index + 1;
                                   return InkWell(
                                     onTap: () {
                                       Navigator.of(context).pushNamed(
                                           '/teamReferralView',
-                                          arguments: team[index]);
+                                          arguments: team![index]);
                                     },
                                     child: Card(
                                       elevation: 5,
@@ -112,7 +112,7 @@ class TeamRewardDetailsView extends StatelessWidget {
                                                 flex: 1,
                                                 child: Center(
                                                     child: Text(
-                                                        team[index]['members']
+                                                        team![index]['members']
                                                             .length
                                                             .toString(),
                                                         style: Theme.of(context)
@@ -122,7 +122,7 @@ class TeamRewardDetailsView extends StatelessWidget {
                                                 flex: 2,
                                                 child: Center(
                                                     child: Text(
-                                                        team[index]
+                                                        team![index]
                                                                 ['totalValue']
                                                             .toStringAsFixed(2),
                                                         style: Theme.of(context)
@@ -136,7 +136,7 @@ class TeamRewardDetailsView extends StatelessWidget {
                                                       const EdgeInsets.only(
                                                           right: 3.0),
                                                   child: Text(
-                                                      team[index][
+                                                      team![index][
                                                               'totalQuantities']
                                                           .toStringAsFixed(3),
                                                       style: Theme.of(context)
@@ -151,7 +151,7 @@ class TeamRewardDetailsView extends StatelessWidget {
                                                       const EdgeInsets.only(
                                                           right: 3.0),
                                                   child: Text(
-                                                      '${team[index]['percentage'].toStringAsFixed(3)}%',
+                                                      '${team![index]['percentage'].toStringAsFixed(3)}%',
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .headline5),

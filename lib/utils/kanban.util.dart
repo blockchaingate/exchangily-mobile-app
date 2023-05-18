@@ -26,70 +26,70 @@ class KanbanUtils {
   Future<String> getScarAddress() async {
     ConfigService configService = locator<ConfigService>();
 
-    var url = configService.getKanbanBaseUrl() +
+    var url = configService.getKanbanBaseUrl()! +
         kanbanApiRoute +
         getScarAddressApiRoute;
 
-    var response = await client.get(url);
+    var response = await client.get(Uri.parse(url));
     return response.body;
   }
 
   Future<String> getCoinPoolAddress() async {
     ConfigService configService = locator<ConfigService>();
     var url =
-        configService.getKanbanBaseUrl() + 'exchangily/getCoinPoolAddress';
+        configService.getKanbanBaseUrl()! + 'exchangily/getCoinPoolAddress';
 
-    var response = await client.get(url);
+    var response = await client.get(Uri.parse(url));
     return response.body;
   }
 
   Future<String> getExchangilyAddress() async {
     ConfigService configService = locator<ConfigService>();
     var url =
-        configService.getKanbanBaseUrl() + 'exchangily/getExchangeAddress';
+        configService.getKanbanBaseUrl()! + 'exchangily/getExchangeAddress';
     debugPrint('URL getExchangilyAddress $url');
 
-    var response = await client.get(url);
+    var response = await client.get(Uri.parse(url));
     return response.body;
   }
 
   Future<double> getGas(String address) async {
     ConfigService configService = locator<ConfigService>();
-    var url = configService.getKanbanBaseUrl() +
+    var url = configService.getKanbanBaseUrl()! +
         kanbanApiRoute +
         getBalanceApiRoute +
         address;
 
-    var response = await client.get(url);
+    var response = await client.get(Uri.parse(url));
     var json = jsonDecode(response.body);
     var fab = json["balance"]["FAB"];
     return double.parse(fab);
   }
 
-  Future<int> getNonce(String address) async {
+  Future<int?> getNonce(String address) async {
     ConfigService configService = locator<ConfigService>();
-    var url = configService.getKanbanBaseUrl() +
+    var url = configService.getKanbanBaseUrl()! +
         kanbanApiRoute +
         getTransactionCountApiRoute +
         address;
     debugPrint('URL getNonce $url');
 
-    var response = await client.get(url);
+    var response = await client.get(Uri.parse(url));
     var json = jsonDecode(response.body);
     debugPrint('getNonce json $json');
     return json["transactionCount"];
   }
 
-  Future<Map<String, dynamic>> submitDeposit(
-      String rawTransaction, String rawKanbanTransaction) async {
+  Future<Map<String, dynamic>?> submitDeposit(
+      String? rawTransaction, String rawKanbanTransaction) async {
     ConfigService configService = locator<ConfigService>();
-    var url = configService.getKanbanBaseUrl() + submitDepositApiRoute;
+    var url = configService.getKanbanBaseUrl()! + submitDepositApiRoute;
     debugPrint('submitDeposit url $url');
     final sharedService = locator<SharedService>();
     var versionInfo = await sharedService.getLocalAppVersion();
     debugPrint('getAppVersion $versionInfo');
-    String versionName = versionInfo['name'];
-    String buildNumber = versionInfo['buildNumber'];
+    String versionName = versionInfo['name']!;
+    String buildNumber = versionInfo['buildNumber']!;
     String fullVersion = versionName + '+' + buildNumber;
     debugPrint('fullVersion $fullVersion');
     var body = {
@@ -101,10 +101,10 @@ class KanbanUtils {
     debugPrint('body $body');
 
     try {
-      var response = await client.post(url, body: body);
+      var response = await client.post(Uri.parse(url), body: body);
       debugPrint("Kanban_util submitDeposit response body:");
       debugPrint(response.body.toString());
-      Map<String, dynamic> res = jsonDecode(response.body);
+      Map<String, dynamic>? res = jsonDecode(response.body);
       return res;
     } catch (err) {
       debugPrint('Catch submitDeposit in kanban util $err');
@@ -114,10 +114,10 @@ class KanbanUtils {
 
   Future getKanbanErrDeposit(String address) async {
     ConfigService configService = locator<ConfigService>();
-    var url = configService.getKanbanBaseUrl() + depositerrApiRoute + address;
+    var url = configService.getKanbanBaseUrl()! + depositerrApiRoute + address;
     debugPrint('kanbanUtil getKanbanErrDeposit $url');
     try {
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       var json = jsonDecode(response.body);
       // debugPrint('Kanban.util-getKanbanErrDeposit $json');
       return json;
@@ -128,16 +128,16 @@ class KanbanUtils {
     }
   }
 
-  Future<Map<String, dynamic>> submitReDeposit(
+  Future<Map<String, dynamic>?> submitReDeposit(
       String rawKanbanTransaction) async {
     ConfigService configService = locator<ConfigService>();
-    var url = configService.getKanbanBaseUrl() + resubmitDepositApiRoute;
+    var url = configService.getKanbanBaseUrl()! + resubmitDepositApiRoute;
 
     final sharedService = locator<SharedService>();
     var versionInfo = await sharedService.getLocalAppVersion();
     debugPrint('getAppVersion $versionInfo');
-    String versionName = versionInfo['name'];
-    String buildNumber = versionInfo['buildNumber'];
+    String versionName = versionInfo['name']!;
+    String buildNumber = versionInfo['buildNumber']!;
     String fullVersion = versionName + '+' + buildNumber;
     debugPrint('fullVersion $fullVersion');
     var body = {
@@ -148,10 +148,10 @@ class KanbanUtils {
     debugPrint('URL submitReDeposit $url -- body $body');
 
     try {
-      var response = await client.post(url, body: body);
+      var response = await client.post(Uri.parse(url), body: body);
       //debugPrint('response from sendKanbanRawTransaction=');
       // debugPrint(response.body);
-      Map<String, dynamic> res = jsonDecode(response.body);
+      Map<String, dynamic>? res = jsonDecode(response.body);
       return res;
     } catch (e) {
       //return e;
@@ -159,17 +159,17 @@ class KanbanUtils {
     }
   }
 
-  Future<Map<String, dynamic>> sendRawKanbanTransaction(
-      String rawKanbanTransaction) async {
+  Future<Map<String, dynamic>?> sendRawKanbanTransaction(
+      String? rawKanbanTransaction) async {
     ConfigService configService = locator<ConfigService>();
     var url =
-        configService.getKanbanBaseUrl() + kanbanApiRoute + sendRawTxApiRoute;
+        configService.getKanbanBaseUrl()! + kanbanApiRoute + sendRawTxApiRoute;
     debugPrint('URL sendKanbanRawTransaction $url');
 
     final sharedService = locator<SharedService>();
     var versionInfo = await sharedService.getLocalAppVersion();
-    String versionName = versionInfo['name'];
-    String buildNumber = versionInfo['buildNumber'];
+    String versionName = versionInfo['name']!;
+    String buildNumber = versionInfo['buildNumber']!;
     String fullVersion = versionName + '+' + buildNumber;
     debugPrint('fullVersion $fullVersion');
     var body = {
@@ -180,14 +180,14 @@ class KanbanUtils {
 
     debugPrint('body $body');
     try {
-      var response = await client.post(url, body: body);
+      var response = await client.post(Uri.parse(url), body: body);
       debugPrint('response from sendKanbanRawTransaction=');
       debugPrint(response.body.toString());
       if (response.body
           .contains('TS crosschain withdraw verification failed')) {
         return {'success': false, 'data': response.body};
       }
-      Map<String, dynamic> res = jsonDecode(response.body);
+      Map<String, dynamic>? res = jsonDecode(response.body);
       return res;
     } catch (e) {
       //return e;

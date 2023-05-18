@@ -22,16 +22,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
 
 class BottomNavBar extends StatelessWidget {
-  final int count;
-  BottomNavBar({Key key, this.count}) : super(key: key);
+  final int? count;
+  BottomNavBar({Key? key, this.count}) : super(key: key);
 
-  final NavigationService navigationService = locator<NavigationService>();
-  final SharedService sharedService = locator<SharedService>();
+  final NavigationService? navigationService = locator<NavigationService>();
+  final SharedService? sharedService = locator<SharedService>();
   @override
   Widget build(BuildContext context) {
     // final double paddingValue = 4; // change space between icon and title text
     const double iconSize = 25; // change icon size
-    int _selectedIndex = count;
+    int _selectedIndex = count!;
 
     return BottomNavigationBar(
       currentIndex: _selectedIndex,
@@ -50,7 +50,7 @@ class BottomNavBar extends StatelessWidget {
               height: 30,
               color: _selectedIndex == 0 ? primaryColor : grey,
             ),
-            label: AppLocalizations.of(context).wallet),
+            label: AppLocalizations.of(context)!.wallet),
         BottomNavigationBarItem(
             icon: Image.asset(
               'assets/images/icons/price-up.png',
@@ -58,7 +58,7 @@ class BottomNavBar extends StatelessWidget {
               height: 30,
               color: _selectedIndex == 1 ? primaryColor : grey,
             ),
-            label: AppLocalizations.of(context).trade),
+            label: AppLocalizations.of(context)!.trade),
         BottomNavigationBarItem(
           icon: Image.asset(
             'assets/images/lightning-remit/remit.png',
@@ -66,7 +66,7 @@ class BottomNavBar extends StatelessWidget {
             height: 30,
             color: _selectedIndex == 2 ? primaryColor : grey,
           ),
-          label: AppLocalizations.of(context).remit,
+          label: AppLocalizations.of(context)!.remit,
         ),
         // BottomNavigationBarItem(
         //     icon: Icon(Icons.branding_watermark, size: iconSize),
@@ -80,7 +80,7 @@ class BottomNavBar extends StatelessWidget {
               height: 30,
               color: _selectedIndex == 3 ? primaryColor : grey,
             ),
-            label: AppLocalizations.of(context).event),
+            label: AppLocalizations.of(context)!.event),
 
         BottomNavigationBarItem(
             icon: Image.asset(
@@ -89,29 +89,29 @@ class BottomNavBar extends StatelessWidget {
               height: 30,
               color: _selectedIndex == 4 ? primaryColor : grey,
             ),
-            label: AppLocalizations.of(context).settings),
+            label: AppLocalizations.of(context)!.settings),
       ].toList(),
       onTap: (int idx) {
-        String currentRouteName = sharedService.getCurrentRouteName(context);
+        String? currentRouteName = sharedService!.getCurrentRouteName(context);
 
         switch (idx) {
           case 0:
             if (currentRouteName != 'WalletDashboardScreen') {
-              navigationService
+              navigationService!
                   .navigateUsingPushReplacementNamed(DashboardViewRoute);
             }
             break;
 
           case 1:
             if (currentRouteName != 'MarketsView') {
-              navigationService.navigateUsingPushReplacementNamed(
+              navigationService!.navigateUsingPushReplacementNamed(
                   MarketsViewRoute,
                   arguments: false);
             }
             break;
           case 2:
             if (currentRouteName != 'LightningRemitView') {
-              navigationService
+              navigationService!
                   .navigateUsingPushReplacementNamed(LightningRemitViewRoute);
             }
             break;
@@ -121,15 +121,15 @@ class BottomNavBar extends StatelessWidget {
           //   break;
           case 3:
             if (currentRouteName != 'EventsView') {
-              navigationService
+              navigationService!
                   .navigateUsingPushReplacementNamed(eventsViewRoute);
             }
             break;
           case 4:
             if (currentRouteName != 'SettingsScreen') {
-              navigationService
+              navigationService!
                   .navigateUsingpopAndPushedNamed(SettingViewRoute);
-            } else if (ModalRoute.of(context).settings.name ==
+            } else if (ModalRoute.of(context)!.settings.name ==
                 'SettingsScreen') {
               return null;
             }

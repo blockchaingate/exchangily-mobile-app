@@ -23,7 +23,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../../../shared/globals.dart' as globals;
 
 class BackupMnemonicWalletScreen extends StatefulWidget {
-  const BackupMnemonicWalletScreen({Key key}) : super(key: key);
+  const BackupMnemonicWalletScreen({Key? key}) : super(key: key);
   static List<String> randomMnemonicList = [];
 
   @override
@@ -33,12 +33,12 @@ class BackupMnemonicWalletScreen extends StatefulWidget {
 
 class _BackupMnemonicWalletScreenState
     extends State<BackupMnemonicWalletScreen> {
-  WalletService walletService = locator<WalletService>();
-  final navigationService = locator<NavigationService>();
+  WalletService? walletService = locator<WalletService>();
+  final NavigationService? navigationService = locator<NavigationService>();
   @override
   void initState() {
     super.initState();
-    final randomMnemonicString = walletService.getRandomMnemonic();
+    final randomMnemonicString = walletService!.getRandomMnemonic();
     // convert string to list to iterate and display single word in a textbox
     BackupMnemonicWalletScreen.randomMnemonicList =
         randomMnemonicString.split(" ").toList();
@@ -48,14 +48,14 @@ class _BackupMnemonicWalletScreenState
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        navigationService.navigateTo(WalletSetupViewRoute);
+        navigationService!.navigateTo(WalletSetupViewRoute);
         return Future(() => false);
       },
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
           elevation: 0,
-          title: Text(AppLocalizations.of(context).backupMnemonic,
+          title: Text(AppLocalizations.of(context)!.backupMnemonic,
               style: Theme.of(context).textTheme.headline3),
           backgroundColor: globals.secondaryColor,
           actions: <Widget>[
@@ -75,7 +75,7 @@ class _BackupMnemonicWalletScreenState
                           children: [
                             Container(
                                 child: Text(
-                              AppLocalizations.of(context)
+                              AppLocalizations.of(context)!
                                   .backupMnemonicNoticeTitle,
                               // textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline3,
@@ -84,7 +84,7 @@ class _BackupMnemonicWalletScreenState
                             Container(
                                 // padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: Text(
-                              AppLocalizations.of(context)
+                              AppLocalizations.of(context)!
                                   .backupMnemonicNoticeContent,
                               style: Theme.of(context).textTheme.headline5,
                             ))
@@ -119,7 +119,7 @@ class _BackupMnemonicWalletScreenState
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      AppLocalizations.of(context).important,
+                      AppLocalizations.of(context)!.important,
                       style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w800,
@@ -136,7 +136,7 @@ class _BackupMnemonicWalletScreenState
                 children: <Widget>[
                   Expanded(
                       child: Text(
-                    AppLocalizations.of(context).warningBackupMnemonic,
+                    AppLocalizations.of(context)!.warningBackupMnemonic,
                     style: Theme.of(context).textTheme.headline5,
                   )),
                 ],
@@ -156,7 +156,7 @@ class _BackupMnemonicWalletScreenState
                   child: MaterialButton(
                     color: primaryColor,
                     child: Text(
-                      AppLocalizations.of(context).confirm,
+                      AppLocalizations.of(context)!.confirm,
                       // style: Theme.of(context).textTheme.headline4,
                       style: const TextStyle(
                           fontWeight: FontWeight.w800,

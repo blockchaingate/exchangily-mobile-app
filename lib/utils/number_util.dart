@@ -1,14 +1,15 @@
 import 'dart:math';
+
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 class NumberUtil {
-  int maxDecimalDigits;
+  int? maxDecimalDigits;
   final log = getLogger('NumberUtil');
   static checkRegexAmount(double amount) =>
       RegexValidator(Constants.regexPattern.toString())
@@ -16,7 +17,8 @@ class NumberUtil {
 
   static Decimal roundDecimal(Decimal value, int decimalPlaces) {
     Decimal multiplier = Decimal.parse(pow(10, decimalPlaces).toString());
-    Decimal roundedValue = ((value * multiplier).truncate() / multiplier);
+    Decimal roundedValue =
+        ((value * multiplier).truncate() / multiplier).toDecimal();
     // .toDecimal(scaleOnInfinitePrecision: decimalPlaces);
     return roundedValue;
   }
@@ -60,11 +62,11 @@ class NumberUtil {
   }
 
   /// Breaks at precision 19
-  static Decimal decimalLimiter(Decimal input, {int decimalPlaces = 2}) {
+  static Decimal decimalLimiter(Decimal input, {int? decimalPlaces = 2}) {
     var finalRes = Constants.decimalZero;
 
     if (input != Constants.decimalZero) {
-      finalRes = roundDecimal(input, decimalPlaces);
+      finalRes = roundDecimal(input, decimalPlaces!);
     }
 
     debugPrint('finalRes $finalRes');
@@ -128,10 +130,7 @@ class NumberUtil {
     if (lastDecimalDigit != '0') {
       roundDown = int.parse(lastDecimalDigit) - 1;
     }
-    String res = beforeDecimalBalance +
-        '.' +
-        secondLastDecimalDigit +
-        roundDown.toString();
+    String res = '$beforeDecimalBalance.$secondLastDecimalDigit$roundDown';
     finalBalance = double.parse(res);
 
     log.w('roundDownLastDigit res $finalBalance');
@@ -153,7 +152,7 @@ class NumberUtil {
   }
 
   double truncateDouble(double val, int places) {
-    double mod = pow(10.0, places);
+    double mod = pow(10.0, places) as double;
     return ((val * mod).round().toDouble() / mod);
   }
 
@@ -169,14 +168,15 @@ class NumberUtil {
   }
 
   static BigInt decimalToBigInt(Decimal value, {int decimalPrecision = 18}) {
-    return (value * Decimal.fromInt(pow(10, decimalPrecision))).toBigInt();
+    return (value * Decimal.fromInt(pow(10, decimalPrecision) as int))
+        .toBigInt();
   }
 
-  static Decimal rawStringToDecimal(String raw, {int decimalPrecision = 18}) {
+  static Decimal rawStringToDecimal(String raw, {int? decimalPrecision = 18}) {
     if (raw.isNotEmpty) {
       Decimal amount = Decimal.parse(raw.toString());
-      var x = Decimal.fromInt((pow(10, decimalPrecision)).toInt());
-      Decimal result = (amount / x);
+      var x = Decimal.fromInt((pow(10, decimalPrecision!)).toInt());
+      Decimal result = (amount / x).toDecimal();
 
       return result;
     } else {
@@ -218,7 +218,7 @@ class NumberUtil {
   }
 
 // pass value to format with decimal digits needed
-  static String currencyFormat(double value, int decimalDigits) {
+  static String currencyFormat(double? value, int decimalDigits) {
     String holder = '';
     holder =
         NumberFormat.simpleCurrency(decimalDigits: decimalDigits).format(value);
@@ -250,7 +250,8 @@ class NumberUtil {
 
 class DecimalTextInputFormatter extends TextInputFormatter {
   final log = getLogger('DecimalTextInputFormatter');
-  DecimalTextInputFormatter({int decimalRange, bool activatedNegativeValues})
+  DecimalTextInputFormatter(
+      {int? decimalRange, required bool activatedNegativeValues})
       : assert(decimalRange == null || decimalRange >= 0,
             'DecimalTextInputFormatter declaretion error') {
     String dp = (decimalRange != null && decimalRange > 0)
@@ -265,7 +266,7 @@ class DecimalTextInputFormatter extends TextInputFormatter {
     }
   }
 
-  RegExp _exp;
+  late RegExp _exp;
 
   @override
   TextEditingValue formatEditUpdate(

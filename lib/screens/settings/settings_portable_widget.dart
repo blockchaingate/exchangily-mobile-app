@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class SettingsPortableView extends StatelessWidget {
-  const SettingsPortableView({Key key}) : super(key: key);
+  const SettingsPortableView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class SettingsPortableView extends StatelessWidget {
         resizeToAvoidBottomInset: false,
 
         body: model.isBusy
-            ? Center(child: model.sharedService.loadingIndicator())
+            ? Center(child: model.sharedService!.loadingIndicator())
             : SettingsPortableContainer(model: model),
       ),
     );
@@ -31,8 +31,8 @@ class SettingsPortableView extends StatelessWidget {
 }
 
 class SettingsPortableContainer extends StatelessWidget {
-  const SettingsPortableContainer({Key key, this.model}) : super(key: key);
-  final SettingsViewmodel model;
+  const SettingsPortableContainer({Key? key, this.model}) : super(key: key);
+  final SettingsViewmodel? model;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -161,7 +161,7 @@ class SettingsPortableContainer extends StatelessWidget {
                   ),
                   Expanded(
                     flex: 3,
-                    child: Text(AppLocalizations.of(context).showDialogWarnings,
+                    child: Text(AppLocalizations.of(context)!.showDialogWarnings,
                         style: Theme.of(context).textTheme.headline5,
                         textAlign: TextAlign.left),
                   ),
@@ -174,9 +174,9 @@ class SettingsPortableContainer extends StatelessWidget {
                           activeTrackColor: white,
                           activeColor: primaryColor,
                           inactiveTrackColor: white,
-                          value: model.isDialogDisplay,
+                          value: model!.isDialogDisplay,
                           onChanged: (value) {
-                            model.setIsDialogWarningValue(value);
+                            model!.setIsDialogWarningValue(value);
                           }),
                     ),
                   ),
@@ -196,7 +196,7 @@ class SettingsPortableContainer extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: Text(
-                        AppLocalizations.of(context)
+                        AppLocalizations.of(context)!
                             .settingsShowcaseInstructions,
                         style: Theme.of(context).textTheme.headline5,
                         textAlign: TextAlign.left),
@@ -210,16 +210,16 @@ class SettingsPortableContainer extends StatelessWidget {
                           activeTrackColor: white,
                           activeColor: primaryColor,
                           inactiveTrackColor: white,
-                          value: !model.isShowCaseOnce,
+                          value: !model!.isShowCaseOnce,
                           onChanged: (value) {
-                            model.storageService.isShowCaseView = !value;
+                            model!.storageService!.isShowCaseView = !value;
 
-                            model.setBusy(true);
+                            model!.setBusy(true);
                             // get new value and assign it to the viewmodel variable
-                            model.isShowCaseOnce =
-                                model.storageService.isShowCaseView;
-                            model.setBusy(false);
-                            debugPrint(model.isShowCaseOnce.toString());
+                            model!.isShowCaseOnce =
+                                model!.storageService!.isShowCaseView;
+                            model!.setBusy(false);
+                            debugPrint(model!.isShowCaseOnce.toString());
                           }),
                     ),
                   ),

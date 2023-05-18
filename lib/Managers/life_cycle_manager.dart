@@ -6,16 +6,16 @@ import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:flutter/material.dart';
 
 class LifeCycleManager extends StatefulWidget {
-  final Widget child;
-  const LifeCycleManager({Key key, this.child}) : super(key: key);
+  final Widget? child;
+  const LifeCycleManager({Key? key, this.child}) : super(key: key);
 
   @override
-  _LifeCycleManagerState createState() => _LifeCycleManagerState();
+  LifeCycleManagerState createState() => LifeCycleManagerState();
 }
 
-class _LifeCycleManagerState extends State<LifeCycleManager>
+class LifeCycleManagerState extends State<LifeCycleManager>
     with WidgetsBindingObserver {
-  List<StoppableService> services = [
+  List<StoppableService?> services = [
     locator<TradeService>(),
     locator<MarketsViewModel>(),
     locator<TradeViewModel>()
@@ -38,9 +38,9 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
     debugPrint('state = $state');
     for (var service in services) {
       if (state == AppLifecycleState.resumed) {
-        service.start();
+        service!.start();
       } else {
-        service.stop();
+        service!.stop();
       }
     }
   }

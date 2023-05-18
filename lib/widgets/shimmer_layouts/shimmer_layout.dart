@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerLayout extends StatelessWidget {
-  final String layoutType;
-  final int count;
-  const ShimmerLayout({Key key, this.layoutType, this.count}) : super(key: key);
+  final String? layoutType;
+  final int? count;
+  const ShimmerLayout({Key? key, this.layoutType, this.count}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class ShimmerLayout extends StatelessWidget {
         child: ListView.builder(
             itemCount: count ?? 5,
             itemBuilder: (BuildContext context, int index) {
-              Widget layout;
+              Widget? layout;
 
               if (layoutType == 'walletDashboard') {
                 layout = Shimmer.fromColors(

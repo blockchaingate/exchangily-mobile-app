@@ -28,19 +28,19 @@ import '../base_state.dart';
 
 class OtcScreenState extends BaseState {
   bool isVisible = false;
-  String mnemonic = '';
+  String? mnemonic = '';
   final log = getLogger('OtcState');
-  DialogService dialogService = locator<DialogService>();
-  WalletService walletService = locator<WalletService>();
+  DialogService? dialogService = locator<DialogService>();
+  WalletService? walletService = locator<WalletService>();
 
-  final _vaultService = locator<VaultService>();
+  final VaultService? _vaultService = locator<VaultService>();
   List<String> languages = ['English', 'Chinese'];
-  String selectedLanguage;
+  String? selectedLanguage;
   // bool result = false;
   @override
   String errorMessage = '';
-  DialogResponse dialogResponse;
-  BuildContext context;
+  DialogResponse? dialogResponse;
+  late BuildContext context;
   String versionName = '';
   String versionCode = '';
   void showMnemonic() async {
@@ -54,16 +54,16 @@ class OtcScreenState extends BaseState {
     errorMessage = '';
     setState(ViewState.Busy);
 
-    await dialogService
+    await dialogService!
         .showDialog(
-            title: AppLocalizations.of(context).enterPassword,
+            title: AppLocalizations.of(context)!.enterPassword,
             description:
-                AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-            buttonTitle: AppLocalizations.of(context).confirm)
+                AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
+            buttonTitle: AppLocalizations.of(context)!.confirm)
         .then((res) async {
-      if (res.confirmed) {
+      if (res.confirmed!) {
         log.w('deleting wallet');
-        await _vaultService.deleteEncryptedData();
+        await _vaultService!.deleteEncryptedData();
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.remove('lang');
@@ -79,7 +79,7 @@ class OtcScreenState extends BaseState {
         log.e('Wrong pass');
         setState(ViewState.Idle);
         return errorMessage =
-            AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
+            AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword;
       }
     }).catchError((error) {
       log.e(error);
@@ -96,14 +96,14 @@ class OtcScreenState extends BaseState {
     if (isVisible) {
       isVisible = !isVisible;
     } else {
-      await dialogService
+      await dialogService!
           .showDialog(
-              title: AppLocalizations.of(context).enterPassword,
-              description: AppLocalizations.of(context)
+              title: AppLocalizations.of(context)!.enterPassword,
+              description: AppLocalizations.of(context)!
                   .dialogManagerTypeSamePasswordNote,
-              buttonTitle: AppLocalizations.of(context).confirm)
+              buttonTitle: AppLocalizations.of(context)!.confirm)
           .then((res) async {
-        if (res.confirmed) {
+        if (res.confirmed!) {
           isVisible = !isVisible;
           mnemonic = res.returnedText;
           setState(ViewState.Idle);
@@ -116,7 +116,7 @@ class OtcScreenState extends BaseState {
           log.e('Wrong pass');
           setState(ViewState.Idle);
           return errorMessage =
-              AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
+              AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword;
         }
       }).catchError((error) {
         log.e(error);

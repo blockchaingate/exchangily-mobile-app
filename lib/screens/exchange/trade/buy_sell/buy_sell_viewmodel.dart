@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+//-----------------------------------burayi ac ----------------------------------------
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -42,7 +43,7 @@ import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
-import 'package:keccak/keccak.dart';
+// import 'package:keccak/keccak.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:random_string/random_string.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -58,26 +59,26 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   BuySellViewModel({this.tickerNameFromRoute});
 
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [tradeService];
-  bool get isRefreshBalance => tradeService.isRefreshBalance;
+  List<ReactiveServiceMixin> get reactiveServices => [tradeService!];
+  bool get isRefreshBalance => tradeService!.isRefreshBalance;
   // double get quantityFromTradeService => tradeService.quantity;
 
   final log = getLogger('BuySellViewModel');
-  List<WalletInfo> walletInfo;
-  WalletInfo targetCoinWalletData;
-  WalletInfo baseCoinWalletData;
-  WalletService walletService = locator<WalletService>();
-  SharedService sharedService = locator<SharedService>();
-  TradeService tradeService = locator<TradeService>();
-  final coinService = locator<CoinService>();
+  List<WalletInfo>? walletInfo;
+  WalletInfo? targetCoinWalletData;
+  WalletInfo? baseCoinWalletData;
+  WalletService? walletService = locator<WalletService>();
+  SharedService? sharedService = locator<SharedService>();
+  TradeService? tradeService = locator<TradeService>();
+  final CoinService? coinService = locator<CoinService>();
 
-  NavigationService navigationService = locator<NavigationService>();
+  NavigationService? navigationService = locator<NavigationService>();
 
-  BuildContext context;
+  BuildContext? context;
 
-  bool bidOrAsk;
-  String baseCoinName;
-  String targetCoinName;
+  bool? bidOrAsk;
+  String? baseCoinName;
+  String? targetCoinName;
 
   TextEditingController kanbanGasPriceTextController = TextEditingController();
   TextEditingController kanbanGasLimitTextController = TextEditingController();
@@ -87,31 +88,31 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   double kanbanTransFee = 0.0;
   bool transFeeAdvance = false;
 
-  final DialogService _dialogService = locator<DialogService>();
+  final DialogService? _dialogService = locator<DialogService>();
   double currentPrice = 0;
   double currentQuantity = 0;
   double sliderValue = 10.0;
-  double price = 0.0;
-  double quantity;
+  double? price = 0.0;
+  double? quantity;
 
-  String exgAddress;
+  String? exgAddress;
 
   double transactionAmount = 0;
 
-  ApiService apiService = locator<ApiService>();
+  ApiService? apiService = locator<ApiService>();
 
   String tickerName = '';
 
   //Price passedPair;
-  GlobalKey globalKeyOne;
-  GlobalKey globalKeyTwo;
-  var storageService = locator<LocalStorageService>();
-  double unlockedAmount;
-  double lockedAmount;
-  ExchangeBalanceModel targetCoinExchangeBalance;
-  ExchangeBalanceModel baseCoinExchangeBalance;
+  late GlobalKey globalKeyOne;
+  late GlobalKey globalKeyTwo;
+  LocalStorageService? storageService = locator<LocalStorageService>();
+  double? unlockedAmount;
+  double? lockedAmount;
+  ExchangeBalanceModel? targetCoinExchangeBalance;
+  ExchangeBalanceModel? baseCoinExchangeBalance;
   bool isReloadMyOrders = false;
-  String pairSymbolWithSlash = '';
+  String? pairSymbolWithSlash = '';
 
   bool _isOrderbookLoaded = false;
   bool get isOrderbookLoaded => _isOrderbookLoaded;
@@ -126,7 +127,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
   @override
   Stream get stream =>
-      tradeService.getOrderBookStreamByTickerName(tickerNameFromRoute);
+      tradeService!.getOrderBookStreamByTickerName(tickerNameFromRoute);
 
   @override
   transformData(data) {
@@ -134,7 +135,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     var jsonDynamic = jsonDecode(data);
     orderbook = Orderbook.fromJson(jsonDynamic);
     log.e(
-        'OrderBook result  -- ${orderbook.buyOrders.length} ${orderbook.sellOrders.length}');
+        'OrderBook result  -- ${orderbook.buyOrders!.length} ${orderbook.sellOrders!.length}');
   }
 
   @override
@@ -158,7 +159,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   @override
   void onCancel() {
     log.e('Orderbook Stream closed');
-    tradeService
+    tradeService!
         .orderbookChannel(tickerName)
         .sink
         .close()
@@ -168,10 +169,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   init() async {
     setBusy(true);
     setDefaultGasPrice();
-    sharedService.context = context;
+    sharedService!.context = context;
     // getOrderbookLoadedStatus();
 
-    exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+    exgAddress = await sharedService!.getExgAddressFromWalletDatabase();
 
     await getDecimalPairConfig();
 
@@ -186,13 +187,13 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 --------------------------------------------------- */
 
   getGasBalance() async {
-    String address = await sharedService.getExgAddressFromWalletDatabase();
-    await walletService.gasBalance(address).then((data) {
+    String address = (await sharedService!.getExgAddressFromWalletDatabase())!;
+    await walletService!.gasBalance(address).then((data) {
       gasAmount = data;
       if (gasAmount == 0) {
-        sharedService.alertDialog(
-          AppLocalizations.of(context).notice,
-          AppLocalizations.of(context).insufficientGasAmount,
+        sharedService!.alertDialog(
+          AppLocalizations.of(context!)!.notice,
+          AppLocalizations.of(context!)!.insufficientGasAmount,
         );
       }
     }).catchError((onError) => log.e(onError));
@@ -201,9 +202,9 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   }
 
   Widget refreshBalanceAfterCancellingOrder() {
-    getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
+    getSingleCoinExchangeBalanceFromAll(targetCoinName!, baseCoinName!);
 
-    return sharedService.loadingIndicator();
+    return sharedService!.loadingIndicator();
   }
 
 /*----------------------------------------------------------------------
@@ -214,7 +215,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
       log.i('getOrderbookLoadedStatus timer started');
-      _isOrderbookLoaded = tradeService.isOrderbookLoaded;
+      _isOrderbookLoaded = tradeService!.isOrderbookLoaded;
       if (_isOrderbookLoaded) {
         setBusy(true);
         // price = priceFromTradeService;
@@ -240,16 +241,19 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     log.e('In getSingleCoinExchangeBalanceFromAll');
 
     targetCoinExchangeBalance =
-        await apiService.getSingleCoinExchangeBalance(targetCoin);
-    log.i('targetCoin Balance using api ${targetCoinExchangeBalance.toJson()}');
+        await apiService!.getSingleCoinExchangeBalance(targetCoin);
+    log.i(
+        'targetCoin Balance using api ${targetCoinExchangeBalance!.toJson()}');
 
     baseCoinExchangeBalance =
-        await apiService.getSingleCoinExchangeBalance(baseCoin);
-    log.i('baseCoin Balance using api ${baseCoinExchangeBalance.toJson()}');
+        await apiService!.getSingleCoinExchangeBalance(baseCoin);
+    log.i('baseCoin Balance using api ${baseCoinExchangeBalance!.toJson()}');
 
     if (targetCoinExchangeBalance == null || baseCoinExchangeBalance == null) {
-      String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
-      List res = await walletService.getAllExchangeBalances(exgAddress);
+      String exgAddress =
+          (await sharedService!.getExgAddressFromWalletDatabase())!;
+      List res = await (walletService!.getAllExchangeBalances(exgAddress)
+          as FutureOr<List<dynamic>>);
 
       targetCoinExchangeBalance = ExchangeBalanceModel();
       baseCoinExchangeBalance = ExchangeBalanceModel();
@@ -257,10 +261,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       for (var coin in res) {
         if (coin['coin'] == baseCoin) {
           log.w('baseCoin ExchangeBalance $coin');
-          baseCoinExchangeBalance.unlockedAmount = coin['amount'];
-          baseCoinExchangeBalance.lockedAmount = coin['lockedAmount'];
+          baseCoinExchangeBalance!.unlockedAmount = coin['amount'];
+          baseCoinExchangeBalance!.lockedAmount = coin['lockedAmount'];
           debugPrint(
-              'exchangeBalance using all coins for loop ${baseCoinExchangeBalance.toJson()}');
+              'exchangeBalance using all coins for loop ${baseCoinExchangeBalance!.toJson()}');
         }
         // else{
         //     baseCoinExchangeBalance.unlockedAmount = 0.0;
@@ -268,10 +272,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
         // }
         if (coin['coin'] == targetCoin) {
           log.w('targetCoin ExchangeBalance $coin');
-          targetCoinExchangeBalance.unlockedAmount = coin['amount'];
-          targetCoinExchangeBalance.lockedAmount = coin['lockedAmount'];
+          targetCoinExchangeBalance!.unlockedAmount = coin['amount'];
+          targetCoinExchangeBalance!.lockedAmount = coin['lockedAmount'];
           debugPrint(
-              'exchangeBalance using all coins for loop ${targetCoinExchangeBalance.toJson()}');
+              'exchangeBalance using all coins for loop ${targetCoinExchangeBalance!.toJson()}');
         }
         // else{
         //     targetCoinExchangeBalance.unlockedAmount = 0.0;
@@ -279,7 +283,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
         // }
       }
     }
-    tradeService.setBalanceRefresh(false);
+    tradeService!.setBalanceRefresh(false);
     setBusy(false);
   }
 
@@ -287,7 +291,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
                         Showcase Feature
 ----------------------------------------------------------------------*/
   showcaseEvent(BuildContext test) async {
-    if (!storageService.isShowCaseView) {
+    if (!storageService!.isShowCaseView) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ShowCaseWidget.of(test).startShowCase([globalKeyOne, globalKeyTwo]);
       });
@@ -313,10 +317,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   initialTextfieldsFill() {
     setBusy(true);
     priceTextController.text =
-        orderbook.price.toStringAsFixed(singlePairDecimalConfig.priceDecimal);
+        orderbook.price!.toStringAsFixed(singlePairDecimalConfig.priceDecimal!);
     price = orderbook.price;
-    quantityTextController.text =
-        orderbook.quantity.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
+    quantityTextController.text = orderbook.quantity!
+        .toStringAsFixed(singlePairDecimalConfig.qtyDecimal!);
     quantity = orderbook.quantity;
     isFilled = true;
     setBusy(false);
@@ -342,9 +346,9 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     var coinsArray = pair.split("/");
     targetCoinName = coinsArray[0];
     baseCoinName = coinsArray[1];
-    tickerName = targetCoinName + baseCoinName;
+    tickerName = targetCoinName! + baseCoinName!;
     log.e('tickername $tickerName');
-    await getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
+    await getSingleCoinExchangeBalanceFromAll(targetCoinName!, baseCoinName!);
     setBusy(false);
   }
 
@@ -377,8 +381,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   }
 
   getDecimalPairConfig() async {
-    String currentCoinName = targetCoinName + baseCoinName;
-    await sharedService.getSinglePairDecimalConfig(currentCoinName).then((res) {
+    String currentCoinName = targetCoinName! + baseCoinName!;
+    await sharedService!
+        .getSinglePairDecimalConfig(currentCoinName)
+        .then((res) {
       log.w('Current coin $currentCoinName in get decimal config $res');
       setBusyForObject(singlePairDecimalConfig, true);
       singlePairDecimalConfig = res;
@@ -446,12 +452,12 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       timeBeforeExpiration,
       randomStr
     ].join('');
-    var outputHashData = keccak(stringToUint8List(concatString));
+    // var outputHashData = keccak(stringToUint8List(concatString));
 
     // if needed convert the output byte array into hex string.
-    var output = hex.encode(outputHashData);
+    // var output = hex.encode(outputHashData);
     // setBusy(false);
-    return output;
+    // return output;
   }
 
 /* ---------------------------------------------------
@@ -486,17 +492,17 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     setBusy(true);
     var timeBeforeExpiration = 423434342432;
     var orderType = 1;
-    int baseCoin = 0;
-    await coinService
+    int? baseCoin = 0;
+    await coinService!
         .getCoinTypeByTickerName(baseCoinName)
         .then((value) => baseCoin = value);
-    log.e('basecoin Hex ==' + baseCoin.toRadixString(16));
-    int targetCoin = 0;
-    await coinService
+    log.e('basecoin Hex ==' + baseCoin!.toRadixString(16));
+    int? targetCoin = 0;
+    await coinService!
         .getCoinTypeByTickerName(targetCoinName)
         .then((value) => targetCoin = value);
 
-    if (!bidOrAsk) {
+    if (!bidOrAsk!) {
       var tmp = baseCoin;
       baseCoin = targetCoin;
       targetCoin = tmp;
@@ -514,10 +520,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
     var abiHex = abiUtils.getCreateOrderFuncABI(
         false,
-        bidOrAsk,
+        bidOrAsk!,
         //  orderType,
-        NumberUtil.convertIntToHex(baseCoin),
-        NumberUtil.convertIntToHex(targetCoin),
+        NumberUtil.convertIntToHex(baseCoin!),
+        NumberUtil.convertIntToHex(targetCoin!),
         qtyBigInt,
         priceBigInt,
         //   timeBeforeExpiration,
@@ -526,7 +532,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     sliceAbiHex(abiHex);
     log.e('exg addr $exgAddress');
 
-    var nonce = await kanbanUtils.getNonce(exgAddress);
+    var nonce = await kanbanUtils.getNonce(exgAddress!);
 
     var keyPairKanban = getExgKeyPair(seed);
     var exchangilyAddress = await kanbanUtils.getExchangilyAddress();
@@ -566,9 +572,9 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
             Calculate Transaction Amount
 --------------------------------------------------- */
   caculateTransactionAmount() {
-    if (price != null && quantity != null && price >= 0 && quantity >= 0) {
+    if (price != null && quantity != null && price! >= 0 && quantity! >= 0) {
       setBusyForObject(transactionAmount, true);
-      transactionAmount = quantity * price;
+      transactionAmount = quantity! * price!;
       setBusyForObject(transactionAmount, false);
     }
     return transactionAmount;
@@ -580,16 +586,16 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   Future placeBuySellOrder() async {
     setBusy(true);
     isReloadMyOrders = false;
-    await _dialogService
+    await _dialogService!
         .showDialog(
-            title: AppLocalizations.of(context).enterPassword,
-            description:
-                AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-            buttonTitle: AppLocalizations.of(context).confirm)
+            title: AppLocalizations.of(context!)!.enterPassword,
+            description: AppLocalizations.of(context!)!
+                .dialogManagerTypeSamePasswordNote,
+            buttonTitle: AppLocalizations.of(context!)!.confirm)
         .then((res) async {
-      if (res.confirmed) {
-        String mnemonic = res.returnedText;
-        Uint8List seed = walletService.generateSeed(mnemonic);
+      if (res.confirmed!) {
+        String? mnemonic = res.returnedText;
+        Uint8List seed = walletService!.generateSeed(mnemonic);
 
         var txHex = await txHexforPlaceOrder(seed);
         log.e('txhex $txHex');
@@ -600,10 +606,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(AppLocalizations.of(context).orderCreatedSuccessfully,
-                    style: Theme.of(context).textTheme.headline5),
+                Text(AppLocalizations.of(context!)!.orderCreatedSuccessfully,
+                    style: Theme.of(context!).textTheme.headline5),
                 Text('txid:' + resKanban['transactionHash'],
-                    style: Theme.of(context).textTheme.headline6),
+                    style: Theme.of(context!).textTheme.headline6),
               ],
             ),
             background: primaryColor,
@@ -615,17 +621,17 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
           // });
           Timer.periodic(const Duration(seconds: 3), (timer) async {
             var res =
-                await tradeService.getTxStatus(resKanban["transactionHash"]);
+                await tradeService!.getTxStatus(resKanban["transactionHash"]);
             if (res != null) {
               log.i('RES $res');
-              String status = res['status'];
+              String? status = res['status'];
               if (status == '0x1') {
                 setBusyForObject(targetCoinExchangeBalance, true);
                 setBusyForObject(targetCoinExchangeBalance, true);
                 log.e('isReloadMyOrders $isReloadMyOrders -- isBusy $isBusy');
                 isReloadMyOrders = true;
                 getSingleCoinExchangeBalanceFromAll(
-                    targetCoinName, baseCoinName);
+                    targetCoinName!, baseCoinName!);
                 Future.delayed(const Duration(milliseconds: 500), () {
                   setBusy(true);
                   isReloadMyOrders = false;
@@ -642,17 +648,17 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
             }
           });
         } else {
-          sharedService.sharedSimpleNotification(
-              AppLocalizations.of(context).placeOrderTransactionFailed,
+          sharedService!.sharedSimpleNotification(
+              AppLocalizations.of(context!)!.placeOrderTransactionFailed,
               subtitle: resKanban.toString());
         }
-      } else if (res.returnedText == 'Closed' && !res.confirmed) {
+      } else if (res.returnedText == 'Closed' && !res.confirmed!) {
         log.e('Dialog Closed By User');
         setBusy(false);
       } else {
         log.e('Wrong pass');
         setBusy(false);
-        sharedService.inCorrectpasswordNotification(context);
+        sharedService!.inCorrectpasswordNotification(context);
       }
     });
     setBusy(false);
@@ -661,18 +667,19 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   checkPass(context) async {
     setBusy(true);
 
-    var targetCoinbalance = targetCoinExchangeBalance.unlockedAmount;
+    var targetCoinbalance = targetCoinExchangeBalance!.unlockedAmount;
 
     //targetCoinWalletData.inExchange; // coin(asset) bal for sell
-    var baseCoinbalance = baseCoinExchangeBalance.unlockedAmount;
+    var baseCoinbalance = baseCoinExchangeBalance!.unlockedAmount;
     // baseCoinWalletData.inExchange; // usd bal for buy
 
     if (price == null ||
         quantity == null ||
-        price.isNegative ||
-        quantity.isNegative) {
+        price!.isNegative ||
+        quantity!.isNegative) {
       setBusy(false);
-      sharedService.alertDialog("", AppLocalizations.of(context).invalidAmount,
+      sharedService!.alertDialog(
+          "", AppLocalizations.of(context)!.invalidAmount,
           isWarning: false);
       return;
     }
@@ -681,10 +688,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       setBusy(false);
       showSimpleNotification(
         Center(
-          child: Text(AppLocalizations.of(context).insufficientGasBalance,
+          child: Text(AppLocalizations.of(context)!.insufficientGasBalance,
               style: Theme.of(context)
                   .textTheme
-                  .headline4
+                  .headline4!
                   .copyWith(fontWeight: FontWeight.w800)),
         ),
         background: sellPrice,
@@ -694,11 +701,11 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       return;
     }
 
-    if (!bidOrAsk) {
+    if (!bidOrAsk!) {
       log.e('SELL tx amount $quantity -- targetCoinbalance $targetCoinbalance');
-      if (quantity > targetCoinbalance) {
-        sharedService.alertDialog(
-            "", AppLocalizations.of(context).invalidAmount,
+      if (quantity! > targetCoinbalance!) {
+        sharedService!.alertDialog(
+            "", AppLocalizations.of(context)!.invalidAmount,
             isWarning: false);
         setBusy(false);
         return;
@@ -709,8 +716,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       log.w(
           'BUY tx amount ${caculateTransactionAmount()} -- baseCoinbalance $baseCoinbalance');
       if (caculateTransactionAmount() > baseCoinbalance) {
-        sharedService.alertDialog(
-            "", AppLocalizations.of(context).invalidAmount,
+        sharedService!.alertDialog(
+            "", AppLocalizations.of(context)!.invalidAmount,
             isWarning: false);
         setBusy(false);
         return;
@@ -732,31 +739,31 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     //if (sliderValue == 100) sliderValue = sliderValue - 0.001;
     log.i('sliderValue $sliderValue');
     var targetCoinbalance =
-        targetCoinExchangeBalance.unlockedAmount; // usd bal for buy
+        targetCoinExchangeBalance!.unlockedAmount; // usd bal for buy
 
     //   targetCoinbalance = NumberUtil().roundDownLastDigit(targetCoinbalance);
     //  targetCoinWalletData.inExchange;
     var baseCoinbalance =
-        baseCoinExchangeBalance.unlockedAmount; //coin(asset) bal for sell
+        baseCoinExchangeBalance!.unlockedAmount; //coin(asset) bal for sell
     //  baseCoinbalance = NumberUtil().roundDownLastDigit(baseCoinbalance);
     //baseCoinWalletData
     //  .inExchange;
-    if (quantity.isNaN) quantity = 0.0;
+    if (quantity!.isNaN) quantity = 0.0;
     if (price != null &&
         quantity != null &&
-        !price.isNegative &&
-        !quantity.isNegative) {
-      if (!bidOrAsk) {
-        var changeQuantityWithSlider = targetCoinbalance * sliderValue / 100;
+        !price!.isNegative &&
+        !quantity!.isNegative) {
+      if (!bidOrAsk!) {
+        var changeQuantityWithSlider = targetCoinbalance! * sliderValue / 100;
         quantity = changeQuantityWithSlider;
 
         double formattedQuantity = NumberUtil().truncateDoubleWithoutRouding(
-            quantity,
-            precision: singlePairDecimalConfig.qtyDecimal);
+            quantity!,
+            precision: singlePairDecimalConfig.qtyDecimal!);
         // double roundedQtyDouble = double.parse(roundedQtyString);
         // roundedQtyDouble = NumberUtil().roundDownLastDigit(roundedQtyDouble);
 
-        transactionAmount = formattedQuantity * price;
+        transactionAmount = formattedQuantity * price!;
         quantityTextController.text = formattedQuantity.toString();
         quantity = formattedQuantity;
         updateTransFee();
@@ -764,15 +771,15 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
         log.e('changeQuantityWithSlider $changeQuantityWithSlider');
       } else {
         log.w('base balance $baseCoinbalance');
-        var changeBalanceWithSlider = baseCoinbalance * sliderValue / 100;
-        quantity = changeBalanceWithSlider / price;
+        var changeBalanceWithSlider = baseCoinbalance! * sliderValue / 100;
+        quantity = changeBalanceWithSlider / price!;
         String roundedQtyString = NumberUtil()
-            .truncateDoubleWithoutRouding(quantity,
-                precision: singlePairDecimalConfig.qtyDecimal)
+            .truncateDoubleWithoutRouding(quantity!,
+                precision: singlePairDecimalConfig.qtyDecimal!)
             .toString();
         double roundedQtyDouble = double.parse(roundedQtyString);
         roundedQtyDouble = NumberUtil().roundDownLastDigit(roundedQtyDouble);
-        transactionAmount = roundedQtyDouble * price;
+        transactionAmount = roundedQtyDouble * price!;
         quantityTextController.text = roundedQtyDouble.toString();
         quantity = roundedQtyDouble;
         updateTransFee();

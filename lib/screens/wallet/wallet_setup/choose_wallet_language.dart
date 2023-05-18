@@ -14,9 +14,9 @@
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/choose_wallet_language_screen_state.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+
 import '../../../shared/globals.dart' as globals;
 import '../../base_screen.dart';
 
@@ -65,9 +65,9 @@ class ChooseWalletLanguageView extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: Text(
-                        AppLocalizations.of(context).pleaseChooseTheLanguage,
+                        AppLocalizations.of(context)!.pleaseChooseTheLanguage,
                         textAlign: TextAlign.start,
-                        style: Theme.of(context).textTheme.headline5),
+                        style: Theme.of(context).textTheme.headlineSmall),
                   )
                 ],
               ),
@@ -79,7 +79,7 @@ class ChooseWalletLanguageView extends StatelessWidget {
                     highlightColor: globals.white,
                     child: Center(
                       child: Text(
-                        AppLocalizations.of(context).loading + '...',
+                        AppLocalizations.of(context)!.loading + '...',
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ),
@@ -91,10 +91,10 @@ class ChooseWalletLanguageView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           // English Lang Button
-                          RaisedButton(
+                          ElevatedButton(
                             child: Text(
                               'English',
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                             onPressed: () {
                               model.setLangauge('en');
@@ -103,13 +103,16 @@ class ChooseWalletLanguageView extends StatelessWidget {
                             },
                           ),
                           // Chinese Lang Button
-                          RaisedButton(
-                            shape: StadiumBorder(
-                                side: BorderSide(
-                                    color: globals.primaryColor, width: 2)),
-                            color: globals.secondaryColor,
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: const StadiumBorder(
+                                  side: BorderSide(
+                                      color: globals.primaryColor, width: 2)),
+                              backgroundColor: globals.secondaryColor,
+                            ),
                             child: Text('中文',
-                                style: Theme.of(context).textTheme.headline4),
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium),
                             onPressed: () {
                               model.setLangauge('zh');
                               AppLocalizations.load(const Locale('zh', 'ZH'));

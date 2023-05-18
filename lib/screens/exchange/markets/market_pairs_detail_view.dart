@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import '../../../shared/globals.dart' as globals;
 
 class MarketPairPriceDetailView extends StatelessWidget {
-  final List<Price> pairList;
-  MarketPairPriceDetailView({Key key, this.pairList}) : super(key: key);
-  final NavigationService navigationService = locator<NavigationService>();
+  final List<Price>? pairList;
+  MarketPairPriceDetailView({Key? key, this.pairList}) : super(key: key);
+  final NavigationService? navigationService = locator<NavigationService>();
 
   @override
   Widget build(BuildContext context) {

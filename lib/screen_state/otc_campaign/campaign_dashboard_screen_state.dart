@@ -21,14 +21,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CampaignDashboardScreenState extends BaseState {
   final log = getLogger('CampaignDashboardScreenState');
 
-  NavigationService navigationService = locator<NavigationService>();
-  CampaignService campaignService = locator<CampaignService>();
-  SharedService sharedService = locator<SharedService>();
-  CampaignUserDatabaseService campaignUserDatabaseService =
+  NavigationService? navigationService = locator<NavigationService>();
+  CampaignService? campaignService = locator<CampaignService>();
+  SharedService? sharedService = locator<SharedService>();
+  CampaignUserDatabaseService? campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
-  final ApiService _apiService = locator<ApiService>();
-  CampaignUserData campaignUserData;
-  String campaignName = '';
+  final ApiService? _apiService = locator<ApiService>();
+  CampaignUserData? campaignUserData;
+  String? campaignName = '';
 
   final List<int> memberLevelsColorList = [0xff696969, 0xffE6BE8A, 0xffffffff];
   String memberLevel = '';
@@ -37,9 +37,9 @@ class CampaignDashboardScreenState extends BaseState {
   String myTotalAssetValue = '';
   double myReferralReward = 0.0;
   int myTotalReferrals = 0;
-  double myTeamsTotalRewards = 0.0;
-  double myTeamsTotalValue = 0.0;
-  BuildContext context;
+  double? myTeamsTotalRewards = 0.0;
+  double? myTeamsTotalValue = 0.0;
+  BuildContext? context;
   String myInvestmentValueWithoutRewards = '';
   double myTokensWithoutRewards = 0.0;
   var myTokens;
@@ -49,8 +49,8 @@ class CampaignDashboardScreenState extends BaseState {
   List<String> orderStatusList = [];
   List<String> uiOrderStatusList = [];
   List<CampaignReward> campaignRewardList = [];
-  MemberProfile memberProfile;
-  List team = [];
+  MemberProfile? memberProfile;
+  List? team = [];
   String currencyFormattedTotalValue = '';
 
 /*----------------------------------------------------------------------
@@ -58,20 +58,20 @@ class CampaignDashboardScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   init() async {
-    sharedService.context = context;
-    await campaignService
+    sharedService!.context = context;
+    await campaignService!
         .getSavedLoginTokenFromLocalStorage()
         .then((token) async {
       if (token != '' || token != null) {
-        await campaignService.getUserDataFromDatabase().then((res) {
+        await campaignService!.getUserDataFromDatabase().then((res) {
           campaignUserData = CampaignUserData();
           campaignUserData = res;
         });
-        await myProfile(token);
+        await myProfile(token!);
         await myRewardsByToken();
         await getCampaignName();
       } else {
-        navigationService.navigateTo('/campaignLogin');
+        navigationService!.navigateTo('/campaignLogin');
       }
     });
   }
@@ -80,7 +80,7 @@ class CampaignDashboardScreenState extends BaseState {
                     onBackButtonPressed
 ----------------------------------------------------------------------*/
   onBackButtonPressed() async {
-    await sharedService.onBackButtonPressed('/dashboard');
+    await sharedService!.onBackButtonPressed('/dashboard');
   }
 
 /*----------------------------------------------------------------------
@@ -89,18 +89,18 @@ class CampaignDashboardScreenState extends BaseState {
 
   tokenCheckTimer() {
     Timer.periodic(const Duration(minutes: 5), (t) async {
-      await campaignService
+      await campaignService!
           .getSavedLoginTokenFromLocalStorage()
           .then((token) async {
         if (token != '' || token != null) {
-          await campaignService
-              .getTeamsRewardDetailsByToken(token)
+          await campaignService!
+              .getTeamsRewardDetailsByToken(token!)
               .then((reward) {
             log.w('get member reward $reward');
             if (reward != null) {
               log.i('timer - login token not expired');
             } else {
-              navigationService.navigateTo('/campaignLogin');
+              navigationService!.navigateTo('/campaignLogin');
               t.cancel();
               log.e('Timer cancel');
             }
@@ -116,7 +116,7 @@ class CampaignDashboardScreenState extends BaseState {
 
   getCampaignName() async {
     setBusy(true);
-    await campaignService.getCampaignName().then((res) {
+    await campaignService!.getCampaignName().then((res) {
       if (res != null) {
         campaignName = res['name'];
         log.w(res);
@@ -134,7 +134,7 @@ class CampaignDashboardScreenState extends BaseState {
 
   logout() async {
     if (campaignUserData != null) {
-      await campaignUserDatabaseService.deleteUserData(campaignUserData.email);
+      await campaignUserDatabaseService!.deleteUserData(campaignUserData!.email);
       log.w('User data deleted successfully.');
     } else {
       log.e('Email not found, deleting user from database failed!!!');
@@ -142,7 +142,7 @@ class CampaignDashboardScreenState extends BaseState {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
     log.i('Local storage clear');
-    navigationService.navigateTo('/campaignLogin');
+    navigationService!.navigateTo('/campaignLogin');
   }
 
 /*-------------------------------------------------------------------------------------
@@ -152,18 +152,18 @@ class CampaignDashboardScreenState extends BaseState {
   myProfile(String token) async {
     setBusy(true);
     memberProfile = MemberProfile();
-    await campaignService.getMemberProfile(token).then((member) {
+    await campaignService!.getMemberProfile(token).then((member) {
       if (member != null) {
-        String level = member.membership;
+        String? level = member.membership;
         if (level == 'gold') {
           memberLevelTextColor = 0xffE6BE8A;
-          memberLevel = AppLocalizations.of(context).gold;
+          memberLevel = AppLocalizations.of(context!)!.gold;
         } else if (level == 'diamond') {
           memberLevelTextColor = 0xffffffff;
-          memberLevel = AppLocalizations.of(context).diamond;
+          memberLevel = AppLocalizations.of(context!)!.diamond;
         } else {
           memberLevelTextColor = 0xff696969;
-          memberLevel = AppLocalizations.of(context).silver;
+          memberLevel = AppLocalizations.of(context!)!.silver;
         }
         //assignColorAccordingToMemberLevel(level);
 
@@ -190,13 +190,13 @@ class CampaignDashboardScreenState extends BaseState {
     log.w('Entry assignColorAccordingToMemberLevel $memberLevel');
     if (memberLevel == 'gold') {
       memberLevelTextColor = 0xffE6BE8A;
-      memberLevel = AppLocalizations.of(context).gold;
+      memberLevel = AppLocalizations.of(context!)!.gold;
     } else if (memberLevel == 'diamond') {
       memberLevelTextColor = 0xffffffff;
-      memberLevel = AppLocalizations.of(context).diamond;
+      memberLevel = AppLocalizations.of(context!)!.diamond;
     } else {
       memberLevelTextColor = 0xff696969;
-      memberLevel = AppLocalizations.of(context).silver;
+      memberLevel = AppLocalizations.of(context!)!.silver;
     }
     log.e('Exit assignColorAccordingToMemberLevel $memberLevel');
   }
@@ -207,11 +207,11 @@ class CampaignDashboardScreenState extends BaseState {
   getCampaignOrdeList() async {
     setBusy(true);
     // await getExgWalletAddr();
-    await campaignService
+    await campaignService!
         .getUserDataFromDatabase()
         .then((res) => campaignUserData = res);
     if (campaignUserData == null) return false;
-    await campaignService.getOrdersById(campaignUserData.id).then((orderList) {
+    await campaignService!.getOrdersById(campaignUserData!.id!).then((orderList) {
       if (orderList != null) {
         orderInfoList = [];
         orderListFromApi = [];
@@ -221,28 +221,28 @@ class CampaignDashboardScreenState extends BaseState {
         log.w(orderListFromApi.length);
         orderStatusList = [
           "",
-          AppLocalizations.of(context).waiting,
-          AppLocalizations.of(context).paid,
-          AppLocalizations.of(context).paymentReceived,
-          AppLocalizations.of(context).failed,
-          AppLocalizations.of(context).orderCancelled,
+          AppLocalizations.of(context!)!.waiting,
+          AppLocalizations.of(context!)!.paid,
+          AppLocalizations.of(context!)!.paymentReceived,
+          AppLocalizations.of(context!)!.failed,
+          AppLocalizations.of(context!)!.orderCancelled,
         ];
 
         for (int i = 0; i < orderListFromApi.length; i++) {
           var status = orderListFromApi[i].status;
 
           if (status == "3") {
-            addOrderInTheList(i, int.parse(status));
+            addOrderInTheList(i, int.parse(status!));
           } else if (status == "4") {
-            addOrderInTheList(i, int.parse(status));
+            addOrderInTheList(i, int.parse(status!));
           } else if (status == "5") {
-            addOrderInTheList(i, int.parse(status));
+            addOrderInTheList(i, int.parse(status!));
           }
         }
         navigateByRouteName('/campaignOrderDetails', orderInfoList);
       } else {
         log.e('Api result null');
-        setErrorMessage(AppLocalizations.of(context).loadOrdersFailed);
+        setErrorMessage(AppLocalizations.of(context!)!.loadOrdersFailed);
         setBusy(false);
       }
     }).catchError((err) {
@@ -254,7 +254,7 @@ class CampaignDashboardScreenState extends BaseState {
 
   // Add order in the order list
   addOrderInTheList(int i, int status) {
-    String formattedDate = formatStringDate(orderListFromApi[i].dateCreated);
+    String formattedDate = formatStringDate(orderListFromApi[i].dateCreated!);
     // needed to declare orderListFromApi globally due to this funtion to keep the code DRY
     orderListFromApi[i].dateCreated = formattedDate;
     orderListFromApi[i].status = orderStatusList[status];
@@ -267,7 +267,7 @@ class CampaignDashboardScreenState extends BaseState {
 
   myReferralsById(CampaignUserData userData) async {
     setBusy(true);
-    await campaignService.getReferralsById(userData).then((res) {
+    await campaignService!.getReferralsById(userData).then((res) {
       log.w(res);
       if (res != null) {
         var list = res as List;
@@ -321,8 +321,8 @@ class CampaignDashboardScreenState extends BaseState {
   myRewardsByToken() async {
     setBusy(true);
     setErrorMessage('fetching your rewards');
-    String token = await campaignService.getSavedLoginTokenFromLocalStorage();
-    await campaignService.getMemberRewardByToken(token).then((res) async {
+    String token = (await campaignService!.getSavedLoginTokenFromLocalStorage())!;
+    await campaignService!.getMemberRewardByToken(token).then((res) async {
       if (res != null) {
         campaignRewardList = res;
 
@@ -333,9 +333,9 @@ class CampaignDashboardScreenState extends BaseState {
           // double totalTokenQuantityByLevel =
           //     campaignRewardList[i].totalQuantities;
           log.e('1111111 ${campaignRewardList[i].toJson()}');
-          int totalReferralsByLevel = campaignRewardList[i].totalAccounts;
+          int totalReferralsByLevel = campaignRewardList[i].totalAccounts!;
           double totalRewardQuantityByLevel =
-              campaignRewardList[i].totalRewardQuantities;
+              campaignRewardList[i].totalRewardQuantities!;
           // int level = campaignRewardList[i].level;
 
           // // calculating total asset quantity
@@ -351,13 +351,13 @@ class CampaignDashboardScreenState extends BaseState {
           myReferralReward = myReferralReward + totalRewardQuantityByLevel;
         }
         myTotalAssetQuantity =
-            myTotalAssetQuantity + myTokensWithoutRewards + myTeamsTotalRewards;
+            myTotalAssetQuantity + myTokensWithoutRewards + myTeamsTotalRewards!;
         await calcMyTotalAsssetValue();
       } else {
         log.e('Campaign reward result in else block $res');
         log.w('In myReward else, res is null from api');
         if (res == null) {
-          navigationService.navigateTo('/campaignLogin');
+          navigationService!.navigateTo('/campaignLogin');
         }
         setBusy(false);
       }
@@ -373,7 +373,7 @@ class CampaignDashboardScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   getTotalTeamReward(token) async {
-    await campaignService.getTotalTeamsRewardByToken(token).then((res) {
+    await campaignService!.getTotalTeamsRewardByToken(token).then((res) {
       myTeamsTotalValue = res['teamsTotalValue'].toDouble();
       myTeamsTotalRewards = res['teamsRewards'].toDouble();
 
@@ -398,7 +398,7 @@ class CampaignDashboardScreenState extends BaseState {
       //   "token": token
       // };
 
-      log.w('reward view data ${team[0]}');
+      log.w('reward view data ${team![0]}');
     });
   }
 
@@ -408,7 +408,7 @@ class CampaignDashboardScreenState extends BaseState {
 
   calcMyTotalAsssetValue() async {
     log.e('calcMyTotalAsssetValue');
-    double exgPrice = await getUsdValue();
+    double exgPrice = (await getUsdValue())!;
     double holder = myTotalAssetQuantity * exgPrice;
     myTotalAssetValue = NumberUtil.currencyFormat(holder, 2);
     log.e(
@@ -418,17 +418,17 @@ class CampaignDashboardScreenState extends BaseState {
 
   // Generic Navigate
   navigateByRouteName(String routeName, args) async {
-    await navigationService.navigateTo(routeName, arguments: args);
+    await navigationService!.navigateTo(routeName, arguments: args);
   }
 
 /*-------------------------------------------------------------------------------------
       Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
 -------------------------------------------------------------------------------------*/
 
-  Future<double> getUsdValue() async {
+  Future<double?> getUsdValue() async {
     setBusy(true);
-    double usdValue = 0;
-    await _apiService.getCoinCurrencyUsdPrice().then((res) {
+    double? usdValue = 0;
+    await _apiService!.getCoinCurrencyUsdPrice().then((res) {
       if (res != null) {
         log.w(res['data']['EXG']['USD']);
         usdValue = res['data']['EXG']['USD'];

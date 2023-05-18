@@ -32,35 +32,35 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   final log = getLogger('MarketsViewModal');
 
   String errorMessage = '';
-  List<Price> pairPriceList = [];
-  List<List<Price>> marketPairsTabBar = [];
-  List<Price> btcFabExgUsdtPriceList = [];
-  SharedService sharedService = locator<SharedService>();
-  TradeService tradeService = locator<TradeService>();
-  LocalAuthService localAuthService = locator<LocalAuthService>();
-  LocalStorageService storageService = locator<LocalStorageService>();
+  List<Price>? pairPriceList = [];
+  List<List<Price>>? marketPairsTabBar = [];
+  List<Price>? btcFabExgUsdtPriceList = [];
+  SharedService? sharedService = locator<SharedService>();
+  TradeService? tradeService = locator<TradeService>();
+  LocalAuthService? localAuthService = locator<LocalAuthService>();
+  LocalStorageService? storageService = locator<LocalStorageService>();
 
-  final NavigationService navigationService = locator<NavigationService>();
-  BuildContext context;
+  final NavigationService? navigationService = locator<NavigationService>();
+  late BuildContext context;
   List<String> tabNames = ['USDT', 'DUSD', 'BTC', 'ETH', 'EXG', 'OTHERS'];
 
   @override
   void start() async {
     super.start();
     log.w(
-        'market view model starting service -- hasAppGoneInTheBackgroundKey = ${storageService.hasAppGoneInTheBackgroundKey} -- auth in progress ${localAuthService.authInProgress}');
+        'market view model starting service -- hasAppGoneInTheBackgroundKey = ${storageService!.hasAppGoneInTheBackgroundKey} -- auth in progress ${localAuthService!.authInProgress}');
 
-    if (storageService.hasInAppBiometricAuthEnabled) {
+    if (storageService!.hasInAppBiometricAuthEnabled) {
       // bool canCheckBiometrics = await localAuthService.canCheckBiometrics();
-      if (!storageService.isCameraOpen) {
-        if (!localAuthService.authInProgress &&
-            storageService.hasAppGoneInTheBackgroundKey) {
-          await localAuthService.authenticateApp();
+      if (!storageService!.isCameraOpen) {
+        if (!localAuthService!.authInProgress &&
+            storageService!.hasAppGoneInTheBackgroundKey) {
+          await localAuthService!.authenticateApp();
         }
       }
     }
-    storageService.hasAppGoneInTheBackgroundKey = false;
-    storageService.isCameraOpen = false;
+    storageService!.hasAppGoneInTheBackgroundKey = false;
+    storageService!.isCameraOpen = false;
     // start subscription again
     // if (streamSubscription != null && streamSubscription.isPaused)
     //   streamSubscription.resume();
@@ -76,7 +76,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   void stop() async {
     super.stop();
     log.w(' mvm stopping service');
-    storageService.hasAppGoneInTheBackgroundKey = true;
+    storageService!.hasAppGoneInTheBackgroundKey = true;
     //var isEmptyValue = await stream.isEmpty.then((value) => value);
     //log.e('is empty $isEmptyValue -- is broadcasr ${stream.isBroadcast}');
     // debugPrint(streamSubscription);
@@ -94,14 +94,14 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   @override
   Stream<dynamic> get stream {
     Stream<dynamic> res;
-    res = tradeService.getAllCoinPriceStream();
+    res = tradeService!.getAllCoinPriceStream();
     return res;
   }
 
   @override
   void onData(data) {
     Map<String, dynamic> res =
-        tradeService.marketPairPriceGroups(pairPriceList);
+        tradeService!.marketPairPriceGroups(pairPriceList);
     marketPairsTabBar = res['marketPairsGroupList'];
     btcFabExgUsdtPriceList = res['btcFabExgUsdtPriceList'];
   }
@@ -113,7 +113,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
 
       PriceList priceList = PriceList.fromJson(jsonDynamicList);
 
-      log.e(' priceList.prices length before ${priceList.prices.length}');
+      log.e(' priceList.prices length before ${priceList.prices!.length}');
       List<String> coinsToRemove = [
         'IOST',
         'REPUSDT',
@@ -130,7 +130,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
         'TWBTCUSDT'
       ];
       for (var coin in coinsToRemove) {
-        priceList.prices.removeWhere((item) => item.symbol.contains(coin));
+        priceList.prices!.removeWhere((item) => item.symbol!.contains(coin));
       }
 
       // for (var t in priceList.prices) {
@@ -141,12 +141,12 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
       //   }
       // }
 
-      log.e(' priceList.prices length after ${priceList.prices.length}');
+      log.e(' priceList.prices length after ${priceList.prices!.length}');
       pairPriceList = priceList.prices;
     } catch (err) {
       log.e('transformData Catch error $err');
       debugPrint('Cancelling Stream Subsciption');
-      streamSubscription.cancel();
+      streamSubscription!.cancel();
     }
   }
 
@@ -156,14 +156,14 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
     setBusy(false);
     errorMessage = error.toString();
 
-    sharedService.alertDialog(AppLocalizations.of(context).serverError,
-        AppLocalizations.of(context).marketPriceFetchFailed,
+    sharedService!.alertDialog(AppLocalizations.of(context)!.serverError,
+        AppLocalizations.of(context)!.marketPriceFetchFailed,
         path: DashboardViewRoute, isWarning: false);
   }
 
   @override
   void onCancel() {
-    tradeService
+    tradeService!
         .getAllPriceChannel()
         .sink
         .close()
@@ -171,6 +171,6 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   }
 
   onBackButtonPressed() async {
-    navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
+    navigationService!.navigateUsingpopAndPushedNamed(DashboardViewRoute);
   }
 }

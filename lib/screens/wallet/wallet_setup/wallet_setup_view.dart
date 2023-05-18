@@ -22,7 +22,7 @@ import 'package:stacked/stacked.dart';
 import '../../../shared/globals.dart' as globals;
 
 class WalletSetupView extends StatelessWidget {
-  const WalletSetupView({Key key}) : super(key: key);
+  const WalletSetupView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class WalletSetupView extends StatelessWidget {
       },
       builder: (context, WalletSetupViewmodel model, child) => WillPopScope(
         onWillPop: () {
-          model.sharedService.closeApp();
+          model.sharedService!.closeApp();
           return Future(() => false);
         },
         child: Container(
@@ -57,10 +57,10 @@ class WalletSetupView extends StatelessWidget {
                   Container(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        AppLocalizations.of(context).welcomeText,
+                        AppLocalizations.of(context)!.welcomeText,
                         style: Theme.of(context)
                             .textTheme
-                            .headline5
+                            .headline5!
                             .copyWith(fontWeight: FontWeight.normal),
                       )),
                 ],
@@ -75,7 +75,7 @@ class WalletSetupView extends StatelessWidget {
 
               model.isDeleting
                   ? Text(
-                      AppLocalizations.of(context).deletingWallet,
+                      AppLocalizations.of(context)!.deletingWallet,
                       style: Theme.of(context).textTheme.bodyText1,
                     )
                   : Container(),
@@ -99,12 +99,12 @@ class WalletSetupView extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              '${AppLocalizations.of(context).checkingExistingWallet}...',
+                              '${AppLocalizations.of(context)!.checkingExistingWallet}...',
                               style: Theme.of(context).textTheme.bodyText1,
                             ),
                             model.isVerifying
                                 ? Text(
-                                    AppLocalizations.of(context)
+                                    AppLocalizations.of(context)!
                                         .verifyingWallet,
                                     style:
                                         Theme.of(context).textTheme.bodyText1,
@@ -120,7 +120,7 @@ class WalletSetupView extends StatelessWidget {
                           highlightColor: globals.white,
                           child: Center(
                             child: Text(
-                              '${AppLocalizations.of(context).restoringWallet}...',
+                              '${AppLocalizations.of(context)!.restoringWallet}...',
                               style: Theme.of(context).textTheme.bodyText1,
                             ),
                           ),
@@ -130,9 +130,9 @@ class WalletSetupView extends StatelessWidget {
                             children: [
                               !model.hasAuthenticated &&
                                       !model.isBusy &&
-                                      model.storageService
+                                      model.storageService!
                                           .hasInAppBiometricAuthEnabled &&
-                                      model.storageService
+                                      model.storageService!
                                           .hasPhoneProtectionEnabled &&
                                       model.hasData
                                   ? ElevatedButton(
@@ -158,7 +158,7 @@ class WalletSetupView extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                   .unlock,
                                               style: Theme.of(context)
                                                   .textTheme
@@ -170,12 +170,12 @@ class WalletSetupView extends StatelessWidget {
                                       },
                                     )
                                   : Container(),
-                              !model.storageService
+                              !model.storageService!
                                           .hasInAppBiometricAuthEnabled ||
-                                      !model.storageService
+                                      !model.storageService!
                                           .hasPhoneProtectionEnabled ||
                                       !model.hasData
-                                  ? model.storageService.hasPrivacyConsent
+                                  ? model.storageService!.hasPrivacyConsent
                                       ? Row(children: <Widget>[
                                           Expanded(
                                             child: Container(
@@ -198,11 +198,11 @@ class WalletSetupView extends StatelessWidget {
                                                   ),
                                                 ),
                                                 child: Text(
-                                                    AppLocalizations.of(context)
+                                                    AppLocalizations.of(context)!
                                                         .createWallet,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline5
+                                                        .headline5!
                                                         .copyWith(
                                                             color:
                                                                 primaryColor)),
@@ -232,11 +232,11 @@ class WalletSetupView extends StatelessWidget {
                                                       MaterialStateProperty.all(
                                                           primaryColor)),
                                               child: Text(
-                                                AppLocalizations.of(context)
+                                                AppLocalizations.of(context)!
                                                     .importWallet,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline5
+                                                    .headline5!
                                                     .copyWith(color: white),
                                               ),
                                               onPressed: () {
@@ -259,10 +259,10 @@ class WalletSetupView extends StatelessWidget {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                       .askPrivacyConsent +
                                                   '. ' +
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                       .userDataUsage,
                                               style: Theme.of(context)
                                                   .textTheme
@@ -287,7 +287,7 @@ class WalletSetupView extends StatelessWidget {
                                                         MaterialStateProperty
                                                             .all(primaryColor)),
                                                 child: Text(
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                       .privacyPolicy,
                                                   style: headText5.copyWith(
                                                       color: white),

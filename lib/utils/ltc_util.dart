@@ -1,11 +1,11 @@
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
-
 import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:http/src/response.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/src/response.dart';
+
 import 'custom_http_util.dart';
 
-final String ltcBaseUrl = environment["endpoints"]["ltc"];
+final String? ltcBaseUrl = environment["endpoints"]["ltc"];
 
 // Main net config
 BitcoinFlutter.NetworkType liteCoinMainnetNetwork = BitcoinFlutter.NetworkType(
@@ -26,10 +26,9 @@ final liteCoinTestnetNetwork = BitcoinFlutter.NetworkType(
 // Generate LTC address
 generateLtcAddress(root, {index = 0}) async {
   var coinType = environment["CoinType"]["LTC"].toString();
-  var node =
-      root.derivePath("m/44'/" + coinType + "'/0'/0/" + index.toString());
+  var node = root.derivePath("m/44'/$coinType'/0'/0/$index");
 
-  String address = BitcoinFlutter.P2PKH(
+  String? address = BitcoinFlutter.P2PKH(
           data: BitcoinFlutter.PaymentData(pubkey: node.publicKey),
           network: environment["chains"]["LTC"]["network"])
       .data
@@ -41,7 +40,7 @@ generateLtcAddress(root, {index = 0}) async {
 class LtcUtils {
   var httpClient = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
 // Generate getLtcAddressForNode
-  String getLtcAddressForNode(node, {String tickerName}) {
+  String? getLtcAddressForNode(node, {String? tickerName}) {
     return BitcoinFlutter.P2PKH(
             data: BitcoinFlutter.PaymentData(pubkey: node.publicKey),
             network: environment["chains"]["LTC"]["network"])
@@ -51,26 +50,30 @@ class LtcUtils {
 
 // getLtcTransactionStatus
   Future getLtcTransactionStatus(String txid) async {
-    Response response;
-    var url = ltcBaseUrl + 'gettransactionjson/' + txid;
+    Response? response;
+    var url = '${ltcBaseUrl!}gettransactionjson/$txid';
 
     try {
-      response = await httpClient.get(url);
-    } catch (e) {}
+      response = await httpClient.get(Uri.parse(url));
+    } catch (e) {
+      debugPrint(e.toString());
+    }
 
     return response;
   }
 
 // getLtcBalanceByAddress
-  Future getLtcBalanceByAddress(String address) async {
-    var url = ltcBaseUrl + 'getbalance/' + address;
+  Future getLtcBalanceByAddress(String? address) async {
+    var url = '${ltcBaseUrl!}getbalance/${address!}';
     debugPrint('ltc_util- getLtcBalanceByAddress url $url');
     var btcBalance = 0.0;
     try {
-      var response = await httpClient.get(url);
+      var response = await httpClient.get(Uri.parse(url));
       debugPrint(response.toString());
       btcBalance = double.parse(response.body) / 1e8;
-    } catch (e) {}
+    } catch (e) {
+      debugPrint(e.toString());
+    }
     return {'balance': btcBalance, 'lockbalance': 0.0};
   }
 }

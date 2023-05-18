@@ -9,12 +9,12 @@ import '../../../shared/globals.dart' as globals;
 import 'market_pairs_detail_view.dart';
 
 class MarketPairsTabView extends StatelessWidget {
-  final List<List<Price>> marketPairsTabBarView;
-  final List priceList;
-  final bool isBusy;
-  final bool hideSlider;
+  final List<List<Price>>? marketPairsTabBarView;
+  final List? priceList;
+  final bool? isBusy;
+  final bool? hideSlider;
   const MarketPairsTabView(
-      {Key key,
+      {Key? key,
       this.marketPairsTabBarView,
       this.priceList,
       this.isBusy,
@@ -44,7 +44,7 @@ class MarketPairsTabView extends StatelessWidget {
                           ? const SliverToBoxAdapter(child: LoadingGif())
                           : SliverToBoxAdapter(
                               child: Offstage(
-                                offstage: hideSlider,
+                                offstage: hideSlider!,
                                 child: Column(
                                   children: [
                                     Carousel(
@@ -57,13 +57,13 @@ class MarketPairsTabView extends StatelessWidget {
                             ),
                       SliverToBoxAdapter(
                         child: Offstage(
-                          offstage: isBusy,
+                          offstage: isBusy!,
                           child: Container(
                             margin: const EdgeInsets.fromLTRB(10, 0, 10, 5),
                             height: 40,
                             child: Row(
                               children: [
-                                for (var pair in priceList)
+                                for (var pair in priceList!)
                                   Expanded(
                                     child: Card(
                                       color: const Color(0xff851fff),
@@ -133,16 +133,16 @@ class MarketPairsTabView extends StatelessWidget {
                       ),
                     ];
                   },
-                  body: isBusy
+                  body: isBusy!
                       ? Container(
                           //color: Theme.of(context).colorScheme.secondary,
                           child: Center(
-                          child: model.sharedService.loadingIndicator(),
+                          child: model.sharedService!.loadingIndicator(),
                         ))
                       : Container(
                           //  color: Theme.of(context).colorScheme.secondary,
                           child: TabBarView(
-                              children: marketPairsTabBarView.map((pairList) {
+                              children: marketPairsTabBarView!.map((pairList) {
                             return MarketPairPriceDetailView(
                                 pairList: pairList);
                           }).toList()),

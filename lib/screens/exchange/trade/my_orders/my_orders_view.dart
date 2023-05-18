@@ -10,16 +10,16 @@ import 'package:stacked/stacked.dart';
 import 'my_orders_viewmodel.dart';
 
 class MyOrdersView extends StatelessWidget {
-  final String tickerName;
+  final String? tickerName;
 
-  const MyOrdersView({Key key, this.tickerName}) : super(key: key);
+  const MyOrdersView({Key? key, this.tickerName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     RefreshController _refreshController =
         RefreshController(initialRefresh: false);
     return ViewModelBuilder<MyOrdersViewModel>.reactive(
-        createNewModelOnInsert: true,
+        createNewViewModelOnInsert: true,
         fireOnModelReadyOnce: true,
         viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
         onModelReady: (model) {
@@ -29,10 +29,15 @@ class MyOrdersView extends StatelessWidget {
           model.refreshController = _refreshController;
           model.init();
         },
-        onDispose: (MyOrdersViewModel m) {
+        onDispose: (viewModel) {
           if (_refreshController != null) _refreshController.dispose();
-          debugPrint('_refreshController disposed in my orders view');
+          debugPrint('_refreshController disposed in wallet dashboard view');
         },
+
+        // onDispose: () {
+        //   if (_refreshController != null) _refreshController.dispose();
+        //   debugPrint(‘_refreshController disposed in wallet dashboard view’);
+        // },
         builder: (context, MyOrdersViewModel model, _) => Container(
             child:
                 // error handling
@@ -44,7 +49,7 @@ class MyOrdersView extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              AppLocalizations.of(context).serverError +
+                              AppLocalizations.of(context)!.serverError +
                                   ': ${model.errorMessage}',
                               style: const TextStyle(color: Colors.white),
                             ),
@@ -97,7 +102,7 @@ class MyOrdersView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                           .showAllPairOrders,
                                       style: Theme.of(context)
                                           .textTheme
@@ -136,25 +141,25 @@ class MyOrdersView extends StatelessWidget {
                                     ),
                                     tabs: [
                                       Text(
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                               .allOrders,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
                                       Text(
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                               .openOrders,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
                                       Text(
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                               .closedOrders,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
                                       Text(
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                               .cancelledOrders,
                                           style: Theme.of(context)
                                               .textTheme
@@ -204,28 +209,28 @@ class MyOrdersView extends StatelessWidget {
         // ),
         Expanded(
           flex: 1,
-          child: Text(AppLocalizations.of(context).type,
+          child: Text(AppLocalizations.of(context)!.type,
               style: Theme.of(context).textTheme.subtitle2),
         ),
         Expanded(
             flex: 2,
-            child: Text(AppLocalizations.of(context).pair,
+            child: Text(AppLocalizations.of(context)!.pair,
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
             flex: 2,
-            child: Text(AppLocalizations.of(context).price,
+            child: Text(AppLocalizations.of(context)!.price,
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
             flex: 2,
-            child: Text(AppLocalizations.of(context).quantity,
+            child: Text(AppLocalizations.of(context)!.quantity,
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
             flex: 2,
-            child: Text(AppLocalizations.of(context).filledAmount,
+            child: Text(AppLocalizations.of(context)!.filledAmount,
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
           flex: 1,
-          child: Text(AppLocalizations.of(context).cancel,
+          child: Text(AppLocalizations.of(context)!.cancel,
               style: Theme.of(context).textTheme.subtitle2),
         ),
       ]),
@@ -234,8 +239,8 @@ class MyOrdersView extends StatelessWidget {
 }
 
 class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
-  final List<OrderModel> orders;
-  const MyOrderDetailsView({Key key, this.orders}) : super(key: key);
+  final List<OrderModel>? orders;
+  const MyOrderDetailsView({Key? key, this.orders}) : super(key: key);
 
   @override
   Widget build(BuildContext context, MyOrdersViewModel model) {
@@ -247,7 +252,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
           : const MaterialClassicHeader(),
       enablePullDown: true,
       footer: CustomFooter(
-        builder: (BuildContext context, LoadStatus mode) {
+        builder: (BuildContext context, LoadStatus? mode) {
           Widget body;
           if (mode == LoadStatus.idle) {
             body = const Text("pull up load");
@@ -256,7 +261,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
           } else if (mode == LoadStatus.failed) {
             body = const Text("Load Failed!Click retry!");
           } else if (mode == LoadStatus.canLoading) {
-            body = Text(AppLocalizations.of(context).releaseToLoadMore);
+            body = Text(AppLocalizations.of(context)!.releaseToLoadMore);
           } else {
             body = const Text("No more Data");
           }
@@ -270,10 +275,10 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
       onRefresh: model.onRefresh,
       onLoading: model.onLoading,
       child: ListView.builder(
-          itemCount: orders.length,
+          itemCount: orders!.length,
           shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
-            var order = orders[index];
+            var order = orders![index];
             return Row(
               children: [
                 // Expanded(
@@ -283,12 +288,12 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                 Expanded(
                     flex: 1,
                     child: Text(
-                        order.bidOrAsk
-                            ? AppLocalizations.of(context).buy
-                            : AppLocalizations.of(context).sell,
-                        style: Theme.of(context).textTheme.headline6.copyWith(
+                        order.bidOrAsk!
+                            ? AppLocalizations.of(context)!.buy
+                            : AppLocalizations.of(context)!.sell,
+                        style: Theme.of(context).textTheme.headline6!.copyWith(
                               color: Color(
-                                  (order.bidOrAsk) ? 0xFF0da88b : 0xFFe2103c),
+                                  order.bidOrAsk! ? 0xFF0da88b : 0xFFe2103c),
                             ))),
                 Expanded(
                     flex: 2,
@@ -297,36 +302,36 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                 Expanded(
                     flex: 2,
                     child: Text(
-                        order.price
-                            .toStringAsFixed(model.decimalConfig.priceDecimal),
+                        order.price!
+                            .toStringAsFixed(model.decimalConfig.priceDecimal!),
                         style: Theme.of(context).textTheme.headline6)),
                 Expanded(
                     flex: 2,
                     child: Text(
-                        order.totalOrderQuantity
-                            .toStringAsFixed(model.decimalConfig.qtyDecimal),
+                        order.totalOrderQuantity!
+                            .toStringAsFixed(model.decimalConfig.qtyDecimal!),
                         style: Theme.of(context).textTheme.headline6)),
                 Expanded(
                     flex: 2,
                     child: Column(
                       children: [
                         Text(
-                            order.filledQuantity.toStringAsFixed(
-                                model.decimalConfig.qtyDecimal),
+                            order.filledQuantity!.toStringAsFixed(
+                                model.decimalConfig.qtyDecimal!),
                             style: Theme.of(context).textTheme.headline6),
                         Text(
-                            order.filledPercentage.isNaN
+                            order.filledPercentage!.isNaN
                                 ? '0.0%'
-                                : '${order.filledPercentage.toStringAsFixed(2)}%',
+                                : '${order.filledPercentage!.toStringAsFixed(2)}%',
                             style: Theme.of(context).textTheme.subtitle2)
                       ],
                     )),
                 Expanded(
                     flex: 1,
-                    child: order.isActive
+                    child: order.isActive!
                         ? model.isCancelling &&
                                 //   model.busy(model.onClickOrderHash) &&
-                                orders[index].orderHash ==
+                                orders![index].orderHash ==
                                     model.onClickOrderHash
                             ? const CupertinoActivityIndicator()
                             : IconButton(
@@ -337,10 +342,10 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                                 ),
                                 onPressed: () {
                                   debugPrint(index.toString());
-                                  debugPrint(orders.indexOf(order).toString());
-                                  if (index == orders.indexOf(order)) {
+                                  debugPrint(orders!.indexOf(order).toString());
+                                  if (index == orders!.indexOf(order)) {
                                     debugPrint(
-                                        'inside if ${index == orders.indexOf(order)}');
+                                        'inside if ${index == orders!.indexOf(order)}');
 
                                     model.checkPass(context, order.orderHash);
                                   }

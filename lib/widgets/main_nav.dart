@@ -19,11 +19,11 @@ class MainNav extends StatefulWidget {
 }
 
 class _MainNavState extends State<MainNav> {
-  PageController _pageController;
+  PageController? _pageController;
   int _page = 0;
   final double paddingValue = 4; // change space between icon and title text
   final double iconSize = 25; // change icon size
-  SharedService sharedService = locator<SharedService>();
+  SharedService? sharedService = locator<SharedService>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +31,8 @@ class _MainNavState extends State<MainNav> {
       // onWillPop: () async => false,
       onWillPop: () async {
         if (_page == 0) {
-          sharedService.context = context;
-          await sharedService.closeApp();
+          sharedService!.context = context;
+          await sharedService!.closeApp();
           return Future(() => false);
         }
         onPageChanged(0);
@@ -63,7 +63,7 @@ class _MainNavState extends State<MainNav> {
           items: [
             BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.wallet, size: iconSize),
-                label: AppLocalizations.of(context).wallet),
+                label: AppLocalizations.of(context)!.wallet),
 
             // BottomNavigationBarItem(
             //     icon: Icon(FontAwesomeIcons.chartBar, size: iconSize),
@@ -72,7 +72,7 @@ class _MainNavState extends State<MainNav> {
             //         child: Text(AppLocalizations.of(context).market))),
             BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.coins, size: iconSize),
-                label: AppLocalizations.of(context).trade),
+                label: AppLocalizations.of(context)!.trade),
             // BottomNavigationBarItem(
             //     icon: Icon(Icons.branding_watermark, size: iconSize),
             //     title: Padding(
@@ -80,11 +80,11 @@ class _MainNavState extends State<MainNav> {
             //         child: Text('OTC'))),
             BottomNavigationBarItem(
                 icon: Icon(Icons.event, size: iconSize),
-                label: AppLocalizations.of(context).event),
+                label: AppLocalizations.of(context)!.event),
 
             BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.cog, size: iconSize),
-                label: AppLocalizations.of(context).settings),
+                label: AppLocalizations.of(context)!.settings),
           ],
           onTap: navigateToPage,
           currentIndex: _page,
@@ -94,7 +94,7 @@ class _MainNavState extends State<MainNav> {
   }
 
   void navigateToPage(int page) {
-    _pageController.animateToPage(page,
+    _pageController!.animateToPage(page,
         duration: const Duration(milliseconds: 300), curve: Curves.ease);
   }
 
@@ -119,7 +119,7 @@ class _MainNavState extends State<MainNav> {
   @override
   void dispose() {
     super.dispose();
-    _pageController.dispose();
+    _pageController!.dispose();
   }
 }
 

@@ -1,14 +1,14 @@
 class UserSettings {
-  int _id;
-  String _language;
-  String _theme;
+  int? _id;
+  String? _language;
+  String? _theme;
   // List<String> _favWalletCoins;
   // bool _isFavCoinTabSelected;
 
   UserSettings({
-    int id,
-    String language,
-    String theme,
+    int? id,
+    String? language,
+    String? theme,
     //   List<String> favWalletCoins,
     //  bool isFavCoinTabSelected
   }) {
@@ -29,26 +29,26 @@ class UserSettings {
 
   factory UserSettings.fromJson(Map<String, dynamic> json) {
     return UserSettings(
-        id: json['id'] as int,
-        language: json['language'] as String,
-        theme: json['json'] as String
+        id: json['id'] as int?,
+        language: json['language'] as String?,
+        theme: json['json'] as String?
         // favWalletCoins: json['favWalletCoins'],
         // isFavCoinTabSelected: json['isFavCoinTabSelected'])
         );
   }
 
-  int get id => _id;
-  set id(int id) {
+  int? get id => _id;
+  set id(int? id) {
     _id = id;
   }
 
-  String get language => _language;
-  set language(String language) {
+  String? get language => _language;
+  set language(String? language) {
     _language = language;
   }
 
-  String get theme => _theme;
-  set theme(String theme) {
+  String? get theme => _theme;
+  set theme(String? theme) {
     _theme = theme;
   }
 

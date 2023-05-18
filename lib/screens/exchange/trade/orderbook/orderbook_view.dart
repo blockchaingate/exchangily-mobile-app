@@ -11,16 +11,16 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/material.dart';
 
 class OrderBookView extends StatelessWidget {
-  final bool isVerticalOrderbook;
-  final Orderbook orderbook;
-  final PairDecimalConfig decimalConfig;
+  final bool? isVerticalOrderbook;
+  final Orderbook? orderbook;
+  final PairDecimalConfig? decimalConfig;
   const OrderBookView(
-      {Key key, this.isVerticalOrderbook, this.orderbook, this.decimalConfig});
+      {Key? key, this.isVerticalOrderbook, this.orderbook, this.decimalConfig});
 
   @override
   Widget build(BuildContext context) {
-    final tradeService = locator<TradeService>();
-    return isVerticalOrderbook
+    final TradeService tradeService = locator<TradeService>();
+    return isVerticalOrderbook!
         ?
 
 /*----------------------------------------------------------------------
@@ -40,7 +40,7 @@ class OrderBookView extends StatelessWidget {
                           bottom: BorderSide(width: 1.0, color: Colors.grey),
                         ),
                       ),
-                      child: Text(AppLocalizations.of(context).price,
+                      child: Text(AppLocalizations.of(context)!.price,
                           style: Theme.of(context).textTheme.headline6)),
                   // Heading Quantity
                   Container(
@@ -50,19 +50,19 @@ class OrderBookView extends StatelessWidget {
                           bottom: BorderSide(width: 1.0, color: Colors.grey),
                         ),
                       ),
-                      child: Text(AppLocalizations.of(context).quantity,
+                      child: Text(AppLocalizations.of(context)!.quantity,
                           style: Theme.of(context).textTheme.headline6))
                 ],
               ),
               buildVerticalOrderbookColumn(
-                  orderbook.sellOrders, false, decimalConfig, tradeService),
+                  orderbook!.sellOrders!, false, decimalConfig, tradeService),
               Container(
                   padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      orderbook.buyOrders != [] && orderbook.sellOrders != []
-                          ? Text(orderbook.price.toString(),
+                      orderbook!.buyOrders != [] && orderbook!.sellOrders != []
+                          ? Text(orderbook!.price.toString(),
                               style: Theme.of(context).textTheme.headline4)
                           : Center(
                               child: Text('No Orders',
@@ -71,7 +71,7 @@ class OrderBookView extends StatelessWidget {
                     ],
                   )),
               buildVerticalOrderbookColumn(
-                  orderbook.buyOrders, true, decimalConfig, tradeService)
+                  orderbook!.buyOrders!, true, decimalConfig, tradeService)
             ],
           )
         : Container(
@@ -84,16 +84,12 @@ class OrderBookView extends StatelessWidget {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Container(
-                        child: Text(AppLocalizations.of(context).buyOrders,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline6),
-                      ),
-                      Container(
-                        child: Text(AppLocalizations.of(context).sellOrders,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline6),
-                      ),
+                      Text(AppLocalizations.of(context)!.buyOrders,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headline6),
+                      Text(AppLocalizations.of(context)!.sellOrders,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headline6),
                     ]),
                 UIHelper.verticalSpaceSmall,
                 // quanity/price text Row
@@ -108,11 +104,11 @@ class OrderBookView extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(AppLocalizations.of(context).quantity,
+                            Text(AppLocalizations.of(context)!.quantity,
                                 style: TextStyle(fontSize: 9, color: grey)),
-                            Text(AppLocalizations.of(context).price,
+                            Text(AppLocalizations.of(context)!.price,
                                 style: TextStyle(fontSize: 9, color: grey)),
-                            Text(AppLocalizations.of(context).quantity,
+                            Text(AppLocalizations.of(context)!.quantity,
                                 style: TextStyle(fontSize: 9, color: grey)),
                           ],
                         ),
@@ -131,11 +127,11 @@ class OrderBookView extends StatelessWidget {
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: orderbook.buyOrders.length,
+                        itemCount: orderbook!.buyOrders!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return OrderDetailsView(
                             decimalConfig: decimalConfig,
-                            orders: orderbook.buyOrders,
+                            orders: orderbook!.buyOrders,
                             index: index,
                             isBuy: true,
                           );
@@ -148,11 +144,11 @@ class OrderBookView extends StatelessWidget {
                       flex: 1,
                       child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: orderbook.sellOrders.length,
+                        itemCount: orderbook!.sellOrders!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return OrderDetailsView(
                             decimalConfig: decimalConfig,
-                            orders: orderbook.sellOrders,
+                            orders: orderbook!.sellOrders,
                             index: index,
                             isBuy: false,
                           );
@@ -171,7 +167,7 @@ class OrderBookView extends StatelessWidget {
 ----------------------------------------------------------------------*/
 
   Column buildVerticalOrderbookColumn(List<OrderType> orderArray,
-      final bool bidOrAsk, deciamlConfig, TradeService tradeService) {
+      final bool bidOrAsk, deciamlConfig, TradeService? tradeService) {
     // List<OrderType> sellOrders = [];
     debugPrint('OrderArray $bidOrAsk length before ${orderArray.length}');
     if (orderArray.length > 7) orderArray = orderArray.sublist(0, 7);
@@ -186,7 +182,7 @@ class OrderBookView extends StatelessWidget {
             onTap: () {
               debugPrint(
                   'trying filling values ${order.price} --  ${order.quantity}');
-              tradeService.setPriceQuantityValues(order.price, order.quantity);
+              tradeService!.setPriceQuantityValues(order.price, order.quantity);
               // model.fillTextFields(order.price, order.quantity);
               // model.setBusy(true);
               // model.quantityTextController.text =
@@ -205,7 +201,8 @@ class OrderBookView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                        order.price.toStringAsFixed(decimalConfig.priceDecimal),
+                        order.price!
+                            .toStringAsFixed(decimalConfig!.priceDecimal!),
                         style: TextStyle(
                             fontWeight: FontWeight.w400,
                             color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
@@ -215,8 +212,8 @@ class OrderBookView extends StatelessWidget {
                             horizontal: 10, vertical: 2),
                         color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                         child: Text(
-                            order.quantity
-                                .toStringAsFixed(decimalConfig.qtyDecimal),
+                            order.quantity!
+                                .toStringAsFixed(decimalConfig!.qtyDecimal!),
                             style: const TextStyle(
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white,
@@ -232,14 +229,14 @@ class OrderBookView extends StatelessWidget {
 class OrderDetailsView extends StatelessWidget {
   final int index;
   final bool isBuy;
-  final PairDecimalConfig decimalConfig;
-  final List<OrderType> orders;
+  final PairDecimalConfig? decimalConfig;
+  final List<OrderType>? orders;
   const OrderDetailsView(
-      {Key key,
+      {Key? key,
       this.decimalConfig,
-      @required this.orders,
-      @required this.index,
-      @required this.isBuy})
+      required this.orders,
+      required this.index,
+      required this.isBuy})
       : super(key: key);
 
   @override
@@ -255,16 +252,16 @@ class OrderDetailsView extends StatelessWidget {
                   orderRow(
                       NumberUtil()
                           .truncateDoubleWithoutRouding(
-                            orders[index].quantity,
-                            precision: decimalConfig.qtyDecimal,
+                            orders![index].quantity!,
+                            precision: decimalConfig!.qtyDecimal!,
                           )
                           .toString(),
                       TextAlign.start,
                       grey),
                   orderRow(
-                      orders[index]
-                          .price
-                          .toStringAsFixed(decimalConfig.priceDecimal),
+                      orders![index]
+                          .price!
+                          .toStringAsFixed(decimalConfig!.priceDecimal!),
                       TextAlign.end,
                       buyPrice),
                 ],
@@ -272,16 +269,16 @@ class OrderDetailsView extends StatelessWidget {
             : Row(
                 children: <Widget>[
                   orderRow(
-                      orders[index]
-                          .price
-                          .toStringAsFixed(decimalConfig.priceDecimal),
+                      orders![index]
+                          .price!
+                          .toStringAsFixed(decimalConfig!.priceDecimal!),
                       TextAlign.start,
                       sellPrice),
                   orderRow(
                       NumberUtil()
                           .truncateDoubleWithoutRouding(
-                            orders[index].quantity,
-                            precision: decimalConfig.qtyDecimal,
+                            orders![index].quantity!,
+                            precision: decimalConfig!.qtyDecimal!,
                           )
                           .toString(),
                       TextAlign.end,

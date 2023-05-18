@@ -12,14 +12,14 @@ class OrderService with ReactiveServiceMixin {
   final log = getLogger('OrderService');
 
   final client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
-  ConfigService configService = locator<ConfigService>();
+  ConfigService? configService = locator<ConfigService>();
 
-  List<OrderModel> _orders = [];
-  List<OrderModel> get orders => _orders;
+  List<OrderModel>? _orders = [];
+  List<OrderModel>? get orders => _orders;
 
-  final RxValue<List<OrderModel>> _singlePairOrders =
-      RxValue<List<OrderModel>>([]);
-  List<OrderModel> get singlePairOrders => _singlePairOrders.value;
+  final RxValue<List<OrderModel>?> _singlePairOrders =
+      RxValue<List<OrderModel>?>([]);
+  List<OrderModel>? get singlePairOrders => _singlePairOrders.value;
 
   final RxValue<bool> _isShowAllOrders = RxValue<bool>(false);
   bool get isShowAllOrders => _isShowAllOrders.value;
@@ -35,9 +35,9 @@ class OrderService with ReactiveServiceMixin {
   List<OrderModel> orderAggregation(List<OrderModel> passedOrders) {
     List<OrderModel> result = [];
     debugPrint('passed orders length ${passedOrders.length}');
-    double prevQuantity = 0.0;
+    double? prevQuantity = 0.0;
     List<int> indexArray = [];
-    double prevPrice = 0;
+    double? prevPrice = 0;
 
     // for each
     for (var currentOrder in passedOrders) {
@@ -50,7 +50,8 @@ class OrderService with ReactiveServiceMixin {
             'price matched with prev price ${currentOrder.price} -- $prevPrice');
         log.w(
             ' currentOrder qty ${currentOrder.orderQuantity} -- prevQuantity $prevQuantity');
-        currentOrder.orderQuantity += prevQuantity;
+        currentOrder.orderQuantity =
+            currentOrder.orderQuantity! + prevQuantity!;
         //  aggrQty = currentOrder.orderQuantity + prevQuantity;
         prevPrice = currentOrder.price;
         log.e(' currentOrder.orderQuantity  ${currentOrder.orderQuantity}');
@@ -83,11 +84,11 @@ class OrderService with ReactiveServiceMixin {
 https://kanbanprod.fabcoinapi.com/ordersbyaddresspaged/0x3b7b00ee5a7f7d57dff7b54cec39c1a21886fe0f/10/5
                                                                                           skip 10/ grab 5
 -------------------------------------------------------------------------------------*/
-  Future<List<OrderModel>> getMyOrders(String exgAddress,
+  Future<List<OrderModel>?> getMyOrders(String exgAddress,
       {int skip = 0, int count = 10, String status = ''}) async {
     log.w('getMyOrders $exgAddress  -- skip $skip -- count $count');
     try {
-      String url = configService.getKanbanBaseUrl() +
+      String url = configService!.getKanbanBaseUrl()! +
           'ordersbyaddresspaged/' +
           exgAddress +
           '/' +
@@ -97,11 +98,11 @@ https://kanbanprod.fabcoinapi.com/ordersbyaddresspaged/0x3b7b00ee5a7f7d57dff7b54
           '/' +
           status;
       log.w('get my orders url $url');
-      var res = await client.get(url);
+      var res = await client.get(Uri.parse(url));
       var jsonList = jsonDecode(res.body) as List;
       log.e(jsonList);
       OrderList orderList = OrderList.fromJson(jsonList);
-      log.w('getMyOrders order list length ${orderList.orders.length}');
+      log.w('getMyOrders order list length ${orderList.orders!.length}');
       //  throw Exception('Catch Exception');
       //return jsonList;
 
@@ -121,30 +122,21 @@ https://kanbanprod.fabcoinapi.com/ordersbyaddresspaged/0x3b7b00ee5a7f7d57dff7b54
                                                           'open', 'closed', 'canceled'
 -------------------------------------------------------------------------------------*/
 
-  Future getMyOrdersByTickerName(String exgAddress, String tickerName,
+  Future getMyOrdersByTickerName(String? exgAddress, String? tickerName,
       {int skip = 0, int count = 10, String status = ''}) async {
     log.w(
         'getMyOrdersByTickerName $exgAddress -- $tickerName -- skip $skip -- count $count');
 
     try {
-      String url = configService.getKanbanBaseUrl() +
-          'getordersbytickernamepaged/' +
-          exgAddress +
-          '/' +
-          tickerName +
-          '/' +
-          skip.toString() +
-          '/' +
-          count.toString() +
-          '/' +
-          status;
+      String url =
+          '${configService!.getKanbanBaseUrl()}getordersbytickernamepaged/$exgAddress/$tickerName/$skip/$count/$status';
       // String url = environment['endpoints']['kanban'] +
       //     'getordersbytickername/' +
       //     exgAddress +
       //     '/' +
       //     tickerName;
       log.i('getMyOrdersByTickerName url $url');
-      var res = await client.get(url);
+      var res = await client.get(Uri.parse(url));
 
       if (res != null) {
         var jsonList = jsonDecode(res.body) as List;

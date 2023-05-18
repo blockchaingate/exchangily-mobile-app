@@ -26,7 +26,7 @@ import '../../localizations.dart';
 import '../../shared/globals.dart' as globals;
 
 class SettingsView extends StatelessWidget {
-  const SettingsView({Key key}) : super(key: key);
+  const SettingsView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +46,13 @@ class SettingsView extends StatelessWidget {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             centerTitle: true,
-            title: Text(AppLocalizations.of(context).settings,
+            title: Text(AppLocalizations.of(context)!.settings,
                 style: Theme.of(context).textTheme.headline3),
             backgroundColor: globals.secondaryColor,
             leading: Container(),
           ),
           body: model.isBusy
-              ? Center(child: model.sharedService.loadingIndicator())
+              ? Center(child: model.sharedService!.loadingIndicator())
               // : model.isShowCaseOnce == false
               //     ? ShowCaseWidget(
               //         onStart: (index, key) {
@@ -98,9 +98,9 @@ class SettingsView extends StatelessWidget {
 }
 
 class SettingsWidget extends StatelessWidget {
-  final SettingsViewmodel model;
+  final SettingsViewmodel? model;
   const SettingsWidget({
-    Key key,
+    Key? key,
     this.model,
   }) : super(key: key);
 
@@ -108,10 +108,10 @@ class SettingsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     GlobalKey _one = GlobalKey();
     GlobalKey _two = GlobalKey();
-    model.one = _one;
-    model.two = _two;
-    debugPrint('isShow _SettingsWidgetState ${model.isShowCaseOnce}');
-    model.showcaseEvent(context);
+    model!.one = _one;
+    model!.two = _two;
+    debugPrint('isShow _SettingsWidgetState ${model!.isShowCaseOnce}');
+    model!.showcaseEvent(context);
     // WidgetsBinding.instance
     //   .addPostFrameCallback((_) => widget.model.showcaseEvent(context));
     return SettingsContainer(
@@ -121,9 +121,9 @@ class SettingsWidget extends StatelessWidget {
 }
 
 class SettingsContainer extends StatelessWidget {
-  const SettingsContainer({Key key, this.model}) : super(key: key);
+  const SettingsContainer({Key? key, this.model}) : super(key: key);
 
-  final SettingsViewmodel model;
+  final SettingsViewmodel? model;
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +153,7 @@ class SettingsContainer extends StatelessWidget {
                 ),
               ),
               onTap: () async {
-                await model.deleteWallet();
+                await model!.deleteWallet();
               },
             ),
             InkWell(
@@ -172,7 +172,7 @@ class SettingsContainer extends StatelessWidget {
                     showMnemonicContainer(context),
               ),
               onTap: () {
-                model.displayMnemonic();
+                model!.displayMnemonic();
               },
             ),
             //  InkWell(
@@ -187,12 +187,12 @@ class SettingsContainer extends StatelessWidget {
             //   },
             // ),
             Visibility(
-              visible: model.isVisible,
+              visible: model!.isVisible,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
                     child: Text(
-                  model.mnemonic,
+                  model!.mnemonic!,
                   style: Theme.of(context).textTheme.bodyText1,
                 )),
               ),
@@ -207,10 +207,10 @@ class SettingsContainer extends StatelessWidget {
                         Container(
                             margin: const EdgeInsets.all(5.0),
                             child: Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                     .changeWalletLanguage,
                                 style: Theme.of(context).textTheme.subtitle2)),
-                        model.isBusy
+                        model!.isBusy
                             ? Container()
                             : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -225,18 +225,18 @@ class SettingsContainer extends StatelessWidget {
                                           materialTapTargetSize:
                                               MaterialTapTargetSize.shrinkWrap,
                                           activeColor: globals.primaryColor,
-                                          onChanged: (bool value) {
+                                          onChanged: (bool? value) {
                                             String lang = '';
-                                            if (value) {
+                                            if (value!) {
                                               lang = 'en';
                                             } else {
                                               lang = 'zh';
                                             }
 
-                                            model.changeWalletLanguage(lang);
+                                            model!.changeWalletLanguage(lang);
                                           },
-                                          value: model.languages[
-                                                  model.selectedLanguage] ==
+                                          value: model!.languages[
+                                                  model!.selectedLanguage] ==
                                               "English",
                                         )
                                       ],
@@ -252,18 +252,18 @@ class SettingsContainer extends StatelessWidget {
                                           materialTapTargetSize:
                                               MaterialTapTargetSize.shrinkWrap,
                                           activeColor: globals.primaryColor,
-                                          onChanged: (bool value) {
+                                          onChanged: (bool? value) {
                                             String lang = '';
-                                            if (!value) {
+                                            if (!value!) {
                                               lang = 'en';
                                             } else {
                                               lang = 'zh';
                                             }
 
-                                            model.changeWalletLanguage(lang);
+                                            model!.changeWalletLanguage(lang);
                                           },
-                                          value: model.languages[
-                                                  model.selectedLanguage] ==
+                                          value: model!.languages[
+                                                  model!.selectedLanguage] ==
                                               "简体中文",
                                         )
                                       ],
@@ -277,13 +277,13 @@ class SettingsContainer extends StatelessWidget {
                             iconEnabledColor: globals.primaryColor,
                             iconSize: 26,
                             hint: Text(
-                              AppLocalizations.of(context).changeWalletLanguage,
+                              AppLocalizations.of(context)!.changeWalletLanguage,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline5,
                             ),
-                            value: model.selectedLanguage,
-                            onChanged: (newValue) {
-                              model.changeWalletLanguage(newValue);
+                            value: model!.selectedLanguage,
+                            onChanged: (dynamic newValue) {
+                              model!.changeWalletLanguage(newValue);
                             },
                             items: [
                               DropdownMenuItem(
@@ -304,7 +304,7 @@ class SettingsContainer extends StatelessWidget {
                                             .headline6),
                                   ],
                                 ),
-                                value: model.languages.keys.first,
+                                value: model!.languages.keys.first,
                               ),
                               DropdownMenuItem(
                                 child: Row(
@@ -325,7 +325,7 @@ class SettingsContainer extends StatelessWidget {
                                             .headline6),
                                   ],
                                 ),
-                                value: model.languages.keys.last,
+                                value: model!.languages.keys.last,
                               ),
                             ]),
                       ),
@@ -385,7 +385,7 @@ class SettingsContainer extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                            AppLocalizations.of(context)
+                            AppLocalizations.of(context)!
                                 .settingsShowcaseInstructions,
                             style: Theme.of(context).textTheme.headline5,
                             textAlign: TextAlign.left),
@@ -397,9 +397,9 @@ class SettingsContainer extends StatelessWidget {
                             activeTrackColor: white,
                             activeColor: primaryColor,
                             inactiveTrackColor: white,
-                            value: model.isShowCaseOnce,
+                            value: model!.isShowCaseOnce,
                             onChanged: (value) {
-                              model.setIsShowcase(value);
+                              model!.setIsShowcase(value);
                             }),
                       ),
                       // ),
@@ -423,7 +423,7 @@ class SettingsContainer extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                            AppLocalizations.of(context)
+                            AppLocalizations.of(context)!
                                 .enableBiometricAuthentication,
                             style: Theme.of(context).textTheme.headline5,
                             textAlign: TextAlign.left),
@@ -435,10 +435,10 @@ class SettingsContainer extends StatelessWidget {
                             activeTrackColor: white,
                             activeColor: primaryColor,
                             inactiveTrackColor: white,
-                            value: model
-                                .storageService.hasInAppBiometricAuthEnabled,
+                            value: model!
+                                .storageService!.hasInAppBiometricAuthEnabled,
                             onChanged: (value) {
-                              model.setBiometricAuth();
+                              model!.setBiometricAuth();
                             }),
                       ),
                       // ),
@@ -448,8 +448,8 @@ class SettingsContainer extends StatelessWidget {
             // lock app now
             // only shows when user enabled the auth
             // and biometric or pin/password is activated
-            model.storageService.hasInAppBiometricAuthEnabled &&
-                    model.storageService.hasPhoneProtectionEnabled
+            model!.storageService!.hasInAppBiometricAuthEnabled &&
+                    model!.storageService!.hasPhoneProtectionEnabled
                 ? Card(
                     elevation: 5,
                     color: walletCardColor,
@@ -466,7 +466,7 @@ class SettingsContainer extends StatelessWidget {
                                 color: white, size: 18),
                           ),
                           Expanded(
-                            child: Text(AppLocalizations.of(context).lockAppNow,
+                            child: Text(AppLocalizations.of(context)!.lockAppNow,
                                 style: Theme.of(context).textTheme.headline5,
                                 textAlign: TextAlign.left),
                           ),
@@ -477,9 +477,9 @@ class SettingsContainer extends StatelessWidget {
                                 activeTrackColor: white,
                                 activeColor: primaryColor,
                                 inactiveTrackColor: white,
-                                value: model.lockAppNow,
+                                value: model!.lockAppNow,
                                 onChanged: (value) {
-                                  model.setLockAppNowValue();
+                                  model!.setLockAppNowValue();
                                 }),
                           ),
                           // ),
@@ -509,7 +509,7 @@ class SettingsContainer extends StatelessWidget {
                       ),
                       // Add column here and add text box that shows which node is current
                       Expanded(
-                        child: Text(AppLocalizations.of(context).useAsiaNode,
+                        child: Text(AppLocalizations.of(context)!.useAsiaNode,
                             style: Theme.of(context).textTheme.headline5,
                             textAlign: TextAlign.left),
                       ),
@@ -520,9 +520,9 @@ class SettingsContainer extends StatelessWidget {
                             activeTrackColor: white,
                             activeColor: primaryColor,
                             inactiveTrackColor: white,
-                            value: model.storageService.isHKServer,
+                            value: model!.storageService!.isHKServer,
                             onChanged: (value) {
-                              model.changeBaseAppUrl();
+                              model!.changeBaseAppUrl();
                             }),
                       ),
                       // ),
@@ -543,7 +543,7 @@ class SettingsContainer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      'v ${model.versionName}.${model.buildNumber}',
+                      'v ${model!.versionName}.${model!.buildNumber}',
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     if (!isProduction)
@@ -556,11 +556,11 @@ class SettingsContainer extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(5),
               child: Center(
-                child: Text(model.errorMessage,
+                child: Text(model!.errorMessage,
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme
-                        .bodyText2
+                        .bodyText2!
                         .copyWith(color: Colors.red)),
               ),
             ),
@@ -570,11 +570,11 @@ class SettingsContainer extends StatelessWidget {
                 text: TextSpan(
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      model.sharedService
+                      model!.sharedService!
                           .launchInBrowser(Uri.parse(exchangilyPrivacyUrl));
                     },
-                  text: AppLocalizations.of(context).privacyPolicy,
-                  style: Theme.of(context).textTheme.bodyText1.copyWith(
+                  text: AppLocalizations.of(context)!.privacyPolicy,
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
                       ),
@@ -593,15 +593,15 @@ class SettingsContainer extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 3.0),
           child: Icon(
-            !model.isVisible ? Icons.enhanced_encryption : Icons.remove_red_eye,
+            !model!.isVisible ? Icons.enhanced_encryption : Icons.remove_red_eye,
             color: globals.primaryColor,
             size: 18,
           ),
         ),
         Text(
-          !model.isVisible
-              ? AppLocalizations.of(context).displayMnemonic
-              : AppLocalizations.of(context).hideMnemonic,
+          !model!.isVisible
+              ? AppLocalizations.of(context)!.displayMnemonic
+              : AppLocalizations.of(context)!.hideMnemonic,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline5,
         ),
@@ -621,10 +621,10 @@ class SettingsContainer extends StatelessWidget {
             size: 18,
           ),
         ),
-        model.isDeleting
-            ? Text(AppLocalizations.of(context).deleteWallet + '...')
+        model!.isDeleting
+            ? Text(AppLocalizations.of(context)!.deleteWallet + '...')
             : Text(
-                AppLocalizations.of(context).deleteWallet,
+                AppLocalizations.of(context)!.deleteWallet,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline5,
               ),

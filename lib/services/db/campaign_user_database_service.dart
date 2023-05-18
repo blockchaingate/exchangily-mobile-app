@@ -29,17 +29,17 @@ class CampaignUserDatabaseService {
   final String columnReferralCode = 'referralCode';
 
   static const _databaseVersion = 6;
-  static Future<Database> _database;
+  static Future<Database>? _database;
   String path = '';
 
-  Future<Database> initDb() async {
-    if (_database != null) return _database;
+  Future<Database>? initDb() async {
+    if (_database != null) return _database!;
     var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
     log.w(path);
     _database =
         openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
-    return _database;
+    return _database!;
   }
 
   void _onCreate(Database db, int version) async {
@@ -58,7 +58,7 @@ class CampaignUserDatabaseService {
 
   Future<List<CampaignUserData>> getAll() async {
     await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
     log.w('getall $db');
 
     // res is giving me the same output in the log whether i map it or just take var res
@@ -73,7 +73,7 @@ class CampaignUserDatabaseService {
 // Insert Data In The Database
   Future insert(CampaignUserData campaignUserData) async {
     await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
     int id = await db.insert(tableName, campaignUserData.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
     return id;
@@ -81,51 +81,51 @@ class CampaignUserDatabaseService {
 
   // Get User By Id
   Future getByMemberId(String id) async {
-    final Database db = await _database;
+    final Database db = (await _database)!;
     List<Map> res =
         await db.query(tableName, where: 'email= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
     if (res.isNotEmpty) {
-      return CampaignUserData.fromJson((res.first));
+      return CampaignUserData.fromJson(res.first as Map<String, dynamic>);
     }
     return null;
   }
 
 // Get User By Email
   Future getByEmail(String email) async {
-    final Database db = await _database;
+    final Database db = (await _database)!;
     List<Map> res =
         await db.query(tableName, where: 'email= ?', whereArgs: [email]);
     log.w('ID - $email --- $res');
     if (res.isNotEmpty) {
-      return CampaignUserData.fromJson((res.first));
+      return CampaignUserData.fromJson(res.first as Map<String, dynamic>);
     }
     return null;
   }
 
   // Get User By Token
-  Future<CampaignUserData> getUserDataByToken(String token) async {
+  Future<CampaignUserData?> getUserDataByToken(String? token) async {
     await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
     log.w('db $db');
     List<Map> res =
         await db.query(tableName, where: 'token= ?', whereArgs: [token]);
     log.w('Login token - $token --- $res');
     if (res.isNotEmpty) {
-      return CampaignUserData.fromJson((res.first));
+      return CampaignUserData.fromJson(res.first as Map<String, dynamic>);
     }
     return null;
   }
 
   // Delete Single Object From Database By email
-  Future<void> deleteUserData(String email) async {
-    final db = await _database;
+  Future<void> deleteUserData(String? email) async {
+    final db = (await _database)!;
     await db.delete(tableName, where: "email = ?", whereArgs: [email]);
   }
 
   // Update database
   Future<void> update(CampaignUserData campaignUserData) async {
-    final Database db = await _database;
+    final Database db = (await _database)!;
     await db.update(
       tableName,
       campaignUserData.toJson(),
@@ -137,7 +137,7 @@ class CampaignUserDatabaseService {
 
   // Close Database
   Future closeDb() async {
-    var db = await _database;
+    var db = (await _database)!;
     return db.close();
   }
 

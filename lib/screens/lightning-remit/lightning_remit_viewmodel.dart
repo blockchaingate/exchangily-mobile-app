@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:barcode_scan/barcode_scan.dart';
+// import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -38,23 +38,23 @@ class LightningRemitViewmodel extends FutureViewModel {
 
   final amountController = TextEditingController();
   final addressController = TextEditingController();
-  ApiService apiService = locator<ApiService>();
-  NavigationService navigationService = locator<NavigationService>();
-  TokenInfoDatabaseService tokenListDatabaseService =
+  ApiService? apiService = locator<ApiService>();
+  NavigationService? navigationService = locator<NavigationService>();
+  TokenInfoDatabaseService? tokenListDatabaseService =
       locator<TokenInfoDatabaseService>();
-  SharedService sharedService = locator<SharedService>();
-  DialogService dialogService = locator<DialogService>();
-  LocalStorageService storageService = locator<LocalStorageService>();
-  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+  SharedService? sharedService = locator<SharedService>();
+  DialogService? dialogService = locator<DialogService>();
+  LocalStorageService? storageService = locator<LocalStorageService>();
+  TransactionHistoryDatabaseService? transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-  final coinService = locator<CoinService>();
-  WalletService walletService = locator<WalletService>();
-  String tickerName = '';
-  BuildContext context;
-  double quantity = 0.0;
+  final CoinService? coinService = locator<CoinService>();
+  WalletService? walletService = locator<WalletService>();
+  String? tickerName = '';
+  BuildContext? context;
+  double? quantity = 0.0;
   List<Map<String, dynamic>> coins = [];
   GlobalKey globalKey = GlobalKey();
-  ScrollController scrollController;
+  ScrollController? scrollController;
   bool isExchangeBalanceEmpty = false;
   String barcodeRes = '';
   String barcodeRes2 = '';
@@ -64,14 +64,14 @@ class LightningRemitViewmodel extends FutureViewModel {
 
   List<TransactionHistory> transactionHistory = [];
 
-  String fabAddress = '';
+  String? fabAddress = '';
 
 /*----------------------------------------------------------------------
                     Default Future to Run
 ----------------------------------------------------------------------*/
   @override
   Future futureToRun() async {
-    return await apiService.getAssetsBalance("");
+    return await apiService!.getAssetsBalance("");
   }
 
 /*----------------------------------------------------------------------
@@ -79,9 +79,9 @@ class LightningRemitViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
 
   init() async {
-    sharedService.context = context;
+    sharedService!.context = context;
     fabAddress =
-        await walletService.getAddressFromCoreWalletDatabaseByTickerName('FAB');
+        await walletService!.getAddressFromCoreWalletDatabaseByTickerName('FAB');
   }
 
 /*----------------------------------------------------------------------
@@ -97,8 +97,8 @@ class LightningRemitViewmodel extends FutureViewModel {
     for (var element in exchangeBalances) {
       log.w('onData ${element.toJson().toString()}');
       try {
-        if (element.ticker.isEmpty) {
-          await coinService
+        if (element.ticker!.isEmpty) {
+          await coinService!
               .getSingleTokenData('', coinType: element.coinType)
               .then((token) {
             //storageService.tokenList.forEach((newToken){
@@ -109,7 +109,7 @@ class LightningRemitViewmodel extends FutureViewModel {
             if (token == null) {
               element.ticker = element.coinType.toString();
             }
-            element.ticker = token.tickerName; //}
+            element.ticker = token!.tickerName; //}
           });
 //element.ticker =tradeService.setTickerNameByType(element.coinType);
           debugPrint('exchanageBalanceModel tickerName ${element.ticker}');
@@ -136,13 +136,13 @@ class LightningRemitViewmodel extends FutureViewModel {
     setBusy(true);
     transactionHistory = [];
 
-    await apiService.getLightningRemitHistoryEvents(fabAddress).then((res) {
+    await apiService!.getLightningRemitHistoryEvents(fabAddress).then((res) {
       res.forEach((tx) {
         transactionHistory.add(tx);
       });
       log.w('LightningRemi txs ${transactionHistory.length}');
       transactionHistory.sort(
-          (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)));
+          (a, b) => DateTime.parse(b.date!).compareTo(DateTime.parse(a.date!)));
     });
     setBusy(false);
   }
@@ -178,7 +178,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     if (isShowBottomSheet) {
       debugPrint('Bottom Sheet already visible');
 
-      navigationService.goBack();
+      navigationService!.goBack();
     } else {
       showBottomSheet(
         context: context1,
@@ -229,7 +229,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(exchangeBalances[index].ticker,
+                          Text(exchangeBalances[index].ticker!,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline4),
                           UIHelper.horizontalSpaceSmall,
@@ -264,7 +264,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                     onBackButtonPressed
 ----------------------------------------------------------------------*/
   onBackButtonPressed() async {
-    await sharedService.onBackButtonPressed('/dashboard');
+    await sharedService!.onBackButtonPressed('/dashboard');
   }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
                                     Barcode Scan
@@ -274,28 +274,29 @@ class LightningRemitViewmodel extends FutureViewModel {
     try {
       setBusy(true);
       String barcode = '';
-      storageService.isCameraOpen = true;
-      barcode = await BarcodeScanner.scan().then((value) => value.rawContent);
+      storageService!.isCameraOpen = true;
+      barcode =
+          "await BarcodeScanner.scan().then((value) => value.rawContent);";
       addressController.text = barcode;
       setBusy(false);
     } on PlatformException catch (e) {
       if (e.code == "PERMISSION_NOT_GRANTED") {
         setBusy(true);
-        sharedService.alertDialog(
-            '', AppLocalizations.of(context).userAccessDenied,
+        sharedService!.alertDialog(
+            '', AppLocalizations.of(context!)!.userAccessDenied,
             isWarning: false);
         // receiverWalletAddressTextController.text =
         //     AppLocalizations.of(context).userAccessDenied;
       } else {
         // setBusy(true);
-        sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
+        sharedService!.alertDialog('', AppLocalizations.of(context!)!.unknownError,
             isWarning: false);
       }
     } on FormatException {
-      sharedService.alertDialog('', AppLocalizations.of(context).scanCancelled,
+      sharedService!.alertDialog('', AppLocalizations.of(context!)!.scanCancelled,
           isWarning: false);
     } catch (e) {
-      sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
+      sharedService!.alertDialog('', AppLocalizations.of(context!)!.unknownError,
           isWarning: false);
     }
 
@@ -306,7 +307,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                     Update Selected Tickername
 ----------------------------------------------------------------------*/
   updateSelectedTickername(
-    String name,
+    String? name,
   ) {
     setBusy(true);
     tickerName = name;
@@ -317,7 +318,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     // changeBottomSheetStatus();
   }
 
-  updateSelectedTickernameIOS(int index, double updatedQuantity) {
+  updateSelectedTickernameIOS(int index, double? updatedQuantity) {
     setBusy(true);
     debugPrint(
         'INDEX ${index + 1} ---- coins length ${exchangeBalances.length}');
@@ -327,7 +328,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     quantity = updatedQuantity;
     debugPrint('IOS tickerName $tickerName --- quantity $quantity');
     setBusy(false);
-    if (isShowBottomSheet) navigationService.goBack();
+    if (isShowBottomSheet) navigationService!.goBack();
     changeBottomSheetStatus();
   }
 
@@ -336,10 +337,10 @@ class LightningRemitViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   refreshBalance() async {
     setBusyForObject(exchangeBalances, true);
-    await apiService.getSingleCoinExchangeBalance(tickerName).then((res) {
+    await apiService!.getSingleCoinExchangeBalance(tickerName!).then((res) {
       exchangeBalances.firstWhere((element) {
         if (element.ticker == tickerName) {
-          element.unlockedAmount = res.unlockedAmount;
+          element.unlockedAmount = res!.unlockedAmount;
         }
         log.w('udpated balance check ${element.unlockedAmount}');
         return true;
@@ -355,15 +356,15 @@ class LightningRemitViewmodel extends FutureViewModel {
   showBarcode() async {
     setBusy(true);
 
-    String kbAddress = walletService.toKbPaymentAddress(fabAddress);
+    String kbAddress = walletService!.toKbPaymentAddress(fabAddress!);
     debugPrint('KBADDRESS $kbAddress');
     showDialog(
-      context: context,
+      context: context!,
       builder: (BuildContext context) {
         return Platform.isIOS
             ? CupertinoAlertDialog(
                 title: Center(
-                    child: Text(AppLocalizations.of(context).receiveAddress)),
+                    child: Text(AppLocalizations.of(context)!.receiveAddress)),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -385,7 +386,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                               size: 16,
                             ),
                             onPressed: () {
-                              sharedService.copyAddress(context, kbAddress)();
+                              sharedService!.copyAddress(context, kbAddress)();
                             })
                       ],
                     ),
@@ -406,7 +407,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                                 errorStateBuilder: (context, err) {
                                   return Center(
                                     child: Text(
-                                        AppLocalizations.of(context)
+                                        AppLocalizations.of(context)!
                                             .somethingWentWrong,
                                         textAlign: TextAlign.center),
                                   );
@@ -427,10 +428,10 @@ class LightningRemitViewmodel extends FutureViewModel {
                                 const BorderRadius.all(Radius.circular(4)),
                             child: Center(
                                 child: Text(
-                              AppLocalizations.of(context).share,
+                              AppLocalizations.of(context)!.share,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline5
+                                  .headline5!
                                   .copyWith(color: primaryColor),
                             )),
                             onPressed: () {
@@ -442,10 +443,10 @@ class LightningRemitViewmodel extends FutureViewModel {
                                 File file = File(filePath);
                                 Future.delayed(const Duration(milliseconds: 30),
                                     () {
-                                  sharedService
+                                  sharedService!
                                       .capturePng(globalKey: globalKey)
                                       .then((byteData) {
-                                    file.writeAsBytes(byteData).then((onFile) {
+                                    file.writeAsBytes(byteData!).then((onFile) {
                                       Share.shareFiles([onFile.path],
                                           text: kbAddress);
                                     });
@@ -458,7 +459,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                           borderRadius:
                               const BorderRadius.all(Radius.circular(4)),
                           child: Text(
-                            AppLocalizations.of(context).close,
+                            AppLocalizations.of(context)!.close,
                             style: Theme.of(context).textTheme.headline5,
                           ),
                           onPressed: () {
@@ -484,11 +485,11 @@ class LightningRemitViewmodel extends FutureViewModel {
                     color: secondaryColor.withOpacity(0.5),
                     child: Center(
                         child:
-                            Text(AppLocalizations.of(context).receiveAddress)),
+                            Text(AppLocalizations.of(context)!.receiveAddress)),
                   ),
                   titleTextStyle: Theme.of(context)
                       .textTheme
-                      .headline4
+                      .headline4!
                       .copyWith(fontWeight: FontWeight.bold),
                   contentTextStyle: const TextStyle(color: grey),
                   content: Column(
@@ -512,7 +513,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                                 size: 16,
                               ),
                               onPressed: () {
-                                sharedService.copyAddress(context, kbAddress);
+                                sharedService!.copyAddress(context, kbAddress);
                               })
                         ],
                       ),
@@ -533,7 +534,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                                   errorStateBuilder: (context, err) {
                                     return Center(
                                       child: Text(
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                               .somethingWentWrong,
                                           textAlign: TextAlign.center),
                                     );
@@ -550,7 +551,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                                 style: outlinedButtonStyles1.copyWith(
                                     backgroundColor: MaterialStateProperty.all(
                                         primaryColor)),
-                                child: Text(AppLocalizations.of(context).share,
+                                child: Text(AppLocalizations.of(context)!.share,
                                     style:
                                         Theme.of(context).textTheme.headline6),
                                 onPressed: () {
@@ -564,11 +565,11 @@ class LightningRemitViewmodel extends FutureViewModel {
 
                                     Future.delayed(
                                         const Duration(milliseconds: 30), () {
-                                      sharedService
+                                      sharedService!
                                           .capturePng(globalKey: globalKey)
                                           .then((byteData) {
                                         file
-                                            .writeAsBytes(byteData)
+                                            .writeAsBytes(byteData!)
                                             .then((onFile) {
                                           Share.shareFiles([onFile.path],
                                               text: kbAddress);
@@ -584,7 +585,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                             child: OutlinedButton(
                               style: outlinedButtonStyles1,
                               child: Text(
-                                AppLocalizations.of(context).close,
+                                AppLocalizations.of(context)!.close,
                                 style: Theme.of(context).textTheme.headline6,
                               ),
                               onPressed: () {
@@ -611,10 +612,10 @@ class LightningRemitViewmodel extends FutureViewModel {
 
   transfer() async {
     setBusy(true);
-    if (walletService.isValidKbAddress(addressController.text)) {
+    if (walletService!.isValidKbAddress(addressController.text)) {
       if (amountController.text == '') {
-        sharedService.alertDialog(AppLocalizations.of(context).validationError,
-            AppLocalizations.of(context).amountMissing);
+        sharedService!.alertDialog(AppLocalizations.of(context!)!.validationError,
+            AppLocalizations.of(context!)!.amountMissing);
         setBusy(false);
         return;
       }
@@ -624,33 +625,33 @@ class LightningRemitViewmodel extends FutureViewModel {
       // int coinType = getCoinTypeIdByName(tickerName);
       debugPrint(_selectedExchangeBal.coinType.toString());
       double amount = double.parse(amountController.text);
-      double selectedCoinBalance = _selectedExchangeBal.unlockedAmount;
+      double selectedCoinBalance = _selectedExchangeBal.unlockedAmount!;
       if (selectedCoinBalance <= 0.0 || amount > selectedCoinBalance) {
-        sharedService.alertDialog(AppLocalizations.of(context).validationError,
-            AppLocalizations.of(context).invalidAmount);
+        sharedService!.alertDialog(AppLocalizations.of(context!)!.validationError,
+            AppLocalizations.of(context!)!.invalidAmount);
         setBusy(false);
         log.e('No exchange balance ${_selectedExchangeBal.unlockedAmount}');
         return;
       }
-      await dialogService
+      await dialogService!
           .showDialog(
-              title: AppLocalizations.of(context).enterPassword,
-              description: AppLocalizations.of(context)
+              title: AppLocalizations.of(context!)!.enterPassword,
+              description: AppLocalizations.of(context!)!
                   .dialogManagerTypeSamePasswordNote,
-              buttonTitle: AppLocalizations.of(context).confirm)
+              buttonTitle: AppLocalizations.of(context!)!.confirm)
           .then((res) async {
-        if (res.confirmed) {
-          String mnemonic = res.returnedText;
-          Uint8List seed = walletService.generateSeed(mnemonic);
-          await walletService
-              .sendCoin(seed, _selectedExchangeBal.coinType,
+        if (res.confirmed!) {
+          String? mnemonic = res.returnedText;
+          Uint8List seed = walletService!.generateSeed(mnemonic);
+          await walletService!
+              .sendCoin(seed, _selectedExchangeBal.coinType!,
                   addressController.text, double.parse(amountController.text))
               .then((res) {
             log.w('RES $res');
             if (res['transactionHash'] != null ||
                 res['transactionHash'] != '') {
               showSimpleNotification(
-                  Text(AppLocalizations.of(context).sendTransactionComplete),
+                  Text(AppLocalizations.of(context!)!.sendTransactionComplete),
                   position: NotificationPosition.bottom,
                   background: primaryColor);
               String date = DateTime.now().toString();
@@ -664,15 +665,15 @@ class LightningRemitViewmodel extends FutureViewModel {
                   tickerChainTxStatus: '',
                   quantity: amount,
                   tag: 'bindpay');
-              walletService.insertTransactionInDatabase(transactionHistory);
+              walletService!.insertTransactionInDatabase(transactionHistory);
               Future.delayed(const Duration(seconds: 3), () async {
                 await refreshBalance();
                 log.i('balance updated');
               });
             } else {
-              sharedService.alertDialog(
-                  AppLocalizations.of(context).transanctionFailed,
-                  AppLocalizations.of(context).pleaseTryAgainLater);
+              sharedService!.alertDialog(
+                  AppLocalizations.of(context!)!.transanctionFailed,
+                  AppLocalizations.of(context!)!.pleaseTryAgainLater);
             }
           });
         } else if (res.returnedText == 'Closed') {
@@ -680,10 +681,10 @@ class LightningRemitViewmodel extends FutureViewModel {
           setBusy(false);
         } else {
           log.e('Wrong pass');
-          sharedService.sharedSimpleNotification(
-            AppLocalizations.of(context).notice,
+          sharedService!.sharedSimpleNotification(
+            AppLocalizations.of(context!)!.notice,
             subtitle:
-                AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+                AppLocalizations.of(context!)!.pleaseProvideTheCorrectPassword,
           );
           setBusy(false);
         }
@@ -693,8 +694,8 @@ class LightningRemitViewmodel extends FutureViewModel {
         return false;
       });
     } else {
-      sharedService.alertDialog(AppLocalizations.of(context).validationError,
-          AppLocalizations.of(context).pleaseCorrectTheFormatOfReceiveAddress);
+      sharedService!.alertDialog(AppLocalizations.of(context!)!.validationError,
+          AppLocalizations.of(context!)!.pleaseCorrectTheFormatOfReceiveAddress);
       setBusy(false);
     }
     setBusy(false);
@@ -706,15 +707,15 @@ class LightningRemitViewmodel extends FutureViewModel {
 
   Future contentPaste() async {
     await Clipboard.getData('text/plain')
-        .then((res) => addressController.text = res.text);
+        .then((res) => addressController.text = res!.text!);
   }
 
-  copyAddress(String txId) {
+  copyAddress(String? txId) {
     Clipboard.setData(ClipboardData(text: txId));
     showSimpleNotification(
         Center(
-            child: Text(AppLocalizations.of(context).copiedSuccessfully,
-                style: Theme.of(context).textTheme.headline5)),
+            child: Text(AppLocalizations.of(context!)!.copiedSuccessfully,
+                style: Theme.of(context!).textTheme.headline5)),
         position: NotificationPosition.bottom,
         background: primaryColor);
   }

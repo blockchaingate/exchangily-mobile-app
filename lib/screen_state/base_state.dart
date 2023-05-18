@@ -26,17 +26,17 @@ class BaseState extends ChangeNotifier {
 
   // better state handling with error
   bool _busy = false;
-  String _errorMessage = '';
+  String? _errorMessage = '';
   String _message = '';
 
   bool get busy => _busy;
-  String get errorMessage => _errorMessage;
+  String? get errorMessage => _errorMessage;
   String get message => _message;
 
-  bool get hasErrorMessage => _errorMessage != null && _errorMessage.isNotEmpty;
+  bool get hasErrorMessage => _errorMessage != null && _errorMessage!.isNotEmpty;
   bool get hasMessage => _message != null && _message.isNotEmpty;
 
-  void setErrorMessage(String message) {
+  void setErrorMessage(String? message) {
     _errorMessage = message;
     notifyListeners();
   }

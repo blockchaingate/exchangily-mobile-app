@@ -3,10 +3,10 @@ import 'package:exchangilymobileapp/responsive/responsive_widget_builder.dart';
 import 'package:flutter/material.dart';
 
 class ScreenTypeLayout extends StatelessWidget {
-  final Widget mobile;
-  final Widget tablet;
-  final Widget desktop;
-  const ScreenTypeLayout({Key key, this.mobile, this.desktop, this.tablet})
+  final Widget? mobile;
+  final Widget? tablet;
+  final Widget? desktop;
+  const ScreenTypeLayout({Key? key, this.mobile, this.desktop, this.tablet})
       : super(key: key);
 
   @override

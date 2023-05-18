@@ -12,17 +12,17 @@
 */
 
 class CoreWalletModel {
-  int id;
-  String mnemonic;
-  String walletBalancesBody;
+  int? id;
+  String? mnemonic;
+  String? walletBalancesBody;
 
   CoreWalletModel({this.id, this.mnemonic, this.walletBalancesBody});
 
   factory CoreWalletModel.fromJson(Map<String, dynamic> json) {
     return CoreWalletModel(
       id: json['id'],
-      mnemonic: json['mnemonic'] as String,
-      walletBalancesBody: json['walletBalancesBody'] as String,
+      mnemonic: json['mnemonic'] as String?,
+      walletBalancesBody: json['walletBalancesBody'] as String?,
     );
   }
 

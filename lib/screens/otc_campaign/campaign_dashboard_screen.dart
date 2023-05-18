@@ -9,7 +9,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignDashboardScreen extends StatelessWidget {
-  CampaignDashboardScreen({Key key}) : super(key: key);
+  CampaignDashboardScreen({Key? key}) : super(key: key);
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
@@ -42,7 +42,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                     automaticallyImplyLeading: false,
                     title: Center(
                         child: Text(
-                      model.campaignName,
+                      model.campaignName!,
                       style: Theme.of(context).textTheme.headline4,
                     )),
                   ),
@@ -54,7 +54,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                     title: model.campaignUserData == null
                         ? const Text('')
                         : Text(
-                            model.campaignUserData.email,
+                            model.campaignUserData!.email!,
                             style: Theme.of(context).textTheme.headline5,
                           ),
                   ),
@@ -65,7 +65,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                       color: globals.green,
                     ),
                     title: Text(
-                        AppLocalizations.of(context).readCampaignInstructions),
+                        AppLocalizations.of(context)!.readCampaignInstructions),
                     onTap: () {
                       Navigator.pushNamed(context, '/campaignInstructions');
                     },
@@ -74,10 +74,10 @@ class CampaignDashboardScreen extends StatelessWidget {
                   ListTile(
                     title: model.campaignUserData != null
                         ? Text(
-                            '${AppLocalizations.of(context).myReferralCode} ${model.campaignUserData.referralCode.toString()}',
+                            '${AppLocalizations.of(context)!.myReferralCode} ${model.campaignUserData!.referralCode.toString()}',
                             style: Theme.of(context)
                                 .textTheme
-                                .headline5
+                                .headline5!
                                 .copyWith(
                                     color: globals.primaryColor,
                                     decoration: TextDecoration.underline))
@@ -85,7 +85,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                     trailing: Icon(Icons.share, color: globals.white54),
                     onTap: () {
                       Share.share(
-                          'Here is my referral code ${model.campaignUserData.referralCode.toString()} for campaign ${model.campaignName}');
+                          'Here is my referral code ${model.campaignUserData!.referralCode.toString()} for campaign ${model.campaignName}');
                     },
                   ),
                   UIHelper.divider,
@@ -95,7 +95,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                       color: globals.red,
                     ),
                     title: Text(
-                      AppLocalizations.of(context).logout,
+                      AppLocalizations.of(context)!.logout,
                     ),
                     onTap: () {
                       model.logout();
@@ -132,7 +132,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     color: globals.primaryColor,
                                   ),
                                   onPressed: () {
-                                    _scaffoldKey.currentState.openDrawer();
+                                    _scaffoldKey.currentState!.openDrawer();
                                   }),
                             ),
                             title: Padding(
@@ -140,7 +140,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                               child: model.campaignUserData == null
                                   ? const Text('')
                                   : Text(
-                                      '${AppLocalizations.of(context).welcome} ${model.campaignUserData.email}',
+                                      '${AppLocalizations.of(context)!.welcome} ${model.campaignUserData!.email}',
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline5),
@@ -150,7 +150,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   model.logout();
                                 },
                                 child: Text(
-                                  AppLocalizations.of(context).logout,
+                                  AppLocalizations.of(context)!.logout,
                                   style: Theme.of(context).textTheme.headline5,
                                   textAlign: TextAlign.end,
                                 )))
@@ -178,7 +178,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             ),
                           ),
                           title: Text(
-                            AppLocalizations.of(context).myTotalAssets,
+                            AppLocalizations.of(context)!.myTotalAssets,
                             style: const TextStyle(letterSpacing: 1.1),
                           ),
                           subtitle: Column(
@@ -188,7 +188,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     const EdgeInsets.symmetric(vertical: 3.0),
                                 child: Row(
                                   children: <Widget>[
-                                    Text(AppLocalizations.of(context).quantity,
+                                    Text(AppLocalizations.of(context)!.quantity,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1),
@@ -256,7 +256,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    AppLocalizations.of(context).level,
+                                    AppLocalizations.of(context)!.level,
                                     style:
                                         Theme.of(context).textTheme.headline5,
                                   ),
@@ -277,7 +277,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                       : Text(model.memberLevel.toUpperCase(),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5
+                                              .headline5!
                                               .copyWith(
                                                   fontWeight: FontWeight.w600,
                                                   color: Color(model
@@ -297,7 +297,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 5.0),
                                     child: Text(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                               .referralCount +
                                           ' ',
                                       style:
@@ -348,13 +348,13 @@ class CampaignDashboardScreen extends StatelessWidget {
                             title: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text(AppLocalizations.of(context).myInvestment,
+                                Text(AppLocalizations.of(context)!.myInvestment,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5
+                                        .headline5!
                                         .copyWith(color: globals.buyPrice)),
                                 Text(
-                                  AppLocalizations.of(context).myTokens,
+                                  AppLocalizations.of(context)!.myTokens,
                                   style: Theme.of(context).textTheme.headline5,
                                 ),
                               ],
@@ -394,11 +394,11 @@ class CampaignDashboardScreen extends StatelessWidget {
                                           ? const Text('')
                                           : Text(
                                               model
-                                                  .memberProfile.totalQuantities
+                                                  .memberProfile!.totalQuantities
                                                   .toString(),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline5
+                                                  .headline5!
                                                   .copyWith(
                                                       fontWeight:
                                                           FontWeight.w600,
@@ -436,13 +436,13 @@ class CampaignDashboardScreen extends StatelessWidget {
                               ),
                             ),
                             title: Text(
-                                AppLocalizations.of(context).myReferralReward),
+                                AppLocalizations.of(context)!.myReferralReward),
                             subtitle: model.busy
                                 ? Shimmer.fromColors(
                                     baseColor: globals.primaryColor,
                                     highlightColor: globals.grey,
                                     child: Text(
-                                      model.errorMessage,
+                                      model.errorMessage!,
                                       style:
                                           Theme.of(context).textTheme.headline5,
                                     ))
@@ -485,10 +485,10 @@ class CampaignDashboardScreen extends StatelessWidget {
                             title: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text(AppLocalizations.of(context)
+                                Text(AppLocalizations.of(context)!
                                     .teamsTotalValue),
                                 Text(
-                                  AppLocalizations.of(context).teamReward,
+                                  AppLocalizations.of(context)!.teamReward,
                                   style: Theme.of(context).textTheme.headline5,
                                 )
                               ],
@@ -520,17 +520,17 @@ class CampaignDashboardScreen extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
-                                          model.myTeamsTotalValue
+                                          model.myTeamsTotalValue!
                                               .toStringAsFixed(2),
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline5),
                                       Text(
-                                          model.myTeamsTotalRewards
+                                          model.myTeamsTotalRewards!
                                               .toStringAsFixed(2),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5
+                                              .headline5!
                                               .copyWith(
                                                   fontWeight: FontWeight.w600,
                                                   color: Color(model
@@ -674,13 +674,25 @@ class CampaignDashboardScreen extends StatelessWidget {
             floatingActionButton: Container(
                 margin: const EdgeInsets.only(right: 10.0),
                 width: MediaQuery.of(context).size.width - 50,
-                child: RaisedButton(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(0),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/campaignPayment');
-                    },
-                    child: Text(AppLocalizations.of(context).buy,
-                        style: Theme.of(context).textTheme.headline4))),
+                    backgroundColor: globals.secondaryColor,
+                    shape: const StadiumBorder(
+                      side: BorderSide(
+                        color: globals.primaryColor,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/campaignPayment');
+                  },
+                  child: Text(
+                    AppLocalizations.of(context)!.buy,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                )),
             bottomNavigationBar: BottomNavBar(count: 2)),
       ),
     );

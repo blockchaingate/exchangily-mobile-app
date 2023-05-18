@@ -12,26 +12,26 @@
 */
 
 class TokenModel {
-  int _id;
-  int _decimal;
-  String _coinName;
-  String _chainName;
-  String _tickerName;
-  int _tokenType;
-  String _contract;
-  String _minWithdraw;
-  String _feeWithdraw;
+  int? _id;
+  int? _decimal;
+  String? _coinName;
+  String? _chainName;
+  String? _tickerName;
+  int? _tokenType;
+  String? _contract;
+  String? _minWithdraw;
+  String? _feeWithdraw;
 
   TokenModel(
-      {int id,
-      int decimal,
-      String coinName,
-      String tickerName,
-      String chainName,
-      int tokenType,
-      String contract,
-      String minWithdraw,
-      String feeWithdraw}) {
+      {int? id,
+      int? decimal,
+      String? coinName,
+      String? tickerName,
+      String? chainName,
+      int? tokenType,
+      String? contract,
+      String? minWithdraw,
+      String? feeWithdraw}) {
     _id = id;
     _decimal = decimal;
     _coinName = coinName;
@@ -51,12 +51,12 @@ class TokenModel {
     String feeWithdraw = fw.toString();
 
     return TokenModel(
-        decimal: json['decimal'] as int,
-        tickerName: json['tickerName'] as String,
-        coinName: json['coinName'] as String,
-        chainName: json['chainName'] as String,
-        tokenType: json['type'] as int,
-        contract: json['contract'] as String,
+        decimal: json['decimal'] as int?,
+        tickerName: json['tickerName'] as String?,
+        coinName: json['coinName'] as String?,
+        chainName: json['chainName'] as String?,
+        tokenType: json['type'] as int?,
+        contract: json['contract'] as String?,
         minWithdraw: minWithdraw,
         feeWithdraw: feeWithdraw);
   }
@@ -89,63 +89,63 @@ class TokenModel {
     _feeWithdraw = '';
   }
 
-  int get id => _id;
+  int? get id => _id;
 
-  set id(int id) {
+  set id(int? id) {
     _id = id;
   }
 
-  int get decimal => _decimal;
+  int? get decimal => _decimal;
 
-  set decimal(int decimal) {
+  set decimal(int? decimal) {
     _decimal = decimal;
   }
 
-  String get coinName => _coinName;
+  String? get coinName => _coinName;
 
-  set coinName(String coinName) {
+  set coinName(String? coinName) {
     _coinName = coinName;
   }
 
-  String get chainName => _chainName;
+  String? get chainName => _chainName;
 
-  set chainName(String chainName) {
+  set chainName(String? chainName) {
     _chainName = chainName;
   }
 
-  String get tickerName => _tickerName;
+  String? get tickerName => _tickerName;
 
-  set tickerName(String tickerName) {
+  set tickerName(String? tickerName) {
     _tickerName = tickerName;
   }
 
-  int get coinType => _tokenType;
+  int? get coinType => _tokenType;
 
-  set coinType(int tokenType) {
+  set coinType(int? tokenType) {
     _tokenType = tokenType;
   }
 
-  String get contract => _contract;
+  String? get contract => _contract;
 
-  set contract(String contract) {
+  set contract(String? contract) {
     _contract = contract;
   }
 
-  String get minWithdraw => _minWithdraw;
+  String? get minWithdraw => _minWithdraw;
 
-  set minWithdraw(String minWithdraw) {
+  set minWithdraw(String? minWithdraw) {
     _minWithdraw = minWithdraw;
   }
 
-  String get feeWithdraw => _feeWithdraw;
+  String? get feeWithdraw => _feeWithdraw;
 
-  set feeWithdraw(String feeWithdraw) {
+  set feeWithdraw(String? feeWithdraw) {
     _feeWithdraw = feeWithdraw;
   }
 }
 
 class TokenList {
-  final List<TokenModel> tokens;
+  final List<TokenModel>? tokens;
   TokenList({this.tokens});
 
   factory TokenList.fromJson(List<dynamic> parsedJson) {

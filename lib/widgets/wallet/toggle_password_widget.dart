@@ -7,7 +7,7 @@ class TogglePasswordWidget extends StatelessWidget {
   final isShow;
   final Function(bool) togglePassword;
   const TogglePasswordWidget(
-      {@required this.isShow, @required this.togglePassword});
+      {required this.isShow, required this.togglePassword});
 
   @override
   Widget build(BuildContext context) {

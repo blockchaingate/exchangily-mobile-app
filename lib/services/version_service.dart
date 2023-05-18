@@ -20,7 +20,7 @@ import 'package:version/version.dart';
 class VersionService {
   final log = getLogger('VersionService');
   final client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
-  final sharedService = locator<SharedService>();
+  final SharedService? sharedService = locator<SharedService>();
 
   String iosStoreUrl =
       "https://apps.apple.com/ca/app/exchangily-dex-wallet/id1503068552";
@@ -40,7 +40,7 @@ class VersionService {
     debugPrint('My os: $os');
     try {
       debugPrint("appVersionUrl: " + appVersionUrl);
-      var response = await client.get(appVersionUrl);
+      var response = await client.get(Uri.parse(appVersionUrl));
       var json = response.body;
       if (json != null) {
         log.w('get version info $json}');
@@ -106,10 +106,10 @@ class VersionService {
           log.e("checkVersion has error!");
         } else {
           log.i("Have Res info");
-          var versionInfo = await sharedService.getLocalAppVersion();
+          var versionInfo = await sharedService!.getLocalAppVersion();
           log.i('getAppVersion $versionInfo');
-          var versionName = versionInfo['name'];
-          var buildNumber = versionInfo['buildNumber'];
+          var versionName = versionInfo['name']!;
+          var buildNumber = versionInfo['buildNumber']!;
           var localVersion = versionName + '.' + buildNumber;
           log.i('local version $localVersion');
           Version currentVersion = Version.parse(localVersion);
@@ -168,7 +168,7 @@ class VersionService {
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 5.0),
                         child: Text(
-                          AppLocalizations.of(context).appUpdateNotice,
+                          AppLocalizations.of(context)!.appUpdateNotice,
                           style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
@@ -179,11 +179,11 @@ class VersionService {
                     const SizedBox(
                       height: 20,
                     ),
-                    Text("${AppLocalizations.of(context).currentVersion}:  " +
+                    Text("${AppLocalizations.of(context)!.currentVersion}:  " +
                         userVersion.toString()),
                     UIHelper.verticalSpaceSmall,
                     Text(
-                      "${AppLocalizations.of(context).latestVersion}:  " +
+                      "${AppLocalizations.of(context)!.latestVersion}:  " +
                           latestVersion.toString(),
                       style: TextStyle(color: Colors.greenAccent[100]),
                     ),
@@ -230,7 +230,7 @@ class VersionService {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        AppLocalizations.of(context)
+                                        AppLocalizations.of(context)!
                                             .downloadLatestApkFromServer,
                                         style: const TextStyle(
                                             color: Colors.white),

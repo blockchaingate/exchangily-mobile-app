@@ -28,52 +28,52 @@ import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 
 class MyOrdersViewModel extends ReactiveViewModel {
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [_orderService];
-  BuildContext context;
-  final String tickerName;
+  List<ReactiveServiceMixin> get reactiveServices => [_orderService!];
+  late BuildContext context;
+  final String? tickerName;
 
   MyOrdersViewModel({this.tickerName});
 
   final log = getLogger('MyOrdersViewModel');
 
-  TradeService tradeService = locator<TradeService>();
-  final OrderService _orderService = locator<OrderService>();
-  final DialogService _dialogService = locator<DialogService>();
-  WalletService walletService = locator<WalletService>();
-  NavigationService navigationService = locator<NavigationService>();
-  ApiService apiService = locator<ApiService>();
-  SharedService sharedService = locator<SharedService>();
+  TradeService? tradeService = locator<TradeService>();
+  final OrderService? _orderService = locator<OrderService>();
+  final DialogService? _dialogService = locator<DialogService>();
+  WalletService? walletService = locator<WalletService>();
+  NavigationService? navigationService = locator<NavigationService>();
+  ApiService? apiService = locator<ApiService>();
+  SharedService? sharedService = locator<SharedService>();
 
   double filledAmount = 0;
   double filledPercentage = 0;
   String errorMessage = '';
 
-  List<OrderModel> myAllOrders = [];
+  List<OrderModel>? myAllOrders = [];
   List<OrderModel> myOpenOrders = [];
   List<OrderModel> myCloseOrders = [];
   List<OrderModel> cancelledOrders = [];
-  List<List<OrderModel>> myOrdersTabBarView = [];
+  List<List<OrderModel>?> myOrdersTabBarView = [];
 
-  List<OrderModel> get orders => _orderService.orders;
-  List<OrderModel> get singlePairOrders => _orderService.singlePairOrders;
+  List<OrderModel>? get orders => _orderService!.orders;
+  List<OrderModel>? get singlePairOrders => _orderService!.singlePairOrders;
 
   bool isFutureError = false;
 
-  String onClickOrderHash = '';
+  String? onClickOrderHash = '';
   PairDecimalConfig decimalConfig = PairDecimalConfig();
   bool isShowAllOrders = false;
 
-  RefreshController refreshController;
+  late RefreshController refreshController;
 
   int skip = 0;
   int count = 10;
 
   final bool _isOrderbookLoaded = false;
   bool get isOrderbookLoaded => _isOrderbookLoaded;
-  String get orderCancelledText => _orderCancelledText;
+  String? get orderCancelledText => _orderCancelledText;
 
-  String _orderCancelledText;
-  TextStyle orderCancelledTextStyle;
+  String? _orderCancelledText;
+  TextStyle? orderCancelledTextStyle;
 
   bool isCancelling = false;
 
@@ -83,13 +83,13 @@ class MyOrdersViewModel extends ReactiveViewModel {
   init() async {
     log.i('INIT');
     getMyOrdersByTickerName();
-    await sharedService
-        .getSinglePairDecimalConfig(tickerName)
+    await sharedService!
+        .getSinglePairDecimalConfig(tickerName!)
         .then((decimalConfig) => decimalConfig = decimalConfig);
 
-    _orderCancelledText = AppLocalizations.of(context).orderCancelled;
+    _orderCancelledText = AppLocalizations.of(context)!.orderCancelled;
     orderCancelledTextStyle =
-        Theme.of(context).textTheme.bodyText1.copyWith(color: colors.white);
+        Theme.of(context).textTheme.bodyText1!.copyWith(color: colors.white);
     // _orderService.swapSources();
   }
 
@@ -118,14 +118,14 @@ class MyOrdersViewModel extends ReactiveViewModel {
     log.e('in loading new orders -- Skip $skip');
 
     if (isShowAllOrders) {
-      if (myAllOrders.length == 10) {
+      if (myAllOrders!.length == 10) {
         skip += 10;
       } else {
         skip = 0;
       }
       await getAllMyOrders();
     } else {
-      if (singlePairOrders.length == 10) {
+      if (singlePairOrders!.length == 10) {
         skip += 10;
       } else {
         skip = 0;
@@ -153,13 +153,13 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusy(true);
     isFutureError = false;
     String exgAddress =
-        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
+        (await walletService!.getAddressFromCoreWalletDatabaseByTickerName('EXG'))!;
 
     clearOrderLists();
-    await _orderService.getMyOrders(exgAddress, skip: skip).then((data) {
+    await _orderService!.getMyOrders(exgAddress, skip: skip).then((data) {
       if (data != null) {
         myAllOrders = data;
-        log.e('getAllMyOrders length ${myAllOrders.length}');
+        log.e('getAllMyOrders length ${myAllOrders!.length}');
         for (var element in data) {
           /// 'amount' = orderQuantity,
           /// 'filledAmount' = filledQuantity
@@ -169,11 +169,11 @@ class MyOrdersViewModel extends ReactiveViewModel {
           //     100 /
           //     doubleAdd(element.filledQuantity, element.orderQuantity));
 
-          if (element.isActive) {
+          if (element.isActive!) {
             myOpenOrders.add(element);
-          } else if (!element.isActive && !element.isCancelled) {
+          } else if (!element.isActive! && !element.isCancelled!) {
             myCloseOrders.add(element);
-          } else if (element.isCancelled) {
+          } else if (element.isCancelled!) {
             cancelledOrders.add(element);
           }
         }
@@ -202,14 +202,14 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusy(true);
     clearOrderLists();
     isFutureError = false;
-    String exgAddress =
-        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
+    String? exgAddress =
+        await walletService!.getAddressFromCoreWalletDatabaseByTickerName('EXG');
 
-    await _orderService
+    await _orderService!
         .getMyOrdersByTickerName(exgAddress, tickerName, skip: skip)
         .then((value) {
-      log.e('getMyOrdersByTickerName order length ${singlePairOrders.length}');
-      for (var element in singlePairOrders) {
+      log.e('getMyOrdersByTickerName order length ${singlePairOrders!.length}');
+      for (var element in singlePairOrders!) {
         myAllOrders = singlePairOrders;
 
         /// 'amount' = orderQuantity,
@@ -219,12 +219,12 @@ class MyOrdersViewModel extends ReactiveViewModel {
         // filledPercentage = (element.filledQuantity *
         //     100 /
         //     doubleAdd(element.filledQuantity, element.orderQuantity));
-        if (element.isActive) {
+        if (element.isActive!) {
           myOpenOrders.add(element);
           //  log.e('Close orders ${myOpenOrders.length}');
-        } else if (!element.isActive && !element.isCancelled) {
+        } else if (!element.isActive! && !element.isCancelled!) {
           myCloseOrders.add(element);
-        } else if (element.isCancelled) {
+        } else if (element.isCancelled!) {
           cancelledOrders.add(element);
         }
 
@@ -253,19 +253,19 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusy(true);
     if (data != null) {
       myAllOrders = data;
-      log.e('My order length ${myAllOrders.length}');
+      log.e('My order length ${myAllOrders!.length}');
       for (var element in data) {
         /// 'amount' = orderQuantity,
         /// 'filledAmount' = filledQuantity
         filledAmount = doubleAdd(element.orderQuantity, element.filledQuantity);
-        filledPercentage = (element.filledQuantity *
+        filledPercentage = (element.filledQuantity! *
             100 /
             doubleAdd(element.filledQuantity, element.orderQuantity));
 
-        if (element.isActive) {
+        if (element.isActive!) {
           myOpenOrders.add(element);
           //  log.e('Close orders ${myOpenOrders.length}');
-        } else if (!element.isActive) {
+        } else if (!element.isActive!) {
           myCloseOrders.add(element);
           //  log.w('Close orders ${myCloseOrders.length}');
         }
@@ -288,9 +288,9 @@ class MyOrdersViewModel extends ReactiveViewModel {
   //  Password mismatch notice
 
   noticePasswordMismatch(context) {
-    return sharedService.sharedSimpleNotification(
-        AppLocalizations.of(context).passwordMismatch,
-        subtitle: AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
+    return sharedService!.sharedSimpleNotification(
+        AppLocalizations.of(context)!.passwordMismatch,
+        subtitle: AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword);
   }
 
   //   Check Password
@@ -299,14 +299,14 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusyForObject(onClickOrderHash, true);
     isCancelling = true;
     onClickOrderHash = orderHash;
-    var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
+    var res = await _dialogService!.showDialog(
+        title: AppLocalizations.of(context)!.enterPassword,
         description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm);
-    if (res.confirmed) {
-      String mnemonic = res.returnedText;
-      Uint8List seed = walletService.generateSeed(mnemonic);
+            AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
+        buttonTitle: AppLocalizations.of(context)!.confirm);
+    if (res.confirmed!) {
+      String? mnemonic = res.returnedText;
+      Uint8List seed = walletService!.generateSeed(mnemonic);
 
       var txHex = await txHexforCancelOrder(seed, orderHash);
       var resKanban = await kanbanUtils.sendRawKanbanTransaction(txHex);
@@ -315,9 +315,9 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
         Timer.periodic(const Duration(seconds: 2), (timer) async {
           var res =
-              await tradeService.getTxStatus(resKanban["transactionHash"]);
+              await tradeService!.getTxStatus(resKanban["transactionHash"]);
           if (res != null) {
-            String status = res['status'];
+            String? status = res['status'];
             bool txStatus = status == '0x1';
             log.i('RES $res -- bool $txStatus');
             if (status == '0x1') {
@@ -331,7 +331,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
               isCancelling = false;
               setBusyForObject(onClickOrderHash, false);
 
-              tradeService.setBalanceRefresh(true);
+              tradeService!.setBalanceRefresh(true);
             }
 
             timer.cancel();
@@ -339,19 +339,19 @@ class MyOrdersViewModel extends ReactiveViewModel {
             showSimpleNotification(
                 Center(
                   child:
-                      Text(orderCancelledText, style: orderCancelledTextStyle),
+                      Text(orderCancelledText!, style: orderCancelledTextStyle),
                 ),
                 background: colors.primaryColor,
                 position: NotificationPosition.bottom);
           }
         });
       }
-    } else if (!res.confirmed && res.returnedText != 'Closed') {
+    } else if (!res.confirmed! && res.returnedText != 'Closed') {
       log.e('wrong password');
       showSimpleNotification(
         Center(
             child: Text(
-                AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+                AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword,
                 style: Theme.of(context).textTheme.bodyText2)),
       );
     } else {
@@ -367,7 +367,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
   txHexforCancelOrder(seed, orderHash) async {
     String exgAddress =
-        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
+        (await walletService!.getAddressFromCoreWalletDatabaseByTickerName('EXG'))!;
     var abiHex = '7489ec23' + trimHexPrefix(orderHash);
     var nonce = await kanbanUtils.getNonce(exgAddress);
 

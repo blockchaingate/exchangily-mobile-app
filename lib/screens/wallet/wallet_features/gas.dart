@@ -19,8 +19,8 @@ import '../../../localizations.dart';
 import '../../../shared/globals.dart' as globals;
 
 class Gas extends StatelessWidget {
-  final double gasAmount;
-  const Gas({Key key, this.gasAmount}) : super(key: key);
+  final double? gasAmount;
+  const Gas({Key? key, this.gasAmount}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class Gas extends StatelessWidget {
             ),
             UIHelper.horizontalSpaceSmall,
             Text(
-              "${AppLocalizations.of(context).gas}: ${NumberUtil().truncateDoubleWithoutRouding(gasAmount, precision: 6)}",
+              "${AppLocalizations.of(context)!.gas}: ${NumberUtil().truncateDoubleWithoutRouding(gasAmount!, precision: 6)}",
               style: Theme.of(context).textTheme.headline5,
             ),
           ],
@@ -62,7 +62,7 @@ class Gas extends StatelessWidget {
             Navigator.pushNamed(context, '/addGas');
           },
           child: Text(
-            AppLocalizations.of(context).addGas,
+            AppLocalizations.of(context)!.addGas,
             style: Theme.of(context).textTheme.headline6,
           ),
         ),

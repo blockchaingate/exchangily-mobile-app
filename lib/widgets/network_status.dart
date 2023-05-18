@@ -20,7 +20,7 @@ class NetworkStausView extends StatelessWidget {
         padding: const EdgeInsets.all(50),
         child: Center(
           child: Text(
-            AppLocalizations.of(context).noInternetWarning,
+            AppLocalizations.of(context)!.noInternetWarning,
             style: Theme.of(context).textTheme.headline3,
             textAlign: TextAlign.center,
           ),

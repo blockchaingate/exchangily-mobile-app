@@ -1,10 +1,10 @@
-String langGlobal = "en";
+String? langGlobal = "en";
 
 setlangGlobal(lang){
   langGlobal = lang;
 }
 
-String getlangGlobal(){
+String? getlangGlobal(){
  return langGlobal;
 }
 

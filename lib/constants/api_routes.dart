@@ -147,15 +147,15 @@ const String totalCountTextApiRoute = '/totalCount';
 // convert base58 fab address to hex. trim the first two and last 8 chars.
 // then put a 0x in front
 
-final String btcBaseUrl = environment["endpoints"]["btc"];
-final String ltcBaseUrl = environment["endpoints"]["ltc"];
-final String bchBaseUrl = environment["endpoints"]["bch"];
-final String dogeBaseUrl = environment["endpoints"]["doge"];
-final String fabBaseUrl = environment["endpoints"]["fab"];
-final String ethBaseUrl = environment["endpoints"]["eth"];
-final String maticmBaseUrl = environment["endpoints"]["maticm"];
-final String bnbBaseUrl = environment["endpoints"]["bnb"];
-final String eventsUrl = environment["eventInfo"];
+final String? btcBaseUrl = environment["endpoints"]["btc"];
+final String? ltcBaseUrl = environment["endpoints"]["ltc"];
+final String? bchBaseUrl = environment["endpoints"]["bch"];
+final String? dogeBaseUrl = environment["endpoints"]["doge"];
+final String? fabBaseUrl = environment["endpoints"]["fab"];
+final String? ethBaseUrl = environment["endpoints"]["eth"];
+final String? maticmBaseUrl = environment["endpoints"]["maticm"];
+final String? bnbBaseUrl = environment["endpoints"]["bnb"];
+final String? eventsUrl = environment["eventInfo"];
 
 const String txStatusStatusRoute = 'kanban/explorer/getTransactionStatus';
 

@@ -8,23 +8,23 @@ import 'package:stacked/stacked.dart';
 class EventsViewModel extends BaseViewModel {
   final log = getLogger('EventsViewModel');
 
-  final sharedService = locator<SharedService>();
-  final storageService = locator<LocalStorageService>();
+  final SharedService? sharedService = locator<SharedService>();
+  final LocalStorageService? storageService = locator<LocalStorageService>();
 
   String _url = exchangilyAnnouncementUrl;
   String get url => _url;
 
   bool _isAnnouncement = true;
   bool get isAnnouncement => _isAnnouncement;
-  var lang = '';
+  String? lang = '';
   init() {
-    updateLangCode(storageService.language);
-    _url = _url + lang;
+    updateLangCode(storageService!.language);
+    _url = _url + lang!;
   }
 
   updateUrl(String passedUrl, {bool isAnnouncement = false}) async {
     setBusy(true);
-    lang = storageService.language;
+    lang = storageService!.language;
     _isAnnouncement = isAnnouncement;
     if (isAnnouncement) {
       lang = updateLangCode(lang);
@@ -34,12 +34,12 @@ class EventsViewModel extends BaseViewModel {
     }
     _url = passedUrl;
     await Future.delayed(
-        const Duration(milliseconds: 50), () => _url = passedUrl + lang);
+        const Duration(milliseconds: 50), () => _url = passedUrl + lang!);
     log.i(_url);
     setBusy(false);
   }
 
-  String updateLangCode(String langcode) {
+  String? updateLangCode(String? langcode) {
     lang = langcode == "en" ? "en" : "sc";
     return lang;
   }

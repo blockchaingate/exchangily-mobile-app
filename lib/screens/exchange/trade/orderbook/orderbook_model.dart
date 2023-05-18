@@ -14,10 +14,10 @@
 // Ordertype to map an array of buy/sell from orderbook data
 
 class OrderType {
-  double _price;
-  double _quantity;
+  double? _price;
+  double? _quantity;
 
-  OrderType({double price, double quantity}) {
+  OrderType({double? price, double? quantity}) {
     _price = price ?? 0.0;
     _quantity = quantity ?? 0.0;
   }
@@ -33,13 +33,13 @@ class OrderType {
     return data;
   }
 
-  double get price => _price;
-  set price(double price) {
+  double? get price => _price;
+  set price(double? price) {
     _price = price;
   }
 
-  double get quantity => _quantity;
-  set quantity(double quantity) {
+  double? get quantity => _quantity;
+  set quantity(double? quantity) {
     _quantity = quantity;
   }
 }
@@ -47,16 +47,16 @@ class OrderType {
 // Map orderbook
 
 class Orderbook {
-  List<OrderType> _buyOrders;
-  List<OrderType> _sellOrders;
-  double _price;
-  double _quantity;
+  List<OrderType>? _buyOrders;
+  List<OrderType>? _sellOrders;
+  double? _price;
+  double? _quantity;
 
   Orderbook({
-    List<OrderType> buyOrders,
-    List<OrderType> sellOrders,
-    double price,
-    double orderQuantity,
+    List<OrderType>? buyOrders,
+    List<OrderType>? sellOrders,
+    double? price,
+    double? orderQuantity,
   }) {
     _buyOrders = buyOrders ?? [];
     _sellOrders = sellOrders ?? [];
@@ -92,23 +92,23 @@ class Orderbook {
     return data;
   }
 
-  List<OrderType> get buyOrders => _buyOrders;
-  set buyOrders(List<OrderType> buyOrders) {
+  List<OrderType>? get buyOrders => _buyOrders;
+  set buyOrders(List<OrderType>? buyOrders) {
     _buyOrders = buyOrders;
   }
 
-  List<OrderType> get sellOrders => _sellOrders;
-  set sellOrders(List<OrderType> sellOrders) {
+  List<OrderType>? get sellOrders => _sellOrders;
+  set sellOrders(List<OrderType>? sellOrders) {
     _sellOrders = sellOrders;
   }
 
-  double get price => _price;
-  set price(double price) {
+  double? get price => _price;
+  set price(double? price) {
     _price = price;
   }
 
-  double get quantity => _quantity;
-  set quantity(double quantity) {
+  double? get quantity => _quantity;
+  set quantity(double? quantity) {
     _quantity = quantity;
   }
 }

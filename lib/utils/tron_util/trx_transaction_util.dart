@@ -24,19 +24,19 @@ import 'package:exchangilymobileapp/protos_gen/protos/tron.pb.dart' as Tron;
 import '../custom_http_util.dart';
 
 Future generateTrxTransactionContract(
-    {@required Uint8List privateKey,
-    @required String fromAddr,
-    @required String toAddr,
-    @required Decimal amount,
-    @required bool isTrxUsdt,
-    @required String tickerName,
-    @required int gasLimit,
-    @required bool isBroadcast}) async {
-  int decimal = 0;
+    {required Uint8List privateKey,
+    required String fromAddr,
+    required String toAddr,
+    required Decimal amount,
+    required bool isTrxUsdt,
+    required String? tickerName,
+    required int? gasLimit,
+    required bool isBroadcast}) async {
+  int? decimal = 0;
 
-  String contractAddress = '';
-  final tokenListDatabaseService = locator<TokenInfoDatabaseService>();
-  final apiService = locator<ApiService>();
+  String? contractAddress = '';
+  final TokenInfoDatabaseService? tokenListDatabaseService = locator<TokenInfoDatabaseService>();
+  final ApiService? apiService = locator<ApiService>();
   List<int> fromAddress = bs58check.decode(fromAddr);
 
   // debugPrint('base58 fromAddress to Hex ${StringUtil.uint8ListToHex(fromAddress)}');
@@ -56,16 +56,16 @@ Future generateTrxTransactionContract(
     // get trx-usdt contract address
     contractAddress = environment["addresses"]["smartContract"][tickerName];
     if (contractAddress == null) {
-      await tokenListDatabaseService
+      await tokenListDatabaseService!
           .getByTickerName(tickerName)
           .then((token) async {
         if (token != null) {
           contractAddress = token.contract;
           decimal = token.decimal;
           //   debugPrint('token from token database ${token.toJson()}');
-        } else if (token.tickerName == 'USDTX') {
-          await apiService.getTokenListUpdates().then((tokenList) {
-            for (var token in tokenList) {
+        } else if (token!.tickerName == 'USDTX') {
+          await apiService!.getTokenListUpdates().then((tokenList) {
+            for (var token in tokenList!) {
               if (token.tickerName == 'USDTX') {
                 contractAddress = token.contract;
                 decimal = token.decimal;
@@ -74,8 +74,8 @@ Future generateTrxTransactionContract(
             }
           });
         } else if (token.tickerName == 'USDCX') {
-          await apiService.getTokenListUpdates().then((tokenList) {
-            for (var token in tokenList) {
+          await apiService!.getTokenListUpdates().then((tokenList) {
+            for (var token in tokenList!) {
               if (token.tickerName == 'USDCX') {
                 contractAddress = token.contract;
                 decimal = token.decimal;
@@ -90,7 +90,7 @@ Future generateTrxTransactionContract(
   }
   if (isTrxUsdt) {
     var transferAbi = Constants.DepositTronUsdtSignatureAbi;
-    var decodedHexToAddress = StringUtil.uint8ListToHex(toAddress);
+    var decodedHexToAddress = StringUtil.uint8ListToHex(toAddress as Uint8List);
 // 4103b01c144f4e41c22b411c2997fbcdfae4fc9c2e
     if (decodedHexToAddress.startsWith('41') ||
         decodedHexToAddress.startsWith('0x')) {
@@ -101,7 +101,7 @@ Future generateTrxTransactionContract(
     if (decodedHexToAddress.length > 40) {
       //  debugPrint(
       //      ' decodedHexToAddress.length ${decodedHexToAddress.length} is more than 40');
-      int difference = decodedHexToAddress.length - 40;
+      int? difference = decodedHexToAddress.length - 40;
       decodedHexToAddress = decodedHexToAddress.substring(
           0, decodedHexToAddress.length - difference);
     }
@@ -123,7 +123,7 @@ Future generateTrxTransactionContract(
       data: StringUtil.hexToBytes(data),
       ownerAddress: fromAddress,
       //  hex address for contract address in config for trx-usdt
-      contractAddress: StringUtil.hexToUint8List(contractAddress),
+      contractAddress: StringUtil.hexToUint8List(contractAddress!),
     );
   } else {
     //  debugPrint('in else $fromAddress -- $toAddress -- $bigIntAmountToInt64 ');
@@ -185,11 +185,11 @@ Future generateTrxTransactionContract(
                   Raw Transaction
 ----------------------------------------------------------------------*/
 _generateTrxRawTransaction(
-    {@required Tron.Transaction_Contract contract,
-    @required Uint8List privateKey,
-    @required bool isTrxUsdt,
-    @required int gasLimit,
-    @required bool isBroadcast}) async {
+    {required Tron.Transaction_Contract contract,
+    required Uint8List privateKey,
+    required bool isTrxUsdt,
+    required int? gasLimit,
+    required bool isBroadcast}) async {
   ApiService _apiService = locator<ApiService>();
 // txRaw.SetRefBlockHash(blkhash)
 // txRaw.SetRefBlockBytes(blk.BlockHeader.Raw.Number)
@@ -197,9 +197,9 @@ _generateTrxRawTransaction(
 // txRaw.SetTimestamp(time.Now().UnixNano() / 1000000)
 
   var refBlockHash;
-  List<int> refBlockBytes;
-  Int64 expiration;
-  Int64 timestamp;
+  List<int>? refBlockBytes;
+  Int64? expiration;
+  Int64? timestamp;
 
 // block_header: {
 // raw_data: {
@@ -256,7 +256,7 @@ _generateTrxRawTransaction(
 
   // CryptoWeb3.MsgSignature
   var signature = //CryptoWeb3.sign(hashedRawTxBuffer.bytes, privateKey);
-      CoinUtils().signTrxTx(hashedRawTxBuffer.bytes, privateKey);
+      CoinUtils().signTrxTx(hashedRawTxBuffer.bytes as Uint8List, privateKey);
   //signTrxTx(keyPair, digest1.bytes);
   // var rsvInList = constructTrxSigntureList(signature);
   // fill transaction object
@@ -292,7 +292,7 @@ Future broadcastTronTransaction(transactionHex) async {
   // debugPrint(
   //    'broadcasrTronTransaction $BroadcasrTronTransactionUrl -- body ${jsonEncode(body)}');
   try {
-    var response = await httpClient.post(broadcasrTronTransactionUrl,
+    var response = await httpClient.post(Uri.parse(broadcasrTronTransactionUrl),
         body: jsonEncode(body));
     var json = jsonDecode(response.body);
     if (json != null) {

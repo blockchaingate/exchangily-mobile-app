@@ -1,18 +1,18 @@
 class MyReferrals {
-  String _id;
-  String _email;
-  String _disqualifiedReason;
-  bool _disqualified;
-  String _parentReferMemberId;
-  String _dateCreated;
+  String? _id;
+  String? _email;
+  String? _disqualifiedReason;
+  bool? _disqualified;
+  String? _parentReferMemberId;
+  String? _dateCreated;
 
   MyReferrals(
-      {String id,
-      String email,
-      String disqualifiedReason,
-      bool disqualified,
-      String parentReferMemberId,
-      String dateCreated}) {
+      {String? id,
+      String? email,
+      String? disqualifiedReason,
+      bool? disqualified,
+      String? parentReferMemberId,
+      String? dateCreated}) {
     _id = id;
     _email = email;
     _disqualifiedReason = disqualifiedReason;
@@ -36,33 +36,33 @@ class MyReferrals {
         "email": _email,
       };
 
-  String get id => _id;
+  String? get id => _id;
 
-  set id(String id) {
+  set id(String? id) {
     _id = id;
   }
 
-  String get email => _email;
+  String? get email => _email;
 
-  set email(String email) {
+  set email(String? email) {
     _email = email;
   }
 
-  bool get disqualified => _disqualified;
+  bool? get disqualified => _disqualified;
 
-  set disqualified(bool disqualified) {
+  set disqualified(bool? disqualified) {
     _disqualified = disqualified;
   }
 
-  String get disqualifiedReason => _disqualifiedReason;
+  String? get disqualifiedReason => _disqualifiedReason;
 
-  set disqualifiedReason(String disqualifiedReason) {
+  set disqualifiedReason(String? disqualifiedReason) {
     _disqualifiedReason = disqualifiedReason;
   }
 }
 
 class MyReferralsList {
-  final List<MyReferrals> myReferralsList;
+  final List<MyReferrals>? myReferralsList;
   MyReferralsList({this.myReferralsList});
 
   factory MyReferralsList.fromJson(List<dynamic> parsedJson) {

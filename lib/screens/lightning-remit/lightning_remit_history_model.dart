@@ -1,10 +1,10 @@
 class LightningRemitHistoryModel {
-  String type;
-  int time;
-  String coin;
-  double amount;
-  int status;
-  String txid;
+  String? type;
+  int? time;
+  String? coin;
+  double? amount;
+  int? status;
+  String? txid;
 
   LightningRemitHistoryModel({
     this.type,
@@ -17,12 +17,12 @@ class LightningRemitHistoryModel {
 
   factory LightningRemitHistoryModel.fromJson(Map<String, dynamic> json) {
     return LightningRemitHistoryModel(
-      type: json['type'] as String,
-      time: json['time'] as int,
-      coin: json['coin'] as String,
+      type: json['type'] as String?,
+      time: json['time'] as int?,
+      coin: json['coin'] as String?,
       amount: double.parse(json['amount'].toString()),
-      status: json['status'] as int,
-      txid: json['txid'] as String,
+      status: json['status'] as int?,
+      txid: json['txid'] as String?,
     );
   }
 

@@ -9,31 +9,31 @@ import 'package:flutter/widgets.dart';
 
 class CoinService {
   final log = getLogger('CoinService');
-  TokenInfoDatabaseService tokenListDatabaseService =
+  TokenInfoDatabaseService? tokenListDatabaseService =
       locator<TokenInfoDatabaseService>();
-  final apiService = locator<ApiService>();
+  final ApiService? apiService = locator<ApiService>();
 
   storeTokensInTokenDatabase() async {
     List existingTokensInTokenDatabase;
     try {
-      existingTokensInTokenDatabase = await tokenListDatabaseService.getAll();
+      existingTokensInTokenDatabase = await tokenListDatabaseService!.getAll();
     } catch (err) {
       existingTokensInTokenDatabase = [];
       log.e('getTokenList tokenListDatabaseService.getAll CATCH err $err');
     }
-    await apiService.getTokenList().then((newTokenListFromTokenApi) async {
+    await apiService!.getTokenList().then((newTokenListFromTokenApi) async {
       if (newTokenListFromTokenApi != null &&
           newTokenListFromTokenApi.isNotEmpty) {
-        existingTokensInTokenDatabase ??= [];
+        existingTokensInTokenDatabase;
         if (existingTokensInTokenDatabase.length !=
             newTokenListFromTokenApi.length) {
-          await tokenListDatabaseService.deleteDb().whenComplete(() => log.e(
+          await tokenListDatabaseService!.deleteDb().whenComplete(() => log.e(
               'token list database cleared before inserting updated token data from api'));
 
           /// Fill the token list database with new data from the api
 
           for (var singleNewToken in newTokenListFromTokenApi) {
-            await tokenListDatabaseService.insert(singleNewToken);
+            await tokenListDatabaseService!.insert(singleNewToken);
           }
         } else {
           log.i('storeTokenListInDB -- local token db same length as api\'s ');
@@ -45,26 +45,26 @@ class CoinService {
   storeTokenListUpdatesInDB() async {
     List existingTokensInTokenDatabase;
     try {
-      existingTokensInTokenDatabase = await tokenListDatabaseService.getAll();
+      existingTokensInTokenDatabase = await tokenListDatabaseService!.getAll();
     } catch (err) {
       existingTokensInTokenDatabase = [];
       log.e('getTokenList tokenListDatabaseService.getAll CATCH err $err');
     }
-    await apiService
+    await apiService!
         .getTokenListUpdates()
         .then((newTokenListFromTokenUpdateApi) async {
       if (newTokenListFromTokenUpdateApi != null &&
           newTokenListFromTokenUpdateApi.isNotEmpty) {
-        existingTokensInTokenDatabase ??= [];
+        existingTokensInTokenDatabase;
         if (existingTokensInTokenDatabase.length !=
             newTokenListFromTokenUpdateApi.length) {
-          await tokenListDatabaseService.deleteDb().whenComplete(() => log.e(
+          await tokenListDatabaseService!.deleteDb().whenComplete(() => log.e(
               'token list database cleared before inserting updated token data from api'));
 
           /// Fill the token list database with new data from the api
 
           for (var singleNewToken in newTokenListFromTokenUpdateApi) {
-            await tokenListDatabaseService.insert(singleNewToken);
+            await tokenListDatabaseService!.insert(singleNewToken);
           }
         } else {
           log.i(
@@ -80,14 +80,14 @@ class CoinService {
 
   getCoinOfficalAddress(String coinName, {String tokenType = ''}) {
     if (tokenType == 'FAB') {
-      String fabTokensOfficialAddress =
+      String? fabTokensOfficialAddress =
           environment['addresses']['exchangilyOfficial'][0]['address'];
       debugPrint(
           'fabTokensOfficialAddress $fabTokensOfficialAddress for $coinName');
       return fabTokensOfficialAddress;
     }
     if (tokenType == 'TRX' || tokenType == 'TRON') {
-      String trxTokensOfficialAddress =
+      String? trxTokensOfficialAddress =
           environment['addresses']['exchangilyOfficial'][9]['address'];
       debugPrint(
           'TRXTokensOfficialAddress $trxTokensOfficialAddress for $coinName');
@@ -103,7 +103,7 @@ class CoinService {
       var address = environment['addresses']['exchangilyOfficial']
           .where((addr) => addr['name'] == coinName)
           .toList();
-      String majorsOfficialAddress = address[0]['address'];
+      String? majorsOfficialAddress = address[0]['address'];
       debugPrint(
           'majors official address $majorsOfficialAddress for $coinName');
       return majorsOfficialAddress;
@@ -114,9 +114,9 @@ class CoinService {
                       Get Token data
 ----------------------------------------------------------------------*/
 
-  Future<TokenModel> getSingleTokenData(String tickerName,
-      {int coinType = 0}) async {
-    TokenModel res;
+  Future<TokenModel?> getSingleTokenData(String? tickerName,
+      {int? coinType = 0}) async {
+    TokenModel? res;
 
 // first look coin in the local storage
 // TODO uncomment code below once save decimaldata in local storage works in wallet service
@@ -134,11 +134,11 @@ class CoinService {
     try {
       log.w(
           ' getSingleTokenData -res $res -- coin type $coinType -- ticker $tickerName');
-      await apiService.getTokenListUpdates().then((newTokens) {
-        for (var j = 0; j < newTokens.length; j++) {
+      await apiService!.getTokenListUpdates().then((newTokens) {
+        for (var j = 0; j < newTokens!.length; j++) {
           if (newTokens[j].coinType == coinType) {
             res = newTokens[j];
-            log.i('getSingleTokenData new tokens list:  res ${res.toJson()}');
+            log.i('getSingleTokenData new tokens list:  res ${res!.toJson()}');
             break;
           }
         }
@@ -149,11 +149,11 @@ class CoinService {
 
     if (res == null) {
       log.i('res $res -- coin type $coinType -- ticker $tickerName');
-      await apiService.getTokenList().then((tokens) {
-        for (var i = 0; i < tokens.length; i++) {
+      await apiService!.getTokenList().then((tokens) {
+        for (var i = 0; i < tokens!.length; i++) {
           if (tokens[i].coinType == coinType) {
             res = tokens[i];
-            log.i('getSingleTokenData old tokens list:  res ${res.toJson()}');
+            log.i('getSingleTokenData old tokens list:  res ${res!.toJson()}');
             break;
           }
         }
@@ -166,9 +166,9 @@ class CoinService {
 /*--------------------------------------------------------------------------
           Get smart contract address from file or database
 ------------------------------------------------------------------------- */
-  Future<String> getSmartContractAddressByTickerName(String tickerName) async {
-    String smartContractAddress = '';
-    int ct = 0;
+  Future<String?> getSmartContractAddressByTickerName(String tickerName) async {
+    String? smartContractAddress = '';
+    int? ct = 0;
 // check hardcoded list
     smartContractAddress =
         environment["addresses"]["smartContract"][tickerName];
@@ -177,7 +177,7 @@ class CoinService {
       await getCoinTypeByTickerName(tickerName).then((value) => ct = value);
       debugPrint(
           '$tickerName contract is null so fetching from token database');
-      await tokenListDatabaseService
+      await tokenListDatabaseService!
           .getContractAddressByCoinType(ct)
           .then((value) {
         if (value != null) {
@@ -210,9 +210,9 @@ class CoinService {
                 Get Coin Type By tickerName
 ----------------------------------------------------------------------*/
 
-  Future<int> getCoinTypeByTickerName(String tickerName) async {
-    int coinType = 0;
-    MapEntry<int, String> hardCodedCoinList;
+  Future<int?> getCoinTypeByTickerName(String? tickerName) async {
+    int? coinType = 0;
+    MapEntry<int, String>? hardCodedCoinList;
     bool isOldToken = newCoinTypeMap.containsValue(tickerName);
     debugPrint('is old token value $isOldToken');
     if (isOldToken) {
@@ -224,8 +224,8 @@ class CoinService {
     if (hardCodedCoinList != null) {
       coinType = hardCodedCoinList.key;
     } else {
-      await apiService.getTokenListUpdates().then((tokens) {
-        for (var token in tokens) {
+      await apiService!.getTokenListUpdates().then((tokens) {
+        for (var token in tokens!) {
           if (token.tickerName == tickerName) {
             coinType = token.coinType;
             break;
@@ -233,8 +233,8 @@ class CoinService {
         }
       });
       if (coinType == 0 || coinType == null) {
-        await apiService.getTokenList().then((tokens) {
-          for (var token in tokens) {
+        await apiService!.getTokenList().then((tokens) {
+          for (var token in tokens!) {
             if (token.tickerName == tickerName) {
               coinType = token.coinType;
               break;

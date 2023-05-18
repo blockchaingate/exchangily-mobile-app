@@ -17,17 +17,17 @@ import '../../shared/globals.dart' as globals;
 
 class CampaignLoginScreenState extends BaseState {
   final log = getLogger('LoginScreenState');
-  BuildContext context;
+  late BuildContext context;
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
   final passwordResetEmailTextController = TextEditingController();
-  CampaignService campaignService = locator<CampaignService>();
-  CampaignUserDatabaseService campaignUserDatabaseService =
+  CampaignService? campaignService = locator<CampaignService>();
+  CampaignUserDatabaseService? campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
-  NavigationService navigationService = locator<NavigationService>();
-  SharedService sharedService = locator<SharedService>();
-  User user;
-  CampaignUserData userData;
+  NavigationService? navigationService = locator<NavigationService>();
+  SharedService? sharedService = locator<SharedService>();
+  late User user;
+  CampaignUserData? userData;
   bool isPasswordTextVisible = false;
 
   bool isLogging = false;
@@ -39,19 +39,19 @@ class CampaignLoginScreenState extends BaseState {
   // INIT
   init() async {
     setBusy(true);
-    setErrorMessage(AppLocalizations.of(context).checkingAccountDetails);
+    setErrorMessage(AppLocalizations.of(context)!.checkingAccountDetails);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var loginToken = prefs.getString('loginToken');
     log.w('login token $loginToken');
     if (loginToken != '' && loginToken != null) {
-      await campaignService.getMemberProfile(loginToken).then((res) async {
+      await campaignService!.getMemberProfile(loginToken).then((res) async {
         if (res != null) {
-          await campaignUserDatabaseService
+          await campaignUserDatabaseService!
               .getUserDataByToken(loginToken)
               .then((res) {
             if (res != null) {
               userData = res;
-              navigationService.navigateUsingpopAndPushedNamed(
+              navigationService!.navigateUsingpopAndPushedNamed(
                   '/campaignDashboard',
                   arguments: userData);
               setBusy(false);
@@ -64,7 +64,7 @@ class CampaignLoginScreenState extends BaseState {
         }
       }).catchError((err) {
         log.e('getMemberRewardByToken catch');
-        setErrorMessage(AppLocalizations.of(context).serverError);
+        setErrorMessage(AppLocalizations.of(context)!.serverError);
         setBusy(false);
       });
     } else {
@@ -83,10 +83,10 @@ class CampaignLoginScreenState extends BaseState {
             animationType: AnimationType.grow,
             isOverlayTapDismiss: true,
             backgroundColor: globals.walletCardColor,
-            descStyle: Theme.of(context).textTheme.bodyText1,
-            titleStyle: Theme.of(context).textTheme.headline5),
+            descStyle: Theme.of(context).textTheme.bodyText1!,
+            titleStyle: Theme.of(context).textTheme.headline5!),
         context: context,
-        title: AppLocalizations.of(context).pleaseEnterYourEmailAddress,
+        title: AppLocalizations.of(context)!.pleaseEnterYourEmailAddress,
         closeFunction: () {
           Navigator.of(context, rootNavigator: true).pop();
           FocusScope.of(context).requestFocus(FocusNode());
@@ -110,25 +110,25 @@ class CampaignLoginScreenState extends BaseState {
           DialogButton(
             color: globals.primaryColor,
             onPressed: () async {
-              await campaignService
+              await campaignService!
                   .resetPassword(passwordResetEmailTextController.text)
                   .then((res) {
                 if (res != null) {
-                  String message = res['message'];
+                  String? message = res['message'];
                   if (message != '' && message != null) {
                     log.e('reset pass message $message');
 
-                    sharedService.sharedSimpleNotification(
-                      AppLocalizations.of(context).passwordResetError,
-                      subtitle: AppLocalizations.of(context)
+                    sharedService!.sharedSimpleNotification(
+                      AppLocalizations.of(context)!.passwordResetError,
+                      subtitle: AppLocalizations.of(context)!
                           .pleaseEnterTheCorrectEmail,
                     );
                   } else {
                     log.w('reset password success $res');
 
-                    sharedService.sharedSimpleNotification(
-                        AppLocalizations.of(context).passwordReset,
-                        subtitle: AppLocalizations.of(context)
+                    sharedService!.sharedSimpleNotification(
+                        AppLocalizations.of(context)!.passwordReset,
+                        subtitle: AppLocalizations.of(context)!
                             .resetPasswordEmailInstruction,
                         isError: false);
                   }
@@ -144,7 +144,7 @@ class CampaignLoginScreenState extends BaseState {
               padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 7),
               // model.busy is not working here and same reason that it does not show the error when desc field is empty
               child: Text(
-                AppLocalizations.of(context).confirm,
+                AppLocalizations.of(context)!.confirm,
                 style: Theme.of(context).textTheme.headline5,
               ),
             ),
@@ -159,7 +159,7 @@ class CampaignLoginScreenState extends BaseState {
               FocusScope.of(context).requestFocus(FocusNode());
             },
             child: Text(
-              AppLocalizations.of(context).cancel,
+              AppLocalizations.of(context)!.cancel,
               style: Theme.of(context).textTheme.headline5,
             ),
           ),
@@ -171,19 +171,19 @@ class CampaignLoginScreenState extends BaseState {
 -------------------------------------------------------------------------------------*/
   login(User user) async {
     setBusy(true);
-    await campaignService.login(user).then((res) async {
+    await campaignService!.login(user).then((res) async {
       // json deconde in campaign api let us see the response then its properties
       if (res == null) {
-        setErrorMessage(AppLocalizations.of(context).serverError);
+        setErrorMessage(AppLocalizations.of(context)!.serverError);
         return false;
       }
-      String error = res['message'];
+      String? error = res['message'];
       if (res != null && (error == null || error == '')) {
         userData = CampaignUserData.fromJson(res);
-        log.i('Test user data object ${userData.toJson()}');
+        log.i('Test user data object ${userData!.toJson()}');
         // navigationService.navigateTo('/campaignDashboard', arguments: userData);
-        await campaignService.saveCampaignUserDataInLocalDatabase(userData);
-        navigationService.navigateTo('/campaignDashboard');
+        await campaignService!.saveCampaignUserDataInLocalDatabase(userData!);
+        navigationService!.navigateTo('/campaignDashboard');
       } else {
         setErrorMessage(error);
         log.e('In else ${res['message']}');
@@ -200,11 +200,11 @@ class CampaignLoginScreenState extends BaseState {
   checkCredentials() {
     setBusy(true);
     isLogging = true;
-    setErrorMessage(AppLocalizations.of(context).checkingCredentials);
+    setErrorMessage(AppLocalizations.of(context)!.checkingCredentials);
     if (emailTextController.text.isEmpty) {
-      setErrorMessage(AppLocalizations.of(context).pleaseEnterYourEmailAddress);
+      setErrorMessage(AppLocalizations.of(context)!.pleaseEnterYourEmailAddress);
     } else if (passwordTextController.text.isEmpty) {
-      setErrorMessage(AppLocalizations.of(context).pleaseFillYourPassword);
+      setErrorMessage(AppLocalizations.of(context)!.pleaseFillYourPassword);
     } else {
       user = User(
           email: emailTextController.text,
@@ -219,14 +219,14 @@ class CampaignLoginScreenState extends BaseState {
   saveUserDataLocally(String loginToken, CampaignUserData userData) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('loginToken', loginToken);
-    await campaignUserDatabaseService.insert(userData);
-    await campaignUserDatabaseService
+    await campaignUserDatabaseService!.insert(userData);
+    await campaignUserDatabaseService!
         .getUserDataByToken(loginToken)
         .then((value) => log.w(value));
   }
 
   deleteDb() async {
-    await campaignUserDatabaseService
+    await campaignUserDatabaseService!
         .deleteDb()
         .then((value) => log.w('delete finish $value'));
   }
@@ -235,6 +235,6 @@ class CampaignLoginScreenState extends BaseState {
                     onBackButtonPressed
 ----------------------------------------------------------------------*/
   onBackButtonPressed() async {
-    await sharedService.onBackButtonPressed('/dashboard');
+    await sharedService!.onBackButtonPressed('/dashboard');
   }
 }

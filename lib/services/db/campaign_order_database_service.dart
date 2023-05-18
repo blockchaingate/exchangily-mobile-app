@@ -29,17 +29,17 @@ class CampaignOrderDatabaseService {
   final String columnStatus = 'status';
 
   static const _databaseVersion = 1;
-  static Future<Database> _database;
+  static Future<Database>? _database;
   String path = '';
 
-  Future<Database> initDb() async {
-    if (_database != null) return _database;
+  Future<Database>? initDb() async {
+    if (_database != null) return _database!;
     var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
     log.w(path);
     _database =
         openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
-    return _database;
+    return _database!;
   }
 
   void _onCreate(Database db, int version) async {
@@ -57,7 +57,7 @@ class CampaignOrderDatabaseService {
 
   Future<List<TransactionHistory>> getAll() async {
     await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
     log.w('getall $db');
 
     // res is giving me the same output in the log whether i map it or just take var res
@@ -72,7 +72,7 @@ class CampaignOrderDatabaseService {
 // Insert Data In The Database
   Future insert(TransactionHistory transactionHistory) async {
     await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
     int id = await db.insert(tableName, transactionHistory.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
     return id;
@@ -81,13 +81,13 @@ class CampaignOrderDatabaseService {
   // Get Single transaction By Name
   Future<List<TransactionHistory>> getByName(String name) async {
     await initDb();
-    final Database db = await _database;
+    final Database db = (await _database)!;
     List<Map> res =
         await db.query(tableName, where: 'tickerName= ?', whereArgs: [name]);
     log.w('Name - $name --- $res');
 
     List<TransactionHistory> list = res.isNotEmpty
-        ? res.map((f) => TransactionHistory.fromJson(f)).toList()
+        ? res.map((f) => TransactionHistory.fromJson(f as Map<String, dynamic>)).toList()
         : [];
     return list;
     // return TransactionHistory.fromJson((res.first));
@@ -95,24 +95,24 @@ class CampaignOrderDatabaseService {
 
   // Get Single transaction By Id
   Future getById(int id) async {
-    final Database db = await _database;
+    final Database db = (await _database)!;
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
     if (res.isNotEmpty) {
-      return TransactionHistory.fromJson((res.first));
+      return TransactionHistory.fromJson(res.first as Map<String, dynamic>);
     }
     return null;
   }
 
   // Delete Single Object From Database By Id
   Future<void> deleteWallet(int id) async {
-    final db = await _database;
+    final db = (await _database)!;
     await db.delete(tableName, where: "id = ?", whereArgs: [id]);
   }
 
   // Update database
   Future<void> update(TransactionHistory transactionHistory) async {
-    final Database db = await _database;
+    final Database db = (await _database)!;
     await db.update(
       tableName,
       transactionHistory.toJson(),
@@ -124,7 +124,7 @@ class CampaignOrderDatabaseService {
 
   // Close Database
   Future closeDb() async {
-    var db = await _database;
+    var db = (await _database)!;
     return db.close();
   }
 

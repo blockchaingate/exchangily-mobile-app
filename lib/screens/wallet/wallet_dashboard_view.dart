@@ -28,7 +28,7 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -39,7 +39,7 @@ import 'wallet_features/gas.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 class WalletDashboardView extends StatelessWidget {
-  const WalletDashboardView({Key key}) : super(key: key);
+  const WalletDashboardView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class WalletDashboardView extends StatelessWidget {
           //  await model.retrieveWalletsFromLocalDatabase();
           await model.init();
         },
-        onDispose: (WalletDashboardViewModel w) {
+        onDispose: (dynamic viewModel) {
           if (_refreshController != null) _refreshController.dispose();
           debugPrint('_refreshController disposed in wallet dashboard view');
         },
@@ -88,7 +88,7 @@ class WalletDashboardView extends StatelessWidget {
                       debugPrint('onComplete: $index, $key');
                     },
                     onFinish: () {
-                      model.storageService.isShowCaseView = false;
+                      model.storageService!.isShowCaseView = false;
 
                       model.updateShowCaseViewStatus();
                     },
@@ -156,7 +156,7 @@ class WalletDashboardView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(35),
                           ),
                           width:
-                              model.selectedCustomTokens.isNotEmpty ? 140 : 120,
+                              model.selectedCustomTokens!.isNotEmpty ? 140 : 120,
                           child: GestureDetector(
                             onTap: () => model.showCustomTokensBottomSheet(),
                             child: Padding(
@@ -168,21 +168,21 @@ class WalletDashboardView extends StatelessWidget {
                                 children: [
                                   UIHelper.horizontalSpaceSmall,
                                   Icon(
-                                    model.selectedCustomTokens.isNotEmpty
+                                    model.selectedCustomTokens!.isNotEmpty
                                         ? Icons.mode_edit_outline_outlined
                                         : FontAwesomeIcons.plus,
-                                    size: model.selectedCustomTokens.isNotEmpty
+                                    size: model.selectedCustomTokens!.isNotEmpty
                                         ? 16
                                         : 14,
-                                    color: model.selectedCustomTokens.isNotEmpty
+                                    color: model.selectedCustomTokens!.isNotEmpty
                                         ? yellow
                                         : green,
                                   ),
                                   Expanded(
-                                    child: model.selectedCustomTokens.isNotEmpty
+                                    child: model.selectedCustomTokens!.isNotEmpty
                                         ? Text(
                                             ' ' +
-                                                AppLocalizations.of(context)
+                                                AppLocalizations.of(context)!
                                                     .editTokenList,
                                             style: const TextStyle(
                                                 color: white,
@@ -191,7 +191,7 @@ class WalletDashboardView extends StatelessWidget {
                                           )
                                         : Text(
                                             ' ' +
-                                                AppLocalizations.of(context)
+                                                AppLocalizations.of(context)!
                                                     .addToken,
                                             style: const TextStyle(
                                                 color: white,
@@ -213,25 +213,25 @@ class WalletDashboardView extends StatelessWidget {
       key: const PageStorageKey('storage-key'),
       controller: model.walletsScrollController,
       shrinkWrap: true,
-      itemCount: model.wallets.length,
+      itemCount: model.wallets!.length,
       itemBuilder: (BuildContext context, int index) {
-        var name = model.wallets[index].coin.toLowerCase();
+        var name = model.wallets![index].coin!.toLowerCase();
 
-        var usdBalance = (!model.wallets[index].balance.isNegative
-                ? model.wallets[index].balance
-                : 0.0) *
-            model.wallets[index].usdValue.usd;
+        var usdBalance = (!model.wallets![index].balance!.isNegative
+                ? model.wallets![index].balance
+                : 0.0)! *
+            model.wallets![index].usdValue!.usd!;
 
         return Visibility(
           // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
           visible: usdBalance >= 0 && !model.isHideSmallAssetsButton,
           child: _coinDetailsCard(
-              name, index, model.wallets, model.elevation, context, model),
+              name, index, model.wallets!, model.elevation, context, model),
           // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
           replacement: Visibility(
               visible: model.isHideSmallAssetsButton && usdBalance != 0,
               child: _coinDetailsCard(
-                  name, index, model.wallets, model.elevation, context, model)),
+                  name, index, model.wallets!, model.elevation, context, model)),
         );
       },
     );
@@ -304,6 +304,7 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
             // titleWidget = AppLocalizations.of(context).totalExchangeBalance;
             return TotalBalanceWidget2(model: model, index: index);
           }
+          return TotalBalanceWidget(model: model, index: index);
 
           // return TotalBalanceCardWidget(
           //   logo: logoWidget,
@@ -411,7 +412,7 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
               icon: model.isBusy || model.busy(model.selectedCustomTokens)
                   ? Container(
                       margin: const EdgeInsets.only(left: 3.0),
-                      child: model.sharedService.loadingIndicator(),
+                      child: model.sharedService!.loadingIndicator(),
                     )
                   : const Icon(
                       Icons.refresh,
@@ -463,17 +464,17 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
                         !model.isHideSmallAssetsButton
-                            ? AppLocalizations.of(context).hideSmallAmountAssets
-                            : AppLocalizations.of(context)
+                            ? AppLocalizations.of(context)!.hideSmallAmountAssets
+                            : AppLocalizations.of(context)!
                                 .showSmallAmountAssets,
                         style: model.isShowFavCoins || model.isHideSearch
                             ? Theme.of(context)
                                 .textTheme
-                                .headline5
+                                .headline5!
                                 .copyWith(wordSpacing: 1.25, color: grey)
                             : Theme.of(context)
                                 .textTheme
-                                .headline5
+                                .headline5!
                                 .copyWith(wordSpacing: 1.25),
                       ),
                     ),
@@ -482,13 +483,13 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
               ),
             ),
             SizedBox(
-              height: model.isEligibleForFreeGas ? 100 : 40,
+              height: model.isEligibleForFreeGas! ? 100 : 40,
               child: Column(
                 children: [
                   model.isBusy
                       ? Container()
                       : Expanded(child: Gas(gasAmount: model.gasAmount)),
-                  !model.isEligibleForFreeGas
+                  !model.isEligibleForFreeGas!
                       ? Container()
                       : Container(
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -509,7 +510,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                                   color: white,
                                 ),
                                 label: Text(
-                                  AppLocalizations.of(context).getFree + ' FAB',
+                                  AppLocalizations.of(context)!.getFree + ' FAB',
                                   style: Theme.of(context).textTheme.headline6,
                                 )),
                           )),
@@ -555,7 +556,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
       UIHelper.verticalSpaceSmall,
       model.isUpdateWallet
           ? TextButton(
-              child: Text(AppLocalizations.of(context).updateWallet),
+              child: Text(AppLocalizations.of(context)!.updateWallet),
               onPressed: () => model.updateWallet(),
             )
           : Container(),
@@ -653,8 +654,8 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
               FavTab(),
               // custom tokens tab
               model.busy(model.selectedCustomTokens)
-                  ? model.sharedService.loadingIndicator()
-                  : model.selectedCustomTokens.isEmpty
+                  ? model.sharedService!.loadingIndicator()
+                  : model.selectedCustomTokens!.isEmpty
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -666,7 +667,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                               height: 40,
                             ),
                             const SizedBox(height: 5),
-                            Text(AppLocalizations.of(context).customTokens,
+                            Text(AppLocalizations.of(context)!.customTokens,
                                 style: const TextStyle(
                                     fontSize: 12, color: Colors.white)),
                           ],
@@ -682,7 +683,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                               child: Row(
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context).logo,
+                                    AppLocalizations.of(context)!.logo,
                                     style: const TextStyle(
                                         color: black,
                                         fontSize: 12,
@@ -692,7 +693,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                   Expanded(
                                       flex: 1,
                                       child: Text(
-                                          AppLocalizations.of(context).symbol,
+                                          AppLocalizations.of(context)!.symbol,
                                           style: const TextStyle(
                                               color: black,
                                               fontSize: 12,
@@ -700,7 +701,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                   Expanded(
                                       flex: 2,
                                       child: Text(
-                                        AppLocalizations.of(context).balance,
+                                        AppLocalizations.of(context)!.balance,
                                         style: const TextStyle(
                                             color: black,
                                             fontSize: 12,
@@ -710,7 +711,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                   Expanded(
                                       flex: 1,
                                       child: Text(
-                                          AppLocalizations.of(context).action,
+                                          AppLocalizations.of(context)!.action,
                                           style: const TextStyle(
                                               color: black,
                                               fontSize: 12,
@@ -727,11 +728,11 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                     padding: const EdgeInsets.only(top: 0),
                                     shrinkWrap: true,
                                     itemCount:
-                                        model.selectedCustomTokens.length,
+                                        model.selectedCustomTokens!.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       var customToken =
-                                          model.selectedCustomTokens[index];
+                                          model.selectedCustomTokens![index];
                                       return Container(
                                         margin: const EdgeInsets.symmetric(
                                             vertical: 4, horizontal: 1),
@@ -768,7 +769,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                             Expanded(
                                               flex: 1,
                                               child: Text(
-                                                customToken.symbol
+                                                customToken.symbol!
                                                     .toUpperCase(),
                                                 style: const TextStyle(
                                                     color: grey,
@@ -811,10 +812,10 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                       onPressed: () async {
                                                         var wi = WalletInfo(
                                                             address: await model
-                                                                .coreWalletDatabaseService
+                                                                .coreWalletDatabaseService!
                                                                 .getWalletAddressByTickerName(
                                                                     'FAB'));
-                                                        model.navigationService
+                                                        model.navigationService!
                                                             .navigateTo(
                                                                 ReceiveViewRoute,
                                                                 arguments: wi);
@@ -829,7 +830,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                           Expanded(
                                                             child: Text(
                                                                 AppLocalizations.of(
-                                                                        context)
+                                                                        context)!
                                                                     .receive,
                                                                 style: const TextStyle(
                                                                     fontSize:
@@ -859,7 +860,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                                           Expanded(
                                                             child: Text(
                                                                 AppLocalizations.of(
-                                                                        context)
+                                                                        context)!
                                                                     .send,
                                                                 style: const TextStyle(
                                                                     fontSize:
@@ -913,12 +914,12 @@ ListView buildListView(WalletDashboardViewModel model) {
     key: const PageStorageKey('storage-key'),
     padding: const EdgeInsets.only(top: 0),
     shrinkWrap: true,
-    itemCount: model.wallets.length,
+    itemCount: model.wallets!.length,
     itemBuilder: (BuildContext context, int index) {
-      var name = model.wallets[index].coin.toLowerCase();
+      var name = model.wallets![index].coin!.toLowerCase();
 
       return _coinDetailsCard(
-          name, index, model.wallets, model.elevation, context, model);
+          name, index, model.wallets!, model.elevation, context, model);
       // Visibility(
       //   // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
       //   visible: usdBalance >= 0 && !model.isHideSmallAssetsButton,
@@ -940,9 +941,9 @@ ListView buildListView(WalletDashboardViewModel model) {
 
 Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
     elevation, context, WalletDashboardViewModel model) {
-  String logoTicker = '';
+  String? logoTicker = '';
   var specialTokenData = {};
-  bool isBalanceNegative = model.wallets[index].balance.isNegative;
+  bool isBalanceNegative = model.wallets![index].balance!.isNegative;
   specialTokenData = model.walletUtil.updateSpecialTokensTickerName(tickerName);
   tickerName = specialTokenData['tickerName'];
   logoTicker = specialTokenData['logoTicker'];
@@ -981,9 +982,9 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                             spreadRadius: 1.0),
                       ]),
                   child: Image.network(
-                    '$walletCoinsLogoUrl${logoTicker.toLowerCase()}.png',
+                    '$walletCoinsLogoUrl${logoTicker!.toLowerCase()}.png',
                     errorBuilder: (BuildContext context, Object exception,
-                        StackTrace stackTrace) {
+                        StackTrace? stackTrace) {
                       return Text(logoTicker.toString(),
                           style: const TextStyle(fontSize: 8, color: white));
                     },
@@ -1009,7 +1010,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.only(right: 5.0),
-                            child: Text(AppLocalizations.of(context).available,
+                            child: Text(AppLocalizations.of(context)!.available,
                                 style: Theme.of(context).textTheme.headline6),
                           ),
                           model.isBusy
@@ -1018,7 +1019,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                   baseColor: red,
                                   highlightColor: white,
                                   child: Text(
-                                    wallets[index].balance.toStringAsFixed(2),
+                                    wallets[index].balance!.toStringAsFixed(2),
                                     style:
                                         Theme.of(context).textTheme.headline6,
                                   ),
@@ -1026,11 +1027,11 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                               : Expanded(
                                   child: Text(
                                       isBalanceNegative
-                                          ? AppLocalizations.of(context)
+                                          ? AppLocalizations.of(context)!
                                               .unavailable
                                           : NumberUtil()
                                               .truncateDoubleWithoutRouding(
-                                                  model.wallets[index].balance,
+                                                  model.wallets![index].balance!,
                                                   precision: 6)
                                               .toString(),
                                       style: Theme.of(context)
@@ -1045,10 +1046,10 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                           Padding(
                             padding: const EdgeInsets.only(
                                 top: 2.0, right: 5.0, bottom: 2.0),
-                            child: Text(AppLocalizations.of(context).locked,
+                            child: Text(AppLocalizations.of(context)!.locked,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline6
+                                    .headline6!
                                     .copyWith(color: red)),
                           ),
                           model.isBusy
@@ -1059,23 +1060,23 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                   child: Text('${wallets[index].lockBalance}',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline6
+                                          .headline6!
                                           .copyWith(color: red)),
                                 ))
                               : Expanded(
                                   child: Text(
-                                      wallets[index].lockBalance.isNegative
-                                          ? AppLocalizations.of(context)
+                                      wallets[index].lockBalance!.isNegative
+                                          ? AppLocalizations.of(context)!
                                               .unavailable
                                           : NumberUtil()
                                               .truncateDoubleWithoutRouding(
-                                                  model.wallets[index]
-                                                      .lockBalance,
+                                                  model.wallets![index]
+                                                      .lockBalance!,
                                                   precision: 6)
                                               .toString(),
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline6
+                                          .headline6!
                                           .copyWith(color: red)),
                                 )
                         ],
@@ -1087,7 +1088,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                             child: Padding(
                               padding: const EdgeInsets.only(right: 5.0),
                               child: Text(
-                                  AppLocalizations.of(context).inExchange,
+                                  AppLocalizations.of(context)!.inExchange,
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context).textTheme.headline6),
                             ),
@@ -1099,7 +1100,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                   highlightColor: white,
                                   child: Text(
                                     wallets[index]
-                                        .unlockedExchangeBalance
+                                        .unlockedExchangeBalance!
                                         .toStringAsFixed(4),
                                     textAlign: TextAlign.center,
                                   ),
@@ -1107,19 +1108,19 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                               : Expanded(
                                   child: Text(
                                       wallets[index]
-                                              .unlockedExchangeBalance
+                                              .unlockedExchangeBalance!
                                               .isNegative
-                                          ? AppLocalizations.of(context)
+                                          ? AppLocalizations.of(context)!
                                               .unavailable
                                           : NumberUtil()
                                               .truncateDoubleWithoutRouding(
                                                   wallets[index]
-                                                      .unlockedExchangeBalance,
+                                                      .unlockedExchangeBalance!,
                                                   precision: 6)
                                               .toString(),
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline6
+                                          .headline6!
                                           .copyWith(color: white)),
                                 ),
                         ],
@@ -1144,7 +1145,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                               ? Container(
                                   padding: EdgeInsets.only(left: 5),
                                 )
-                              : model.wallets[index].balance == 0.0
+                              : model.wallets![index].balance == 0.0
                                   ? UIHelper.horizontalSpaceMedium
                                   : UIHelper.horizontalSpaceSmall,
                           isBalanceNegative
@@ -1153,11 +1154,11 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                           Expanded(
                             child: Text(
                               isBalanceNegative
-                                  ? AppLocalizations.of(context).unavailable
+                                  ? AppLocalizations.of(context)!.unavailable
                                   : NumberUtil()
                                       .truncateDoubleWithoutRouding(
-                                          model.wallets[index].balance *
-                                              model.wallets[index].usdValue.usd,
+                                          model.wallets![index].balance! *
+                                              model.wallets![index].usdValue!.usd!,
                                           precision: 2)
                                       .toString(),
                               style: isBalanceNegative
@@ -1185,10 +1186,10 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                 child: Column(
                                   children: [
                                     Text(
-                                      AppLocalizations.of(context).withdraw,
+                                      AppLocalizations.of(context)!.withdraw,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .subtitle2
+                                          .subtitle2!
                                           .copyWith(fontSize: 8),
                                     ),
                                     const Icon(
@@ -1201,7 +1202,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                               ),
                               onTap: () {
                                 model.routeWithWalletInfoArgs(
-                                    model.wallets[index], WithdrawViewRoute);
+                                    model.wallets![index], WithdrawViewRoute);
                               }),
                         ],
                       ),
@@ -1221,12 +1222,12 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                     children: <Widget>[
                                       Text(
                                           //  '${model.specialTicker} '.toUpperCase() +
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                               .unConfirmedBalance,
                                           style:
                                               subText2.copyWith(color: yellow)),
                                       Text(
-                                          '${NumberUtil().truncateDoubleWithoutRouding(wallets[index].unconfirmedBalance, precision: 8)}  FAB',
+                                          '${NumberUtil().truncateDoubleWithoutRouding(wallets[index].unconfirmedBalance!, precision: 8)}  FAB',
                                           textAlign: TextAlign.start,
                                           style:
                                               subText2.copyWith(color: yellow)),
@@ -1262,12 +1263,12 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
   bool get fireOnModelReadyOnce => true;
   @override
   Widget builder(
-      BuildContext context, WalletDashboardViewModel model, Widget child) {
+      BuildContext context, WalletDashboardViewModel model, Widget? child) {
     debugPrint('fav list length before');
     debugPrint(model.favWallets.length.toString());
 
     return model.busy(model.favWallets)
-        ? model.sharedService.loadingIndicator()
+        ? model.sharedService!.loadingIndicator()
         : Container(
             child: model.favWallets.isEmpty || model.favWallets == null
                 ? Column(
@@ -1281,7 +1282,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                         height: 40,
                       ),
                       const SizedBox(height: 5),
-                      Text(AppLocalizations.of(context).favoriteTokens,
+                      Text(AppLocalizations.of(context)!.favoriteTokens,
                           style: const TextStyle(
                               fontSize: 12, color: Colors.white)),
                     ],
@@ -1296,13 +1297,13 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                     itemCount: model.favWallets.length,
                     itemBuilder: (BuildContext context, int index) {
                       var tickerName =
-                          model.favWallets[index].coin.toLowerCase();
+                          model.favWallets[index].coin!.toLowerCase();
 
-                      String logoTicker = '';
+                      String? logoTicker = '';
 
                       var specialTokenData = {};
                       bool isBalanceNegative =
-                          model.wallets[index].balance.isNegative;
+                          model.wallets![index].balance!.isNegative;
                       specialTokenData = model.walletUtil
                           .updateSpecialTokensTickerName(tickerName);
                       tickerName = specialTokenData['tickerName'];
@@ -1338,10 +1339,10 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                               spreadRadius: 1.0),
                                         ]),
                                     child: Image.network(
-                                      '$walletCoinsLogoUrl${logoTicker.toLowerCase()}.png',
+                                      '$walletCoinsLogoUrl${logoTicker!.toLowerCase()}.png',
                                       errorBuilder: (BuildContext context,
                                           Object exception,
-                                          StackTrace stackTrace) {
+                                          StackTrace? stackTrace) {
                                         return Text(logoTicker.toString(),
                                             style: const TextStyle(
                                                 fontSize: 8, color: white));
@@ -1374,7 +1375,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                               padding: const EdgeInsets.only(
                                                   right: 5.0),
                                               child: Text(
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                       .available,
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -1383,14 +1384,14 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                             Expanded(
                                               child: Text(
                                                   model.favWallets[index]
-                                                          .balance.isNegative
+                                                          .balance!.isNegative
                                                       ? '0.0'
                                                       : NumberUtil()
                                                           .truncateDoubleWithoutRouding(
                                                               model
                                                                   .favWallets[
                                                                       index]
-                                                                  .balance,
+                                                                  .balance!,
                                                               precision: 6)
                                                           .toString(),
                                                   style: Theme.of(context)
@@ -1408,18 +1409,18 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                   right: 5.0,
                                                   bottom: 2.0),
                                               child: Text(
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                       .locked,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline6
+                                                      .headline6!
                                                       .copyWith(color: red)),
                                             ),
                                             Expanded(
                                               child: Text(
                                                   model
                                                           .favWallets[index]
-                                                          .lockBalance
+                                                          .lockBalance!
                                                           .isNegative
                                                       ? '0.0'
                                                       : NumberUtil()
@@ -1427,12 +1428,12 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                               model
                                                                   .favWallets[
                                                                       index]
-                                                                  .lockBalance,
+                                                                  .lockBalance!,
                                                               precision: 6)
                                                           .toString(),
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline6
+                                                      .headline6!
                                                       .copyWith(color: red)),
                                             )
                                           ],
@@ -1444,7 +1445,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                               padding: const EdgeInsets.only(
                                                   right: 5.0),
                                               child: Text(
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                       .inExchange,
                                                   textAlign: TextAlign.center,
                                                   style: Theme.of(context)
@@ -1457,12 +1458,12 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                       .truncateDoubleWithoutRouding(
                                                           model
                                                               .favWallets[index]
-                                                              .unlockedExchangeBalance,
+                                                              .unlockedExchangeBalance!,
                                                           precision: 6)
                                                       .toString(),
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline6
+                                                      .headline6!
                                                       .copyWith(
                                                           color: primaryColor)),
                                             ),
@@ -1484,7 +1485,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                               style: TextStyle(color: green)),
                                           Expanded(
                                             child: Text(
-                                                '${NumberUtil().truncateDoubleWithoutRouding(model.favWallets[index].balance * model.favWallets[index].usdValue.usd, precision: 2).toString()} USD',
+                                                '${NumberUtil().truncateDoubleWithoutRouding(model.favWallets[index].balance! * model.favWallets[index].usdValue!.usd!, precision: 2).toString()} USD',
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(color: green)),
                                           ),
@@ -1507,11 +1508,11 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                     children: [
                                                       Text(
                                                         AppLocalizations.of(
-                                                                context)
+                                                                context)!
                                                             .deposit,
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .subtitle2
+                                                            .subtitle2!
                                                             .copyWith(
                                                                 fontSize: 8),
                                                       ),
@@ -1535,11 +1536,11 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                   children: [
                                                     Text(
                                                       AppLocalizations.of(
-                                                              context)
+                                                              context)!
                                                           .withdraw,
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .subtitle2
+                                                          .subtitle2!
                                                           .copyWith(
                                                               fontSize: 8),
                                                     ),
@@ -1578,9 +1579,9 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
 ----------------------------------------------------------------------*/
 
 class TotalBalanceWidget extends StatelessWidget {
-  const TotalBalanceWidget({Key key, this.model, this.index}) : super(key: key);
-  final WalletDashboardViewModel model;
-  final int index;
+  const TotalBalanceWidget({Key? key, this.model, this.index}) : super(key: key);
+  final WalletDashboardViewModel? model;
+  final int? index;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -1591,7 +1592,7 @@ class TotalBalanceWidget extends StatelessWidget {
             right: 30,
             left: 30,
             child: Card(
-              elevation: model.elevation,
+              elevation: model!.elevation,
               color: isProduction ? secondaryColor : red.withAlpha(200),
               child: Container(
                 //duration: Duration(milliseconds: 250),
@@ -1623,26 +1624,26 @@ class TotalBalanceWidget extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).totalWalletBalance,
+                          Text(AppLocalizations.of(context)!.totalWalletBalance,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline4
+                                  .headline4!
                                   .copyWith(fontWeight: FontWeight.w400)),
-                          model.isBusy
+                          model!.isBusy
                               ? Shimmer.fromColors(
                                   baseColor: primaryColor,
                                   highlightColor: white,
                                   child: Text(
-                                    '${model.totalUsdBalance} USD',
+                                    '${model!.totalUsdBalance} USD',
                                     style:
                                         Theme.of(context).textTheme.subtitle1,
                                   ),
                                 )
-                              : Text('${model.totalUsdBalance} USD',
+                              : Text('${model!.totalUsdBalance} USD',
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .subtitle1
+                                      .subtitle1!
                                       .copyWith(fontWeight: FontWeight.w400)),
                         ],
                       ),
@@ -1663,10 +1664,10 @@ class TotalBalanceWidget extends StatelessWidget {
 }
 
 class TotalBalanceWidget2 extends StatelessWidget {
-  const TotalBalanceWidget2({Key key, this.model, this.index})
+  const TotalBalanceWidget2({Key? key, this.model, this.index})
       : super(key: key);
-  final WalletDashboardViewModel model;
-  final int index;
+  final WalletDashboardViewModel? model;
+  final int? index;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -1677,7 +1678,7 @@ class TotalBalanceWidget2 extends StatelessWidget {
             right: 30,
             left: 30,
             child: Card(
-              elevation: model.elevation,
+              elevation: model!.elevation,
               color: isProduction ? secondaryColor : red.withAlpha(200),
               child: Container(
                 //duration: Duration(milliseconds: 250),
@@ -1712,7 +1713,7 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                 ))),
                     Expanded(
                       flex: 3,
-                      child: model.isBusy
+                      child: model!.isBusy
                           ? Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -1720,11 +1721,11 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 3.0),
                                   child: Text(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                           .totalExchangeBalance,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline6
+                                          .headline6!
                                           .copyWith(
                                               fontWeight: FontWeight.bold,
                                               color: white)),
@@ -1733,7 +1734,7 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                     baseColor: primaryColor,
                                     highlightColor: white,
                                     child: Text(
-                                      model.totalExchangeBalance + ' USD',
+                                      model!.totalExchangeBalance + ' USD',
                                       style:
                                           Theme.of(context).textTheme.subtitle1,
                                     )),
@@ -1746,18 +1747,18 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 3.0),
                                   child: Text(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                           .totalExchangeBalance,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline4
+                                          .headline4!
                                           .copyWith(
                                               fontWeight: FontWeight.w400)),
                                 ),
-                                Text(model.totalExchangeBalance + ' USD',
+                                Text(model!.totalExchangeBalance + ' USD',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .subtitle1
+                                        .subtitle1!
                                         .copyWith(fontWeight: FontWeight.w400)),
                               ],
                             ),
@@ -1778,10 +1779,10 @@ class TotalBalanceWidget2 extends StatelessWidget {
 }
 
 class TotalBalanceWidget3 extends StatelessWidget {
-  const TotalBalanceWidget3({Key key, this.model, this.index})
+  const TotalBalanceWidget3({Key? key, this.model, this.index})
       : super(key: key);
-  final WalletDashboardViewModel model;
-  final int index;
+  final WalletDashboardViewModel? model;
+  final int? index;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -1792,7 +1793,7 @@ class TotalBalanceWidget3 extends StatelessWidget {
             right: 30,
             left: 30,
             child: Card(
-              elevation: model.elevation,
+              elevation: model!.elevation,
               color: isProduction ? secondaryColor : red.withAlpha(200),
               child: Container(
                 //duration: Duration(milliseconds: 250),
@@ -1809,8 +1810,8 @@ class TotalBalanceWidget3 extends StatelessWidget {
 }
 
 class AddGasRow extends StatelessWidget {
-  const AddGasRow({Key key, this.model}) : super(key: key);
-  final WalletDashboardViewModel model;
+  const AddGasRow({Key? key, this.model}) : super(key: key);
+  final WalletDashboardViewModel? model;
 
   @override
   Widget build(BuildContext context) {
@@ -1845,35 +1846,35 @@ class AddGasRow extends StatelessWidget {
         //         ),
         //       )
         //     :
-        Gas(gasAmount: model.gasAmount);
+        Gas(gasAmount: model!.gasAmount);
   }
 }
 
 class DepositWidget extends StatelessWidget {
-  const DepositWidget({Key key, this.model, this.index, this.tickerName})
+  const DepositWidget({Key? key, this.model, this.index, this.tickerName})
       : super(key: key);
 
-  final WalletDashboardViewModel model;
-  final int index;
-  final String tickerName;
+  final WalletDashboardViewModel? model;
+  final int? index;
+  final String? tickerName;
 
   @override
   Widget build(BuildContext context) {
     // model.showcaseEvent(context);
     return InkWell(
-        child: tickerName.toUpperCase() == 'FAB' &&
-                (model.isShowCaseView || model.gasAmount < 0.5) &&
-                !model.isBusy
+        child: tickerName!.toUpperCase() == 'FAB' &&
+                (model!.isShowCaseView || model!.gasAmount < 0.5) &&
+                !model!.isBusy
             ? Showcase(
-                key: model.globalKeyTwo,
+                key: model!.globalKeyTwo,
                 descTextStyle: const TextStyle(fontSize: 9, color: black),
                 description:
-                    AppLocalizations.of(context).walletDashboardInstruction2,
+                    AppLocalizations.of(context)!.walletDashboardInstruction2,
                 child: buildPaddingDeposit(context),
               )
             : buildPaddingDeposit(context),
-        onTap: () => model.routeWithWalletInfoArgs(
-            model.wallets[index], DepositViewRoute));
+        onTap: () => model!.routeWithWalletInfoArgs(
+            model!.wallets![index!], DepositViewRoute));
   }
 
   Padding buildPaddingDeposit(BuildContext context) {
@@ -1882,9 +1883,9 @@ class DepositWidget extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              AppLocalizations.of(context).deposit,
+              AppLocalizations.of(context)!.deposit,
               style:
-                  Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 8),
+                  Theme.of(context).textTheme.subtitle2!.copyWith(fontSize: 8),
             ),
             Icon(Icons.arrow_downward, color: green, size: 16),
           ],

@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
 class MarketTradesView extends StatelessWidget {
-  final List<MarketTrades> marketTrades;
-  final PairDecimalConfig decimalConfig;
-  const MarketTradesView({Key key, this.marketTrades, this.decimalConfig})
+  final List<MarketTrades>? marketTrades;
+  final PairDecimalConfig? decimalConfig;
+  const MarketTradesView({Key? key, this.marketTrades, this.decimalConfig})
       : super(key: key);
 
   @override
@@ -28,19 +28,19 @@ class MarketTradesView extends StatelessWidget {
                     UIHelper.horizontalSpaceSmall,
                     Expanded(
                         flex: 1,
-                        child: Text(AppLocalizations.of(context).price,
+                        child: Text(AppLocalizations.of(context)!.price,
                             textAlign: TextAlign.right,
                             style: Theme.of(context).textTheme.subtitle2)),
                     UIHelper.horizontalSpaceMedium,
                     Expanded(
                         flex: 2,
-                        child: Text(AppLocalizations.of(context).quantity,
+                        child: Text(AppLocalizations.of(context)!.quantity,
                             textAlign: TextAlign.right,
                             style: Theme.of(context).textTheme.subtitle2)),
                     UIHelper.horizontalSpaceSmall,
                     Expanded(
                         flex: 2,
-                        child: Text(AppLocalizations.of(context).time,
+                        child: Text(AppLocalizations.of(context)!.time,
                             textAlign: TextAlign.right,
                             style: Theme.of(context).textTheme.subtitle2)),
                     UIHelper.horizontalSpaceMedium,
@@ -52,11 +52,12 @@ class MarketTradesView extends StatelessWidget {
                 child: Container(
               child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: marketTrades.length,
+                  itemCount: marketTrades!.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
-                      color:
-                          marketTrades[index].bidOrAsk ? buyOrders : sellOrders,
+                      color: marketTrades![index].bidOrAsk!
+                          ? buyOrders
+                          : sellOrders,
                       padding: const EdgeInsets.all(4.0),
                       margin: const EdgeInsets.only(bottom: 1.0),
                       child: Row(
@@ -69,8 +70,8 @@ class MarketTradesView extends StatelessWidget {
                               child: Text(
                                   NumberUtil()
                                       .truncateDoubleWithoutRouding(
-                                          marketTrades[index].price,
-                                          precision: decimalConfig.qtyDecimal)
+                                          marketTrades![index].price!,
+                                          precision: decimalConfig!.qtyDecimal!)
                                       .toString(),
                                   textAlign: TextAlign.right,
                                   style:
@@ -81,8 +82,8 @@ class MarketTradesView extends StatelessWidget {
                               child: Text(
                                   NumberUtil()
                                       .truncateDoubleWithoutRouding(
-                                          marketTrades[index].quantity,
-                                          precision: decimalConfig.qtyDecimal)
+                                          marketTrades![index].quantity!,
+                                          precision: decimalConfig!.qtyDecimal!)
                                       .toString(),
                                   textAlign: TextAlign.right,
                                   style:
@@ -92,7 +93,7 @@ class MarketTradesView extends StatelessWidget {
                               flex: 2,
                               child: Text(
                                   NumberUtil()
-                                      .timeFormatted(marketTrades[index].time)
+                                      .timeFormatted(marketTrades![index].time)
                                       .toString(),
                                   textAlign: TextAlign.right,
                                   style:

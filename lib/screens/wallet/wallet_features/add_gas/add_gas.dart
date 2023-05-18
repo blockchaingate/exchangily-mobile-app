@@ -47,7 +47,7 @@ class AddGas extends StatelessWidget {
                 },
               ),
               middle: Text(
-                AppLocalizations.of(context).addGas,
+                AppLocalizations.of(context)!.addGas,
                 style: const TextStyle(color: Colors.white),
               ),
               backgroundColor: const Color(0XFF1f2233),
@@ -79,7 +79,7 @@ class AddGas extends StatelessWidget {
                             borderSide: BorderSide(
                                 color: Color(0XFF871fff), width: 1.0)),
                         hintText:
-                            AppLocalizations.of(context).enterAmount + '(FAB)',
+                            AppLocalizations.of(context)!.enterAmount + '(FAB)',
                         hintStyle: Theme.of(context).textTheme.headline6,
                       ),
                       controller: model.amountController,
@@ -94,7 +94,7 @@ class AddGas extends StatelessWidget {
                         padding: const EdgeInsets.only(
                             left: 2.0, right: 4.0, top: 2.0),
                         child: Text(
-                            '${AppLocalizations.of(context).gas} ${AppLocalizations.of(context).balance}',
+                            '${AppLocalizations.of(context)!.gas} ${AppLocalizations.of(context)!.balance}',
                             style: const TextStyle(
                                 fontSize: 12.0, color: Colors.white)),
                       ),
@@ -108,7 +108,7 @@ class AddGas extends StatelessWidget {
                         padding: const EdgeInsets.only(
                             left: 2.0, right: 4.0, top: 2.0),
                         child: Text(
-                            'FAB ${AppLocalizations.of(context).balance}',
+                            'FAB ${AppLocalizations.of(context)!.balance}',
                             style: const TextStyle(
                                 fontSize: 12.0, color: Colors.white)),
                       ),
@@ -122,7 +122,7 @@ class AddGas extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 2.0, right: 4.0, top: 2.0),
-                        child: Text(AppLocalizations.of(context).gasFee,
+                        child: Text(AppLocalizations.of(context)!.gasFee,
                             style: const TextStyle(
                                 fontSize: 12.0, color: Colors.white)),
                       ),
@@ -144,10 +144,10 @@ class AddGas extends StatelessWidget {
                     ),
                     // Advance
                     Row(children: <Widget>[
-                      Text(AppLocalizations.of(context).advance,
+                      Text(AppLocalizations.of(context)!.advance,
                           style: Theme.of(context)
                               .textTheme
-                              .headline5
+                              .headline5!
                               .copyWith(fontWeight: FontWeight.w300)),
                       Switch(
                         value: model.isAdvance,
@@ -168,10 +168,10 @@ class AddGas extends StatelessWidget {
                               Expanded(
                                 flex: 3,
                                 child: Text(
-                                    AppLocalizations.of(context).gasPrice,
+                                    AppLocalizations.of(context)!.gasPrice,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5
+                                        .headline5!
                                         .copyWith(fontWeight: FontWeight.w300)),
                               ),
                               Expanded(
@@ -197,12 +197,12 @@ class AddGas extends StatelessWidget {
                                           hintText: '0.00000',
                                           hintStyle: Theme.of(context)
                                               .textTheme
-                                              .headline5
+                                              .headline5!
                                               .copyWith(
                                                   fontWeight: FontWeight.w300)),
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline5
+                                          .headline5!
                                           .copyWith(
                                               fontWeight: FontWeight.w300)))
                             ],
@@ -214,10 +214,10 @@ class AddGas extends StatelessWidget {
                               Expanded(
                                   flex: 3,
                                   child: Text(
-                                    AppLocalizations.of(context).gasLimit,
+                                    AppLocalizations.of(context)!.gasLimit,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5
+                                        .headline5!
                                         .copyWith(fontWeight: FontWeight.w300),
                                   )),
                               Expanded(
@@ -243,12 +243,12 @@ class AddGas extends StatelessWidget {
                                           hintText: '0.00000',
                                           hintStyle: Theme.of(context)
                                               .textTheme
-                                              .headline5
+                                              .headline5!
                                               .copyWith(
                                                   fontWeight: FontWeight.w300)),
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline5
+                                          .headline5!
                                           .copyWith(
                                               fontWeight: FontWeight.w300)))
                             ],
@@ -264,7 +264,7 @@ class AddGas extends StatelessWidget {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text(AppLocalizations.of(context).cancel,
+                              child: Text(AppLocalizations.of(context)!.cancel,
                                   style: const TextStyle(color: Colors.white))),
                         ),
                         const SizedBox(width: 8),
@@ -280,18 +280,18 @@ class AddGas extends StatelessWidget {
                               // var res = await AddGasDo(double.parse(myController.text));
                               model.amountController.text == '' ||
                                       amount == null
-                                  ? model.sharedService
+                                  ? model.sharedService!
                                       .sharedSimpleNotification(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                           .invalidAmount,
-                                      subtitle: AppLocalizations.of(context)
+                                      subtitle: AppLocalizations.of(context)!
                                           .pleaseEnterValidNumber,
                                     )
                                   : model.checkPass(amount, context);
                               //   debugPrint(res);
                             },
                             child: Text(
-                              AppLocalizations.of(context).confirm,
+                              AppLocalizations.of(context)!.confirm,
                               style: Theme.of(context).textTheme.button,
                             ),
                           ),

@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import '../../../shared/globals.dart' as globals;
 
 class MyRewardDetailsScreen extends StatelessWidget {
-  final List<CampaignReward> campaignRewardList;
-  const MyRewardDetailsScreen({Key key, this.campaignRewardList})
+  final List<CampaignReward>? campaignRewardList;
+  const MyRewardDetailsScreen({Key? key, this.campaignRewardList})
       : super(key: key);
 
   @override
@@ -17,7 +17,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(AppLocalizations.of(context).myRewardDetails,
+        title: Text(AppLocalizations.of(context)!.myRewardDetails,
             style: Theme.of(context).textTheme.headline4),
       ),
       body: Container(
@@ -31,28 +31,28 @@ class MyRewardDetailsScreen extends StatelessWidget {
                 Expanded(
                     flex: 1,
                     child: Center(
-                        child: Text(AppLocalizations.of(context).level,
+                        child: Text(AppLocalizations.of(context)!.level,
                             style: Theme.of(context).textTheme.subtitle2))),
                 Expanded(
                     flex: 1,
                     child: Center(
-                        child: Text(AppLocalizations.of(context).referrals,
+                        child: Text(AppLocalizations.of(context)!.referrals,
                             style: Theme.of(context).textTheme.subtitle2))),
                 Expanded(
                     flex: 3,
                     child: Center(
                         child: Text(
-                            AppLocalizations.of(context).totalTokenAmount,
+                            AppLocalizations.of(context)!.totalTokenAmount,
                             style: Theme.of(context).textTheme.subtitle2))),
                 Expanded(
                     flex: 2,
                     child: Center(
-                        child: Text(AppLocalizations.of(context).rewardsToken,
+                        child: Text(AppLocalizations.of(context)!.rewardsToken,
                             style: Theme.of(context).textTheme.subtitle2))),
                 Expanded(
                     flex: 2,
                     child: Center(
-                        child: Text(AppLocalizations.of(context).totalValue,
+                        child: Text(AppLocalizations.of(context)!.totalValue,
                             style: Theme.of(context).textTheme.subtitle2)))
               ],
             ),
@@ -62,12 +62,12 @@ class MyRewardDetailsScreen extends StatelessWidget {
           Expanded(
               child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: campaignRewardList.length,
+                  itemCount: campaignRewardList!.length,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () {
                         Navigator.pushNamed(context, '/myReferralView',
-                            arguments: campaignRewardList[index].users);
+                            arguments: campaignRewardList![index].users);
                       },
                       child: Card(
                         elevation: 5,
@@ -81,7 +81,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
                                   flex: 1,
                                   child: Center(
                                       child: Text(
-                                    campaignRewardList[index].level.toString(),
+                                    campaignRewardList![index].level.toString(),
                                     style:
                                         Theme.of(context).textTheme.headline6,
                                   ))),
@@ -89,7 +89,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
                                   flex: 1,
                                   child: Center(
                                       child: Text(
-                                          campaignRewardList[index]
+                                          campaignRewardList![index]
                                               .totalAccounts
                                               .toString(),
                                           style: Theme.of(context)
@@ -99,8 +99,8 @@ class MyRewardDetailsScreen extends StatelessWidget {
                                   flex: 3,
                                   child: Center(
                                       child: Text(
-                                          campaignRewardList[index]
-                                              .totalQuantities
+                                          campaignRewardList![index]
+                                              .totalQuantities!
                                               .toStringAsFixed(3),
                                           style: Theme.of(context)
                                               .textTheme
@@ -109,8 +109,8 @@ class MyRewardDetailsScreen extends StatelessWidget {
                                   flex: 2,
                                   child: Center(
                                       child: Text(
-                                          campaignRewardList[index]
-                                              .totalRewardQuantities
+                                          campaignRewardList![index]
+                                              .totalRewardQuantities!
                                               .toStringAsFixed(3),
                                           style: Theme.of(context)
                                               .textTheme
@@ -119,12 +119,12 @@ class MyRewardDetailsScreen extends StatelessWidget {
                                   flex: 2,
                                   child: Center(
                                       child: Text(
-                                          campaignRewardList[index]
-                                              .totalValue
+                                          campaignRewardList![index]
+                                              .totalValue!
                                               .toStringAsFixed(3),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6
+                                              .headline6!
                                               .copyWith(
                                                   color: Colors.greenAccent,
                                                   fontWeight:

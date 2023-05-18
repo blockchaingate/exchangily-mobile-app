@@ -1,16 +1,16 @@
 class OrderInfo {
-  String _id;
-  String _dateCreated;
-  String _txId;
-  String _status;
-  double _quantity;
+  String? _id;
+  String? _dateCreated;
+  String? _txId;
+  String? _status;
+  double? _quantity;
 
   OrderInfo(
-      {String id,
-      String dateCreated,
-      String txId,
-      String status,
-      double quantity}) {
+      {String? id,
+      String? dateCreated,
+      String? txId,
+      String? status,
+      double? quantity}) {
     this.id = id;
     _dateCreated = dateCreated ?? '';
     _txId = txId ?? '';
@@ -20,8 +20,8 @@ class OrderInfo {
 
   factory OrderInfo.fromJson(Map<String, dynamic> json) {
     return OrderInfo(
-        id: json['_id'] as String,
-        dateCreated: json['dateCreated'] as String,
+        id: json['_id'] as String?,
+        dateCreated: json['dateCreated'] as String?,
         txId: json['txId'],
         status: json['status'],
         quantity: json['quantity'].toDouble());
@@ -37,37 +37,37 @@ class OrderInfo {
     return data;
   }
 
-  String get id => _id;
+  String? get id => _id;
 
-  set id(String id) {
+  set id(String? id) {
     _id = id;
   }
 
-  String get dateCreated => _dateCreated;
+  String? get dateCreated => _dateCreated;
 
-  set dateCreated(String dateCreated) {
+  set dateCreated(String? dateCreated) {
     _dateCreated = dateCreated;
   }
 
-  String get txId => _txId;
+  String? get txId => _txId;
 
-  set txId(String txid) {
+  set txId(String? txid) {
     _txId = txid;
   }
 
-  String get status => _status;
-  set status(String status) {
+  String? get status => _status;
+  set status(String? status) {
     _status = status;
   }
 
-  double get quantity => _quantity;
-  set quantity(double quantity) {
+  double? get quantity => _quantity;
+  set quantity(double? quantity) {
     _quantity = quantity;
   }
 }
 
 class OrderInfoList {
-  final List<OrderInfo> orders;
+  final List<OrderInfo>? orders;
   OrderInfoList({this.orders});
 
   factory OrderInfoList.fromJson(List<dynamic> parsedJson) {

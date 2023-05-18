@@ -6,9 +6,9 @@ import 'package:exchangilymobileapp/models/campaign/team_reward.dart';
 
 class TeamRewardDetailsScreenState extends BaseState {
   final log = getLogger('TeamRewardDetailsScreenState');
-  CampaignService campaignService = locator<CampaignService>();
+  CampaignService? campaignService = locator<CampaignService>();
   List<TeamReward> campaignTeamRewardList = [];
-  Map<String, dynamic> teamValueAndRewardWithToken;
+  Map<String, dynamic>? teamValueAndRewardWithToken;
 // Init state
   void initState() {
     // getTeamRewardDetails();

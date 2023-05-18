@@ -11,23 +11,23 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:typed_data';
+
+import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/utils/fab_util.dart';
-import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart' as stringUtils;
-import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/services/dialog_service.dart';
-import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class SmartContract extends StatefulWidget {
-  const SmartContract({Key key}) : super(key: key);
+  const SmartContract({Key? key}) : super(key: key);
 
   @override
   _SmartContractState createState() => _SmartContractState();
@@ -35,23 +35,23 @@ class SmartContract extends StatefulWidget {
 
 class _SmartContractState extends State<SmartContract> {
   final log = getLogger('SmartContract');
-  String _currentFunction;
-  String _smartContractName;
+  String? _currentFunction;
+  String? _smartContractName;
   var abis;
   var functionHex;
-  var abi;
+  late var abi;
 
-  final DialogService _dialogService = locator<DialogService>();
-  WalletService walletService = locator<WalletService>();
-  SharedService sharedService = locator<SharedService>();
+  final DialogService? _dialogService = locator<DialogService>();
+  WalletService? walletService = locator<WalletService>();
+  SharedService? sharedService = locator<SharedService>();
   var fabUtils = FabUtils();
 
-  var inputs = [];
+  List<dynamic>? inputs = [];
   var payable = false;
   TextEditingController smartContractAddressController =
       TextEditingController();
   TextEditingController payableController = TextEditingController();
-  List<DropdownMenuItem<String>> _dropDownMenuItems;
+  List<DropdownMenuItem<String>>? _dropDownMenuItems;
   @override
   void initState() {
     smartContractAddressController.value = TextEditingValue(
@@ -80,7 +80,7 @@ class _SmartContractState extends State<SmartContract> {
     return items;
   }
 
-  void changedDropDownItem(String selectedFunction) {
+  void changedDropDownItem(String? selectedFunction) {
     debugPrint(
         "Selected function $selectedFunction, we are going to refresh the UI");
     var _inputs;
@@ -144,7 +144,7 @@ class _SmartContractState extends State<SmartContract> {
             },
           ),
           middle: Text(
-            AppLocalizations.of(context).smartContract,
+            AppLocalizations.of(context)!.smartContract,
             style: const TextStyle(color: Colors.white),
           ),
           backgroundColor: const Color(0XFF1f2233),
@@ -154,7 +154,7 @@ class _SmartContractState extends State<SmartContract> {
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
             child: ListView(
               children: <Widget>[
-                Text(AppLocalizations.of(context).smartContractAddress,
+                Text(AppLocalizations.of(context)!.smartContractAddress,
                     style: const TextStyle(color: Colors.grey, fontSize: 18.0)),
                 const SizedBox(height: 10),
                 TextField(
@@ -162,7 +162,7 @@ class _SmartContractState extends State<SmartContract> {
                     enabledBorder: const OutlineInputBorder(
                         borderSide:
                             BorderSide(color: Color(0XFF871fff), width: 1.0)),
-                    hintText: AppLocalizations.of(context).enterAddress,
+                    hintText: AppLocalizations.of(context)!.enterAddress,
                     hintStyle:
                         const TextStyle(fontSize: 20.0, color: Colors.grey),
                   ),
@@ -173,14 +173,14 @@ class _SmartContractState extends State<SmartContract> {
                   },
                 ),
                 const SizedBox(height: 20),
-                Text(AppLocalizations.of(context).smartContractName,
+                Text(AppLocalizations.of(context)!.smartContractName,
                     style: const TextStyle(color: Colors.grey, fontSize: 18.0)),
                 const SizedBox(height: 10),
-                Text(_smartContractName,
+                Text(_smartContractName!,
                     style:
                         const TextStyle(color: Colors.white, fontSize: 18.0)),
                 const SizedBox(height: 20),
-                Text(AppLocalizations.of(context).function,
+                Text(AppLocalizations.of(context)!.function,
                     style: const TextStyle(color: Colors.grey, fontSize: 18.0)),
                 const SizedBox(height: 10),
                 DropdownButton(
@@ -192,7 +192,7 @@ class _SmartContractState extends State<SmartContract> {
                 const SizedBox(height: 20),
                 Column(
                   children: <Widget>[
-                    for (var input in inputs)
+                    for (var input in inputs!)
                       Column(
                         children: <Widget>[
                           Text(input['name'],
@@ -217,7 +217,7 @@ class _SmartContractState extends State<SmartContract> {
                     if (payable)
                       Column(
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).payableValue,
+                          Text(AppLocalizations.of(context)!.payableValue,
                               style: const TextStyle(
                                   color: Colors.grey, fontSize: 18.0)),
                           const SizedBox(height: 10),
@@ -246,8 +246,8 @@ class _SmartContractState extends State<SmartContract> {
                   onPressed: () async {
                     // var res = await AddGasDo(double.parse(myController.text));
 
-                    for (var i = 0; i < inputs.length; i++) {
-                      var text = inputs[i]['controller'].text;
+                    for (var i = 0; i < inputs!.length; i++) {
+                      var text = inputs![i]['controller'].text;
                     }
                     if (payable) {}
 
@@ -259,7 +259,7 @@ class _SmartContractState extends State<SmartContract> {
                     //   debugPrint(res);
                   },
                   child: Text(
-                    AppLocalizations.of(context).confirm,
+                    AppLocalizations.of(context)!.confirm,
                     style: Theme.of(context).textTheme.button,
                   ),
                 )
@@ -268,7 +268,7 @@ class _SmartContractState extends State<SmartContract> {
   }
 
   formABI() {
-    var abiHex = '';
+    String? abiHex = '';
     if (functionHex != null) {
       for (var i = 0; i < functionHex.length; i++) {
         if (functionHex[i]['name'] == _currentFunction) {
@@ -277,11 +277,11 @@ class _SmartContractState extends State<SmartContract> {
       }
     }
 
-    for (var i = 0; i < inputs.length; i++) {
-      var text = inputs[i]['controller'].value.text;
+    for (var i = 0; i < inputs!.length; i++) {
+      var text = inputs![i]['controller'].value.text;
       final number = int.parse(text, radix: 10);
       var hexString = number.toRadixString(16);
-      abiHex += stringUtils.fixLength(hexString, 64);
+      abiHex = abiHex! + stringUtils.fixLength(hexString, 64);
     }
     return abiHex;
   }
@@ -289,20 +289,20 @@ class _SmartContractState extends State<SmartContract> {
   callContract() {}
 
   checkPass(abiHex, value, context) async {
-    var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
+    var res = await _dialogService!.showDialog(
+        title: AppLocalizations.of(context)!.enterPassword,
         description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote);
-    if (res.confirmed) {
+            AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote);
+    if (res.confirmed!) {
       log.w('Pass matched');
       log.w(res.returnedText);
-      String mnemonic = res.returnedText;
-      Uint8List seed = walletService.generateSeed(mnemonic);
+      String? mnemonic = res.returnedText;
+      Uint8List seed = walletService!.generateSeed(mnemonic);
 
-      var contractInfo = await walletService.getFabSmartContract(
+      var contractInfo = await walletService!.getFabSmartContract(
           smartContractAddressController.value.text, abiHex, 800000, 50);
 
-      var res1 = await walletService.getFabTransactionHex(
+      var res1 = await walletService!.getFabTransactionHex(
           seed,
           [0],
           contractInfo['contract'],
@@ -313,7 +313,7 @@ class _SmartContractState extends State<SmartContract> {
           false);
       var txHex = res1['txHex'];
       var errMsg = res1['errMsg'];
-      var txHash = '';
+      String? txHash = '';
       if (txHex != null && txHex != '') {
         var res = await fabUtils.postFabTx(txHex);
         txHash = res['txHash'];
@@ -328,9 +328,9 @@ class _SmartContractState extends State<SmartContract> {
   }
 
   showNotification(context) {
-    sharedService.sharedSimpleNotification(
-      AppLocalizations.of(context).passwordMismatch,
-      subtitle: AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+    sharedService!.sharedSimpleNotification(
+      AppLocalizations.of(context)!.passwordMismatch,
+      subtitle: AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword,
     );
   }
 

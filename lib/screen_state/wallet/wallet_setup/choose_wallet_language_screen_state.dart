@@ -25,13 +25,13 @@ import 'package:flutter/material.dart';
 
 class ChooseWalletLanguageScreenState extends BaseState {
   final log = getLogger('ChooseWalletLanguageScreenState');
-  BuildContext context;
+  BuildContext? context;
 
-  UserSettingsDatabaseService userSettingsDatabaseService =
+  UserSettingsDatabaseService? userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();
-  final NavigationService navigationService = locator<NavigationService>();
-  final LocalStorageService storageService = locator<LocalStorageService>();
-  final walletService = locator<WalletService>();
+  final NavigationService? navigationService = locator<NavigationService>();
+  final LocalStorageService? storageService = locator<LocalStorageService>();
+  final WalletService? walletService = locator<WalletService>();
   @override
   String errorMessage = '';
   bool isUserSettingsEmpty = false;
@@ -40,16 +40,16 @@ class ChooseWalletLanguageScreenState extends BaseState {
     String lang = '';
     setState(ViewState.Busy);
     //  SharedPreferences prefs = await SharedPreferences.getInstance();
-    lang = await userSettingsDatabaseService
+    lang = await userSettingsDatabaseService!
         .getById(1)
-        .then((res) => res.language);
+        .then((res) => res!.language!);
     if (lang == null || lang == '') {
       log.e('language empty');
     } else {
       setState(ViewState.Idle);
       setLangauge(lang);
-      storageService.language = lang;
-      navigationService.navigateTo('/walletSetup');
+      storageService!.language = lang;
+      navigationService!.navigateTo('/walletSetup');
     }
     setState(ViewState.Idle);
   }
@@ -58,7 +58,7 @@ class ChooseWalletLanguageScreenState extends BaseState {
     setState(ViewState.Busy);
     //  SharedPreferences prefs = await SharedPreferences.getInstance();
     UserSettings userSettings = UserSettings(language: languageCode, theme: '');
-    await userSettingsDatabaseService.getById(1).then((res) {
+    await userSettingsDatabaseService!.getById(1).then((res) {
       if (res != null) {
         //   userSettings.language = res.language;
         isUserSettingsEmpty = false;
@@ -69,7 +69,7 @@ class ChooseWalletLanguageScreenState extends BaseState {
       }
     }).catchError((err) => log.e('user settings db empty $err'));
     //await walletService.updateUserSettingsDb(userSettings, isUserSettingsEmpty);
-    storageService.language = languageCode;
+    storageService!.language = languageCode;
     AppLocalizations.load(Locale(languageCode, languageCode.toUpperCase()));
     setState(ViewState.Idle);
   }

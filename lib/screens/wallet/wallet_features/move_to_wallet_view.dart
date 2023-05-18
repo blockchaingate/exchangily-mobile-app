@@ -27,8 +27,8 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/gestures.dart';
 
 class MoveToWalletScreen extends StatelessWidget {
-  final WalletInfo walletInfo;
-  const MoveToWalletScreen({Key key, this.walletInfo}) : super(key: key);
+  final WalletInfo? walletInfo;
+  const MoveToWalletScreen({Key? key, this.walletInfo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class MoveToWalletScreen extends StatelessWidget {
                 },
               ),
               middle: Text(
-                  '${AppLocalizations.of(context).move}  ${model.specialTicker}  ${AppLocalizations.of(context).toWallet}',
+                  '${AppLocalizations.of(context)!.move}  ${model.specialTicker}  ${AppLocalizations.of(context)!.toWallet}',
                   style: Theme.of(context).textTheme.headline5),
               backgroundColor: const Color(0XFF1f2233),
             ),
@@ -99,7 +99,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                                   .minimumAmount +
                                               ': ',
                                           style: Theme.of(context)
@@ -107,7 +107,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                               .headline6),
                                       Text(
                                           model.token.minWithdraw == null
-                                              ? AppLocalizations.of(context)
+                                              ? AppLocalizations.of(context)!
                                                   .loading
                                               : model.token.minWithdraw
                                                   .toString(),
@@ -121,7 +121,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                                   .decimalLimit +
                                               ': ',
                                           style: Theme.of(context)
@@ -139,36 +139,36 @@ class MoveToWalletScreen extends StatelessWidget {
                                   borderSide: BorderSide(
                                       color: Color(0XFF871fff), width: 1.0)),
                               hintText:
-                                  AppLocalizations.of(context).enterAmount,
+                                  AppLocalizations.of(context)!.enterAmount,
                               hintStyle: Theme.of(context)
                                   .textTheme
-                                  .headline5
+                                  .headline5!
                                   .copyWith(fontWeight: FontWeight.w300)),
                           controller: model.amountController,
                           style: Theme.of(context)
                               .textTheme
-                              .headline5
+                              .headline5!
                               .copyWith(fontWeight: FontWeight.w300)),
                       UIHelper.verticalSpaceSmall,
                       // Exchange bal
                       Row(
                         children: <Widget>[
                           Text(
-                              AppLocalizations.of(context).inExchange +
-                                  ' ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, precision: model.decimalLimit).toString()}',
+                              AppLocalizations.of(context)!.inExchange +
+                                  ' ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.inExchange!, precision: model.decimalLimit).toString()}',
                               style: Theme.of(context).textTheme.subtitle2),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 3,
                             ),
-                            child: walletInfo.tickerName == 'USDTX'
+                            child: walletInfo!.tickerName == 'USDTX'
                                 ? Text('USDT'.toUpperCase(),
                                     style:
                                         Theme.of(context).textTheme.subtitle2)
-                                : walletInfo.tickerName == 'USDCX'
+                                : walletInfo!.tickerName == 'USDCX'
                                     ? Text('USDC'.toUpperCase(),
                                         style: subText2)
-                                    : Text(model.specialTicker.toUpperCase(),
+                                    : Text(model.specialTicker!.toUpperCase(),
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2),
@@ -225,8 +225,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                     children: [
                                       model.isShowTrxTsWalletBalance ||
                                               WalletUtil.isSpecialUsdt(
-                                                  walletInfo.tickerName) ||
-                                              walletInfo.tickerName == 'USDT'
+                                                  walletInfo!.tickerName) ||
+                                              walletInfo!.tickerName == 'USDT'
                                           ? Row(
                                               children: <Widget>[
                                                 SizedBox(
@@ -235,7 +235,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   child: Radio(
                                                       activeColor:
                                                           globals.primaryColor,
-                                                      onChanged: (value) {
+                                                      onChanged: (dynamic value) {
                                                         model
                                                             .radioButtonSelection(
                                                                 value);
@@ -262,7 +262,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                       //           (states) => Colors.blue),
                                                       activeColor:
                                                           globals.primaryColor,
-                                                      onChanged: (value) {
+                                                      onChanged: (dynamic value) {
                                                         model
                                                             .radioButtonSelection(
                                                                 value);
@@ -290,7 +290,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                             child: Radio(
                                                 activeColor:
                                                     globals.primaryColor,
-                                                onChanged: (value) {
+                                                onChanged: (dynamic value) {
                                                   model.radioButtonSelection(
                                                       value);
                                                 },
@@ -315,11 +315,11 @@ class MoveToWalletScreen extends StatelessWidget {
                                       // BNB radio button
                                       model.isShowBnbTsWalletBalance ||
                                               WalletUtil.isSpecialUsdt(
-                                                  walletInfo.tickerName) ||
+                                                  walletInfo!.tickerName) ||
                                               WalletUtil.isSpecialFab(
-                                                  walletInfo.tickerName) ||
-                                              walletInfo.tickerName == 'FAB' ||
-                                              walletInfo.tickerName == 'USDT'
+                                                  walletInfo!.tickerName) ||
+                                              walletInfo!.tickerName == 'FAB' ||
+                                              walletInfo!.tickerName == 'USDT'
                                           ? Row(
                                               children: <Widget>[
                                                 SizedBox(
@@ -328,7 +328,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   child: Radio(
                                                       activeColor:
                                                           globals.primaryColor,
-                                                      onChanged: (value) {
+                                                      onChanged: (dynamic value) {
                                                         model
                                                             .radioButtonSelection(
                                                                 value);
@@ -350,8 +350,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                       // MATIC radio button
                                       model.isShowPolygonTsWalletBalance ||
                                               WalletUtil.isSpecialUsdt(
-                                                  walletInfo.tickerName) ||
-                                              walletInfo.tickerName == 'USDT'
+                                                  walletInfo!.tickerName) ||
+                                              walletInfo!.tickerName == 'USDT'
                                           ? Row(
                                               children: <Widget>[
                                                 SizedBox(
@@ -360,7 +360,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   child: Radio(
                                                       activeColor:
                                                           globals.primaryColor,
-                                                      onChanged: (value) {
+                                                      onChanged: (dynamic value) {
                                                         model
                                                             .radioButtonSelection(
                                                                 value);
@@ -392,9 +392,9 @@ class MoveToWalletScreen extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(
-                              AppLocalizations.of(context).withdraw +
+                              AppLocalizations.of(context)!.withdraw +
                                   ' ' +
-                                  AppLocalizations.of(context).fee,
+                                  AppLocalizations.of(context)!.fee,
                               style: Theme.of(context).textTheme.headline6),
                           UIHelper.horizontalSpaceSmall,
                           Padding(
@@ -404,7 +404,7 @@ class MoveToWalletScreen extends StatelessWidget {
                             child: model.isBusy
                                 ? const Text('..')
                                 : Text(
-                                    '${model.token.feeWithdraw} ${model.specialTicker.contains('(') ? model.specialTicker.split('(')[0] : model.specialTicker}',
+                                    '${model.token.feeWithdraw} ${model.specialTicker!.contains('(') ? model.specialTicker!.split('(')[0] : model.specialTicker}',
                                     style:
                                         Theme.of(context).textTheme.headline6),
                           )
@@ -413,7 +413,7 @@ class MoveToWalletScreen extends StatelessWidget {
                       UIHelper.verticalSpaceSmall,
                       Row(
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).kanbanGasFee,
+                          Text(AppLocalizations.of(context)!.kanbanGasFee,
                               style: Theme.of(context).textTheme.headline6),
                           Padding(
                             padding: const EdgeInsets.only(
@@ -429,7 +429,7 @@ class MoveToWalletScreen extends StatelessWidget {
                       UIHelper.verticalSpaceSmall,
                       Row(
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).advance,
+                          Text(AppLocalizations.of(context)!.advance,
                               style: Theme.of(context).textTheme.headline6),
                           SizedBox(
                             height: 15,
@@ -457,11 +457,11 @@ class MoveToWalletScreen extends StatelessWidget {
                                   Expanded(
                                     flex: 3,
                                     child: Text(
-                                        AppLocalizations.of(context)
+                                        AppLocalizations.of(context)!
                                             .kanbanGasPrice,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5
+                                            .headline5!
                                             .copyWith(
                                                 fontWeight: FontWeight.w300)),
                                   ),
@@ -491,10 +491,10 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   hintText: '0.00000',
                                                   hintStyle: Theme.of(context)
                                                       .textTheme
-                                                      .headline5
+                                                      .headline5!
                                                       .copyWith(
                                                           fontWeight: FontWeight.w300)),
-                                              style: Theme.of(context).textTheme.headline5.copyWith(fontWeight: FontWeight.w300))))
+                                              style: Theme.of(context).textTheme.headline5!.copyWith(fontWeight: FontWeight.w300))))
                                 ],
                               ),
                               // Kanban Gas Limit
@@ -504,11 +504,11 @@ class MoveToWalletScreen extends StatelessWidget {
                                   Expanded(
                                       flex: 3,
                                       child: Text(
-                                        AppLocalizations.of(context)
+                                        AppLocalizations.of(context)!
                                             .kanbanGasLimit,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5
+                                            .headline5!
                                             .copyWith(
                                                 fontWeight: FontWeight.w300),
                                       )),
@@ -537,13 +537,13 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   hintText: '0.00000',
                                                   hintStyle: Theme.of(context)
                                                       .textTheme
-                                                      .headline5
+                                                      .headline5!
                                                       .copyWith(
                                                           fontWeight:
                                                               FontWeight.w300)),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline5
+                                                  .headline5!
                                                   .copyWith(fontWeight: FontWeight.w300)))),
                                 ],
                               ),
@@ -666,7 +666,7 @@ class MoveToWalletScreen extends StatelessWidget {
                       // Success/Error container
                       Container(
                           child: Visibility(
-                              visible: model.message.isNotEmpty,
+                              visible: model.message!.isNotEmpty,
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -680,7 +680,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                   UIHelper.verticalSpaceSmall,
                                   RichText(
                                     text: TextSpan(
-                                        text: AppLocalizations.of(context)
+                                        text: AppLocalizations.of(context)!
                                             .taphereToCopyTxId,
                                         style: const TextStyle(
                                             decoration:
@@ -706,13 +706,13 @@ class MoveToWalletScreen extends StatelessWidget {
                                     text: TextSpan(
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5
+                                            .headline5!
                                             .copyWith(
                                                 color: red,
                                                 decoration:
                                                     TextDecoration.underline),
                                         text:
-                                            '${AppLocalizations.of(context).error} ${AppLocalizations.of(context).details}',
+                                            '${AppLocalizations.of(context)!.error} ${AppLocalizations.of(context)!.details}',
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
                                             model.showDetailsMessageToggle();
@@ -730,7 +730,7 @@ class MoveToWalletScreen extends StatelessWidget {
                       UIHelper.verticalSpaceSmall,
                       model.isShowDetailsMessage
                           ? Center(
-                              child: Text(model.serverError,
+                              child: Text(model.serverError!,
                                   style: Theme.of(context).textTheme.headline6),
                             )
                           : Container(),
@@ -750,7 +750,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                 child: CircularProgressIndicator(
                                   strokeWidth: 1,
                                 ))
-                            : Text(AppLocalizations.of(context).confirm,
+                            : Text(AppLocalizations.of(context)!.confirm,
                                 style: Theme.of(context).textTheme.headline4),
                       ),
                     ],

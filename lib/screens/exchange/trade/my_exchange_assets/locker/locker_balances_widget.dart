@@ -20,7 +20,7 @@ class LockerBalanceWidget extends ViewModelBuilderWidget<LockerViewModel> {
   bool get createNewModelOnInsert => true;
 
   @override
-  Widget builder(BuildContext context, LockerViewModel model, Widget child) {
+  Widget builder(BuildContext context, LockerViewModel model, Widget? child) {
     return Container(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -42,7 +42,7 @@ class LockerBalanceWidget extends ViewModelBuilderWidget<LockerViewModel> {
           model.busy(model.lockers)
               ? Container(
                   margin: const EdgeInsets.all(20.0),
-                  child: model.sharedService.loadingIndicator())
+                  child: model.sharedService!.loadingIndicator())
               : model.lockers.isEmpty
                   ? Container(
                       margin: const EdgeInsets.all(20.0),

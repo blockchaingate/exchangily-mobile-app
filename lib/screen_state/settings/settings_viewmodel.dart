@@ -46,48 +46,48 @@ import 'package:exchangilymobileapp/services/db/token_info_database_service.dart
 
 class SettingsViewmodel extends BaseViewModel {
   bool isVisible = false;
-  String mnemonic = '';
+  String? mnemonic = '';
   final log = getLogger('SettingsViewmodel');
-  DialogService dialogService = locator<DialogService>();
-  WalletService walletService = locator<WalletService>();
-  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+  DialogService? dialogService = locator<DialogService>();
+  WalletService? walletService = locator<WalletService>();
+  TransactionHistoryDatabaseService? transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-  TokenInfoDatabaseService tokenListDatabaseService =
+  TokenInfoDatabaseService? tokenListDatabaseService =
       locator<TokenInfoDatabaseService>();
 
-  SharedService sharedService = locator<SharedService>();
-  final storageService = locator<LocalStorageService>();
-  final NavigationService navigationService = locator<NavigationService>();
+  SharedService? sharedService = locator<SharedService>();
+  final LocalStorageService? storageService = locator<LocalStorageService>();
+  final NavigationService? navigationService = locator<NavigationService>();
 
-  final walletDatabaseService = locator<WalletDatabaseService>();
-  final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
-  UserSettingsDatabaseService userSettingsDatabaseService =
+  final WalletDatabaseService? walletDatabaseService = locator<WalletDatabaseService>();
+  final CoreWalletDatabaseService? coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+  UserSettingsDatabaseService? userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();
-  ConfigService configService = locator<ConfigService>();
-  final authService = locator<LocalAuthService>();
-  final coinService = locator<CoinService>();
-  final vs = locator<VersionService>();
+  ConfigService? configService = locator<ConfigService>();
+  final LocalAuthService? authService = locator<LocalAuthService>();
+  final CoinService? coinService = locator<CoinService>();
+  final VersionService? vs = locator<VersionService>();
   final Map<String, String> languages = {'en': 'English', 'zh': '简体中文'};
-  String selectedLanguage;
+  String? selectedLanguage;
   // bool result = false;
   String errorMessage = '';
-  DialogResponse dialogResponse;
-  BuildContext context;
-  String versionName = '';
-  String buildNumber = '';
+  DialogResponse? dialogResponse;
+  late BuildContext context;
+  String? versionName = '';
+  String? buildNumber = '';
   static int initialLanguageValue = 0;
   final FixedExtentScrollController fixedScrollController =
       FixedExtentScrollController(initialItem: initialLanguageValue);
   bool isDialogDisplay = false;
-  ScrollController scrollController;
+  ScrollController? scrollController;
   bool isDeleting = false;
-  GlobalKey one;
-  GlobalKey two;
-  bool isShowCaseOnce;
-  String baseServerUrl;
+  late GlobalKey one;
+  late GlobalKey two;
+  late bool isShowCaseOnce;
+  String? baseServerUrl;
 
-  bool isHKServer;
-  Map<String, String> versionInfo;
+  bool? isHKServer;
+  late Map<String, String> versionInfo;
   UserSettings userSettings = UserSettings();
   bool isUserSettingsEmpty = false;
   final coinUtils = CoinUtils();
@@ -100,16 +100,16 @@ class SettingsViewmodel extends BaseViewModel {
   init() async {
     setBusy(true);
 
-    storageService.isShowCaseView == null
+    storageService!.isShowCaseView == null
         ? isShowCaseOnce = false
-        : isShowCaseOnce = storageService.isShowCaseView;
+        : isShowCaseOnce = storageService!.isShowCaseView;
 
     getAppVersion();
-    baseServerUrl = configService.getKanbanBaseUrl();
+    baseServerUrl = configService!.getKanbanBaseUrl();
     // Future.delayed(const Duration(seconds: 1), () async {
     // await setLanguageFromDb();
-    selectedLanguage = storageService.language;
-    if (selectedLanguage.isEmpty) {
+    selectedLanguage = storageService!.language;
+    if (selectedLanguage!.isEmpty) {
       selectedLanguage = 'en';
     }
     // await selectDefaultWalletLanguage();
@@ -121,7 +121,7 @@ class SettingsViewmodel extends BaseViewModel {
   setLockAppNowValue() {
     setBusyForObject(lockAppNow, true);
     _lockAppNow = !_lockAppNow;
-    navigationService.navigateUsingPushReplacementNamed(WalletSetupViewRoute);
+    navigationService!.navigateUsingPushReplacementNamed(WalletSetupViewRoute);
     setBusyForObject(lockAppNow, false);
   }
 
@@ -130,29 +130,29 @@ class SettingsViewmodel extends BaseViewModel {
   setBiometricAuth() async {
     setBusyForObject(isBiometricAuth, true);
 
-    bool hasAuthorized = await authService.authenticateApp();
+    bool hasAuthorized = await authService!.authenticateApp();
 
     if (hasAuthorized) {
-      storageService.hasInAppBiometricAuthEnabled =
-          !storageService.hasInAppBiometricAuthEnabled;
-      storageService.hasPhoneProtectionEnabled = true;
+      storageService!.hasInAppBiometricAuthEnabled =
+          !storageService!.hasInAppBiometricAuthEnabled;
+      storageService!.hasPhoneProtectionEnabled = true;
     } else if (!hasAuthorized) {
-      if (authService.isLockedOut) {
-        sharedService.sharedSimpleNotification(
-            AppLocalizations.of(context).lockedOutTemp);
-      } else if (authService.isLockedOutPerm) {
-        sharedService.sharedSimpleNotification(
-            AppLocalizations.of(context).lockedOutPerm);
+      if (authService!.isLockedOut) {
+        sharedService!.sharedSimpleNotification(
+            AppLocalizations.of(context)!.lockedOutTemp);
+      } else if (authService!.isLockedOutPerm) {
+        sharedService!.sharedSimpleNotification(
+            AppLocalizations.of(context)!.lockedOutPerm);
       }
     }
 
-    if (!storageService.hasPhoneProtectionEnabled) {
-      sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).pleaseSetupDeviceSecurity);
-      storageService.hasCancelledBiometricAuth = false;
-      storageService.hasInAppBiometricAuthEnabled = false;
+    if (!storageService!.hasPhoneProtectionEnabled) {
+      sharedService!.sharedSimpleNotification(
+          AppLocalizations.of(context)!.pleaseSetupDeviceSecurity);
+      storageService!.hasCancelledBiometricAuth = false;
+      storageService!.hasInAppBiometricAuthEnabled = false;
     }
-    _isBiometricAuth = storageService.hasInAppBiometricAuthEnabled;
+    _isBiometricAuth = storageService!.hasInAppBiometricAuthEnabled;
     setBusyForObject(isBiometricAuth, false);
   }
 
@@ -160,7 +160,7 @@ class SettingsViewmodel extends BaseViewModel {
 
   setLanguageFromDb() async {
     setBusy(true);
-    await userSettingsDatabaseService.getById(1).then((res) {
+    await userSettingsDatabaseService!.getById(1).then((res) {
       if (res != null) {
         userSettings.language = res.language;
         log.i('user settings db not null');
@@ -178,11 +178,11 @@ class SettingsViewmodel extends BaseViewModel {
                       selectDefaultWalletLanguage
 -------------------------------------------------------------------------------------*/
 
-  Future<String> selectDefaultWalletLanguage() async {
+  Future<String?> selectDefaultWalletLanguage() async {
     setBusy(true);
     if (selectedLanguage == '' || selectedLanguage == null) {
-      String key;
-      if (userSettings.language == null || userSettings.language.isEmpty)
+      String? key;
+      if (userSettings.language == null || userSettings.language!.isEmpty)
         key = 'en';
       // await getSetLocalStorageDataByKey('lang');
       // log.w('key in init $key');
@@ -212,12 +212,12 @@ class SettingsViewmodel extends BaseViewModel {
 
 // Not in use
   convertDecimalToHex() async {
-    int baseCoin = 0;
-    await coinService
+    int? baseCoin = 0;
+    await coinService!
         .getCoinTypeByTickerName('USDT')
         .then((value) => baseCoin = value);
-    var x = baseCoin.toRadixString(16);
-    var t = HEX.encode([baseCoin]);
+    var x = baseCoin!.toRadixString(16);
+    var t = HEX.encode([baseCoin!]);
     log.e('basecoin $baseCoin --  Hex == $t');
   }
 
@@ -228,13 +228,13 @@ class SettingsViewmodel extends BaseViewModel {
   changeBaseAppUrl() {
     setBusy(true);
     //  log.i('1');
-    storageService.isHKServer = !storageService.isHKServer;
+    storageService!.isHKServer = !storageService!.isHKServer;
 
-    storageService.isUSServer = storageService.isHKServer ? false : true;
+    storageService!.isUSServer = storageService!.isHKServer ? false : true;
     // Phoenix.rebirth(context);
     //  log.i('2');
-    baseServerUrl = configService.getKanbanBaseUrl();
-    isHKServer = storageService.isHKServer;
+    baseServerUrl = configService!.getKanbanBaseUrl();
+    isHKServer = storageService!.isHKServer;
     log.e('GLobal kanban url $baseServerUrl');
     setBusy(false);
   }
@@ -254,11 +254,11 @@ class SettingsViewmodel extends BaseViewModel {
   setIsShowcase(bool v) {
     // set updated value
     log.i('setIsShowcase $v value');
-    storageService.isShowCaseView = !storageService.isShowCaseView;
+    storageService!.isShowCaseView = !storageService!.isShowCaseView;
 
     // get new value and assign it to the viewmodel variable
     setBusy(true);
-    isShowCaseOnce = storageService.isShowCaseView;
+    isShowCaseOnce = storageService!.isShowCaseView;
     setBusy(false);
     log.w('is show case once value $isShowCaseOnce');
   }
@@ -268,11 +268,11 @@ class SettingsViewmodel extends BaseViewModel {
 -------------------------------------------------------------------------------------*/
 
   setIsDialogWarningValue(value) async {
-    storageService.isNoticeDialogDisplay =
-        !storageService.isNoticeDialogDisplay;
+    storageService!.isNoticeDialogDisplay =
+        !storageService!.isNoticeDialogDisplay;
     setBusy(true);
     //sharedService.setDialogWarningsStatus(value);
-    isDialogDisplay = storageService.isNoticeDialogDisplay;
+    isDialogDisplay = storageService!.isNoticeDialogDisplay;
     setBusy(false);
   }
 
@@ -286,21 +286,21 @@ class SettingsViewmodel extends BaseViewModel {
   Future deleteWallet() async {
     errorMessage = '';
     // log.i('model busy $busy');
-    await dialogService
+    await dialogService!
         .showVerifyDialog(
-      title: AppLocalizations.of(context).deleteWalletConfirmationPopup,
-      buttonTitle: AppLocalizations.of(context).confirm,
-      secondaryButton: AppLocalizations.of(context).cancel,
+      title: AppLocalizations.of(context)!.deleteWalletConfirmationPopup,
+      buttonTitle: AppLocalizations.of(context)!.confirm,
+      secondaryButton: AppLocalizations.of(context)!.cancel,
     )
         .then((res) async {
-      if (res.confirmed) {
+      if (res.confirmed!) {
         setBusy(true);
         isDeleting = true;
         log.w('deleting wallet');
-        await walletService.deleteWallet();
+        await walletService!.deleteWallet();
 
         Navigator.pushNamed(context, '/');
-      } else if (res.returnedText == 'Closed' && !res.confirmed) {
+      } else if (res.returnedText == 'Closed' && !res.confirmed!) {
         log.e('Dialog Closed By User');
         isDeleting = false;
         setBusy(false);
@@ -329,15 +329,15 @@ class SettingsViewmodel extends BaseViewModel {
     if (isVisible) {
       isVisible = !isVisible;
     } else {
-      await dialogService
+      await dialogService!
           .showDialog(
-        title: AppLocalizations.of(context).enterPassword,
+        title: AppLocalizations.of(context)!.enterPassword,
         description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm,
+            AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
+        buttonTitle: AppLocalizations.of(context)!.confirm,
       )
           .then((res) async {
-        if (res.confirmed) {
+        if (res.confirmed!) {
           setBusy(true);
           isVisible = !isVisible;
           mnemonic = res.returnedText;
@@ -348,16 +348,16 @@ class SettingsViewmodel extends BaseViewModel {
           log.e('Dialog Closed By User');
           // setBusy(false);
           // return errorMessage = '';
-        } else if (res.isRequiredUpdate) {
+        } else if (res.isRequiredUpdate!) {
           log.e('Wallet update required');
           setBusy(false);
           return errorMessage =
-              AppLocalizations.of(context).importantWalletUpdateNotice;
+              AppLocalizations.of(context)!.importantWalletUpdateNotice;
         } else {
           log.e('Wrong pass');
           setBusy(false);
           return errorMessage =
-              AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
+              AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword;
         }
       }).catchError((error) {
         log.e(error);
@@ -370,7 +370,7 @@ class SettingsViewmodel extends BaseViewModel {
 /*-------------------------------------------------------------------------------------
                       Change wallet language
 -------------------------------------------------------------------------------------*/
-  changeWalletLanguage(String updatedLanguageValue) async {
+  changeWalletLanguage(String? updatedLanguageValue) async {
     setBusy(true);
 
     //remove cached announcement Data in different language
@@ -379,7 +379,7 @@ class SettingsViewmodel extends BaseViewModel {
 
     // Get the Map key using value
     // String key = languages.keys.firstWhere((k) => languages[k] == lang);
-    String key = '';
+    String? key = '';
     log.e('KEY or Value $updatedLanguageValue');
     if (languages.containsValue(updatedLanguageValue)) {
       key = languages.keys
@@ -389,7 +389,7 @@ class SettingsViewmodel extends BaseViewModel {
       key = updatedLanguageValue;
     }
 // selected language should be English,Chinese or other language selected not its lang code
-    selectedLanguage = key.isNotEmpty ? updatedLanguageValue : languages[key];
+    selectedLanguage = key!.isNotEmpty ? updatedLanguageValue : languages[key];
     log.w('selectedLanguage $selectedLanguage');
     if (updatedLanguageValue == 'Chinese' ||
         updatedLanguageValue == 'zh' ||
@@ -399,13 +399,13 @@ class SettingsViewmodel extends BaseViewModel {
 
       //   UserSettings us = UserSettings(id: 1, language: 'zh', theme: '');
       //   await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
-      storageService.language = 'zh';
+      storageService!.language = 'zh';
     } else if (updatedLanguageValue == 'English' ||
         updatedLanguageValue == 'en' ||
         key == 'en') {
       log.e('in en');
       AppLocalizations.load(const Locale('en', 'EN'));
-      storageService.language = 'en';
+      storageService!.language = 'en';
       // UserSettings us = UserSettings(id: 1, language: 'en', theme: '');
       // await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
     }
@@ -422,7 +422,7 @@ class SettingsViewmodel extends BaseViewModel {
   getAppVersion() async {
     setBusy(true);
     log.w('in app getappver');
-    versionInfo = await sharedService.getLocalAppVersion();
+    versionInfo = await sharedService!.getLocalAppVersion();
     log.i('getAppVersion $versionInfo');
     versionName = versionInfo['name'];
     buildNumber = versionInfo['buildNumber'];
@@ -435,6 +435,6 @@ class SettingsViewmodel extends BaseViewModel {
                     onBackButtonPressed
 ----------------------------------------------------------------------*/
   onBackButtonPressed() async {
-    await sharedService.onBackButtonPressed('/dashboard');
+    await sharedService!.onBackButtonPressed('/dashboard');
   }
 }

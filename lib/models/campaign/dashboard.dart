@@ -1,8 +1,8 @@
 class CampaignDashboard {
-  String level;
-  double totalInvestment;
-  double totalReward;
-  double refferals;
+  String? level;
+  double? totalInvestment;
+  double? totalReward;
+  double? refferals;
 
   CampaignDashboard(
       {this.level, this.refferals, this.totalInvestment, this.totalReward});

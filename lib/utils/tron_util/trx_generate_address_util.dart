@@ -1,22 +1,20 @@
 import 'dart:typed_data';
 
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:bs58check/bs58check.dart' as bs58check;
-
-// import 'package:bip32/src/utils/ecurve.dart' as ecc;
-// import 'package:pointycastle/src/utils.dart';
+import 'package:web3dart/crypto.dart' as CryptoWeb3;
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
-import 'package:web3dart/crypto.dart' as CryptoWeb3;
+import 'package:bs58check/bs58check.dart' as bs58check;
 
-generateTrxPrivKey(String mnemonic) {
+import '../../service_locator.dart';
+import '../../services/wallet_service.dart';
+
+generateTrxPrivKey(String? mnemonic) {
   final walletService = locator<WalletService>();
   var seed = walletService.generateSeed(mnemonic);
   var root = walletService.generateBip32Root(seed);
 
   String ct = '195';
-  bip32.BIP32 node = root.derivePath("m/44'/" + ct + "'/0'/0/" + 0.toString());
+  bip32.BIP32 node = root.derivePath("m/44'/$ct'/0'/0/${0}");
 
   var privKey = node.privateKey;
   return privKey;
@@ -27,35 +25,25 @@ generateTrxPrivKeyBySeed(seed) {
   var root = walletService.generateBip32Root(seed);
 
   String ct = '195';
-  bip32.BIP32 node = root.derivePath("m/44'/" + ct + "'/0'/0/" + 0.toString());
+  bip32.BIP32 node = root.derivePath("m/44'/$ct'/0'/0/${0}");
 
   var privKey = node.privateKey;
   return privKey;
 }
 
-generateTrxAddress(String mnemonic) {
-  final walletService = locator<WalletService>();
+generateTrxAddress(String? mnemonic) {
+  final WalletService walletService = locator<WalletService>();
   var privKey = generateTrxPrivKey(mnemonic);
-  //debugPrint('priv key $privKey -- length ${privKey.length}');
-  // debugPrint('priv Key ${StringUtil.uint8ListToHex(privKey)}');
-  //  var pubKey = node.publicKey;
-  //  log.w('pub key $pubKey -- length ${pubKey.length}');
+
   var uncompressedPubKey =
       BitcoinFlutter.ECPair.fromPrivateKey(privKey, compressed: false)
           .publicKey;
-  // debugPrint('uncompressedPubKey  length ${uncompressedPubKey.length}');
-  // debugPrint('uncompressedPubKey ${StringUtil.uint8ListToHex(uncompressedPubKey)}');
 
-  if (uncompressedPubKey.length == 65) {
+  if (uncompressedPubKey!.length == 65) {
     uncompressedPubKey = uncompressedPubKey.sublist(1);
-    //  debugPrint(
-    //     'uncompressedPubKey > 65 ${StringUtil.uint8ListToHex(uncompressedPubKey)} -- length ${uncompressedPubKey.length}');
   }
-
   var hash = CryptoWeb3.keccak256(uncompressedPubKey);
-  // debugPrint('hash $hash');
 
-  // debugPrint('hex ${StringUtil.uint8ListToHex(hash)}');
 // take 20 bytes at the end from hash
   var last20Bytes = hash.sublist(12);
   // debugPrint('last20Bytes $last20Bytes');
@@ -70,7 +58,7 @@ generateTrxAddress(String mnemonic) {
     updatedHash.add(f);
     i++;
   }
-  //debugPrint('updatedHash $updatedHash');
+
   // take 0x41 or 65 + (hash[12:32] means take last 20 bytes from addressHex and discard first 12)
   // to do sha256 twice and get 4 bytes checksum
   var sha256Hash = walletService.sha256Twice(updatedHash);

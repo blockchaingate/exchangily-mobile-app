@@ -22,27 +22,27 @@ const String _marketTradesStreamKey = 'marketTradesList';
 const String _orderbookStreamKey = 'orderbook';
 
 class TradeViewModel extends MultipleStreamViewModel with StoppableService {
-  final Price pairPriceByRoute;
+  final Price? pairPriceByRoute;
   TradeViewModel({this.pairPriceByRoute});
 
   final log = getLogger('TradeViewModal');
 
-  BuildContext context;
+  BuildContext? context;
 
-  NavigationService navigationService = locator<NavigationService>();
-  SharedService sharedService = locator<SharedService>();
+  NavigationService? navigationService = locator<NavigationService>();
+  SharedService? sharedService = locator<SharedService>();
 
-  ApiService apiService = locator<ApiService>();
-  final TradeService _tradeService = locator<TradeService>();
-  WalletService walletService = locator<WalletService>();
-  ConfigService configService = locator<ConfigService>();
+  ApiService? apiService = locator<ApiService>();
+  final TradeService? _tradeService = locator<TradeService>();
+  WalletService? walletService = locator<WalletService>();
+  ConfigService? configService = locator<ConfigService>();
   List<PairDecimalConfig> pairDecimalConfigList = [];
 
   //List<Order> buyOrderBookList = [];
   //List<Order> sellOrderBookList = [];
-  Orderbook orderbook;
+  Orderbook? orderbook;
 
-  List<MarketTrades> marketTradesList = [];
+  List<MarketTrades>? marketTradesList = [];
 
   bool get hasStreamTickerData => dataReady(_tickerStreamKey);
   bool get hasStreamMarketTrades => dataReady(_marketTradesStreamKey);
@@ -57,20 +57,20 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   List myExchangeAssets = [];
   PairDecimalConfig singlePairDecimalConfig = PairDecimalConfig();
   bool isDisposing = false;
-  double usdValue = 0.0;
+  double? usdValue = 0.0;
   String pairSymbolWithSlash = '';
-  String get interval => _tradeService.interval;
+  String? get interval => _tradeService!.interval;
 
-  WebViewController webViewController;
+  WebViewController? webViewController;
   bool isStreamDataNull = false;
   @override
   Map<String, StreamData> get streamsMap => {
         _tickerStreamKey: StreamData<dynamic>(
-            _tradeService.getTickerDataStream(pairPriceByRoute.symbol)),
-        _orderbookStreamKey: StreamData<dynamic>(_tradeService
-            .getOrderBookStreamByTickerName(pairPriceByRoute.symbol)),
-        _marketTradesStreamKey: StreamData<dynamic>(_tradeService
-            .getMarketTradesStreamByTickerName(pairPriceByRoute.symbol))
+            _tradeService!.getTickerDataStream(pairPriceByRoute!.symbol!)),
+        _orderbookStreamKey: StreamData<dynamic>(_tradeService!
+            .getOrderBookStreamByTickerName(pairPriceByRoute!.symbol!)),
+        _marketTradesStreamKey: StreamData<dynamic>(_tradeService!
+            .getMarketTradesStreamByTickerName(pairPriceByRoute!.symbol!))
       };
   // Map<String, StreamData> res =
   //     tradeService.getMultipleStreams(pairPriceByRoute.symbol);
@@ -83,16 +83,16 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 
     await getDecimalPairConfig();
     //   await getExchangeAssets();
-    String holder = updateTickerName(pairPriceByRoute.symbol);
+    String holder = updateTickerName(pairPriceByRoute!.symbol!);
     pairSymbolWithSlash = holder;
     if (pairSymbolWithSlash.split('/')[1] == 'USDT' ||
         pairSymbolWithSlash.split('/')[1] == 'DUSD') {
       usdValue = dataReady('allPrices')
           ? currentPairPrice.price
-          : pairPriceByRoute.price;
+          : pairPriceByRoute!.price;
     } else {
       String tickerWithoutBasePair = pairSymbolWithSlash.split('/')[0];
-      usdValue = await apiService
+      usdValue = await apiService!
           .getCoinMarketPriceByTickerName(tickerWithoutBasePair);
     }
   }
@@ -145,13 +145,12 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
           log.i('$key Data is null or empty');
         }
         // log.w('TICKER PRICE ${currentPairPrice.toJson()}');
-
       } else if (key == _orderbookStreamKey) {
         log.w('transformData -- data $data');
         var jsonDynamic = jsonDecode(data);
         orderbook = Orderbook.fromJson(jsonDynamic);
         log.e(
-            'OrderBook result  -- ${orderbook.buyOrders.length} ${orderbook.sellOrders.length}');
+            'OrderBook result  -- ${orderbook!.buyOrders!.length} ${orderbook!.sellOrders!.length}');
       }
 /*----------------------------------------------------------------------
                     Market trade list
@@ -206,30 +205,30 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     // log.e('on cancel Stream $key closed');
 
     if (key == _tickerStreamKey) {
-      getSubscriptionForKey(key).cancel().whenComplete(() {
+      getSubscriptionForKey(key)!.cancel().whenComplete(() {
         log.e('on cancel Stream $key closed');
-        _tradeService
-            .tickerDataChannel(pairPriceByRoute.symbol)
+        _tradeService!
+            .tickerDataChannel(pairPriceByRoute!.symbol!)
             .sink
             .close()
             .then((value) => log.i('tickerDataChannel closed'));
       });
     }
     if (key == _marketTradesStreamKey) {
-      getSubscriptionForKey(key).cancel().whenComplete(() {
+      getSubscriptionForKey(key)!.cancel().whenComplete(() {
         log.e('on cancel Stream $key closed');
-        _tradeService
-            .marketTradesChannel(pairPriceByRoute.symbol)
+        _tradeService!
+            .marketTradesChannel(pairPriceByRoute!.symbol!)
             .sink
             .close()
             .then((value) => log.i('marketTradesChannel closed'));
       });
     }
     if (key == _orderbookStreamKey) {
-      getSubscriptionForKey(key).cancel().whenComplete(() {
+      getSubscriptionForKey(key)!.cancel().whenComplete(() {
         log.e('on cancel Stream $key closed');
-        _tradeService
-            .orderbookChannel(pairPriceByRoute.symbol)
+        _tradeService!
+            .orderbookChannel(pairPriceByRoute!.symbol!)
             .sink
             .close()
             .then((value) => log.i('orderbookChannel closed'));
@@ -244,9 +243,9 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   List<Orderbook> orderAggregation(List<Orderbook> passedOrders) {
     List<Orderbook> result = [];
     debugPrint('passed orders length ${passedOrders.length}');
-    double prevQuantity = 0.0;
+    double? prevQuantity = 0.0;
     List<int> indexArray = [];
-    double prevPrice = 0;
+    double? prevPrice = 0;
 
     // for each
     for (var currentOrder in passedOrders) {
@@ -259,7 +258,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
             'price matched with prev price ${currentOrder.price} -- $prevPrice');
         log.w(
             ' currentOrder qty ${currentOrder.quantity} -- prevQuantity $prevQuantity');
-        currentOrder.quantity += prevQuantity;
+        currentOrder.quantity = currentOrder.quantity! + prevQuantity!;
         //  aggrQty = currentOrder.orderQuantity + prevQuantity;
         prevPrice = currentOrder.price;
         log.e(' currentOrder.orderQuantity  ${currentOrder.quantity}');
@@ -281,8 +280,8 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 ----------------------------------------------------------------------*/
 
   getDecimalPairConfig() async {
-    await sharedService
-        .getSinglePairDecimalConfig(pairPriceByRoute.symbol)
+    await sharedService!
+        .getSinglePairDecimalConfig(pairPriceByRoute!.symbol!)
         .then((decimalValues) {
       singlePairDecimalConfig = decimalValues;
       log.i(
@@ -316,7 +315,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
       notifyListeners();
     } else if (index == 1) {
       //  pauseStream(orderBookStreamKey);
-      getSubscriptionForKey(_marketTradesStreamKey).resume();
+      getSubscriptionForKey(_marketTradesStreamKey)!.resume();
       notifyListeners();
     } else if (index == 2) {
       pauseAllStreams();
@@ -328,7 +327,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 
   pauseAllStreams() {
     log.e('Stream pause');
-    getSubscriptionForKey(_marketTradesStreamKey).pause();
+    getSubscriptionForKey(_marketTradesStreamKey)!.pause();
     // getSubscriptionForKey(orderBookStreamKey).pause();
     notifyListeners();
   }
@@ -336,29 +335,29 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   resumeAllStreams() {
     log.e('Stream resume');
 
-    getSubscriptionForKey('marketTradesList').resume();
-    getSubscriptionForKey('orderBookList').resume();
+    getSubscriptionForKey('marketTradesList')!.resume();
+    getSubscriptionForKey('orderBookList')!.resume();
     notifyListeners();
   }
 
   pauseStream(String key) {
     // If the subscription is paused more than once,
     // an equal number of resumes must be performed to resume the stream
-    log.e(getSubscriptionForKey(key).isPaused);
-    if (!getSubscriptionForKey(key).isPaused) {
-      getSubscriptionForKey(key).pause();
+    log.e(getSubscriptionForKey(key)!.isPaused);
+    if (!getSubscriptionForKey(key)!.isPaused) {
+      getSubscriptionForKey(key)!.pause();
     }
-    log.i(getSubscriptionForKey(key).isPaused);
+    log.i(getSubscriptionForKey(key)!.isPaused);
   }
 
   void cancelSingleStreamByKey(String key) {
-    var stream = getSubscriptionForKey(key);
+    var stream = getSubscriptionForKey(key)!;
     stream.cancel();
     log.e('Stream $key cancelled');
   }
 
   String updateTickerName(String tickerName) {
-    return _tradeService.seperateBasePair(tickerName);
+    return _tradeService!.seperateBasePair(tickerName);
   }
 
   // getMyOrders() async {
@@ -374,7 +373,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 -------------------------------------------------------------------------------------*/
 
   onBackButtonPressed() {
-    navigationService.navigateUsingPushReplacementNamed(MarketsViewRoute,
-        arguments: false);
+    navigationService!
+        .navigateUsingPushReplacementNamed(MarketsViewRoute, arguments: false);
   }
 }

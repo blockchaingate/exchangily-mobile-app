@@ -1,18 +1,16 @@
-import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/style.dart';
 
 class HtmlPage extends StatelessWidget {
-  const HtmlPage({Key key, this.htmlData}) : super(key: key);
-  final Map htmlData;
+  const HtmlPage({Key? key, this.htmlData}) : super(key: key);
+  final Map? htmlData;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          htmlData["title"],
+          htmlData!["title"],
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -20,7 +18,7 @@ class HtmlPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Html(
-          data: htmlData["content"],
+          data: htmlData!["content"],
           //Optional parameters:
           style: {
             "html": Style(
@@ -44,14 +42,9 @@ class HtmlPage extends StatelessWidget {
             ),
             "var": Style(fontFamily: 'serif'),
           },
-          onLinkTap: (url) {
-            debugPrint("Opening $url...");
-          },
-          onImageTap: (src) {
-            debugPrint(src.toString());
-          },
+
           onImageError: (exception, stackTrace) {
-            debugPrint(exception);
+            debugPrint(exception as String?);
           },
         ),
       ),

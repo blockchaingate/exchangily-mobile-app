@@ -11,17 +11,17 @@ import 'package:http/io_client.dart';
                           Custom HTTP client
 ----------------------------------------------------------------------*/
 class CustomHttpUtil {
-  static HttpClient customHttpClient({String cert}) {
+  static HttpClient customHttpClient({String? cert}) {
     SecurityContext securityContext = SecurityContext.defaultContext;
     try {
       if (cert != null) {
-        Uint8List bytes = utf8.encode(cert);
+        Uint8List bytes = utf8.encode(cert) as Uint8List;
         securityContext.setTrustedCertificatesBytes(bytes);
       }
       debugPrint('certicate added');
     } on TlsException catch (e) {
-      if (e?.osError?.message != null &&
-          e.osError.message.contains('CERT_ALREADY_IN_HASH_TABLE')) {
+      if (e.osError?.message != null &&
+          e.osError!.message.contains('CERT_ALREADY_IN_HASH_TABLE')) {
         debugPrint('createHttpClient() - cert already trusted! Skipping.');
       } else {
         debugPrint(

@@ -14,13 +14,13 @@ class AnnouncementListScreenState extends BaseState {
   // CoreWalletDatabaseService walletDatabaseService =
   //     locator<CoreWalletDatabaseService>();
   // SharedService sharedService = locator<SharedService>();
-  BuildContext context;
-  SharedPreferences prefs;
+  BuildContext? context;
+  late SharedPreferences prefs;
   List announceList = [];
   init() async {
     setBusy(true);
     prefs = await SharedPreferences.getInstance();
-    List tempdata = prefs.getStringList('announceData');
+    List tempdata = prefs.getStringList('announceData')!;
     for (var element in tempdata) {
       announceList.add(jsonDecode(element));
       // debugPrint('jsonData $announceList');

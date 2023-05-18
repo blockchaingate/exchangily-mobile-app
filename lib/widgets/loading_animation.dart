@@ -20,7 +20,7 @@ class LoadingGif extends StatelessWidget {
         ),
         const SizedBox(height: 3),
         Text(
-          AppLocalizations.of(context).loading,
+          AppLocalizations.of(context)!.loading,
           style: TextStyle(color: globals.primaryColor),
         )
       ],

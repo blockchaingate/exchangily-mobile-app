@@ -23,14 +23,14 @@ class ImportWalletView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => ConfirmMnemonicViewmodel(),
-      onModelReady: (model) {
+      onModelReady: (dynamic model) {
         model.route = 'import';
       },
       builder: (context, ConfirmMnemonicViewmodel model, child) => Scaffold(
         appBar: AppBar(
             centerTitle: true,
             title: Text(
-              AppLocalizations.of(context).importWallet,
+              AppLocalizations.of(context)!.importWallet,
               style: const TextStyle(fontSize: 14),
             ),
             backgroundColor: globals.secondaryColor),
@@ -45,10 +45,10 @@ class ImportWalletView extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.all(15),
-                child: RaisedButton(
+                child: ElevatedButton(
                   child: Text(
-                    AppLocalizations.of(context).confirm,
-                    style: Theme.of(context).textTheme.button,
+                    AppLocalizations.of(context)!.confirm,
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
                   onPressed: () {
                     model.verifyMnemonic(

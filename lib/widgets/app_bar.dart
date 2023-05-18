@@ -19,7 +19,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   String title;
   Color color;
 
-  CustomAppBar({@required this.color, @required this.title})
+  CustomAppBar({required this.color, required this.title})
       : assert(title != null),
         assert(color != null);
 

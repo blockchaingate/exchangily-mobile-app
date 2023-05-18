@@ -3,10 +3,10 @@ import 'package:flutter/widgets.dart';
 import '../../environments/coins.dart' as coin_list;
 
 class ExchangeBalanceModel {
-  String ticker;
-  int coinType;
-  double unlockedAmount;
-  double lockedAmount;
+  String? ticker;
+  int? coinType;
+  double? unlockedAmount;
+  double? lockedAmount;
 
   ExchangeBalanceModel(
       {this.ticker, this.coinType, this.unlockedAmount, this.lockedAmount});
@@ -14,7 +14,7 @@ class ExchangeBalanceModel {
   factory ExchangeBalanceModel.fromJson(Map<String, dynamic> json) {
     var type = json['coinType'];
 
-    String tickerName = '';
+    String? tickerName = '';
     if (type != null) {
       tickerName = coin_list.newCoinTypeMap[type];
       debugPrint(
@@ -42,7 +42,7 @@ class ExchangeBalanceModel {
 }
 
 class ExchangeBalanceModelList {
-  final List<ExchangeBalanceModel> balances;
+  final List<ExchangeBalanceModel>? balances;
   ExchangeBalanceModelList({this.balances});
 
   factory ExchangeBalanceModelList.fromJson(List<dynamic> parsedJson) {

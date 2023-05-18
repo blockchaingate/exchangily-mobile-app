@@ -30,26 +30,26 @@ import 'package:hex/hex.dart';
 
 class RedepositViewModel extends FutureViewModel {
   final log = getLogger('RedepositVM');
-  DialogService dialogService = locator<DialogService>();
-  WalletService walletService = locator<WalletService>();
-  SharedService sharedService = locator<SharedService>();
-  final tokenListDatabaseService = locator<TokenInfoDatabaseService>();
-  final coinService = locator<CoinService>();
-  final apiService = locator<ApiService>();
+  DialogService? dialogService = locator<DialogService>();
+  WalletService? walletService = locator<WalletService>();
+  SharedService? sharedService = locator<SharedService>();
+  final TokenInfoDatabaseService? tokenListDatabaseService = locator<TokenInfoDatabaseService>();
+  final CoinService? coinService = locator<CoinService>();
+  final ApiService? apiService = locator<ApiService>();
 
   final kanbanGasPriceTextController = TextEditingController();
   final kanbanGasLimitTextController = TextEditingController();
   double kanbanTransFee = 0.0;
   bool transFeeAdvance = false;
 
-  String errDepositTransactionID;
+  String? errDepositTransactionID;
   List errDepositList = [];
-  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+  TransactionHistoryDatabaseService? transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
 
-  WalletInfo walletInfo;
-  BuildContext context;
-  String errorMessage = '';
+  WalletInfo? walletInfo;
+  late BuildContext context;
+  String? errorMessage = '';
   bool isConfirmButtonPressed = false;
   final abiUtils = AbiUtils();
   final kanbanUtils = KanbanUtils();
@@ -61,8 +61,8 @@ class RedepositViewModel extends FutureViewModel {
 
   Future getErrDeposit() async {
     setBusy(true);
-    var address = await sharedService.getExgAddressFromWalletDatabase();
-    await walletService.getErrDeposit(address).then((errDepositData) async {
+    var address = (await sharedService!.getExgAddressFromWalletDatabase())!;
+    await walletService!.getErrDeposit(address).then((errDepositData) async {
       debugPrint(
           'redeposit res length ${errDepositData.length} ---data $errDepositData');
       for (var i = 0; i < errDepositData.length; i++) {
@@ -70,20 +70,20 @@ class RedepositViewModel extends FutureViewModel {
         log.w('errDepositData count $i $item');
         var coinType = item['coinType'];
 
-        String tickerNameByCointype = newCoinTypeMap[coinType];
+        String? tickerNameByCointype = newCoinTypeMap[coinType];
         debugPrint('tickerNameByCointype $tickerNameByCointype');
         if (tickerNameByCointype == null) {
-          await tokenListDatabaseService.getAll().then((tokenList) {
+          await tokenListDatabaseService!.getAll().then((tokenList) {
             if (tokenList != null) {
               tickerNameByCointype = tokenList
                   .firstWhere((element) => element.coinType == coinType)
                   .tickerName;
-              if (tickerNameByCointype == walletInfo.tickerName) {
+              if (tickerNameByCointype == walletInfo!.tickerName) {
                 errDepositList.add(item);
               }
             }
           });
-        } else if (tickerNameByCointype == walletInfo.tickerName) {
+        } else if (tickerNameByCointype == walletInfo!.tickerName) {
           errDepositList.add(item);
           log.e(
               'in else if -- coin type $coinType --  tickerNameByCointype $tickerNameByCointype');
@@ -115,14 +115,14 @@ class RedepositViewModel extends FutureViewModel {
 ----------------------------------------------------------------------*/
 
   getSingleWalletBalance() async {
-    String fabAddress =
-        await sharedService.getFabAddressFromCoreWalletDatabase();
-    await apiService
+    String? fabAddress =
+        await sharedService!.getFabAddressFromCoreWalletDatabase();
+    await apiService!
         .getSingleWalletBalance(
-            fabAddress, walletInfo.tickerName, walletInfo.address)
+            fabAddress, walletInfo!.tickerName, walletInfo!.address)
         .then((res) {
       if (res != null) {
-        walletInfo.availableBalance = res[0].balance;
+        walletInfo!.availableBalance = res[0].balance!;
       }
     });
   }
@@ -143,9 +143,9 @@ class RedepositViewModel extends FutureViewModel {
     }
 
     if (errDepositItem == null) {
-      sharedService.sharedSimpleNotification(
-        AppLocalizations.of(context).redepositError,
-        subtitle: AppLocalizations.of(context).redepositItemNotSelected,
+      sharedService!.sharedSimpleNotification(
+        AppLocalizations.of(context)!.redepositError,
+        subtitle: AppLocalizations.of(context)!.redepositItemNotSelected,
       );
     }
     log.w('errDepositItem $errDepositItem');
@@ -163,14 +163,14 @@ class RedepositViewModel extends FutureViewModel {
     //         context);
     //   }
     // });
-    var res = await dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
+    var res = await dialogService!.showDialog(
+        title: AppLocalizations.of(context)!.enterPassword,
         description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm);
-    if (res.confirmed) {
-      String mnemonic = res.returnedText;
-      Uint8List seed = walletService.generateSeed(mnemonic);
+            AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
+        buttonTitle: AppLocalizations.of(context)!.confirm);
+    if (res.confirmed!) {
+      String? mnemonic = res.returnedText;
+      Uint8List seed = walletService!.generateSeed(mnemonic);
       var keyPairKanban = getExgKeyPair(seed);
       var exgAddress = keyPairKanban['address'];
       var nonce = await kanbanUtils.getNonce(exgAddress);
@@ -191,18 +191,18 @@ class RedepositViewModel extends FutureViewModel {
       // }
       // // Other coins deposit
       // else {
-      var originalMessage = walletService.getOriginalMessage(
+      var originalMessage = walletService!.getOriginalMessage(
           coinType,
           trimHexPrefix(transactionID),
           amountInBigIntByApi,
           trimHexPrefix(addressInKanban));
 
       var signedMess = await CoinUtils().signedMessage(
-          originalMessage, seed, walletInfo.tickerName, walletInfo.tokenType);
+          originalMessage, seed, walletInfo!.tickerName, walletInfo!.tokenType);
 
       var txKanbanHex = await getTxKanbanHex(amountInBigIntByApi, keyPairKanban,
           nonce, coinType, transactionID, signedMess,
-          chainType: walletInfo.tokenType);
+          chainType: walletInfo!.tokenType);
 
       var resRedeposit = await kanbanUtils.submitReDeposit(txKanbanHex);
 
@@ -210,9 +210,9 @@ class RedepositViewModel extends FutureViewModel {
       if ((resRedeposit != null) && (resRedeposit['success'])) {
         var newTransactionId = resRedeposit['data']['transactionID'];
 
-        sharedService.alertDialog(
-            AppLocalizations.of(context).redepositCompleted,
-            AppLocalizations.of(context).transactionId +
+        sharedService!.alertDialog(
+            AppLocalizations.of(context)!.redepositCompleted,
+            AppLocalizations.of(context)!.transactionId +
                 ': ' +
                 newTransactionId,
             path: errDepositList.length == 1 ? WalletFeaturesViewRoute : '',
@@ -223,13 +223,13 @@ class RedepositViewModel extends FutureViewModel {
           await getErrDeposit();
           setBusy(false);
         }
-      } else if (resRedeposit['message'] != null ||
+      } else if (resRedeposit!['message'] != null ||
           resRedeposit['message'] != '') {
         errorMessage = resRedeposit['message'];
       } else {
-        sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).redepositFailedError,
-          subtitle: AppLocalizations.of(context).networkIssue,
+        sharedService!.sharedSimpleNotification(
+          AppLocalizations.of(context)!.redepositFailedError,
+          subtitle: AppLocalizations.of(context)!.networkIssue,
         );
       }
       //  } // other coins redeposit else ends
@@ -244,18 +244,18 @@ class RedepositViewModel extends FutureViewModel {
 
   getTxKanbanHex(
       amountInLink, keyPairKanban, nonce, coinType, txHash, signedMess,
-      {String chainType = ''}) async {
+      {String? chainType = ''}) async {
     var abiHex;
-    String addressInKanban = keyPairKanban['address'];
+    String? addressInKanban = keyPairKanban['address'];
     log.w('transactionID for submitredeposit:' + txHash);
     var coinPoolAddress = await kanbanUtils.getCoinPoolAddress();
     //var signedMess = {'r': r, 's': s, 'v': v};
-    String coinName = '';
+    String? coinName = '';
     bool isSpecial = false;
-    int specialCoinType;
+    int? specialCoinType;
     coinName = newCoinTypeMap[coinType];
     if (coinName == null) {
-      await tokenListDatabaseService
+      await tokenListDatabaseService!
           .getTickerNameByCoinType(coinType)
           .then((ticker) {
         coinName = ticker;
@@ -270,11 +270,11 @@ class RedepositViewModel extends FutureViewModel {
     }
 
     if (isSpecial) {
-      specialCoinType = await coinService
-          .getCoinTypeByTickerName(coinName.substring(0, coinName.length - 1));
+      specialCoinType = await coinService!
+          .getCoinTypeByTickerName(coinName!.substring(0, coinName!.length - 1));
     }
     abiHex = abiUtils.getDepositFuncABI(isSpecial ? specialCoinType : coinType,
-        txHash, amountInLink, addressInKanban, signedMess,
+        txHash, amountInLink, addressInKanban!, signedMess,
         chain: chainType, isSpecialDeposit: isSpecial);
     // abiUtils.getAmountFromDepositAbiHex(abiHex);
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
@@ -292,15 +292,15 @@ class RedepositViewModel extends FutureViewModel {
   }
 
   showNotification(context) {
-    sharedService.sharedSimpleNotification(
-      AppLocalizations.of(context).passwordMismatch,
-      subtitle: AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+    sharedService!.sharedSimpleNotification(
+      AppLocalizations.of(context)!.passwordMismatch,
+      subtitle: AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword,
     );
   }
 
   updateTransFee() async {
-    var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
-    var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
+    var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text)!;
+    var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text)!;
     var kanbanTransFeeDouble = bigNum2Double(kanbanPrice * kanbanGasLimit);
 
     kanbanTransFee = kanbanTransFeeDouble;

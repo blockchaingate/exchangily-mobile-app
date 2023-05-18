@@ -6,8 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {
   final log = getLogger('LocalStorageService');
-  static LocalStorageService _instance;
-  static SharedPreferences _preferences;
+  static LocalStorageService? _instance;
+  static SharedPreferences? _preferences;
 /*----------------------------------------------------------------------
                 Local Storage Keys
 ----------------------------------------------------------------------*/
@@ -37,7 +37,7 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                   Instance
 ----------------------------------------------------------------------*/
-  static Future<LocalStorageService> getInstance() async {
+  static Future<LocalStorageService?> getInstance() async {
     _instance ??= LocalStorageService();
 
     _preferences ??= await SharedPreferences.getInstance();
@@ -46,7 +46,7 @@ class LocalStorageService {
   }
 
   void clearStorage() {
-    _preferences.clear();
+    _preferences!.clear();
   }
 
 /*----------------------------------------------------------------------
@@ -58,19 +58,19 @@ class LocalStorageService {
         '(TRACE) LocalStorageService:_saveToDisk. key: $key value: $content');
 
     if (content is String) {
-      _preferences.setString(key, content);
+      _preferences!.setString(key, content);
     }
     if (content is bool) {
-      _preferences.setBool(key, content);
+      _preferences!.setBool(key, content);
     }
     if (content is int) {
-      _preferences.setInt(key, content);
+      _preferences!.setInt(key, content);
     }
     if (content is double) {
-      _preferences.setDouble(key, content);
+      _preferences!.setDouble(key, content);
     }
     if (content is List<String>) {
-      _preferences.setStringList(key, content);
+      _preferences!.setStringList(key, content);
     }
   }
 
@@ -79,7 +79,7 @@ class LocalStorageService {
 ----------------------------------------------------------------------*/
 
   dynamic _getFromDisk(String key) {
-    var value = _preferences.get(key);
+    var value = _preferences!.get(key);
     // log.i('key: $key value: $value');
 
     return value;
@@ -87,7 +87,7 @@ class LocalStorageService {
 
   int getStoredListLength(String jsonStringData) {
     int objLength = 0;
-    var obj = jsonDecode(jsonStringData) as List;
+    var obj = jsonDecode(jsonStringData) as List?;
     if (obj != null) {
       objLength = obj.length;
       log.w('getStoredListLength $objLength');
@@ -148,8 +148,8 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                   Languages getter/setter
 ----------------------------------------------------------------------*/
-  String get language => _getFromDisk(appLanguagesKey);
-  set language(String appLanguage) => _saveToDisk(appLanguagesKey, appLanguage);
+  String? get language => _getFromDisk(appLanguagesKey);
+  set language(String? appLanguage) => _saveToDisk(appLanguagesKey, appLanguage);
 
 /*----------------------------------------------------------------------
                 Dark mode getter/setter
@@ -229,7 +229,7 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                     Token List
 ----------------------------------------------------------------------  */
-  List<String> get tokenList => _getFromDisk(tokenListKey) ?? false;
+  List<String> get tokenList => _getFromDisk(tokenListKey) ?? false as List<String>;
 
   set tokenList(List<String> value) => _saveToDisk(tokenListKey, value);
 

@@ -22,8 +22,8 @@ import 'confirm_mnemonic_viewmodel.dart';
 import 'verify_mnemonic.dart';
 
 class ConfirmMnemonicView extends StatelessWidget {
-  final List<String> randomMnemonicListFromRoute;
-  const ConfirmMnemonicView({Key key, this.randomMnemonicListFromRoute})
+  final List<String>? randomMnemonicListFromRoute;
+  const ConfirmMnemonicView({Key? key, this.randomMnemonicListFromRoute})
       : super(key: key);
 
   @override
@@ -32,8 +32,8 @@ class ConfirmMnemonicView extends StatelessWidget {
       viewModelBuilder: () => ConfirmMnemonicViewModel(),
       onModelReady: (model) {
         model.init();
-        model.randomMnemonicList.addAll(randomMnemonicListFromRoute);
-        randomMnemonicListFromRoute.shuffle();
+        model.randomMnemonicList.addAll(randomMnemonicListFromRoute!);
+        randomMnemonicListFromRoute!.shuffle();
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async {
@@ -44,9 +44,9 @@ class ConfirmMnemonicView extends StatelessWidget {
           appBar: AppBar(
               centerTitle: true,
               title: Text(
-                AppLocalizations.of(context).confirm +
+                AppLocalizations.of(context)!.confirm +
                     ' ' +
-                    AppLocalizations.of(context).mnemonic,
+                    AppLocalizations.of(context)!.mnemonic,
                 style: Theme.of(context).textTheme.headline3,
               ),
               backgroundColor: secondaryColor),
@@ -70,7 +70,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                       ),
                       child: Text(
                           'Verify Mnemonic by tap on words in the correct order',
-                          style: Theme.of(context).textTheme.headline5.copyWith(
+                          style: Theme.of(context).textTheme.headline5!.copyWith(
                               fontWeight: model.isTap
                                   ? FontWeight.bold
                                   : FontWeight.normal)),
@@ -90,7 +90,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                             side: BorderSide(color: secondaryColor, width: 2))),
                       ),
                       child: Text('Verify Mnemonic by typing mnemonic words',
-                          style: Theme.of(context).textTheme.headline5.copyWith(
+                          style: Theme.of(context).textTheme.headline5!.copyWith(
                               fontWeight: !model.isTap
                                   ? FontWeight.bold
                                   : FontWeight.normal)),
@@ -127,7 +127,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                                   Text('Reset Selection',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline3
+                                          .headline3!
                                           .copyWith(color: yellow)),
                                 ],
                               )),
@@ -151,7 +151,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                                   //   model.shuffledList = model.randomMnemonicList;
 
                                   var singleWord =
-                                      randomMnemonicListFromRoute[i];
+                                      randomMnemonicListFromRoute![i];
 
                                   //model.shuffledList[i];
 
@@ -214,7 +214,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
-                        AppLocalizations.of(context).finishWalletBackup,
+                        AppLocalizations.of(context)!.finishWalletBackup,
                         style: Theme.of(context).textTheme.button,
                       ),
                     ),

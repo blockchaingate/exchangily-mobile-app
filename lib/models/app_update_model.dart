@@ -1,9 +1,9 @@
 class AppUpdateModel {
-  String os;
-  String version;
-  bool forceUpdate;
-  String app;
-  List<Link> link;
+  String? os;
+  String? version;
+  bool? forceUpdate;
+  String? app;
+  List<Link>? link;
 
   AppUpdateModel(
       {this.os, this.version, this.forceUpdate, this.app, this.link});
@@ -16,7 +16,7 @@ class AppUpdateModel {
     if (json['link'] != null) {
       link = [];
       json['link'].forEach((v) {
-        link.add(Link.fromJson(v));
+        link!.add(Link.fromJson(v));
       });
     }
   }
@@ -28,16 +28,16 @@ class AppUpdateModel {
     data['forceUpdate'] = forceUpdate;
     data['app'] = app;
     if (link != null) {
-      data['link'] = link.map((v) => v.toJson()).toList();
+      data['link'] = link!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Link {
-  String name;
-  String link;
-  bool ready;
+  String? name;
+  String? link;
+  bool? ready;
 
   Link({this.name, this.link, this.ready});
 

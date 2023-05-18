@@ -7,7 +7,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 
 class MarketDataTable extends StatefulWidget {
-  final List<Price> pairList;
+  final List<Price>? pairList;
   const MarketDataTable(this.pairList);
 
   @override
@@ -16,11 +16,11 @@ class MarketDataTable extends StatefulWidget {
 
 class _MarketDataTableState extends State<MarketDataTable> {
   _MarketDataTableState(this.pairList);
-  List<Price> pairList;
+  List<Price>? pairList;
 
-  List<Price> cpPairList;
+  List<Price>? cpPairList;
 
-  final NavigationService navigationService = locator<NavigationService>();
+  final NavigationService? navigationService = locator<NavigationService>();
 
   bool _sortNameAsc = true;
   bool _sortPriceAsc = true;
@@ -29,7 +29,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
   bool _sortChangeAsc = true;
 
   bool _sortAsc = true;
-  int _sortColumnIndex;
+  int? _sortColumnIndex;
 
   @override
   void initState() {
@@ -39,10 +39,10 @@ class _MarketDataTableState extends State<MarketDataTable> {
   onSortColum(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
       if (ascending) {
-        pairList
+        pairList!
             .sort((a, b) => a.symbol.toString().compareTo(b.symbol.toString()));
       } else {
-        pairList
+        pairList!
             .sort((a, b) => b.symbol.toString().compareTo(a.symbol.toString()));
       }
     }
@@ -51,8 +51,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
   @override
   Widget build(BuildContext context) {
     onRowTap(Price itemRow) {
-      itemRow.symbol = itemRow.symbol.replaceAll('/', '').toString();
-      navigationService.navigateUsingpopAndPushedNamed(ExchangeTradeViewRoute,
+      itemRow.symbol = itemRow.symbol!.replaceAll('/', '').toString();
+      navigationService!.navigateUsingpopAndPushedNamed(ExchangeTradeViewRoute,
           arguments: itemRow);
     }
 
@@ -71,7 +71,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 padding: const EdgeInsets.only(left: 6),
                 // width: MediaQuery.of(context).size.width * 3 / 15,
                 child: Text(
-                  AppLocalizations.of(context).ticker,
+                  AppLocalizations.of(context)!.ticker,
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
@@ -86,10 +86,10 @@ class _MarketDataTableState extends State<MarketDataTable> {
                     _sortAsc = _sortNameAsc;
                   }
                   if (sortAscending) {
-                    pairList.sort((a, b) =>
+                    pairList!.sort((a, b) =>
                         a.symbol.toString().compareTo(b.symbol.toString()));
                   } else {
-                    pairList.sort((a, b) =>
+                    pairList!.sort((a, b) =>
                         b.symbol.toString().compareTo(a.symbol.toString()));
                   }
                 });
@@ -99,7 +99,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               label: Container(
                 // width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
-                  AppLocalizations.of(context).price,
+                  AppLocalizations.of(context)!.price,
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
@@ -114,9 +114,9 @@ class _MarketDataTableState extends State<MarketDataTable> {
                     _sortAsc = _sortPriceAsc;
                   }
                   if (sortAscending) {
-                    pairList.sort((a, b) => a.price.compareTo(b.price));
+                    pairList!.sort((a, b) => a.price!.compareTo(b.price!));
                   } else {
-                    pairList.sort((a, b) => b.price.compareTo(a.price));
+                    pairList!.sort((a, b) => b.price!.compareTo(a.price!));
                   }
                 });
               },
@@ -125,7 +125,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               label: Container(
                 //   width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
-                  '24H ${AppLocalizations.of(context).volume}',
+                  '24H ${AppLocalizations.of(context)!.volume}',
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
@@ -138,9 +138,9 @@ class _MarketDataTableState extends State<MarketDataTable> {
                     _sortAsc = _sortVolAsc;
                   }
                   if (sortAscending) {
-                    pairList.sort((a, b) => a.volume.compareTo(b.volume));
+                    pairList!.sort((a, b) => a.volume!.compareTo(b.volume!));
                   } else {
-                    pairList.sort((a, b) => b.volume.compareTo(a.volume));
+                    pairList!.sort((a, b) => b.volume!.compareTo(a.volume!));
                   }
                 });
               },
@@ -173,7 +173,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               label: Container(
                 //  width: MediaQuery.of(context).size.width * 2 / 15,
                 child: Text(
-                  '24H ${AppLocalizations.of(context).change}',
+                  '24H ${AppLocalizations.of(context)!.change}',
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
@@ -186,15 +186,15 @@ class _MarketDataTableState extends State<MarketDataTable> {
                     _sortAsc = _sortChangeAsc;
                   }
                   if (sortAscending) {
-                    pairList.sort((a, b) => a.change.compareTo(b.change));
+                    pairList!.sort((a, b) => a.change!.compareTo(b.change!));
                   } else {
-                    pairList.sort((a, b) => b.change.compareTo(a.change));
+                    pairList!.sort((a, b) => b.change!.compareTo(a.change!));
                   }
                 });
               },
             ),
           ],
-          rows: pairList
+          rows: pairList!
               .map((itemRow) => DataRow(
                     cells: <DataCell>[
                       DataCell(
@@ -203,9 +203,9 @@ class _MarketDataTableState extends State<MarketDataTable> {
                           // width: MediaQuery.of(context).size.width * 3 / 11,
                           // color: Colors.green,
                           child: Text(
-                            itemRow.symbol.split('/')[0],
+                            itemRow.symbol!.split('/')[0],
                             style:
-                                Theme.of(context).textTheme.headline5.copyWith(
+                                Theme.of(context).textTheme.headline5!.copyWith(
                                       fontWeight: FontWeight.w500,
                                     ),
                             textAlign: TextAlign.center,
@@ -217,10 +217,10 @@ class _MarketDataTableState extends State<MarketDataTable> {
                       ),
                       DataCell(
                         Container(
-                          child: Text(itemRow.price.toStringAsFixed(6),
+                          child: Text(itemRow.price!.toStringAsFixed(6),
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline5
+                                  .headline5!
                                   .copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -232,10 +232,10 @@ class _MarketDataTableState extends State<MarketDataTable> {
                       ),
                       DataCell(
                         Container(
-                          child: Text(itemRow.volume.toStringAsFixed(2),
+                          child: Text(itemRow.volume!.toStringAsFixed(2),
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline5
+                                  .headline5!
                                   .copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -267,11 +267,11 @@ class _MarketDataTableState extends State<MarketDataTable> {
                       // ),
                       DataCell(
                         Text(
-                          itemRow.change >= 0
-                              ? "+" + itemRow.change.toStringAsFixed(2) + '%'
-                              : itemRow.change.toStringAsFixed(2) + '%',
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                                color: Color(itemRow.change >= 0
+                          itemRow.change! >= 0
+                              ? "+" + itemRow.change!.toStringAsFixed(2) + '%'
+                              : itemRow.change!.toStringAsFixed(2) + '%',
+                          style: Theme.of(context).textTheme.headline5!.copyWith(
+                                color: Color(itemRow.change! >= 0
                                     ? 0XFF0da88b
                                     : 0XFFe2103c),
                                 fontWeight: FontWeight.w500,

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:web3dart/web3dart.dart';
 
 class EventMainContent extends StatelessWidget {
-  final List campaignInfo;
+  final List? campaignInfo;
   const EventMainContent(this.campaignInfo);
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class EventMainContent extends StatelessWidget {
         //     Border.all(color: Color(0xbb3f4df1),width: 3)
       ),
       child: Column(
-          children: campaignInfo.map((e) {
+          children: campaignInfo!.map((e) {
         if (e["type"] == "row") {
           return ContentRow(
               e.containsKey("title2") ? e["title"] + e["title2"] : e["title"],
@@ -51,8 +51,8 @@ class EventMainContent extends StatelessWidget {
 //text items
 class ContentRow extends StatelessWidget {
   const ContentRow(this.title, this.text);
-  final String title;
-  final String text;
+  final String? title;
+  final String? text;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class ContentRow extends StatelessWidget {
           Offstage(
             offstage: title == "",
             child: Text(
-              title,
+              title!,
               style: const TextStyle(
                   fontSize: 16,
                   color: Colors.white,
@@ -81,7 +81,7 @@ class ContentRow extends StatelessWidget {
           Offstage(
             offstage: text == "",
             child: Text(
-              text,
+              text!,
               style: const TextStyle(color: Colors.white),
             ),
           ),
@@ -93,8 +93,8 @@ class ContentRow extends StatelessWidget {
 //list items
 class ContentRowList extends StatelessWidget {
   const ContentRowList(this.title, this.text);
-  final String title;
-  final List text;
+  final String? title;
+  final List? text;
 
   @override
   Widget build(BuildContext context) {
@@ -107,13 +107,13 @@ class ContentRowList extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           Text(
-            title,
+            title!,
             style: const TextStyle(
                 fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 15),
           Column(
-            children: text.asMap().entries.map((e) {
+            children: text!.asMap().entries.map((e) {
               debugPrint("event runtimeType: ");
               debugPrint(e.value.runtimeType.toString());
               String type = e.value.runtimeType.toString();
@@ -125,7 +125,7 @@ class ContentRowList extends StatelessWidget {
                       children: e.value.asMap().entries.map<Widget>((l) {
                     return Container(
                       padding: EdgeInsets.only(
-                          bottom: l.key + 1 == text.length ? 0 : 10),
+                          bottom: l.key + 1 == text!.length ? 0 : 10),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +155,7 @@ class ContentRowList extends StatelessWidget {
               } else if (e.value.runtimeType == String) {
                 return Container(
                   padding: EdgeInsets.only(
-                      bottom: e.key + 1 == text.length ? 0 : 10),
+                      bottom: e.key + 1 == text!.length ? 0 : 10),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,7 +202,7 @@ class ContentRowList extends StatelessWidget {
 //Form
 class ContentForm extends StatelessWidget {
   const ContentForm(this.info);
-  final Map info;
+  final Map? info;
   // final String icon;
   // final String title;
   // final String text;
@@ -225,7 +225,7 @@ class ContentForm extends StatelessWidget {
                 color: const Color(0xff3d3da1).withOpacity(0.5),
                 child: Center(
                     child: Text(
-                  info["price"],
+                  info!["price"],
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -238,13 +238,13 @@ class ContentForm extends StatelessWidget {
                 width: 40,
                 height: 40,
                 child: CacheImage(
-                  info["icon"],
+                  info!["icon"],
                   fit: BoxFit.contain,
                 ),
               ),
               const SizedBox(height: 20),
               Text(
-                info["title"],
+                info!["title"],
                 style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white,
@@ -256,14 +256,14 @@ class ContentForm extends StatelessWidget {
                 color: const Color(0xff3d3da1).withOpacity(0.5),
                 child: Center(
                     child: Text(
-                  info["tier1"],
+                  info!["tier1"],
                   style: const TextStyle(color: Colors.white, fontSize: 9),
                 )),
               ),
               Container(
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(
-                  info["reword1"],
+                  info!["reword1"],
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -283,14 +283,14 @@ class ContentForm extends StatelessWidget {
                 color: const Color(0xff3d3da1).withOpacity(0.5),
                 child: Center(
                     child: Text(
-                  info["tier2"],
+                  info!["tier2"],
                   style: const TextStyle(color: Colors.white, fontSize: 9),
                 )),
               ),
               Container(
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(
-                  info["reword2"],
+                  info!["reword2"],
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -310,14 +310,14 @@ class ContentForm extends StatelessWidget {
                 color: const Color(0xff3d3da1).withOpacity(0.5),
                 child: Center(
                     child: Text(
-                  info["tier3"],
+                  info!["tier3"],
                   style: const TextStyle(color: Colors.white, fontSize: 9),
                 )),
               ),
               Container(
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(
-                  info["reword3"],
+                  info!["reword3"],
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -341,7 +341,7 @@ class ContentForm extends StatelessWidget {
 //text items
 class ContentRowTable extends StatelessWidget {
   const ContentRowTable(this.tcontent);
-  final List tcontent;
+  final List? tcontent;
 
   @override
   Widget build(BuildContext context) {
@@ -356,7 +356,7 @@ class ContentRowTable extends StatelessWidget {
             child: Container(
               // color: Color(0xff000066),
               child: Table(
-                  children: tcontent.asMap().entries.map((e) {
+                  children: tcontent!.asMap().entries.map((e) {
                 return TableRow(
                     children: e.value.map<Widget>((l) {
                   return Container(

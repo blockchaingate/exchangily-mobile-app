@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignTokenDetailsScreen extends StatelessWidget {
-  final List<CampaignReward> campaignRewardList;
-  const CampaignTokenDetailsScreen({Key key, this.campaignRewardList})
+  final List<CampaignReward>? campaignRewardList;
+  const CampaignTokenDetailsScreen({Key? key, this.campaignRewardList})
       : super(key: key);
 
   @override
@@ -13,7 +13,7 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).tokenDetails,
+          title: Text(AppLocalizations.of(context)!.tokenDetails,
               // AppLocalizations.of(context).myRewardDetails,
               style: Theme.of(context).textTheme.headline3),
         ),
@@ -29,7 +29,7 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      Text(AppLocalizations.of(context).myOrders),
+                      Text(AppLocalizations.of(context)!.myOrders),
                       const Text('234513')
                     ],
                   ),
@@ -40,7 +40,7 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
                 elevation: 5,
                 child: Column(
                   children: <Widget>[
-                    Text(AppLocalizations.of(context).myRewardTokens),
+                    Text(AppLocalizations.of(context)!.myRewardTokens),
                     const Text('875444')
                   ],
                 ),

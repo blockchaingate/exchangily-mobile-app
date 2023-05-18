@@ -24,9 +24,9 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class CreatePasswordViewModel extends BaseViewModel {
-  final WalletService _walletService = locator<WalletService>();
-  final NavigationService navigationService = locator<NavigationService>();
-  final sharedService = locator<SharedService>();
+  final WalletService? _walletService = locator<WalletService>();
+  final NavigationService? navigationService = locator<NavigationService>();
+  final SharedService? sharedService = locator<SharedService>();
 
   //List<WalletInfo> _walletInfo;
   final log = getLogger('CreatePasswordViewModel');
@@ -34,7 +34,7 @@ class CreatePasswordViewModel extends BaseViewModel {
   bool passwordMatch = false;
   bool checkConfirmPasswordConditions = false;
   String randomMnemonicFromRoute = '';
-  BuildContext context;
+  late BuildContext context;
   String password = '';
   String confirmPassword = '';
   String errorMessage = '';
@@ -45,8 +45,8 @@ class CreatePasswordViewModel extends BaseViewModel {
   FocusNode confirmPassFocus = FocusNode();
   TextEditingController passTextController = TextEditingController();
   TextEditingController confirmPassTextController = TextEditingController();
-  WalletService walletService = locator<WalletService>();
-  final coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+  WalletService? walletService = locator<WalletService>();
+  final CoreWalletDatabaseService? coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
   bool isShowPassword = false;
 
   togglePassword(bool value) {
@@ -59,11 +59,11 @@ class CreatePasswordViewModel extends BaseViewModel {
     isShowPassword = false;
     // await _vaultService.secureMnemonic(
     //     passTextController.text, randomMnemonicFromRoute);
-    await _walletService
+    await _walletService!
         .createOfflineWalletsV1(
             randomMnemonicFromRoute, passTextController.text)
         .then((data) {
-      navigationService
+      navigationService!
           .navigateUsingPushNamedAndRemoveUntil(DashboardViewRoute);
       randomMnemonicFromRoute = '';
       passTextController.text = '';
@@ -86,7 +86,7 @@ class CreatePasswordViewModel extends BaseViewModel {
   bool checkPassword(String pass) {
     setBusy(true);
     password = pass;
-    var res = RegexValidator(pattern).isValid(password);
+    var res = RegexValidator(pattern as String).isValid(password);
     checkPasswordConditions = res;
     if (confirmPassTextController.text.isNotEmpty) {
       password == confirmPassword
@@ -101,7 +101,7 @@ class CreatePasswordViewModel extends BaseViewModel {
   bool checkConfirmPassword(String confirmPass) {
     setBusy(true);
     confirmPassword = confirmPass;
-    var res = RegexValidator(pattern).isValid(confirmPass);
+    var res = RegexValidator(pattern as String).isValid(confirmPass);
     checkConfirmPasswordConditions = res;
     password == confirmPass ? passwordMatch = true : passwordMatch = false;
     if (passwordMatch) errorMessage = '';
@@ -111,7 +111,7 @@ class CreatePasswordViewModel extends BaseViewModel {
 
   Future validatePassword() async {
     setBusy(true);
-    RegExp regex = RegExp(pattern);
+    RegExp regex = RegExp(pattern as String);
     String pass = passTextController.text;
     String confirmPass = confirmPassTextController.text;
     if (pass.isEmpty) {
@@ -119,25 +119,25 @@ class CreatePasswordViewModel extends BaseViewModel {
       confirmPassword = '';
       checkPasswordConditions = false;
       checkConfirmPasswordConditions = false;
-      sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).emptyPassword,
-          subtitle: AppLocalizations.of(context).pleaseFillBothPasswordFields);
+      sharedService!.sharedSimpleNotification(
+          AppLocalizations.of(context)!.emptyPassword,
+          subtitle: AppLocalizations.of(context)!.pleaseFillBothPasswordFields);
 
       setBusy(false);
       return;
     } else {
       if (!regex.hasMatch(pass)) {
-        sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).passwordConditionsMismatch,
-          subtitle: AppLocalizations.of(context).passwordConditions,
+        sharedService!.sharedSimpleNotification(
+          AppLocalizations.of(context)!.passwordConditionsMismatch,
+          subtitle: AppLocalizations.of(context)!.passwordConditions,
         );
 
         setBusy(false);
         return;
       } else if (pass != confirmPass) {
-        sharedService.sharedSimpleNotification(
-          AppLocalizations.of(context).passwordMismatch,
-          subtitle: AppLocalizations.of(context).passwordRetype,
+        sharedService!.sharedSimpleNotification(
+          AppLocalizations.of(context)!.passwordMismatch,
+          subtitle: AppLocalizations.of(context)!.passwordRetype,
         );
         setBusy(false);
         return;
