@@ -12,14 +12,13 @@
 */
 
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../service_locator.dart';
-
-class BaseScreen<T extends BaseState?> extends StatefulWidget {
+class BaseScreen<T extends BaseState> extends StatefulWidget {
   final Widget Function(BuildContext context, T model, Widget? child)? builder;
-  final Function(T)? onModelReady;
+  final void Function(T model)? onModelReady;
 
   const BaseScreen({Key? key, this.builder, this.onModelReady})
       : super(key: key);
@@ -28,21 +27,56 @@ class BaseScreen<T extends BaseState?> extends StatefulWidget {
   BaseScreenState<T> createState() => BaseScreenState<T>();
 }
 
-class BaseScreenState<T extends BaseState?> extends State<BaseScreen<T?>> {
-  T? model = locator<T>();
+class BaseScreenState<T extends BaseState> extends State<BaseScreen<T>> {
+  late T model;
 
   @override
   void initState() {
+    super.initState();
+    model = locator<T>();
     if (widget.onModelReady != null) {
       widget.onModelReady!(model);
     }
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<T?>(
-        create: (context) => model,
-        child: Consumer<T>(builder: widget.builder!));
+    return ChangeNotifierProvider<T>(
+      create: (context) => model,
+      child: Consumer<T>(
+        builder: widget.builder!,
+      ),
+    );
   }
 }
+
+
+// class BaseScreen<T extends BaseState?> extends StatefulWidget {
+//   final Widget Function(BuildContext context, T model, Widget? child)? builder;
+//   final Function(T)? onModelReady;
+
+//   const BaseScreen({Key? key, this.builder, this.onModelReady})
+//       : super(key: key);
+
+//   @override
+//   BaseScreenState<T> createState() => BaseScreenState<T>();
+// }
+
+// class BaseScreenState<T extends BaseState?> extends State<BaseScreen<T?>> {
+//   T model = locator<T>();
+
+//   @override
+//   void initState() {
+//     if (widget.onModelReady != null) {
+//       widget.onModelReady!(model);
+//     }
+//     super.initState();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return ChangeNotifierProvider<T?>(
+//         create: (context) => model,
+//         child: Consumer<T>(builder: widget.builder!));
+//   }
+// }

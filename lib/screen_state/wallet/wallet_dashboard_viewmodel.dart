@@ -20,7 +20,6 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/constants/ui_var.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
-import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
@@ -56,11 +55,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../environments/environment_type_example.dart';
+
 class WalletDashboardViewModel extends BaseViewModel {
   final log = getLogger('WalletDashboardViewModel');
 
-  WalletService? walletService = locator<WalletService>();
-  SharedService? sharedService = locator<SharedService>();
+  WalletService walletService = locator<WalletService>();
+  SharedService sharedService = locator<SharedService>();
 
   final NavigationService? navigationService = locator<NavigationService>();
   final DecimalConfigDatabaseService? decimalConfigDatabaseService =
@@ -149,7 +150,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   init() async {
     setBusy(true);
 
-    sharedService!.context = context;
+    sharedService.context = context;
     //currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
 
     await refreshBalancesV2();
@@ -178,7 +179,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     // }
 
     Future.delayed(const Duration(seconds: 2), () async {
-      await walletService!.updateTokenListDb();
+      await walletService.updateTokenListDb();
     });
   }
 
@@ -197,7 +198,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 // Send custom token
   routeCustomToken(CustomTokenModel customTokenModel,
       {bool isSend = true}) async {
-    var exgAddress = await sharedService!.getExgAddressFromWalletDatabase();
+    var exgAddress = await sharedService.getExgAddressFromWalletDatabase();
 
     var wallet = WalletInfo(
         tickerName: customTokenModel.symbol,
@@ -214,7 +215,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   Future getBalanceForSelectedCustomTokens() async {
     setBusyForObject(selectedCustomTokens, true);
-    String? fabAddress = await sharedService!.getExgAddressFromWalletDatabase();
+    String? fabAddress = await sharedService.getExgAddressFromWalletDatabase();
     selectedCustomTokens!.clear();
     String selectedCustomTokensJson = storageService!.customTokens;
     if (selectedCustomTokensJson != null && selectedCustomTokensJson != '') {
@@ -674,8 +675,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   checkToUpdateWallet() async {
     setBusy(true);
-    String? wallet = await walletService!
-        .getAddressFromCoreWalletDatabaseByTickerName('TRX');
+    String? wallet =
+        await walletService.getAddressFromCoreWalletDatabaseByTickerName('TRX');
     if (wallet != null) {
       log.w('$wallet TRX present');
       isUpdateWallet = false;
@@ -710,14 +711,12 @@ class WalletDashboardViewModel extends BaseViewModel {
                           color: primaryColor, fontWeight: FontWeight.w500),
                     )),
                   ),
-                  content: Container(
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(true);
-                            updateWallet();
-                          },
-                          child:
-                              Text(AppLocalizations.of(context)!.updateNow))),
+                  content: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                        updateWallet();
+                      },
+                      child: Text(AppLocalizations.of(context)!.updateNow)),
                   actions: const <Widget>[],
                 ))
             : AlertDialog(
@@ -1050,7 +1049,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   getAppVersion() async {
     setBusy(true);
     Map<String, String> localAppVersion =
-        await sharedService!.getLocalAppVersion();
+        await sharedService.getLocalAppVersion();
     String store = '';
     String appDownloadLinkOnWebsite = exchangilyAppLatestApkUrl;
     if (Platform.isIOS) {
@@ -1066,7 +1065,7 @@ class WalletDashboardViewModel extends BaseViewModel {
             'api app version $apiAppVersion -- local version $localAppVersion');
 
         if (localAppVersion['name']!.compareTo(apiAppVersion) == -1) {
-          sharedService!.alertDialog(
+          sharedService.alertDialog(
               AppLocalizations.of(context!)!.appUpdateNotice,
               '${AppLocalizations.of(context!)!.pleaseUpdateYourAppFrom} $localAppVersion ${AppLocalizations.of(context!)!.toLatestBuild} $apiAppVersion ${AppLocalizations.of(context!)!.inText} $store ${AppLocalizations.of(context!)!.clickOnWebsiteButton}',
               isUpdate: true,
@@ -1086,8 +1085,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
 
   getFreeFab() async {
-    String? address = await walletService!
-        .getAddressFromCoreWalletDatabaseByTickerName('EXG');
+    String? address =
+        await walletService.getAddressFromCoreWalletDatabaseByTickerName('EXG');
     await apiService!.getFreeFab(address).then((res) {
       if (res != null) {
         if (res['ok']) {
@@ -1217,9 +1216,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           onPressed: () async {
-                                            String? fabAddress =
-                                                await sharedService!
-                                                    .getFabAddressFromCoreWalletDatabase();
+                                            String? fabAddress = await sharedService
+                                                .getFabAddressFromCoreWalletDatabase();
                                             postFreeFabResult = '';
                                             Map data = {
                                               "address": fabAddress,
@@ -1244,7 +1242,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                         isEligibleForFreeGas =
                                                             false);
 
-                                                    sharedService!
+                                                    sharedService
                                                         .sharedSimpleNotification(
                                                             AppLocalizations.of(
                                                                     context)!
@@ -1254,7 +1252,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                                 .freeFabSuccess,
                                                             isError: false);
                                                   } else {
-                                                    sharedService!
+                                                    sharedService
                                                         .sharedSimpleNotification(
                                                             AppLocalizations.of(
                                                                     context)!
@@ -1264,7 +1262,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                                 .incorrectAnswer);
                                                   }
                                                 } else {
-                                                  sharedService!
+                                                  sharedService
                                                       .sharedSimpleNotification(
                                                           AppLocalizations.of(
                                                                   context)!
@@ -1298,7 +1296,7 @@ class WalletDashboardViewModel extends BaseViewModel {
           isEligibleForFreeGas = res['ok'];
           debugPrint(isEligibleForFreeGas.toString());
 
-          sharedService!.sharedSimpleNotification(
+          sharedService.sharedSimpleNotification(
               AppLocalizations.of(context!)!.notice,
               subtitle: AppLocalizations.of(context!)!.freeFabUsedAlready);
         }
@@ -1369,9 +1367,9 @@ class WalletDashboardViewModel extends BaseViewModel {
   }
 
   getGas() async {
-    String address = (await walletService!
+    String address = (await walletService
         .getAddressFromCoreWalletDatabaseByTickerName('EXG'))!;
-    await walletService!
+    await walletService
         .gasBalance(address)
         .then((data) => gasAmount = data)
         .catchError((onError) => log.e(onError));
@@ -1380,9 +1378,9 @@ class WalletDashboardViewModel extends BaseViewModel {
   }
 
   getConfirmDepositStatus() async {
-    String address = (await walletService!
+    String address = (await walletService
         .getAddressFromCoreWalletDatabaseByTickerName('EXG'))!;
-    await walletService!.getErrDeposit(address).then((result) async {
+    await walletService.getErrDeposit(address).then((result) async {
       List<String?> pendingDepositCoins = [];
       if (result != null) {
         log.w('getConfirmDepositStatus reesult $result');
@@ -1430,12 +1428,12 @@ class WalletDashboardViewModel extends BaseViewModel {
   showDialogWarning() {
     log.w('in showDialogWarning isConfirmDeposit $isConfirmDeposit');
     if (gasAmount == 0.0) {
-      sharedService!.alertDialog(
+      sharedService.alertDialog(
           AppLocalizations.of(context!)!.insufficientGasAmount,
           AppLocalizations.of(context!)!.pleaseAddGasToTrade);
     }
     if (isConfirmDeposit) {
-      sharedService!.alertDialog(
+      sharedService.alertDialog(
           AppLocalizations.of(context!)!.pendingConfirmDeposit,
           '${AppLocalizations.of(context!)!.pleaseConfirmYour} ${wallets![0].coin} ${AppLocalizations.of(context!)!.deposit}',
           path: '/walletFeatures',
@@ -1467,8 +1465,8 @@ class WalletDashboardViewModel extends BaseViewModel {
     double availableBal = newTokenWalletBalance.balance ?? 0.0;
     double lockedBal = newTokenWalletBalance.lockBalance ?? 0.0;
 
-    double? usdValue = walletService!
-        .calculateCoinUsdBalance(marketPrice, availableBal, lockedBal);
+    double? usdValue = walletService.calculateCoinUsdBalance(
+        marketPrice, availableBal, lockedBal);
     // String holder = NumberUtil.currencyFormat(usdValue, 2);
     // formattedUsdValueList.add(holder);
 
@@ -1482,9 +1480,13 @@ class WalletDashboardViewModel extends BaseViewModel {
     log.e('new coin ${wb.coin} added ${wb.toJson()} in wallet info object');
   }
 
+  /*-------------------------------------------------------------------------------------
+                          Refresh Balances
+-------------------------------------------------------------------------------------*/
+
   Future<List<WalletBalance>?> refreshBalancesV2() async {
     setBusy(true);
-    List<dynamic>? walletBalancesApiRes = [];
+    List<WalletBalance> walletBalancesApiRes = [];
     // get the walletbalancebody from the DB
     var walletBalancesBodyFromDB =
         await coreWalletDatabaseService!.getWalletBalancesBody();
@@ -1515,14 +1517,14 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     if (isProduction && coinsToHideList.isNotEmpty) {
       for (var coinToHideTicker in coinsToHideList) {
-        walletBalancesApiRes!
+        walletBalancesApiRes
             .removeWhere((element) => element.coin == coinToHideTicker);
       }
     }
     if (walletBalancesApiRes != null) {
       log.i('walletBalances LENGTH ${walletBalancesApiRes.length}');
     }
-    wallets = walletBalancesApiRes as List<WalletBalance>?;
+    wallets = walletBalancesApiRes;
 
     walletsCopy = wallets;
 
@@ -1565,14 +1567,14 @@ class WalletDashboardViewModel extends BaseViewModel {
   debugVersionPopup() async {
     // await _showNotification();
 
-    sharedService!.alertDialog(AppLocalizations.of(context!)!.notice,
+    sharedService.alertDialog(AppLocalizations.of(context!)!.notice,
         AppLocalizations.of(context!)!.testVersion,
         isWarning: false);
   }
 
   onBackButtonPressed() async {
-    sharedService!.context = context;
-    await sharedService!.closeApp();
+    sharedService.context = context;
+    await sharedService.closeApp();
   }
 
   updateAppbarHeight(h) {

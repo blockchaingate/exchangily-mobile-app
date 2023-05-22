@@ -143,13 +143,13 @@ class CoreWalletDatabaseService {
   }
 
   // getWalletAddressByTickerName
-  Future<String?> getWalletAddressByTickerName(String tickerName) async {
+  Future<String> getWalletAddressByTickerName(String tickerName) async {
     final Database db = (await _database)!;
 
     var fabUtils = FabUtils();
     String? address = '';
     String passedTicker = '';
-    List<Map> res =
+    List<Map?> res =
         await db.query(tableName, columns: [columnWalletBalancesBody]);
     if (tickerName == 'EXG') {
       passedTicker = tickerName;
@@ -157,7 +157,7 @@ class CoreWalletDatabaseService {
     }
 
     address = jsonToMap(
-        res.first['walletBalancesBody'], '${tickerName.toLowerCase()}Address');
+        res.first!['walletBalancesBody'], '${tickerName.toLowerCase()}Address');
     String? finalRes = '';
     finalRes =
         passedTicker == 'EXG' ? fabUtils.fabToExgAddress(address!) : address!;

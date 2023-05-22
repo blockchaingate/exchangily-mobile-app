@@ -5,15 +5,12 @@ version: 2.1.92+269
 environment:
   sdk: '>=2.12.0 <3.0.0'
 
-dependency_overrides:
-  intl: any
-
 dependencies:
   flutter:
     sdk: flutter
 
   flutter_localizations:
-    sdk: flutter
+    sdk: flutter  
 
   # flutter_cupertino_localizations: ^1.0.1
 
@@ -229,15 +226,15 @@ dependencies:
   protobuf: ^2.1.0
 
   # protoc_plugin
-  protoc_plugin: ^20.0.1
+  # protoc_plugin: ^20.0.1
 
-  intl_translation: ^0.18.2
+  intl_translation: ^0.18.0
 
   #version
   version: ^3.0.2
 
 dev_dependencies:
-  intl: ^0.18.1
+  intl: ^0.17.0
   # flutter_launcher_icons: ^0.7.0
 
   flutter_test:

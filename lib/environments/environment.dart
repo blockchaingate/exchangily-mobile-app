@@ -1,8 +1,8 @@
-// import 'package:bitcoin_flutter/bitcoin_flutter.dart' as bitcoin_flutter;
-import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as bitcoin_flutter;
+import 'package:exchangilymobileapp/utils/ltc_util.dart';
+import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
+import 'environment_type.dart';
 
-// -----------------------------------burayi ac ----------------------------------------
 Map devConfig = {
   "decimal": {'priceDecimal': 6, 'volDecimal': 4},
   "chains": {
@@ -11,17 +11,17 @@ Map devConfig = {
       "satoshisPerBytes": 100,
       "bytesPerInput": 152
     },
-    // "LTC": {
-    //   "network": liteCoinTestnetNetwork,
-    //   "satoshisPerBytes": 400,
-    //   "bytesPerInput": 155
-    // },
-    // "BCH": {"testnet": true, "satoshisPerBytes": 9, "bytesPerInput": 155},
-    // "DOGE": {
-    //   "network": dogeCoinTestnetNetwork,
-    //   "satoshisPerBytes": 800000,
-    //   "bytesPerInput": 152
-    // },
+    "LTC": {
+      "network": liteCoinTestnetNetwork,
+      "satoshisPerBytes": 400,
+      "bytesPerInput": 155
+    },
+    "BCH": {"testnet": true, "satoshisPerBytes": 9, "bytesPerInput": 155},
+    "DOGE": {
+      "network": dogeCoinTestnetNetwork,
+      "satoshisPerBytes": 800000,
+      "bytesPerInput": 152
+    },
     "ETH": {
       "chain": 'ropsten',
       "hardfork": 'byzantium',
@@ -32,41 +32,12 @@ Map devConfig = {
       "gasLimit": 21000,
       "gasLimitToken": 70000
     },
-    "BNB": {
-      "chain": 'testnet',
-      "networkId": 97,
-      "chainId": 97,
-      "rpcEndpoint": 'https://data-seed-prebsc-1-s1.binance.org:8545',
-      "hardfork": 'byzantium',
-      "gasPrice": 10,
-      "gasPriceMax": 100,
-      "gasLimit": 21000,
-      "gasLimitToken": 70000
-    },
-    "MATIC": {
-      "chain": 'testnet',
-      "networkId": 80001,
-      "chainId": 80001,
-      "gasPrice": 5,
-      "gasPriceMax": 100,
-      "gasLimit": 21000,
-      "gasLimitToken": 70000
-    },
-    "POLYGON": {
-      "chain": 'testnet',
-      "networkId": 80001,
-      "chainId": 80001,
-      "gasPrice": 5,
-      "gasPriceMax": 100,
-      "gasLimit": 21000,
-      "gasLimitToken": 70000
-    },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
       "satoshisPerBytes": 100,
-      "bytesPerInput": 148,
+      "bytesPerInput": 152,
       "gasPrice": 40,
-      "gasLimit": 100000
+      "gasLimit": 500000
     },
     "KANBAN": {"chainId": 212, "gasPrice": 50000000, "gasLimit": 20000000}
   },
@@ -77,8 +48,7 @@ Map devConfig = {
     "BCH": 1,
     "LTC": 1,
     "DOGE": 1,
-    "TRX": 195,
-    "BNB": 60,
+    "TRX": 195
   },
   'endpoints': {
     //for local test
@@ -94,22 +64,14 @@ Map devConfig = {
     'doge': 'https://dogetest.fabcoinapi.com/',
     'fab': 'https://fabtest.fabcoinapi.com/',
     'eth': 'https://ethtest.fabcoinapi.com/',
-    'campaign': 'https://test.blockchaingate.com/v2/',
-    'maticm': 'https://rpc-mumbai.matic.today',
-    'bnb': 'https://data-seed-prebsc-1-s1.binance.org:8545'
+    'campaign': 'https://test.blockchaingate.com/v2/'
   },
   "addresses": {
     "smartContract": {
-      // "USDT": {
-      //   "ETH": '0x1c35eCBc06ae6061d925A2fC2920779a1896282c',
-      //   "TRX": 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
-      //   "BNB": '0x4850754EA867654339F38d4e6DF7cd80CFee141f',
-      //   "MATIC": '0x26CbCDe3842D9A9170d47F122F69D993a00676ED'
-      // },
       "FABLOCK": '0xa7d4a4e23bf7dd7a1e03eda9eb7c28a016fd54aa',
       "EXG": '0x867480ba8e577402fa44f43c33875ce74bdc5df6',
       "DUSD": '35cb9b675495714909c80c1c11366dc8d396cbe7',
-      "USDT": '0x1c35eCBc06ae6061d925A2fC2920779a1896282c',
+      "USDT": '0xa9f4f6f0fa56058ebdb91865eb2f6aec83b94532',
       "BNB": '0xE90e361892d258F28e3a2E758EEB7E571e370c6f',
       "INB": '0x919c6d21670fe8cEBd1E86a82a1A74E9AA2988F8',
       "REP": '0x4659c4A33432A5091c322E438e0Fb1D286A1EbdE',
@@ -128,7 +90,7 @@ Map devConfig = {
       "KNC": '0x3aad796ceb3a1063f727c6d0c698e37053292d10',
       "GVT": '0x3e610d9fb322063e50d185e2cc1b45f007e7180c',
       "DRGN": '0xbbdd7a557a0d8a9bf166dcc2730ae3ccec7df05c',
-      "MATICUSDT": "0x26CbCDe3842D9A9170d47F122F69D993a00676ED"
+      "PaycoolReferralAddress": "0xa76af08ba89012e617cd33641f70cb6c2ec957e6"
     },
     'exchangilyOfficial': [
       {'name': 'EXG', 'address': '0xed76be271bb47a6df055bbc2039733c26fdecc82'},
@@ -142,15 +104,7 @@ Map devConfig = {
         'address': 'bchtest:qrkhd038rw685m0s2kauyquhx0pxlhkvsg6dydtwn9 ',
       },
       {'name': 'LTC', 'address': 'n3AYguoFtN7SqsfAJPx6Ky8FTTZUkeKbvc'},
-      {'name': 'DOGE', 'address': 'nqqkf8PqJj3CUjwLMEcjJDfpiU5NDcMUrB'},
-      {
-        'name': 'BNB',
-        'address': '0x450C53c50F8c0413a5829B0A9ab9Fa7e38f3eD2E',
-      },
-      {
-        'name': 'MATICM',
-        'address': '0x450C53c50F8c0413a5829B0A9ab9Fa7e38f3eD2E'
-      }
+      {'name': 'DOGE', 'address': 'nqqkf8PqJj3CUjwLMEcjJDfpiU5NDcMUrB'}
     ],
   },
   "websocket": {
@@ -195,17 +149,17 @@ Map productionConfig = {
       "satoshisPerBytes": 100,
       "bytesPerInput": 152
     },
-    // "LTC": {
-    //   "network": liteCoinMainnetNetwork,
-    //   "satoshisPerBytes": 400,
-    //   "bytesPerInput": 152
-    // },
-    // "BCH": {"testnet": false, "satoshisPerBytes": 9, "bytesPerInput": 155},
-    // "DOGE": {
-    //   "network": dogeCoinMainnetNetwork,
-    //   "satoshisPerBytes": 800000,
-    //   "bytesPerInput": 152
-    // },
+    "LTC": {
+      "network": liteCoinMainnetNetwork,
+      "satoshisPerBytes": 400,
+      "bytesPerInput": 152
+    },
+    "BCH": {"testnet": false, "satoshisPerBytes": 9, "bytesPerInput": 155},
+    "DOGE": {
+      "network": dogeCoinMainnetNetwork,
+      "satoshisPerBytes": 800000,
+      "bytesPerInput": 152
+    },
     "ETH": {
       "chain": 'mainnet',
       "hardfork": 'byzantium',
@@ -216,35 +170,6 @@ Map productionConfig = {
       "gasLimit": 21000,
       "gasLimitToken": 70000
     },
-    "BNB": {
-      "chain": 'mainnet',
-      "networkId": 56,
-      "chainId": 56,
-      "rpcEndpoint": 'https://kanbanprod.fabcoinapi.com/redirect/binance',
-      "hardfork": 'petersburg',
-      "gasPrice": 10,
-      "gasPriceMax": 200,
-      "gasLimit": 21000,
-      "gasLimitToken": 200000
-    },
-    "MATICM": {
-      "chain": "mainnet",
-      "networkId": 137,
-      "chainId": 137,
-      "gasPrice": 10,
-      "gasPriceMax": 200,
-      "gasLimit": 21000,
-      "gasLimitToken": 200000
-    },
-    "POLYGON": {
-      "chain": "mainnet",
-      "networkId": 137,
-      "chainId": 137,
-      "gasPrice": 10,
-      "gasPriceMax": 200,
-      "gasLimit": 21000,
-      "gasLimitToken": 200000
-    },
     "FAB": {
       "chain": {
         "name": 'mainnet',
@@ -254,7 +179,7 @@ Map productionConfig = {
       "satoshisPerBytes": 100,
       "bytesPerInput": 152,
       "gasPrice": 40,
-      "gasLimit": 100000
+      "gasLimit": 500000
     },
     "KANBAN": {"chainId": 211, "gasPrice": 50000000, "gasLimit": 20000000}
   },
@@ -265,8 +190,7 @@ Map productionConfig = {
     "BCH": 145,
     "LTC": 2,
     "DOGE": 3,
-    "TRX": 195,
-    "BNB": 60,
+    "TRX": 195
   },
   'endpoints': {
     'blockchaingate': 'https://www.blockchaingate.com/v2/',
@@ -279,22 +203,10 @@ Map productionConfig = {
     'fab': 'https://fabprod.fabcoinapi.com/',
     'eth': 'https://ethprod.fabcoinapi.com/',
     'trx': 'https://api.trongrid.io/',
-    'campaign': 'https://api.blockchaingate.com/v2/',
-    'maticm': 'https://kanbanprod.fabcoinapi.com/redirect/polygon',
-    'bnb': 'https://kanbanprod.fabcoinapi.com/redirect/binance'
+    'campaign': 'https://api.blockchaingate.com/v2/'
   },
   'addresses': {
     "smartContract": {
-      // "USDT": {
-      //   "ETH": '0xdac17f958d2ee523a2206206994597c13d831ec7',
-      //   "TRX": 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
-      //   "BNB": '0x55d398326f99059ff775485246999027b3197955',
-      //   "MATIC": '0xc2132D05D31c914a87C6611C10748AEb04B58e8F'
-      // },
-      "USDC": {
-        "ETH": '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-        "TRX": 'TEkxiTehnzSmSe2XqrBj4w32RUN966rdz8'
-      },
       "FABLOCK": '0x04baa04d9550c49831427c6abe16def2c579af4a',
       "EXG": '0xa3e26671a38978e8204b8a37f1c2897042783b00',
       "USDT": '0xdac17f958d2ee523a2206206994597c13d831ec7',
@@ -318,7 +230,10 @@ Map productionConfig = {
       "GVT": '0x103c3A209da59d3E7C4A89307e66521e081CFDF0',
       "DRGN": '0x419c4db4b9e25d6db2ad9691ccb832c8d9fda05e',
       "CNB": "ceb9a838c3f3ee6e3168c06734f9188f2693999f",
-      "MATICUSDT": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
+      "NVZN": "0x99963ee76c886fc43d5063428ff8f926e8a50985",
+      "BST": "0x4fe1819daf783a3f3151ea0937090063b85d6122",
+      "PaycoolReferralAddress": "0xcd9c20e8e1252d5cd5eacd825e1be2dbda808000",
+      "ProjectUserRelation": "0xb16cb516bc0de12e89c7ce6a495012cd00ac2ebf"
     },
     'exchangilyOfficial': [
       {'name': 'EXG', 'address': '0xa7c8257b0571dc3d3c96b24b668c6569391b3ac9'},
@@ -333,12 +248,7 @@ Map productionConfig = {
       },
       {'name': 'LTC', 'address': 'LaX6sfX8RoHbQHNDEBmdzyBMN9vFa95FXL'},
       {'name': 'DOGE', 'address': 'DLSF9i9weYwpgUrendmuGiHC35HGoHuvR9'},
-      {'name': 'TRX', 'address': 'TGfvRWxddNoWrghwE5zC1JEcbXyMdPATdo'},
-      {'name': 'BNB', 'address': '0x4983f8634255762A18D854790E6d35A522E2633a'},
-      {
-        'name': 'MATICM',
-        'address': '0x4983f8634255762A18D854790E6d35A522E2633a'
-      }
+      {'name': 'TRX', 'address': 'TGfvRWxddNoWrghwE5zC1JEcbXyMdPATdo'}
     ],
     "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },

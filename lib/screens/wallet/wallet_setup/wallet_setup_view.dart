@@ -28,7 +28,7 @@ class WalletSetupView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<WalletSetupViewmodel>.reactive(
       viewModelBuilder: () => WalletSetupViewmodel(),
-      onModelReady: (WalletSetupViewmodel model) async {
+      onViewModelReady: (WalletSetupViewmodel model) async {
         model.context = context;
 
         model.init();
@@ -60,7 +60,7 @@ class WalletSetupView extends StatelessWidget {
                         AppLocalizations.of(context)!.welcomeText,
                         style: Theme.of(context)
                             .textTheme
-                            .headline5!
+                            .headlineSmall!
                             .copyWith(fontWeight: FontWeight.normal),
                       )),
                 ],
@@ -76,13 +76,13 @@ class WalletSetupView extends StatelessWidget {
               model.isDeleting
                   ? Text(
                       AppLocalizations.of(context)!.deletingWallet,
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     )
                   : Container(),
               !model.isBusy && model.errorMessage.isNotEmpty
                   ? Text(
                       model.errorMessage,
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     )
                   : Container(),
               model.isHideIcon
@@ -100,14 +100,14 @@ class WalletSetupView extends StatelessWidget {
                           children: [
                             Text(
                               '${AppLocalizations.of(context)!.checkingExistingWallet}...',
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.bodyLarge,
                             ),
                             model.isVerifying
                                 ? Text(
                                     AppLocalizations.of(context)!
                                         .verifyingWallet,
                                     style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                        Theme.of(context).textTheme.bodyLarge,
                                   )
                                 : Container()
                           ],
@@ -121,102 +121,147 @@ class WalletSetupView extends StatelessWidget {
                           child: Center(
                             child: Text(
                               '${AppLocalizations.of(context)!.restoringWallet}...',
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.bodyLarge,
                             ),
                           ),
                         )
-                      : Container(
-                          child: Column(
-                            children: [
-                              !model.hasAuthenticated &&
-                                      !model.isBusy &&
-                                      model.storageService!
-                                          .hasInAppBiometricAuthEnabled &&
-                                      model.storageService!
-                                          .hasPhoneProtectionEnabled &&
-                                      model.hasData
-                                  ? ElevatedButton(
-                                      style: ButtonStyle(
-                                          shape: MaterialStateProperty.all(
-                                            const StadiumBorder(
-                                                side: BorderSide(
-                                                    color: Colors.transparent,
-                                                    width: 2)),
+                      : Column(
+                          children: [
+                            !model.hasAuthenticated &&
+                                    !model.isBusy &&
+                                    model.storageService!
+                                        .hasInAppBiometricAuthEnabled &&
+                                    model.storageService!
+                                        .hasPhoneProtectionEnabled &&
+                                    model.hasData
+                                ? ElevatedButton(
+                                    style: ButtonStyle(
+                                        shape: MaterialStateProperty.all(
+                                          const StadiumBorder(
+                                              side: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 2)),
+                                        ),
+                                        elevation:
+                                            MaterialStateProperty.all(5)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(right: 4),
+                                          child: Icon(
+                                            Icons.lock_open_outlined,
+                                            color: white,
+                                            size: 18,
                                           ),
-                                          elevation:
-                                              MaterialStateProperty.all(5)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          const Padding(
-                                            padding: EdgeInsets.only(right: 4),
-                                            child: Icon(
-                                              Icons.lock_open_outlined,
-                                              color: white,
-                                              size: 18,
+                                        ),
+                                        Text(
+                                            AppLocalizations.of(context)!
+                                                .unlock,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineMedium),
+                                      ],
+                                    ),
+                                    onPressed: () {
+                                      model.checkExistingWallet();
+                                    },
+                                  )
+                                : Container(),
+                            !model.storageService!.hasInAppBiometricAuthEnabled ||
+                                    !model.storageService!
+                                        .hasPhoneProtectionEnabled ||
+                                    !model.hasData
+                                ? model.storageService!.hasPrivacyConsent
+                                    ? Row(children: <Widget>[
+                                        Expanded(
+                                          child: Container(
+                                            margin:
+                                                const EdgeInsets.only(right: 5),
+                                            child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                elevation:
+                                                    MaterialStateProperty.all(
+                                                        5),
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        white),
+                                                shape:
+                                                    MaterialStateProperty.all(
+                                                  const StadiumBorder(
+                                                      side: BorderSide(
+                                                          color: primaryColor,
+                                                          width: 2)),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .createWallet,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headlineSmall!
+                                                      .copyWith(
+                                                          color: primaryColor)),
+                                              onPressed: () {
+                                                if (!model.isBusy) {
+                                                  model.importCreateNav(
+                                                      'create');
+                                                }
+                                              },
                                             ),
                                           ),
-                                          Text(
+                                        ),
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                                elevation:
+                                                    MaterialStateProperty.all(
+                                                        5),
+                                                shape:
+                                                    MaterialStateProperty.all(
+                                                  const StadiumBorder(
+                                                      side: BorderSide(
+                                                          color: primaryColor,
+                                                          width: 2)),
+                                                ),
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        primaryColor)),
+                                            child: Text(
                                               AppLocalizations.of(context)!
-                                                  .unlock,
+                                                  .importWallet,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline4),
-                                        ],
-                                      ),
-                                      onPressed: () {
-                                        model.checkExistingWallet();
-                                      },
-                                    )
-                                  : Container(),
-                              !model.storageService!
-                                          .hasInAppBiometricAuthEnabled ||
-                                      !model.storageService!
-                                          .hasPhoneProtectionEnabled ||
-                                      !model.hasData
-                                  ? model.storageService!.hasPrivacyConsent
-                                      ? Row(children: <Widget>[
-                                          Expanded(
-                                            child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  right: 5),
-                                              child: ElevatedButton(
-                                                style: ButtonStyle(
-                                                  elevation:
-                                                      MaterialStateProperty.all(
-                                                          5),
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          white),
-                                                  shape:
-                                                      MaterialStateProperty.all(
-                                                    const StadiumBorder(
-                                                        side: BorderSide(
-                                                            color: primaryColor,
-                                                            width: 2)),
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                    AppLocalizations.of(context)!
-                                                        .createWallet,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline5!
-                                                        .copyWith(
-                                                            color:
-                                                                primaryColor)),
-                                                onPressed: () {
-                                                  if (!model.isBusy) {
-                                                    model.importCreateNav(
-                                                        'create');
-                                                  }
-                                                },
-                                              ),
+                                                  .headlineSmall!
+                                                  .copyWith(color: white),
                                             ),
+                                            onPressed: () {
+                                              if (!model.isBusy) {
+                                                model.importCreateNav('import');
+                                              }
+                                            },
                                           ),
-                                          Expanded(
-                                            child: ElevatedButton(
+                                        ),
+                                        // TextButton(
+                                        //   child: Text('click'),
+                                        //   onPressed: () => model
+                                        //       .coreWalletDatabaseService
+                                        //       .insert(CoreWalletModel()),
+                                        // )
+                                      ])
+                                    : Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            '${AppLocalizations.of(context)!.askPrivacyConsent}. ${AppLocalizations.of(context)!.userDataUsage}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineSmall,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          UIHelper.verticalSpaceSmall,
+                                          ElevatedButton(
                                               style: ButtonStyle(
                                                   elevation:
                                                       MaterialStateProperty.all(
@@ -233,72 +278,16 @@ class WalletSetupView extends StatelessWidget {
                                                           primaryColor)),
                                               child: Text(
                                                 AppLocalizations.of(context)!
-                                                    .importWallet,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5!
-                                                    .copyWith(color: white),
+                                                    .privacyPolicy,
+                                                style: headText5.copyWith(
+                                                    color: white),
                                               ),
-                                              onPressed: () {
-                                                if (!model.isBusy) {
-                                                  model.importCreateNav(
-                                                      'import');
-                                                }
-                                              },
-                                            ),
-                                          ),
-                                          // TextButton(
-                                          //   child: Text('click'),
-                                          //   onPressed: () => model
-                                          //       .coreWalletDatabaseService
-                                          //       .insert(CoreWalletModel()),
-                                          // )
-                                        ])
-                                      : Container(
-                                          child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                      .askPrivacyConsent +
-                                                  '. ' +
-                                                  AppLocalizations.of(context)!
-                                                      .userDataUsage,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            UIHelper.verticalSpaceSmall,
-                                            ElevatedButton(
-                                                style: ButtonStyle(
-                                                    elevation:
-                                                        MaterialStateProperty
-                                                            .all(5),
-                                                    shape: MaterialStateProperty
-                                                        .all(
-                                                      const StadiumBorder(
-                                                          side: BorderSide(
-                                                              color:
-                                                                  primaryColor,
-                                                              width: 2)),
-                                                    ),
-                                                    backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all(primaryColor)),
-                                                child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .privacyPolicy,
-                                                  style: headText5.copyWith(
-                                                      color: white),
-                                                ),
-                                                onPressed: () => model
-                                                    .showPrivacyConsentWidget()),
-                                          ],
-                                        ))
-                                  : Container(),
-                            ],
-                          ),
+                                              onPressed: () => model
+                                                  .showPrivacyConsentWidget()),
+                                        ],
+                                      )
+                                : Container(),
+                          ],
                         ),
               //  UIHelper.verticalSpaceLarge,
               // TextButton(

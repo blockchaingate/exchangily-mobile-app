@@ -24,9 +24,9 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class CreatePasswordViewModel extends BaseViewModel {
-  final WalletService? _walletService = locator<WalletService>();
-  final NavigationService? navigationService = locator<NavigationService>();
-  final SharedService? sharedService = locator<SharedService>();
+  final WalletService _walletService = locator<WalletService>();
+  final NavigationService navigationService = locator<NavigationService>();
+  final SharedService sharedService = locator<SharedService>();
 
   //List<WalletInfo> _walletInfo;
   final log = getLogger('CreatePasswordViewModel');
@@ -46,7 +46,8 @@ class CreatePasswordViewModel extends BaseViewModel {
   TextEditingController passTextController = TextEditingController();
   TextEditingController confirmPassTextController = TextEditingController();
   WalletService? walletService = locator<WalletService>();
-  final CoreWalletDatabaseService? coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+  final CoreWalletDatabaseService? coreWalletDatabaseService =
+      locator<CoreWalletDatabaseService>();
   bool isShowPassword = false;
 
   togglePassword(bool value) {
@@ -57,13 +58,11 @@ class CreatePasswordViewModel extends BaseViewModel {
   Future createOfflineWallets() async {
     setBusy(true);
     isShowPassword = false;
-    // await _vaultService.secureMnemonic(
-    //     passTextController.text, randomMnemonicFromRoute);
-    await _walletService!
+    await _walletService
         .createOfflineWalletsV1(
             randomMnemonicFromRoute, passTextController.text)
         .then((data) {
-      navigationService!
+      navigationService
           .navigateUsingPushNamedAndRemoveUntil(DashboardViewRoute);
       randomMnemonicFromRoute = '';
       passTextController.text = '';
@@ -73,7 +72,6 @@ class CreatePasswordViewModel extends BaseViewModel {
       password = '';
       confirmPassword = '';
       errorMessage = onError.toString();
-      //AppLocalizations.of(context).somethingWentWrong;
       log.e(onError);
       setBusy(false);
     });
@@ -119,7 +117,7 @@ class CreatePasswordViewModel extends BaseViewModel {
       confirmPassword = '';
       checkPasswordConditions = false;
       checkConfirmPasswordConditions = false;
-      sharedService!.sharedSimpleNotification(
+      sharedService.sharedSimpleNotification(
           AppLocalizations.of(context)!.emptyPassword,
           subtitle: AppLocalizations.of(context)!.pleaseFillBothPasswordFields);
 
@@ -127,7 +125,7 @@ class CreatePasswordViewModel extends BaseViewModel {
       return;
     } else {
       if (!regex.hasMatch(pass)) {
-        sharedService!.sharedSimpleNotification(
+        sharedService.sharedSimpleNotification(
           AppLocalizations.of(context)!.passwordConditionsMismatch,
           subtitle: AppLocalizations.of(context)!.passwordConditions,
         );
@@ -135,7 +133,7 @@ class CreatePasswordViewModel extends BaseViewModel {
         setBusy(false);
         return;
       } else if (pass != confirmPass) {
-        sharedService!.sharedSimpleNotification(
+        sharedService.sharedSimpleNotification(
           AppLocalizations.of(context)!.passwordMismatch,
           subtitle: AppLocalizations.of(context)!.passwordRetype,
         );

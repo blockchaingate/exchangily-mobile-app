@@ -15,29 +15,28 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_viewmodel.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/wallet/toggle_password_widget.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
-import 'package:flutter/material.dart';
-import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 
 class CreatePasswordScreen extends StatefulWidget {
   final args;
   const CreatePasswordScreen({Key? key, this.args}) : super(key: key);
 
   @override
-  _CreatePasswordScreenState createState() => _CreatePasswordScreenState();
+  CreatePasswordScreenState createState() => CreatePasswordScreenState();
 }
 
-class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
+class CreatePasswordScreenState extends State<CreatePasswordScreen> {
   final log = getLogger('CreatePassword');
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => CreatePasswordViewModel(),
-      onModelReady: (dynamic model) {
+      onViewModelReady: (dynamic model) {
         model.randomMnemonicFromRoute = widget.args['mnemonic'];
         model.context = context;
         model.errorMessage = '';
@@ -47,7 +46,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(AppLocalizations.of(context)!.secureYourWallet,
-              style: Theme.of(context).textTheme.headline4),
+              style: Theme.of(context).textTheme.headlineMedium),
           backgroundColor: secondaryColor,
         ),
         body: Container(
@@ -63,7 +62,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   children: <Widget>[
                     Text(
                       AppLocalizations.of(context)!.setPasswordConditions,
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyLarge,
                       textAlign: TextAlign.left,
                     ),
                     UIHelper.verticalSpaceSmall,
@@ -91,7 +90,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                         child: Text(model.errorMessage,
                             style: Theme.of(context)
                                 .textTheme
-                                .headline5!
+                                .headlineSmall!
                                 .copyWith(color: red))),
                     UIHelper.verticalSpaceLarge,
                     UIHelper.verticalSpaceLarge,
@@ -106,7 +105,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                         .importingWallet
                                     : AppLocalizations.of(context)!
                                         .creatingWallet,
-                                style: Theme.of(context).textTheme.button,
+                                style: Theme.of(context).textTheme.labelLarge,
                               ),
                             )
                           : _buildCreateNewWalletButton(model, context),
@@ -117,7 +116,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                       textAlign: TextAlign.left,
                       style: Theme.of(context)
                           .textTheme
-                          .headline5!
+                          .headlineSmall!
                           .copyWith(fontWeight: FontWeight.bold),
                     )
                   ],
@@ -180,8 +179,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
             ),
             labelText: AppLocalizations.of(context)!.enterPassword,
             prefixIcon: const Icon(Icons.lock_outline, color: Colors.white),
-            labelStyle: Theme.of(context).textTheme.headline5,
-            helperStyle: Theme.of(context).textTheme.headline5));
+            labelStyle: Theme.of(context).textTheme.headlineSmall,
+            helperStyle: Theme.of(context).textTheme.headlineSmall));
   }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -238,8 +237,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
             ),
             labelText: AppLocalizations.of(context)!.confirmPassword,
             prefixIcon: const Icon(Icons.lock, color: Colors.white),
-            labelStyle: Theme.of(context).textTheme.headline5,
-            helperStyle: Theme.of(context).textTheme.headline5));
+            labelStyle: Theme.of(context).textTheme.headlineSmall,
+            helperStyle: Theme.of(context).textTheme.headlineSmall));
   }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -259,7 +258,6 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         textColor: Colors.white,
         onPressed: () {
           // Remove the on screen keyboard by shifting focus to unused focus node
-
           FocusScope.of(context).requestFocus(FocusNode());
           model.validatePassword();
         },
@@ -269,7 +267,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
               : AppLocalizations.of(context)!.createWallet,
           style: Theme.of(context)
               .textTheme
-              .headline4!
+              .headlineMedium!
               .copyWith(fontWeight: FontWeight.w400),
         ),
       ),

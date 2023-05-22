@@ -23,7 +23,7 @@ class ImportWalletView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => ConfirmMnemonicViewmodel(),
-      onModelReady: (dynamic model) {
+      onViewModelReady: (dynamic model) {
         model.route = 'import';
       },
       builder: (context, ConfirmMnemonicViewmodel model, child) => Scaffold(

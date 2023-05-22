@@ -50,7 +50,7 @@ class WalletDashboardView extends StatelessWidget {
         RefreshController(initialRefresh: false);
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => WalletDashboardViewModel(),
-        onModelReady: (WalletDashboardViewModel model) async {
+        onViewModelReady: (WalletDashboardViewModel model) async {
           model.context = context;
           model.globalKeyOne = _one;
           model.globalKeyTwo = _two;
@@ -155,8 +155,9 @@ class WalletDashboardView extends StatelessWidget {
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(35),
                           ),
-                          width:
-                              model.selectedCustomTokens!.isNotEmpty ? 140 : 120,
+                          width: model.selectedCustomTokens!.isNotEmpty
+                              ? 140
+                              : 120,
                           child: GestureDetector(
                             onTap: () => model.showCustomTokensBottomSheet(),
                             child: Padding(
@@ -174,12 +175,14 @@ class WalletDashboardView extends StatelessWidget {
                                     size: model.selectedCustomTokens!.isNotEmpty
                                         ? 16
                                         : 14,
-                                    color: model.selectedCustomTokens!.isNotEmpty
-                                        ? yellow
-                                        : green,
+                                    color:
+                                        model.selectedCustomTokens!.isNotEmpty
+                                            ? yellow
+                                            : green,
                                   ),
                                   Expanded(
-                                    child: model.selectedCustomTokens!.isNotEmpty
+                                    child: model
+                                            .selectedCustomTokens!.isNotEmpty
                                         ? Text(
                                             ' ' +
                                                 AppLocalizations.of(context)!
@@ -230,8 +233,8 @@ class WalletDashboardView extends StatelessWidget {
           // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
           replacement: Visibility(
               visible: model.isHideSmallAssetsButton && usdBalance != 0,
-              child: _coinDetailsCard(
-                  name, index, model.wallets!, model.elevation, context, model)),
+              child: _coinDetailsCard(name, index, model.wallets!,
+                  model.elevation, context, model)),
         );
       },
     );
@@ -412,7 +415,7 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
               icon: model.isBusy || model.busy(model.selectedCustomTokens)
                   ? Container(
                       margin: const EdgeInsets.only(left: 3.0),
-                      child: model.sharedService!.loadingIndicator(),
+                      child: model.sharedService.loadingIndicator(),
                     )
                   : const Icon(
                       Icons.refresh,
@@ -464,7 +467,8 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
                         !model.isHideSmallAssetsButton
-                            ? AppLocalizations.of(context)!.hideSmallAmountAssets
+                            ? AppLocalizations.of(context)!
+                                .hideSmallAmountAssets
                             : AppLocalizations.of(context)!
                                 .showSmallAmountAssets,
                         style: model.isShowFavCoins || model.isHideSearch
@@ -510,7 +514,8 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                                   color: white,
                                 ),
                                 label: Text(
-                                  AppLocalizations.of(context)!.getFree + ' FAB',
+                                  AppLocalizations.of(context)!.getFree +
+                                      ' FAB',
                                   style: Theme.of(context).textTheme.headline6,
                                 )),
                           )),
@@ -654,7 +659,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
               FavTab(),
               // custom tokens tab
               model.busy(model.selectedCustomTokens)
-                  ? model.sharedService!.loadingIndicator()
+                  ? model.sharedService.loadingIndicator()
                   : model.selectedCustomTokens!.isEmpty
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -755,8 +760,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                                               decoration: BoxDecoration(
                                                   image: DecorationImage(
                                                       image: NetworkImage(
-                                                        baseBlockchainGateV2Url +
-                                                            'issuetoken/${customToken.tokenId}/logo',
+                                                        '${baseBlockchainGateV2Url}issuetoken/${customToken.tokenId}/logo',
                                                       ),
                                                       fit: BoxFit.cover),
                                                   borderRadius:
@@ -1031,7 +1035,8 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                               .unavailable
                                           : NumberUtil()
                                               .truncateDoubleWithoutRouding(
-                                                  model.wallets![index].balance!,
+                                                  model
+                                                      .wallets![index].balance!,
                                                   precision: 6)
                                               .toString(),
                                       style: Theme.of(context)
@@ -1158,7 +1163,8 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                   : NumberUtil()
                                       .truncateDoubleWithoutRouding(
                                           model.wallets![index].balance! *
-                                              model.wallets![index].usdValue!.usd!,
+                                              model.wallets![index].usdValue!
+                                                  .usd!,
                                           precision: 2)
                                       .toString(),
                               style: isBalanceNegative
@@ -1268,7 +1274,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
     debugPrint(model.favWallets.length.toString());
 
     return model.busy(model.favWallets)
-        ? model.sharedService!.loadingIndicator()
+        ? model.sharedService.loadingIndicator()
         : Container(
             child: model.favWallets.isEmpty || model.favWallets == null
                 ? Column(
@@ -1579,7 +1585,8 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
 ----------------------------------------------------------------------*/
 
 class TotalBalanceWidget extends StatelessWidget {
-  const TotalBalanceWidget({Key? key, this.model, this.index}) : super(key: key);
+  const TotalBalanceWidget({Key? key, this.model, this.index})
+      : super(key: key);
   final WalletDashboardViewModel? model;
   final int? index;
   @override

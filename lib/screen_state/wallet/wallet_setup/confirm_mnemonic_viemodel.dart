@@ -17,7 +17,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// import 'package:bip39/bip39.dart' as bip39;
+import 'package:bip39/bip39.dart' as bip39;
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 import '../../../logger.dart';
@@ -55,15 +55,15 @@ class ConfirmMnemonicViewmodel extends BaseViewModel {
           userTypedMnemonicList[10] != '' &&
           userTypedMnemonicList[11] != '') {
         listToStringMnemonic = userTypedMnemonicList.join(' ');
-        // bool isValid = bip39.validateMnemonic(listToStringMnemonic);
-        // if (isValid) {
-        //   importWallet(listToStringMnemonic, context);
-        // } else {
-        //   sharedService.sharedSimpleNotification(
-        //       AppLocalizations.of(context).invalidMnemonic,
-        //       subtitle: AppLocalizations.of(context)
-        //           .pleaseFillAllTheTextFieldsCorrectly);
-        // }
+        bool isValid = bip39.validateMnemonic(listToStringMnemonic);
+        if (isValid) {
+          importWallet(listToStringMnemonic, context);
+        } else {
+          sharedService!.sharedSimpleNotification(
+              AppLocalizations.of(context)!.invalidMnemonic,
+              subtitle: AppLocalizations.of(context)!
+                  .pleaseFillAllTheTextFieldsCorrectly);
+        }
       } else {
         sharedService!.sharedSimpleNotification(
             AppLocalizations.of(context)!.invalidMnemonic,
@@ -86,24 +86,28 @@ class ConfirmMnemonicViewmodel extends BaseViewModel {
   createWallet(context) {
     if (listEquals(randomMnemonicList, userTypedMnemonicList)) {
       listToStringMnemonic = randomMnemonicList.join(' ');
-      // bool isValid = bip39.validateMnemonic(listToStringMnemonic);
-      // if (isValid) {
-      //   var args = {'mnemonic': listToStringMnemonic, 'isImport': false};
-      //   Navigator.of(context).pushNamed('/createPassword', arguments: args);
-      // } else {
-      //   showSimpleNotification(
-      //       Text(AppLocalizations.of(context).invalidMnemonic,
-      //           style:
-      //               Theme.of(context).textTheme.headline4.copyWith(color: red)),
-      //       position: NotificationPosition.bottom,
-      //       subtitle: Text(AppLocalizations.of(context)
-      //           .pleaseFillAllTheTextFieldsCorrectly));
-      // }
+      bool isValid = bip39.validateMnemonic(listToStringMnemonic);
+      if (isValid) {
+        var args = {'mnemonic': listToStringMnemonic, 'isImport': false};
+        Navigator.of(context).pushNamed('/createPassword', arguments: args);
+      } else {
+        showSimpleNotification(
+            Text(AppLocalizations.of(context)!.invalidMnemonic,
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium!
+                    .copyWith(color: red)),
+            position: NotificationPosition.bottom,
+            subtitle: Text(AppLocalizations.of(context)!
+                .pleaseFillAllTheTextFieldsCorrectly));
+      }
     } else {
       showSimpleNotification(
           Text(AppLocalizations.of(context)!.invalidMnemonic,
-              style:
-                  Theme.of(context).textTheme.headline4!.copyWith(color: red)),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium!
+                  .copyWith(color: red)),
           position: NotificationPosition.bottom,
           subtitle: Text(AppLocalizations.of(context)!
               .pleaseFillAllTheTextFieldsCorrectly));

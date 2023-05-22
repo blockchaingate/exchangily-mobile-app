@@ -13,11 +13,14 @@
 
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/app_update_model.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token_model.dart';
+import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
@@ -25,18 +28,16 @@ import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_hist
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../screens/exchange/trade/my_exchange_assets/locker/locker_model.dart';
-import '../utils/string_util.dart' as string_utils;
-import 'package:exchangilymobileapp/logger.dart';
-import '../environments/environment.dart';
-import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:http/http.dart' as http;
 
-import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
+import '../environments/environment.dart';
+import '../utils/string_util.dart' as string_utils;
 
 /// The service responsible for networking requests
 class ApiService {
@@ -459,11 +460,8 @@ class ApiService {
     String exgAddress =
         (await sharedService!.getExgAddressFromWalletDatabase())!;
     //  String exgAddress = await getExchangilyAddress();
-    String url = configService!.getKanbanBaseUrl()! +
-        getSingleCoinExchangeBalApiRoute +
-        exgAddress +
-        '/' +
-        tickerName;
+    String url =
+        '${configService!.getKanbanBaseUrl()!}$getSingleCoinExchangeBalApiRoute$exgAddress/$tickerName';
     log.e('getSingleCoinExchangeBalance url $url');
     ExchangeBalanceModel? exchangeBalance;
     try {
@@ -551,7 +549,7 @@ class ApiService {
     await NetworkInterface.list(type: InternetAddressType.IPv4)
         .then((networkData) => ipAddress = networkData[0].addresses[0].address);
 
-    String url = getFreeFabUrl + address + '/' + ipAddress.toString();
+    String url = '$getFreeFabUrl$address/$ipAddress';
 
     log.i('getFreeFab url $url');
     try {
@@ -601,8 +599,7 @@ class ApiService {
 ----------------------------------------------------------------------*/
 
   Future getTransactionStatus(String transactionId) async {
-    var url =
-        configService!.getKanbanBaseUrl()! + 'checkstatus/' + transactionId;
+    var url = '${configService!.getKanbanBaseUrl()!}checkstatus/$transactionId';
     log.e(url);
     try {
       var response = await client.get(Uri.parse(url));
@@ -659,32 +656,30 @@ class ApiService {
                       Get all wallet balance
 -------------------------------------------------------------------------------------*/
 
-  Future<List<WalletBalance>?> getWalletBalance(body) async {
+  Future<List<WalletBalance>> getWalletBalance(body) async {
     String url = configService!.getKanbanBaseUrl()! + walletBalancesApiRoute;
-    log.i('getWalletBalance URL $url --getWalletBalance body $body');
 
-    WalletBalanceList balanceList;
+    WalletBalanceList? balanceList;
     try {
       var response = await client.post(Uri.parse(url), body: body);
-      bool? success = jsonDecode(response.body)['success'];
+      bool success = jsonDecode(response.body)['success'];
       if (success == true) {
         var jsonList = jsonDecode(response.body)['data'] as List;
         //  log.i('json list getWalletBalance $jsonList');
-        // List newList = [];
-        // for (var element in jsonList) {
-        //   if (element['balance'] == -1) element['balance'] = 0.0;
-        //   if (element['balance'] != null) newList.add(element);
-        // }
-        // log.i('newList getWalletBalance $newList');
-        balanceList = WalletBalanceList.fromJson(jsonList.sublist(2));
+        List newList = [];
+        for (var element in jsonList) {
+          if (element['balance'] != null) newList.add(element);
+        }
+        log.i('newList getWalletBalance $newList');
+        balanceList = WalletBalanceList.fromJson(newList);
       } else {
         log.e('get wallet balances returning null');
-        return null;
+        return balanceList!.walletBalances!;
       }
-      return balanceList.walletBalances;
+      return balanceList.walletBalances!;
     } catch (err) {
       log.e('In getWalletBalance catch $err');
-      return null;
+      return balanceList!.walletBalances!;
     }
   }
 
@@ -791,11 +786,8 @@ class ApiService {
   // Get Orders by tickername
   Future getMyOrdersPagedByFabHexAddressAndTickerName(
       String exgAddress, String tickerName) async {
-    String url = configService!.getKanbanBaseUrl()! +
-        getOrdersByTickerApiRoute +
-        exgAddress +
-        '/' +
-        tickerName;
+    String url =
+        '${configService!.getKanbanBaseUrl()!}$getOrdersByTickerApiRoute$exgAddress/$tickerName';
     // String url = environment['endpoints']['kanban'] +
     //     'getordersbytickername/' +
     //     exgAddress +

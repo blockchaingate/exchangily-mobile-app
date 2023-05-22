@@ -34,36 +34,33 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
+  await serviceLocator();
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-  // debugRepaintRainbowEnabled = true;
-  // isrgrootx1.pem
-
-  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  //   systemNavigationBarColor: Colors.blue, // navigation bar color
-  //   statusBarColor: Colors.pink, // status bar color
+  runApp(
+      //  DevicePreview(builder: (context) =>
+      MyApp(packageInfo));
   // ));
-  // SystemChrome.setSystemUIOverlayStyle(
-  //     SystemUiOverlayStyle(statusBarColor: Colors.white));
 
-  try {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    await serviceLocator();
-    Logger.level = Level.info;
-    SystemChannels.textInput
-        .invokeMethod('TextInput.hide'); // Hides keyboard initially
-    // Force user to use only portrait mode until the development of other screen size design
-    await dotenv.load();
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
-      (_) {
-        runApp(
-            //  DevicePreview(builder: (context) =>
-            MyApp(packageInfo));
-        // ));
-      },
-    );
-  } catch (err) {
-    debugPrint('main.dart (Catch) Locator setup has failed $err');
-  }
+  // try {
+  //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  //   await serviceLocator();
+  //   Logger.level = Level.info;
+  //   SystemChannels.textInput
+  //       .invokeMethod('TextInput.hide'); // Hides keyboard initially
+  //   // Force user to use only portrait mode until the development of other screen size design
+  //   await dotenv.load();
+  //   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
+  //     (_) {
+  //       runApp(
+  //           //  DevicePreview(builder: (context) =>
+  //           MyApp(packageInfo));
+  //       // ));
+  //     },
+  //   );
+  // } catch (err) {
+  //   debugPrint('main.dart (Catch) Locator setup has failed $err');
+  // }
 }
 
 class MyApp extends StatelessWidget {
@@ -143,7 +140,7 @@ class MyApp extends StatelessWidget {
                   shape: StadiumBorder(),
                   textTheme: ButtonTextTheme.primary),
               fontFamily: 'Roboto',
-              textTheme: const TextTheme(
+              textTheme: TextTheme(
                   button: TextStyle(fontSize: 14, color: globals.white),
                   headline1: TextStyle(
                       fontSize: 22,

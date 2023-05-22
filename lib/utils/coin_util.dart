@@ -36,6 +36,7 @@ import './eth_util.dart';
 import '../environments/environment.dart';
 import '../utils/string_util.dart';
 import 'varuint.dart';
+import 'wallet_coin_address_utils/doge_util.dart';
 
 final ECDomainParameters _params = ECCurve_secp256k1();
 final BigInt _halfCurveOrder = _params.n >> 1;
@@ -45,7 +46,6 @@ class CoinUtils {
   final fabUtils = FabUtils();
   final btcUtils = BtcUtils();
   final ethUtils = EthUtils();
-  final ltcUtils = LtcUtils();
 /*----------------------------------------------------------------------
                 Sign deposit TRX tx
 --------------r--------------------------------------------------------*/
@@ -694,9 +694,9 @@ getAddressForCoin(root, 'EXG', tokenType: 'FAB');
           btcUtils.getBtcNode(root, tickerName: tickerName, index: index);
       return btcUtils.getBtcAddressForNode(node, tickerName: tickerName);
     } else if (tickerName == 'LTC') {
-      return null;
+      return generateLtcAddress(root);
     } else if (tickerName == 'DOGE') {
-      return null;
+      return generateDogeAddress(root);
     } else if ((tickerName == 'ETH') || (tokenType == 'ETH')) {
       var node = ethUtils.getEthNode(root, index: index);
       return await ethUtils.getEthAddressForNode(node);
@@ -723,7 +723,7 @@ getAddressForCoin(root, 'EXG', tokenType: 'FAB');
       if (coinName == 'BTC') {
         return await btcUtils.getBtcBalanceByAddress(address!);
       } else if (coinName == 'LTC') {
-        return await ltcUtils.getLtcBalanceByAddress(address);
+        return await getLtcBalanceByAddress(address!);
       } else if (coinName == 'ETH') {
         return await ethUtils.getEthBalanceByAddress(address!);
       } else if (coinName == 'FAB') {

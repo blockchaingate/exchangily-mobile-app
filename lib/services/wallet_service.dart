@@ -1,22 +1,32 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
-//-----------------------------------burayi ac ----------------------------------------
+import 'package:bip32/bip32.dart' as bip32;
+import 'package:bip39/bip39.dart' as bip39;
 import 'package:bitbox/bitbox.dart' as bitbox;
+import 'package:bitcoin_flutter/bitcoin_flutter.dart' as bitcoin_flutter;
+import 'package:bitcoin_flutter/src/utils/script.dart' as script;
+//-----------------------------------burayi ac ----------------------------------------
+
+import 'package:bs58check/bs58check.dart' as bs58check;
+import 'package:crypto/crypto.dart' as CryptoHash;
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
+import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
-import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
+import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
-import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -25,46 +35,32 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/coin_utils/erc20_util.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
+import 'package:exchangilymobileapp/utils/exaddr.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
-import 'package:exchangilymobileapp/utils/string_util.dart';
-import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
-import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
-import 'package:flutter/material.dart';
-import 'package:overlay_support/overlay_support.dart';
-import 'dart:async';
-import 'package:bip39/bip39.dart' as bip39;
-import 'package:bip32/bip32.dart' as bip32;
-import 'package:hex/hex.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:typed_data';
-import 'package:web3dart/web3dart.dart';
-import '../environments/coins.dart' as coin_list;
-import '../utils/abi_util.dart';
-import '../utils/number_util.dart';
-import '../utils/string_util.dart' as string_utils;
-import '../utils/keypair_util.dart';
-import '../utils/eth_util.dart';
-import '../utils/fab_util.dart';
-import '../utils/coin_util.dart';
-
-import 'package:bitcoin_flutter/src/utils/script.dart' as script;
-import '../environments/environment.dart';
-import 'package:encrypt/encrypt.dart' as prefix0;
-import 'package:bs58check/bs58check.dart' as bs58check;
-import 'package:decimal/decimal.dart';
-import 'package:bitcoin_flutter/bitcoin_flutter.dart' as bitcoin_flutter;
-import 'db/transaction_history_database_service.dart';
-import 'package:exchangilymobileapp/utils/exaddr.dart';
-import 'package:web3dart/crypto.dart' as crypto_web3;
-import 'package:crypto/crypto.dart' as crypto_hash;
-
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
     as tron_address_util;
 import 'package:exchangilymobileapp/utils/tron_util/trx_transaction_util.dart'
     as tron_transaction_util;
+import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
+import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
+import 'package:flutter/material.dart';
+import 'package:hex/hex.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:web3dart/crypto.dart' as CryptoWeb3;
+import 'package:web3dart/web3dart.dart';
+
+import '../environments/coins.dart' as coin_list;
+import '../environments/environment.dart';
+import '../utils/abi_util.dart';
+import '../utils/coin_util.dart';
+import '../utils/eth_util.dart';
+import '../utils/keypair_util.dart';
+import '../utils/string_util.dart' as string_utils;
+import 'db/transaction_history_database_service.dart';
 //import 'package:http/http.dart' as client;
 
 class WalletService {
@@ -98,7 +94,7 @@ class WalletService {
   final coinUtils = CoinUtils();
   final ethUtils = EthUtils();
   final kanbanUtils = KanbanUtils();
-  final ltcUtils = LtcUtils();
+  // final ltcUtils = LtcUtils();
   var walletUtil = WalletUtil();
   final erc20Util = Erc20Util();
 
@@ -152,9 +148,9 @@ class WalletService {
     } else if (await coreWalletDatabaseService!.getWalletBalancesBody() !=
         null) {
       fabAddressFromCoreWalletDb = (await coreWalletDatabaseService!
-          .getWalletAddressByTickerName('FAB'))!;
+          .getWalletAddressByTickerName('FAB'));
       trxAddressFromCoreWalletDb = (await coreWalletDatabaseService!
-          .getWalletAddressByTickerName('TRX'))!;
+          .getWalletAddressByTickerName('TRX'));
     }
     log.i(
         'fabAddressFromCreate $fabAddressFromCreate -- fabAddressFromStorage $fabAddressFromStorage -- fabAddressFromCoreWalletDb $fabAddressFromCoreWalletDb');
@@ -250,7 +246,7 @@ class WalletService {
     String? address = '';
 
     address = (await coreWalletDatabaseService!
-        .getWalletAddressByTickerName(tickerName))!;
+        .getWalletAddressByTickerName(tickerName));
 
     return address;
   }
@@ -474,8 +470,8 @@ class WalletService {
   }
 
   sha256Twice(bytes) {
-    var digest1 = crypto_hash.sha256.convert(bytes);
-    var digest2 = crypto_hash.sha256.convert(digest1.bytes);
+    var digest1 = CryptoHash.sha256.convert(bytes);
+    var digest2 = CryptoHash.sha256.convert(digest1.bytes);
     //SHA256(addressHex);
     debugPrint('digest2  -- $digest2');
     return digest2;
@@ -485,37 +481,32 @@ class WalletService {
                     Generate TRX address
 ----------------------------------------------------------------------*/
 
-  generateTrxAddress(String? mnemonic) {
+  generateTrxAddress(mnemonic) {
     var seed = generateSeed(mnemonic);
     var root = generateBip32Root(seed);
-    debugPrint('root $root');
+    debugPrint('root ${root.toString()}');
     String ct = '195';
     bip32.BIP32 node = root.derivePath("m/44'/$ct'/0'/0/${0}");
-    debugPrint('node $node');
-    var privKey = node.privateKey;
+    debugPrint('node ${node.toString()}');
+    var privKey = node.privateKey!;
+
     //  var pubKey = node.publicKey;
     //  log.w('pub key $pubKey -- length ${pubKey.length}');
     var uncompressedPubKey =
-        bitcoin_flutter.ECPair.fromPrivateKey(privKey!, compressed: false)
+        bitcoin_flutter.ECPair.fromPrivateKey(privKey, compressed: false)
             .publicKey;
-    log.e('uncompressedPubKey  length ${uncompressedPubKey!.length}');
-    log.w('uncompressedPubKey ${uint8ListToHex(uncompressedPubKey)}');
 
-    if (uncompressedPubKey.length == 65) {
+    if (uncompressedPubKey!.length == 65) {
       uncompressedPubKey = uncompressedPubKey.sublist(1);
-      log.w(
-          'uncompressedPubKey > 65 ${uint8ListToHex(uncompressedPubKey)} -- length ${uncompressedPubKey.length}');
     }
 
-    var hash = crypto_web3.keccak256(uncompressedPubKey);
-    log.w('hash $hash');
+    var hash = CryptoWeb3.keccak256(uncompressedPubKey);
 
-    log.e('hex ${uint8ListToHex(hash)}');
 // take 20 bytes at the end from hash
     var last20Bytes = hash.sublist(12);
-    debugPrint('last20Bytes $last20Bytes');
+
     List<int> updatedHash = [];
-    var addressHex = Uint8List.fromList(hash);
+    //  var addressHex = Uint8List.fromList(hash);
     int i = 1;
     for (var f in last20Bytes) {
       if (i == 1) {
@@ -525,17 +516,15 @@ class WalletService {
       updatedHash.add(f);
       i++;
     }
-    log.w('updatedHash $updatedHash');
+
     // take 0x41 or 65 + (hash[12:32] means take last 20 bytes from addressHex)
     // to do sha256 twice and get 4 bytes checksum
     var sha256Hash = sha256Twice(updatedHash);
 
     // first 4 bytes checksum
     var checksum = sha256Hash.bytes.sublist(0, 4);
-    debugPrint('checksum  -- $checksum');
-    log.i('checksum hex ${uint8ListToHex(checksum)}');
+
     updatedHash.addAll(checksum);
-    log.w('updatedHash with checksum $updatedHash');
 
     // use base58 on (0x41 + hash[12:32] + checksum)
     // or base 58 on updateHash which first need to convert to Iint8List to get address
@@ -545,23 +534,22 @@ class WalletService {
     return address;
   }
 
-  computeAddress(String pubBytes) {
-    log.i('in compute');
-    if (pubBytes.length == 65) pubBytes = pubBytes.substring(1);
-    // var signature = sign(keccak256(concat), privateKey);
-    debugPrint('1 $pubBytes');
-    var hash = crypto_web3.keccakUtf8(pubBytes);
-    debugPrint('hash $hash');
-    //   var addressHex = "41" + hash.substring(24);
-    //   debugPrint('address hex $addressHex');
-    // var output = hex.encode(outputHashData);
-    //  return hexStr2byteArray(addressHex);
-  }
+//   computeAddress(String pubBytes) {
+//     if (pubBytes.length == 65) pubBytes = pubBytes.substring(1);
+//     // var signature = sign(keccak256(concat), privateKey);
 
-// Get address From Private Key
-  getAddressFromPrivKey(privKey) {
-    //ProtobufEnum.initByValue(byIndex)
-  }
+//     var hash = CryptoWeb3.keccakUtf8(pubBytes);
+
+//     //   var addressHex = "41" + hash.substring(24);
+//     //   debugPrint('address hex $addressHex');
+//     //var output = hex.encode(outputHashData);
+//     //  return hexStr2byteArray(addressHex);
+//   }
+
+// // Get address From Private Key
+//   getAddressFromPrivKey(privKey) {
+//     //ProtobufEnum.initByValue(byIndex)
+//   }
 
 /*----------------------------------------------------------------------
                 Generate BCH address
@@ -612,18 +600,6 @@ class WalletService {
         .data
         .address;
     debugPrint('ticker: $tickerName --  address1: $address1');
-
-    // String address = '';
-
-    // final keyPair = ECPair.makeRandom(network: liteCoinNetworkType);
-    // debugPrint('keyPair: ${keyPair.publicKey}');
-
-    // address = new P2PKH(
-    //         data: new BitcoinFlutter.PaymentData(pubkey: keyPair.publicKey),
-    //         network: liteCoinNetworkType)
-    //     .data
-    //     .address;
-    // log.w('$address');
     return address1;
   }
 
@@ -739,10 +715,28 @@ class WalletService {
       'BTC',
       'ETH',
       'FAB',
+      'EXG',
+      'USDT',
+      'DUSD',
+      'TRX',
+      'BCH',
       'LTC',
       'DOGE',
-      'BCH',
-      'TRX'
+      'INB',
+      'DRGN',
+      'HOT',
+      'CEL',
+      'MATIC',
+      'IOST',
+      'MANA',
+      'WAX',
+      'ELF',
+      'GNO',
+      'POWR',
+      'WINGS',
+      'MTL',
+      'KNC',
+      'GVT'
     ];
 
     var seed = generateSeed(mnemonic);
@@ -763,7 +757,7 @@ class WalletService {
           address = trxAddress;
         } else {
           address = await (coinUtils.getAddressForCoin(root, tickerName,
-              tokenType: token) as FutureOr<String>);
+              tokenType: token));
         }
         if (tickerName == 'BTC') {
           wbb['btcAddress'] = address;
@@ -787,12 +781,7 @@ class WalletService {
           id: 1,
           walletBalancesBody: walletBalanceBodyJsonString,
         );
-      } // for loop ends
-      // await coreWalletDatabaseService.getEncryptedMnemonic().then((res) async {
-      //   if (res.isNotEmpty) {
-      //     await coreWalletDatabaseService.deleteDb();
-      //   }
-      // });
+      }
 
       log.i("Wallet core model json ${walletCoreModel.toJson()}");
 
@@ -851,7 +840,7 @@ class WalletService {
           addr = trxAddress;
         } else {
           addr = await (coinUtils.getAddressForCoin(root, tickerName,
-              tokenType: token) as FutureOr<String>);
+              tokenType: token));
         }
         WalletInfo wi = WalletInfo(
             id: null,
@@ -1435,9 +1424,9 @@ class WalletService {
     log.w('depositTron signed raw tx $rawTxRes');
     String txHash;
     var txHex = rawTxRes["rawTxBufferHexAfterSign"];
-    crypto_hash.Digest hashedTxHash = rawTxRes["hashedRawTxBufferBeforeSign"];
+    CryptoHash.Digest hashedTxHash = rawTxRes["hashedRawTxBufferBeforeSign"];
     // txHex is the result of raw tx after sign but we don't broadcast
-    txHash = crypto_web3.bytesToHex(hashedTxHash.bytes);
+    txHash = CryptoWeb3.bytesToHex(hashedTxHash.bytes);
 
 // code  from depositDo
 
@@ -2222,7 +2211,7 @@ class WalletService {
         var index = addressIndexList[i];
         var node = root
             .derivePath("m/44'/${environment["CoinType"]["LTC"]}'/0'/0/$index");
-        var fromAddress = ltcUtils.getLtcAddressForNode(node);
+        var fromAddress = getLtcAddressForNode(node);
         if (addressList.isNotEmpty) {
           fromAddress = addressList[i];
         }

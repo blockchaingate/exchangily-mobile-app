@@ -252,8 +252,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     if (targetCoinExchangeBalance == null || baseCoinExchangeBalance == null) {
       String exgAddress =
           (await sharedService!.getExgAddressFromWalletDatabase())!;
-      List res = await (walletService!.getAllExchangeBalances(exgAddress)
-          as FutureOr<List<dynamic>>);
+      List res = await (walletService!.getAllExchangeBalances(exgAddress));
 
       targetCoinExchangeBalance = ExchangeBalanceModel();
       baseCoinExchangeBalance = ExchangeBalanceModel();
