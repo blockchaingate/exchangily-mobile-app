@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/widgets.dart';
 import '../../environments/coins.dart' as coin_list;
@@ -16,7 +17,7 @@ class ExchangeBalanceModel {
 
     String? tickerName = '';
     if (type != null) {
-      tickerName = coin_list.newCoinTypeMap[type];
+      tickerName = coin_list.newCoinTypeMap[type] ?? '';
       debugPrint(
           'ExchangeBalanceModel - Ticker Name -- $tickerName --- coin type ${json['coinType']}');
     }
@@ -24,8 +25,12 @@ class ExchangeBalanceModel {
     ExchangeBalanceModel exchangeBalanceModel = ExchangeBalanceModel(
         ticker: tickerName ?? '',
         coinType: json['coinType'],
-        unlockedAmount: bigNum2Double(json['unlockedAmount']).toDouble(),
-        lockedAmount: bigNum2Double(json['lockedAmount']).toDouble());
+        unlockedAmount:
+            NumberUtil.rawStringToDecimal(json['unlockedAmount'].toString())
+                .toDouble(),
+        lockedAmount:
+            NumberUtil.rawStringToDecimal(json['lockedAmount'].toString())
+                .toDouble());
 
     return exchangeBalanceModel;
   }

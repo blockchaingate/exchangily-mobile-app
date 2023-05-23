@@ -1,252 +1,85 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 2.1.92+269
+version: 2.2.93+270
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-
-  flutter_localizations:
-    sdk: flutter  
-
-  # flutter_cupertino_localizations: ^1.0.1
-
-  flutter_dotenv: ^5.0.2 
-
-  local_auth: ^2.1.6
-
-  # ----- Bitcoin -- Addresses -- Bip
-
-  bs58check: ^1.0.2
-
-  # bch address
-  #-----------------------------------burayi ac ----------------------------------------
-  # bitbox: ^0.0.1
+  auto_size_text: ^3.0.0
   bitbox:
     git:
       url: https://github.com/blockchaingate/exchangily-packages.git
       path: open_source_packages/bitbox_flutter
-  
-  # Generate LTC and DOGE coin address
-  #-----------------------------------burayi ac ----------------------------------------
-  # bitcoin_flutter: ^2.0.1
   bitcoin_flutter:
     git:
       url: https://github.com/blockchaingate/exchangily-packages.git
       path: open_source_packages/bitcoin_flutter
-
-  #bip39: ^1.0.3
-
-  # ----- ICONS ---------
-
-  # Cupertino Icons
+  bs58check: ^1.0.2
+  cached_network_image: ^3.2.3
+  connectivity_plus:
   cupertino_icons: ^1.0.5
-
-  # Font Awesome
-  font_awesome_flutter: ^10.4.0
-
-  # ----- COMMUNICATION --------
-
-  # Http
-  http: ^0.13.6
-
-  # Web Sockets
-  web_socket_channel: ^2.4.0
-
-
-
-  # ----- SECURITY --------
-
-  # Encrypt
+  decimal: ^2.3.2
+  drop_cap_text: ^1.1.3
   encrypt: ^5.0.1
-
-  # Logger
-  logger: ^1.3.0
-
-  # Web 3 Dart
-  web3dart: ^2.6.1
-
-    # ----- ARCHITECTURE --------
-
-  # A wrapper around InheritedWidget to make them easier to use and more reusable.
-  provider: ^6.0.5
-
-  # Dependency injection
+  flutter:
+    sdk: flutter
+  flutter_dotenv: ^5.0.2
+  flutter_html: ^3.0.0-alpha.6
+  flutter_localizations:
+    sdk: flutter
+  flutter_svg: ^0.23.0+1
+  flutter_swiper_view: ^1.1.8
+  font_awesome_flutter: ^10.4.0
   get_it: ^7.6.0
-
-  # State Management
-  stacked: ^3.2.6
-
-  # Path Provider
-  path_provider: ^2.0.15
-
-  # Random String
-  random_string: ^2.3.1
-
-  # Keccak
-  #-----------------------------------burayi ac ----------------------------------------
-  # keccak: ^1.0.3
+  http: ^0.13.6
+  intl_translation: ^0.18.0
+  json_diff: ^0.2.1
   keccak:
     git:
       url: https://github.com/blockchaingate/exchangily-packages.git
       path: open_source_packages/keccak
-
-
-  # Json Serialization
-  # json_serializable: ^2.2.1
-
-  # Generate QR Code Image
-  qr_flutter: ^4.0.0
-  qr: ^2.1.0
-
-  # Barcode Scan
-  # barcode_scan: 3.0.1
-  #barcode_scan: ^2.0.2
-
-  # Material icons
-  material_design_icons_flutter: ^6.0.7096
-
-  # Flushbar instead of Snackbar for notifications
-  #flushbar: ^1.9.0
-  # flushbar:
-  #   git:
-  #     url: git://github.com/valterh4ck3r/flushbar
-  #     ref: master
-
-  # decimal
-  decimal: ^2.3.2
-
-  # Device Preview
-  # device_preview:
-
-
-  # rflutter Alert
-  rflutter_alert: ^2.0.5
-
-  # Shared Preferences
-  shared_preferences: ^2.1.1
-
-  # Loading animation
-  shimmer: ^2.0.0
-
-  # Sqflite
-  sqflite: ^2.2.8+4
-
-  # Path
-  path: ^1.8.2
-
-  # Build version
-  package_info: ^2.0.2
-
-  # Pull to refresh
-  pull_to_refresh: ^2.0.0
-
-  # Flutter SVG
-  flutter_svg: ^0.23.0+1
-
-  # Carousel
-  # flutter_swiper: ^1.1.6
-  flutter_swiper_view: ^1.1.8
-
-  # validators
-  validators: ^3.0.0
-
-  # cached_network_image
-  cached_network_image: ^3.2.3
-
-  #gradient_text
-  # gradient_text: ^1.0.2
-  simple_gradient_text: ^1.2.4
-
-  #drop_cap_text
-  drop_cap_text: ^1.1.3
-
-  # launch the app in the app stores
   launch_review: ^3.0.1
-
-  # To open web url's
-  # ERROR
-  # Flutter\.pub-cache\hosted\pub.dartlang.org\url_launcher-5.5.2\android\src\main\java\io\flutter\plugins\
-  # urllauncher\WebViewActivity.java uses or overrides a deprecated API
+  local_auth: ^2.1.6
+  logger: ^1.3.0
+  material_design_icons_flutter: ^6.0.7096
+  observable_ish: ^4.0.8
+  overlay_support: ^2.1.0
+  package_info: ^2.0.2
+  path: ^1.8.2
+  path_provider: ^2.0.15
+  protobuf: ^2.1.0
+  provider: ^6.0.5
+  pull_to_refresh: ^2.0.0
+  qr: ^2.1.0
+  qr_flutter: ^4.0.0
+  random_string: ^2.3.1
+  rflutter_alert: ^2.0.5
+  share_plus: ^6.3.4
+  shared_preferences: ^2.1.1
+  shimmer: ^2.0.0
+  showcaseview: ^2.0.3
+  simple_gradient_text: ^1.2.4
+  sqflite: ^2.2.8+4
+  stacked: ^3.2.6
   url_launcher: ^6.1.11
-
-  # # video_player
-  # fijkplayer:
-
-  #youtube_player
+  validators: ^3.0.0
+  version: ^3.0.2
+  web3dart: ^2.6.1
+  web_socket_channel: ^2.4.0
+  webview_flutter: ^2.8.0
   youtube_player_flutter: ^8.1.2
 
-  #flutter_html
-  flutter_html: ^2.2.1 
-  webview_flutter: ^2.8.0 
-  #flutter_local_notifications
-  # flutter_local_notifications: ^1.4.4+4
-
-  # #share
-  share_plus: ^6.3.4
-
-  json_diff: ^0.2.1
-
-  # Share files
-  # share:
-  #   git:
-  #     url: https://github.com/bbedward/plugins.git
-  #     path: packages/share
-  #     ref: master
-
-  # json_diff:
-  #   git:
-  #     url: https://github.com/google/dart-json_diff.git
-  #     ref: master
-  # To highlight new feature or how to use tuts
-  showcaseview: ^2.0.3
-
-  # Connectivity
-  connectivity: ^3.0.6
-
-  # Reactive
-  observable_ish: ^4.0.8
-
-  # Pagination
-  #pagination_view: ^1.0.3+2
-
-  # Overlay notification
-  overlay_support: ^2.1.0
-
-  # Reload app
-  #flutter_phoenix: ^0.1.0
-
-  # auto size text
-  auto_size_text: ^3.0.0
-
-  # protobuf
-  protobuf: ^2.1.0
-
-  # protoc_plugin
-  # protoc_plugin: ^20.0.1
-
-  intl_translation: ^0.18.0
-
-  #version
-  version: ^3.0.2
-
 dev_dependencies:
-  intl: ^0.17.0
-  # flutter_launcher_icons: ^0.7.0
+  flutter_lints: ^2.0.1
 
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.1
+  intl: null
 
 flutter:
   uses-material-design: true
-  # module:
-  #   androidX: true
-  #   androidPackage: my.package
-  #   iosBundleIdentifier: my.package
+
   assets:
     - assets/images/start-page/
     - assets/images/img/
@@ -270,5 +103,3 @@ fonts:
     fonts:
       - asset: Roboto-Italic.ttf
       - asset: Roboto-normal.ttf
-  #  - lib/l10n/en.json
-  #  - lib/l10n/zh.json

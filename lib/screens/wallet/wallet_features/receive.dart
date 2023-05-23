@@ -139,8 +139,8 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                   Future.delayed(const Duration(milliseconds: 30), () {
                     _capturePng().then((byteData) {
                       file.writeAsBytes(byteData!).then((onFile) {
-                        Share.shareFiles([onFile.path],
-                            text: convertedToFabAddress == ''
+                        Share.share(onFile.path,
+                            subject: convertedToFabAddress == ''
                                 ? widget.walletInfo!.address
                                 : convertedToFabAddress);
                       });
@@ -234,7 +234,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
         ? widget.walletInfo!.address
         : convertedToFabAddress;
     log.w(address);
-    Clipboard.setData(ClipboardData(text: address));
+    Clipboard.setData(ClipboardData(text: address!));
     SharedService sharedService = locator<SharedService>();
     sharedService.sharedSimpleNotification(
       AppLocalizations.of(context)!.addressCopied,
@@ -250,10 +250,11 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
 
   Future<Uint8List?> _capturePng() async {
     try {
-      RenderRepaintBoundary boundary =
-          _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary = _globalKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
       var image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData byteData = (await image.toByteData(format: ImageByteFormat.png))!;
+      ByteData byteData =
+          (await image.toByteData(format: ImageByteFormat.png))!;
       Uint8List pngBytes = byteData.buffer.asUint8List();
       return pngBytes;
     } catch (e) {

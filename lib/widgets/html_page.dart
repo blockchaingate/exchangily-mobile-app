@@ -43,9 +43,9 @@ class HtmlPage extends StatelessWidget {
             "var": Style(fontFamily: 'serif'),
           },
 
-          onImageError: (exception, stackTrace) {
-            debugPrint(exception as String?);
-          },
+          // onImageError: (exception, stackTrace) {
+          //   debugPrint(exception as String?);
+          // },
         ),
       ),
     );

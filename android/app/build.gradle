@@ -13,12 +13,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-flutterVersionCode = '269'
+   throw new GradleException("versionCode not found. Define flutter.versionCode in the local.properties file.")
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '2.1.92'
+    throw new GradleException("versionName not found. Define flutter.versionName in the local.properties file.")
 }
 
 apply plugin: 'com.android.application'
@@ -64,23 +64,23 @@ android {
         }
     }
 
-//     protobuf {
-//     protoc {
-//         artifact = 'com.google.protobuf:protoc:3.8.0'
-//     }
-//     plugins {
-//         javalite {
-//             artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
-//         }
-//     }
-//     generateProtoTasks {
-//         all().each {
-//             task -> task.plugins{
-//                 javalite { }
-//             }
-//         }
-//     }
-// }
+    protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.8.0'
+    }
+    plugins {
+        javalite {
+            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+        }
+    }
+    generateProtoTasks {
+        all().each {
+            task -> task.plugins{
+                javalite { }
+            }
+        }
+    }
+}
 
     buildTypes {
         release {
@@ -98,6 +98,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    implementation 'com.google.protobuf:protobuf-lite:3.0.1'
+    //implementation 'com.google.protobuf:protobuf-lite:3.0.1'
     implementation 'androidx.multidex:multidex:2.0.1'  //with androidx libraries
 }

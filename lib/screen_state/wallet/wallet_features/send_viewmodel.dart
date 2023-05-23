@@ -919,13 +919,13 @@ class SendViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
 
   copyAddress(context) {
-    Clipboard.setData(ClipboardData(text: txHash));
+    Clipboard.setData(ClipboardData(text: txHash!));
     showSimpleNotification(
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppLocalizations.of(context)!.transactionId + ' '),
+            Text('${AppLocalizations.of(context)!.transactionId} '),
             Text(AppLocalizations.of(context)!.copiedSuccessfully),
           ],
         ),

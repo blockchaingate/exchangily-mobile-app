@@ -1,4 +1,4 @@
-import 'package:exchangilymobileapp/screen_state/market/marketPairsTabViewState.dart';
+import 'package:exchangilymobileapp/screen_state/market/MarketPairsTabViewState.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';

@@ -641,31 +641,6 @@ class WalletService {
   }
 
 /*----------------------------------------------------------------------
-                Get Coin Price By Web Sockets
-----------------------------------------------------------------------*/
-
-  // getCoinPriceByWebSocket(String pair) {
-  //   currentUsdValue = 0;
-  //   final channel = IOWebSocketChannel.connect(
-  //       Constants.COIN_PRICE_DETAILS_WS_URL,
-  //       pingInterval: Duration(minutes: 1));
-
-  //   channel.stream.listen((prices) async {
-  //     List<Price> coinListWithPriceData = Decoder.fromJsonArray(prices);
-  //     for (var i = 0; i < coinListWithPriceData.length; i++) {
-  //       if (coinListWithPriceData[i].symbol == 'EXGUSDT') {
-  //         var d = coinListWithPriceData[i].price;
-  //         currentUsdValue = stringUtils.bigNum2Double(d);
-  //       }
-  //     }
-  //   });
-  //   Future.delayed(Duration(seconds: 2), () {
-  //     channel.sink.close();
-  //     log.i('Channel closed');
-  //   });
-  // }
-
-/*----------------------------------------------------------------------
                 Get Current Market Price For The Coin By Name
 ----------------------------------------------------------------------*/
 
@@ -1090,7 +1065,7 @@ class WalletService {
           res['balance'] != null &&
           res['balance']['FAB'] != null) {
         var newBal = BigInt.parse(res['balance']['FAB']);
-        gasAmount = string_utils.bigNum2Double(newBal);
+        gasAmount = NumberUtil.rawStringToDecimal(newBal.toString()).toDouble();
       }
     }).timeout(const Duration(seconds: 50), onTimeout: () {
       log.e('Timeout');

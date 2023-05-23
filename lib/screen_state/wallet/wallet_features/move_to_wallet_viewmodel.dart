@@ -33,7 +33,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
   WalletService? walletService = locator<WalletService>();
   ApiService? apiService = locator<ApiService>();
   SharedService? sharedService = locator<SharedService>();
-  final TokenInfoDatabaseService? tokenListDatabaseService = locator<TokenInfoDatabaseService>();
+  final TokenInfoDatabaseService? tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   final CoinService? coinService = locator<CoinService>();
 
   WalletInfo? walletInfo;
@@ -111,7 +112,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
     tokenType = walletInfo!.tokenType;
 
-    kanbanTransFee = bigNum2Double(gasPrice * gasLimit);
+    kanbanTransFee =
+        NumberUtil.rawStringToDecimal((gasPrice * gasLimit).toString())
+            .toDouble();
 
     _groupValue = 'ETH';
 
@@ -127,12 +130,14 @@ class MoveToWalletViewmodel extends BaseViewModel {
       radioButtonSelection('ETH');
     }
     //FAB
-    else if (walletInfo!.tickerName == 'FAB' || walletInfo!.tokenType == 'FAB') {
+    else if (walletInfo!.tickerName == 'FAB' ||
+        walletInfo!.tokenType == 'FAB') {
       isShowFabChainBalance = true;
       radioButtonSelection('FAB');
     }
     // TRX
-    else if (walletInfo!.tickerName == 'TRX' || walletInfo!.tokenType == 'TRX') {
+    else if (walletInfo!.tickerName == 'TRX' ||
+        walletInfo!.tokenType == 'TRX') {
       isShowTrxTsWalletBalance = true;
 
       radioButtonSelection('TRX');
@@ -328,7 +333,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
                                                             '';
                                                       }
                                                       updateTickerForErc =
-                                                          walletInfo!.tickerName;
+                                                          walletInfo!
+                                                              .tickerName;
                                                       log.i(
                                                           'chain type ${walletInfo!.tokenType}');
                                                       setWithdrawLimit(
@@ -739,7 +745,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
                 title: Container(
                   padding: const EdgeInsets.all(10.0),
                   color: secondaryColor.withOpacity(0.5),
-                  child: Center(child: Text(AppLocalizations.of(context)!.note)),
+                  child:
+                      Center(child: Text(AppLocalizations.of(context)!.note)),
                 ),
                 titleTextStyle: headText4.copyWith(fontWeight: FontWeight.bold),
                 contentTextStyle: const TextStyle(color: grey),
@@ -1300,7 +1307,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
                 ' ' +
                 fabChainBalance.toString() +
                 '. ' +
-                AppLocalizations.of(context!)!.lowTsWalletBalanceErrorSecondPart,
+                AppLocalizations.of(context!)!
+                    .lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
 
         setBusy(false);
@@ -1317,7 +1325,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
                 ' ' +
                 ethChainBalance.toString() +
                 '. ' +
-                AppLocalizations.of(context!)!.lowTsWalletBalanceErrorSecondPart,
+                AppLocalizations.of(context!)!
+                    .lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
 
         setBusy(false);
@@ -1331,7 +1340,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
                 ' ' +
                 trxTsWalletBalance.toString() +
                 '. ' +
-                AppLocalizations.of(context!)!.lowTsWalletBalanceErrorSecondPart,
+                AppLocalizations.of(context!)!
+                    .lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
         setBusy(false);
         return;
@@ -1344,7 +1354,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
                 ' ' +
                 bnbTsWalletBalance.toString() +
                 '. ' +
-                AppLocalizations.of(context!)!.lowTsWalletBalanceErrorSecondPart,
+                AppLocalizations.of(context!)!
+                    .lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
         setBusy(false);
         return;
@@ -1357,7 +1368,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
                 ' ' +
                 polygonTsWalletBalance.toString() +
                 '. ' +
-                AppLocalizations.of(context!)!.lowTsWalletBalanceErrorSecondPart,
+                AppLocalizations.of(context!)!
+                    .lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
         setBusy(false);
         return;
@@ -1474,7 +1486,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
             }
             sharedService!.sharedSimpleNotification(
                 success && ret['transactionHash'] != null
-                    ? AppLocalizations.of(context!)!.withdrawTransactionSuccessful
+                    ? AppLocalizations.of(context!)!
+                        .withdrawTransactionSuccessful
                     : AppLocalizations.of(context!)!.withdrawTransactionFailed,
                 subtitle:
                     success ? "" : AppLocalizations.of(context!)!.networkIssue,
@@ -1514,7 +1527,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
             }
             sharedService!.sharedSimpleNotification(
                 success && ret['transactionHash'] != null
-                    ? AppLocalizations.of(context!)!.withdrawTransactionSuccessful
+                    ? AppLocalizations.of(context!)!
+                        .withdrawTransactionSuccessful
                     : AppLocalizations.of(context!)!.withdrawTransactionFailed,
                 subtitle: success ? "" : serverError!,
                 isError: success ? false : true);
@@ -1563,8 +1577,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
     var kanbanPriceBig = BigInt.from(kanbanPrice);
     var kanbanGasLimitBig = BigInt.from(kanbanGasLimit);
-    var kanbanTransFeeDouble =
-        bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
+    var kanbanTransFeeDouble = NumberUtil.rawStringToDecimal(
+            (kanbanPriceBig * kanbanGasLimitBig).toString())
+        .toDouble();
     debugPrint('Update trans fee $kanbanTransFeeDouble');
 
     kanbanTransFee = kanbanTransFeeDouble;

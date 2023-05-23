@@ -15,6 +15,18 @@ class NumberUtil {
       RegexValidator(Constants.regexPattern.toString())
           .isValid(amount.toString());
 
+  static Decimal rawStringToDecimal(String raw, {int? decimalPrecision = 18}) {
+    if (raw.isNotEmpty) {
+      Decimal amount = Decimal.parse(raw.toString());
+      var x = Decimal.fromInt((pow(10, decimalPrecision!)).toInt());
+      Decimal result = (amount / x).toDecimal();
+
+      return result;
+    } else {
+      return Decimal.zero;
+    }
+  }
+
   static Decimal roundDecimal(Decimal value, int decimalPlaces) {
     Decimal multiplier = Decimal.parse(pow(10, decimalPlaces).toString());
     Decimal roundedValue =
@@ -172,25 +184,13 @@ class NumberUtil {
         .toBigInt();
   }
 
-  static Decimal rawStringToDecimal(String raw, {int? decimalPrecision = 18}) {
-    if (raw.isNotEmpty) {
-      Decimal amount = Decimal.parse(raw.toString());
-      var x = Decimal.fromInt((pow(10, decimalPrecision!)).toInt());
-      Decimal result = (amount / x).toDecimal();
-
-      return result;
-    } else {
-      return Decimal.zero;
-    }
-  }
-
 // To Big Int
   static toBigInt(amount, [decimalLength]) {
     var numString = amount.toString();
     var numStringArray = numString.split('.');
     decimalLength ??= 18;
     var val = '';
-    if (numStringArray != null) {
+    if (numStringArray.isNotEmpty) {
       val = numStringArray[0];
       if (numStringArray.length == 2) {
         var decimalPart = numStringArray[1];

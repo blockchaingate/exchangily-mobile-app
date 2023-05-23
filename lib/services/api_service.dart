@@ -788,11 +788,7 @@ class ApiService {
       String exgAddress, String tickerName) async {
     String url =
         '${configService!.getKanbanBaseUrl()!}$getOrdersByTickerApiRoute$exgAddress/$tickerName';
-    // String url = environment['endpoints']['kanban'] +
-    //     'getordersbytickername/' +
-    //     exgAddress +
-    //     '/' +
-    //     tickerName;
+
     log.i('getMyOrdersByTickerName url $url');
     try {
       final res = await client.get(Uri.parse(url));

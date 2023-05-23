@@ -24,6 +24,7 @@ import 'package:web3dart/web3dart.dart';
 
 import '../environments/environment.dart';
 import 'custom_http_util.dart';
+import 'number_util.dart';
 
 class EthUtils {
   var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
@@ -99,7 +100,8 @@ class EthUtils {
     try {
       var response = await client.get(Uri.parse(url));
       Map<String, dynamic> balance = jsonDecode(response.body);
-      ethBalance = bigNum2Double(balance['balance']);
+      ethBalance = NumberUtil.rawStringToDecimal(balance['balance'].toString())
+          .toDouble();
     } catch (e) {
       debugPrint('getEthNonce CATCH $e');
     }

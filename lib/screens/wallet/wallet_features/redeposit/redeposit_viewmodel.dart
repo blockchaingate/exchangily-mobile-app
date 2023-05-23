@@ -33,7 +33,8 @@ class RedepositViewModel extends FutureViewModel {
   DialogService? dialogService = locator<DialogService>();
   WalletService? walletService = locator<WalletService>();
   SharedService? sharedService = locator<SharedService>();
-  final TokenInfoDatabaseService? tokenListDatabaseService = locator<TokenInfoDatabaseService>();
+  final TokenInfoDatabaseService? tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   final CoinService? coinService = locator<CoinService>();
   final ApiService? apiService = locator<ApiService>();
 
@@ -97,11 +98,13 @@ class RedepositViewModel extends FutureViewModel {
     kanbanGasPriceTextController.text = gasPrice.toString();
     kanbanGasLimitTextController.text = gasLimit.toString();
 
-    var kanbanTransFee = bigNum2Double(gasPrice * gasLimit);
+    var kanbanTransFee =
+        NumberUtil.rawStringToDecimal((gasPrice * gasLimit).toString())
+            .toDouble();
 
     log.w('errDepositList=== $errDepositList');
     // if there is only one redeposit entry
-    if (errDepositList != null && errDepositList.isNotEmpty) {
+    if (errDepositList.isNotEmpty) {
       errDepositList = errDepositList;
       errDepositTransactionID = errDepositList[0]["transactionID"];
       this.kanbanTransFee = kanbanTransFee;
@@ -270,8 +273,8 @@ class RedepositViewModel extends FutureViewModel {
     }
 
     if (isSpecial) {
-      specialCoinType = await coinService!
-          .getCoinTypeByTickerName(coinName!.substring(0, coinName!.length - 1));
+      specialCoinType = await coinService!.getCoinTypeByTickerName(
+          coinName!.substring(0, coinName!.length - 1));
     }
     abiHex = abiUtils.getDepositFuncABI(isSpecial ? specialCoinType : coinType,
         txHash, amountInLink, addressInKanban!, signedMess,
@@ -301,7 +304,9 @@ class RedepositViewModel extends FutureViewModel {
   updateTransFee() async {
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text)!;
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text)!;
-    var kanbanTransFeeDouble = bigNum2Double(kanbanPrice * kanbanGasLimit);
+    var kanbanTransFeeDouble =
+        NumberUtil.rawStringToDecimal((kanbanGasLimit * kanbanPrice).toString())
+            .toDouble();
 
     kanbanTransFee = kanbanTransFeeDouble;
   }

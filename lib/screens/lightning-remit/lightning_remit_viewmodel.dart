@@ -118,7 +118,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     setBusyForObject(exchangeBalances, false);
 
     setBusyForObject(tickerName, true);
-    if (exchangeBalances != null && exchangeBalances.isNotEmpty) {
+    if (exchangeBalances.isNotEmpty) {
       tickerName = exchangeBalances[0].ticker;
       quantity = exchangeBalances[0].unlockedAmount;
     }
@@ -449,8 +449,8 @@ class LightningRemitViewmodel extends FutureViewModel {
                                       .capturePng(globalKey: globalKey)
                                       .then((byteData) {
                                     file.writeAsBytes(byteData!).then((onFile) {
-                                      Share.shareFiles([onFile.path],
-                                          text: kbAddress);
+                                      Share.share(onFile.path,
+                                          subject: kbAddress);
                                     });
                                   });
                                 });
@@ -570,8 +570,8 @@ class LightningRemitViewmodel extends FutureViewModel {
                                       file
                                           .writeAsBytes(byteData!)
                                           .then((onFile) {
-                                        Share.shareFiles([onFile.path],
-                                            text: kbAddress);
+                                        Share.share(onFile.path,
+                                            subject: kbAddress);
                                       });
                                     });
                                   });
@@ -713,7 +713,7 @@ class LightningRemitViewmodel extends FutureViewModel {
   }
 
   copyAddress(String? txId) {
-    Clipboard.setData(ClipboardData(text: txId));
+    Clipboard.setData(ClipboardData(text: txId!));
     showSimpleNotification(
         Center(
             child: Text(AppLocalizations.of(context!)!.copiedSuccessfully,

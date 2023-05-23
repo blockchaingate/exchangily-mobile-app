@@ -43,6 +43,7 @@ import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
+import 'package:keccak/keccak.dart';
 // import 'package:keccak/keccak.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:random_string/random_string.dart';
@@ -437,8 +438,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 /* ---------------------------------------------------
           Generate Order Hash
 --------------------------------------------------- */
-  generateOrderHash(bidOrAsk, orderType, baseCoin, targetCoin, amount, price,
-      timeBeforeExpiration) {
+  String generateOrderHash(bidOrAsk, orderType, baseCoin, targetCoin, amount,
+      price, timeBeforeExpiration) {
     setBusy(true);
     var randomStr = randomString(32);
     var concatString = [
@@ -451,12 +452,12 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       timeBeforeExpiration,
       randomStr
     ].join('');
-    // var outputHashData = keccak(stringToUint8List(concatString));
+    var outputHashData = keccak(stringToUint8List(concatString));
 
     // if needed convert the output byte array into hex string.
-    // var output = hex.encode(outputHashData);
-    // setBusy(false);
-    // return output;
+    String output = hex.encode(outputHashData);
+    setBusy(false);
+    return output;
   }
 
 /* ---------------------------------------------------
@@ -506,7 +507,6 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       baseCoin = targetCoin;
       targetCoin = tmp;
     }
-    // quantity = NumberUtil().roundDownLastDigit(quantity);
     var orderHash = generateOrderHash(bidOrAsk, orderType, baseCoin, targetCoin,
         quantity, price, timeBeforeExpiration);
 
@@ -516,7 +516,11 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
     debugPrint('qtyBigInt==' + qtyBigInt);
     debugPrint('priceBigInt==' + priceBigInt);
-
+    if (orderHash.isEmpty) {
+      log.e('orderhash empty');
+      setBusy(false);
+      return;
+    }
     var abiHex = abiUtils.getCreateOrderFuncABI(
         false,
         bidOrAsk!,
@@ -558,8 +562,9 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     if (kanbanGasLimit != null && kanbanPrice != null) {
       var kanbanPriceBig = BigInt.from(kanbanPrice);
       var kanbanGasLimitBig = BigInt.from(kanbanGasLimit);
-      var kanbanTransFeeDouble =
-          bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
+      var kanbanTransFeeDouble = NumberUtil.rawStringToDecimal(
+              (kanbanPriceBig * kanbanGasLimitBig).toString())
+          .toDouble();
       setBusyForObject(kanbanTransFee, true);
       kanbanTransFee = kanbanTransFeeDouble;
       setBusyForObject(kanbanTransFee, false);

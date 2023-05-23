@@ -217,7 +217,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                   Copy Address
 ----------------------------------------------------------------------*/
   copyAddress(String? txId) {
-    Clipboard.setData(ClipboardData(text: txId));
+    Clipboard.setData(ClipboardData(text: txId!));
     showSimpleNotification(
         Center(
             child: Text(AppLocalizations.of(context)!.copiedSuccessfully,

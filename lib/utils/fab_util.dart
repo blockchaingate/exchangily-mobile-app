@@ -29,6 +29,7 @@ import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'dart:math';
 import 'package:flutter/widgets.dart';
 import 'custom_http_util.dart';
+import 'number_util.dart';
 
 final String? fabBaseUrl = environment["endpoints"]["fab"];
 
@@ -348,9 +349,8 @@ class FabUtils {
         tokenBalance =
             ((unlockInt) / BigInt.parse(pow(10, decimal).toString()));
       } else {
-        tokenBalance = bigNum2Double(unlockInt);
-        // debugPrint('tokenBalance for EXG==');
-        // debugPrint(tokenBalance);
+        tokenBalance =
+            NumberUtil.rawStringToDecimal(unlockInt.toString()).toDouble();
       }
 
       //debugPrint('tokenBalance===' + tokenBalance.toString());

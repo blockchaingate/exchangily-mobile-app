@@ -542,7 +542,8 @@ class SharedService {
                                 color: globals.primaryColor),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                Clipboard.setData(ClipboardData(text: message));
+                                Clipboard.setData(
+                                    ClipboardData(text: message!));
                               }),
                       ),
                     )

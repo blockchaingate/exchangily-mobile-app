@@ -152,8 +152,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
   getAllMyOrders() async {
     setBusy(true);
     isFutureError = false;
-    String exgAddress =
-        (await walletService!.getAddressFromCoreWalletDatabaseByTickerName('EXG'))!;
+    String exgAddress = (await walletService!
+        .getAddressFromCoreWalletDatabaseByTickerName('EXG'))!;
 
     clearOrderLists();
     await _orderService!.getMyOrders(exgAddress, skip: skip).then((data) {
@@ -202,8 +202,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusy(true);
     clearOrderLists();
     isFutureError = false;
-    String? exgAddress =
-        await walletService!.getAddressFromCoreWalletDatabaseByTickerName('EXG');
+    String? exgAddress = await walletService!
+        .getAddressFromCoreWalletDatabaseByTickerName('EXG');
 
     await _orderService!
         .getMyOrdersByTickerName(exgAddress, tickerName, skip: skip)
@@ -251,7 +251,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
   void onData(List<OrderModel> data) {
     setBusy(true);
-    if (data != null) {
+    if (data.isNotEmpty) {
       myAllOrders = data;
       log.e('My order length ${myAllOrders!.length}');
       for (var element in data) {
@@ -290,7 +290,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
   noticePasswordMismatch(context) {
     return sharedService!.sharedSimpleNotification(
         AppLocalizations.of(context)!.passwordMismatch,
-        subtitle: AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword);
+        subtitle:
+            AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword);
   }
 
   //   Check Password
@@ -366,8 +367,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
   // Cancel order
 
   txHexforCancelOrder(seed, orderHash) async {
-    String exgAddress =
-        (await walletService!.getAddressFromCoreWalletDatabaseByTickerName('EXG'))!;
+    String exgAddress = (await walletService!
+        .getAddressFromCoreWalletDatabaseByTickerName('EXG'))!;
     var abiHex = '7489ec23' + trimHexPrefix(orderHash);
     var nonce = await kanbanUtils.getNonce(exgAddress);
 

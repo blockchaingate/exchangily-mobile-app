@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 
 class OrderModel {
@@ -64,10 +65,17 @@ class OrderModel {
         orderHash: json['orderHash'],
         orderType: json['orderType'],
         bidOrAsk: json['bidOrAsk'],
-        price: bigNum2Double(json['price']),
-        orderQuantity: bigNum2Double(json['orderQuantity']),
-        originalOrderQuantity: bigNum2Double(json['originalOrderQuantity']),
-        filledQuantity: bigNum2Double(json['filledQuantity']),
+        price:
+            NumberUtil.rawStringToDecimal(json['price'].toString()).toDouble(),
+        orderQuantity:
+            NumberUtil.rawStringToDecimal(json['orderQuantity'].toString())
+                .toDouble(),
+        originalOrderQuantity: NumberUtil.rawStringToDecimal(
+                json['originalOrderQuantity'].toString())
+            .toDouble(),
+        filledQuantity:
+            NumberUtil.rawStringToDecimal(json['filledQuantity'].toString())
+                .toDouble(),
         time: json['time'],
         isActive: json['isActive'],
         pairName: json['pairName'],
