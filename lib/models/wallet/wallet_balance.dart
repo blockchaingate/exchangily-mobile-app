@@ -93,16 +93,19 @@ class WalletBalance {
   List<DepositErr>? _depositErr;
   double? _unlockedExchangeBalance;
   double? _lockedExchangeBalance;
+  String? tokenType;
 
-  WalletBalance(
-      {String? coin,
-      double? balance,
-      double? unconfirmedBalance,
-      double? lockBalance,
-      UsdValue? usdValue,
-      List<DepositErr>? depositErr,
-      double? unlockedExchangeBalance,
-      double? lockedExchangeBalance}) {
+  WalletBalance({
+    String? coin,
+    double? balance,
+    double? unconfirmedBalance,
+    double? lockBalance,
+    UsdValue? usdValue,
+    List<DepositErr>? depositErr,
+    double? unlockedExchangeBalance,
+    double? lockedExchangeBalance,
+    String? tokenType,
+  }) {
     _coin = coin;
     _balance = balance ?? 0.0;
     _unconfirmedBalance = unconfirmedBalance ?? 0.0;
@@ -111,6 +114,7 @@ class WalletBalance {
     _depositErr = depositErr;
     _unlockedExchangeBalance = unlockedExchangeBalance ?? 0.0;
     _lockedExchangeBalance = lockedExchangeBalance ?? 0.0;
+    tokenType = tokenType;
   }
 
   factory WalletBalance.fromJson(Map<String, dynamic> json) {

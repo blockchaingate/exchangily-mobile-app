@@ -82,12 +82,12 @@ class CampaignOrderDatabaseService {
   Future<List<TransactionHistory>> getByName(String name) async {
     await initDb();
     final Database db = (await _database)!;
-    List<Map> res =
+    List<Map<String, dynamic>> res =
         await db.query(tableName, where: 'tickerName= ?', whereArgs: [name]);
     log.w('Name - $name --- $res');
 
     List<TransactionHistory> list = res.isNotEmpty
-        ? res.map((f) => TransactionHistory.fromJson(f as Map<String, dynamic>)).toList()
+        ? res.map((f) => TransactionHistory.fromJson(f)).toList()
         : [];
     return list;
     // return TransactionHistory.fromJson((res.first));
@@ -96,10 +96,11 @@ class CampaignOrderDatabaseService {
   // Get Single transaction By Id
   Future getById(int id) async {
     final Database db = (await _database)!;
-    List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
+    List<Map<String, dynamic>> res =
+        await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
     if (res.isNotEmpty) {
-      return TransactionHistory.fromJson(res.first as Map<String, dynamic>);
+      return TransactionHistory.fromJson(res.first);
     }
     return null;
   }

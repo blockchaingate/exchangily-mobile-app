@@ -20,7 +20,7 @@ class TransactionHistoryView extends StatelessWidget {
         createNewViewModelOnInsert: true,
         viewModelBuilder: () =>
             TransactionHistoryViewmodel(walletInfo: walletInfo),
-        onModelReady: (TransactionHistoryViewmodel model) async {
+        onViewModelReady: (TransactionHistoryViewmodel model) async {
           model.context = context;
         },
         builder: (context, TransactionHistoryViewmodel model, child) =>
@@ -95,7 +95,8 @@ class TransactionHistoryView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: Text(
-                                          AppLocalizations.of(context)!.quantity,
+                                          AppLocalizations.of(context)!
+                                              .quantity,
                                           textAlign: TextAlign.right,
                                           style: Theme.of(context)
                                               .textTheme
@@ -108,7 +109,8 @@ class TransactionHistoryView extends StatelessWidget {
                                         margin:
                                             const EdgeInsets.only(left: 10.0),
                                         child: Text(
-                                            AppLocalizations.of(context)!.status,
+                                            AppLocalizations.of(context)!
+                                                .status,
                                             textAlign: TextAlign.left,
                                             style: Theme.of(context)
                                                 .textTheme

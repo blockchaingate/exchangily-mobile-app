@@ -22,7 +22,7 @@ class MyOrdersView extends StatelessWidget {
         createNewViewModelOnInsert: true,
         fireOnModelReadyOnce: true,
         viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
-        onModelReady: (model) {
+        onViewModelReady: (model) {
           debugPrint('in init MyOrdersView');
           model.context = context;
 

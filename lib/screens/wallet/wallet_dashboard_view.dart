@@ -120,7 +120,7 @@ class WalletDashboardView extends StatelessWidget {
                                   return Row(
                                     children: [
                                       SizedBox(
-                                          width: 300,
+                                          width: 400,
                                           height: double.infinity,
                                           child: coinList(model, ctx)),
                                       Expanded(
@@ -147,10 +147,10 @@ class WalletDashboardView extends StatelessWidget {
                 floatingActionButton: model.busy(model.selectedCustomTokens)
                     ? Container()
                     : Visibility(
-                        visible: model.currentTabSelection == 2,
+                        visible: model.currentTabSelection == 6,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: model.currentTabSelection == 2
+                            color: model.currentTabSelection == 6
                                 ? primaryColor
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(35),
@@ -184,18 +184,14 @@ class WalletDashboardView extends StatelessWidget {
                                     child: model
                                             .selectedCustomTokens!.isNotEmpty
                                         ? Text(
-                                            ' ' +
-                                                AppLocalizations.of(context)!
-                                                    .editTokenList,
+                                            ' ${AppLocalizations.of(context)!.editTokenList}',
                                             style: const TextStyle(
                                                 color: white,
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.bold),
                                           )
                                         : Text(
-                                            ' ' +
-                                                AppLocalizations.of(context)!
-                                                    .addToken,
+                                            ' ${AppLocalizations.of(context)!.addToken}',
                                             style: const TextStyle(
                                                 color: white,
                                                 fontSize: 12,
@@ -228,13 +224,13 @@ class WalletDashboardView extends StatelessWidget {
         return Visibility(
           // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
           visible: usdBalance >= 0 && !model.isHideSmallAssetsButton,
-          child: _coinDetailsCard(
-              name, index, model.wallets!, model.elevation, context, model),
           // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
           replacement: Visibility(
               visible: model.isHideSmallAssetsButton && usdBalance != 0,
               child: _coinDetailsCard(name, index, model.wallets!,
                   model.elevation, context, model)),
+          child: _coinDetailsCard(
+              name, index, model.wallets!, model.elevation, context, model),
         );
       },
     );
@@ -474,11 +470,11 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                         style: model.isShowFavCoins || model.isHideSearch
                             ? Theme.of(context)
                                 .textTheme
-                                .headline5!
+                                .headlineSmall!
                                 .copyWith(wordSpacing: 1.25, color: grey)
                             : Theme.of(context)
                                 .textTheme
-                                .headline5!
+                                .headlineSmall!
                                 .copyWith(wordSpacing: 1.25),
                       ),
                     ),
@@ -514,9 +510,8 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                                   color: white,
                                 ),
                                 label: Text(
-                                  AppLocalizations.of(context)!.getFree +
-                                      ' FAB',
-                                  style: Theme.of(context).textTheme.headline6,
+                                  '${AppLocalizations.of(context)!.getFree} FAB',
+                                  style: Theme.of(context).textTheme.titleLarge,
                                 )),
                           )),
                 ],
@@ -572,358 +567,369 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
 Widget coinList(WalletDashboardViewModel model, BuildContext context) {
   // final tabController = TabController(length: 3, vsync: this, initialIndex: 1);
   return DefaultTabController(
-      length: 3,
-      initialIndex: model.currentTabSelection,
-      child: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverToBoxAdapter(
-              child: SizedBox(
-                  // color: Colors.lightBlue,
-                  height: 180,
-                  width: MediaQuery.of(context).size.width,
-                  child: topWidget(model, context)),
-            ),
-            SliverToBoxAdapter(
-                child: MediaQuery.of(context).size.width < largeSize
-                    ? amountAndGas(model, context)
-                    : Container()),
-            SliverPersistentHeader(
-                pinned: true,
-                delegate: _SliverAppBarDelegate(
-                  TabBar(
-
-                      // controller: ,
-                      // labelPadding: EdgeInsets.only(bottom: 14, top: 14),
-                      onTap: (int tabIndex) {
-                        model.updateTabSelection(tabIndex);
-                      },
-                      labelColor: white,
-                      unselectedLabelColor: primaryColor,
-                      indicatorColor: primaryColor,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      tabs: [
-                        const Tab(
-                          icon: Icon(
-                            FontAwesomeIcons.coins,
-                            // color: white,
-                            size: 16,
-                          ),
-                          iconMargin: EdgeInsets.only(bottom: 3),
-                          // child: Text(model.wallets.length.toString(),
-                          //     style: TextStyle(fontSize: 10))
-                        ),
-                        const Tab(
-                          icon: Icon(Icons.star,
-                              // color: primaryColor,
-                              size: 18),
-                          iconMargin: EdgeInsets.only(bottom: 3),
-                          // child: Text(
-                          //     model.favWalletInfoList.length.toString(),
-                          //     style: TextStyle(fontSize: 10, color: grey)),
-                        ),
-                        // custom tokens
-                        Tab(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                Constants.customTokenLogoLocalUrl,
-                                width: 16,
-                                color: primaryColor,
-                              )
-                            ],
-                          ),
-                        ),
-                      ]),
-                ))
-          ];
-        },
-        body: Container(
-          // color: Colors.amber,
-          margin: const EdgeInsets.only(top: 0),
-          padding: const EdgeInsets.only(top: 0),
-          child: TabBarView(
-            //  physics: ClampingScrollPhysics(),
-            children: [
-              // All coins tab
-
-              model.isBusy || model.busy(model.isHideSmallAssetsButton)
-                  ? const ShimmerLayout(
-                      layoutType: 'walletDashboard',
-                      count: 9,
-                    )
-                  : buildListView(model),
-
-              // Favorite tab
-              FavTab(),
-              // custom tokens tab
-              model.busy(model.selectedCustomTokens)
-                  ? model.sharedService.loadingIndicator()
-                  : model.selectedCustomTokens!.isEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              Constants.emptyWalletLocalUrl,
-                              color: Colors.grey,
-                              width: 40,
-                              height: 40,
-                            ),
-                            const SizedBox(height: 5),
-                            Text(AppLocalizations.of(context)!.customTokens,
-                                style: const TextStyle(
-                                    fontSize: 12, color: Colors.white)),
-                          ],
+    length: 7,
+    initialIndex: model.currentTabSelection,
+    child: NestedScrollView(
+      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        return <Widget>[
+          SliverToBoxAdapter(
+            child: SizedBox(
+                // color: Colors.lightBlue,
+                height: 180,
+                width: MediaQuery.of(context).size.width,
+                child: topWidget(model, context)),
+          ),
+          SliverToBoxAdapter(
+              child: MediaQuery.of(context).size.width < largeSize
+                  ? amountAndGas(model, context)
+                  : Container()),
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _SliverAppBarDelegate(
+              TabBar(
+                onTap: (int tabIndex) {
+                  model.updateTabSelection(tabIndex);
+                },
+                labelPadding: EdgeInsets.zero,
+                labelColor: white,
+                unselectedLabelColor: primaryColor,
+                indicatorColor: primaryColor,
+                indicatorSize: TabBarIndicatorSize.tab,
+                tabs: [
+                  Tab(
+                    text: "All",
+                  ),
+                  Tab(
+                    text: "FAB",
+                  ),
+                  Tab(
+                    text: "ETH",
+                  ),
+                  Tab(
+                    text: "TRX",
+                  ),
+                  Tab(
+                    text: "BNB",
+                  ),
+                  Tab(
+                    icon: Icon(Icons.star, size: 18),
+                  ),
+                  // custom tokens
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          Constants.customTokenLogoLocalUrl,
+                          width: 16,
+                          color: primaryColor,
                         )
-                      : Column(
-                          children: [
-                            UIHelper.verticalSpaceSmall,
-                            // symbol balance action text row
-                            Container(
-                              color: white,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 5),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!.logo,
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        ];
+      },
+      body: TabBarView(
+        children: [
+          // All coins tab
+
+          model.isBusy || model.busy(model.isHideSmallAssetsButton)
+              ? const ShimmerLayout(
+                  layoutType: 'walletDashboard',
+                  count: 9,
+                )
+              : buildListView(model, "1"),
+
+          buildListView(model, "2"),
+          buildListView(model, "3"),
+          buildListView(model, "4"),
+          buildListView(model, "5"),
+
+          // Favorite tab
+          FavTab(),
+          // custom tokens tab
+          model.busy(model.selectedCustomTokens)
+              ? model.sharedService.loadingIndicator()
+              : model.selectedCustomTokens!.isEmpty
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          Constants.emptyWalletLocalUrl,
+                          color: Colors.grey,
+                          width: 40,
+                          height: 40,
+                        ),
+                        const SizedBox(height: 5),
+                        Text(AppLocalizations.of(context)!.customTokens,
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.white)),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        UIHelper.verticalSpaceSmall,
+                        // symbol balance action text row
+                        Container(
+                          color: white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 5),
+                          child: Row(
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.logo,
+                                style: const TextStyle(
+                                    color: black,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              UIHelper.horizontalSpaceMedium,
+                              Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                      AppLocalizations.of(context)!.symbol,
+                                      style: const TextStyle(
+                                          color: black,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600))),
+                              Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    AppLocalizations.of(context)!.balance,
                                     style: const TextStyle(
                                         color: black,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600),
-                                  ),
-                                  UIHelper.horizontalSpaceMedium,
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                          AppLocalizations.of(context)!.symbol,
-                                          style: const TextStyle(
-                                              color: black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600))),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                        AppLocalizations.of(context)!.balance,
-                                        style: const TextStyle(
-                                            color: black,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600),
-                                        //  textAlign: TextAlign.center,
-                                      )),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                          AppLocalizations.of(context)!.action,
-                                          style: const TextStyle(
-                                              color: black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600)))
-                                ],
-                              ),
-                            ),
+                                    //  textAlign: TextAlign.center,
+                                  )),
+                              Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                      AppLocalizations.of(context)!.action,
+                                      style: const TextStyle(
+                                          color: black,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600)))
+                            ],
+                          ),
+                        ),
 
-                            Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 3, vertical: 10),
-                                child: ListView.builder(
-                                    padding: const EdgeInsets.only(top: 0),
-                                    shrinkWrap: true,
-                                    itemCount:
-                                        model.selectedCustomTokens!.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      var customToken =
-                                          model.selectedCustomTokens![index];
-                                      return Container(
-                                        margin: const EdgeInsets.symmetric(
-                                            vertical: 4, horizontal: 1),
-                                        decoration: BoxDecoration(
-                                            color: walletCardColor,
-                                            borderRadius:
-                                                BorderRadius.circular(9)),
-                                        padding: const EdgeInsets.all(3),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            // logo
-                                            Container(
-                                              width: 25,
-                                              height: 25,
-                                              margin: const EdgeInsets.only(
-                                                  left: 10),
-                                              decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                      image: NetworkImage(
-                                                        '${baseBlockchainGateV2Url}issuetoken/${customToken.tokenId}/logo',
-                                                      ),
-                                                      fit: BoxFit.cover),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0)),
-                                            ),
-                                            UIHelper.horizontalSpaceMedium,
-
-                                            // Symbol and name
-                                            Expanded(
-                                              flex: 1,
-                                              child: Text(
-                                                customToken.symbol!
-                                                    .toUpperCase(),
-                                                style: const TextStyle(
-                                                    color: grey,
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ),
-                                            UIHelper.horizontalSpaceMedium,
-                                            UIHelper.horizontalSpaceSmall,
-                                            // Balance
-                                            Expanded(
-                                              flex: 2,
-                                              child: model.busy(model
-                                                      .selectedCustomTokens)
-                                                  ? const Text('...')
-                                                  : Text(
-                                                      customToken.balance
-                                                          .toString(),
-                                                      style: const TextStyle(
-                                                          color: white),
-                                                    ),
-                                            ),
-                                            //  Action
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.only(top: 5),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                                  Container(
-                                                    child: IconButton(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .zero,
-                                                      onPressed: () async {
-                                                        var wi = WalletInfo(
-                                                            address: await model
-                                                                .coreWalletDatabaseService!
-                                                                .getWalletAddressByTickerName(
-                                                                    'FAB'));
-                                                        model.navigationService!
-                                                            .navigateTo(
-                                                                ReceiveViewRoute,
-                                                                arguments: wi);
-                                                      },
-                                                      icon: Column(
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .download_for_offline_rounded,
-                                                            color: green,
-                                                          ),
-                                                          Expanded(
-                                                            child: Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .receive,
-                                                                style: const TextStyle(
-                                                                    fontSize:
-                                                                        10,
-                                                                    color:
-                                                                        white)),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 3, vertical: 10),
+                            child: ListView.builder(
+                                padding: const EdgeInsets.only(top: 0),
+                                shrinkWrap: true,
+                                itemCount: model.selectedCustomTokens!.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  var customToken =
+                                      model.selectedCustomTokens![index];
+                                  return Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 1),
+                                    decoration: BoxDecoration(
+                                        color: walletCardColor,
+                                        borderRadius: BorderRadius.circular(9)),
+                                    padding: const EdgeInsets.all(3),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        // logo
+                                        Container(
+                                          width: 25,
+                                          height: 25,
+                                          margin:
+                                              const EdgeInsets.only(left: 10),
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: NetworkImage(
+                                                    '${baseBlockchainGateV2Url}issuetoken/${customToken.tokenId}/logo',
                                                   ),
-                                                  Container(
-                                                    child: IconButton(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .zero,
-                                                      onPressed: () {
-                                                        model.routeCustomToken(
-                                                            customToken);
-                                                      },
-                                                      icon: Column(
-                                                        children: [
-                                                          const Icon(
-                                                            Icons.send_rounded,
-                                                            color: primaryColor,
-                                                          ),
-                                                          Expanded(
-                                                            child: Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .send,
-                                                                style: const TextStyle(
-                                                                    fontSize:
-                                                                        10,
-                                                                    color:
-                                                                        white)),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            bottom: 5.0),
-                                                    child: IconButton(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .zero,
-                                                      onPressed: () {
-                                                        model.routeCustomToken(
-                                                            customToken,
-                                                            isSend: false);
-                                                      },
-                                                      icon: const Icon(
-                                                        Icons.history_rounded,
-                                                        color: yellow,
-                                                        size: 24,
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            )
-                                          ],
+                                                  fit: BoxFit.cover),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0)),
                                         ),
-                                      );
-                                    }),
-                              ),
-                            ),
-                          ],
-                        )
-            ],
-          ),
-        ),
-      ));
+                                        UIHelper.horizontalSpaceMedium,
+
+                                        // Symbol and name
+                                        Expanded(
+                                          flex: 1,
+                                          child: Text(
+                                            customToken.symbol!.toUpperCase(),
+                                            style: const TextStyle(
+                                                color: grey,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ),
+                                        UIHelper.horizontalSpaceMedium,
+                                        UIHelper.horizontalSpaceSmall,
+                                        // Balance
+                                        Expanded(
+                                          flex: 2,
+                                          child: model.busy(
+                                                  model.selectedCustomTokens)
+                                              ? const Text('...')
+                                              : Text(
+                                                  customToken.balance
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                      color: white),
+                                                ),
+                                        ),
+                                        //  Action
+                                        Container(
+                                          padding:
+                                              const EdgeInsets.only(top: 5),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              IconButton(
+                                                padding:
+                                                    EdgeInsetsDirectional.zero,
+                                                onPressed: () async {
+                                                  var wi = WalletInfo(
+                                                      address: await model
+                                                          .coreWalletDatabaseService!
+                                                          .getWalletAddressByTickerName(
+                                                              'FAB'));
+                                                  model.navigationService!
+                                                      .navigateTo(
+                                                          ReceiveViewRoute,
+                                                          arguments: wi);
+                                                },
+                                                icon: Column(
+                                                  children: [
+                                                    Icon(
+                                                      Icons
+                                                          .download_for_offline_rounded,
+                                                      color: green,
+                                                    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .receive,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 10,
+                                                                  color:
+                                                                      white)),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              IconButton(
+                                                padding:
+                                                    EdgeInsetsDirectional.zero,
+                                                onPressed: () {
+                                                  model.routeCustomToken(
+                                                      customToken);
+                                                },
+                                                icon: Column(
+                                                  children: [
+                                                    const Icon(
+                                                      Icons.send_rounded,
+                                                      color: primaryColor,
+                                                    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .send,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 10,
+                                                                  color:
+                                                                      white)),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 5.0),
+                                                child: IconButton(
+                                                  padding: EdgeInsetsDirectional
+                                                      .zero,
+                                                  onPressed: () {
+                                                    model.routeCustomToken(
+                                                        customToken,
+                                                        isSend: false);
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.history_rounded,
+                                                    color: yellow,
+                                                    size: 24,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                }),
+                          ),
+                        ),
+                      ],
+                    )
+        ],
+      ),
+    ),
+  );
 }
 
-ListView buildListView(WalletDashboardViewModel model) {
+ListView buildListView(WalletDashboardViewModel model, String a) {
+  List<WalletBalance> newList = [];
+
+  if (model.currentTabSelection == 0) {
+    newList = model.wallets!;
+  } else if (model.currentTabSelection == 1) {
+    newList = model.wallets!.where((element) {
+      return element.tokenType == model.netowrkList[0] ||
+          element.coin == model.netowrkList[0];
+    }).toList();
+  } else if (model.currentTabSelection == 2) {
+    newList = model.wallets!.where((element) {
+      return element.tokenType == model.netowrkList[1] ||
+          element.coin == model.netowrkList[1];
+    }).toList();
+  } else if (model.currentTabSelection == 3) {
+    newList = model.wallets!.where((element) {
+      return element.tokenType == model.netowrkList[2] ||
+          element.coin == model.netowrkList[2];
+    }).toList();
+  } else if (model.currentTabSelection == 4) {
+    newList = model.wallets!.where((element) {
+      return element.tokenType == model.netowrkList[3] ||
+          element.coin == model.netowrkList[3];
+    }).toList();
+  }
+
   return ListView.builder(
-    key: const PageStorageKey('storage-key'),
+    key: PageStorageKey('storage-key$a'),
     padding: const EdgeInsets.only(top: 0),
     shrinkWrap: true,
-    itemCount: model.wallets!.length,
+    itemCount: newList.length,
     itemBuilder: (BuildContext context, int index) {
-      var name = model.wallets![index].coin!.toLowerCase();
+      var name = newList[index].coin!.toLowerCase();
 
       return _coinDetailsCard(
-          name, index, model.wallets!, model.elevation, context, model);
+          name, index, newList, model.elevation, context, model);
       // Visibility(
       //   // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
       //   visible: usdBalance >= 0 && !model.isHideSmallAssetsButton,
@@ -985,6 +991,9 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                             blurRadius: 10.0,
                             spreadRadius: 1.0),
                       ]),
+                  //asset('assets/images/wallet-page/$tickerName.png'),
+                  width: 35,
+                  height: 35,
                   child: Image.network(
                     '$walletCoinsLogoUrl${logoTicker!.toLowerCase()}.png',
                     errorBuilder: (BuildContext context, Object exception,
@@ -992,259 +1001,243 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                       return Text(logoTicker.toString(),
                           style: const TextStyle(fontSize: 8, color: white));
                     },
-                  ),
-                  //asset('assets/images/wallet-page/$tickerName.png'),
-                  width: 35,
-                  height: 35),
+                  )),
               UIHelper.horizontalSpaceSmall,
               // Tickername available locked and inexchange column
               Expanded(
                 flex: 3,
-                child: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        tickerName.toUpperCase(),
-                        style: Theme.of(context).textTheme.headline3,
-                      ),
-                      // Available Row
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 5.0),
-                            child: Text(AppLocalizations.of(context)!.available,
-                                style: Theme.of(context).textTheme.headline6),
-                          ),
-                          model.isBusy
-                              ? SizedBox(
-                                  child: Shimmer.fromColors(
-                                  baseColor: red,
-                                  highlightColor: white,
-                                  child: Text(
-                                    wallets[index].balance!.toStringAsFixed(2),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      tickerName.toUpperCase(),
+                      style: Theme.of(context).textTheme.displaySmall,
+                    ),
+                    // Available Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5.0),
+                          child: Text(AppLocalizations.of(context)!.available,
+                              style: Theme.of(context).textTheme.titleLarge),
+                        ),
+                        model.isBusy
+                            ? SizedBox(
+                                child: Shimmer.fromColors(
+                                baseColor: red,
+                                highlightColor: white,
+                                child: Text(
+                                  wallets[index].balance!.toStringAsFixed(2),
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                              ))
+                            : Expanded(
+                                child: Text(
+                                    isBalanceNegative
+                                        ? AppLocalizations.of(context)!
+                                            .unavailable
+                                        : NumberUtil()
+                                            .truncateDoubleWithoutRouding(
+                                                model.wallets![index].balance!,
+                                                precision: 6)
+                                            .toString(),
                                     style:
-                                        Theme.of(context).textTheme.headline6,
-                                  ),
-                                ))
-                              : Expanded(
-                                  child: Text(
-                                      isBalanceNegative
-                                          ? AppLocalizations.of(context)!
-                                              .unavailable
-                                          : NumberUtil()
-                                              .truncateDoubleWithoutRouding(
-                                                  model
-                                                      .wallets![index].balance!,
-                                                  precision: 6)
-                                              .toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6),
-                                ),
-                        ],
-                      ),
-                      // Locked Row
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 2.0, right: 5.0, bottom: 2.0),
-                            child: Text(AppLocalizations.of(context)!.locked,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline6!
-                                    .copyWith(color: red)),
-                          ),
-                          model.isBusy
-                              ? SizedBox(
-                                  child: Shimmer.fromColors(
-                                  baseColor: red,
-                                  highlightColor: white,
-                                  child: Text('${wallets[index].lockBalance}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6!
-                                          .copyWith(color: red)),
-                                ))
-                              : Expanded(
-                                  child: Text(
-                                      wallets[index].lockBalance!.isNegative
-                                          ? AppLocalizations.of(context)!
-                                              .unavailable
-                                          : NumberUtil()
-                                              .truncateDoubleWithoutRouding(
-                                                  model.wallets![index]
-                                                      .lockBalance!,
-                                                  precision: 6)
-                                              .toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6!
-                                          .copyWith(color: red)),
-                                )
-                        ],
-                      ),
-                      // Inexchange Row
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 5.0),
-                              child: Text(
-                                  AppLocalizations.of(context)!.inExchange,
+                                        Theme.of(context).textTheme.titleLarge),
+                              ),
+                      ],
+                    ),
+                    // Locked Row
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 2.0, right: 5.0, bottom: 2.0),
+                          child: Text(AppLocalizations.of(context)!.locked,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .copyWith(color: red)),
+                        ),
+                        model.isBusy
+                            ? SizedBox(
+                                child: Shimmer.fromColors(
+                                baseColor: red,
+                                highlightColor: white,
+                                child: Text('${wallets[index].lockBalance}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(color: red)),
+                              ))
+                            : Expanded(
+                                child: Text(
+                                    wallets[index].lockBalance!.isNegative
+                                        ? AppLocalizations.of(context)!
+                                            .unavailable
+                                        : NumberUtil()
+                                            .truncateDoubleWithoutRouding(
+                                                model.wallets![index]
+                                                    .lockBalance!,
+                                                precision: 6)
+                                            .toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(color: red)),
+                              )
+                      ],
+                    ),
+                    // Inexchange Row
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5.0),
+                          child: Text(AppLocalizations.of(context)!.inExchange,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.titleLarge),
+                        ),
+                        model.isBusy
+                            ? SizedBox(
+                                child: Shimmer.fromColors(
+                                baseColor: primaryColor,
+                                highlightColor: white,
+                                child: Text(
+                                  wallets[index]
+                                      .unlockedExchangeBalance!
+                                      .toStringAsFixed(4),
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.headline6),
-                            ),
-                          ),
-                          model.isBusy
-                              ? SizedBox(
-                                  child: Shimmer.fromColors(
-                                  baseColor: primaryColor,
-                                  highlightColor: white,
-                                  child: Text(
-                                    wallets[index]
-                                        .unlockedExchangeBalance!
-                                        .toStringAsFixed(4),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ))
-                              : Expanded(
-                                  child: Text(
-                                      wallets[index]
-                                              .unlockedExchangeBalance!
-                                              .isNegative
-                                          ? AppLocalizations.of(context)!
-                                              .unavailable
-                                          : NumberUtil()
-                                              .truncateDoubleWithoutRouding(
-                                                  wallets[index]
-                                                      .unlockedExchangeBalance!,
-                                                  precision: 6)
-                                              .toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6!
-                                          .copyWith(color: white)),
                                 ),
-                        ],
-                      ),
-                    ],
-                  ),
+                              ))
+                            : Expanded(
+                                child: Text(
+                                    wallets[index]
+                                            .unlockedExchangeBalance!
+                                            .isNegative
+                                        ? AppLocalizations.of(context)!
+                                            .unavailable
+                                        : NumberUtil()
+                                            .truncateDoubleWithoutRouding(
+                                                wallets[index]
+                                                    .unlockedExchangeBalance!,
+                                                precision: 6)
+                                            .toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(color: white)),
+                              ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
 
               // Value USD and deposit - withdraw Container column
               Expanded(
                 flex: 2,
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          isBalanceNegative
-                              ? Container(
-                                  padding: EdgeInsets.only(left: 5),
-                                )
-                              : model.wallets![index].balance == 0.0
-                                  ? UIHelper.horizontalSpaceMedium
-                                  : UIHelper.horizontalSpaceSmall,
-                          isBalanceNegative
-                              ? Container()
-                              : Text('\$', style: TextStyle(color: green)),
-                          Expanded(
-                            child: Text(
-                              isBalanceNegative
-                                  ? AppLocalizations.of(context)!.unavailable
-                                  : NumberUtil()
-                                      .truncateDoubleWithoutRouding(
-                                          model.wallets![index].balance! *
-                                              model.wallets![index].usdValue!
-                                                  .usd!,
-                                          precision: 2)
-                                      .toString(),
-                              style: isBalanceNegative
-                                  ? const TextStyle(color: grey, fontSize: 13)
-                                  : TextStyle(color: green),
-                            ),
-                          )
-                        ],
-                      ),
-
-                      // Deposit and Withdraw Container Row
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          DepositWidget(
-                              model: model,
-                              index: index,
-                              tickerName: tickerName),
-                          const Divider(
-                            endIndent: 5,
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        isBalanceNegative
+                            ? Container(
+                                padding: EdgeInsets.only(left: 5),
+                              )
+                            : model.wallets![index].balance == 0.0
+                                ? UIHelper.horizontalSpaceMedium
+                                : UIHelper.horizontalSpaceSmall,
+                        isBalanceNegative
+                            ? Container()
+                            : Text('\$', style: TextStyle(color: green)),
+                        Expanded(
+                          child: Text(
+                            isBalanceNegative
+                                ? AppLocalizations.of(context)!.unavailable
+                                : NumberUtil()
+                                    .truncateDoubleWithoutRouding(
+                                        model.wallets![index].balance! *
+                                            model
+                                                .wallets![index].usdValue!.usd!,
+                                        precision: 2)
+                                    .toString(),
+                            style: isBalanceNegative
+                                ? const TextStyle(color: grey, fontSize: 13)
+                                : TextStyle(color: green),
                           ),
-                          InkWell(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
+                        )
+                      ],
+                    ),
+
+                    // Deposit and Withdraw Container Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        DepositWidget(
+                            model: model, index: index, tickerName: tickerName),
+                        const Divider(
+                          endIndent: 5,
+                        ),
+                        InkWell(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!.withdraw,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(fontSize: 8),
+                                  ),
+                                  const Icon(
+                                    Icons.arrow_upward,
+                                    color: red,
+                                    size: 16,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onTap: () {
+                              model.routeWithWalletInfoArgs(
+                                  model.wallets![index], WithdrawViewRoute);
+                            }),
+                      ],
+                    ),
+                    wallets[index].coin == 'FAB' &&
+                            wallets[index].unconfirmedBalance != 0
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5.0, vertical: 5.0),
                                 child: Column(
-                                  children: [
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
                                     Text(
-                                      AppLocalizations.of(context)!.withdraw,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle2!
-                                          .copyWith(fontSize: 8),
-                                    ),
-                                    const Icon(
-                                      Icons.arrow_upward,
-                                      color: red,
-                                      size: 16,
-                                    ),
+                                        //  '${model.specialTicker} '.toUpperCase() +
+                                        AppLocalizations.of(context)!
+                                            .unConfirmedBalance,
+                                        style:
+                                            subText2.copyWith(color: yellow)),
+                                    Text(
+                                        '${NumberUtil().truncateDoubleWithoutRouding(wallets[index].unconfirmedBalance!, precision: 8)}  FAB',
+                                        textAlign: TextAlign.start,
+                                        style:
+                                            subText2.copyWith(color: yellow)),
                                   ],
                                 ),
                               ),
-                              onTap: () {
-                                model.routeWithWalletInfoArgs(
-                                    model.wallets![index], WithdrawViewRoute);
-                              }),
-                        ],
-                      ),
-                      wallets[index].coin == 'FAB' &&
-                              wallets[index].unconfirmedBalance != 0
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5.0, vertical: 5.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                          //  '${model.specialTicker} '.toUpperCase() +
-                                          AppLocalizations.of(context)!
-                                              .unConfirmedBalance,
-                                          style:
-                                              subText2.copyWith(color: yellow)),
-                                      Text(
-                                          '${NumberUtil().truncateDoubleWithoutRouding(wallets[index].unconfirmedBalance!, precision: 8)}  FAB',
-                                          textAlign: TextAlign.start,
-                                          style:
-                                              subText2.copyWith(color: yellow)),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Container(),
-                    ],
-                  ),
+                            ],
+                          )
+                        : Container(),
+                  ],
                 ),
               ),
             ],
@@ -1257,7 +1250,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
 
 // FAB TAB
 
-class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
+class FavTab extends StackedView<WalletDashboardViewModel> {
   @override
   void onViewModelReady(WalletDashboardViewModel model) async {
     await model.buildFavCoinListV1();
@@ -1265,7 +1258,6 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
 
   @override
   bool get initialiseSpecialViewModelsOnce => true;
-  @override
   bool get fireOnModelReadyOnce => true;
   @override
   Widget builder(
@@ -1344,6 +1336,9 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                               blurRadius: 10.0,
                                               spreadRadius: 1.0),
                                         ]),
+                                    //asset('assets/images/wallet-page/$tickerName.png'),
+                                    width: 35,
+                                    height: 35,
                                     child: Image.network(
                                       '$walletCoinsLogoUrl${logoTicker!.toLowerCase()}.png',
                                       errorBuilder: (BuildContext context,
@@ -1353,130 +1348,122 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                             style: const TextStyle(
                                                 fontSize: 8, color: white));
                                       },
-                                    ),
-                                    //asset('assets/images/wallet-page/$tickerName.png'),
-                                    width: 35,
-                                    height: 35),
+                                    )),
                                 UIHelper.horizontalSpaceSmall,
                                 // Tickername available locked and inexchange column
                                 Expanded(
                                   flex: 3,
-                                  child: Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          tickerName.toUpperCase(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline3,
-                                        ),
-                                        // Available Row
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 5.0),
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .available,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6),
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                  model.favWallets[index]
-                                                          .balance!.isNegative
-                                                      ? '0.0'
-                                                      : NumberUtil()
-                                                          .truncateDoubleWithoutRouding(
-                                                              model
-                                                                  .favWallets[
-                                                                      index]
-                                                                  .balance!,
-                                                              precision: 6)
-                                                          .toString(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6),
-                                            ),
-                                          ],
-                                        ),
-                                        // Locked Row
-                                        Row(
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 2.0,
-                                                  right: 5.0,
-                                                  bottom: 2.0),
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .locked,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6!
-                                                      .copyWith(color: red)),
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                  model
-                                                          .favWallets[index]
-                                                          .lockBalance!
-                                                          .isNegative
-                                                      ? '0.0'
-                                                      : NumberUtil()
-                                                          .truncateDoubleWithoutRouding(
-                                                              model
-                                                                  .favWallets[
-                                                                      index]
-                                                                  .lockBalance!,
-                                                              precision: 6)
-                                                          .toString(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6!
-                                                      .copyWith(color: red)),
-                                            )
-                                          ],
-                                        ),
-                                        // Inexchange Row
-                                        Row(
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 5.0),
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .inExchange,
-                                                  textAlign: TextAlign.center,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6),
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                  NumberUtil()
-                                                      .truncateDoubleWithoutRouding(
-                                                          model
-                                                              .favWallets[index]
-                                                              .unlockedExchangeBalance!,
-                                                          precision: 6)
-                                                      .toString(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6!
-                                                      .copyWith(
-                                                          color: primaryColor)),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        tickerName.toUpperCase(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall,
+                                      ),
+                                      // Available Row
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 5.0),
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .available,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                                model.favWallets[index].balance!
+                                                        .isNegative
+                                                    ? '0.0'
+                                                    : NumberUtil()
+                                                        .truncateDoubleWithoutRouding(
+                                                            model
+                                                                .favWallets[
+                                                                    index]
+                                                                .balance!,
+                                                            precision: 6)
+                                                        .toString(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge),
+                                          ),
+                                        ],
+                                      ),
+                                      // Locked Row
+                                      Row(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 2.0,
+                                                right: 5.0,
+                                                bottom: 2.0),
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .locked,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge!
+                                                    .copyWith(color: red)),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                                model.favWallets[index]
+                                                        .lockBalance!.isNegative
+                                                    ? '0.0'
+                                                    : NumberUtil()
+                                                        .truncateDoubleWithoutRouding(
+                                                            model
+                                                                .favWallets[
+                                                                    index]
+                                                                .lockBalance!,
+                                                            precision: 6)
+                                                        .toString(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge!
+                                                    .copyWith(color: red)),
+                                          )
+                                        ],
+                                      ),
+                                      // Inexchange Row
+                                      Row(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 5.0),
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .inExchange,
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                                NumberUtil()
+                                                    .truncateDoubleWithoutRouding(
+                                                        model.favWallets[index]
+                                                            .unlockedExchangeBalance!,
+                                                        precision: 6)
+                                                    .toString(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge!
+                                                    .copyWith(
+                                                        color: primaryColor)),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
 
@@ -1518,7 +1505,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                             .deposit,
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .subtitle2!
+                                                            .titleSmall!
                                                             .copyWith(
                                                                 fontSize: 8),
                                                       ),
@@ -1546,7 +1533,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                           .withdraw,
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .subtitle2!
+                                                          .titleSmall!
                                                           .copyWith(
                                                               fontSize: 8),
                                                     ),
@@ -1634,7 +1621,7 @@ class TotalBalanceWidget extends StatelessWidget {
                           Text(AppLocalizations.of(context)!.totalWalletBalance,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline4!
+                                  .headlineMedium!
                                   .copyWith(fontWeight: FontWeight.w400)),
                           model!.isBusy
                               ? Shimmer.fromColors(
@@ -1643,14 +1630,14 @@ class TotalBalanceWidget extends StatelessWidget {
                                   child: Text(
                                     '${model!.totalUsdBalance} USD',
                                     style:
-                                        Theme.of(context).textTheme.subtitle1,
+                                        Theme.of(context).textTheme.titleMedium,
                                   ),
                                 )
                               : Text('${model!.totalUsdBalance} USD',
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .subtitle1!
+                                      .titleMedium!
                                       .copyWith(fontWeight: FontWeight.w400)),
                         ],
                       ),
@@ -1732,7 +1719,7 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                           .totalExchangeBalance,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline6!
+                                          .titleLarge!
                                           .copyWith(
                                               fontWeight: FontWeight.bold,
                                               color: white)),
@@ -1741,9 +1728,10 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                     baseColor: primaryColor,
                                     highlightColor: white,
                                     child: Text(
-                                      model!.totalExchangeBalance + ' USD',
-                                      style:
-                                          Theme.of(context).textTheme.subtitle1,
+                                      '${model!.totalExchangeBalance} USD',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
                                     )),
                               ],
                             )
@@ -1758,14 +1746,14 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                           .totalExchangeBalance,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline4!
+                                          .headlineMedium!
                                           .copyWith(
                                               fontWeight: FontWeight.w400)),
                                 ),
-                                Text(model!.totalExchangeBalance + ' USD',
+                                Text('${model!.totalExchangeBalance} USD',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .subtitle1!
+                                        .titleMedium!
                                         .copyWith(fontWeight: FontWeight.w400)),
                               ],
                             ),
@@ -1892,7 +1880,7 @@ class DepositWidget extends StatelessWidget {
             Text(
               AppLocalizations.of(context)!.deposit,
               style:
-                  Theme.of(context).textTheme.subtitle2!.copyWith(fontSize: 8),
+                  Theme.of(context).textTheme.titleSmall!.copyWith(fontSize: 8),
             ),
             Icon(Icons.arrow_downward, color: green, size: 16),
           ],
@@ -1914,8 +1902,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      child: _tabBar,
       color: secondaryColor,
+      child: _tabBar,
     );
   }
 

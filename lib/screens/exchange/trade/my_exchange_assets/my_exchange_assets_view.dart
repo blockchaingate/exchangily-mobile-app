@@ -19,7 +19,7 @@ class MyExchangeAssetsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       //createNewModelOnInsert: true,
-      onModelReady: (MyExchangeAssetsViewModel model) {
+      onViewModelReady: (MyExchangeAssetsViewModel model) {
         model.context = context;
 
         model.init();
@@ -157,7 +157,8 @@ class MyExchangeAssetsView extends StatelessWidget {
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 2),
                                       child: Text(
-                                          model.exchangeBalances![index].ticker!,
+                                          model
+                                              .exchangeBalances![index].ticker!,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),

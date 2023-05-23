@@ -26,7 +26,7 @@ class AddGas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AddGasViewModel>.reactive(
-        onModelReady: (model) async {
+        onViewModelReady: (model) async {
           model.context = context;
           await model.init();
         },

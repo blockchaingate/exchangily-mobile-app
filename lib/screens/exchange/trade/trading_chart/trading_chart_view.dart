@@ -31,15 +31,15 @@ class LoadHTMLFileToWEbView extends StatefulWidget {
     this.pair,
   );
   @override
-  _LoadHTMLFileToWEbViewState createState() => _LoadHTMLFileToWEbViewState();
+  LoadHTMLFileToWEbViewState createState() => LoadHTMLFileToWEbViewState();
 }
 
-class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
+class LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => TradingChartViewModel(),
-      onModelReady: (dynamic model) {
+      onViewModelReady: (dynamic model) {
         model.init();
       },
       builder: (context, TradingChartViewModel model, _) => Column(

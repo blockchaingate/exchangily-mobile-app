@@ -31,7 +31,7 @@ class TradeView extends StatelessWidget {
         // which is required override
         viewModelBuilder: () =>
             TradeViewModel(pairPriceByRoute: pairPriceByRoute),
-        onModelReady: (model) {
+        onViewModelReady: (model) {
           model.context = context;
           model.init();
         },

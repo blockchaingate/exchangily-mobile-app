@@ -41,7 +41,7 @@ class BuySellView extends StatelessWidget {
         disposeViewModel: false,
         viewModelBuilder: () =>
             BuySellViewModel(tickerNameFromRoute: tickerName),
-        onModelReady: (model) async {
+        onViewModelReady: (model) async {
           model.context = context;
           model.globalKeyOne = _one;
           model.globalKeyTwo = _two;

@@ -13,7 +13,6 @@
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -33,7 +32,7 @@ class OtcScreenState extends BaseState {
   DialogService? dialogService = locator<DialogService>();
   WalletService? walletService = locator<WalletService>();
 
-  final VaultService? _vaultService = locator<VaultService>();
+  final VaultService _vaultService = locator<VaultService>();
   List<String> languages = ['English', 'Chinese'];
   String? selectedLanguage;
   // bool result = false;
@@ -63,7 +62,7 @@ class OtcScreenState extends BaseState {
         .then((res) async {
       if (res.confirmed!) {
         log.w('deleting wallet');
-        await _vaultService!.deleteEncryptedData();
+        await _vaultService.deleteEncryptedData();
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.remove('lang');

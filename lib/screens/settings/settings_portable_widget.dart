@@ -13,7 +13,7 @@ class SettingsPortableView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SettingsViewmodel>.reactive(
-      onModelReady: (model) async {
+      onViewModelReady: (model) async {
         model.context = context;
         await model.init();
       },
@@ -161,7 +161,8 @@ class SettingsPortableContainer extends StatelessWidget {
                   ),
                   Expanded(
                     flex: 3,
-                    child: Text(AppLocalizations.of(context)!.showDialogWarnings,
+                    child: Text(
+                        AppLocalizations.of(context)!.showDialogWarnings,
                         style: Theme.of(context).textTheme.headline5,
                         textAlign: TextAlign.left),
                   ),

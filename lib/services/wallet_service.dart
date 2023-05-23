@@ -907,7 +907,7 @@ class WalletService {
                 t.cancel();
 
                 var storedTx = (await transactionHistoryDatabaseService!
-                    .getByKanbanTxId(transaction.kanbanTxId))!;
+                    .getByKanbanTxId(transaction.kanbanTxId!))!;
                 showSimpleNotification(
                     Row(
                       children: [
@@ -970,7 +970,7 @@ class WalletService {
 
         if (transaction != null) {
           transactionByTxId = (await transactionHistoryDatabaseService!
-              .getByKanbanTxId(transaction.kanbanTxId))!;
+              .getByKanbanTxId(transaction.kanbanTxId!))!;
           showSimpleNotification(
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -1044,7 +1044,7 @@ class WalletService {
       }
       await transactionHistoryDatabaseService!.update(transactionHistory);
       await transactionHistoryDatabaseService!
-          .getByKanbanTxId(transaction.kanbanTxId);
+          .getByKanbanTxId(transaction.kanbanTxId!);
     });
     return result;
     //  return _completer.future;

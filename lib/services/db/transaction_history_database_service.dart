@@ -95,28 +95,28 @@ class TransactionHistoryDatabaseService {
   // Get Single Wallet By Tag
   Future<List<TransactionHistory>> getByTagName(String tag) async {
     await initDb();
-    final Database db = (await _database)!;
-    List<Map> res =
+    final Database db = await _database!;
+    List<Map<String, dynamic>> res =
         await db.query(tableName, where: 'tag= ?', whereArgs: [tag]);
     log.w('tagName - $tag --- $res');
 
     List<TransactionHistory> list = res.isNotEmpty
-        ? res.map((f) => TransactionHistory.fromJson(f as Map<String, dynamic>)).toList()
+        ? res.map((f) => TransactionHistory.fromJson(f)).toList()
         : [];
     return list;
     // return TransactionHistory.fromJson((res.first));
   }
 
   // Get Single Wallet By Name
-  Future<List<TransactionHistory>> getByName(String? name) async {
+  Future<List<TransactionHistory>> getByName(String name) async {
     await initDb();
-    final Database db = (await _database)!;
-    List<Map> res =
+    final Database db = await _database!;
+    List<Map<String, dynamic>> res =
         await db.query(tableName, where: 'tickerName= ?', whereArgs: [name]);
     log.w('Name - $name --- $res');
 
     List<TransactionHistory> list = res.isNotEmpty
-        ? res.map((f) => TransactionHistory.fromJson(f as Map<String, dynamic>)).toList()
+        ? res.map((f) => TransactionHistory.fromJson(f)).toList()
         : [];
     return list;
     // return TransactionHistory.fromJson((res.first));
@@ -125,13 +125,13 @@ class TransactionHistoryDatabaseService {
   // Get Single Wallet By Name
   Future<List<TransactionHistory>> getByNameOrderByDate(String name) async {
     await initDb();
-    final Database db = (await _database)!;
-    List<Map> res = await db.query(tableName,
+    final Database db = await _database!;
+    List<Map<String, dynamic>> res = await db.query(tableName,
         where: 'tickerName= ?', orderBy: columnDate, whereArgs: [name]);
     log.w('Name - $name --- $res');
 
     List<TransactionHistory> list = res.isNotEmpty
-        ? res.map((f) => TransactionHistory.fromJson(f as Map<String, dynamic>)).toList()
+        ? res.map((f) => TransactionHistory.fromJson(f)).toList()
         : [];
     return list;
     // return TransactionHistory.fromJson((res.first));
@@ -139,23 +139,24 @@ class TransactionHistoryDatabaseService {
 
   // Get Single Wallet By Id
   Future getById(int id) async {
-    final Database db = (await _database)!;
-    List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
+    final Database db = await _database!;
+    List<Map<String, dynamic>> res =
+        await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
     if (res.isNotEmpty) {
-      return TransactionHistory.fromJson(res.first as Map<String, dynamic>);
+      return TransactionHistory.fromJson((res.first));
     }
     return null;
   }
 
   // Get Single Wallet By txId
-  Future<TransactionHistory?> getByKanbanTxId(String? tickerChainTxId) async {
-    final Database db = (await _database)!;
-    List<Map> res = await db.query(tableName,
+  Future<TransactionHistory?> getByKanbanTxId(String tickerChainTxId) async {
+    final Database db = await _database!;
+    List<Map<String, dynamic>> res = await db.query(tableName,
         where: 'tickerChainTxId= ?', whereArgs: [tickerChainTxId]);
     log.w('tickerChainTxId - $tickerChainTxId --- $res');
     if (res.isNotEmpty) {
-      return TransactionHistory.fromJson(res.first as Map<String, dynamic>);
+      return TransactionHistory.fromJson((res.first));
     }
     return null;
   }

@@ -82,11 +82,11 @@ class CampaignUserDatabaseService {
   // Get User By Id
   Future getByMemberId(String id) async {
     final Database db = (await _database)!;
-    List<Map> res =
+    List<Map<String, dynamic>> res =
         await db.query(tableName, where: 'email= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
     if (res.isNotEmpty) {
-      return CampaignUserData.fromJson(res.first as Map<String, dynamic>);
+      return CampaignUserData.fromJson(res.first);
     }
     return null;
   }
@@ -94,11 +94,11 @@ class CampaignUserDatabaseService {
 // Get User By Email
   Future getByEmail(String email) async {
     final Database db = (await _database)!;
-    List<Map> res =
+    List<Map<String, dynamic>> res =
         await db.query(tableName, where: 'email= ?', whereArgs: [email]);
     log.w('ID - $email --- $res');
     if (res.isNotEmpty) {
-      return CampaignUserData.fromJson(res.first as Map<String, dynamic>);
+      return CampaignUserData.fromJson(res.first);
     }
     return null;
   }
@@ -108,11 +108,11 @@ class CampaignUserDatabaseService {
     await initDb();
     final Database db = (await _database)!;
     log.w('db $db');
-    List<Map> res =
+    List<Map<String, dynamic>> res =
         await db.query(tableName, where: 'token= ?', whereArgs: [token]);
     log.w('Login token - $token --- $res');
     if (res.isNotEmpty) {
-      return CampaignUserData.fromJson(res.first as Map<String, dynamic>);
+      return CampaignUserData.fromJson(res.first);
     }
     return null;
   }

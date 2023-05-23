@@ -33,7 +33,7 @@ class WalletFeaturesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => WalletFeaturesViewModel(),
-      onModelReady: (dynamic model) {
+      onViewModelReady: (dynamic model) {
         model.walletInfo = walletInfo;
         model.context = context;
         model.init();

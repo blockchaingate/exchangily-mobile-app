@@ -82,11 +82,11 @@ class TokenInfoDatabaseService {
   Future<TokenModel?> getByCointype(int? coinType) async {
     await initDb();
     final Database db = (await _database)!;
-    List<Map> res =
+    List<Map<String, dynamic>> res =
         await db.query(tableName, where: 'type= ?', whereArgs: [coinType]);
     log.i('coinType - $coinType - res-- $res');
 
-    if (res.isNotEmpty) return TokenModel.fromJson(res.first as Map<String, dynamic>);
+    if (res.isNotEmpty) return TokenModel.fromJson(res.first);
     return null;
   }
 
@@ -94,11 +94,11 @@ class TokenInfoDatabaseService {
   Future<String?> getContractAddressByCoinType(int? coinType) async {
     await initDb();
     final Database db = (await _database)!;
-    List<Map> res =
+    List<Map<String, dynamic>> res =
         await db.query(tableName, where: 'type= ?', whereArgs: [coinType]);
     log.w('coinType - $coinType - res-- $res');
 
-    if (res.isNotEmpty) return TokenModel.fromJson(res.first as Map<String, dynamic>).contract;
+    if (res.isNotEmpty) return TokenModel.fromJson(res.first).contract;
     return null;
   }
 
@@ -121,11 +121,11 @@ class TokenInfoDatabaseService {
   Future<TokenModel?> getByTickerName(String? tickerName) async {
     await initDb();
     final Database db = (await _database)!;
-    List<Map> res = await db
+    List<Map<String, dynamic>> res = await db
         .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);
     log.i('Name - $tickerName - res-- $res');
 
-    if (res.isNotEmpty) return TokenModel.fromJson(res.first as Map<String, dynamic>);
+    if (res.isNotEmpty) return TokenModel.fromJson(res.first);
     return null;
     // return TransactionHistory.fromJson((res.first));
   }
@@ -134,11 +134,11 @@ class TokenInfoDatabaseService {
   Future<String?> getContractAddressByTickerName(String tickerName) async {
     await initDb();
     final Database db = (await _database)!;
-    List<Map> res = await db
+    List<Map<String, dynamic>> res = await db
         .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);
     log.w('Name - $tickerName - res-- $res');
 
-    if (res.isNotEmpty) return TokenModel.fromJson(res.first as Map<String, dynamic>).contract;
+    if (res.isNotEmpty) return TokenModel.fromJson(res.first).contract;
     return null;
     // return TransactionHistory.fromJson((res.first));
   }
@@ -147,16 +147,16 @@ class TokenInfoDatabaseService {
   getCoinTypeByTickerName(String tickerName) async {
     await initDb();
     final Database db = (await _database)!;
-    List<Map> res = await db.query(tableName,
+    List<Map<String, dynamic>> res = await db.query(tableName,
         distinct: true,
         where: 'tickerName= ?',
         whereArgs: [tickerName],
         limit: 1);
     log.w('Name - $tickerName - res-- $res');
-    int? tt = TokenModel.fromJson(res.first as Map<String, dynamic>).coinType;
+    int? tt = TokenModel.fromJson(res.first).coinType;
     log.i('token type $tt');
 
-    if (res.isNotEmpty) return TokenModel.fromJson(res.first as Map<String, dynamic>).coinType;
+    if (res.isNotEmpty) return TokenModel.fromJson(res.first).coinType;
 
     return null;
     // return TransactionHistory.fromJson((res.first));
@@ -166,12 +166,12 @@ class TokenInfoDatabaseService {
   getTickerNameByCoinType(int? coinType) async {
     await initDb();
     final Database db = (await _database)!;
-    List<Map> res = await db.query(tableName,
+    List<Map<String, dynamic>> res = await db.query(tableName,
         distinct: true, where: 'type= ?', whereArgs: [coinType], limit: 1);
     log.w('Name - $coinType - res-- $res');
     String? ticker = '';
     if (res != null || res.isNotEmpty) {
-      ticker = TokenModel.fromJson(res.first as Map<String, dynamic>).tickerName;
+      ticker = TokenModel.fromJson(res.first).tickerName;
     }
     log.i('ticker $ticker');
 
@@ -183,10 +183,11 @@ class TokenInfoDatabaseService {
   // Get Single transaction By Id
   Future getById(int id) async {
     final Database db = (await _database)!;
-    List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
+    List<Map<String, dynamic>> res =
+        await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
     if (res.isNotEmpty) {
-      return TokenModel.fromJson(res.first as Map<String, dynamic>);
+      return TokenModel.fromJson(res.first);
     }
     return null;
   }

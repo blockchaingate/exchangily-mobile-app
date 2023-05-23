@@ -36,7 +36,7 @@ class MoveToExchangeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => MoveToExchangeViewModel(),
-      onModelReady: (MoveToExchangeViewModel model) {
+      onViewModelReady: (MoveToExchangeViewModel model) {
         model.context = context;
         model.walletInfo = walletInfo;
         model.initState();

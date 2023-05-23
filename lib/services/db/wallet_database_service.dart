@@ -97,35 +97,36 @@ class WalletDatabaseService {
 
   // Get Single Wallet By Name
   Future<WalletInfo?> getByName(String name) async {
-    final Database db = (await _database)!;
-    List<Map> res =
+    final Database db = await _database!;
+    List<Map<String, dynamic>> res =
         await db.query(tableName, where: 'name= ?', whereArgs: [name]);
     log.w('ID - $name --- $res');
     if (res.isNotEmpty) {
-      return WalletInfo.fromJson(res.first as Map<String, dynamic>);
+      return WalletInfo.fromJson((res.first));
     }
     return null;
   }
 
   // Get Single Wallet By tickerName
   Future<WalletInfo?> getWalletBytickerName(String tickerName) async {
-    final Database db = (await _database)!;
-    List<Map> res = await db
+    final Database db = await _database!;
+    List<Map<String, dynamic>> res = await db
         .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);
     log.w('tickerName - $tickerName --res - $res');
     if (res.isNotEmpty) {
-      return WalletInfo.fromJson(res.first as Map<String, dynamic>);
+      return WalletInfo.fromJson((res.first));
     }
     return null;
   }
 
   // Get Single Wallet By Id
   Future getById(int id) async {
-    final Database db = (await _database)!;
-    List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
+    final Database db = await _database!;
+    List<Map<String, dynamic>> res =
+        await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     // log.w('ID - $id --- $res');
     if (res.isNotEmpty) {
-      return WalletInfo.fromJson(res.first as Map<String, dynamic>);
+      return WalletInfo.fromJson((res.first));
     }
     return null;
   }

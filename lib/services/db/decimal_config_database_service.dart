@@ -78,16 +78,11 @@ class DecimalConfigDatabaseService {
   // Get Single Setting By Name
   Future<PairDecimalConfig> getByName(String name) async {
     await initDb();
-    final Database db = (await _database)!;
-    List<Map> res =
+    final Database db = await _database!;
+    List<Map<String, dynamic>> res =
         await db.query(tableName, where: 'name= ?', whereArgs: [name]);
     log.w('Name - $name --- $res');
-
-    // List<PairDecimalConfig> list = res.isNotEmpty
-    //     ? res.map((f) => PairDecimalConfig.fromJson(f)).toList()
-    //     : [];
-    // return list;
-    return PairDecimalConfig.fromJson(res.first as Map<String, dynamic>);
+    return PairDecimalConfig.fromJson((res.first));
   }
 
   // Close Database

@@ -32,17 +32,6 @@ class UserSettingsDatabaseService {
   String path = '';
 
   Future<Database>? initDb() async {
-    // try {
-    //   await _database.then((res) {
-    //     debugPrint(res.isOpen);
-    //     debugPrint(res);
-    //   });
-    //   return _database;
-    // } catch (err) {
-    //   log.e('initDb - corrupted db - deleting ');
-    //   await deleteDb();
-    // }
-
     if (_database != null) return _database!;
     var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
@@ -94,26 +83,30 @@ class UserSettingsDatabaseService {
 
   // Get Single Wallet By Id
   Future<UserSettings?> getById(int id) async {
-    // await initDb();
-    final Database db = (await _database)!;
-    List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
+    final Database db = await _database!;
+    List<Map<String, dynamic>> res =
+        await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
     if (res.isNotEmpty) {
-      return UserSettings.fromJson(res.first as Map<String, dynamic>);
+      return UserSettings.fromJson((res.first));
     }
     return null;
   }
 
   // Get Single Wallet By Id
   Future<String?> getLanguage() async {
-    final Database db = (await _database)!;
-    if (db == null) return "en";
-    List<Map> res = await db.query(tableName);
-    log.w('res --- $res');
-    if (res.isNotEmpty) {
-      return UserSettings.fromJson(res.first as Map<String, dynamic>).language;
+    try {
+      final Database db = await _database!;
+
+      List<Map<String, dynamic>> res = await db.query(tableName);
+      log.w('res --- $res');
+      if (res.isNotEmpty) {
+        return UserSettings.fromJson((res.first)).language;
+      }
+      return null;
+    } catch (e) {
+      return "en";
     }
-    return null;
   }
 
   // Delete Single Object From Database By Id

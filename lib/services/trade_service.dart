@@ -45,7 +45,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
   final log = getLogger('TradeService');
-  final ApiService? _api = locator<ApiService>();
+  final ApiService _api = locator<ApiService>();
   ConfigService? configService = locator<ConfigService>();
 
   LocalStorageService? storageService = locator<LocalStorageService>();
@@ -118,7 +118,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 ----------------------------------------------------------------------*/
   Future getTxStatus(String? txHash) async {
     String url =
-        configService!.getKanbanBaseUrl()! + txStatusStatusRoute + '/$txHash';
+        '${configService!.getKanbanBaseUrl()!}$txStatusStatusRoute/$txHash';
     log.e('getTxStatus url $url');
     var res;
     try {
@@ -166,7 +166,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 // no need to convert everytime
   String trimHexString(String hexString) {
     //  int length = hexString.length;
-    String trimmedString = '0x' + hexString.substring(2, 42);
+    String trimmedString = '0x${hexString.substring(2, 42)}';
     return trimmedString;
   }
 
@@ -200,11 +200,8 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
   IOWebSocketChannel tickerDataChannel(String pair, {String interval = '24'}) {
-    var wsStringUrl = configService!.getKanbanBaseWSUrl()! +
-        tickerWSRoute +
-        pair +
-        '@' +
-        interval;
+    var wsStringUrl =
+        '${configService!.getKanbanBaseWSUrl()!}$tickerWSRoute$pair@$interval';
     log.i('getTickerDataUrl $wsStringUrl');
     final channel = IOWebSocketChannel.connect(wsStringUrl);
     return channel;
@@ -264,7 +261,8 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel marketTradesChannel(String pair) {
     try {
-      var wsString = configService!.getKanbanBaseWSUrl()! + tradesWSRoute + pair;
+      var wsString =
+          configService!.getKanbanBaseWSUrl()! + tradesWSRoute + pair;
       log.i('marketTradesChannel URL $wsString');
       IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
       return channel;
@@ -292,7 +290,8 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel orderbookChannel(String pair) {
     try {
-      var wsString = configService!.getKanbanBaseWSUrl()! + ordersWSRoute + pair;
+      var wsString =
+          configService!.getKanbanBaseWSUrl()! + ordersWSRoute + pair;
       log.i('ordersChannel Url $wsString');
       // if not put the IOWebSoketChannel.connect to variable channel and
       // directly returns it then in the multiple stream it doesn't work
@@ -306,7 +305,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   Future<double?> getCoinMarketPrice(String name) async {
     double? currentUsdValue;
-    var data = await _api!.getCoinCurrencyUsdPrice();
+    var data = await _api.getCoinCurrencyUsdPrice();
 
     currentUsdValue = data['data'][name.toUpperCase()]['USD'];
     debugPrint('Current market price $currentUsdValue');
@@ -332,7 +331,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
       String exgAddress, String tickerName) async {
     OrderList orderList;
     try {
-      var data = await _api!.getMyOrdersPagedByFabHexAddressAndTickerName(
+      var data = await _api.getMyOrdersPagedByFabHexAddressAndTickerName(
           exgAddress, tickerName);
       debugPrint(data.toString());
       if (data != null) {
@@ -349,15 +348,15 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   // Market Pair Group Price List
   marketPairPriceGroups(pairPriceList) {
-    List<List<Price?>> marketPairsGroupList = [];
-    List<Price?> usdtPairsList = [];
-    List<Price?> dusdPairsList = [];
-    List<Price?> btcPairsList = [];
-    List<Price?> ethPairsList = [];
-    List<Price?> exgPairsList = [];
-    List<Price?> usdcPairsList = [];
-    List<Price?> bnbPairsList = [];
-    List<Price?> btcFabExgUsdtPriceList = [];
+    List<List<Price>>? marketPairsGroupList = [];
+    List<Price> usdtPairsList = [];
+    List<Price> dusdPairsList = [];
+    List<Price> btcPairsList = [];
+    List<Price> ethPairsList = [];
+    List<Price> exgPairsList = [];
+    List<Price> usdcPairsList = [];
+    List<Price> bnbPairsList = [];
+    List<Price> btcFabExgUsdtPriceList = [];
     for (var pair in pairPriceList) {
       if (pair.symbol.endsWith("USDT")) {
         if (pair.symbol == 'BTCUSDT' ||

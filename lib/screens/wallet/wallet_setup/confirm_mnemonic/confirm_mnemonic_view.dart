@@ -11,11 +11,10 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 import 'confirm_mnemonic_viewmodel.dart';
@@ -30,7 +29,7 @@ class ConfirmMnemonicView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ConfirmMnemonicViewModel>.reactive(
       viewModelBuilder: () => ConfirmMnemonicViewModel(),
-      onModelReady: (model) {
+      onViewModelReady: (model) {
         model.init();
         model.randomMnemonicList.addAll(randomMnemonicListFromRoute!);
         randomMnemonicListFromRoute!.shuffle();
@@ -44,10 +43,8 @@ class ConfirmMnemonicView extends StatelessWidget {
           appBar: AppBar(
               centerTitle: true,
               title: Text(
-                AppLocalizations.of(context)!.confirm +
-                    ' ' +
-                    AppLocalizations.of(context)!.mnemonic,
-                style: Theme.of(context).textTheme.headline3,
+                '${AppLocalizations.of(context)!.confirm} ${AppLocalizations.of(context)!.mnemonic}',
+                style: Theme.of(context).textTheme.displaySmall,
               ),
               backgroundColor: secondaryColor),
           body: Container(
@@ -70,10 +67,13 @@ class ConfirmMnemonicView extends StatelessWidget {
                       ),
                       child: Text(
                           'Verify Mnemonic by tap on words in the correct order',
-                          style: Theme.of(context).textTheme.headline5!.copyWith(
-                              fontWeight: model.isTap
-                                  ? FontWeight.bold
-                                  : FontWeight.normal)),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5!
+                              .copyWith(
+                                  fontWeight: model.isTap
+                                      ? FontWeight.bold
+                                      : FontWeight.normal)),
                       onPressed: () {
                         //    model.shuffleStringList();
                         model.selectConfirmMethod('tap');
@@ -90,10 +90,13 @@ class ConfirmMnemonicView extends StatelessWidget {
                             side: BorderSide(color: secondaryColor, width: 2))),
                       ),
                       child: Text('Verify Mnemonic by typing mnemonic words',
-                          style: Theme.of(context).textTheme.headline5!.copyWith(
-                              fontWeight: !model.isTap
-                                  ? FontWeight.bold
-                                  : FontWeight.normal)),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(
+                                  fontWeight: !model.isTap
+                                      ? FontWeight.bold
+                                      : FontWeight.normal)),
                       onPressed: () => model.selectConfirmMethod('write'),
                     ),
                   ],
@@ -215,7 +218,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
                         AppLocalizations.of(context)!.finishWalletBackup,
-                        style: Theme.of(context).textTheme.button,
+                        style: Theme.of(context).textTheme.labelLarge,
                       ),
                     ),
                     onPressed: () {

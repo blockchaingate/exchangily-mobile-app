@@ -25,7 +25,7 @@ class MarketsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MarketsViewModel>.reactive(
-        onModelReady: (model) {
+        onViewModelReady: (model) {
           model.context = context;
         },
         initialiseSpecialViewModelsOnce: true,

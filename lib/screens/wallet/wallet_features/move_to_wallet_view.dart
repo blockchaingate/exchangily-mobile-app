@@ -34,7 +34,7 @@ class MoveToWalletScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<MoveToWalletViewmodel>.reactive(
       viewModelBuilder: () => MoveToWalletViewmodel(),
-      onModelReady: (model) {
+      onViewModelReady: (model) {
         model.context = context;
         model.walletInfo = walletInfo;
         model.initState();
@@ -235,7 +235,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   child: Radio(
                                                       activeColor:
                                                           globals.primaryColor,
-                                                      onChanged: (dynamic value) {
+                                                      onChanged:
+                                                          (dynamic value) {
                                                         model
                                                             .radioButtonSelection(
                                                                 value);
@@ -262,7 +263,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                                       //           (states) => Colors.blue),
                                                       activeColor:
                                                           globals.primaryColor,
-                                                      onChanged: (dynamic value) {
+                                                      onChanged:
+                                                          (dynamic value) {
                                                         model
                                                             .radioButtonSelection(
                                                                 value);
@@ -328,7 +330,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   child: Radio(
                                                       activeColor:
                                                           globals.primaryColor,
-                                                      onChanged: (dynamic value) {
+                                                      onChanged:
+                                                          (dynamic value) {
                                                         model
                                                             .radioButtonSelection(
                                                                 value);
@@ -360,7 +363,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   child: Radio(
                                                       activeColor:
                                                           globals.primaryColor,
-                                                      onChanged: (dynamic value) {
+                                                      onChanged:
+                                                          (dynamic value) {
                                                         model
                                                             .radioButtonSelection(
                                                                 value);

@@ -83,6 +83,8 @@ class WalletDashboardViewModel extends BaseViewModel {
   List<WalletBalance>? walletsCopy = [];
   List<WalletBalance> favWallets = [];
 
+  final List<String> netowrkList = ["FAB", "ETH", "TRX", "BNB"];
+
   WalletInfo? rightWalletInfo;
   final double elevation = 5;
   String totalUsdBalance = '';
@@ -153,7 +155,19 @@ class WalletDashboardViewModel extends BaseViewModel {
     sharedService.context = context;
     //currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
 
-    await refreshBalancesV2();
+    await refreshBalancesV2().then((value) async {
+      for (var i = 0; i < value!.length; i++) {
+        try {
+          await WalletUtil()
+              .getCoinTypeIdByName(wallets![i].coin!)
+              .then((value) async {
+            wallets![i].tokenType = WalletUtil().getChainNameByTokenType(value);
+          });
+        } catch (error) {
+          debugPrint("getWalletInfoObjFromWalletBalance ===> $error");
+        }
+      }
+    });
     showDialogWarning();
     getConfirmDepositStatus();
 
@@ -530,16 +544,18 @@ class WalletDashboardViewModel extends BaseViewModel {
     isHideSearch = true;
 
     if (tabIndex == 0) {
-      // await init();
       isHideSmallAssetsButton = false;
       isHideSearch = false;
-    } else if (tabIndex == 1) {
+    } else if (tabIndex == 5) {
       isShowFavCoins = true;
-    } else if (tabIndex == 2) {
+    } else if (tabIndex == 6) {
       await getBalanceForSelectedCustomTokens();
+    } else {
+      isHideSmallAssetsButton = false;
+      isHideSearch = false;
     }
 
-    if (tabIndex != 1) {
+    if (tabIndex != 5) {
       isShowFavCoins = false;
     }
     storageService!.isFavCoinTabSelected = isShowFavCoins ? true : false;
@@ -707,8 +723,11 @@ class WalletDashboardViewModel extends BaseViewModel {
                     child: Center(
                         child: Text(
                       AppLocalizations.of(context)!.appUpdateNotice,
-                      style: Theme.of(context).textTheme.headline4!.copyWith(
-                          color: primaryColor, fontWeight: FontWeight.w500),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(
+                              color: primaryColor, fontWeight: FontWeight.w500),
                     )),
                   ),
                   content: TextButton(
@@ -968,7 +987,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusy(true);
     unreadMsgNum = getunReadAnnouncement();
 
-    debugPrint("Update unread annmoucement number:" + unreadMsgNum.toString());
+    debugPrint("Update unread annmoucement number:$unreadMsgNum");
     (context as Element).markNeedsBuild();
     setBusy(false);
   }

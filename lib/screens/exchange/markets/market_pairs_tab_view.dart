@@ -1,4 +1,4 @@
-import 'package:exchangilymobileapp/screen_state/market/MarketPairsTabViewState.dart';
+import 'package:exchangilymobileapp/screen_state/market/marketPairsTabViewState.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -134,88 +134,23 @@ class MarketPairsTabView extends StatelessWidget {
                     ];
                   },
                   body: isBusy!
-                      ? Container(
-                          //color: Theme.of(context).colorScheme.secondary,
-                          child: Center(
+                      ? Center(
                           child: model.sharedService!.loadingIndicator(),
-                        ))
-                      : Container(
-                          //  color: Theme.of(context).colorScheme.secondary,
-                          child: TabBarView(
-                              children: marketPairsTabBarView!.map((pairList) {
-                            return MarketPairPriceDetailView(
-                                pairList: pairList);
-                          }).toList()),
-                        ),
+                        )
+                      : TabBarView(
+                          children: marketPairsTabBarView!.map((pairList) {
+                          return MarketPairPriceDetailView(pairList: pairList);
+                        }).toList()),
                 ),
               ),
             )));
   }
 }
 
-// class HeaderRow extends StatelessWidget {
-//   const HeaderRow({
-//     Key key,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return
-//         // Container();
-
-//         Row(
-//       children: <Widget>[
-//         Expanded(
-//             flex: 3,
-//             child: Padding(
-//               padding: const EdgeInsets.only(left: 10.0),
-//               child: Text(
-//                 'Ticker',
-//                 style: Theme.of(context).textTheme.subtitle2,
-//               ),
-//             )),
-//         Expanded(
-//           flex: 2,
-//           child: Text(
-//             'Price',
-//             style: Theme.of(context).textTheme.subtitle2,
-//           ),
-//         ),
-//         Expanded(
-//           flex: 2,
-//           child: Text(
-//             'High',
-//             style: Theme.of(context).textTheme.subtitle2,
-//           ),
-//         ),
-//         Expanded(
-//           flex: 2,
-//           child: Text(
-//             'Low',
-//             style: Theme.of(context).textTheme.subtitle2,
-//           ),
-//         ),
-//         Expanded(
-//           flex: 1,
-//           child: Text(
-//             'Change',
-//             style: Theme.of(context).textTheme.subtitle2,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate(this._tabBar);
 
   final TabBar _tabBar;
-
-  // @override
-  // double get minExtent => _tabBar.preferredSize.height + 20;
-  // @override
-  // double get maxExtent => _tabBar.preferredSize.height + 20;
 
   @override
   double get minExtent => _tabBar.preferredSize.height - 10;
@@ -230,33 +165,12 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
         Container(
           height: _tabBar.preferredSize.height - 10,
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: PreferredSize(
-              child: _tabBar,
-              preferredSize: Size(MediaQuery.of(context).size.width,
-                  _tabBar.preferredSize.height - 10)),
           color: const Color(0xff202138),
+          child: PreferredSize(
+              preferredSize: Size(MediaQuery.of(context).size.width,
+                  _tabBar.preferredSize.height - 10),
+              child: _tabBar),
         ),
-        // new SizedBox(
-        //   height: 20,
-        //   child: Container(
-        //     child: Container(
-        //       padding: EdgeInsets.only(top: 2.0, bottom: 2),
-        //       decoration: BoxDecoration(
-        //           color: Theme.of(context).cardColor,
-        //           borderRadius: BorderRadius.only(
-        //               topLeft: Radius.circular(15),
-        //               topRight: Radius.circular(15))),
-        //       child: Card(
-        //         margin: EdgeInsets.symmetric(vertical: 1, horizontal: 8),
-        //         shape: RoundedRectangleBorder(
-        //           borderRadius: BorderRadius.circular(35),
-        //         ),
-        //         elevation: 1,
-        //         child: HeaderRow(),
-        //       ),
-        //     ),
-        //   ),
-        // ),
       ],
     );
   }

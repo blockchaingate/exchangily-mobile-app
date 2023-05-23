@@ -55,8 +55,10 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   final ApiService? apiService = locator<ApiService>();
   SharedService? sharedService = locator<SharedService>();
   final NavigationService? navigationService = locator<NavigationService>();
-  final UserSettingsDatabaseService? userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
-  final CoreWalletDatabaseService? coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+  final UserSettingsDatabaseService? userSettingsDatabaseService =
+      locator<UserSettingsDatabaseService>();
+  final CoreWalletDatabaseService? coreWalletDatabaseService =
+      locator<CoreWalletDatabaseService>();
 
   bool isChinese = false;
   bool isDialogUp = false;
@@ -67,7 +69,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   @override
   Future futureToRun() async =>
       // tickerName.isEmpty ?
-      await transactionHistoryDatabaseService!.getByName(walletInfo!.tickerName);
+      await transactionHistoryDatabaseService!
+          .getByName(walletInfo!.tickerName!);
 
 /*----------------------------------------------------------------------
                   After Future Data is ready
@@ -80,8 +83,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     List<TransactionHistory> txHistoryFromDb = [];
     List<TransactionHistory> txHistoryEvents = [];
     txHistoryFromDb = data;
-    String? fabAddress =
-        await walletService!.getAddressFromCoreWalletDatabaseByTickerName('FAB');
+    String? fabAddress = await walletService!
+        .getAddressFromCoreWalletDatabaseByTickerName('FAB');
     txHistoryEvents = await apiService!.getTransactionHistoryEvents(fabAddress);
     if (txHistoryEvents.isNotEmpty) {
       for (var txFromApi in txHistoryEvents) {
@@ -282,7 +285,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                                                   .kanbanTxId!.isEmpty
                                               ? transactionHistory
                                                       .kanbanTxStatus!.isEmpty
-                                                  ? AppLocalizations.of(context)!
+                                                  ? AppLocalizations.of(
+                                                          context)!
                                                       .inProgress
                                                   : firstCharToUppercase(
                                                       transactionHistory
@@ -485,16 +489,16 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                                           transactionHistory.chainName,
                                           false);
                                     },
-                                  text:
-                                      transactionHistory.tickerChainTxId!.isEmpty
-                                          ? transactionHistory
-                                                  .tickerChainTxStatus!.isEmpty
-                                              ? AppLocalizations.of(context)!
-                                                  .inProgress
-                                              : transactionHistory
-                                                  .tickerChainTxStatus
-                                          : transactionHistory.tickerChainTxId
-                                              .toString(),
+                                  text: transactionHistory
+                                          .tickerChainTxId!.isEmpty
+                                      ? transactionHistory
+                                              .tickerChainTxStatus!.isEmpty
+                                          ? AppLocalizations.of(context)!
+                                              .inProgress
+                                          : transactionHistory
+                                              .tickerChainTxStatus
+                                      : transactionHistory.tickerChainTxId
+                                          .toString(),
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyText1!

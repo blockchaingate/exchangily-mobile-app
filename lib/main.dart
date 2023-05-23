@@ -17,19 +17,20 @@ import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/connectivity_service.dart';
-import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
+
 import './shared/globals.dart' as globals;
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'localizations.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,25 +43,25 @@ Future<void> main() async {
       MyApp(packageInfo));
   // ));
 
-  // try {
-  //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  //   await serviceLocator();
-  //   Logger.level = Level.info;
-  //   SystemChannels.textInput
-  //       .invokeMethod('TextInput.hide'); // Hides keyboard initially
-  //   // Force user to use only portrait mode until the development of other screen size design
-  //   await dotenv.load();
-  //   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
-  //     (_) {
-  //       runApp(
-  //           //  DevicePreview(builder: (context) =>
-  //           MyApp(packageInfo));
-  //       // ));
-  //     },
-  //   );
-  // } catch (err) {
-  //   debugPrint('main.dart (Catch) Locator setup has failed $err');
-  // }
+  try {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    await serviceLocator();
+    Logger.level = Level.info;
+    SystemChannels.textInput
+        .invokeMethod('TextInput.hide'); // Hides keyboard initially
+    // Force user to use only portrait mode until the development of other screen size design
+    await dotenv.load();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
+      (_) {
+        runApp(
+            //  DevicePreview(builder: (context) =>
+            MyApp(packageInfo));
+        // ));
+      },
+    );
+  } catch (err) {
+    debugPrint('main.dart (Catch) Locator setup has failed $err');
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -130,8 +131,8 @@ class MyApp extends StatelessWidget {
               unselectedWidgetColor: Colors.white,
               disabledColor: globals.grey.withAlpha(100),
               primaryColor: globals.primaryColor,
-              backgroundColor: globals.secondaryColor,
               cardColor: globals.walletCardColor,
+              backgroundColor: globals.secondaryColor,
               canvasColor: globals.secondaryColor,
               buttonTheme: const ButtonThemeData(
                   minWidth: double.infinity,
@@ -141,40 +142,40 @@ class MyApp extends StatelessWidget {
                   textTheme: ButtonTextTheme.primary),
               fontFamily: 'Roboto',
               textTheme: TextTheme(
-                  button: TextStyle(fontSize: 14, color: globals.white),
-                  headline1: TextStyle(
+                  labelLarge: TextStyle(fontSize: 14, color: globals.white),
+                  displayLarge: TextStyle(
                       fontSize: 22,
                       color: globals.white,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.25),
-                  headline2: TextStyle(
+                  displayMedium: TextStyle(
                       fontSize: 14,
                       color: globals.white,
                       letterSpacing: 1,
                       height: 1.5,
                       fontWeight: FontWeight.bold),
-                  headline3: TextStyle(fontSize: 16, color: globals.white),
-                  headline4: TextStyle(
+                  displaySmall: TextStyle(fontSize: 16, color: globals.white),
+                  headlineMedium: TextStyle(
                       fontSize: 15,
                       color: globals.white,
                       fontWeight: FontWeight.w300),
-                  subtitle1: TextStyle(
+                  titleMedium: TextStyle(
                       fontSize: 14,
                       color: globals.white,
                       fontWeight: FontWeight.w300),
-                  headline5: TextStyle(
+                  headlineSmall: TextStyle(
                       fontSize: 12.5,
                       color: globals.white,
                       fontWeight: FontWeight.w400),
-                  subtitle2: TextStyle(
+                  titleSmall: TextStyle(
                       fontSize: 10.3,
                       color: globals.grey,
                       fontWeight: FontWeight.w400),
-                  bodyText1: TextStyle(
+                  bodyLarge: TextStyle(
                       fontSize: 13,
                       color: globals.white,
                       fontWeight: FontWeight.w400),
-                  headline6: TextStyle(
+                  titleLarge: TextStyle(
                       fontSize: 10.5,
                       color: globals.white,
                       fontWeight: FontWeight.w500)),

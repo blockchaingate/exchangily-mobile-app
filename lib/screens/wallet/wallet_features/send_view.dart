@@ -31,7 +31,7 @@ class SendWalletView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => SendViewModel(),
-        onModelReady: (SendViewModel model) async {
+        onViewModelReady: (SendViewModel model) async {
           model.context = context;
           model.walletInfo = walletInfo;
 

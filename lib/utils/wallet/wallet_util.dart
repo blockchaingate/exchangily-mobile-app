@@ -13,11 +13,13 @@ import 'package:path_provider/path_provider.dart';
 class WalletUtil {
   final log = getLogger('WalletUtil');
 
-  final TokenInfoDatabaseService? tokenListDatabaseService = locator<TokenInfoDatabaseService>();
+  final TokenInfoDatabaseService? tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
 
   var abiUtils = AbiUtils();
   final CoinService? coinService = locator<CoinService>();
-  CoreWalletDatabaseService? coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+  CoreWalletDatabaseService? coreWalletDatabaseService =
+      locator<CoreWalletDatabaseService>();
 
   Map<String, String> coinTickerAndNameList = {
     'BTC': 'Bitcoin',
@@ -185,20 +187,20 @@ class WalletUtil {
         tokenType == 'POLYGON' ||
         tickerName == "BNB" ||
         tokenType == "BNB") {
-      walletAddress =
-          (await coreWalletDatabaseService!.getWalletAddressByTickerName('ETH'))!;
+      walletAddress = (await coreWalletDatabaseService!
+          .getWalletAddressByTickerName('ETH'));
     } else if (tickerName == 'FAB' || tokenType == 'FAB') {
-      walletAddress =
-          (await coreWalletDatabaseService!.getWalletAddressByTickerName('FAB'))!;
+      walletAddress = (await coreWalletDatabaseService!
+          .getWalletAddressByTickerName('FAB'));
     } else if (tickerName == 'TRX' ||
         tickerName == 'TRON' ||
         tokenType == 'TRON' ||
         tokenType == 'TRX') {
-      walletAddress =
-          (await coreWalletDatabaseService!.getWalletAddressByTickerName('TRX'))!;
+      walletAddress = (await coreWalletDatabaseService!
+          .getWalletAddressByTickerName('TRX'));
     } else {
       walletAddress = (await coreWalletDatabaseService!
-          .getWalletAddressByTickerName(tickerName))!;
+          .getWalletAddressByTickerName(tickerName));
     }
     String? coinName = '';
     for (var i = 0; i < coinTickerAndNameList.length; i++) {

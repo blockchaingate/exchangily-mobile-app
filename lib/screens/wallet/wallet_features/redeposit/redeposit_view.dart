@@ -31,7 +31,7 @@ class Redeposit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<RedepositViewModel>.reactive(
-      onModelReady: (model) {
+      onViewModelReady: (model) {
         model.context = context;
         model.walletInfo = walletInfo;
       },
@@ -62,7 +62,8 @@ class Redeposit extends StatelessWidget {
                                     title: Row(
                                       children: <Widget>[
                                         Text(
-                                            AppLocalizations.of(context)!.amount,
+                                            AppLocalizations.of(context)!
+                                                .amount,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline4),
@@ -82,8 +83,8 @@ class Redeposit extends StatelessWidget {
                                     onChanged: (dynamic val) {
                                       model.setBusy(true);
                                       model.errDepositTransactionID = val;
-                                      debugPrint('valllll=' +
-                                          model.errDepositTransactionID!);
+                                      debugPrint(
+                                          'valllll=${model.errDepositTransactionID!}');
                                       model.setBusy(false);
                                     },
                                   ))
@@ -91,141 +92,138 @@ class Redeposit extends StatelessWidget {
                         ),
                       ),
                 UIHelper.verticalSpaceSmall,
-                Container(
-                  // padding: EdgeInsets.only(left: 20.0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            AppLocalizations.of(context)!.walletbalance +
-                                ' ${model.walletInfo!.availableBalance}',
+                Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          '${AppLocalizations.of(context)!.walletbalance} ${model.walletInfo!.availableBalance}',
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                          ),
+                          child: Text(
+                            walletInfo!.tickerName!.toUpperCase(),
                             style: Theme.of(context).textTheme.headline5,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
+                        )
+                      ],
+                    ),
+                    UIHelper.verticalSpaceSmall,
+                    Row(
+                      children: <Widget>[
+                        Text(AppLocalizations.of(context)!.kanbanGasFee,
+                            style: Theme.of(context).textTheme.headline5),
+                        UIHelper.horizontalSpaceSmall,
+                        Text(
+                          '${model.kanbanTransFee}',
+                          style: Theme.of(context).textTheme.headline5,
+                        )
+                      ],
+                    ),
+                    // Switch Row
+                    Row(
+                      children: <Widget>[
+                        Text(AppLocalizations.of(context)!.advance,
+                            style: Theme.of(context).textTheme.headline5),
+                        Switch(
+                          value: model.transFeeAdvance,
+                          inactiveTrackColor: grey,
+                          dragStartBehavior: DragStartBehavior.start,
+                          activeColor: primaryColor,
+                          onChanged: (bool isOn) {
+                            model.setBusy(true);
+                            model.transFeeAdvance = isOn;
+                            model.setBusy(false);
+                          },
+                        )
+                      ],
+                    ),
+                    Visibility(
+                        visible: model.transFeeAdvance,
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                      AppLocalizations.of(context)!
+                                          .kanbanGasPrice,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                ),
+                                Expanded(
+                                    flex: 5,
+                                    child: TextField(
+                                      controller:
+                                          model.kanbanGasPriceTextController,
+                                      onChanged: (String amount) {
+                                        model.updateTransFee();
+                                      },
+                                      keyboardType: TextInputType
+                                          .number, // numnber keyboard
+                                      decoration: InputDecoration(
+                                          focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: primaryColor)),
+                                          enabledBorder: UnderlineInputBorder(
+                                              borderSide:
+                                                  BorderSide(color: grey)),
+                                          hintText: '0.00000',
+                                          hintStyle: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                      style:
+                                          TextStyle(color: grey, fontSize: 12),
+                                    ))
+                              ],
                             ),
-                            child: Text(
-                              walletInfo!.tickerName!.toUpperCase(),
-                              style: Theme.of(context).textTheme.headline5,
-                            ),
-                          )
-                        ],
-                      ),
-                      UIHelper.verticalSpaceSmall,
-                      Row(
-                        children: <Widget>[
-                          Text(AppLocalizations.of(context)!.kanbanGasFee,
-                              style: Theme.of(context).textTheme.headline5),
-                          UIHelper.horizontalSpaceSmall,
-                          Text(
-                            '${model.kanbanTransFee}',
-                            style: Theme.of(context).textTheme.headline5,
-                          )
-                        ],
-                      ),
-                      // Switch Row
-                      Row(
-                        children: <Widget>[
-                          Text(AppLocalizations.of(context)!.advance,
-                              style: Theme.of(context).textTheme.headline5),
-                          Switch(
-                            value: model.transFeeAdvance,
-                            inactiveTrackColor: grey,
-                            dragStartBehavior: DragStartBehavior.start,
-                            activeColor: primaryColor,
-                            onChanged: (bool isOn) {
-                              model.setBusy(true);
-                              model.transFeeAdvance = isOn;
-                              model.setBusy(false);
-                            },
-                          )
-                        ],
-                      ),
-                      Visibility(
-                          visible: model.transFeeAdvance,
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                        AppLocalizations.of(context)!
-                                            .kanbanGasPrice,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6),
-                                  ),
-                                  Expanded(
-                                      flex: 5,
-                                      child: TextField(
-                                        controller:
-                                            model.kanbanGasPriceTextController,
-                                        onChanged: (String amount) {
-                                          model.updateTransFee();
-                                        },
-                                        keyboardType: TextInputType
-                                            .number, // numnber keyboard
-                                        decoration: InputDecoration(
-                                            focusedBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: primaryColor)),
-                                            enabledBorder: UnderlineInputBorder(
-                                                borderSide:
-                                                    BorderSide(color: grey)),
-                                            hintText: '0.00000',
-                                            hintStyle: Theme.of(context)
-                                                .textTheme
-                                                .headline5),
-                                        style: TextStyle(
-                                            color: grey, fontSize: 12),
-                                      ))
-                                ],
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                        AppLocalizations.of(context)!
-                                            .kanbanGasLimit,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6),
-                                  ),
-                                  Expanded(
-                                      flex: 5,
-                                      child: TextField(
-                                        controller:
-                                            model.kanbanGasLimitTextController,
-                                        onChanged: (String amount) {
-                                          model.updateTransFee();
-                                        },
-                                        keyboardType: const TextInputType
-                                                .numberWithOptions(
-                                            decimal: true), // numnber keyboard
-                                        decoration: InputDecoration(
-                                            focusedBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: primaryColor)),
-                                            enabledBorder: UnderlineInputBorder(
-                                                borderSide:
-                                                    BorderSide(color: grey)),
-                                            hintText: '0.00000',
-                                            hintStyle: Theme.of(context)
-                                                .textTheme
-                                                .headline5),
-                                        style: TextStyle(
-                                            color: grey, fontSize: 12),
-                                      ))
-                                ],
-                              )
-                            ],
-                          ))
-                    ],
-                  ),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                      AppLocalizations.of(context)!
+                                          .kanbanGasLimit,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                ),
+                                Expanded(
+                                    flex: 5,
+                                    child: TextField(
+                                      controller:
+                                          model.kanbanGasLimitTextController,
+                                      onChanged: (String amount) {
+                                        model.updateTransFee();
+                                      },
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                              decimal:
+                                                  true), // numnber keyboard
+                                      decoration: InputDecoration(
+                                          focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: primaryColor)),
+                                          enabledBorder: UnderlineInputBorder(
+                                              borderSide:
+                                                  BorderSide(color: grey)),
+                                          hintText: '0.00000',
+                                          hintStyle: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                      style:
+                                          TextStyle(color: grey, fontSize: 12),
+                                    ))
+                              ],
+                            )
+                          ],
+                        ))
+                  ],
                 ),
                 model.errorMessage != null || model.errorMessage!.isNotEmpty
                     ? Center(

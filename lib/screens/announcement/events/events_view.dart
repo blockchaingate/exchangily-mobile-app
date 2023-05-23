@@ -17,7 +17,7 @@ class EventsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => EventsViewModel(),
-        onModelReady: (EventsViewModel model) async {
+        onViewModelReady: (EventsViewModel model) async {
           model.init();
         },
         builder: (context, EventsViewModel model, child) {

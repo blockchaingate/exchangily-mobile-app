@@ -1,23 +1,24 @@
 import 'dart:io';
-import 'dart:typed_data';
 
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 // import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
-
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
+import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,13 +26,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:stacked/stacked.dart';
-import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
-import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:exchangilymobileapp/constants/api_routes.dart';
 
 class LightningRemitViewmodel extends FutureViewModel {
   final log = getLogger('LightningRemitViewmodel');
@@ -80,8 +77,8 @@ class LightningRemitViewmodel extends FutureViewModel {
 
   init() async {
     sharedService!.context = context;
-    fabAddress =
-        await walletService!.getAddressFromCoreWalletDatabaseByTickerName('FAB');
+    fabAddress = await walletService!
+        .getAddressFromCoreWalletDatabaseByTickerName('FAB');
   }
 
 /*----------------------------------------------------------------------
@@ -231,11 +228,13 @@ class LightningRemitViewmodel extends FutureViewModel {
                         children: [
                           Text(exchangeBalances[index].ticker!,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headline4),
+                              style:
+                                  Theme.of(context).textTheme.headlineMedium),
                           UIHelper.horizontalSpaceSmall,
                           Text(
                               exchangeBalances[index].unlockedAmount.toString(),
-                              style: Theme.of(context).textTheme.headline4),
+                              style:
+                                  Theme.of(context).textTheme.headlineMedium),
                           const Divider(
                             color: Colors.white,
                             height: 1,
@@ -289,14 +288,17 @@ class LightningRemitViewmodel extends FutureViewModel {
         //     AppLocalizations.of(context).userAccessDenied;
       } else {
         // setBusy(true);
-        sharedService!.alertDialog('', AppLocalizations.of(context!)!.unknownError,
+        sharedService!.alertDialog(
+            '', AppLocalizations.of(context!)!.unknownError,
             isWarning: false);
       }
     } on FormatException {
-      sharedService!.alertDialog('', AppLocalizations.of(context!)!.scanCancelled,
+      sharedService!.alertDialog(
+          '', AppLocalizations.of(context!)!.scanCancelled,
           isWarning: false);
     } catch (e) {
-      sharedService!.alertDialog('', AppLocalizations.of(context!)!.unknownError,
+      sharedService!.alertDialog(
+          '', AppLocalizations.of(context!)!.unknownError,
           isWarning: false);
     }
 
@@ -376,7 +378,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                               // add here cupertino widget to check in these small widgets first then the entire app
                               kbAddress,
                               textAlign: TextAlign.left,
-                              style: Theme.of(context).textTheme.headline6),
+                              style: Theme.of(context).textTheme.titleLarge),
                         ),
                         CupertinoButton(
                             child: const Icon(
@@ -431,7 +433,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                               AppLocalizations.of(context)!.share,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline5!
+                                  .headlineSmall!
                                   .copyWith(color: primaryColor),
                             )),
                             onPressed: () {
@@ -460,7 +462,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                               const BorderRadius.all(Radius.circular(4)),
                           child: Text(
                             AppLocalizations.of(context)!.close,
-                            style: Theme.of(context).textTheme.headline5,
+                            style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           onPressed: () {
                             Navigator.of(context).pop(false);
@@ -489,7 +491,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                   ),
                   titleTextStyle: Theme.of(context)
                       .textTheme
-                      .headline4!
+                      .headlineMedium!
                       .copyWith(fontWeight: FontWeight.bold),
                   contentTextStyle: const TextStyle(color: grey),
                   content: Column(
@@ -503,7 +505,8 @@ class LightningRemitViewmodel extends FutureViewModel {
                               child: Text(
                                   // add here cupertino widget to check in these small widgets first then the entire app
                                   kbAddress,
-                                  style: Theme.of(context).textTheme.headline6),
+                                  style:
+                                      Theme.of(context).textTheme.titleLarge),
                             ),
                           ),
                           IconButton(
@@ -545,40 +548,35 @@ class LightningRemitViewmodel extends FutureViewModel {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            // padding: const EdgeInsets.all(10.0),
-                            child: ElevatedButton(
-                                style: outlinedButtonStyles1.copyWith(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        primaryColor)),
-                                child: Text(AppLocalizations.of(context)!.share,
-                                    style:
-                                        Theme.of(context).textTheme.headline6),
-                                onPressed: () {
-                                  String receiveFileName =
-                                      'Lightning-remit-kanban-receive-address.png';
-                                  getApplicationDocumentsDirectory()
-                                      .then((dir) {
-                                    String filePath =
-                                        "${dir.path}/$receiveFileName";
-                                    File file = File(filePath);
+                          ElevatedButton(
+                              style: outlinedButtonStyles1.copyWith(
+                                  backgroundColor:
+                                      MaterialStateProperty.all(primaryColor)),
+                              child: Text(AppLocalizations.of(context)!.share,
+                                  style: Theme.of(context).textTheme.headline6),
+                              onPressed: () {
+                                String receiveFileName =
+                                    'Lightning-remit-kanban-receive-address.png';
+                                getApplicationDocumentsDirectory().then((dir) {
+                                  String filePath =
+                                      "${dir.path}/$receiveFileName";
+                                  File file = File(filePath);
 
-                                    Future.delayed(
-                                        const Duration(milliseconds: 30), () {
-                                      sharedService!
-                                          .capturePng(globalKey: globalKey)
-                                          .then((byteData) {
-                                        file
-                                            .writeAsBytes(byteData!)
-                                            .then((onFile) {
-                                          Share.shareFiles([onFile.path],
-                                              text: kbAddress);
-                                        });
+                                  Future.delayed(
+                                      const Duration(milliseconds: 30), () {
+                                    sharedService!
+                                        .capturePng(globalKey: globalKey)
+                                        .then((byteData) {
+                                      file
+                                          .writeAsBytes(byteData!)
+                                          .then((onFile) {
+                                        Share.shareFiles([onFile.path],
+                                            text: kbAddress);
                                       });
                                     });
                                   });
-                                }),
-                          ),
+                                });
+                              }),
                           Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 10.0),
@@ -586,7 +584,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                               style: outlinedButtonStyles1,
                               child: Text(
                                 AppLocalizations.of(context)!.close,
-                                style: Theme.of(context).textTheme.headline6,
+                                style: Theme.of(context).textTheme.titleLarge,
                               ),
                               onPressed: () {
                                 Navigator.of(context).pop(false);
@@ -614,23 +612,25 @@ class LightningRemitViewmodel extends FutureViewModel {
     setBusy(true);
     if (walletService!.isValidKbAddress(addressController.text)) {
       if (amountController.text == '') {
-        sharedService!.alertDialog(AppLocalizations.of(context!)!.validationError,
+        sharedService!.alertDialog(
+            AppLocalizations.of(context!)!.validationError,
             AppLocalizations.of(context!)!.amountMissing);
         setBusy(false);
         return;
       }
       await refreshBalance();
-      ExchangeBalanceModel _selectedExchangeBal = exchangeBalances
+      ExchangeBalanceModel selectedExchangeBal = exchangeBalances
           .firstWhere((element) => element.ticker == tickerName);
       // int coinType = getCoinTypeIdByName(tickerName);
-      debugPrint(_selectedExchangeBal.coinType.toString());
+      debugPrint(selectedExchangeBal.coinType.toString());
       double amount = double.parse(amountController.text);
-      double selectedCoinBalance = _selectedExchangeBal.unlockedAmount!;
+      double selectedCoinBalance = selectedExchangeBal.unlockedAmount!;
       if (selectedCoinBalance <= 0.0 || amount > selectedCoinBalance) {
-        sharedService!.alertDialog(AppLocalizations.of(context!)!.validationError,
+        sharedService!.alertDialog(
+            AppLocalizations.of(context!)!.validationError,
             AppLocalizations.of(context!)!.invalidAmount);
         setBusy(false);
-        log.e('No exchange balance ${_selectedExchangeBal.unlockedAmount}');
+        log.e('No exchange balance ${selectedExchangeBal.unlockedAmount}');
         return;
       }
       await dialogService!
@@ -644,7 +644,7 @@ class LightningRemitViewmodel extends FutureViewModel {
           String? mnemonic = res.returnedText;
           Uint8List seed = walletService!.generateSeed(mnemonic);
           await walletService!
-              .sendCoin(seed, _selectedExchangeBal.coinType!,
+              .sendCoin(seed, selectedExchangeBal.coinType!,
                   addressController.text, double.parse(amountController.text))
               .then((res) {
             log.w('RES $res');
@@ -694,8 +694,10 @@ class LightningRemitViewmodel extends FutureViewModel {
         return false;
       });
     } else {
-      sharedService!.alertDialog(AppLocalizations.of(context!)!.validationError,
-          AppLocalizations.of(context!)!.pleaseCorrectTheFormatOfReceiveAddress);
+      sharedService!.alertDialog(
+          AppLocalizations.of(context!)!.validationError,
+          AppLocalizations.of(context!)!
+              .pleaseCorrectTheFormatOfReceiveAddress);
       setBusy(false);
     }
     setBusy(false);
@@ -715,7 +717,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     showSimpleNotification(
         Center(
             child: Text(AppLocalizations.of(context!)!.copiedSuccessfully,
-                style: Theme.of(context!).textTheme.headline5)),
+                style: Theme.of(context!).textTheme.headlineSmall)),
         position: NotificationPosition.bottom,
         background: primaryColor);
   }
