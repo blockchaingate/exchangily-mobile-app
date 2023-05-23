@@ -140,7 +140,7 @@ Future serviceLocator() async {
   // Trade
   locator.registerFactory(() => MarketsViewModel());
   locator.registerFactory(() => TradeViewModel());
-  locator.registerFactory(() => BuySellViewModel());
+  locator.registerFactory(() => BuySellViewModel(tickerNameFromRoute: ''));
   locator.registerFactory(() => MyExchangeAssetsViewModel());
   locator.registerFactory(() => MarketPairsTabViewState());
   locator.registerFactory(() => TradingChartViewModel());

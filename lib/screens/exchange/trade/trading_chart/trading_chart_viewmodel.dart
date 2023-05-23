@@ -15,7 +15,7 @@ class TradingChartViewModel extends ReactiveViewModel {
   final log = getLogger('TradingChartViewModel');
   late WebViewController webViewController;
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [_tradeService];
+  List<ListenableServiceMixin> get listenableServices => [_tradeService];
 
   String? _tradingChartInterval = '24h';
   String? get tradingChartInterval => _tradeService.interval;

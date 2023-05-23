@@ -46,7 +46,7 @@ Future<void> main() async {
   try {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     await serviceLocator();
-    Logger.level = Level.info;
+    Logger.level = Level.nothing;
     SystemChannels.textInput
         .invokeMethod('TextInput.hide'); // Hides keyboard initially
     // Force user to use only portrait mode until the development of other screen size design
@@ -177,7 +177,7 @@ class MyApp extends StatelessWidget {
                   titleLarge: TextStyle(
                       fontSize: 10.5,
                       color: globals.white,
-                      fontWeight: FontWeight.w500)), colorScheme: ColorScheme(background: globals.secondaryColor),
+                      fontWeight: FontWeight.w500)),
             ),
             // Removed the home and scaffold because initial route has set
             initialRoute: '/',

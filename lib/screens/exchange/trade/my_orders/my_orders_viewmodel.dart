@@ -28,7 +28,7 @@ import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 
 class MyOrdersViewModel extends ReactiveViewModel {
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [_orderService];
+  List<ListenableServiceMixin> get listenableServices => [_orderService];
   late BuildContext context;
   final String? tickerName;
 
@@ -205,7 +205,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
     String? exgAddress = await walletService!
         .getAddressFromCoreWalletDatabaseByTickerName('EXG');
 
-    await _orderService.getMyOrdersByTickerName(exgAddress, tickerName, skip: skip)
+    await _orderService
+        .getMyOrdersByTickerName(exgAddress, tickerName, skip: skip)
         .then((value) {
       log.e('getMyOrdersByTickerName order length ${singlePairOrders!.length}');
       for (var element in singlePairOrders!) {

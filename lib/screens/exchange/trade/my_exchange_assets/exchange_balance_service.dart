@@ -10,7 +10,7 @@ import 'package:observable_ish/value/value.dart';
 
 import 'locker/locker_model.dart';
 
-class ExchangeBalanceService with ReactiveServiceMixin {
+class ExchangeBalanceService with ListenableServiceMixin {
   final log = getLogger('ExchangeBalanceService');
 
   final client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();

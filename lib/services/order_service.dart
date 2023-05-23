@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:observable_ish/value/value.dart';
 import 'package:stacked/stacked.dart';
 
-class OrderService with ReactiveServiceMixin {
+class OrderService with ListenableServiceMixin {
   final log = getLogger('OrderService');
 
   final client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();

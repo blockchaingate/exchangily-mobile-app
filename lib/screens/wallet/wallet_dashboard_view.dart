@@ -59,7 +59,7 @@ class WalletDashboardView extends StatelessWidget {
           await model.init();
         },
         onDispose: (dynamic viewModel) {
- refreshController.dispose();
+          refreshController.dispose();
           debugPrint('_refreshController disposed in wallet dashboard view');
         },
         builder: (context, WalletDashboardViewModel model, child) {
@@ -147,10 +147,10 @@ class WalletDashboardView extends StatelessWidget {
                 floatingActionButton: model.busy(model.selectedCustomTokens)
                     ? Container()
                     : Visibility(
-                        visible: model.currentTabSelection == 6,
+                        visible: model.selectedTabIndex == 6,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: model.currentTabSelection == 6
+                            color: model.selectedTabIndex == 6
                                 ? primaryColor
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(35),
@@ -400,10 +400,10 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
           right: 5,
           child: IconButton(
               onPressed: () {
-                if (model.currentTabSelection == 0) {
+                if (model.selectedTabIndex == 0) {
                   model.refreshBalancesV2();
                   debugPrint('getting wallet coins balance');
-                } else if (model.currentTabSelection == 2) {
+                } else if (model.selectedTabIndex == 2) {
                   model.getBalanceForSelectedCustomTokens();
                   debugPrint('getting custom token balance');
                 }
@@ -568,7 +568,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
   // final tabController = TabController(length: 3, vsync: this, initialIndex: 1);
   return DefaultTabController(
     length: 7,
-    initialIndex: model.currentTabSelection,
+    initialIndex: model.selectedTabIndex,
     child: NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         return <Widget>[
@@ -896,32 +896,20 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
 ListView buildListView(WalletDashboardViewModel model, String a) {
   List<WalletBalance> newList = [];
 
-  if (model.currentTabSelection == 0) {
+  if (model.selectedTabIndex == 0) {
     newList = model.wallets!;
-  } else if (model.currentTabSelection == 1) {
-    newList = model.wallets!.where((element) {
-      return element.tokenType == model.netowrkList[0] ||
-          element.coin == model.netowrkList[0];
-    }).toList();
-  } else if (model.currentTabSelection == 2) {
-    newList = model.wallets!.where((element) {
-      return element.tokenType == model.netowrkList[1] ||
-          element.coin == model.netowrkList[1];
-    }).toList();
-  } else if (model.currentTabSelection == 3) {
-    newList = model.wallets!.where((element) {
-      return element.tokenType == model.netowrkList[2] ||
-          element.coin == model.netowrkList[2];
-    }).toList();
-  } else if (model.currentTabSelection == 4) {
-    newList = model.wallets!.where((element) {
-      return element.tokenType == model.netowrkList[3] ||
-          element.coin == model.netowrkList[3];
-    }).toList();
+  } else if (model.selectedTabIndex == 1) {
+    newList = model.fabWalletTokens;
+  } else if (model.selectedTabIndex == 2) {
+    newList = model.ethWalletTokens;
+  } else if (model.selectedTabIndex == 3) {
+    newList = model.trxWalletTokens;
+  } else if (model.selectedTabIndex == 4) {
+    newList = model.bnbWalletTokens;
   }
 
   return ListView.builder(
-    key: PageStorageKey('storage-key$a'),
+    // key: PageStorageKey('storage-key$a'),
     padding: const EdgeInsets.only(top: 0),
     shrinkWrap: true,
     itemCount: newList.length,
@@ -1039,7 +1027,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                             .unavailable
                                         : NumberUtil()
                                             .truncateDoubleWithoutRouding(
-                                                model.wallets![index].balance!,
+                                                wallets[index].balance!,
                                                 precision: 6)
                                             .toString(),
                                     style:
@@ -1077,8 +1065,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                             .unavailable
                                         : NumberUtil()
                                             .truncateDoubleWithoutRouding(
-                                                model.wallets![index]
-                                                    .lockBalance!,
+                                                wallets[index].lockBalance!,
                                                 precision: 6)
                                             .toString(),
                                     style: Theme.of(context)
@@ -1147,7 +1134,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                             ? Container(
                                 padding: EdgeInsets.only(left: 5),
                               )
-                            : model.wallets![index].balance == 0.0
+                            : wallets[index].balance == 0.0
                                 ? UIHelper.horizontalSpaceMedium
                                 : UIHelper.horizontalSpaceSmall,
                         isBalanceNegative
@@ -1159,9 +1146,8 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                 ? AppLocalizations.of(context)!.unavailable
                                 : NumberUtil()
                                     .truncateDoubleWithoutRouding(
-                                        model.wallets![index].balance! *
-                                            model
-                                                .wallets![index].usdValue!.usd!,
+                                        wallets[index].balance! *
+                                            wallets[index].usdValue!.usd!,
                                         precision: 2)
                                     .toString(),
                             style: isBalanceNegative
@@ -1203,7 +1189,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                             ),
                             onTap: () {
                               model.routeWithWalletInfoArgs(
-                                  model.wallets![index], WithdrawViewRoute);
+                                  wallets[index], WithdrawViewRoute);
                             }),
                       ],
                     ),

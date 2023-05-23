@@ -55,22 +55,22 @@ import 'package:convert/convert.dart';
 import 'package:hex/hex.dart';
 import 'dart:core';
 
-class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
-  final tickerNameFromRoute;
-  BuySellViewModel({this.tickerNameFromRoute});
+class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
+  final String tickerNameFromRoute;
+  BuySellViewModel({required this.tickerNameFromRoute});
 
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [tradeService!];
-  bool get isRefreshBalance => tradeService!.isRefreshBalance;
+  List<ListenableServiceMixin> get listenableServices => [tradeService];
+  bool get isRefreshBalance => tradeService.isRefreshBalance;
   // double get quantityFromTradeService => tradeService.quantity;
 
   final log = getLogger('BuySellViewModel');
   List<WalletInfo>? walletInfo;
   WalletInfo? targetCoinWalletData;
   WalletInfo? baseCoinWalletData;
-  WalletService? walletService = locator<WalletService>();
-  SharedService? sharedService = locator<SharedService>();
-  TradeService? tradeService = locator<TradeService>();
+  final walletService = locator<WalletService>();
+  final sharedService = locator<SharedService>();
+  final tradeService = locator<TradeService>();
   final CoinService? coinService = locator<CoinService>();
 
   NavigationService? navigationService = locator<NavigationService>();
@@ -146,7 +146,6 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
       initialTextfieldsFill();
     }
   }
-
 
   @override
   void onError(error) {
@@ -584,7 +583,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   Future placeBuySellOrder() async {
     setBusy(true);
     isReloadMyOrders = false;
-    await _dialogService.showDialog(
+    await _dialogService
+        .showDialog(
             title: AppLocalizations.of(context!)!.enterPassword,
             description: AppLocalizations.of(context!)!
                 .dialogManagerTypeSamePasswordNote,

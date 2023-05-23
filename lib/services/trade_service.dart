@@ -33,7 +33,7 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import "package:hex/hex.dart";
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
-class TradeService extends StoppableService with ReactiveServiceMixin {
+class TradeService extends StoppableService with ListenableServiceMixin {
   TradeService() {
     listenToReactiveValues([
       _price,

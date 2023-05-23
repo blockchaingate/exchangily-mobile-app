@@ -24,7 +24,8 @@ class LockerViewModel extends ReactiveViewModel {
   final log = getLogger('LockerViewModel');
 
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [_exchangeBalanceService];
+  List<ListenableServiceMixin> get listenableServices =>
+      [_exchangeBalanceService];
 
   late BuildContext context;
   SharedService? sharedService = locator<SharedService>();
@@ -33,7 +34,8 @@ class LockerViewModel extends ReactiveViewModel {
   LocalStorageService? storageService = locator<LocalStorageService>();
   final DialogService _dialogService = locator<DialogService>();
   final CoinService? coinService = locator<CoinService>();
-  final ExchangeBalanceService _exchangeBalanceService = locator<ExchangeBalanceService>();
+  final ExchangeBalanceService _exchangeBalanceService =
+      locator<ExchangeBalanceService>();
 
   var abiUtils = AbiUtils();
   var kanbanUtils = KanbanUtils();
@@ -67,8 +69,8 @@ class LockerViewModel extends ReactiveViewModel {
       for (var locker in lockers) {
         String tickerNameByCointype = newCoinTypeMap[locker.coinType] ?? '';
         if (tickerNameByCointype.isEmpty) {
-          var tokenRes = (await coinService!.getSingleTokenData('',
-              coinType: locker.coinType))!;
+          var tokenRes = (await coinService!
+              .getSingleTokenData('', coinType: locker.coinType))!;
           if (tokenRes.tickerName!.isNotEmpty) {
             locker.tickerName = tokenRes.tickerName;
           }
@@ -92,7 +94,8 @@ class LockerViewModel extends ReactiveViewModel {
         buttonTitle: AppLocalizations.of(context)!.confirm);
 
     if (res.confirmed!) {
-      String exgAddress = (await sharedService!.getExgAddressFromWalletDatabase())!;
+      String exgAddress =
+          (await sharedService!.getExgAddressFromWalletDatabase())!;
       String? mnemonic = res.returnedText;
       Uint8List seed = walletService!.generateSeed(mnemonic);
 
@@ -104,8 +107,8 @@ class LockerViewModel extends ReactiveViewModel {
 
       var nonce = await kanbanUtils.getNonce(exgAddress);
 
-      var abiHex =
-          abiUtils.construcUnlockAbiHex(selectedLocker.id!, selectedLocker.user!);
+      var abiHex = abiUtils.construcUnlockAbiHex(
+          selectedLocker.id!, selectedLocker.user!);
       var txKanbanHex;
       try {
         txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
@@ -133,7 +136,8 @@ class LockerViewModel extends ReactiveViewModel {
         buttonTitle: AppLocalizations.of(context)!.confirm);
 
     if (res.confirmed!) {
-      String exgAddress = (await sharedService!.getExgAddressFromWalletDatabase())!;
+      String exgAddress =
+          (await sharedService!.getExgAddressFromWalletDatabase())!;
       String? mnemonic = res.returnedText;
       Uint8List seed = walletService!.generateSeed(mnemonic);
 
@@ -145,8 +149,8 @@ class LockerViewModel extends ReactiveViewModel {
 
       var nonce = await kanbanUtils.getNonce(exgAddress);
 
-      var abiHex =
-          abiUtils.construcUnlockAbiHex(selectedLocker.id!, selectedLocker.user!);
+      var abiHex = abiUtils.construcUnlockAbiHex(
+          selectedLocker.id!, selectedLocker.user!);
       var txKanbanHex;
       try {
         txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(

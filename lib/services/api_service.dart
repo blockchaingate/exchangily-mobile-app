@@ -34,7 +34,6 @@ import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
 import '../environments/environment.dart';
 import '../utils/string_util.dart' as string_utils;
 
@@ -117,7 +116,8 @@ class ApiService {
 // Get issue tokens
 
   Future<List<CustomTokenModel>?> getCustomTokens() async {
-    String url = '$baseBlockchainGateV2Url$getIsueTokenApiRoute/$getWithoutLogoApiRoute';
+    String url =
+        '$baseBlockchainGateV2Url$getIsueTokenApiRoute/$getWithoutLogoApiRoute';
     log.i('getIssueTokens url $url');
     try {
       var response = await client.get(Uri.parse(url));
@@ -478,7 +478,7 @@ class ApiService {
                     Get Token List Updates
 ----------------------------------------------------------------------*/
 
-  Future<List<TokenModel>?> getTokenListUpdates() async {
+  Future<List<TokenModel>> getTokenListUpdates() async {
     String url =
         configService!.getKanbanBaseUrl()! + getTokenListUpdatesApiRoute;
     log.i('getTokenListUpdates url $url');
@@ -489,7 +489,7 @@ class ApiService {
       var parsedTokenList = data as List;
       log.w('getTokenListUpdates  ${parsedTokenList.length}');
       TokenList tokenList = TokenList.fromJson(parsedTokenList);
-      return tokenList.tokens;
+      return tokenList.tokens!;
     } catch (err) {
       log.e('getTokenList CATCH $err');
       throw Exception(err);
@@ -1042,7 +1042,8 @@ class ApiService {
   }
 
   Future getEvents() async {
-    log.i("getEvents Url: ${configService!.getKanbanBaseUrl()!}kanban/getCampaigns");
+    log.i(
+        "getEvents Url: ${configService!.getKanbanBaseUrl()!}kanban/getCampaigns");
     try {
       final res = await client.get(
           Uri.parse("${configService!.getKanbanBaseUrl()!}kanban/getCampaigns")

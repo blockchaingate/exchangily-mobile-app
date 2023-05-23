@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
 import 'package:flutter/widgets.dart';
@@ -20,7 +21,7 @@ class WalletUtil {
   final CoinService? coinService = locator<CoinService>();
   CoreWalletDatabaseService? coreWalletDatabaseService =
       locator<CoreWalletDatabaseService>();
-
+  final apiService = locator<ApiService>();
   Map<String, String> coinTickerAndNameList = {
     'BTC': 'Bitcoin',
     'ETH': 'Ethereum',
@@ -307,14 +308,14 @@ class WalletUtil {
                 Get Coin Type Id By Name
 ----------------------------------------------------------------------*/
 
-  Future<int> getCoinTypeIdByName(String coinName) async {
+  Future<int> getCoinTypeIdByName(String tickerName) async {
     int coinType = 0;
     MapEntry<int, String>? hardCodedCoinList;
-    bool isOldToken = coin_list.newCoinTypeMap.containsValue(coinName);
+    bool isOldToken = coin_list.newCoinTypeMap.containsValue(tickerName);
     debugPrint('is old token value $isOldToken');
     if (isOldToken) {
       hardCodedCoinList = coin_list.newCoinTypeMap.entries
-          .firstWhere((coinTypeMap) => coinTypeMap.value == coinName);
+          .firstWhere((coinTypeMap) => coinTypeMap.value == tickerName);
     }
     // var coins =
     //     coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
@@ -322,10 +323,24 @@ class WalletUtil {
       coinType = hardCodedCoinList.key;
     } else {
       await tokenListDatabaseService!
-          .getCoinTypeByTickerName(coinName)
+          .getCoinTypeByTickerName(tickerName)
           .then((value) => coinType = value);
     }
-    debugPrint('ticker $coinName -- coin type $coinType');
+    if (coinType == 0) {
+      await apiService.getTokenListUpdates().then((tokens) {
+        coinType = tokens
+            .firstWhere((element) => element.coinName == tickerName)
+            .coinType!;
+      });
+    }
+    if (coinType == 0) {
+      await apiService.getTokenList().then((tokens) {
+        coinType = tokens!
+            .firstWhere((element) => element.tickerName == tickerName)
+            .coinType!;
+      });
+    }
+    debugPrint('ticker $tickerName -- coin type $coinType');
     return coinType;
   }
 
