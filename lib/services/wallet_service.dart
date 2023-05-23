@@ -256,8 +256,7 @@ class WalletService {
         'saveTokenListUpdatesInDB TIME START ${DateTime.now().toLocal().toIso8601String()}');
 
     await getTokenListUpdates().then((newTokenListFromTokenUpdateApi) async {
-      if (newTokenListFromTokenUpdateApi != null &&
-          newTokenListFromTokenUpdateApi.isNotEmpty) {
+      if (newTokenListFromTokenUpdateApi.isNotEmpty) {
         await tokenListDatabaseService!.deleteDb().whenComplete(() => log.e(
             'token list database cleared before inserting updated token data from api'));
 
@@ -277,7 +276,7 @@ class WalletService {
     String storedValue = storageService!.tokenListDBUpdateTime;
 
     // Check if the stored value is empty or invalid
-    if (storedValue == null || storedValue.isEmpty) {
+    if (storedValue.isEmpty) {
       // If it's empty or invalid, set the current time as the initial value
       String currentTime = DateTime.now().toLocal().toIso8601String();
       storageService!.tokenListDBUpdateTime = currentTime;
@@ -943,21 +942,19 @@ class WalletService {
 
         String date = DateTime.now().toString();
 
-        if (transaction != null) {
-          transactionByTxId = (await transactionHistoryDatabaseService!
-              .getByKanbanTxId(transaction.kanbanTxId!))!;
-          showSimpleNotification(
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text('${transactionByTxId.tickerName} '),
-                  Text(transactionByTxId.tag!),
-                  Text(string_utils.firstCharToUppercase(result.toString())),
-                ],
-              ),
-              position: NotificationPosition.bottom,
-              background: primaryColor);
-        }
+        transactionByTxId = (await transactionHistoryDatabaseService!
+            .getByKanbanTxId(transaction.kanbanTxId!))!;
+        showSimpleNotification(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text('${transactionByTxId.tickerName} '),
+                Text(transactionByTxId.tag!),
+                Text(string_utils.firstCharToUppercase(result.toString())),
+              ],
+            ),
+            position: NotificationPosition.bottom,
+            background: primaryColor);
 
         if (res['code'] == 0) {
           log.e('Transaction history passed arguement ${transaction.toJson()}');
@@ -1528,7 +1525,7 @@ class WalletService {
       return errRes;
     }
     var subString = amountInLinkString.substring(amountInTxString.length);
-    if (subString != null && subString != '') {
+    if (subString != '') {
       var zero = int.parse(subString);
       if (zero != 0) {
         errRes['data'] = 'unequal amount for two transactions';
@@ -2589,7 +2586,7 @@ class WalletService {
 
       var contractInfo = await getFabSmartContract(
           contractAddress, fxnCallHex, gasLimit, gasPrice);
-      if (addressList != null && addressList.isNotEmpty) {
+      if (addressList.isNotEmpty) {
         addressList[0] =
             await getAddressFromCoreWalletDatabaseByTickerName('FAB') !=
                     addressList[0]

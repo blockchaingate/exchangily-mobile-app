@@ -1,9 +1,5 @@
-import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
-import 'package:exchangilymobileapp/environments/coins.dart';
-import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/exchange_balance_service.dart';
@@ -21,7 +17,7 @@ import 'locker/locker_model.dart';
 
 class MyExchangeAssetsViewModel extends ReactiveViewModel {
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [_exchangeBalanceService!];
+  List<ReactiveServiceMixin> get reactiveServices => [_exchangeBalanceService];
 
   final log = getLogger('MyExchangeAssetsViewModel');
   List myExchangeAssets = [];
@@ -35,8 +31,8 @@ class MyExchangeAssetsViewModel extends ReactiveViewModel {
   List<ExchangeBalanceModel>? exchangeBalances = [];
   LocalStorageService? storageService = locator<LocalStorageService>();
   final CoinService? coinService = locator<CoinService>();
-  final DialogService? _dialogService = locator<DialogService>();
-  final ExchangeBalanceService? _exchangeBalanceService = locator<ExchangeBalanceService>();
+  final DialogService _dialogService = locator<DialogService>();
+  final ExchangeBalanceService _exchangeBalanceService = locator<ExchangeBalanceService>();
 
   String logoUrl = walletCoinsLogoUrl;
 
@@ -98,7 +94,7 @@ class MyExchangeAssetsViewModel extends ReactiveViewModel {
     if (tabIndex == 0) {
       await getExchangeBalances();
     } else if (tabIndex == 1) {
-      _exchangeBalanceService!.setRefreshLockerBalances(true);
+      _exchangeBalanceService.setRefreshLockerBalances(true);
     }
     setBusy(false);
   }

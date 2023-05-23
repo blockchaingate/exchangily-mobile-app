@@ -34,7 +34,6 @@ import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'package:http/http.dart' as http;
 
 import '../environments/environment.dart';
 import '../utils/string_util.dart' as string_utils;
@@ -118,10 +117,7 @@ class ApiService {
 // Get issue tokens
 
   Future<List<CustomTokenModel>?> getCustomTokens() async {
-    String url = baseBlockchainGateV2Url +
-        getIsueTokenApiRoute +
-        '/' +
-        getWithoutLogoApiRoute;
+    String url = '$baseBlockchainGateV2Url$getIsueTokenApiRoute/$getWithoutLogoApiRoute';
     log.i('getIssueTokens url $url');
     try {
       var response = await client.get(Uri.parse(url));
@@ -971,7 +967,7 @@ class ApiService {
   // Get Fab Transaction
   Future getFabTransactionJson(String txid) async {
     txid = string_utils.trimHexPrefix(txid);
-    var url = fabBaseUrl! + 'gettransactionjson/' + txid;
+    var url = '${fabBaseUrl!}gettransactionjson/$txid';
     var json;
     try {
       var response = await client.get(Uri.parse(url));
@@ -1027,10 +1023,10 @@ class ApiService {
 
   Future getAnnouncement(lang) async {
     final langcode = lang == "en" ? "en" : "sc";
-    final url = baseBlockchainGateV2Url + "announcements/language/" + langcode;
+    final url = "${baseBlockchainGateV2Url}announcements/language/$langcode";
 
     log.w("Calling api: getAnnouncement " + lang);
-    log.i("url: " + url);
+    log.i("url: $url");
     try {
       final res = await client.get(Uri.parse(url));
       // log.w('getAnnouncement ${jsonDecode(res.body)}');
@@ -1046,12 +1042,10 @@ class ApiService {
   }
 
   Future getEvents() async {
-    log.i("getEvents Url: " +
-        configService!.getKanbanBaseUrl()! +
-        "kanban/getCampaigns");
+    log.i("getEvents Url: ${configService!.getKanbanBaseUrl()!}kanban/getCampaigns");
     try {
       final res = await client.get(
-          Uri.parse(configService!.getKanbanBaseUrl()! + "kanban/getCampaigns")
+          Uri.parse("${configService!.getKanbanBaseUrl()!}kanban/getCampaigns")
           // "http://192.168.0.12:4000/kanban/getCampaigns"
           );
       log.w('getEvents ${jsonDecode(res.body)}');
@@ -1059,7 +1053,7 @@ class ApiService {
         debugPrint("success");
         return jsonDecode(res.body);
       } else {
-        log.e("error: " + res.body);
+        log.e("error: ${res.body}");
         return "error";
       }
     } catch (e) {
@@ -1074,7 +1068,7 @@ class ApiService {
     try {
       final res = await client.post(
         Uri.parse(
-            configService!.getKanbanBaseUrl()! + "kanban/getCampaignSingle")
+            "${configService!.getKanbanBaseUrl()!}kanban/getCampaignSingle")
         // "http://192.168.0.12:4000/kanban/getCampaignSingle",
         ,
         headers: <String, String>{

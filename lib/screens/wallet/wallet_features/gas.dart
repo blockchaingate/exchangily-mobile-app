@@ -48,7 +48,7 @@ class Gas extends StatelessWidget {
             UIHelper.horizontalSpaceSmall,
             Text(
               "${AppLocalizations.of(context)!.gas}: ${NumberUtil().truncateDoubleWithoutRouding(gasAmount!, precision: 6)}",
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
           ],
         ),
@@ -63,7 +63,7 @@ class Gas extends StatelessWidget {
           },
           child: Text(
             AppLocalizations.of(context)!.addGas,
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
       ],

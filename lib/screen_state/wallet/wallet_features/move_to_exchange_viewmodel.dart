@@ -111,9 +111,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
       fabAddress =
           await coreWalletDatabaseService!.getWalletAddressByTickerName('FAB');
     }
-    var _tokenType = tokenType == 'POLYGON' ? 'MATICM' : tokenType;
+    var tt = tokenType == 'POLYGON' ? 'MATICM' : tokenType;
     await apiService!
-        .getSingleWalletBalance(fabAddress, _tokenType, walletInfo!.address)
+        .getSingleWalletBalance(fabAddress, tt, walletInfo!.address)
         .then((walletBalance) => chainBalance = NumberUtil.roundDecimal(
             Decimal.parse(walletBalance!.first.balance.toString()),
             decimalLimit!));
@@ -356,7 +356,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (!isTrx()) {
       finalAmount = await amountAfterFee();
     }
-    if (amount == null || amount == Constants.decimalZero || amount.isInteger) {
+    if (amount == Constants.decimalZero || amount.isInteger) {
       log.e(
           'amount $amount --- final amount with fee: $finalAmount -- wallet bal: ${walletInfo!.availableBalance}');
       sharedService!.alertDialog(AppLocalizations.of(context)!.invalidAmount,
@@ -380,9 +380,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     /// check chain balance to check
     /// whether native token has enough balance to cover transaction fee
     if (tokenType!.isNotEmpty) {
-      var _tokenType = tokenType == 'POLYGON' ? 'MATICM' : tokenType;
+      var tt = tokenType == 'POLYGON' ? 'MATICM' : tokenType;
       bool hasSufficientChainBalance = await walletService!
-          .hasSufficientWalletBalance(transFee.toDouble(), _tokenType);
+          .hasSufficientWalletBalance(transFee.toDouble(), tt);
       if (!hasSufficientChainBalance) {
         log.e('Chain $tokenType -- insufficient balance');
         sharedService!.sharedSimpleNotification(walletInfo!.tokenType!,
@@ -666,7 +666,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     //amount = double.tryParse(amountController.text);
 
-    if (to == null || amount == null || amount <= Constants.decimalZero) {
+    if (to == null || amount <= Constants.decimalZero) {
       transFee = Constants.decimalZero;
       kanbanTransFee = Constants.decimalZero;
       setBusy(false);

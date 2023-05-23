@@ -5,6 +5,6 @@ const double largeSize = 700;
 
 //check is phone or tablet
 bool isPhone() {
-    final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+    final data = MediaQueryData.fromView(WidgetsBinding.instance.window);
     return data.size.shortestSide < largeSize ;
 }

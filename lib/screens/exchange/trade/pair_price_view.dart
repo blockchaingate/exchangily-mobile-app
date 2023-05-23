@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -21,9 +20,9 @@ class PairPriceView extends StatelessWidget {
   Widget build(BuildContext context) {
     return isBusy!
         ? Shimmer.fromColors(
-            child: buildContainer(context),
             baseColor: grey,
-            highlightColor: primaryColor)
+            highlightColor: primaryColor,
+            child: buildContainer(context))
         : buildContainer(context);
   }
 
@@ -53,17 +52,17 @@ class PairPriceView extends StatelessWidget {
                         Text(pairPrice!.changeValue!.toStringAsFixed(2),
                             style: Theme.of(context)
                                 .textTheme
-                                .headline5!
+                                .headlineSmall!
                                 .copyWith(
                                     color: Color(
                                         pairPrice!.close! > pairPrice!.open!
                                             ? 0XFF0da88b
                                             : 0XFFe2103c))),
                         UIHelper.horizontalSpaceSmall,
-                        Text(pairPrice!.change!.toStringAsFixed(2) + "%",
+                        Text("${pairPrice!.change!.toStringAsFixed(2)}%",
                             style: Theme.of(context)
                                 .textTheme
-                                .headline5!
+                                .headlineSmall!
                                 .copyWith(
                                     color: Color(pairPrice!.change! >= 0
                                         ? 0XFF0da88b
@@ -92,17 +91,17 @@ class PairPriceView extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: Text(AppLocalizations.of(context)!.volume,
-                        style: Theme.of(context).textTheme.subtitle2),
+                        style: Theme.of(context).textTheme.titleSmall),
                   ),
                   Expanded(
                     flex: 2,
                     child: Text(AppLocalizations.of(context)!.low.toString(),
-                        style: Theme.of(context).textTheme.subtitle2),
+                        style: Theme.of(context).textTheme.titleSmall),
                   ),
                   Expanded(
                     flex: 2,
                     child: Text(AppLocalizations.of(context)!.high.toString(),
-                        style: Theme.of(context).textTheme.subtitle2),
+                        style: Theme.of(context).textTheme.titleSmall),
                   ),
                 ],
               ),
@@ -118,21 +117,21 @@ class PairPriceView extends StatelessWidget {
                     child: Text(
                         pairPrice!.volume!
                             .toStringAsFixed(decimalConfig!.priceDecimal!),
-                        style: Theme.of(context).textTheme.headline6),
+                        style: Theme.of(context).textTheme.titleLarge),
                   ),
                   Expanded(
                     flex: 2,
                     child: Text(
                         pairPrice!.low!
                             .toStringAsFixed(decimalConfig!.priceDecimal!),
-                        style: Theme.of(context).textTheme.headline6),
+                        style: Theme.of(context).textTheme.titleLarge),
                   ),
                   Expanded(
                       flex: 2,
                       child: Text(
                           pairPrice!.high!
                               .toStringAsFixed(decimalConfig!.priceDecimal!),
-                          style: Theme.of(context).textTheme.headline6)),
+                          style: Theme.of(context).textTheme.titleLarge)),
                 ],
               ),
             ]),

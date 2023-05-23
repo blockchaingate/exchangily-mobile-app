@@ -37,7 +37,7 @@ class KanbanUtils {
   Future<String> getCoinPoolAddress() async {
     ConfigService configService = locator<ConfigService>();
     var url =
-        configService.getKanbanBaseUrl()! + 'exchangily/getCoinPoolAddress';
+        '${configService.getKanbanBaseUrl()!}exchangily/getCoinPoolAddress';
 
     var response = await client.get(Uri.parse(url));
     return response.body;
@@ -46,7 +46,7 @@ class KanbanUtils {
   Future<String> getExchangilyAddress() async {
     ConfigService configService = locator<ConfigService>();
     var url =
-        configService.getKanbanBaseUrl()! + 'exchangily/getExchangeAddress';
+        '${configService.getKanbanBaseUrl()!}exchangily/getExchangeAddress';
     debugPrint('URL getExchangilyAddress $url');
 
     var response = await client.get(Uri.parse(url));
@@ -90,7 +90,7 @@ class KanbanUtils {
     debugPrint('getAppVersion $versionInfo');
     String versionName = versionInfo['name']!;
     String buildNumber = versionInfo['buildNumber']!;
-    String fullVersion = versionName + '+' + buildNumber;
+    String fullVersion = '$versionName+$buildNumber';
     debugPrint('fullVersion $fullVersion');
     var body = {
       'app': Constants.appName,
@@ -138,7 +138,7 @@ class KanbanUtils {
     debugPrint('getAppVersion $versionInfo');
     String versionName = versionInfo['name']!;
     String buildNumber = versionInfo['buildNumber']!;
-    String fullVersion = versionName + '+' + buildNumber;
+    String fullVersion = '$versionName+$buildNumber';
     debugPrint('fullVersion $fullVersion');
     var body = {
       'app': Constants.appName,
@@ -170,7 +170,7 @@ class KanbanUtils {
     var versionInfo = await sharedService.getLocalAppVersion();
     String versionName = versionInfo['name']!;
     String buildNumber = versionInfo['buildNumber']!;
-    String fullVersion = versionName + '+' + buildNumber;
+    String fullVersion = '$versionName+$buildNumber';
     debugPrint('fullVersion $fullVersion');
     var body = {
       'app': 'exchangily',

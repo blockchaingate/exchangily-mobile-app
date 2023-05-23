@@ -1,10 +1,7 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:validators/validators.dart';
 
 class CacheImage extends StatefulWidget {
   final BoxFit? fit;

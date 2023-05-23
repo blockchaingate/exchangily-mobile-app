@@ -178,7 +178,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                   : convertedToFabAddress,
               style: Theme.of(context)
                   .textTheme
-                  .headline5!
+                  .headlineSmall!
                   .copyWith(fontWeight: FontWeight.w800)),
           SizedBox(
             width: 200,
@@ -208,7 +208,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                     AppLocalizations.of(context)!.copyAddress,
                     style: Theme.of(context)
                         .textTheme
-                        .headline5!
+                        .headlineSmall!
                         .copyWith(fontWeight: FontWeight.w400),
                   ),
                 ],

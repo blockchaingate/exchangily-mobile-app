@@ -24,21 +24,21 @@ class LockerViewModel extends ReactiveViewModel {
   final log = getLogger('LockerViewModel');
 
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [_exchangeBalanceService!];
+  List<ReactiveServiceMixin> get reactiveServices => [_exchangeBalanceService];
 
   late BuildContext context;
   SharedService? sharedService = locator<SharedService>();
   WalletService? walletService = locator<WalletService>();
   ApiService? apiService = locator<ApiService>();
   LocalStorageService? storageService = locator<LocalStorageService>();
-  final DialogService? _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
   final CoinService? coinService = locator<CoinService>();
-  final ExchangeBalanceService? _exchangeBalanceService = locator<ExchangeBalanceService>();
+  final ExchangeBalanceService _exchangeBalanceService = locator<ExchangeBalanceService>();
 
   var abiUtils = AbiUtils();
   var kanbanUtils = KanbanUtils();
 
-  List<LockerModel> get lockers => _exchangeBalanceService!.lockers;
+  List<LockerModel> get lockers => _exchangeBalanceService.lockers;
   String? exgAddress = '';
 
   @override
@@ -61,7 +61,7 @@ class LockerViewModel extends ReactiveViewModel {
       exgAddress = await sharedService!.getExgAddressFromWalletDatabase();
     }
 
-    await _exchangeBalanceService!.getLockers(exgAddress!);
+    await _exchangeBalanceService.getLockers(exgAddress!);
 
     if (lockers.isNotEmpty) {
       for (var locker in lockers) {
@@ -85,7 +85,7 @@ class LockerViewModel extends ReactiveViewModel {
     var abiUtils = AbiUtils();
     var kanbanUtils = KanbanUtils();
 
-    var res = await _dialogService!.showDialog(
+    var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context)!.enterPassword,
         description:
             AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
@@ -126,7 +126,7 @@ class LockerViewModel extends ReactiveViewModel {
   }
 
   lockCoins(LockerModel selectedLocker) async {
-    var res = await _dialogService!.showDialog(
+    var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context)!.enterPassword,
         description:
             AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,

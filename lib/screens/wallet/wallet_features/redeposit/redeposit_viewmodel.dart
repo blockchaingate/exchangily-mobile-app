@@ -1,7 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:decimal/decimal.dart';
-import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
@@ -75,13 +73,11 @@ class RedepositViewModel extends FutureViewModel {
         debugPrint('tickerNameByCointype $tickerNameByCointype');
         if (tickerNameByCointype == null) {
           await tokenListDatabaseService!.getAll().then((tokenList) {
-            if (tokenList != null) {
-              tickerNameByCointype = tokenList
-                  .firstWhere((element) => element.coinType == coinType)
-                  .tickerName;
-              if (tickerNameByCointype == walletInfo!.tickerName) {
-                errDepositList.add(item);
-              }
+            tickerNameByCointype = tokenList
+                .firstWhere((element) => element.coinType == coinType)
+                .tickerName;
+            if (tickerNameByCointype == walletInfo!.tickerName) {
+              errDepositList.add(item);
             }
           });
         } else if (tickerNameByCointype == walletInfo!.tickerName) {
@@ -215,8 +211,7 @@ class RedepositViewModel extends FutureViewModel {
 
         sharedService!.alertDialog(
             AppLocalizations.of(context)!.redepositCompleted,
-            AppLocalizations.of(context)!.transactionId +
-                ': ' +
+            '${AppLocalizations.of(context)!.transactionId}: ' +
                 newTransactionId,
             path: errDepositList.length == 1 ? WalletFeaturesViewRoute : '',
             arguments: errDepositList.length == 1 ? walletInfo : null);

@@ -31,11 +31,11 @@ class LockerBalanceWidget extends ViewModelBuilderWidget<LockerViewModel> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Coin', style: Theme.of(context).textTheme.subtitle2),
-                Text('Amount', style: Theme.of(context).textTheme.subtitle2),
+                Text('Coin', style: Theme.of(context).textTheme.titleSmall),
+                Text('Amount', style: Theme.of(context).textTheme.titleSmall),
                 Text('Release Block',
-                    style: Theme.of(context).textTheme.subtitle2),
-                Text('Action', style: Theme.of(context).textTheme.subtitle2),
+                    style: Theme.of(context).textTheme.titleSmall),
+                Text('Action', style: Theme.of(context).textTheme.titleSmall),
               ],
             ),
           ),
@@ -62,17 +62,17 @@ class LockerBalanceWidget extends ViewModelBuilderWidget<LockerViewModel> {
                                     Text(model.lockers[index].tickerName ?? '',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6),
+                                            .titleLarge),
                                     Text(model.lockers[index].amount.toString(),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6),
+                                            .titleLarge),
                                     Text(
                                         model.lockers[index].releaseBlock
                                             .toString(),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6),
+                                            .titleLarge),
                                     ElevatedButton(
                                       style: ButtonStyle(
                                           backgroundColor:
@@ -81,7 +81,7 @@ class LockerBalanceWidget extends ViewModelBuilderWidget<LockerViewModel> {
                                       child: Text('Unlock',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5),
+                                              .headlineSmall),
                                       onPressed: () {
                                         model.unlockCoins(model.lockers[index]);
                                       },

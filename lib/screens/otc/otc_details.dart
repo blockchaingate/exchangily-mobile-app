@@ -39,7 +39,7 @@ class OtcDetailsScreen extends StatelessWidget {
                         Center(
                           child: Text(
                             'Merchant Info',
-                            style: Theme.of(context).textTheme.headline4,
+                            style: Theme.of(context).textTheme.headlineMedium,
                           ),
                         ),
                         // Name
@@ -48,11 +48,11 @@ class OtcDetailsScreen extends StatelessWidget {
                             child: Row(children: <Widget>[
                               Text(
                                 'Name: ',
-                                style: Theme.of(context).textTheme.headline5,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
                               Text(
                                 'Paul Liu',
-                                style: Theme.of(context).textTheme.headline5,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
                             ])),
                         // Volume
@@ -61,11 +61,11 @@ class OtcDetailsScreen extends StatelessWidget {
                             child: Row(children: <Widget>[
                               Text(
                                 'Volume/30d: ',
-                                style: Theme.of(context).textTheme.headline5,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
                               Text(
                                 '100 30d completed',
-                                style: Theme.of(context).textTheme.headline5,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
                             ])),
                         // Completed Rate
@@ -74,11 +74,11 @@ class OtcDetailsScreen extends StatelessWidget {
                             child: Row(children: <Widget>[
                               Text(
                                 'Completed Rate: ',
-                                style: Theme.of(context).textTheme.headline5,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
                               Text(
                                 '84%',
-                                style: Theme.of(context).textTheme.headline5,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
                             ])),
                         // Average coin deliver time
@@ -87,11 +87,11 @@ class OtcDetailsScreen extends StatelessWidget {
                             child: Row(children: <Widget>[
                               Text(
                                 'Average Coin Deliver Time: ',
-                                style: Theme.of(context).textTheme.headline5,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
                               Text(
                                 '2.002 min',
-                                style: Theme.of(context).textTheme.headline5,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
                             ])),
                         // Registration time
@@ -100,11 +100,11 @@ class OtcDetailsScreen extends StatelessWidget {
                             child: Row(children: <Widget>[
                               Text(
                                 'Registration Time: ',
-                                style: Theme.of(context).textTheme.headline5,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
                               Text(
                                 '19-02-19 01:43:15',
-                                style: Theme.of(context).textTheme.headline5,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
                             ])),
                       ],
@@ -126,7 +126,7 @@ class OtcDetailsScreen extends StatelessWidget {
                           Center(
                             child: Text(
                               'Order Info',
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ),
                           UIHelper.horizontalSpaceSmall,
@@ -141,12 +141,12 @@ class OtcDetailsScreen extends StatelessWidget {
                                     Text(
                                       'Coin: ',
                                       style:
-                                          Theme.of(context).textTheme.headline5,
+                                          Theme.of(context).textTheme.headlineSmall,
                                     ),
                                     Text(
                                       'USDT',
                                       style:
-                                          Theme.of(context).textTheme.headline5,
+                                          Theme.of(context).textTheme.headlineSmall,
                                     ),
                                   ])),
                               // Quantity
@@ -156,12 +156,12 @@ class OtcDetailsScreen extends StatelessWidget {
                                     Text(
                                       'Quantity: ',
                                       style:
-                                          Theme.of(context).textTheme.headline5,
+                                          Theme.of(context).textTheme.headlineSmall,
                                     ),
                                     Text(
                                       '44457843.1124',
                                       style:
-                                          Theme.of(context).textTheme.headline5,
+                                          Theme.of(context).textTheme.headlineSmall,
                                     ),
                                   ])),
                             ],
@@ -177,12 +177,12 @@ class OtcDetailsScreen extends StatelessWidget {
                                     Text(
                                       'Limits: ',
                                       style:
-                                          Theme.of(context).textTheme.headline5,
+                                          Theme.of(context).textTheme.headlineSmall,
                                     ),
                                     Text(
                                       '70000.0--48434.111',
                                       style:
-                                          Theme.of(context).textTheme.headline5,
+                                          Theme.of(context).textTheme.headlineSmall,
                                     ),
                                   ])),
                               // Price
@@ -192,12 +192,12 @@ class OtcDetailsScreen extends StatelessWidget {
                                     Text(
                                       'Price: ',
                                       style:
-                                          Theme.of(context).textTheme.headline5,
+                                          Theme.of(context).textTheme.headlineSmall,
                                     ),
                                     Text(
                                       '70.1421',
                                       style:
-                                          Theme.of(context).textTheme.headline5,
+                                          Theme.of(context).textTheme.headlineSmall,
                                     ),
                                   ])),
                             ],
@@ -226,7 +226,7 @@ class OtcDetailsScreen extends StatelessWidget {
                                         AppLocalizations.of(context)!.quantity,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5)),
+                                            .headlineSmall)),
                                 SizedBox(
                                   width: 150,
                                   child: TextField(
@@ -255,10 +255,10 @@ class OtcDetailsScreen extends StatelessWidget {
                                           hintText: '0.00',
                                           hintStyle: Theme.of(context)
                                               .textTheme
-                                              .headline5),
+                                              .headlineSmall),
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline5),
+                                          .headlineSmall),
                                 ),
                               ]),
                         ),
@@ -275,7 +275,7 @@ class OtcDetailsScreen extends StatelessWidget {
                                         AppLocalizations.of(context)!.amount,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5)),
+                                            .headlineSmall)),
                                 SizedBox(
                                   width: 150,
                                   child: TextField(
@@ -305,10 +305,10 @@ class OtcDetailsScreen extends StatelessWidget {
                                           hintText: '0.00',
                                           hintStyle: Theme.of(context)
                                               .textTheme
-                                              .headline5),
+                                              .headlineSmall),
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline5),
+                                          .headlineSmall),
                                 ),
                               ]),
                         ),
@@ -334,7 +334,7 @@ class OtcDetailsScreen extends StatelessWidget {
                                                       .cancel,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline5),
+                                                      .headlineSmall),
                                               onPressed: () {}),
                                         )
                                       : Center(

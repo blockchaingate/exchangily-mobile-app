@@ -35,15 +35,15 @@ class LockerModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
-    data['_id'] = this.sId;
-    data['id'] = this.id;
-    data['address'] = this.address;
-    data['user'] = this.user;
-    data['coinType'] = this.coinType;
-    data['amount'] = this.amount;
-    data['releaseBlock'] = this.releaseBlock;
-    data['createBy'] = this.createBy;
-    data['tickerName'] = this.tickerName;
+    data['_id'] = sId;
+    data['id'] = id;
+    data['address'] = address;
+    data['user'] = user;
+    data['coinType'] = coinType;
+    data['amount'] = amount;
+    data['releaseBlock'] = releaseBlock;
+    data['createBy'] = createBy;
+    data['tickerName'] = tickerName;
     return data;
   }
 }

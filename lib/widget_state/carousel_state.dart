@@ -3,7 +3,6 @@ import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CarouselWidgetState extends BaseState {
   final log = getLogger('CarouselWidgetState');

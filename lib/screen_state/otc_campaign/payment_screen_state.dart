@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
@@ -8,7 +7,6 @@ import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -16,7 +14,6 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -24,7 +21,6 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -33,7 +29,7 @@ import '../../shared/globals.dart' as globals;
 
 class CampaignPaymentScreenState extends BaseState {
   final log = getLogger('PaymentScreenState');
-  final NavigationService? _navigationService = locator<NavigationService>();
+  final NavigationService _navigationService = locator<NavigationService>();
   DialogService? dialogService = locator<DialogService>();
   WalletService? walletService = locator<WalletService>();
   SharedService? sharedService = locator<SharedService>();
@@ -42,7 +38,7 @@ class CampaignPaymentScreenState extends BaseState {
       locator<TokenInfoDatabaseService>();
   CampaignUserDatabaseService? campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
-  final ApiService? _apiService = locator<ApiService>();
+  final ApiService _apiService = locator<ApiService>();
 
   final sendAmountTextController = TextEditingController();
   String? _groupValue;
@@ -143,7 +139,7 @@ class CampaignPaymentScreenState extends BaseState {
   }
 
   navigateToDashboard() {
-    _navigationService!.navigateTo('/campaignDashboard');
+    _navigationService.navigateTo('/campaignDashboard');
   }
 
 /*----------------------------------------------------------------------
@@ -173,7 +169,7 @@ class CampaignPaymentScreenState extends BaseState {
       if (contractAddr == null) {
         await tokenListDatabaseService!
             .getContractAddressByTickerName(tickerName)
-            .then((value) => contractAddr = '0x' + value!);
+            .then((value) => contractAddr = '0x${value!}');
       }
 
       options = {
@@ -388,10 +384,10 @@ class CampaignPaymentScreenState extends BaseState {
             animationType: AnimationType.grow,
             isOverlayTapDismiss: true,
             backgroundColor: globals.walletCardColor,
-            descStyle: Theme.of(context!).textTheme.bodyText1!,
+            descStyle: Theme.of(context!).textTheme.bodyLarge!,
             titleStyle: Theme.of(context!)
                 .textTheme
-                .headline4!
+                .headlineMedium!
                 .copyWith(decoration: TextDecoration.underline)),
         context: context!,
         title: AppLocalizations.of(context!)!.updateYourOrderStatus,
@@ -406,12 +402,12 @@ class CampaignPaymentScreenState extends BaseState {
               children: <Widget>[
                 Text(
                   AppLocalizations.of(context!)!.quantity,
-                  style: Theme.of(context!).textTheme.bodyText1,
+                  style: Theme.of(context!).textTheme.bodyLarge,
                 ),
                 UIHelper.horizontalSpaceSmall,
                 Text(
                   quantity,
-                  style: Theme.of(context!).textTheme.bodyText1,
+                  style: Theme.of(context!).textTheme.bodyLarge,
                 ),
               ],
             ),
@@ -424,8 +420,8 @@ class CampaignPaymentScreenState extends BaseState {
               obscureText: false,
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context!)!.paymentDescription,
-                hintStyle: Theme.of(context!).textTheme.bodyText1,
-                labelStyle: Theme.of(context!).textTheme.headline6,
+                hintStyle: Theme.of(context!).textTheme.bodyLarge,
+                labelStyle: Theme.of(context!).textTheme.titleLarge,
                 icon: Icon(
                   Icons.event_note,
                   color: globals.primaryColor,
@@ -472,7 +468,7 @@ class CampaignPaymentScreenState extends BaseState {
                   ? Text(AppLocalizations.of(context!)!.loading)
                   : Text(
                       AppLocalizations.of(context!)!.confirmPayment,
-                      style: Theme.of(context!).textTheme.headline5,
+                      style: Theme.of(context!).textTheme.headlineSmall,
                     ),
             ),
           ),
@@ -498,7 +494,7 @@ class CampaignPaymentScreenState extends BaseState {
             },
             child: Text(
               AppLocalizations.of(context!)!.cancelOrder,
-              style: Theme.of(context!).textTheme.headline5,
+              style: Theme.of(context!).textTheme.headlineSmall,
             ),
           ),
         ]).show();
@@ -522,8 +518,7 @@ class CampaignPaymentScreenState extends BaseState {
 
       FocusScope.of(context).requestFocus(FocusNode());
     } else {
-      if (amount == null ||
-          !checkSendAmount ||
+      if (!checkSendAmount ||
           amount > walletBalances.balance! ||
           !isBalanceAvailabeForOrder()) {
         log.e('$usdtUnconfirmedOrderQuantity');
@@ -601,7 +596,7 @@ class CampaignPaymentScreenState extends BaseState {
   Future<double?> getUsdValue() async {
     setBusy(true);
     double? usdPrice = 0;
-    await _apiService!.getCoinCurrencyUsdPrice().then((res) {
+    await _apiService.getCoinCurrencyUsdPrice().then((res) {
       if (res != null) {
         log.w(res['data']['EXG']['USD']);
         log.e(selectedCurrency);

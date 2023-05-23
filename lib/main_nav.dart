@@ -44,14 +44,14 @@ class _MainNavState extends State<MainNav> {
       child: Scaffold(
         body: PageView(
           physics: const NeverScrollableScrollPhysics(),
+          controller: _pageController,
+          onPageChanged: onPageChanged,
           children: const <Widget>[
             WalletDashboardView(),
             MarketsView(),
             CampaignInstructionScreen(),
             SettingsView()
           ],
-          controller: _pageController,
-          onPageChanged: onPageChanged,
         ),
         bottomNavigationBar: BottomNavigationBar(
           // currentIndex: _selectedIndex,

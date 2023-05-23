@@ -2,7 +2,6 @@ import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 
@@ -72,7 +71,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 // width: MediaQuery.of(context).size.width * 3 / 15,
                 child: Text(
                   AppLocalizations.of(context)!.ticker,
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -100,7 +99,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 // width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
                   AppLocalizations.of(context)!.price,
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -126,7 +125,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 //   width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
                   '24H ${AppLocalizations.of(context)!.volume}',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -174,7 +173,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 //  width: MediaQuery.of(context).size.width * 2 / 15,
                 child: Text(
                   '24H ${AppLocalizations.of(context)!.change}',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -205,7 +204,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                           child: Text(
                             itemRow.symbol!.split('/')[0],
                             style:
-                                Theme.of(context).textTheme.headline5!.copyWith(
+                                Theme.of(context).textTheme.headlineSmall!.copyWith(
                                       fontWeight: FontWeight.w500,
                                     ),
                             textAlign: TextAlign.center,
@@ -220,7 +219,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                           child: Text(itemRow.price!.toStringAsFixed(6),
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline5!
+                                  .headlineSmall!
                                   .copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -235,7 +234,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                           child: Text(itemRow.volume!.toStringAsFixed(2),
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline5!
+                                  .headlineSmall!
                                   .copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -269,8 +268,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
                         Text(
                           itemRow.change! >= 0
                               ? "+" + itemRow.change!.toStringAsFixed(2) + '%'
-                              : itemRow.change!.toStringAsFixed(2) + '%',
-                          style: Theme.of(context).textTheme.headline5!.copyWith(
+                              : '${itemRow.change!.toStringAsFixed(2)}%',
+                          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 color: Color(itemRow.change! >= 0
                                     ? 0XFF0da88b
                                     : 0XFFe2103c),

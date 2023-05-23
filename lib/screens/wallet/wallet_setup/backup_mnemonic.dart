@@ -56,7 +56,7 @@ class _BackupMnemonicWalletScreenState
           centerTitle: true,
           elevation: 0,
           title: Text(AppLocalizations.of(context)!.backupMnemonic,
-              style: Theme.of(context).textTheme.headline3),
+              style: Theme.of(context).textTheme.displaySmall),
           backgroundColor: globals.secondaryColor,
           actions: <Widget>[
             // action button
@@ -78,7 +78,7 @@ class _BackupMnemonicWalletScreenState
                               AppLocalizations.of(context)!
                                   .backupMnemonicNoticeTitle,
                               // textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headline3,
+                              style: Theme.of(context).textTheme.displaySmall,
                             )),
                             const SizedBox(height: 20),
                             Container(
@@ -86,7 +86,7 @@ class _BackupMnemonicWalletScreenState
                                 child: Text(
                               AppLocalizations.of(context)!
                                   .backupMnemonicNoticeContent,
-                              style: Theme.of(context).textTheme.headline5,
+                              style: Theme.of(context).textTheme.headlineSmall,
                             ))
                           ],
                         );
@@ -137,7 +137,7 @@ class _BackupMnemonicWalletScreenState
                   Expanded(
                       child: Text(
                     AppLocalizations.of(context)!.warningBackupMnemonic,
-                    style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   )),
                 ],
               ),

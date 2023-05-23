@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -7,7 +6,6 @@ import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/models/campaign/user.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:flutter/material.dart';
@@ -83,8 +81,8 @@ class CampaignLoginScreenState extends BaseState {
             animationType: AnimationType.grow,
             isOverlayTapDismiss: true,
             backgroundColor: globals.walletCardColor,
-            descStyle: Theme.of(context).textTheme.bodyText1!,
-            titleStyle: Theme.of(context).textTheme.headline5!),
+            descStyle: Theme.of(context).textTheme.bodyLarge!,
+            titleStyle: Theme.of(context).textTheme.headlineSmall!),
         context: context,
         title: AppLocalizations.of(context)!.pleaseEnterYourEmailAddress,
         closeFunction: () {
@@ -145,7 +143,7 @@ class CampaignLoginScreenState extends BaseState {
               // model.busy is not working here and same reason that it does not show the error when desc field is empty
               child: Text(
                 AppLocalizations.of(context)!.confirm,
-                style: Theme.of(context).textTheme.headline5,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
             ),
           ),
@@ -160,7 +158,7 @@ class CampaignLoginScreenState extends BaseState {
             },
             child: Text(
               AppLocalizations.of(context)!.cancel,
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
           ),
         ]).show();

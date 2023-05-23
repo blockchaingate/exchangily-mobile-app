@@ -232,7 +232,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     String? fabAddress = await sharedService.getExgAddressFromWalletDatabase();
     selectedCustomTokens!.clear();
     String selectedCustomTokensJson = storageService!.customTokens;
-    if (selectedCustomTokensJson != null && selectedCustomTokensJson != '') {
+    if (selectedCustomTokensJson != '') {
       List<CustomTokenModel>? customTokensFromStorage =
           CustomTokenModelList.fromJson(jsonDecode(selectedCustomTokensJson))
               .customTokens;
@@ -606,7 +606,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     favWallets.clear();
     String favCoinsJson = storageService!.favWalletCoins;
-    if (favCoinsJson != null && favCoinsJson != '') {
+    if (favCoinsJson != '') {
       List<String> favWalletCoins =
           (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
       currentTabSelection = 1;
@@ -752,7 +752,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                 ),
                 titleTextStyle: Theme.of(context)
                     .textTheme
-                    .headline4!
+                    .headlineMedium!
                     .copyWith(fontWeight: FontWeight.bold),
                 contentTextStyle: const TextStyle(color: grey),
                 content: Container(
@@ -773,7 +773,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                             });
                           },
                           child: Text(AppLocalizations.of(context)!.updateNow,
-                              style: Theme.of(context).textTheme.headline5),
+                              style: Theme.of(context).textTheme.headlineSmall),
                         ),
                       ]),
                 ));
@@ -895,8 +895,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                 // debugPrint(diff.changed);
                 // debugPrint("Lenght: " + diff.changed.toString().length.toString());
 
-                if (diff.changed != null &&
-                    diff.changed.toString().length > 3) {
+                if (diff.changed.toString().length > 3) {
                   //   log.w('ann data diff!!!!');
                   tempAnnounceData![idx] = annNew;
                   tempAnnounceData[idx]['isRead'] = false;
@@ -1123,7 +1122,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                           titlePadding: const EdgeInsets.symmetric(vertical: 0),
                           actionsPadding: const EdgeInsets.all(0),
                           elevation: 5,
-                          titleTextStyle: Theme.of(context).textTheme.headline4,
+                          titleTextStyle: Theme.of(context).textTheme.headlineMedium,
                           contentTextStyle: const TextStyle(color: grey),
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 10),
@@ -1143,7 +1142,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                 res['_body']['question'].toString(),
                                 style: Theme.of(context)
                                     .textTheme
-                                    .bodyText1!
+                                    .bodyLarge!
                                     .copyWith(
                                         color: red,
                                         fontWeight: FontWeight.bold),
@@ -1409,11 +1408,9 @@ class WalletDashboardViewModel extends BaseViewModel {
           String? tickerNameByCointype = newCoinTypeMap[coinType];
           if (tickerNameByCointype == null) {
             await tokenListDatabaseService!.getAll().then((tokenList) {
-              if (tokenList != null) {
-                tickerNameByCointype = tokenList
-                    .firstWhere((element) => element.coinType == coinType)
-                    .tickerName;
-              }
+              tickerNameByCointype = tokenList
+                  .firstWhere((element) => element.coinType == coinType)
+                  .tickerName;
             });
           }
           log.w('tickerNameByCointype $tickerNameByCointype');
@@ -1520,9 +1517,10 @@ class WalletDashboardViewModel extends BaseViewModel {
       if (finalWbb.isNotEmpty) {
         await coreWalletDatabaseService!.insert(walletCoreModel);
       }
-    } else if (walletBalancesBodyFromDB != null) {
+    } else {
       finalWbb = walletBalancesBodyFromDB['walletBalancesBody'];
     }
+
     if (finalWbb == null || finalWbb.isEmpty) {
       storageService!.hasWalletVerified = false;
       navigationService!
@@ -1531,18 +1529,14 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     walletBalancesApiRes =
         await apiService!.getWalletBalance(jsonDecode(finalWbb));
-    if (walletBalancesApiRes != null) {
-      log.w('walletBalances LENGTH ${walletBalancesApiRes.length}');
-    }
+    log.w('walletBalances LENGTH ${walletBalancesApiRes.length}');
     if (isProduction && coinsToHideList.isNotEmpty) {
       for (var coinToHideTicker in coinsToHideList) {
         walletBalancesApiRes
             .removeWhere((element) => element.coin == coinToHideTicker);
       }
     }
-    if (walletBalancesApiRes != null) {
-      log.i('walletBalances LENGTH ${walletBalancesApiRes.length}');
-    }
+    log.i('walletBalances LENGTH ${walletBalancesApiRes.length}');
     wallets = walletBalancesApiRes;
 
     walletsCopy = wallets;

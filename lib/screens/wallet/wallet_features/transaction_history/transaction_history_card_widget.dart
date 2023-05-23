@@ -49,7 +49,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                                     Text(transaction.tickerName!.split('(')[0],
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6),
+                                            .titleLarge),
                                     Text(
                                         transaction.tickerName!
                                             .split('(')[1]
@@ -61,11 +61,11 @@ class TxHisotryCardWidget extends StatelessWidget {
                                                     1),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .subtitle2),
+                                            .titleSmall),
                                   ],
                                 )
                               : Text(transaction.tickerName!.toUpperCase(),
-                                  style: Theme.of(context).textTheme.subtitle2),
+                                  style: Theme.of(context).textTheme.titleSmall),
                         ),
                       ),
 
@@ -105,7 +105,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 3.0),
                           child: Text(
                             AppLocalizations.of(context)!.withdraw,
-                            style: Theme.of(context).textTheme.subtitle2,
+                            style: Theme.of(context).textTheme.titleSmall,
                             textAlign: TextAlign.center,
                           ),
                         )
@@ -115,7 +115,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 5.0),
                           child: Text(
                             AppLocalizations.of(context)!.send,
-                            style: Theme.of(context).textTheme.subtitle2,
+                            style: Theme.of(context).textTheme.titleSmall,
                             textAlign: TextAlign.center,
                           ),
                         )
@@ -127,7 +127,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                               : const EdgeInsets.only(left: 3.0),
                           child: Text(
                             AppLocalizations.of(context)!.deposit,
-                            style: Theme.of(context).textTheme.subtitle2,
+                            style: Theme.of(context).textTheme.titleSmall,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -145,7 +145,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                       '${transaction.date!.split(" ")[0].split("-")[1]}-${transaction.date!.split(" ")[0].split("-")[2]}-${transaction.date!.split(" ")[0].split("-")[0]}',
                       style: Theme.of(context)
                           .textTheme
-                          .headline5!
+                          .headlineSmall!
                           .copyWith(fontWeight: FontWeight.w400),
                       minFontSize: 8,
                       maxLines: 1,
@@ -160,7 +160,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                             : transaction.date!.split(" ")[1],
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle2!
+                            .titleSmall!
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -182,7 +182,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                       textAlign: TextAlign.right,
                       style: Theme.of(context)
                           .textTheme
-                          .headline5!
+                          .headlineSmall!
                           .copyWith(fontWeight: FontWeight.w400),
                       minFontSize: 8,
                       maxLines: 2,

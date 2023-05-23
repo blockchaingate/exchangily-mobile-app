@@ -50,7 +50,7 @@ class SendWalletView extends StatelessWidget {
                 backgroundColor: walletCardColor,
                 title: Text(
                     '${AppLocalizations.of(context)!.send} ${model.specialTickerName!}',
-                    style: Theme.of(context).textTheme.headline4),
+                    style: Theme.of(context).textTheme.headlineMedium),
                 centerTitle: true,
               ),
               body: GestureDetector(
@@ -125,15 +125,13 @@ class SendWalletView extends StatelessWidget {
                                             ),
                                           ),
                                           labelText:
-                                              AppLocalizations.of(context)!
-                                                      .receiverWalletAddress +
-                                                  ', ' +
-                                                  'DNS',
+                                              '${AppLocalizations.of(context)!
+                                                      .receiverWalletAddress}, DNS',
                                           labelStyle: Theme.of(context)
                                               .textTheme
-                                              .headline6),
+                                              .titleLarge),
                                       style:
-                                          Theme.of(context).textTheme.headline6,
+                                          Theme.of(context).textTheme.titleLarge,
                                     ),
                                   )),
                               model.busy(model.userTypedDomain)
@@ -184,7 +182,7 @@ class SendWalletView extends StatelessWidget {
                                             .scanBarCode,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5!
+                                            .headlineSmall!
                                             .copyWith(
                                                 fontWeight: FontWeight.w400),
                                       )
@@ -219,13 +217,11 @@ class SendWalletView extends StatelessWidget {
                                           decimal: true), // numnber keyboard
                                   decoration: InputDecoration(
                                       suffix: Text(
-                                          AppLocalizations.of(context)!
-                                                  .decimalLimit +
-                                              ': ' +
-                                              model.decimalLimit.toString(),
+                                          '${AppLocalizations.of(context)!
+                                                  .decimalLimit}: ${model.decimalLimit}',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6),
+                                              .titleLarge),
                                       focusedBorder: const UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: primaryColor)),
@@ -293,7 +289,7 @@ class SendWalletView extends StatelessWidget {
                                                                           // textAlign: TextAlign.center,
                                                                           style: Theme.of(context)
                                                                               .textTheme
-                                                                              .headline4,
+                                                                              .headlineMedium,
                                                                         ),
                                                                       )),
                                                                   UIHelper
@@ -309,7 +305,7 @@ class SendWalletView extends StatelessWidget {
                                                                             .availableBalanceInfoContent,
                                                                         style: Theme.of(context)
                                                                             .textTheme
-                                                                            .headline2,
+                                                                            .displayMedium,
                                                                       ))
                                                                 ],
                                                               );
@@ -325,7 +321,7 @@ class SendWalletView extends StatelessWidget {
                                             '${AppLocalizations.of(context)!.available} ${AppLocalizations.of(context)!.walletbalance}  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.availableBalance, precision: model.decimalLimit!)} ',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline6!
+                                                .titleLarge!
                                                 .copyWith(
                                                     fontWeight:
                                                         FontWeight.w400),
@@ -335,7 +331,7 @@ class SendWalletView extends StatelessWidget {
                                                 .toUpperCase(),
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline6,
+                                                .titleLarge,
                                           ),
                                         ],
                                       ),
@@ -419,7 +415,7 @@ class SendWalletView extends StatelessWidget {
                                                                         // textAlign: TextAlign.center,
                                                                         style: Theme.of(context)
                                                                             .textTheme
-                                                                            .headline3,
+                                                                            .displaySmall,
                                                                       ),
                                                                     )),
                                                                 const SizedBox(
@@ -436,7 +432,7 @@ class SendWalletView extends StatelessWidget {
                                                                       style: Theme.of(
                                                                               context)
                                                                           .textTheme
-                                                                          .headline2,
+                                                                          .displayMedium,
                                                                     )),
                                                                 UIHelper
                                                                     .verticalSpaceMedium,
@@ -452,7 +448,7 @@ class SendWalletView extends StatelessWidget {
                                                                       style: Theme.of(
                                                                               context)
                                                                           .textTheme
-                                                                          .headline2,
+                                                                          .displayMedium,
                                                                     ))
                                                               ],
                                                             );
@@ -464,7 +460,7 @@ class SendWalletView extends StatelessWidget {
                                                 '${AppLocalizations.of(context)!.unConfirmedBalance}  ${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance!, precision: model.decimalLimit!)} ',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline6!
+                                                    .titleLarge!
                                                     .copyWith(
                                                         fontWeight:
                                                             FontWeight.w400),
@@ -474,7 +470,7 @@ class SendWalletView extends StatelessWidget {
                                                     .toUpperCase(),
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline6,
+                                                    .titleLarge,
                                               )
                                             ],
                                           ),
@@ -495,7 +491,7 @@ class SendWalletView extends StatelessWidget {
                                                   '${AppLocalizations.of(context)!.totalBalance}  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.availableBalance + model.unconfirmedBalance!, precision: model.decimalLimit!)} ',
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline6!
+                                                      .titleLarge!
                                                       .copyWith(
                                                           fontWeight:
                                                               FontWeight.w400),
@@ -505,7 +501,7 @@ class SendWalletView extends StatelessWidget {
                                                       .toUpperCase(),
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline6,
+                                                      .titleLarge,
                                                 )
                                               ],
                                             ),
@@ -530,7 +526,7 @@ class SendWalletView extends StatelessWidget {
                                               textAlign: TextAlign.left,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline6)
+                                                  .titleLarge)
                                           : Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -541,14 +537,14 @@ class SendWalletView extends StatelessWidget {
                                                     textAlign: TextAlign.left,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline6),
+                                                        .titleLarge),
                                                 Text(
                                                     'TRX'
                                                     '${AppLocalizations.of(context)!.balance}: ${model.chainBalance} TRX',
                                                     textAlign: TextAlign.left,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline6),
+                                                        .titleLarge),
                                               ],
                                             ),
                                     )
@@ -562,7 +558,7 @@ class SendWalletView extends StatelessWidget {
                                                 .gasFee,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline5!
+                                                .headlineSmall!
                                                 .copyWith(
                                                     fontWeight:
                                                         FontWeight.w400),
@@ -586,7 +582,7 @@ class SendWalletView extends StatelessWidget {
                                                     '${NumberUtil().truncateDoubleWithoutRouding(model.transFee!, precision: 6)}  ${model.feeUnit}',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline6!
+                                                        .titleLarge!
                                                         .copyWith(
                                                             fontWeight:
                                                                 FontWeight
@@ -603,7 +599,7 @@ class SendWalletView extends StatelessWidget {
                                     AppLocalizations.of(context)!.advance,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5!
+                                        .headlineSmall!
                                         .copyWith(fontWeight: FontWeight.w400),
                                   ),
                                   Switch(
@@ -689,7 +685,7 @@ class SendWalletView extends StatelessWidget {
                                                           .gasPrice,
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .headline6!
+                                                          .titleLarge!
                                                           .copyWith(
                                                               fontWeight:
                                                                   FontWeight
@@ -721,14 +717,14 @@ class SendWalletView extends StatelessWidget {
                                                             hintText: '0.00000',
                                                             hintStyle: Theme.of(context)
                                                                 .textTheme
-                                                                .headline6!
+                                                                .titleLarge!
                                                                 .copyWith(
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w400)),
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .headline6!
+                                                            .titleLarge!
                                                             .copyWith(
                                                                 fontWeight:
                                                                     FontWeight.w400)))
@@ -753,7 +749,7 @@ class SendWalletView extends StatelessWidget {
                                                             .gasLimit,
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .headline6!
+                                                            .titleLarge!
                                                             .copyWith(
                                                                 fontWeight:
                                                                     FontWeight
@@ -791,14 +787,14 @@ class SendWalletView extends StatelessWidget {
                                                             hintStyle: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .headline6!
+                                                                .titleLarge!
                                                                 .copyWith(
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w400)),
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .headline6!
+                                                            .titleLarge!
                                                             .copyWith(
                                                                 fontWeight:
                                                                     FontWeight
@@ -823,7 +819,7 @@ class SendWalletView extends StatelessWidget {
                                                             .satoshisPerByte,
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .headline6),
+                                                            .titleLarge),
                                                   ),
                                                   //  UIHelper.horizontalSpaceLarge,
                                                   Expanded(
@@ -857,14 +853,14 @@ class SendWalletView extends StatelessWidget {
                                                             hintStyle: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .headline6!
+                                                                .titleLarge!
                                                                 .copyWith(
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w400)),
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .headline6!
+                                                            .titleLarge!
                                                             .copyWith(
                                                                 fontWeight:
                                                                     FontWeight
@@ -913,7 +909,7 @@ class SendWalletView extends StatelessWidget {
                                         model.txHash!,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText2!
+                                            .bodyMedium!
                                             .copyWith(color: primaryColor),
                                       ),
                                     ],
@@ -990,7 +986,7 @@ class SendWalletView extends StatelessWidget {
                                 : Text(AppLocalizations.of(context)!.confirm,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline4!
+                                        .headlineMedium!
                                         .copyWith(
                                             color: model.isValidAmount &&
                                                     model.amount != 0.0

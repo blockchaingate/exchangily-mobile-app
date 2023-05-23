@@ -98,7 +98,7 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
         debugPrint('if : adding element ');
         tappedMnemonicList.add(singleWord);
         tapTextControllerList[i].text =
-            tappedMnemonicList.length.toString() + ') ' + singleWord;
+            '${tappedMnemonicList.length}) $singleWord';
         lastIndexList.add(i);
       }
       // else {
@@ -215,7 +215,7 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
             Text(AppLocalizations.of(context)!.invalidMnemonic,
                 style: Theme.of(context)
                     .textTheme
-                    .headline4!
+                    .headlineMedium!
                     .copyWith(color: red, fontWeight: FontWeight.bold)),
             position: NotificationPosition.bottom,
             subtitle: Text(AppLocalizations.of(context)!
@@ -254,7 +254,7 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
       showSimpleNotification(
           Text(AppLocalizations.of(context)!.invalidMnemonic,
               style:
-                  Theme.of(context).textTheme.headline4!.copyWith(color: red)),
+                  Theme.of(context).textTheme.headlineMedium!.copyWith(color: red)),
           position: NotificationPosition.bottom,
           subtitle: Text(AppLocalizations.of(context)!
               .pleaseFillAllTheTextFieldsCorrectly));

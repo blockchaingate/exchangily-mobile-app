@@ -30,19 +30,19 @@ class MarketTradesView extends StatelessWidget {
                         flex: 1,
                         child: Text(AppLocalizations.of(context)!.price,
                             textAlign: TextAlign.right,
-                            style: Theme.of(context).textTheme.subtitle2)),
+                            style: Theme.of(context).textTheme.titleSmall)),
                     UIHelper.horizontalSpaceMedium,
                     Expanded(
                         flex: 2,
                         child: Text(AppLocalizations.of(context)!.quantity,
                             textAlign: TextAlign.right,
-                            style: Theme.of(context).textTheme.subtitle2)),
+                            style: Theme.of(context).textTheme.titleSmall)),
                     UIHelper.horizontalSpaceSmall,
                     Expanded(
                         flex: 2,
                         child: Text(AppLocalizations.of(context)!.time,
                             textAlign: TextAlign.right,
-                            style: Theme.of(context).textTheme.subtitle2)),
+                            style: Theme.of(context).textTheme.titleSmall)),
                     UIHelper.horizontalSpaceMedium,
                   ],
                 ),
@@ -75,7 +75,7 @@ class MarketTradesView extends StatelessWidget {
                                       .toString(),
                                   textAlign: TextAlign.right,
                                   style:
-                                      Theme.of(context).textTheme.headline6)),
+                                      Theme.of(context).textTheme.titleLarge)),
                           UIHelper.horizontalSpaceSmall,
                           Expanded(
                               flex: 2,
@@ -87,7 +87,7 @@ class MarketTradesView extends StatelessWidget {
                                       .toString(),
                                   textAlign: TextAlign.right,
                                   style:
-                                      Theme.of(context).textTheme.headline6)),
+                                      Theme.of(context).textTheme.titleLarge)),
                           UIHelper.horizontalSpaceSmall,
                           Expanded(
                               flex: 2,
@@ -97,7 +97,7 @@ class MarketTradesView extends StatelessWidget {
                                       .toString(),
                                   textAlign: TextAlign.right,
                                   style:
-                                      Theme.of(context).textTheme.headline6)),
+                                      Theme.of(context).textTheme.titleLarge)),
                           //  UIHelper.horizontalSpaceSmall,
                         ],
                       ),

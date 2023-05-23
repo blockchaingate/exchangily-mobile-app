@@ -12,7 +12,6 @@
 */
 
 import 'package:exchangilymobileapp/utils/number_util.dart';
-import 'package:exchangilymobileapp/utils/string_util.dart';
 
 class OrderModel {
   String? _orderHash;

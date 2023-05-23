@@ -57,8 +57,7 @@ class NumberUtil {
 
   static Decimal parseStringToDecimal(String value) {
     // add error handling for string that if it is null or not a number or not a double or empty
-    if (value == null ||
-        value.isEmpty ||
+    if (value.isEmpty ||
         value.toString().isEmpty ||
         value.toString().contains('e')) return Constants.decimalZero;
     return Decimal.parse(value);
@@ -66,8 +65,7 @@ class NumberUtil {
 
   static Decimal parseDoubleToDecimal(double value) {
     // add error handling for double that if it is null or not a number or not a double or empty
-    if (value == null ||
-        value.isNaN ||
+    if (value.isNaN ||
         value.isInfinite ||
         value.toString().isEmpty) return Constants.decimalZero;
     return Decimal.parse(value.toString());
@@ -229,11 +227,7 @@ class NumberUtil {
 // Time Format
   timeFormatted(timeStamp) {
     var time = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
-    return addZeroInFrontForSingleDigit(time.hour.toString()) +
-        ':' +
-        addZeroInFrontForSingleDigit(time.minute.toString()) +
-        ':' +
-        addZeroInFrontForSingleDigit(time.second.toString());
+    return '${addZeroInFrontForSingleDigit(time.hour.toString())}:${addZeroInFrontForSingleDigit(time.minute.toString())}:${addZeroInFrontForSingleDigit(time.second.toString())}';
   }
 
   String addZeroInFrontForSingleDigit(String value) {

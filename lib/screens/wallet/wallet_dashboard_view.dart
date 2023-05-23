@@ -43,23 +43,23 @@ class WalletDashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey _one = GlobalKey();
-    GlobalKey _two = GlobalKey();
+    GlobalKey one = GlobalKey();
+    GlobalKey two = GlobalKey();
     final key = GlobalKey<ScaffoldState>();
-    RefreshController _refreshController =
+    RefreshController refreshController =
         RefreshController(initialRefresh: false);
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => WalletDashboardViewModel(),
         onViewModelReady: (WalletDashboardViewModel model) async {
           model.context = context;
-          model.globalKeyOne = _one;
-          model.globalKeyTwo = _two;
-          model.refreshController = _refreshController;
+          model.globalKeyOne = one;
+          model.globalKeyTwo = two;
+          model.refreshController = refreshController;
           //  await model.retrieveWalletsFromLocalDatabase();
           await model.init();
         },
         onDispose: (dynamic viewModel) {
-          if (_refreshController != null) _refreshController.dispose();
+ refreshController.dispose();
           debugPrint('_refreshController disposed in wallet dashboard view');
         },
         builder: (context, WalletDashboardViewModel model, child) {
@@ -1268,7 +1268,7 @@ class FavTab extends StackedView<WalletDashboardViewModel> {
     return model.busy(model.favWallets)
         ? model.sharedService.loadingIndicator()
         : Container(
-            child: model.favWallets.isEmpty || model.favWallets == null
+            child: model.favWallets.isEmpty
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,

@@ -182,7 +182,7 @@ class CoinService {
           .then((value) {
         if (value != null) {
           if (!value.startsWith('0x')) {
-            smartContractAddress = '0x' + value;
+            smartContractAddress = '0x$value';
           } else {
             smartContractAddress = value;
           }

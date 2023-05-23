@@ -34,7 +34,7 @@ class BaseState extends ChangeNotifier {
   String get message => _message;
 
   bool get hasErrorMessage => _errorMessage != null && _errorMessage!.isNotEmpty;
-  bool get hasMessage => _message != null && _message.isNotEmpty;
+  bool get hasMessage => _message.isNotEmpty;
 
   void setErrorMessage(String? message) {
     _errorMessage = message;

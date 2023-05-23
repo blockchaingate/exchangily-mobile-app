@@ -35,8 +35,8 @@ Future generateTrxTransactionContract(
   int? decimal = 0;
 
   String? contractAddress = '';
-  final TokenInfoDatabaseService? tokenListDatabaseService = locator<TokenInfoDatabaseService>();
-  final ApiService? apiService = locator<ApiService>();
+  final TokenInfoDatabaseService tokenListDatabaseService = locator<TokenInfoDatabaseService>();
+  final ApiService apiService = locator<ApiService>();
   List<int> fromAddress = bs58check.decode(fromAddr);
 
   // debugPrint('base58 fromAddress to Hex ${StringUtil.uint8ListToHex(fromAddress)}');
@@ -56,15 +56,14 @@ Future generateTrxTransactionContract(
     // get trx-usdt contract address
     contractAddress = environment["addresses"]["smartContract"][tickerName];
     if (contractAddress == null) {
-      await tokenListDatabaseService!
-          .getByTickerName(tickerName)
+      await tokenListDatabaseService.getByTickerName(tickerName)
           .then((token) async {
         if (token != null) {
           contractAddress = token.contract;
           decimal = token.decimal;
           //   debugPrint('token from token database ${token.toJson()}');
         } else if (token!.tickerName == 'USDTX') {
-          await apiService!.getTokenListUpdates().then((tokenList) {
+          await apiService.getTokenListUpdates().then((tokenList) {
             for (var token in tokenList!) {
               if (token.tickerName == 'USDTX') {
                 contractAddress = token.contract;
@@ -74,7 +73,7 @@ Future generateTrxTransactionContract(
             }
           });
         } else if (token.tickerName == 'USDCX') {
-          await apiService!.getTokenListUpdates().then((tokenList) {
+          await apiService.getTokenListUpdates().then((tokenList) {
             for (var token in tokenList!) {
               if (token.tickerName == 'USDCX') {
                 contractAddress = token.contract;
@@ -190,7 +189,7 @@ _generateTrxRawTransaction(
     required bool isTrxUsdt,
     required int? gasLimit,
     required bool isBroadcast}) async {
-  ApiService _apiService = locator<ApiService>();
+  ApiService apiService = locator<ApiService>();
 // txRaw.SetRefBlockHash(blkhash)
 // txRaw.SetRefBlockBytes(blk.BlockHeader.Raw.Number)
 // txRaw.SetExpiration(blk.BlockHeader.Raw.Timestamp + 1 * 60 * 60 * 1000 + int64(i) ) // 1 hours
@@ -211,7 +210,7 @@ _generateTrxRawTransaction(
 // timestamp: 1615246092000
 // },
 
-  await _apiService.getTronLatestBlock().then((res) {
+  await apiService.getTronLatestBlock().then((res) {
     var blockHash =
         //'0000000001b2a1380ab6f5081d4388499fa9dbb0d4c7d7b70478fbd6c661cfdd';
         res['blockID'];

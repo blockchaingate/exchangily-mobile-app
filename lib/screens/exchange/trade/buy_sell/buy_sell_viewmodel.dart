@@ -89,7 +89,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   double kanbanTransFee = 0.0;
   bool transFeeAdvance = false;
 
-  final DialogService? _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
   double currentPrice = 0;
   double currentQuantity = 0;
   double sliderValue = 10.0;
@@ -147,10 +147,6 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   void onError(error) {
@@ -468,12 +464,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     var numStringArray = numString.split('.');
     var zeroLength = 18;
     var val = '';
-    if (numStringArray != null) {
-      val = numStringArray[0];
-      if (numStringArray.length == 2) {
-        zeroLength -= numStringArray[1].length;
-        val += numStringArray[1];
-      }
+    val = numStringArray[0];
+    if (numStringArray.length == 2) {
+      zeroLength -= numStringArray[1].length;
+      val += numStringArray[1];
     }
 
     var valInt = int.parse(val);
@@ -496,7 +490,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     await coinService!
         .getCoinTypeByTickerName(baseCoinName)
         .then((value) => baseCoin = value);
-    log.e('basecoin Hex ==' + baseCoin!.toRadixString(16));
+    log.e('basecoin Hex ==${baseCoin!.toRadixString(16)}');
     int? targetCoin = 0;
     await coinService!
         .getCoinTypeByTickerName(targetCoinName)
@@ -590,8 +584,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   Future placeBuySellOrder() async {
     setBusy(true);
     isReloadMyOrders = false;
-    await _dialogService!
-        .showDialog(
+    await _dialogService.showDialog(
             title: AppLocalizations.of(context!)!.enterPassword,
             description: AppLocalizations.of(context!)!
                 .dialogManagerTypeSamePasswordNote,
@@ -611,9 +604,9 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(AppLocalizations.of(context!)!.orderCreatedSuccessfully,
-                    style: Theme.of(context!).textTheme.headline5),
+                    style: Theme.of(context!).textTheme.headlineSmall),
                 Text('txid:' + resKanban['transactionHash'],
-                    style: Theme.of(context!).textTheme.headline6),
+                    style: Theme.of(context!).textTheme.titleLarge),
               ],
             ),
             background: primaryColor,
@@ -695,7 +688,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
           child: Text(AppLocalizations.of(context)!.insufficientGasBalance,
               style: Theme.of(context)
                   .textTheme
-                  .headline4!
+                  .headlineMedium!
                   .copyWith(fontWeight: FontWeight.w800)),
         ),
         background: sellPrice,

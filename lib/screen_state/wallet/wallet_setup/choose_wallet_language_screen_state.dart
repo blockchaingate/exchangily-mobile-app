@@ -43,7 +43,7 @@ class ChooseWalletLanguageScreenState extends BaseState {
     lang = await userSettingsDatabaseService!
         .getById(1)
         .then((res) => res!.language!);
-    if (lang == null || lang == '') {
+    if (lang == '') {
       log.e('language empty');
     } else {
       setState(ViewState.Idle);

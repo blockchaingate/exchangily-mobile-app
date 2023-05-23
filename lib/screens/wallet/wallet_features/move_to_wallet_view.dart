@@ -23,7 +23,6 @@ import 'package:stacked/stacked.dart';
 import '../../../localizations.dart';
 import '../../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/gestures.dart';
 
 class MoveToWalletScreen extends StatelessWidget {
@@ -69,7 +68,7 @@ class MoveToWalletScreen extends StatelessWidget {
               ),
               middle: Text(
                   '${AppLocalizations.of(context)!.move}  ${model.specialTicker}  ${AppLocalizations.of(context)!.toWallet}',
-                  style: Theme.of(context).textTheme.headline5),
+                  style: Theme.of(context).textTheme.headlineSmall),
               backgroundColor: const Color(0XFF1f2233),
             ),
             backgroundColor: const Color(0xFF1F2233),
@@ -99,12 +98,11 @@ class MoveToWalletScreen extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                          AppLocalizations.of(context)!
-                                                  .minimumAmount +
-                                              ': ',
+                                          '${AppLocalizations.of(context)!
+                                                  .minimumAmount}: ',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6),
+                                              .titleLarge),
                                       Text(
                                           model.token.minWithdraw == null
                                               ? AppLocalizations.of(context)!
@@ -113,7 +111,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   .toString(),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6),
+                                              .titleLarge),
                                     ],
                                   ),
                                   Row(
@@ -121,16 +119,15 @@ class MoveToWalletScreen extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                          AppLocalizations.of(context)!
-                                                  .decimalLimit +
-                                              ': ',
+                                          '${AppLocalizations.of(context)!
+                                                  .decimalLimit}: ',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6),
+                                              .titleLarge),
                                       Text(model.token.decimal.toString(),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6),
+                                              .titleLarge),
                                     ],
                                   ),
                                 ],
@@ -142,21 +139,20 @@ class MoveToWalletScreen extends StatelessWidget {
                                   AppLocalizations.of(context)!.enterAmount,
                               hintStyle: Theme.of(context)
                                   .textTheme
-                                  .headline5!
+                                  .headlineSmall!
                                   .copyWith(fontWeight: FontWeight.w300)),
                           controller: model.amountController,
                           style: Theme.of(context)
                               .textTheme
-                              .headline5!
+                              .headlineSmall!
                               .copyWith(fontWeight: FontWeight.w300)),
                       UIHelper.verticalSpaceSmall,
                       // Exchange bal
                       Row(
                         children: <Widget>[
                           Text(
-                              AppLocalizations.of(context)!.inExchange +
-                                  ' ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.inExchange!, precision: model.decimalLimit).toString()}',
-                              style: Theme.of(context).textTheme.subtitle2),
+                              '${AppLocalizations.of(context)!.inExchange} ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.inExchange!, precision: model.decimalLimit).toString()}',
+                              style: Theme.of(context).textTheme.titleSmall),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 3,
@@ -164,14 +160,14 @@ class MoveToWalletScreen extends StatelessWidget {
                             child: walletInfo!.tickerName == 'USDTX'
                                 ? Text('USDT'.toUpperCase(),
                                     style:
-                                        Theme.of(context).textTheme.subtitle2)
+                                        Theme.of(context).textTheme.titleSmall)
                                 : walletInfo!.tickerName == 'USDCX'
                                     ? Text('USDC'.toUpperCase(),
                                         style: subText2)
                                     : Text(model.specialTicker!.toUpperCase(),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .subtitle2),
+                                            .titleSmall),
                           ),
                           model.isWithdrawChoice
                               ? SizedBox(
@@ -249,7 +245,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                 Text('TRX Chain',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline6),
+                                                        .titleLarge),
                                               ],
                                             )
                                           : Row(
@@ -277,7 +273,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                 Text('FAB Chain',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline6),
+                                                        .titleLarge),
                                               ],
                                             ),
 
@@ -303,7 +299,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                           Text('ETH Chain',
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline6),
+                                                  .titleLarge),
                                         ],
                                       ),
                                     ],
@@ -344,7 +340,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                 Text('BNB Chain',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline6),
+                                                        .titleLarge),
                                               ],
                                             )
                                           : Container(),
@@ -377,7 +373,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                 Text('POLYGON Chain',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline6),
+                                                        .titleLarge),
                                               ],
                                             )
                                           : Container(),
@@ -396,10 +392,8 @@ class MoveToWalletScreen extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(
-                              AppLocalizations.of(context)!.withdraw +
-                                  ' ' +
-                                  AppLocalizations.of(context)!.fee,
-                              style: Theme.of(context).textTheme.headline6),
+                              '${AppLocalizations.of(context)!.withdraw} ${AppLocalizations.of(context)!.fee}',
+                              style: Theme.of(context).textTheme.titleLarge),
                           UIHelper.horizontalSpaceSmall,
                           Padding(
                             padding: const EdgeInsets.only(
@@ -410,7 +404,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                 : Text(
                                     '${model.token.feeWithdraw} ${model.specialTicker!.contains('(') ? model.specialTicker!.split('(')[0] : model.specialTicker}',
                                     style:
-                                        Theme.of(context).textTheme.headline6),
+                                        Theme.of(context).textTheme.titleLarge),
                           )
                         ],
                       ),
@@ -418,14 +412,14 @@ class MoveToWalletScreen extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(AppLocalizations.of(context)!.kanbanGasFee,
-                              style: Theme.of(context).textTheme.headline6),
+                              style: Theme.of(context).textTheme.titleLarge),
                           Padding(
                             padding: const EdgeInsets.only(
                                 left:
                                     5), // padding left to keep some space from the text
                             child: Text(
                                 '${model.kanbanTransFee.toStringAsFixed(4)} GAS',
-                                style: Theme.of(context).textTheme.headline6),
+                                style: Theme.of(context).textTheme.titleLarge),
                           )
                         ],
                       ),
@@ -434,7 +428,7 @@ class MoveToWalletScreen extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(AppLocalizations.of(context)!.advance,
-                              style: Theme.of(context).textTheme.headline6),
+                              style: Theme.of(context).textTheme.titleLarge),
                           SizedBox(
                             height: 15,
                             child: Switch(
@@ -465,7 +459,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                             .kanbanGasPrice,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5!
+                                            .headlineSmall!
                                             .copyWith(
                                                 fontWeight: FontWeight.w300)),
                                   ),
@@ -495,10 +489,10 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   hintText: '0.00000',
                                                   hintStyle: Theme.of(context)
                                                       .textTheme
-                                                      .headline5!
+                                                      .headlineSmall!
                                                       .copyWith(
                                                           fontWeight: FontWeight.w300)),
-                                              style: Theme.of(context).textTheme.headline5!.copyWith(fontWeight: FontWeight.w300))))
+                                              style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontWeight: FontWeight.w300))))
                                 ],
                               ),
                               // Kanban Gas Limit
@@ -512,7 +506,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                             .kanbanGasLimit,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5!
+                                            .headlineSmall!
                                             .copyWith(
                                                 fontWeight: FontWeight.w300),
                                       )),
@@ -541,13 +535,13 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   hintText: '0.00000',
                                                   hintStyle: Theme.of(context)
                                                       .textTheme
-                                                      .headline5!
+                                                      .headlineSmall!
                                                       .copyWith(
                                                           fontWeight:
                                                               FontWeight.w300)),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline5!
+                                                  .headlineSmall!
                                                   .copyWith(fontWeight: FontWeight.w300)))),
                                 ],
                               ),
@@ -679,7 +673,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                   Text(
                                     model.message ?? '',
                                     style:
-                                        Theme.of(context).textTheme.headline6,
+                                        Theme.of(context).textTheme.titleLarge,
                                   ),
                                   UIHelper.verticalSpaceSmall,
                                   RichText(
@@ -710,7 +704,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                     text: TextSpan(
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5!
+                                            .headlineSmall!
                                             .copyWith(
                                                 color: red,
                                                 decoration:
@@ -735,7 +729,7 @@ class MoveToWalletScreen extends StatelessWidget {
                       model.isShowDetailsMessage
                           ? Center(
                               child: Text(model.serverError!,
-                                  style: Theme.of(context).textTheme.headline6),
+                                  style: Theme.of(context).textTheme.titleLarge),
                             )
                           : Container(),
                       UIHelper.verticalSpaceMedium,
@@ -755,7 +749,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                   strokeWidth: 1,
                                 ))
                             : Text(AppLocalizations.of(context)!.confirm,
-                                style: Theme.of(context).textTheme.headline4),
+                                style: Theme.of(context).textTheme.headlineMedium),
                       ),
                     ],
                   )),

@@ -27,7 +27,6 @@ import 'package:exchangilymobileapp/services/local_auth_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/version_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
@@ -182,8 +181,9 @@ class SettingsViewmodel extends BaseViewModel {
     setBusy(true);
     if (selectedLanguage == '' || selectedLanguage == null) {
       String? key;
-      if (userSettings.language == null || userSettings.language!.isEmpty)
+      if (userSettings.language == null || userSettings.language!.isEmpty) {
         key = 'en';
+      }
       // await getSetLocalStorageDataByKey('lang');
       // log.w('key in init $key');
 

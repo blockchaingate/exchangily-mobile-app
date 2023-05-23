@@ -3,7 +3,6 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -163,7 +162,7 @@ class SettingsPortableContainer extends StatelessWidget {
                     flex: 3,
                     child: Text(
                         AppLocalizations.of(context)!.showDialogWarnings,
-                        style: Theme.of(context).textTheme.headline5,
+                        style: Theme.of(context).textTheme.headlineSmall,
                         textAlign: TextAlign.left),
                   ),
                   Expanded(
@@ -199,7 +198,7 @@ class SettingsPortableContainer extends StatelessWidget {
                     child: Text(
                         AppLocalizations.of(context)!
                             .settingsShowcaseInstructions,
-                        style: Theme.of(context).textTheme.headline5,
+                        style: Theme.of(context).textTheme.headlineSmall,
                         textAlign: TextAlign.left),
                   ),
                   Expanded(

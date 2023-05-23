@@ -69,7 +69,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                           'Verify Mnemonic by tap on words in the correct order',
                           style: Theme.of(context)
                               .textTheme
-                              .headline5!
+                              .headlineSmall!
                               .copyWith(
                                   fontWeight: model.isTap
                                       ? FontWeight.bold
@@ -130,7 +130,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                                   Text('Reset Selection',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline3!
+                                          .displaySmall!
                                           .copyWith(color: yellow)),
                                 ],
                               )),

@@ -28,7 +28,7 @@ import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 
 class MyOrdersViewModel extends ReactiveViewModel {
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [_orderService!];
+  List<ReactiveServiceMixin> get reactiveServices => [_orderService];
   late BuildContext context;
   final String? tickerName;
 
@@ -37,8 +37,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
   final log = getLogger('MyOrdersViewModel');
 
   TradeService? tradeService = locator<TradeService>();
-  final OrderService? _orderService = locator<OrderService>();
-  final DialogService? _dialogService = locator<DialogService>();
+  final OrderService _orderService = locator<OrderService>();
+  final DialogService _dialogService = locator<DialogService>();
   WalletService? walletService = locator<WalletService>();
   NavigationService? navigationService = locator<NavigationService>();
   ApiService? apiService = locator<ApiService>();
@@ -54,8 +54,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
   List<OrderModel> cancelledOrders = [];
   List<List<OrderModel>?> myOrdersTabBarView = [];
 
-  List<OrderModel>? get orders => _orderService!.orders;
-  List<OrderModel>? get singlePairOrders => _orderService!.singlePairOrders;
+  List<OrderModel>? get orders => _orderService.orders;
+  List<OrderModel>? get singlePairOrders => _orderService.singlePairOrders;
 
   bool isFutureError = false;
 
@@ -89,7 +89,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
     _orderCancelledText = AppLocalizations.of(context)!.orderCancelled;
     orderCancelledTextStyle =
-        Theme.of(context).textTheme.bodyText1!.copyWith(color: colors.white);
+        Theme.of(context).textTheme.bodyLarge!.copyWith(color: colors.white);
     // _orderService.swapSources();
   }
 
@@ -156,7 +156,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
         .getAddressFromCoreWalletDatabaseByTickerName('EXG'))!;
 
     clearOrderLists();
-    await _orderService!.getMyOrders(exgAddress, skip: skip).then((data) {
+    await _orderService.getMyOrders(exgAddress, skip: skip).then((data) {
       if (data != null) {
         myAllOrders = data;
         log.e('getAllMyOrders length ${myAllOrders!.length}');
@@ -205,8 +205,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
     String? exgAddress = await walletService!
         .getAddressFromCoreWalletDatabaseByTickerName('EXG');
 
-    await _orderService!
-        .getMyOrdersByTickerName(exgAddress, tickerName, skip: skip)
+    await _orderService.getMyOrdersByTickerName(exgAddress, tickerName, skip: skip)
         .then((value) {
       log.e('getMyOrdersByTickerName order length ${singlePairOrders!.length}');
       for (var element in singlePairOrders!) {
@@ -300,7 +299,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusyForObject(onClickOrderHash, true);
     isCancelling = true;
     onClickOrderHash = orderHash;
-    var res = await _dialogService!.showDialog(
+    var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context)!.enterPassword,
         description:
             AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
@@ -353,7 +352,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
         Center(
             child: Text(
                 AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword,
-                style: Theme.of(context).textTheme.bodyText2)),
+                style: Theme.of(context).textTheme.bodyMedium)),
       );
     } else {
       if (res.returnedText == 'Closed') {

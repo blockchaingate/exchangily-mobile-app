@@ -123,12 +123,10 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     var res;
     try {
       var response = await client.get(Uri.parse(url));
-      if (response.body != null) {
-        res = jsonDecode(response.body);
-        // json['message'] != null
+      res = jsonDecode(response.body);
+      // json['message'] != null
 
-        log.w('getTxStatus json $res}');
-      }
+      log.w('getTxStatus json $res}');
     } catch (err) {
       log.e('getTxStatus func: Catch err $err');
     }

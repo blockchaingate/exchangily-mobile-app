@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:exchangilymobileapp/screen_state/announcement/announcement_list_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
@@ -7,7 +6,6 @@ import 'package:exchangilymobileapp/widgets/html_page.dart';
 import 'package:exchangilymobileapp/widgets/loading_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/globals.dart' as globals;
 
 class AnnouncementList extends StatelessWidget {
@@ -137,7 +135,7 @@ class AnnouncementList extends StatelessWidget {
                                                   ["title"],
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline3!
+                                                  .displaySmall!
                                                   .copyWith(
                                                       fontWeight:
                                                           FontWeight.bold)),
@@ -147,7 +145,7 @@ class AnnouncementList extends StatelessWidget {
                                                       ["dateCreated"]),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline5),
+                                                  .headlineSmall),
                                         ],
                                       ),
                                     ),

@@ -1,7 +1,6 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
@@ -61,7 +60,7 @@ class OtcScreen extends StatelessWidget {
                                     'Merchant:',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5!
+                                        .headlineSmall!
                                         .copyWith(
                                             color: globals.grey,
                                             fontWeight: FontWeight.bold),
@@ -74,7 +73,7 @@ class OtcScreen extends StatelessWidget {
                                     'Quantity:',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5!
+                                        .headlineSmall!
                                         .copyWith(
                                             color: globals.grey,
                                             fontWeight: FontWeight.bold),
@@ -83,7 +82,7 @@ class OtcScreen extends StatelessWidget {
                                     'Price:',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5!
+                                        .headlineSmall!
                                         .copyWith(
                                             color: globals.grey,
                                             fontWeight: FontWeight.bold),
@@ -92,7 +91,7 @@ class OtcScreen extends StatelessWidget {
                                     'Limits:',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5!
+                                        .headlineSmall!
                                         .copyWith(
                                             color: globals.grey,
                                             fontWeight: FontWeight.bold),
@@ -101,7 +100,7 @@ class OtcScreen extends StatelessWidget {
                                     'Payment:',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5!
+                                        .headlineSmall!
                                         .copyWith(
                                             color: globals.grey,
                                             fontWeight: FontWeight.bold),
@@ -122,7 +121,7 @@ class OtcScreen extends StatelessWidget {
                                       'Paul Liu',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline5!
+                                          .headlineSmall!
                                           .copyWith(
                                               fontWeight: FontWeight.bold),
                                     ),
@@ -134,19 +133,19 @@ class OtcScreen extends StatelessWidget {
                                   Text(
                                     '711241.124',
                                     style:
-                                        Theme.of(context).textTheme.headline5,
+                                        Theme.of(context).textTheme.headlineSmall,
                                   ),
                                   Text(
                                     '14.2145',
                                     style:
-                                        Theme.of(context).textTheme.headline5,
+                                        Theme.of(context).textTheme.headlineSmall,
                                   ),
                                   // Limit amount
                                   Text(
                                     '21000--3212154',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5!
+                                        .headlineSmall!
                                         .copyWith(color: globals.grey),
                                   ),
                                   // Payment icons

@@ -39,7 +39,7 @@ class VerifyMnemonicWalletView extends StatelessWidget {
                   child: Text(
                 AppLocalizations.of(context)!.warningImportOrConfirmMnemonic,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineMedium,
               )),
             ],
           ),

@@ -41,7 +41,7 @@ class OrderBookView extends StatelessWidget {
                         ),
                       ),
                       child: Text(AppLocalizations.of(context)!.price,
-                          style: Theme.of(context).textTheme.headline6)),
+                          style: Theme.of(context).textTheme.titleLarge)),
                   // Heading Quantity
                   Container(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
@@ -51,7 +51,7 @@ class OrderBookView extends StatelessWidget {
                         ),
                       ),
                       child: Text(AppLocalizations.of(context)!.quantity,
-                          style: Theme.of(context).textTheme.headline6))
+                          style: Theme.of(context).textTheme.titleLarge))
                 ],
               ),
               buildVerticalOrderbookColumn(
@@ -63,10 +63,10 @@ class OrderBookView extends StatelessWidget {
                     children: <Widget>[
                       orderbook!.buyOrders != [] && orderbook!.sellOrders != []
                           ? Text(orderbook!.price.toString(),
-                              style: Theme.of(context).textTheme.headline4)
+                              style: Theme.of(context).textTheme.headlineMedium)
                           : Center(
                               child: Text('No Orders',
-                                  style: Theme.of(context).textTheme.bodyText2),
+                                  style: Theme.of(context).textTheme.bodyMedium),
                             )
                     ],
                   )),
@@ -86,10 +86,10 @@ class OrderBookView extends StatelessWidget {
                     children: [
                       Text(AppLocalizations.of(context)!.buyOrders,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline6),
+                          style: Theme.of(context).textTheme.titleLarge),
                       Text(AppLocalizations.of(context)!.sellOrders,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline6),
+                          style: Theme.of(context).textTheme.titleLarge),
                     ]),
                 UIHelper.verticalSpaceSmall,
                 // quanity/price text Row

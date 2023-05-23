@@ -100,7 +100,7 @@ class Erc20Util {
       String officialAddress) async {
     var callTransaction = {
       'to': smartContractAddress,
-      'data': '0x70a08231000000000000000000000000' + officialAddress
+      'data': '0x70a08231000000000000000000000000$officialAddress'
     };
     var body = {
       "jsonrpc": "2.0",
@@ -125,11 +125,7 @@ class Erc20Util {
     }
     log.w('res getTokenBalanceByAddress $nonce');
 
-    var url = baseUrl +
-        'callcontract/' +
-        smartContractAddress +
-        '/' +
-        smartContractAddress;
+    var url = '${baseUrl}callcontract/$smartContractAddress/$smartContractAddress';
     log.i('getEthTokenBalanceByAddress - $url ');
 
     var tokenBalanceIe18 = 0.0;

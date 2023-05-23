@@ -132,7 +132,7 @@ class WalletSetupViewmodel extends BaseViewModel {
                     children: [
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary: walletCardColor),
+                              backgroundColor: walletCardColor),
                           onPressed: (() => navigationService!.goBack()),
                           child: Text(
                             AppLocalizations.of(context)!.decline,
@@ -141,7 +141,7 @@ class WalletSetupViewmodel extends BaseViewModel {
                       UIHelper.horizontalSpaceMedium,
                       ElevatedButton(
                           style:
-                              ElevatedButton.styleFrom(primary: primaryColor),
+                              ElevatedButton.styleFrom(backgroundColor: primaryColor),
                           onPressed: (() => setPrivacyConsent()),
                           child: Text(
                             AppLocalizations.of(context)!.accept,

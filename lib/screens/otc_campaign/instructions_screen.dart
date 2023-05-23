@@ -62,7 +62,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                             },
                           text: AppLocalizations.of(context)!.visitWebsite,
                           style:
-                              Theme.of(context).textTheme.bodyText1!.copyWith(
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
                                     color: Colors.blue,
                                     decoration: TextDecoration.underline,
                                   ),
@@ -109,10 +109,8 @@ class CampaignInstructionScreen extends StatelessWidget {
                       ? Container(
                           child: Center(
                             child: Text(
-                              AppLocalizations.of(context)!
-                                      .serverBusy
-                                      .toString() +
-                                  "...",
+                              "${AppLocalizations.of(context)!
+                                      .serverBusy}...",
                               style: const TextStyle(color: Colors.white),
                             ),
                           ),
@@ -182,7 +180,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                         UIHelper.horizontalSpaceSmall,
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                              primary: primaryColor),
+                                              backgroundColor: primaryColor),
                                           child: Row(
                                             children: [
                                               Text(AppLocalizations.of(context)!
@@ -429,7 +427,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                           style: Theme.of(
                                                                   context)
                                                               .textTheme
-                                                              .headline3!
+                                                              .displaySmall!
                                                               .copyWith(
                                                                   fontWeight:
                                                                       FontWeight

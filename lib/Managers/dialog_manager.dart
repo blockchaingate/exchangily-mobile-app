@@ -35,16 +35,16 @@ class DialogManager extends StatefulWidget {
 
 class _DialogManagerState extends State<DialogManager> {
   final log = getLogger('DialogManager');
-  final DialogService? _dialogService = locator<DialogService>();
-  final VaultService? _vaultService = locator<VaultService>();
+  final DialogService _dialogService = locator<DialogService>();
+  final VaultService _vaultService = locator<VaultService>();
   TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _dialogService!.registerDialogListener(_showDialog);
-    _dialogService!.registerBasicDialogListener(_showBasicDialog);
-    _dialogService!.registerVerifyDialogListener(_showVerifyDialog);
+    _dialogService.registerDialogListener(_showDialog);
+    _dialogService.registerBasicDialogListener(_showBasicDialog);
+    _dialogService.registerVerifyDialogListener(_showVerifyDialog);
     controller.text = '';
   }
 
@@ -57,7 +57,7 @@ class _DialogManagerState extends State<DialogManager> {
     showSimpleNotification(
       Center(
           child: Text(request.title!,
-              style: Theme.of(context).textTheme.headline6)),
+              style: Theme.of(context).textTheme.titleLarge)),
     );
   }
 
@@ -70,17 +70,17 @@ class _DialogManagerState extends State<DialogManager> {
             animationType: AnimationType.grow,
             isOverlayTapDismiss: false,
             backgroundColor: walletCardColor,
-            descStyle: Theme.of(context).textTheme.bodyText1!,
+            descStyle: Theme.of(context).textTheme.bodyLarge!,
             titleStyle: Theme.of(context)
                 .textTheme
-                .headline3!
+                .displaySmall!
                 .copyWith(fontWeight: FontWeight.bold)),
         context: context,
         title: request.title,
         desc: request.description ?? '',
         closeFunction: () {
           FocusScope.of(context).requestFocus(FocusNode());
-          _dialogService!.dialogComplete(
+          _dialogService.dialogComplete(
               DialogResponse(returnedText: 'Closed', confirmed: false));
           controller.text = '';
 
@@ -97,26 +97,25 @@ class _DialogManagerState extends State<DialogManager> {
             DialogButton(
               color: red,
               onPressed: () {
-                _dialogService!
-                    .dialogComplete(DialogResponse(confirmed: false));
+                _dialogService.dialogComplete(DialogResponse(confirmed: false));
 
                 Navigator.of(context).pop();
               },
               child: Text(
                 request.secondaryButton!,
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
           DialogButton(
             color: primaryColor,
             onPressed: () {
-              _dialogService!.dialogComplete(DialogResponse(confirmed: true));
+              _dialogService.dialogComplete(DialogResponse(confirmed: true));
 
               Navigator.of(context).pop();
             },
             child: Text(
               request.buttonTitle!,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           )
         ]).show();
@@ -128,17 +127,17 @@ class _DialogManagerState extends State<DialogManager> {
             animationType: AnimationType.grow,
             isOverlayTapDismiss: false,
             backgroundColor: walletCardColor,
-            descStyle: Theme.of(context).textTheme.bodyText1!,
+            descStyle: Theme.of(context).textTheme.bodyLarge!,
             titleStyle: Theme.of(context)
                 .textTheme
-                .headline3!
+                .displaySmall!
                 .copyWith(fontWeight: FontWeight.bold)),
         context: context,
         title: request.title,
         desc: request.description,
         closeFunction: () {
           FocusScope.of(context).requestFocus(FocusNode());
-          _dialogService!.dialogComplete(
+          _dialogService.dialogComplete(
               DialogResponse(returnedText: 'Closed', confirmed: false));
           controller.text = '';
           debugPrint('popping');
@@ -156,13 +155,13 @@ class _DialogManagerState extends State<DialogManager> {
           DialogButton(
             color: primaryColor,
             onPressed: () {
-              _dialogService!.dialogComplete(DialogResponse(confirmed: false));
+              _dialogService.dialogComplete(DialogResponse(confirmed: false));
 
               Navigator.of(context).pop();
             },
             child: Text(
               request.buttonTitle!,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           )
         ]).show();
@@ -174,17 +173,17 @@ class _DialogManagerState extends State<DialogManager> {
             animationType: AnimationType.grow,
             isOverlayTapDismiss: false,
             backgroundColor: walletCardColor,
-            descStyle: Theme.of(context).textTheme.bodyText1!,
+            descStyle: Theme.of(context).textTheme.bodyLarge!,
             titleStyle: Theme.of(context)
                 .textTheme
-                .headline3!
+                .displaySmall!
                 .copyWith(fontWeight: FontWeight.bold)),
         context: context,
         title: request.title,
         desc: request.description,
         closeFunction: () {
           FocusScope.of(context).requestFocus(FocusNode());
-          _dialogService!.dialogComplete(
+          _dialogService.dialogComplete(
               DialogResponse(returnedText: 'Closed', confirmed: false));
           controller.text = '';
           debugPrint('popping');
@@ -202,7 +201,7 @@ class _DialogManagerState extends State<DialogManager> {
               decoration: InputDecoration(
                 labelStyle: Theme.of(context)
                     .textTheme
-                    .bodyText1!
+                    .bodyLarge!
                     .copyWith(color: white),
                 icon: const Icon(
                   Icons.security,
@@ -218,7 +217,7 @@ class _DialogManagerState extends State<DialogManager> {
             color: grey,
             onPressed: () {
               controller.text = '';
-              _dialogService!.dialogComplete(
+              _dialogService.dialogComplete(
                   DialogResponse(returnedText: 'Closed', confirmed: false));
               Navigator.of(context).pop();
             },
@@ -226,7 +225,7 @@ class _DialogManagerState extends State<DialogManager> {
               AppLocalizations.of(context)!.cancel,
               style: Theme.of(context)
                   .textTheme
-                  .headline4!
+                  .headlineMedium!
                   .copyWith(color: Colors.black),
             ),
           ),
@@ -255,30 +254,29 @@ class _DialogManagerState extends State<DialogManager> {
                     // then get the unencrypted mnemonic from the file
 
                     finalRes =
-                        await _vaultService!.decryptData(controller.text);
+                        await _vaultService.decryptData(controller.text);
                   } else if (encryptedMnemonic.isNotEmpty) {
-                    await _vaultService!
-                        .decryptMnemonic(controller.text, encryptedMnemonic)
+                    await _vaultService.decryptMnemonic(controller.text, encryptedMnemonic)
                         .then((data) {
                       finalRes = data;
                     });
                   }
                   if (finalRes == Constants.ImportantWalletUpdateText) {
-                    _dialogService!.dialogComplete(DialogResponse(
+                    _dialogService.dialogComplete(DialogResponse(
                         confirmed: false,
                         returnedText: '',
                         isRequiredUpdate: true));
                     controller.text = '';
                     Navigator.of(context).pop();
-                  } else if (finalRes != '' && finalRes != null) {
-                    _dialogService!.dialogComplete(DialogResponse(
+                  } else if (finalRes != '') {
+                    _dialogService.dialogComplete(DialogResponse(
                         returnedText: finalRes,
                         confirmed: true,
                         isRequiredUpdate: false));
                     controller.text = '';
                     Navigator.of(context).pop();
                   } else {
-                    _dialogService!.dialogComplete(DialogResponse(
+                    _dialogService.dialogComplete(DialogResponse(
                         confirmed: false,
                         returnedText: 'wrong password',
                         isRequiredUpdate: false));
@@ -292,7 +290,7 @@ class _DialogManagerState extends State<DialogManager> {
             },
             child: Text(
               request.buttonTitle!,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           )
         ]).show();

@@ -56,7 +56,7 @@ class TransactionHistoryView extends StatelessWidget {
                   //   )
                   // ],
                   title: Text(AppLocalizations.of(context)!.transactionHistory,
-                      style: Theme.of(context).textTheme.headline3),
+                      style: Theme.of(context).textTheme.displaySmall),
                   backgroundColor: secondaryColor,
                 ),
                 body: !model.dataReady || model.isBusy
@@ -81,7 +81,7 @@ class TransactionHistoryView extends StatelessWidget {
                                     Text(AppLocalizations.of(context)!.action,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .subtitle2),
+                                            .titleSmall),
                                     UIHelper.horizontalSpaceSmall,
                                     Expanded(
                                       flex: 1,
@@ -90,7 +90,7 @@ class TransactionHistoryView extends StatelessWidget {
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .subtitle2),
+                                              .titleSmall),
                                     ),
                                     Expanded(
                                       flex: 2,
@@ -100,7 +100,7 @@ class TransactionHistoryView extends StatelessWidget {
                                           textAlign: TextAlign.right,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .subtitle2),
+                                              .titleSmall),
                                     ),
                                     UIHelper.horizontalSpaceSmall,
                                     Expanded(
@@ -114,7 +114,7 @@ class TransactionHistoryView extends StatelessWidget {
                                             textAlign: TextAlign.left,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .subtitle2),
+                                                .titleSmall),
                                       ),
                                     ),
                                     Expanded(
@@ -124,7 +124,7 @@ class TransactionHistoryView extends StatelessWidget {
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .subtitle2),
+                                              .titleSmall),
                                     ),
                                   ],
                                 ),

@@ -1,7 +1,5 @@
-import 'dart:convert';
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
-import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -9,10 +7,8 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:http/http.dart' as http;
 import 'package:launch_review/launch_review.dart';
 import 'dart:io' show Platform;
-import 'package:package_info/package_info.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:version/version.dart';
@@ -39,7 +35,7 @@ class VersionService {
 
     debugPrint('My os: $os');
     try {
-      debugPrint("appVersionUrl: " + appVersionUrl);
+      debugPrint("appVersionUrl: $appVersionUrl");
       var response = await client.get(Uri.parse(appVersionUrl));
       var json = response.body;
       if (json != null) {
@@ -110,10 +106,10 @@ class VersionService {
           log.i('getAppVersion $versionInfo');
           var versionName = versionInfo['name']!;
           var buildNumber = versionInfo['buildNumber']!;
-          var localVersion = versionName + '.' + buildNumber;
+          var localVersion = '$versionName.$buildNumber';
           log.i('local version $localVersion');
           Version currentVersion = Version.parse(localVersion);
-          debugPrint("userVersion: " + localVersion);
+          debugPrint("userVersion: $localVersion");
 
           Version latestVersion = Version.parse(appVersionFromApi);
 
@@ -179,12 +175,10 @@ class VersionService {
                     const SizedBox(
                       height: 20,
                     ),
-                    Text("${AppLocalizations.of(context)!.currentVersion}:  " +
-                        userVersion.toString()),
+                    Text("${AppLocalizations.of(context)!.currentVersion}:  $userVersion"),
                     UIHelper.verticalSpaceSmall,
                     Text(
-                      "${AppLocalizations.of(context)!.latestVersion}:  " +
-                          latestVersion.toString(),
+                      "${AppLocalizations.of(context)!.latestVersion}:  $latestVersion",
                       style: TextStyle(color: Colors.greenAccent[100]),
                     ),
                     // Text("Force Update: " + latestVersion['forceUpdate'].toString()),

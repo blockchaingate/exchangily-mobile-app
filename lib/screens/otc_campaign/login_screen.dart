@@ -1,7 +1,6 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/login_screen_state.dart';
 import 'package:shimmer/shimmer.dart';
@@ -27,7 +26,7 @@ class CampaignLoginScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: Text(AppLocalizations.of(context)!.login,
-                style: Theme.of(context).textTheme.headline3),
+                style: Theme.of(context).textTheme.displaySmall),
             centerTitle: true,
           ),
           body: Column(
@@ -50,7 +49,7 @@ class CampaignLoginScreen extends StatelessWidget {
                               padding: const EdgeInsets.only(top: 7.0),
                               child: Text(
                                 AppLocalizations.of(context)!.email,
-                                style: Theme.of(context).textTheme.headline5,
+                                style: Theme.of(context).textTheme.headlineSmall,
                                 //  textAlign: TextAlign.center,
                               ),
                             )),
@@ -81,7 +80,7 @@ class CampaignLoginScreen extends StatelessWidget {
                               padding: const EdgeInsets.only(top: 7.0),
                               child: Text(
                                 AppLocalizations.of(context)!.password,
-                                style: Theme.of(context).textTheme.headline5,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
                             )),
                         model.isPasswordTextVisible == true
@@ -135,7 +134,7 @@ class CampaignLoginScreen extends StatelessWidget {
                     UIHelper.verticalSpaceMedium,
                     InkWell(
                       child: Text(
-                        AppLocalizations.of(context)!.forgotPassword + '?',
+                        '${AppLocalizations.of(context)!.forgotPassword}?',
                         style: const TextStyle(
                             decoration: TextDecoration.underline,
                             color: globals.white),
@@ -148,17 +147,17 @@ class CampaignLoginScreen extends StatelessWidget {
                         visible: model.hasErrorMessage,
                         child: Text(model.errorMessage!,
                             style: model.isLogging && model.busy
-                                ? Theme.of(context).textTheme.bodyText2
+                                ? Theme.of(context).textTheme.bodyMedium
                                 : Theme.of(context)
                                     .textTheme
-                                    .bodyText2!
+                                    .bodyMedium!
                                     .copyWith(color: Colors.yellow))),
                     Visibility(
                         visible: errorMessage != null &&
                             errorMessage != '' &&
                             !model.hasErrorMessage,
                         child: Text(errorMessage ?? '',
-                            style: Theme.of(context).textTheme.bodyText2)),
+                            style: Theme.of(context).textTheme.bodyMedium)),
                     UIHelper.verticalSpaceSmall,
                     // Button row
                     Row(

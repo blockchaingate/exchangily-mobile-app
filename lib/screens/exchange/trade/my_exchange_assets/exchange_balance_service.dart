@@ -16,7 +16,7 @@ class ExchangeBalanceService with ReactiveServiceMixin {
   final client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
   ConfigService? configService = locator<ConfigService>();
 
-  List<LockerModel> _lockers = [];
+  final List<LockerModel> _lockers = [];
   List<LockerModel> get lockers => _lockers;
 
   final RxValue<bool> _refreshLockerBalances = RxValue<bool>(false);
@@ -27,7 +27,7 @@ class ExchangeBalanceService with ReactiveServiceMixin {
   }
 
   void setRefreshLockerBalances(bool value) {
-    log.i('setRefreshLockerBalances value ${value}');
+    log.i('setRefreshLockerBalances value $value');
     _refreshLockerBalances.value = value;
     log.w('setRefreshLockerBalances ${_refreshLockerBalances.value}');
   }
@@ -66,7 +66,7 @@ class ExchangeBalanceService with ReactiveServiceMixin {
     if (pageNumber != 0) {
       pageNumber = pageNumber - 1;
     }
-    String url = lockerApiUrl + exgAddress + '/$pageSize/$pageNumber';
+    String url = '$lockerApiUrl$exgAddress/$pageSize/$pageNumber';
     log.i('getLockerInfo url $url');
     try {
       var response = await client.get(Uri.parse(url));

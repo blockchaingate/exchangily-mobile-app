@@ -24,7 +24,7 @@ class AddGasViewModel extends FutureViewModel {
   final SharedService? sharedService = locator<SharedService>();
   final ApiService? apiService = locator<ApiService>();
 
-  final DialogService? _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
 
   final amountController = TextEditingController();
   final gasPriceTextController = TextEditingController();
@@ -141,7 +141,7 @@ class AddGasViewModel extends FutureViewModel {
     }
     var gasPrice = int.tryParse(gasPriceTextController.text);
     var gasLimit = int.tryParse(gasLimitTextController.text);
-    var res = await _dialogService!.showDialog(
+    var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context)!.enterPassword,
         description:
             AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,

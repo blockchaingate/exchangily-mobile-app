@@ -26,7 +26,7 @@ class CampaignDashboardScreenState extends BaseState {
   SharedService? sharedService = locator<SharedService>();
   CampaignUserDatabaseService? campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
-  final ApiService? _apiService = locator<ApiService>();
+  final ApiService _apiService = locator<ApiService>();
   CampaignUserData? campaignUserData;
   String? campaignName = '';
 
@@ -428,7 +428,7 @@ class CampaignDashboardScreenState extends BaseState {
   Future<double?> getUsdValue() async {
     setBusy(true);
     double? usdValue = 0;
-    await _apiService!.getCoinCurrencyUsdPrice().then((res) {
+    await _apiService.getCoinCurrencyUsdPrice().then((res) {
       if (res != null) {
         log.w(res['data']['EXG']['USD']);
         usdValue = res['data']['EXG']['USD'];

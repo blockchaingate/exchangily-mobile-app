@@ -553,7 +553,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                                   backgroundColor:
                                       MaterialStateProperty.all(primaryColor)),
                               child: Text(AppLocalizations.of(context)!.share,
-                                  style: Theme.of(context).textTheme.headline6),
+                                  style: Theme.of(context).textTheme.titleLarge),
                               onPressed: () {
                                 String receiveFileName =
                                     'Lightning-remit-kanban-receive-address.png';

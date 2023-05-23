@@ -51,7 +51,7 @@ class _YoutubePageState extends State<YoutubePage> {
                   widget.videoObj!["title"],
                   style: Theme.of(context)
                       .textTheme
-                      .headline1!
+                      .displayLarge!
                       .copyWith(fontWeight: FontWeight.bold),
                 )),
             const SizedBox(height: 10),

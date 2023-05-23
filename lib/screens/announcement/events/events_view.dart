@@ -69,7 +69,7 @@ class EventsView extends StatelessWidget {
                         UIHelper.horizontalSpaceSmall,
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              primary: !model.isAnnouncement
+                              backgroundColor: !model.isAnnouncement
                                   ? primaryColor
                                   : secondaryColor,
                             ),
@@ -110,7 +110,7 @@ class EventsView extends StatelessWidget {
                                         .visitWebsite,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .bodyText1!
+                                        .bodyLarge!
                                         .copyWith(
                                           color: Colors.blue,
                                           decoration: TextDecoration.underline,

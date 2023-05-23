@@ -15,7 +15,7 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
           centerTitle: true,
           title: Text(AppLocalizations.of(context)!.tokenDetails,
               // AppLocalizations.of(context).myRewardDetails,
-              style: Theme.of(context).textTheme.headline3),
+              style: Theme.of(context).textTheme.displaySmall),
         ),
         body: Container(
           margin: const EdgeInsets.all(10.0),

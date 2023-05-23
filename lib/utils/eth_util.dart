@@ -16,7 +16,6 @@ import 'dart:typed_data';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
-import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hex/hex.dart';
 import 'package:keccak/keccak.dart';

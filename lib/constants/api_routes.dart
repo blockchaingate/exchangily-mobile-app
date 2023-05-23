@@ -19,7 +19,7 @@ const String tronBaseApiUrl = 'https://api.trongrid.io/';
 ----------------------------------------------------------------------*/
 const String chargeTextApiRoute = "charge";
 const String ordersTextApiRoute = "orders";
-const String payOrderApiRoute = ordersTextApiRoute + "/code/";
+const String payOrderApiRoute = "$ordersTextApiRoute/code/";
 
 /*----------------------------------------------------------------------
                         Wallet
@@ -48,8 +48,8 @@ const String depositerrApiRoute = 'depositerr/';
 const String submitDepositApiRoute = 'submitDeposit';
 
 const String tronUsdtAccountBalanceUrl =
-    tronBaseApiUrl + "wallet/triggerconstantcontract";
-const String tronGetAccountUrl = tronBaseApiUrl + "wallet/getaccount";
+    "${tronBaseApiUrl}wallet/triggerconstantcontract";
+const String tronGetAccountUrl = "${tronBaseApiUrl}wallet/getaccount";
 //  const requestURL = `${TRON_API_ENDPOINT}/wallet/getaccount`;
 // const requestBody = {
 //   address,
@@ -57,8 +57,8 @@ const String tronGetAccountUrl = tronBaseApiUrl + "wallet/getaccount";
 // };
 
 const String broadcasrTronTransactionUrl =
-    tronBaseApiUrl + "wallet/broadcasthex";
-const String getTronLatestBlockUrl = tronBaseApiUrl + 'wallet/getnowblock';
+    "${tronBaseApiUrl}wallet/broadcasthex";
+const String getTronLatestBlockUrl = '${tronBaseApiUrl}wallet/getnowblock';
 
 const String walletBalancesApiRoute = 'walletBalances';
 const String singleWalletBalanceApiRoute = 'singleCoinWalletBalance';
@@ -81,9 +81,9 @@ const String maticmExplorerUrl = 'https://polygonscan.com/tx/';
 
 // Free Fab
 const String getFreeFabUrl =
-    baseBlockchainGateV2Url + 'airdrop/getQuestionair/';
+    '${baseBlockchainGateV2Url}airdrop/getQuestionair/';
 const String postFreeFabUrl =
-    baseBlockchainGateV2Url + 'airdrop/answerQuestionair/';
+    '${baseBlockchainGateV2Url}airdrop/answerQuestionair/';
 
 // USD Coin Price
 const String GetUsdCoinPriceUrl =
@@ -137,7 +137,7 @@ const String bannerApiUrl =
     'https://api.blockchaingate.com/v2/banners/app/5b6a8688905612106e976a69';
 
 // https://fabtest.info/api/kanban/locker/user/0xdcd0f23125f74ef621dfa3310625f8af0dcd971b/50/0
-const String lockerApiUrl = fabInfoUrl + 'api/kanban/locker/user/';
+const String lockerApiUrl = '${fabInfoUrl}api/kanban/locker/user/';
 const String totalCountTextApiRoute = '/totalCount';
 
 // /ordersbyaddresspaged/:address/:start?/:count?/:status?

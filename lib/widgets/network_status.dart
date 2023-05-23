@@ -21,7 +21,7 @@ class NetworkStausView extends StatelessWidget {
         child: Center(
           child: Text(
             AppLocalizations.of(context)!.noInternetWarning,
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.displaySmall,
             textAlign: TextAlign.center,
           ),
         ),

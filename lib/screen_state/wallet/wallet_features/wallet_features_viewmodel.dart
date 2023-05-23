@@ -148,11 +148,9 @@ class WalletFeaturesViewModel extends BaseViewModel {
           String? tickerNameByCointype = newCoinTypeMap[coinType];
           if (tickerNameByCointype == null) {
             await tokenListDatabaseService!.getAll().then((tokenList) {
-              if (tokenList != null) {
-                tickerNameByCointype = tokenList
-                    .firstWhere((element) => element.coinType == coinType)
-                    .tickerName;
-              }
+              tickerNameByCointype = tokenList
+                  .firstWhere((element) => element.coinType == coinType)
+                  .tickerName;
             });
           }
           log.w('tickerNameByCointype $tickerNameByCointype');

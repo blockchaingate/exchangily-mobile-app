@@ -35,16 +35,16 @@ class BuySellView extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    GlobalKey _one = GlobalKey();
-    GlobalKey _two = GlobalKey();
+    GlobalKey one = GlobalKey();
+    GlobalKey two = GlobalKey();
     return ViewModelBuilder<BuySellViewModel>.reactive(
         disposeViewModel: false,
         viewModelBuilder: () =>
             BuySellViewModel(tickerNameFromRoute: tickerName),
         onViewModelReady: (model) async {
           model.context = context;
-          model.globalKeyOne = _one;
-          model.globalKeyTwo = _two;
+          model.globalKeyOne = one;
+          model.globalKeyTwo = two;
           model.bidOrAsk = bidOrAsk;
 
           model.pairSymbolWithSlash = pairSymbolWithSlash;
@@ -168,7 +168,7 @@ class BuySellView extends StatelessWidget {
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .headline6)),
+                                                                .titleLarge)),
                                                     // Heading Quantity
                                                     Container(
                                                         padding:
@@ -191,7 +191,7 @@ class BuySellView extends StatelessWidget {
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .headline6))
+                                                                .titleLarge))
                                                   ],
                                                 ),
                                                 buildVerticalOrderbookColumn(
@@ -218,14 +218,14 @@ class BuySellView extends StatelessWidget {
                                                                 style: Theme.of(
                                                                         context)
                                                                     .textTheme
-                                                                    .headline4)
+                                                                    .headlineMedium)
                                                             : Center(
                                                                 child: Text(
                                                                     'No Orders',
                                                                     style: Theme.of(
                                                                             context)
                                                                         .textTheme
-                                                                        .bodyText2),
+                                                                        .bodyMedium),
                                                               )
                                                       ],
                                                     )),
@@ -354,7 +354,7 @@ class BuySellView extends StatelessWidget {
       ),
       middle: Text(
         pairSymbolWithSlash ?? '',
-        style: Theme.of(context).textTheme.headline3,
+        style: Theme.of(context).textTheme.displaySmall,
       ),
       backgroundColor: const Color(0XFF1f2233),
     );
@@ -602,8 +602,8 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             controller: model.priceTextController,
             decoration: InputDecoration(
                 labelText: AppLocalizations.of(context)!.price,
-                labelStyle: Theme.of(context).textTheme.headline6),
-            style: Theme.of(context).textTheme.headline5,
+                labelStyle: Theme.of(context).textTheme.titleLarge),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
         ),
         // quantity text input
@@ -628,8 +628,8 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             controller: model.quantityTextController,
             decoration: InputDecoration(
                 labelText: AppLocalizations.of(context)!.quantity,
-                labelStyle: Theme.of(context).textTheme.headline6),
-            style: Theme.of(context).textTheme.headline5,
+                labelStyle: Theme.of(context).textTheme.titleLarge),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
         ),
         // Slider
@@ -742,7 +742,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                   children: <Widget>[
                     Text(
                       AppLocalizations.of(context)!.kanbanGasPrice,
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                     UIHelper.horizontalSpaceSmall,
                     Expanded(
@@ -761,8 +761,8 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                                     borderSide: BorderSide(color: grey)),
                                 hintText: '0.00000',
                                 hintStyle:
-                                    Theme.of(context).textTheme.headline6),
-                            style: Theme.of(context).textTheme.headline6))
+                                    Theme.of(context).textTheme.titleLarge),
+                            style: Theme.of(context).textTheme.titleLarge))
                   ],
                 ),
                 //   Kanban gas limit
@@ -770,7 +770,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                   children: <Widget>[
                     Text(
                       AppLocalizations.of(context)!.kanbanGasLimit,
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                     UIHelper.horizontalSpaceSmall,
                     Expanded(
@@ -787,8 +787,8 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                           enabledBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(color: grey)),
                           hintText: '0.00000',
-                          hintStyle: Theme.of(context).textTheme.headline6),
-                      style: Theme.of(context).textTheme.headline6,
+                          hintStyle: Theme.of(context).textTheme.titleLarge),
+                      style: Theme.of(context).textTheme.titleLarge,
                     )),
                   ],
                 ),
@@ -816,12 +816,12 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
               },
               child: model.isBusy
                   ? Text(AppLocalizations.of(context)!.loading,
-                      style: Theme.of(context).textTheme.headline4)
+                      style: Theme.of(context).textTheme.headlineMedium)
                   : Text(
                       model.bidOrAsk!
                           ? AppLocalizations.of(context)!.buy
                           : AppLocalizations.of(context)!.sell,
-                      style: Theme.of(context).textTheme.headline4)),
+                      style: Theme.of(context).textTheme.headlineMedium)),
         )
       ],
     );

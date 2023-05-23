@@ -29,7 +29,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   final log = getLogger('MoveToWalletViewmodel');
 
   final client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
-  final DialogService? _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
   WalletService? walletService = locator<WalletService>();
   ApiService? apiService = locator<ApiService>();
   SharedService? sharedService = locator<SharedService>();
@@ -549,7 +549,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                                       AppLocalizations.of(context)!.withdraw,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyText2!
+                                          .bodyMedium!
                                           .copyWith(
                                               fontWeight: FontWeight.bold),
                                     ),
@@ -1047,8 +1047,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
       'address': trimHexPrefix(smartContractAddress!),
       'data': balanceInfoABI + fixLength(trimHexPrefix(address), 64)
     };
-    var tokenBalance;
-    var url = fabBaseUrl! + 'callcontract';
+    double tokenBalance;
+    var url = '${fabBaseUrl!}callcontract';
     debugPrint(
         'Fab_util -- address $address getFabTokenBalanceForABI balance by address url -- $url -- body $body');
 
@@ -1175,7 +1175,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (WalletUtil.isSpecialFab(walletInfo!.tickerName)) tokenType = '';
       // updateTickerForErc = walletInfo.tickerName;
       log.i('walletInfo token type ${walletInfo!.tokenType}');
-      log.w('updated token type ${tokenType}');
+      log.w('updated token type $tokenType');
       if (WalletUtil.isSpecialFab(walletInfo!.tickerName)) {
         await setWithdrawLimit('FAB');
       } else if (walletInfo!.tickerName == 'DSCE' && isShowFabChainBalance) {
@@ -1287,8 +1287,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
         setBusy(false);
         return;
       }
-      if (amount == null ||
-          amount > walletInfo!.inExchange! ||
+      if (amount > walletInfo!.inExchange! ||
           amount == 0 ||
           amount.isNegative) {
         sharedService!.alertDialog(AppLocalizations.of(context!)!.invalidAmount,
@@ -1303,12 +1302,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (groupValue == 'FAB' && amount > fabChainBalance) {
         sharedService!.alertDialog(
             AppLocalizations.of(context!)!.notice,
-            AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart +
-                ' ' +
-                fabChainBalance.toString() +
-                '. ' +
-                AppLocalizations.of(context!)!
-                    .lowTsWalletBalanceErrorSecondPart,
+            '${AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart} $fabChainBalance. ${AppLocalizations.of(context!)!
+                    .lowTsWalletBalanceErrorSecondPart}',
             isWarning: false);
 
         setBusy(false);
@@ -1321,12 +1316,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (groupValue == 'ETH' && amount > ethChainBalance) {
         sharedService!.alertDialog(
             AppLocalizations.of(context!)!.notice,
-            AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart +
-                ' ' +
-                ethChainBalance.toString() +
-                '. ' +
-                AppLocalizations.of(context!)!
-                    .lowTsWalletBalanceErrorSecondPart,
+            '${AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart} $ethChainBalance. ${AppLocalizations.of(context!)!
+                    .lowTsWalletBalanceErrorSecondPart}',
             isWarning: false);
 
         setBusy(false);
@@ -1336,12 +1327,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (groupValue == 'TRX' && amount > trxTsWalletBalance) {
         sharedService!.alertDialog(
             AppLocalizations.of(context!)!.notice,
-            AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart +
-                ' ' +
-                trxTsWalletBalance.toString() +
-                '. ' +
-                AppLocalizations.of(context!)!
-                    .lowTsWalletBalanceErrorSecondPart,
+            '${AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart} $trxTsWalletBalance. ${AppLocalizations.of(context!)!
+                    .lowTsWalletBalanceErrorSecondPart}',
             isWarning: false);
         setBusy(false);
         return;
@@ -1350,12 +1337,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (groupValue == 'BNB' && amount > bnbTsWalletBalance) {
         sharedService!.alertDialog(
             AppLocalizations.of(context!)!.notice,
-            AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart +
-                ' ' +
-                bnbTsWalletBalance.toString() +
-                '. ' +
-                AppLocalizations.of(context!)!
-                    .lowTsWalletBalanceErrorSecondPart,
+            '${AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart} $bnbTsWalletBalance. ${AppLocalizations.of(context!)!
+                    .lowTsWalletBalanceErrorSecondPart}',
             isWarning: false);
         setBusy(false);
         return;
@@ -1364,12 +1347,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (groupValue == 'POLYGON' && amount > polygonTsWalletBalance) {
         sharedService!.alertDialog(
             AppLocalizations.of(context!)!.notice,
-            AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart +
-                ' ' +
-                polygonTsWalletBalance.toString() +
-                '. ' +
-                AppLocalizations.of(context!)!
-                    .lowTsWalletBalanceErrorSecondPart,
+            '${AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart} $polygonTsWalletBalance. ${AppLocalizations.of(context!)!
+                    .lowTsWalletBalanceErrorSecondPart}',
             isWarning: false);
         setBusy(false);
         return;
@@ -1377,7 +1356,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
       //  }
 
       message = '';
-      var res = await _dialogService!.showDialog(
+      var res = await _dialogService.showDialog(
           title: AppLocalizations.of(context!)!.enterPassword,
           description:
               AppLocalizations.of(context!)!.dialogManagerTypeSamePasswordNote,

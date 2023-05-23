@@ -3,9 +3,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/team_reward_details_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../../shared/globals.dart' as globals;
 
 class CampaignTeamReferralView extends StatelessWidget {
@@ -26,7 +24,7 @@ class CampaignTeamReferralView extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: Text(AppLocalizations.of(context)!.memberDetails,
-              style: Theme.of(context).textTheme.headline4),
+              style: Theme.of(context).textTheme.headlineMedium),
         ),
         body: Container(
             //  margin: EdgeInsets.all(8.0),
@@ -40,10 +38,10 @@ class CampaignTeamReferralView extends StatelessWidget {
                 children: <Widget>[
                   Center(
                       child: Text(AppLocalizations.of(context)!.teamLeader,
-                          style: Theme.of(context).textTheme.headline5)),
+                          style: Theme.of(context).textTheme.headlineSmall)),
                   Center(
                       child: Text(rewardDetails['name']['email'].toString(),
-                          style: Theme.of(context).textTheme.headline5)),
+                          style: Theme.of(context).textTheme.headlineSmall)),
                 ],
               ),
             ),
@@ -70,7 +68,7 @@ class CampaignTeamReferralView extends StatelessWidget {
                                 flex: 3,
                                 child: Text(
                                   i.toString(),
-                                  style: Theme.of(context).textTheme.headline5,
+                                  style: Theme.of(context).textTheme.headlineSmall,
                                 )),
                             Expanded(
                                 flex: 7,
@@ -79,7 +77,7 @@ class CampaignTeamReferralView extends StatelessWidget {
                                         .toString(),
                                     textAlign: TextAlign.start,
                                     style:
-                                        Theme.of(context).textTheme.headline5)),
+                                        Theme.of(context).textTheme.headlineSmall)),
                           ],
                         ),
                       ),

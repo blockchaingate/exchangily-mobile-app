@@ -88,15 +88,8 @@ https://kanbanprod.fabcoinapi.com/ordersbyaddresspaged/0x3b7b00ee5a7f7d57dff7b54
       {int skip = 0, int count = 10, String status = ''}) async {
     log.w('getMyOrders $exgAddress  -- skip $skip -- count $count');
     try {
-      String url = configService!.getKanbanBaseUrl()! +
-          'ordersbyaddresspaged/' +
-          exgAddress +
-          '/' +
-          skip.toString() +
-          '/' +
-          count.toString() +
-          '/' +
-          status;
+      String url =
+          '${configService!.getKanbanBaseUrl()!}ordersbyaddresspaged/$exgAddress/$skip/$count/$status';
       log.w('get my orders url $url');
       var res = await client.get(Uri.parse(url));
       var jsonList = jsonDecode(res.body) as List;
@@ -130,24 +123,16 @@ https://kanbanprod.fabcoinapi.com/ordersbyaddresspaged/0x3b7b00ee5a7f7d57dff7b54
     try {
       String url =
           '${configService!.getKanbanBaseUrl()}getordersbytickernamepaged/$exgAddress/$tickerName/$skip/$count/$status';
-      // String url = environment['endpoints']['kanban'] +
-      //     'getordersbytickername/' +
-      //     exgAddress +
-      //     '/' +
-      //     tickerName;
+
       log.i('getMyOrdersByTickerName url $url');
       var res = await client.get(Uri.parse(url));
 
-      if (res != null) {
-        var jsonList = jsonDecode(res.body) as List;
+      var jsonList = jsonDecode(res.body) as List;
 
-        OrderList orderList = OrderList.fromJson(jsonList);
-        //   _singlePairOrders.value = orderAggregation(orderList.orders);3
-        _singlePairOrders.value = orderList.orders;
-        //  .map((e) => e).toList();
-      } else {
-        return null;
-      }
+      OrderList orderList = OrderList.fromJson(jsonList);
+      //   _singlePairOrders.value = orderAggregation(orderList.orders);3
+      _singlePairOrders.value = orderList.orders;
+      //  .map((e) => e).toList();
     } catch (err) {
       log.e('getMyOrdersByTickerName Catch $err');
       throw Exception;

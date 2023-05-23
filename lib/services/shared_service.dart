@@ -105,7 +105,7 @@ class SharedService {
           .then((value) {
         if (value != null) {
           if (!value.startsWith('0x')) {
-            smartContractAddress = '0x' + value;
+            smartContractAddress = '0x$value';
           } else {
             smartContractAddress = value;
           }
@@ -122,7 +122,7 @@ class SharedService {
 
   Future<PairDecimalConfig> getSinglePairDecimalConfig(String pairName,
       {String base = ''}) async {
-    final ApiService? apiService = locator<ApiService>();
+    final ApiService apiService = locator<ApiService>();
     PairDecimalConfig singlePairDecimalConfig = PairDecimalConfig();
     log.i('tickername $pairName -- endswith usdt ${pairName.endsWith('USDT')}');
 
@@ -142,7 +142,7 @@ class SharedService {
           PairDecimalConfig(name: pairName, priceDecimal: 2, qtyDecimal: 2);
     } else {
       log.i('base $base');
-      await apiService!.getPairDecimalConfig().then((res) {
+      await apiService.getPairDecimalConfig().then((res) {
         if (res != null) {
           singlePairDecimalConfig =
               res.firstWhere((element) => element.name == pairName + base);
@@ -467,7 +467,7 @@ class SharedService {
                     padding: const EdgeInsets.all(10),
                     child: Text(title),
                   ),
-            titleTextStyle: Theme.of(context).textTheme.headline5,
+            titleTextStyle: Theme.of(context).textTheme.headlineSmall,
             contentTextStyle: const TextStyle(color: globals.grey),
             contentPadding: const EdgeInsets.symmetric(horizontal: 10),
             content: Visibility(
@@ -511,7 +511,7 @@ class SharedService {
                           Text(
                             AppLocalizations.of(context)!
                                 .doNotShowTheseWarnings,
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ],
                       ),

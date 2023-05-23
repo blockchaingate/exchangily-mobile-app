@@ -79,8 +79,8 @@ class ChooseWalletLanguageView extends StatelessWidget {
                     highlightColor: globals.white,
                     child: Center(
                       child: Text(
-                        AppLocalizations.of(context)!.loading + '...',
-                        style: Theme.of(context).textTheme.bodyText2,
+                        '${AppLocalizations.of(context)!.loading}...',
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ),
                   )

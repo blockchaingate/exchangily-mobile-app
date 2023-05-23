@@ -33,7 +33,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   SharedService? sharedService = locator<SharedService>();
 
   ApiService? apiService = locator<ApiService>();
-  final TradeService? _tradeService = locator<TradeService>();
+  final TradeService _tradeService = locator<TradeService>();
   WalletService? walletService = locator<WalletService>();
   ConfigService? configService = locator<ConfigService>();
   List<PairDecimalConfig> pairDecimalConfigList = [];
@@ -59,18 +59,16 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   bool isDisposing = false;
   double? usdValue = 0.0;
   String pairSymbolWithSlash = '';
-  String? get interval => _tradeService!.interval;
+  String? get interval => _tradeService.interval;
 
   WebViewController? webViewController;
   bool isStreamDataNull = false;
   @override
   Map<String, StreamData> get streamsMap => {
         _tickerStreamKey: StreamData<dynamic>(
-            _tradeService!.getTickerDataStream(pairPriceByRoute!.symbol!)),
-        _orderbookStreamKey: StreamData<dynamic>(_tradeService!
-            .getOrderBookStreamByTickerName(pairPriceByRoute!.symbol!)),
-        _marketTradesStreamKey: StreamData<dynamic>(_tradeService!
-            .getMarketTradesStreamByTickerName(pairPriceByRoute!.symbol!))
+            _tradeService.getTickerDataStream(pairPriceByRoute!.symbol!)),
+        _orderbookStreamKey: StreamData<dynamic>(_tradeService.getOrderBookStreamByTickerName(pairPriceByRoute!.symbol!)),
+        _marketTradesStreamKey: StreamData<dynamic>(_tradeService.getMarketTradesStreamByTickerName(pairPriceByRoute!.symbol!))
       };
   // Map<String, StreamData> res =
   //     tradeService.getMultipleStreams(pairPriceByRoute.symbol);
@@ -207,8 +205,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     if (key == _tickerStreamKey) {
       getSubscriptionForKey(key)!.cancel().whenComplete(() {
         log.e('on cancel Stream $key closed');
-        _tradeService!
-            .tickerDataChannel(pairPriceByRoute!.symbol!)
+        _tradeService.tickerDataChannel(pairPriceByRoute!.symbol!)
             .sink
             .close()
             .then((value) => log.i('tickerDataChannel closed'));
@@ -217,8 +214,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     if (key == _marketTradesStreamKey) {
       getSubscriptionForKey(key)!.cancel().whenComplete(() {
         log.e('on cancel Stream $key closed');
-        _tradeService!
-            .marketTradesChannel(pairPriceByRoute!.symbol!)
+        _tradeService.marketTradesChannel(pairPriceByRoute!.symbol!)
             .sink
             .close()
             .then((value) => log.i('marketTradesChannel closed'));
@@ -227,8 +223,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     if (key == _orderbookStreamKey) {
       getSubscriptionForKey(key)!.cancel().whenComplete(() {
         log.e('on cancel Stream $key closed');
-        _tradeService!
-            .orderbookChannel(pairPriceByRoute!.symbol!)
+        _tradeService.orderbookChannel(pairPriceByRoute!.symbol!)
             .sink
             .close()
             .then((value) => log.i('orderbookChannel closed'));
@@ -357,7 +352,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   }
 
   String updateTickerName(String tickerName) {
-    return _tradeService!.seperateBasePair(tickerName);
+    return _tradeService.seperateBasePair(tickerName);
   }
 
   // getMyOrders() async {

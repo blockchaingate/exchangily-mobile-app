@@ -26,30 +26,30 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                   Expanded(
                       flex: 1,
                       child: Text('$index',
-                          style: Theme.of(context).textTheme.headline6)),
+                          style: Theme.of(context).textTheme.titleLarge)),
                   Expanded(
                       flex: 1,
                       child: Text(
                           order.bidOrAsk!
                               ? AppLocalizations.of(context)!.buy
                               : AppLocalizations.of(context)!.sell,
-                          style: Theme.of(context).textTheme.headline6!.copyWith(
+                          style: Theme.of(context).textTheme.titleLarge!.copyWith(
                                 color: Color(
                                     order.bidOrAsk! ? 0xFF0da88b : 0xFFe2103c),
                               ))),
                   Expanded(
                       flex: 2,
                       child: Text(order.pairName.toString(),
-                          style: Theme.of(context).textTheme.headline6)),
+                          style: Theme.of(context).textTheme.titleLarge)),
                   Expanded(
                       flex: 2,
                       child: Text(order.price.toString(),
-                          style: Theme.of(context).textTheme.headline6)),
+                          style: Theme.of(context).textTheme.titleLarge)),
                   Expanded(
                       flex: 2,
                       child: Text(
                           '${model.filledAmount.toString()} (${model.filledPercentage.toStringAsFixed(2)}%)',
-                          style: Theme.of(context).textTheme.headline6)),
+                          style: Theme.of(context).textTheme.titleLarge)),
                   Expanded(
                       flex: 1,
                       child: order.isActive!

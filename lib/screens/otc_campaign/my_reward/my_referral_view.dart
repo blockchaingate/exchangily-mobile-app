@@ -1,11 +1,8 @@
-import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/team_reward_details_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../../shared/globals.dart' as globals;
 
 class MyReferralView extends StatelessWidget {
@@ -25,7 +22,7 @@ class MyReferralView extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: Text(AppLocalizations.of(context)!.memberDetails,
-              style: Theme.of(context).textTheme.headline4),
+              style: Theme.of(context).textTheme.headlineMedium),
         ),
         body: Container(
             //  margin: EdgeInsets.all(8.0),
@@ -54,13 +51,13 @@ class MyReferralView extends StatelessWidget {
                                 flex: 3,
                                 child: Text(
                                   i.toString(),
-                                  style: Theme.of(context).textTheme.headline5,
+                                  style: Theme.of(context).textTheme.headlineSmall,
                                 )),
                             Expanded(
                                 flex: 7,
                                 child: Text(referralDetails![index].toString(),
                                     style:
-                                        Theme.of(context).textTheme.headline5)),
+                                        Theme.of(context).textTheme.headlineSmall)),
                           ],
                         ),
                       ),

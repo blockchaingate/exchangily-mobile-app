@@ -56,11 +56,11 @@ class FabUtils {
   // Fab Post Tx
   Future postFabTx(String? txHex) async {
     var url = fabBaseUrl! + postRawTxApiRoute;
-    final SharedService? sharedService = locator<SharedService>();
+    final SharedService sharedService = locator<SharedService>();
     String? txHash = '';
     String? errMsg = '';
     if (txHex != '') {
-      var versionInfo = await sharedService!.getLocalAppVersion();
+      var versionInfo = await sharedService.getLocalAppVersion();
       log.i('getAppVersion $versionInfo');
       String versionName = versionInfo['name']!;
       String buildNumber = versionInfo['buildNumber']!;
@@ -96,10 +96,7 @@ class FabUtils {
   }
 
   getFabNode(root, {index = 0}) {
-    var node = root.derivePath("m/44'/" +
-        environment["CoinType"]["FAB"].toString() +
-        "'/0'/0/" +
-        index.toString());
+    var node = root.derivePath("m/44'/${environment["CoinType"]["FAB"]}'/0'/0/$index");
     return node;
   }
 
@@ -113,7 +110,7 @@ class FabUtils {
       'data': trimHexPrefix(getLockedInfoABI),
       'sender': address
     };
-    var url = fabBaseUrl! + 'callcontract';
+    var url = '${fabBaseUrl!}callcontract';
     try {
       var response = await client.post(Uri.parse(url), body: data);
       var json = jsonDecode(response.body);
@@ -249,7 +246,7 @@ class FabUtils {
         final getLockerInfo = contract.function('getLockerInfo');
         var res = getLockerInfo.decodeReturnValues(balanceHex);
 
-        if (res != null && res.length == 2) {
+        if (res.length == 2) {
           var values = res[1];
           values.forEach((element) => {balance = balance + element.toDouble()});
           balance = balance / 1e8;
@@ -260,7 +257,7 @@ class FabUtils {
   }
 
   Future getFabBalanceByAddress(String address) async {
-    var url = fabBaseUrl! + 'getbalance/' + address;
+    var url = '${fabBaseUrl!}getbalance/$address';
     var fabBalance = 0.0;
     try {
       var response = await client.get(Uri.parse(url));
@@ -294,7 +291,7 @@ class FabUtils {
 
    */
     address = bs58check.encode(HEX.decode(address) as Uint8List);
-    log.w('address after encode=' + address);
+    log.w('address after encode=$address');
 
     /*
   var decoded = bs58check.decode('mvLuZXGYMxpRM65kgzbfoKqs3FPcisM6ri');
@@ -309,7 +306,7 @@ class FabUtils {
     var decoded = bs58check.decode(address);
     address = HEX.encode(decoded);
     address = address.substring(2);
-    address = '0x' + address;
+    address = '0x$address';
     log.w('in fabToExgAddress $address');
     return address;
   }
@@ -330,7 +327,7 @@ class FabUtils {
       'data': balanceInfoABI + fixLength(trimHexPrefix(address), 64)
     };
     var tokenBalance = 0.0;
-    var url = fabBaseUrl! + 'callcontract';
+    var url = '${fabBaseUrl!}callcontract';
     log.i(
         'Fab_util -- address $address getFabTokenBalanceForABI balance by address url -- $url -- body $body');
     try {
@@ -361,7 +358,7 @@ class FabUtils {
   }
 
   Future getSmartContractABI(String smartContractAddress) async {
-    var url = fabBaseUrl! + 'getabiforcontract/' + smartContractAddress;
+    var url = '${fabBaseUrl!}getabiforcontract/$smartContractAddress';
     var response = await client.get(Uri.parse(url));
     Map<String, dynamic>? resJson = jsonDecode(response.body);
     return resJson;
@@ -378,7 +375,7 @@ class FabUtils {
           .getContractAddressByTickerName(coinName)
           .then((value) {
         if (!value!.startsWith('0x')) {
-          smartContractAddress = '0x' + value;
+          smartContractAddress = '0x$value';
         } else {
           smartContractAddress = value;
         }

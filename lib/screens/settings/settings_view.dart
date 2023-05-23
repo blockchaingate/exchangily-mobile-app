@@ -69,10 +69,10 @@ class SettingsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey _one = GlobalKey();
-    GlobalKey _two = GlobalKey();
-    model!.one = _one;
-    model!.two = _two;
+    GlobalKey one = GlobalKey();
+    GlobalKey two = GlobalKey();
+    model!.one = one;
+    model!.two = two;
     debugPrint('isShow _SettingsWidgetState ${model!.isShowCaseOnce}');
     model!.showcaseEvent(context);
     return SettingsContainer(

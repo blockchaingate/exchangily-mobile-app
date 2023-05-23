@@ -132,7 +132,6 @@ class MyApp extends StatelessWidget {
               disabledColor: globals.grey.withAlpha(100),
               primaryColor: globals.primaryColor,
               cardColor: globals.walletCardColor,
-              backgroundColor: globals.secondaryColor,
               canvasColor: globals.secondaryColor,
               buttonTheme: const ButtonThemeData(
                   minWidth: double.infinity,
@@ -178,7 +177,7 @@ class MyApp extends StatelessWidget {
                   titleLarge: TextStyle(
                       fontSize: 10.5,
                       color: globals.white,
-                      fontWeight: FontWeight.w500)),
+                      fontWeight: FontWeight.w500)), colorScheme: ColorScheme(background: globals.secondaryColor),
             ),
             // Removed the home and scaffold because initial route has set
             initialRoute: '/',

@@ -1,9 +1,6 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
-import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard_screen_state.dart';
-import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/globals.dart' as globals;
 
@@ -18,7 +15,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(AppLocalizations.of(context)!.myRewardDetails,
-            style: Theme.of(context).textTheme.headline4),
+            style: Theme.of(context).textTheme.headlineMedium),
       ),
       body: Container(
           child: Column(
@@ -32,28 +29,28 @@ class MyRewardDetailsScreen extends StatelessWidget {
                     flex: 1,
                     child: Center(
                         child: Text(AppLocalizations.of(context)!.level,
-                            style: Theme.of(context).textTheme.subtitle2))),
+                            style: Theme.of(context).textTheme.titleSmall))),
                 Expanded(
                     flex: 1,
                     child: Center(
                         child: Text(AppLocalizations.of(context)!.referrals,
-                            style: Theme.of(context).textTheme.subtitle2))),
+                            style: Theme.of(context).textTheme.titleSmall))),
                 Expanded(
                     flex: 3,
                     child: Center(
                         child: Text(
                             AppLocalizations.of(context)!.totalTokenAmount,
-                            style: Theme.of(context).textTheme.subtitle2))),
+                            style: Theme.of(context).textTheme.titleSmall))),
                 Expanded(
                     flex: 2,
                     child: Center(
                         child: Text(AppLocalizations.of(context)!.rewardsToken,
-                            style: Theme.of(context).textTheme.subtitle2))),
+                            style: Theme.of(context).textTheme.titleSmall))),
                 Expanded(
                     flex: 2,
                     child: Center(
                         child: Text(AppLocalizations.of(context)!.totalValue,
-                            style: Theme.of(context).textTheme.subtitle2)))
+                            style: Theme.of(context).textTheme.titleSmall)))
               ],
             ),
           ),
@@ -83,7 +80,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
                                       child: Text(
                                     campaignRewardList![index].level.toString(),
                                     style:
-                                        Theme.of(context).textTheme.headline6,
+                                        Theme.of(context).textTheme.titleLarge,
                                   ))),
                               Expanded(
                                   flex: 1,
@@ -94,7 +91,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
                                               .toString(),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6))),
+                                              .titleLarge))),
                               Expanded(
                                   flex: 3,
                                   child: Center(
@@ -104,7 +101,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
                                               .toStringAsFixed(3),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6))),
+                                              .titleLarge))),
                               Expanded(
                                   flex: 2,
                                   child: Center(
@@ -114,7 +111,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
                                               .toStringAsFixed(3),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6))),
+                                              .titleLarge))),
                               Expanded(
                                   flex: 2,
                                   child: Center(
@@ -124,7 +121,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
                                               .toStringAsFixed(3),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6!
+                                              .titleLarge!
                                               .copyWith(
                                                   color: Colors.greenAccent,
                                                   fontWeight:

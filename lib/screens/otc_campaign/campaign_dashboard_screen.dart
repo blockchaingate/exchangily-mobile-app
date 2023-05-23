@@ -43,7 +43,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                     title: Center(
                         child: Text(
                       model.campaignName!,
-                      style: Theme.of(context).textTheme.headline4,
+                      style: Theme.of(context).textTheme.headlineMedium,
                     )),
                   ),
                   ListTile(
@@ -55,7 +55,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                         ? const Text('')
                         : Text(
                             model.campaignUserData!.email!,
-                            style: Theme.of(context).textTheme.headline5,
+                            style: Theme.of(context).textTheme.headlineSmall,
                           ),
                   ),
                   UIHelper.divider,
@@ -77,7 +77,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             '${AppLocalizations.of(context)!.myReferralCode} ${model.campaignUserData!.referralCode.toString()}',
                             style: Theme.of(context)
                                 .textTheme
-                                .headline5!
+                                .headlineSmall!
                                 .copyWith(
                                     color: globals.primaryColor,
                                     decoration: TextDecoration.underline))
@@ -143,7 +143,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                       '${AppLocalizations.of(context)!.welcome} ${model.campaignUserData!.email}',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline5),
+                                          .headlineSmall),
                             ),
                             trailing: InkWell(
                                 onTap: () {
@@ -151,7 +151,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 },
                                 child: Text(
                                   AppLocalizations.of(context)!.logout,
-                                  style: Theme.of(context).textTheme.headline5,
+                                  style: Theme.of(context).textTheme.headlineSmall,
                                   textAlign: TextAlign.end,
                                 )))
                       ],
@@ -191,7 +191,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     Text(AppLocalizations.of(context)!.quantity,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText1),
+                                            .bodyLarge),
                                     UIHelper.horizontalSpaceSmall,
                                     model.busy
                                         ? Shimmer.fromColors(
@@ -201,14 +201,14 @@ class CampaignDashboardScreen extends StatelessWidget {
                                               ('0.000'),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline5,
+                                                  .headlineSmall,
                                             ))
                                         : Text(
                                             model.myTotalAssetQuantity
                                                 .toStringAsFixed(2),
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyText1),
+                                                .bodyLarge),
                                   ],
                                 ),
                               ),
@@ -221,7 +221,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   child: Text(
                                     ('0.000'),
                                     style:
-                                        Theme.of(context).textTheme.headline5,
+                                        Theme.of(context).textTheme.headlineSmall,
                                   ))
                               : SizedBox(
                                   width: 120,
@@ -237,7 +237,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                         child: Text(model.myTotalAssetValue,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline3),
+                                                .displaySmall),
                                       ),
                                     ],
                                   ),
@@ -258,7 +258,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   Text(
                                     AppLocalizations.of(context)!.level,
                                     style:
-                                        Theme.of(context).textTheme.headline5,
+                                        Theme.of(context).textTheme.headlineSmall,
                                   ),
                                   UIHelper.horizontalSpaceSmall,
                                   model.busy
@@ -271,13 +271,13 @@ class CampaignDashboardScreen extends StatelessWidget {
                                                 (''),
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline5,
+                                                    .headlineSmall,
                                               )),
                                         )
                                       : Text(model.memberLevel.toUpperCase(),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5!
+                                              .headlineSmall!
                                               .copyWith(
                                                   fontWeight: FontWeight.w600,
                                                   color: Color(model
@@ -297,11 +297,10 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 5.0),
                                     child: Text(
-                                      AppLocalizations.of(context)!
-                                              .referralCount +
-                                          ' ',
+                                      '${AppLocalizations.of(context)!
+                                              .referralCount} ',
                                       style:
-                                          Theme.of(context).textTheme.headline5,
+                                          Theme.of(context).textTheme.headlineSmall,
                                     ),
                                   ),
                                   model.busy
@@ -312,12 +311,12 @@ class CampaignDashboardScreen extends StatelessWidget {
                                             ('0.000'),
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline5,
+                                                .headlineSmall,
                                           ))
                                       : Text(model.myTotalReferrals.toString(),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5),
+                                              .headlineSmall),
                                 ],
                               )
                             ],
@@ -351,11 +350,11 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 Text(AppLocalizations.of(context)!.myInvestment,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline5!
+                                        .headlineSmall!
                                         .copyWith(color: globals.buyPrice)),
                                 Text(
                                   AppLocalizations.of(context)!.myTokens,
-                                  style: Theme.of(context).textTheme.headline5,
+                                  style: Theme.of(context).textTheme.headlineSmall,
                                 ),
                               ],
                             ),
@@ -371,13 +370,13 @@ class CampaignDashboardScreen extends StatelessWidget {
                                           ('0.000'),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5,
+                                              .headlineSmall,
                                         ),
                                         Text(
                                           ('0.000'),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5,
+                                              .headlineSmall,
                                         )
                                       ],
                                     ))
@@ -389,7 +388,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                           '\$${model.myInvestmentValueWithoutRewards}',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5),
+                                              .headlineSmall),
                                       model.memberProfile == null
                                           ? const Text('')
                                           : Text(
@@ -398,7 +397,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                                   .toString(),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline5!
+                                                  .headlineSmall!
                                                   .copyWith(
                                                       fontWeight:
                                                           FontWeight.w600,
@@ -444,12 +443,12 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     child: Text(
                                       model.errorMessage!,
                                       style:
-                                          Theme.of(context).textTheme.headline5,
+                                          Theme.of(context).textTheme.headlineSmall,
                                     ))
                                 : Text(
                                     model.myReferralReward.toStringAsFixed(2),
                                     style:
-                                        Theme.of(context).textTheme.headline5),
+                                        Theme.of(context).textTheme.headlineSmall),
                             trailing: Icon(
                               Icons.navigate_next,
                               color: globals.white54,
@@ -489,7 +488,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     .teamsTotalValue),
                                 Text(
                                   AppLocalizations.of(context)!.teamReward,
-                                  style: Theme.of(context).textTheme.headline5,
+                                  style: Theme.of(context).textTheme.headlineSmall,
                                 )
                               ],
                             ),
@@ -505,13 +504,13 @@ class CampaignDashboardScreen extends StatelessWidget {
                                           ('0.000'),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5,
+                                              .headlineSmall,
                                         ),
                                         Text(
                                           ('0.000'),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5,
+                                              .headlineSmall,
                                         )
                                       ],
                                     ))
@@ -524,13 +523,13 @@ class CampaignDashboardScreen extends StatelessWidget {
                                               .toStringAsFixed(2),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5),
+                                              .headlineSmall),
                                       Text(
                                           model.myTeamsTotalRewards!
                                               .toStringAsFixed(2),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5!
+                                              .headlineSmall!
                                               .copyWith(
                                                   fontWeight: FontWeight.w600,
                                                   color: Color(model

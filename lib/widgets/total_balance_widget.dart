@@ -1,10 +1,7 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
@@ -52,7 +49,7 @@ class TotalBalanceCardWidget
                                 Text(title!,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline4!
+                                        .headlineMedium!
                                         .copyWith(fontWeight: FontWeight.w400)),
                                 model.isBusy
                                     ? Shimmer.fromColors(
@@ -62,7 +59,7 @@ class TotalBalanceCardWidget
                                           '${model.totalUsdBalance} USD',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .subtitle1,
+                                              .titleMedium,
                                         ),
                                       )
                                     : Text(
@@ -70,7 +67,7 @@ class TotalBalanceCardWidget
                                         textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .subtitle1!
+                                            .titleMedium!
                                             .copyWith(
                                                 fontWeight: FontWeight.w400)),
                               ],

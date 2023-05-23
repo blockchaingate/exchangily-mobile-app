@@ -1,16 +1,10 @@
-import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/locker/locker_balances_widget.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my_exchange_assets_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
-import 'package:flutter/rendering.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../../../widgets/sliver_appbar_delegate.dart';
 
 class MyExchangeAssetsView extends StatelessWidget {
   const MyExchangeAssetsView({Key? key}) : super(key: key);
@@ -141,14 +135,12 @@ class MyExchangeAssetsView extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(50),
                                       ),
+                                      width: 35,
+                                      height: 35,
                                       child:
                                           // Image.asset(
                                           // 'assets/images/wallet-page/${tickerName.toLowerCase()}.png') ??
-                                          Image.network(model.logoUrl +
-                                              tickerName.toLowerCase() +
-                                              '.png'),
-                                      width: 35,
-                                      height: 35),
+                                          Image.network('${model.logoUrl}${tickerName.toLowerCase()}.png')),
                                 ),
                                 UIHelper.horizontalSpaceSmall,
                                 UIHelper.horizontalSpaceSmall,
@@ -161,7 +153,7 @@ class MyExchangeAssetsView extends StatelessWidget {
                                               .exchangeBalances![index].ticker!,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6),
+                                              .titleLarge),
                                     )),
                                 UIHelper.horizontalSpaceSmall,
                                 Expanded(
@@ -172,7 +164,7 @@ class MyExchangeAssetsView extends StatelessWidget {
                                             .toString(),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6)),
+                                            .titleLarge)),
                                 Expanded(
                                     flex: 2,
                                     child: Text(
@@ -181,7 +173,7 @@ class MyExchangeAssetsView extends StatelessWidget {
                                             .toString(),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6))
+                                            .titleLarge))
                               ],
                             );
                           })

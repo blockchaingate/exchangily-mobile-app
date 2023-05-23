@@ -41,7 +41,7 @@ class Redeposit extends StatelessWidget {
             centerTitle: true,
             title: Text(
               '${AppLocalizations.of(context)!.redeposit}  ${walletInfo!.tickerName}  ${AppLocalizations.of(context)!.toExchange}',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             backgroundColor: const Color(0XFF1f2233),
           ),
@@ -66,14 +66,14 @@ class Redeposit extends StatelessWidget {
                                                 .amount,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline4),
+                                                .headlineMedium),
                                         UIHelper.horizontalSpaceSmall,
                                         Text(
                                           bigNum2Double(redepositItem["amount"])
                                               .toString(),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline4,
+                                              .headlineMedium,
                                         ),
                                       ],
                                     ),
@@ -98,7 +98,7 @@ class Redeposit extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           '${AppLocalizations.of(context)!.walletbalance} ${model.walletInfo!.availableBalance}',
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -106,7 +106,7 @@ class Redeposit extends StatelessWidget {
                           ),
                           child: Text(
                             walletInfo!.tickerName!.toUpperCase(),
-                            style: Theme.of(context).textTheme.headline5,
+                            style: Theme.of(context).textTheme.headlineSmall,
                           ),
                         )
                       ],
@@ -115,11 +115,11 @@ class Redeposit extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Text(AppLocalizations.of(context)!.kanbanGasFee,
-                            style: Theme.of(context).textTheme.headline5),
+                            style: Theme.of(context).textTheme.headlineSmall),
                         UIHelper.horizontalSpaceSmall,
                         Text(
                           '${model.kanbanTransFee}',
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         )
                       ],
                     ),
@@ -127,7 +127,7 @@ class Redeposit extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Text(AppLocalizations.of(context)!.advance,
-                            style: Theme.of(context).textTheme.headline5),
+                            style: Theme.of(context).textTheme.headlineSmall),
                         Switch(
                           value: model.transFeeAdvance,
                           inactiveTrackColor: grey,
@@ -154,7 +154,7 @@ class Redeposit extends StatelessWidget {
                                           .kanbanGasPrice,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline6),
+                                          .titleLarge),
                                 ),
                                 Expanded(
                                     flex: 5,
@@ -176,7 +176,7 @@ class Redeposit extends StatelessWidget {
                                           hintText: '0.00000',
                                           hintStyle: Theme.of(context)
                                               .textTheme
-                                              .headline5),
+                                              .headlineSmall),
                                       style:
                                           TextStyle(color: grey, fontSize: 12),
                                     ))
@@ -191,7 +191,7 @@ class Redeposit extends StatelessWidget {
                                           .kanbanGasLimit,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline6),
+                                          .titleLarge),
                                 ),
                                 Expanded(
                                     flex: 5,
@@ -215,7 +215,7 @@ class Redeposit extends StatelessWidget {
                                           hintText: '0.00000',
                                           hintStyle: Theme.of(context)
                                               .textTheme
-                                              .headline5),
+                                              .headlineSmall),
                                       style:
                                           TextStyle(color: grey, fontSize: 12),
                                     ))
@@ -244,7 +244,7 @@ class Redeposit extends StatelessWidget {
                       ? model.sharedService!.loadingIndicator()
                       : Text(
                           AppLocalizations.of(context)!.confirm,
-                          style: Theme.of(context).textTheme.button,
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                 ),
               ],

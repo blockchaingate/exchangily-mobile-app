@@ -54,10 +54,10 @@ class OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
             animationType: AnimationType.grow,
             isOverlayTapDismiss: true,
             backgroundColor: globals.priceColor,
-            descStyle: Theme.of(context).textTheme.bodyText1!,
+            descStyle: Theme.of(context).textTheme.bodyLarge!,
             titleStyle: Theme.of(context)
                 .textTheme
-                .headline3!
+                .displaySmall!
                 .copyWith(fontWeight: FontWeight.bold)),
         context: context,
         title: request.title,
@@ -76,7 +76,7 @@ class OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
               decoration: InputDecoration(
                 labelStyle: Theme.of(context)
                     .textTheme
-                    .bodyText1!
+                    .bodyLarge!
                     .copyWith(color: globals.white),
                 icon: Icon(
                   Icons.event_note,
@@ -95,7 +95,7 @@ class OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
             },
             child: Text(
               request.buttonTitle!,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),
           DialogButton(
@@ -105,7 +105,7 @@ class OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
             },
             child: Text(
               request.cancelButton!,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           )
         ]).show();

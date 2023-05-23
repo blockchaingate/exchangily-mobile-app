@@ -41,7 +41,7 @@ class _SmartContractState extends State<SmartContract> {
   var functionHex;
   late var abi;
 
-  final DialogService? _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
   WalletService? walletService = locator<WalletService>();
   SharedService? sharedService = locator<SharedService>();
   var fabUtils = FabUtils();
@@ -83,26 +83,26 @@ class _SmartContractState extends State<SmartContract> {
   void changedDropDownItem(String? selectedFunction) {
     debugPrint(
         "Selected function $selectedFunction, we are going to refresh the UI");
-    var _inputs;
-    var _payable = false;
+    var inputs;
+    var payable = false;
     for (var i = 0; i < abis.length; i++) {
       var item = abis[i];
       if (item['name'] == selectedFunction) {
-        _inputs = item['inputs'];
+        inputs = item['inputs'];
         abi = item;
-        for (var j = 0; j < _inputs.length; j++) {
-          _inputs[j]['controller'] = TextEditingController();
+        for (var j = 0; j < inputs.length; j++) {
+          inputs[j]['controller'] = TextEditingController();
         }
         if (item['stateMutability'] == 'payable') {
-          _payable = true;
+          payable = true;
         }
         break;
       }
     }
 
     setState(() {
-      payable = _payable;
-      inputs = _inputs;
+      payable = payable;
+      inputs = inputs;
       _currentFunction = selectedFunction;
     });
   }
@@ -113,15 +113,15 @@ class _SmartContractState extends State<SmartContract> {
     abis = smartContractABI['abi'];
     functionHex = smartContractABI['functionHex'];
     var funcs = await getDropDownMenuItems(abis);
-    var _currentFunc;
+    var currentFunc;
     if ((funcs != null) && (funcs.length > 0)) {
-      _currentFunc = funcs[0].value;
+      currentFunc = funcs[0].value;
     }
 
     setState(() => {
           _smartContractName = smartContractABI['Name'],
           _dropDownMenuItems = funcs,
-          _currentFunction = _currentFunc
+          _currentFunction = currentFunc
         });
   }
 
@@ -260,7 +260,7 @@ class _SmartContractState extends State<SmartContract> {
                   },
                   child: Text(
                     AppLocalizations.of(context)!.confirm,
-                    style: Theme.of(context).textTheme.button,
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
                 )
               ],
@@ -289,7 +289,7 @@ class _SmartContractState extends State<SmartContract> {
   callContract() {}
 
   checkPass(abiHex, value, context) async {
-    var res = await _dialogService!.showDialog(
+    var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context)!.enterPassword,
         description:
             AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote);
