@@ -49,7 +49,6 @@ import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:json_diff/json_diff.dart';
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -495,7 +494,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     });
 
     await apiService!.getTokenListUpdates().then((token) {
-      for (var token in token!) {
+      for (var token in token) {
         walletDecimalList.add({token.tickerName: token.decimal});
       }
     });
