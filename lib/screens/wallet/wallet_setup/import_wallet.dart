@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/confirm_mnemonic_viemodel.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/confirm_mnemonic/verify_mnemonic.dart';
@@ -46,6 +47,7 @@ class ImportWalletView extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(15),
                 child: ElevatedButton(
+                  style: generalButtonStyle1,
                   child: Text(
                     AppLocalizations.of(context)!.confirm,
                     style: Theme.of(context).textTheme.labelLarge,
