@@ -38,8 +38,36 @@ import 'package:stacked/stacked.dart';
 import 'wallet_features/gas.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
-class WalletDashboardView extends StatelessWidget {
+class WalletDashboardView extends StatefulWidget {
   const WalletDashboardView({Key? key}) : super(key: key);
+
+  @override
+  State<WalletDashboardView> createState() => _WalletDashboardViewState();
+}
+
+class _WalletDashboardViewState extends State<WalletDashboardView>
+    with SingleTickerProviderStateMixin {
+  TabController? _tabController;
+  late WalletDashboardViewModel newModel;
+
+  @override
+  initState() {
+    super.initState();
+    _tabController = TabController(length: 7, vsync: this);
+    _tabController!.addListener(() {
+      _handleTabSelection();
+    });
+  }
+
+  @override
+  dispose() {
+    _tabController!.dispose();
+    super.dispose();
+  }
+
+  void _handleTabSelection() {
+    newModel.updateTabSelection(_tabController!.index);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +79,7 @@ class WalletDashboardView extends StatelessWidget {
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => WalletDashboardViewModel(),
         onViewModelReady: (WalletDashboardViewModel model) async {
+          newModel = model;
           model.context = context;
           model.globalKeyOne = one;
           model.globalKeyTwo = two;
@@ -60,14 +89,10 @@ class WalletDashboardView extends StatelessWidget {
         },
         onDispose: (dynamic viewModel) {
           refreshController.dispose();
+
           debugPrint('_refreshController disposed in wallet dashboard view');
         },
         builder: (context, WalletDashboardViewModel model, child) {
-          // var connectionStatus = Provider.of<ConnectivityStatus>(context);
-          // if (connectionStatus == ConnectivityStatus.Offline)
-          //   return NetworkStausView();
-          // else
-
           return WillPopScope(
             onWillPop: () {
               model.onBackButtonPressed();
@@ -115,14 +140,15 @@ class WalletDashboardView extends StatelessWidget {
                               child: LayoutBuilder(builder: (BuildContext ctx,
                                   BoxConstraints constraints) {
                                 if (constraints.maxWidth < largeSize) {
-                                  return coinList(model, ctx);
+                                  return coinList(model, ctx, _tabController!);
                                 } else {
                                   return Row(
                                     children: [
                                       SizedBox(
                                           width: 400,
                                           height: double.infinity,
-                                          child: coinList(model, ctx)),
+                                          child: coinList(
+                                              model, ctx, _tabController!)),
                                       Expanded(
                                         child: model.wallets == null
                                             ? Container()
@@ -564,8 +590,8 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
   );
 }
 
-Widget coinList(WalletDashboardViewModel model, BuildContext context) {
-  // final tabController = TabController(length: 3, vsync: this, initialIndex: 1);
+Widget coinList(WalletDashboardViewModel model, BuildContext context,
+    TabController tabController) {
   return DefaultTabController(
     length: 7,
     initialIndex: model.selectedTabIndex,
@@ -591,11 +617,13 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                 onTap: (int tabIndex) {
                   model.updateTabSelection(tabIndex);
                 },
+                controller: tabController,
                 labelPadding: EdgeInsets.zero,
                 labelColor: white,
                 unselectedLabelColor: primaryColor,
                 indicatorColor: primaryColor,
                 indicatorSize: TabBarIndicatorSize.tab,
+                isScrollable: false,
                 tabs: [
                   Tab(
                     text: "All",
@@ -635,6 +663,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
         ];
       },
       body: TabBarView(
+        controller: tabController,
         children: [
           // All coins tab
 
