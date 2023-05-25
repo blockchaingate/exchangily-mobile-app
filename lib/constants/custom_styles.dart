@@ -24,6 +24,17 @@ TextStyle bodyText2 = const TextStyle(fontSize: 13, color: red);
 TextStyle headText6 =
     const TextStyle(fontSize: 10.5, color: white, fontWeight: FontWeight.w500);
 
+AppBar customAppBarWithTitle(String title, {Color color = primaryColor}) =>
+    AppBar(
+      title: Text(
+        title,
+        style: headText3.copyWith(color: secondaryColor),
+      ),
+      automaticallyImplyLeading: true,
+      backgroundColor: color,
+      centerTitle: true,
+    );
+
 var shapeRoundBorder = MaterialStateProperty.all<RoundedRectangleBorder>(
     RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25.0),

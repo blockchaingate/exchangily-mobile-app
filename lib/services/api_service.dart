@@ -15,6 +15,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/app_update_model.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
@@ -24,7 +25,7 @@ import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
-import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_history_model.dart';
+import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_transfer_history_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -321,54 +322,39 @@ class ApiService {
 /*----------------------------------------------------------------------
                 Get LightningRemit History
 ----------------------------------------------------------------------*/
-  Future getLightningRemitHistoryEvents(String? fabAddress) async {
-    List<TransactionHistory> transactionHistory = [];
+  Future<LightningRemitHistoryModel> getLightningRemitHistoryEvents(
+      String url, String fabAddress,
+      {int pageSize = 10, int pageNumber = 0}) async {
+    LightningRemitHistoryModel transferHistory = LightningRemitHistoryModel();
 
-    String url =
-        configService!.getKanbanBaseUrl()! + lightningRemitTxHHistoryApiRoute;
-    Map<String, dynamic> body = {"fabAddress": fabAddress};
+    Map<String, dynamic> body = {
+      "fabAddress": fabAddress,
+      "pageSize": pageSize,
+      "pageNum": pageNumber
+    };
 
-    log.i('getLightningRemitHistoryEvents url $url -- body $body');
+    log.i(
+        'getLightningRemitHistoryEvents url $url -- body ${jsonEncode(body)}');
 
     try {
-      var response = await client.post(Uri.parse(url), body: body);
+      var response = await client.post(Uri.parse(url),
+          headers: Constants.headersJson, body: jsonEncode(body));
 
       var json = jsonDecode(response.body);
       if (json != null) {
-        log.w('getLightningRemitHistoryEvents json $json}');
+        log.w('getBindpayHistoryEvents json $json}');
         if (json['success']) {
           //   log.e('getTransactionHistoryEvents json ${json['data']}');
-          var data = json['data'] as List;
+          transferHistory = LightningRemitHistoryModel.fromJson(json['data']);
 
-          for (var element in data) {
-            var holder = LightningRemitHistoryModel.fromJson(element);
-            debugPrint(holder.toJson().toString());
-            var timestamp = holder.time!;
-
-            var date =
-                DateTime.fromMillisecondsSinceEpoch(timestamp * 1000).toLocal();
-            String filteredDate =
-                date.toString().substring(0, date.toString().length - 4);
-
-            TransactionHistory tx = TransactionHistory(
-                tickerChainTxStatus: holder.status.toString(),
-                tag: holder.type ?? '',
-                tickerChainTxId: holder.txid ?? '',
-                date: filteredDate,
-                tickerName: holder.coin ?? '',
-                quantity: holder.amount ?? 0.0);
-
-            transactionHistory.add(tx);
-          }
-
-          for (var element in transactionHistory) {
-            log.e('getTransactionHistoryEvents length ${element.toJson()}');
-          }
+          log.e(
+              'getLightningRemitHistoryEvents totalCount ${transferHistory.totalCount}');
         }
       }
-      return transactionHistory;
+
+      return transferHistory;
     } catch (err) {
-      log.e('getTransactionHistoryEvents CATCH $err');
+      log.e('getLightningRemitHistoryEvents CATCH $err');
 
       throw Exception(err);
     }

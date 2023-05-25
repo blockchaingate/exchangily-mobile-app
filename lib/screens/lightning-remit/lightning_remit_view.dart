@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_transfer_history.view.dart';
 import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
@@ -273,7 +274,7 @@ class LightningRemitView extends StatelessWidget {
                                 UIHelper.horizontalSpaceSmall,
 
 /*----------------------------------------------------------------------------------------------------
-                                            Receive Button
+                                            Transaction history Button
 ----------------------------------------------------------------------------------------------------*/
 
                                 Expanded(
@@ -297,15 +298,12 @@ class LightningRemitView extends StatelessWidget {
                                   color: primaryColor,
                                   // textColor: Colors.white,
                                   onPressed: () async {
-                                    await model
-                                        .getLightningRemitTransactionHistory();
+                                    await model.geTransactionstHistory();
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (_) => TxHistoryView(
-                                                transactionHistory:
-                                                    model.transactionHistory,
-                                                model: model)));
+                                            builder: (_) =>
+                                                LightningRemitTransferHistoryView()));
                                   },
                                   icon: Icon(Icons.history,
                                       color: white, size: 24),
@@ -381,152 +379,6 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
               model!.coinListBottomSheet(context);
             }
           }),
-    );
-  }
-}
-
-// transaction history
-
-class TxHistoryView extends StatelessWidget {
-  final List<TransactionHistory>? transactionHistory;
-  final LightningRemitViewmodel? model;
-  const TxHistoryView({this.transactionHistory, this.model});
-  @override
-  Widget build(BuildContext context) {
-    /*----------------------------------------------------------------------
-                    Copy Order
-----------------------------------------------------------------------*/
-
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(AppLocalizations.of(context)!.transactionHistory,
-            style: Theme.of(context).textTheme.displaySmall),
-        backgroundColor: secondaryColor,
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-            padding: const EdgeInsets.all(4.0),
-            child: Column(
-              children: <Widget>[
-                for (var transaction in transactionHistory!)
-                  Card(
-                    elevation: 4,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 4.0),
-                      color: walletCardColor,
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(
-                            width: 45,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 3.0),
-                                  child: Text(transaction.tickerName!,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall),
-                                ),
-                                // icon
-                                transaction.tag == 'send'
-                                    ? Icon(
-                                        FontAwesomeIcons.arrowRight,
-                                        size: 11,
-                                        color: sellPrice,
-                                      )
-                                    : Icon(
-                                        Icons.arrow_downward,
-                                        size: 18,
-                                        color: buyPrice,
-                                      ),
-                              ],
-                            ),
-                          ),
-                          UIHelper.horizontalSpaceSmall,
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width / 2.5,
-                                    child: RichText(
-                                      overflow: TextOverflow.ellipsis,
-                                      text: TextSpan(
-                                          text: transaction.tickerChainTxId,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall!
-                                              .copyWith(
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                  color: primaryColor),
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              model!.copyAddress(
-                                                  transaction.tickerChainTxId);
-                                              model!.openExplorer(
-                                                  transaction.tickerChainTxId!);
-                                            }),
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.copy_outlined,
-                                        color: white, size: 16),
-                                    onPressed: () => model!.copyAddress(
-                                        transaction.tickerChainTxId),
-                                  )
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5.0),
-                                child: Text(
-                                  transaction.date!.substring(0, 19),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall!
-                                      .copyWith(fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                            ],
-                          ),
-                          UIHelper.horizontalSpaceSmall,
-                          UIHelper.horizontalSpaceSmall,
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(AppLocalizations.of(context)!.quantity,
-                                  style:
-                                      Theme.of(context).textTheme.titleSmall),
-                              Text(
-                                transaction.quantity!.toStringAsFixed(
-                                    // model
-                                    //   .decimalConfig
-                                    //   .quantityDecimal
-                                    2),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineSmall!
-                                    .copyWith(fontWeight: FontWeight.w400),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-              ],
-            )),
-      ),
     );
   }
 }

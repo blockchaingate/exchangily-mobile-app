@@ -11,6 +11,7 @@ import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
+import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -24,28 +25,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:pagination_widget/pagination_widget.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'lightning_remit_transfer_history_model.dart';
+
 class LightningRemitViewmodel extends FutureViewModel {
   final log = getLogger('LightningRemitViewmodel');
 
   final amountController = TextEditingController();
   final addressController = TextEditingController();
-  ApiService? apiService = locator<ApiService>();
-  NavigationService? navigationService = locator<NavigationService>();
-  TokenInfoDatabaseService? tokenListDatabaseService =
+  ApiService apiService = locator<ApiService>();
+  NavigationService navigationService = locator<NavigationService>();
+  TokenInfoDatabaseService tokenListDatabaseService =
       locator<TokenInfoDatabaseService>();
-  SharedService? sharedService = locator<SharedService>();
-  DialogService? dialogService = locator<DialogService>();
-  LocalStorageService? storageService = locator<LocalStorageService>();
-  TransactionHistoryDatabaseService? transactionHistoryDatabaseService =
+  SharedService sharedService = locator<SharedService>();
+  DialogService dialogService = locator<DialogService>();
+  LocalStorageService storageService = locator<LocalStorageService>();
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-  final CoinService? coinService = locator<CoinService>();
-  WalletService? walletService = locator<WalletService>();
+  final CoinService coinService = locator<CoinService>();
+  WalletService walletService = locator<WalletService>();
   String? tickerName = '';
   BuildContext? context;
   double? quantity = 0.0;
@@ -58,17 +62,17 @@ class LightningRemitViewmodel extends FutureViewModel {
   var walletBalancesBody;
   bool isShowBottomSheet = false;
   List<ExchangeBalanceModel> exchangeBalances = [];
-
-  List<TransactionHistory> transactionHistory = [];
-
-  String? fabAddress = '';
+  PaginationModel paginationModel = PaginationModel();
+  LightningRemitHistoryModel transferHistory = LightningRemitHistoryModel();
+  ConfigService configService = locator<ConfigService>();
+  String fabAddress = '';
 
 /*----------------------------------------------------------------------
                     Default Future to Run
 ----------------------------------------------------------------------*/
   @override
   Future futureToRun() async {
-    return await apiService!.getAssetsBalance("");
+    return await apiService.getAssetsBalance("");
   }
 
 /*----------------------------------------------------------------------
@@ -77,8 +81,12 @@ class LightningRemitViewmodel extends FutureViewModel {
 
   init() async {
     sharedService!.context = context;
-    fabAddress = await walletService!
-        .getAddressFromCoreWalletDatabaseByTickerName('FAB');
+    await setFabAddress();
+  }
+
+  setFabAddress() async {
+    fabAddress = (await walletService
+        .getAddressFromCoreWalletDatabaseByTickerName('FAB'))!;
   }
 
 /*----------------------------------------------------------------------
@@ -127,20 +135,33 @@ class LightningRemitViewmodel extends FutureViewModel {
     setBusy(false);
   }
 
+  getPaginationData(int pageNumber) async {
+    setBusy(true);
+    paginationModel.pageNumber = pageNumber;
+    await geTransactionstHistory();
+    setBusy(false);
+  }
+
   // get all LightningRemit transactions
 
-  getLightningRemitTransactionHistory() async {
+  geTransactionstHistory() async {
     setBusy(true);
-    transactionHistory = [];
-
-    await apiService!.getLightningRemitHistoryEvents(fabAddress).then((res) {
-      res.forEach((tx) {
-        transactionHistory.add(tx);
-      });
-      log.w('LightningRemi txs ${transactionHistory.length}');
-      transactionHistory.sort(
-          (a, b) => DateTime.parse(b.date!).compareTo(DateTime.parse(a.date!)));
+    transferHistory.history = [];
+    await setFabAddress();
+    String url =
+        '${configService.getKanbanBaseUrl()}v2/$lightningRemitTxHHistoryApiRoute';
+    await apiService
+        .getLightningRemitHistoryEvents(url, fabAddress,
+            pageNumber: paginationModel.pageNumber,
+            pageSize: paginationModel.pageSize)
+        .then((th) {
+      transferHistory = th;
     });
+    paginationModel.setTotalPages(transferHistory.totalCount);
+    log.w('LightningRemit count ${transferHistory.totalCount}');
+    transferHistory.history.sort((a, b) => DateTime.parse(b.date.toString())
+        .compareTo(DateTime.parse(a.date.toString())));
+
     setBusy(false);
   }
 
@@ -153,11 +174,6 @@ class LightningRemitViewmodel extends FutureViewModel {
       await launch(exchangilyExplorerUrl);
     }
   }
-
-/*----------------------------------------------------------------------
-                    Pay order
-----------------------------------------------------------------------*/
-  Future payOrder() async {}
 
 /*----------------------------------------------------------------------
                     Change bottom sheet hide/show status
@@ -553,7 +569,8 @@ class LightningRemitViewmodel extends FutureViewModel {
                                   backgroundColor:
                                       MaterialStateProperty.all(primaryColor)),
                               child: Text(AppLocalizations.of(context)!.share,
-                                  style: Theme.of(context).textTheme.titleLarge),
+                                  style:
+                                      Theme.of(context).textTheme.titleLarge),
                               onPressed: () {
                                 String receiveFileName =
                                     'Lightning-remit-kanban-receive-address.png';
@@ -712,13 +729,9 @@ class LightningRemitViewmodel extends FutureViewModel {
         .then((res) => addressController.text = res!.text!);
   }
 
-  copyAddress(String? txId) {
+  copyAddress(String? txId, BuildContext context) {
     Clipboard.setData(ClipboardData(text: txId!));
-    showSimpleNotification(
-        Center(
-            child: Text(AppLocalizations.of(context!)!.copiedSuccessfully,
-                style: Theme.of(context!).textTheme.headlineSmall)),
-        position: NotificationPosition.bottom,
-        background: primaryColor);
+    sharedService.sharedSimpleNotification(
+        AppLocalizations.of(context)!.copiedSuccessfully);
   }
 }

@@ -19,6 +19,21 @@ import 'package:hex/hex.dart';
 import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
 import 'package:bs58check/bs58check.dart' as base58;
+
+class StringUtil {
+  static String localDateFromMilliseconds(int milliseconds,
+      {bool removeLast4Chars = false}) {
+    var date =
+        DateTime.fromMillisecondsSinceEpoch(milliseconds * 1000).toLocal();
+    debugPrint('dateFromMilliseconds string ${date.toString().length}');
+    String finalDate = '';
+    removeLast4Chars
+        ? finalDate = date.toString().substring(0, date.toString().length - 4)
+        : finalDate = date.toString();
+    debugPrint('dateFromMilliseconds string ${finalDate.toString()}');
+    return finalDate;
+  }
+}
 /*
 toBitInt(num, [zeroLength]) {
   var numString = num.toString();
