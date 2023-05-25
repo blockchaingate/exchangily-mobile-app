@@ -585,6 +585,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context) {
                   : Container()),
           SliverPersistentHeader(
             pinned: true,
+            floating: true,
             delegate: _SliverAppBarDelegate(
               TabBar(
                 onTap: (int tabIndex) {

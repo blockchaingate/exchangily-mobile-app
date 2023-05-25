@@ -43,7 +43,7 @@ import 'package:exchangilymobileapp/utils/coin_util.dart';
 import "package:hex/hex.dart";
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 
-class SettingsViewmodel extends BaseViewModel {
+class SettingsViewModel extends BaseViewModel {
   bool isVisible = false;
   String? mnemonic = '';
   final log = getLogger('SettingsViewmodel');
@@ -58,8 +58,10 @@ class SettingsViewmodel extends BaseViewModel {
   final LocalStorageService? storageService = locator<LocalStorageService>();
   final NavigationService? navigationService = locator<NavigationService>();
 
-  final WalletDatabaseService? walletDatabaseService = locator<WalletDatabaseService>();
-  final CoreWalletDatabaseService? coreWalletDatabaseService = locator<CoreWalletDatabaseService>();
+  final WalletDatabaseService? walletDatabaseService =
+      locator<WalletDatabaseService>();
+  final CoreWalletDatabaseService? coreWalletDatabaseService =
+      locator<CoreWalletDatabaseService>();
   UserSettingsDatabaseService? userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();
   ConfigService? configService = locator<ConfigService>();

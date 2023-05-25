@@ -117,7 +117,7 @@ Future serviceLocator() async {
   locator.registerFactory(() => WalletDashboardViewModel());
   locator.registerFactory(() => WalletFeaturesViewModel());
   locator.registerFactory(() => SendViewModel());
-  locator.registerFactory(() => SettingsViewmodel());
+  locator.registerFactory(() => SettingsViewModel());
   //locator.registerFactory(() => LanguageScreenState());
   locator.registerFactory(() => WalletSetupViewmodel());
   locator.registerFactory(() => ChooseWalletLanguageScreenState());

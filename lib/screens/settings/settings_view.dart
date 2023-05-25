@@ -29,12 +29,12 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<SettingsViewmodel>.reactive(
+    return ViewModelBuilder<SettingsViewModel>.reactive(
       onViewModelReady: (model) async {
         model.context = context;
         await model.init();
       },
-      viewModelBuilder: () => SettingsViewmodel(),
+      viewModelBuilder: () => SettingsViewModel(),
       builder: (context, model, _) => WillPopScope(
         onWillPop: () async {
           model.onBackButtonPressed();
@@ -61,7 +61,7 @@ class SettingsView extends StatelessWidget {
 }
 
 class SettingsWidget extends StatelessWidget {
-  final SettingsViewmodel? model;
+  final SettingsViewModel? model;
   const SettingsWidget({
     Key? key,
     this.model,
@@ -84,7 +84,7 @@ class SettingsWidget extends StatelessWidget {
 class SettingsContainer extends StatelessWidget {
   const SettingsContainer({Key? key, this.model}) : super(key: key);
 
-  final SettingsViewmodel? model;
+  final SettingsViewModel? model;
 
   @override
   Widget build(BuildContext context) {

@@ -24,6 +24,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pagination_widget/pagination_widget.dart';
 
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -36,7 +37,6 @@ import 'package:overlay_support/overlay_support.dart';
 class TransactionHistoryViewmodel extends FutureViewModel {
   final WalletInfo? walletInfo;
   final String success = 'success';
-  final String bindpay = 'bindpay';
   final String send = 'send';
   final String pending = 'pending';
   final String withdraw = 'withdraw';
@@ -59,7 +59,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
       locator<UserSettingsDatabaseService>();
   final CoreWalletDatabaseService? coreWalletDatabaseService =
       locator<CoreWalletDatabaseService>();
-
+  PaginationModel paginationModel = PaginationModel();
   bool isChinese = false;
   bool isDialogUp = false;
   int? decimalLimit = 6;
@@ -128,7 +128,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
       }
     }
 
-    if (txHistoryFromDb != null || txHistoryFromDb.isNotEmpty) {
+    if (txHistoryFromDb.isNotEmpty) {
       for (var t in txHistoryFromDb) {
         if (t.tag == 'send' &&
             (t.tickerName == tickerName ||
@@ -168,6 +168,14 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     clearLists();
     await futureToRun();
     onData(data);
+  }
+
+  getPaginationTransactions(int pageNumber) async {
+    setBusy(true);
+    paginationModel.pageNumber = pageNumber;
+    await reloadTransactions();
+
+    setBusy(false);
   }
 
   clearLists() {
@@ -253,8 +261,11 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                     title: Center(
                         child: Text(
                       '${AppLocalizations.of(context)!.transactionDetails}....',
-                      style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                          color: primaryColor, fontWeight: FontWeight.w500),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(
+                              color: primaryColor, fontWeight: FontWeight.w500),
                     )),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,

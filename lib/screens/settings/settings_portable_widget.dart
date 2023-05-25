@@ -11,12 +11,12 @@ class SettingsPortableView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<SettingsViewmodel>.reactive(
+    return ViewModelBuilder<SettingsViewModel>.reactive(
       onViewModelReady: (model) async {
         model.context = context;
         await model.init();
       },
-      viewModelBuilder: () => SettingsViewmodel(),
+      viewModelBuilder: () => SettingsViewModel(),
       builder: (context, model, _) => Scaffold(
         // When the keyboard appears, the Flutter widgets resize to avoid that we use resizeToAvoidBottomInset: false
         resizeToAvoidBottomInset: false,
@@ -31,7 +31,7 @@ class SettingsPortableView extends StatelessWidget {
 
 class SettingsPortableContainer extends StatelessWidget {
   const SettingsPortableContainer({Key? key, this.model}) : super(key: key);
-  final SettingsViewmodel? model;
+  final SettingsViewModel? model;
   @override
   Widget build(BuildContext context) {
     return Container(

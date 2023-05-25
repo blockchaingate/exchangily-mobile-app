@@ -2,9 +2,13 @@ name: exchangilymobileapp
 description: Decentralized Wallet App.
 publish_to: none
 
-version: 2.2.94+272
+version: 2.2.95+273
 environment:
   sdk: ">=2.12.0 <3.0.0"
+
+dependency_overrides: 
+  pagination_widget:
+    path: "../exchangily-packages/pagination_widget"
 
 dependencies:
   auto_size_text: ^3.0.0
@@ -29,7 +33,7 @@ dependencies:
   flutter_html: ^3.0.0-alpha.6
   flutter_localizations:
     sdk: flutter
-  flutter_svg: ^0.23.0+1
+  #flutter_svg: ^0.23.0+1
   flutter_swiper_view: ^1.1.8
   font_awesome_flutter: ^10.4.0
   get_it: ^7.6.0
@@ -40,6 +44,11 @@ dependencies:
     git:
       url: https://github.com/blockchaingate/exchangily-packages.git
       path: open_source_packages/keccak
+  kyc:
+     git:
+       url: https://github.com/blockchaingate/exchangily-packages.git
+       path: kyc
+       ref: main
   launch_review: ^3.0.1
   local_auth: ^2.1.6
   logger: ^1.3.0
@@ -47,6 +56,11 @@ dependencies:
   observable_ish: ^4.0.8
   overlay_support: ^2.1.0
   package_info: ^2.0.2
+  pagination_widget:
+     git:
+       url: https://github.com/blockchaingate/exchangily-packages.git
+       path: pagination_widget
+       ref: main
   path: ^1.8.2
   path_provider: ^2.0.15
   protobuf: ^2.1.0

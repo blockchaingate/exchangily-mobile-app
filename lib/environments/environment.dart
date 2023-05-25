@@ -32,6 +32,35 @@ Map devConfig = {
       "gasLimit": 21000,
       "gasLimitToken": 70000
     },
+    "BNB": {
+      "chain": 'testnet',
+      "networkId": 97,
+      "chainId": 97,
+      "rpcEndpoint": 'https://data-seed-prebsc-1-s1.binance.org:8545',
+      "hardfork": 'byzantium',
+      "gasPrice": 10,
+      "gasPriceMax": 100,
+      "gasLimit": 21000,
+      "gasLimitToken": 70000
+    },
+    "MATIC": {
+      "chain": 'testnet',
+      "networkId": 80001,
+      "chainId": 80001,
+      "gasPrice": 5,
+      "gasPriceMax": 100,
+      "gasLimit": 21000,
+      "gasLimitToken": 70000
+    },
+    "POLYGON": {
+      "chain": 'testnet',
+      "networkId": 80001,
+      "chainId": 80001,
+      "gasPrice": 5,
+      "gasPriceMax": 100,
+      "gasLimit": 21000,
+      "gasLimitToken": 70000
+    },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
       "satoshisPerBytes": 100,
@@ -48,7 +77,8 @@ Map devConfig = {
     "BCH": 1,
     "LTC": 1,
     "DOGE": 1,
-    "TRX": 195
+    "TRX": 195,
+    "BNB": 60
   },
   'endpoints': {
     //for local test
@@ -64,7 +94,9 @@ Map devConfig = {
     'doge': 'https://dogetest.fabcoinapi.com/',
     'fab': 'https://fabtest.fabcoinapi.com/',
     'eth': 'https://ethtest.fabcoinapi.com/',
-    'campaign': 'https://test.blockchaingate.com/v2/'
+    'campaign': 'https://test.blockchaingate.com/v2/',
+    'maticm': 'https://rpc-mumbai.matic.today',
+    'bnb': 'https://data-seed-prebsc-1-s1.binance.org:8545'
   },
   "addresses": {
     "smartContract": {
@@ -170,6 +202,35 @@ Map productionConfig = {
       "gasLimit": 21000,
       "gasLimitToken": 70000
     },
+    "BNB": {
+      "chain": 'mainnet',
+      "networkId": 56,
+      "chainId": 56,
+      "rpcEndpoint": 'https://kanbanprod.fabcoinapi.com/redirect/binance',
+      "hardfork": 'petersburg',
+      "gasPrice": 10,
+      "gasPriceMax": 200,
+      "gasLimit": 21000,
+      "gasLimitToken": 200000
+    },
+    "MATICM": {
+      "chain": "mainnet",
+      "networkId": 137,
+      "chainId": 137,
+      "gasPrice": 10,
+      "gasPriceMax": 200,
+      "gasLimit": 21000,
+      "gasLimitToken": 200000
+    },
+    "POLYGON": {
+      "chain": "mainnet",
+      "networkId": 137,
+      "chainId": 137,
+      "gasPrice": 10,
+      "gasPriceMax": 200,
+      "gasLimit": 21000,
+      "gasLimitToken": 200000
+    },
     "FAB": {
       "chain": {
         "name": 'mainnet',
@@ -179,7 +240,7 @@ Map productionConfig = {
       "satoshisPerBytes": 100,
       "bytesPerInput": 152,
       "gasPrice": 40,
-      "gasLimit": 500000
+      "gasLimit": 200000
     },
     "KANBAN": {"chainId": 211, "gasPrice": 50000000, "gasLimit": 20000000}
   },
@@ -190,7 +251,8 @@ Map productionConfig = {
     "BCH": 145,
     "LTC": 2,
     "DOGE": 3,
-    "TRX": 195
+    "TRX": 195,
+    "BNB": 60
   },
   'endpoints': {
     'blockchaingate': 'https://www.blockchaingate.com/v2/',
@@ -203,7 +265,9 @@ Map productionConfig = {
     'fab': 'https://fabprod.fabcoinapi.com/',
     'eth': 'https://ethprod.fabcoinapi.com/',
     'trx': 'https://api.trongrid.io/',
-    'campaign': 'https://api.blockchaingate.com/v2/'
+    'campaign': 'https://api.blockchaingate.com/v2/',
+    'maticm': 'https://kanbanprod.fabcoinapi.com/redirect/polygon',
+    'bnb': 'https://kanbanprod.fabcoinapi.com/redirect/binance'
   },
   'addresses': {
     "smartContract": {
@@ -248,7 +312,12 @@ Map productionConfig = {
       },
       {'name': 'LTC', 'address': 'LaX6sfX8RoHbQHNDEBmdzyBMN9vFa95FXL'},
       {'name': 'DOGE', 'address': 'DLSF9i9weYwpgUrendmuGiHC35HGoHuvR9'},
-      {'name': 'TRX', 'address': 'TGfvRWxddNoWrghwE5zC1JEcbXyMdPATdo'}
+      {'name': 'TRX', 'address': 'TGfvRWxddNoWrghwE5zC1JEcbXyMdPATdo'},
+      {'name': 'BNB', 'address': '0x4983f8634255762A18D854790E6d35A522E2633a'},
+      {
+        'name': 'MATICM',
+        'address': '0x4983f8634255762A18D854790E6d35A522E2633a'
+      }
     ],
     "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },
