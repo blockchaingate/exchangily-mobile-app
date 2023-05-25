@@ -50,7 +50,7 @@ class RedepositViewModel extends FutureViewModel {
   late BuildContext context;
   String? errorMessage = '';
   bool isConfirmButtonPressed = false;
-  final abiUtils = AbiUtils();
+  final abiUtils = AbiUtil();
   final kanbanUtils = KanbanUtils();
 
   @override
@@ -196,7 +196,7 @@ class RedepositViewModel extends FutureViewModel {
           amountInBigIntByApi,
           trimHexPrefix(addressInKanban));
 
-      var signedMess = await CoinUtils().signedMessage(
+      var signedMess = await CoinUtil().signedMessage(
           originalMessage, seed, walletInfo!.tickerName, walletInfo!.tokenType);
 
       var txKanbanHex = await getTxKanbanHex(amountInBigIntByApi, keyPairKanban,

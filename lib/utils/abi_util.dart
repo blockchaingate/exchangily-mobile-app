@@ -26,7 +26,7 @@ import 'dart:typed_data';
 import 'package:exchangilymobileapp/constants/constants.dart';
 // {"success":true,"data":{"transactionID":"3ba8d681cddea5376c9b6ab2963ff243160fa086ec0681a67a3206ad80284d76"}}
 
-class AbiUtils {
+class AbiUtil {
   final log = getLogger('AbiUtils');
   final fabUtils = FabUtils();
 
@@ -51,7 +51,8 @@ class AbiUtils {
 
     // convert decimal to big int
     // then convert big int amount to radix string
-    var amountHex = NumberUtil.decimalToBigInt(locker.amount!).toRadixString(16);
+    var amountHex =
+        NumberUtil.decimalToBigInt(locker.amount!).toRadixString(16);
 
     var abiHex = Constants.unlockAbiSignature +
         fixLength(trimHexPrefix(locker.id!), 64) +

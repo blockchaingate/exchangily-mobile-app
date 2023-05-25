@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
+import 'package:exchangilymobileapp/widgets/wallet/kyc_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -386,7 +387,7 @@ class SettingsContainer extends StatelessWidget {
                       ),
                     ))
                 : Container(),
-
+            // KycWidget(),
             Card(
                 elevation: 5,
                 color: globals.walletCardColor,
@@ -413,7 +414,7 @@ class SettingsContainer extends StatelessWidget {
                             activeTrackColor: white,
                             activeColor: primaryColor,
                             inactiveTrackColor: white,
-                            value: model!.storageService!.isHKServer,
+                            value: model!.storageService.isHKServer,
                             onChanged: (value) {
                               model!.changeBaseAppUrl();
                             }),

@@ -48,6 +48,7 @@ import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
 import 'package:flutter/material.dart';
 import 'package:hex/hex.dart';
+import 'package:kyc/kyc.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web3dart/crypto.dart' as CryptoWeb3;
@@ -70,17 +71,17 @@ class WalletService {
       locator<TokenInfoDatabaseService>();
   ApiService? apiService = locator<ApiService>();
 
-  SharedService? sharedService = locator<SharedService>();
-  final LocalStorageService? storageService = locator<LocalStorageService>();
-  TransactionHistoryDatabaseService? transactionHistoryDatabaseService =
+  SharedService sharedService = locator<SharedService>();
+  final LocalStorageService storageService = locator<LocalStorageService>();
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-  final CoreWalletDatabaseService? coreWalletDatabaseService =
+  final CoreWalletDatabaseService coreWalletDatabaseService =
       locator<CoreWalletDatabaseService>();
-  final WalletDatabaseService? walletDatabaseService =
+  final WalletDatabaseService walletDatabaseService =
       locator<WalletDatabaseService>();
-  final CoinService? coinService = locator<CoinService>();
+  final CoinService coinService = locator<CoinService>();
 
-  final UserSettingsDatabaseService? userSettingsDatabaseService =
+  final UserSettingsDatabaseService userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();
   double? currentTickerUsdValue;
   var txids = [];
@@ -90,8 +91,8 @@ class WalletService {
   Completer<DialogResponse>? _completer;
   final fabUtils = FabUtils();
   final btcUtils = BtcUtils();
-  final abiUtils = AbiUtils();
-  final coinUtils = CoinUtils();
+  final abiUtils = AbiUtil();
+  final coinUtils = CoinUtil();
   final ethUtils = EthUtils();
   final kanbanUtils = KanbanUtils();
   // final ltcUtils = LtcUtils();

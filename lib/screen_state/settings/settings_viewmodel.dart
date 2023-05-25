@@ -29,9 +29,11 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/version_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/utils/wallet/local_kyc_util.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 
 import 'package:flutter/material.dart';
+import 'package:kyc/kyc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
@@ -47,27 +49,27 @@ class SettingsViewModel extends BaseViewModel {
   bool isVisible = false;
   String? mnemonic = '';
   final log = getLogger('SettingsViewmodel');
-  DialogService? dialogService = locator<DialogService>();
-  WalletService? walletService = locator<WalletService>();
-  TransactionHistoryDatabaseService? transactionHistoryDatabaseService =
+  DialogService dialogService = locator<DialogService>();
+  WalletService walletService = locator<WalletService>();
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-  TokenInfoDatabaseService? tokenListDatabaseService =
+  TokenInfoDatabaseService tokenListDatabaseService =
       locator<TokenInfoDatabaseService>();
 
-  SharedService? sharedService = locator<SharedService>();
-  final LocalStorageService? storageService = locator<LocalStorageService>();
-  final NavigationService? navigationService = locator<NavigationService>();
+  SharedService sharedService = locator<SharedService>();
+  final LocalStorageService storageService = locator<LocalStorageService>();
+  final NavigationService navigationService = locator<NavigationService>();
 
-  final WalletDatabaseService? walletDatabaseService =
+  final WalletDatabaseService walletDatabaseService =
       locator<WalletDatabaseService>();
-  final CoreWalletDatabaseService? coreWalletDatabaseService =
+  final CoreWalletDatabaseService coreWalletDatabaseService =
       locator<CoreWalletDatabaseService>();
-  UserSettingsDatabaseService? userSettingsDatabaseService =
+  UserSettingsDatabaseService userSettingsDatabaseService =
       locator<UserSettingsDatabaseService>();
-  ConfigService? configService = locator<ConfigService>();
-  final LocalAuthService? authService = locator<LocalAuthService>();
-  final CoinService? coinService = locator<CoinService>();
-  final VersionService? vs = locator<VersionService>();
+  ConfigService configService = locator<ConfigService>();
+  final LocalAuthService authService = locator<LocalAuthService>();
+  final CoinService coinService = locator<CoinService>();
+  final VersionService vs = locator<VersionService>();
   final Map<String, String> languages = {'en': 'English', 'zh': '简体中文'};
   String? selectedLanguage;
   // bool result = false;
@@ -91,25 +93,25 @@ class SettingsViewModel extends BaseViewModel {
   late Map<String, String> versionInfo;
   UserSettings userSettings = UserSettings();
   bool isUserSettingsEmpty = false;
-  final coinUtils = CoinUtils();
+  final coinUtils = CoinUtil();
   bool _isBiometricAuth = false;
   get isBiometricAuth => _isBiometricAuth;
   final t = TextEditingController();
   bool _lockAppNow = false;
   get lockAppNow => _lockAppNow;
   var walletUtil = WalletUtil();
+  bool kycStarted = false;
+  var kycCheckResult = UserDataContent();
   init() async {
     setBusy(true);
 
-    storageService!.isShowCaseView == null
-        ? isShowCaseOnce = false
-        : isShowCaseOnce = storageService!.isShowCaseView;
+    isShowCaseOnce = storageService.isShowCaseView;
 
     getAppVersion();
-    baseServerUrl = configService!.getKanbanBaseUrl();
+    baseServerUrl = configService.getKanbanBaseUrl();
     // Future.delayed(const Duration(seconds: 1), () async {
     // await setLanguageFromDb();
-    selectedLanguage = storageService!.language;
+    selectedLanguage = storageService.language;
     if (selectedLanguage!.isEmpty) {
       selectedLanguage = 'en';
     }
@@ -119,10 +121,24 @@ class SettingsViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+  checkKycStatus() async {
+    setBusyForObject(kycStarted, true);
+    var result = await LocalKycUtil.checkKycStatus();
+    kycStarted = result['success'];
+    if (kycStarted) {
+      var res = result['data'] ?? {};
+      log.w('checkkycstatus res $res');
+      kycCheckResult = UserDataContent.fromJson(res['data']);
+      // kycCheckResult.kyc!.step = 6;
+      log.w('checkkycstatus kycCheckResult ${kycCheckResult.toJson()}');
+    }
+    setBusyForObject(kycStarted, false);
+  }
+
   setLockAppNowValue() {
     setBusyForObject(lockAppNow, true);
     _lockAppNow = !_lockAppNow;
-    navigationService!.navigateUsingPushReplacementNamed(WalletSetupViewRoute);
+    navigationService.navigateUsingPushReplacementNamed(WalletSetupViewRoute);
     setBusyForObject(lockAppNow, false);
   }
 
@@ -270,8 +286,8 @@ class SettingsViewModel extends BaseViewModel {
 -------------------------------------------------------------------------------------*/
 
   setIsDialogWarningValue(value) async {
-    storageService!.isNoticeDialogDisplay =
-        !storageService!.isNoticeDialogDisplay;
+    storageService.isNoticeDialogDisplay =
+        !storageService.isNoticeDialogDisplay;
     setBusy(true);
     //sharedService.setDialogWarningsStatus(value);
     isDialogDisplay = storageService!.isNoticeDialogDisplay;
@@ -288,7 +304,7 @@ class SettingsViewModel extends BaseViewModel {
   Future deleteWallet() async {
     errorMessage = '';
     // log.i('model busy $busy');
-    await dialogService!
+    await dialogService
         .showVerifyDialog(
       title: AppLocalizations.of(context)!.deleteWalletConfirmationPopup,
       buttonTitle: AppLocalizations.of(context)!.confirm,

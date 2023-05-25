@@ -17,7 +17,7 @@ class WalletUtil {
   final TokenInfoDatabaseService? tokenListDatabaseService =
       locator<TokenInfoDatabaseService>();
 
-  var abiUtils = AbiUtils();
+  var abiUtils = AbiUtil();
   final CoinService? coinService = locator<CoinService>();
   CoreWalletDatabaseService? coreWalletDatabaseService =
       locator<CoreWalletDatabaseService>();

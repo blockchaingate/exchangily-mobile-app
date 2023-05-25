@@ -33,6 +33,12 @@ class StringUtil {
     debugPrint('dateFromMilliseconds string ${finalDate.toString()}');
     return finalDate;
   }
+
+  static String stringToHex(String input) {
+    return input.codeUnits
+        .map((c) => c.toRadixString(16).padLeft(2, '0'))
+        .join();
+  }
 }
 /*
 toBitInt(num, [zeroLength]) {

@@ -77,7 +77,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
   bool isCancelling = false;
 
-  final abiUtils = AbiUtils();
+  final abiUtils = AbiUtil();
   final kanbanUtils = KanbanUtils();
 
   init() async {

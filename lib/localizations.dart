@@ -2087,6 +2087,16 @@ class AppLocalizations {
     return Intl.message('Privacy Policy',
         name: 'privacyPolicy', desc: 'privacyPolicy');
   }
+
+  String get checkKycStatus {
+    return Intl.message('Check Kyc Status',
+        name: 'checkKycStatus', desc: 'checkKycStatus');
+  }
+
+  String get startKycProcess {
+    return Intl.message('Start Kyc Process',
+        name: 'startKycProcess', desc: 'startKycProcess');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

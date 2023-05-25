@@ -91,7 +91,7 @@ class SendViewModel extends BaseViewModel {
   String? specialTickerName = '';
 
   String? tokenType = '';
-  final coinUtils = CoinUtils();
+  final coinUtils = CoinUtil();
   final fabUtils = FabUtils();
   final erc20Util = Erc20Util();
   int? decimalLimit = 8;

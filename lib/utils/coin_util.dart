@@ -20,6 +20,7 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
     as tron_address_util;
 import 'package:flutter/widgets.dart';
@@ -37,15 +38,81 @@ import '../environments/environment.dart';
 import '../utils/string_util.dart';
 import 'varuint.dart';
 import 'wallet_coin_address_utils/doge_util.dart';
+import 'package:web3dart/crypto.dart' as web3_dart;
 
 final ECDomainParameters _params = ECCurve_secp256k1();
 final BigInt _halfCurveOrder = _params.n >> 1;
 
-class CoinUtils {
+class CoinUtil {
   final log = getLogger('coin_util');
   final fabUtils = FabUtils();
   final btcUtils = BtcUtils();
   final ethUtils = EthUtils();
+
+  hashKanbanMessage(String hexMessage) {
+    List<int> messagePrefix = utf8.encode(Constants.KanbanMessagePrefix);
+    log.w('hashKanbanMessage prefix=== $messagePrefix');
+
+    var messageHexToBytes = web3_dart.hexToBytes(hexMessage);
+    debugPrint('messageHexToBytes $messageHexToBytes');
+    var messageLengthToAscii =
+        ascii.encode(messageHexToBytes.length.toString());
+    var messageBuffer = Uint8List(messageHexToBytes.length);
+
+    int preamble = messagePrefix.length +
+        messageHexToBytes.length +
+        messageLengthToAscii.length;
+    Uint8List preambleBuffer = Uint8List(preamble);
+
+    preambleBuffer.setRange(
+        0,
+        messagePrefix.length + messageLengthToAscii.length,
+        messagePrefix + messageLengthToAscii);
+
+    int bufferStart = messagePrefix.length;
+    int bufferEnd = preamble;
+
+    preambleBuffer.setRange(bufferStart + messageLengthToAscii.length,
+        bufferEnd, messageHexToBytes);
+
+    log.w('hashKanbanMessage buffer $preambleBuffer');
+    return web3_dart.keccak256(preambleBuffer);
+  }
+
+  Future<Map<String, String>> signHashKanbanMessage(
+      Uint8List seed, Uint8List hash,
+      {isMsgSignatureType = false}) async {
+    var network = environment["chains"]["BTC"]["network"];
+
+    final root2 = bip_32.BIP32.fromSeed(
+        seed,
+        bip_32.NetworkType(
+            wif: network.wif,
+            bip32: bip_32.Bip32Type(
+                public: network.bip32.public, private: network.bip32.private)));
+// 1150 = fab coin type
+    var bitCoinChild = root2.derivePath("m/44'/${1150}'/0'/0/0");
+    var privateKey = bitCoinChild.privateKey;
+
+    var signature = signMessageWithPrivateKey(hash, privateKey!);
+
+    debugPrint('signature.v=======${signature.v}');
+
+    final chainIdV = signature.v + 27;
+    debugPrint('chainIdV=$chainIdV');
+    signature = web3_dart.MsgSignature(signature.r, signature.s, chainIdV);
+    log.w('signature ${signature.toString()}');
+    final r = _padTo32(NumberUtil.encodeBigIntV1(signature.r));
+    final s = _padTo32(NumberUtil.encodeBigIntV1(signature.s));
+    final v = NumberUtil.encodeBigIntV1(BigInt.from(signature.v));
+    final hexr = web3_dart.bytesToHex(r.toList(), include0x: true);
+    final hexs = web3_dart.bytesToHex(s.toList(), include0x: true);
+    final hexv = web3_dart.bytesToHex(v, include0x: true);
+    var rsv = {"r": hexr, "s": hexs, "v": hexv};
+
+    return rsv;
+  }
+
 /*----------------------------------------------------------------------
                 Sign deposit TRX tx
 --------------r--------------------------------------------------------*/
@@ -89,7 +156,8 @@ class CoinUtils {
     debugPrint(
         'hashedOriginalMessageWithPrefix ${crypto_web3.bytesToHex(hashedOriginalMessageWithPrefix)}');
 
-    var signature = sign(hashedOriginalMessageWithPrefix, privateKey);
+    var signature =
+        signMessageWithPrivateKey(hashedOriginalMessageWithPrefix, privateKey);
 
     debugPrint('signature v ${signature.v}');
 
@@ -117,7 +185,7 @@ class CoinUtils {
   ) {
     debugPrint('sign trx');
 
-    var signature = sign(hash, privateKey);
+    var signature = signMessageWithPrivateKey(hash, privateKey);
 
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
     // be aware that signature.v already is recovery + 27
@@ -181,7 +249,8 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 }
 */
 
-  crypto_web3.MsgSignature sign(Uint8List messageHash, Uint8List privateKey) {
+  crypto_web3.MsgSignature signMessageWithPrivateKey(
+      Uint8List messageHash, Uint8List privateKey) {
     final digest = SHA256Digest();
     final signer = ECDSASigner(null, HMac(digest, 64));
     final key = ECPrivateKey(crypto_web3.bytesToInt(privateKey), _params);
@@ -309,7 +378,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     debugPrint(network.toString());
     debugPrint('messageHash=');
     debugPrint(messageHash.toString());
-    var signature = sign(messageHash, privateKey);
+    var signature = signMessageWithPrivateKey(messageHash, privateKey);
 
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
     // be aware that signature.v already is recovery + 27
@@ -348,7 +417,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     debugPrint(network);
     debugPrint('messageHash=');
     debugPrint(messageHash.toString());
-    var signature = sign(messageHash, privateKey);
+    var signature = signMessageWithPrivateKey(messageHash, privateKey);
 
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
     // be aware that signature.v already is recovery + 27
@@ -389,7 +458,8 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 
     //final signature = await credential.signToSignature(concat, chainId: chainId);
 
-    var signature = sign(crypto_web3.keccak256(concat), privateKey);
+    var signature =
+        signMessageWithPrivateKey(crypto_web3.keccak256(concat), privateKey);
 
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
     // be aware that signature.v already is recovery + 27

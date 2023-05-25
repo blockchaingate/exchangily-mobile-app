@@ -59,7 +59,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   var res;
   Decimal amount = Constants.decimalZero;
   String feeUnit = '';
-  final coinUtils = CoinUtils();
+  final coinUtils = CoinUtil();
   int? decimalLimit = 8;
   Decimal chainBalance = Constants.decimalZero;
   String? fabAddress = '';

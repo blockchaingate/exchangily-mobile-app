@@ -80,6 +80,7 @@ class Constants {
 
   static const String EthMessagePrefix = '\u0019Ethereum Signed Message:\n';
   static const String BtcMessagePrefix = '\x18Bitcoin Signed Message:\n';
+  static const String KanbanMessagePrefix = '\u0017Kanban Signed Message:\n';
 
   static const String ISRG_X1 = """-----BEGIN CERTIFICATE-----
 MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw

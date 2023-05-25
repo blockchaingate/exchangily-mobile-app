@@ -37,7 +37,7 @@ class LockerViewModel extends ReactiveViewModel {
   final ExchangeBalanceService _exchangeBalanceService =
       locator<ExchangeBalanceService>();
 
-  var abiUtils = AbiUtils();
+  var abiUtils = AbiUtil();
   var kanbanUtils = KanbanUtils();
 
   List<LockerModel> get lockers => _exchangeBalanceService.lockers;
@@ -84,7 +84,7 @@ class LockerViewModel extends ReactiveViewModel {
   }
 
   unlockCoins(LockerModel selectedLocker) async {
-    var abiUtils = AbiUtils();
+    var abiUtils = AbiUtil();
     var kanbanUtils = KanbanUtils();
 
     var res = await _dialogService.showDialog(

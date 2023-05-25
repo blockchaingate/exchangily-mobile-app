@@ -35,7 +35,8 @@ Future generateTrxTransactionContract(
   int? decimal = 0;
 
   String? contractAddress = '';
-  final TokenInfoDatabaseService tokenListDatabaseService = locator<TokenInfoDatabaseService>();
+  final TokenInfoDatabaseService tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
   final ApiService apiService = locator<ApiService>();
   List<int> fromAddress = bs58check.decode(fromAddr);
 
@@ -56,7 +57,8 @@ Future generateTrxTransactionContract(
     // get trx-usdt contract address
     contractAddress = environment["addresses"]["smartContract"][tickerName];
     if (contractAddress == null) {
-      await tokenListDatabaseService.getByTickerName(tickerName)
+      await tokenListDatabaseService
+          .getByTickerName(tickerName)
           .then((token) async {
         if (token != null) {
           contractAddress = token.contract;
@@ -255,7 +257,7 @@ _generateTrxRawTransaction(
 
   // CryptoWeb3.MsgSignature
   var signature = //CryptoWeb3.sign(hashedRawTxBuffer.bytes, privateKey);
-      CoinUtils().signTrxTx(hashedRawTxBuffer.bytes as Uint8List, privateKey);
+      CoinUtil().signTrxTx(hashedRawTxBuffer.bytes as Uint8List, privateKey);
   //signTrxTx(keyPair, digest1.bytes);
   // var rsvInList = constructTrxSigntureList(signature);
   // fill transaction object

@@ -119,8 +119,8 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
   bool get isOrderbookLoaded => _isOrderbookLoaded;
   PairDecimalConfig singlePairDecimalConfig = PairDecimalConfig();
   Orderbook orderbook = Orderbook();
-  final coinUtils = CoinUtils();
-  final abiUtils = AbiUtils();
+  final coinUtils = CoinUtil();
+  final abiUtils = AbiUtil();
 
   final kanbanUtils = KanbanUtils();
   double gasAmount = 0.0;
