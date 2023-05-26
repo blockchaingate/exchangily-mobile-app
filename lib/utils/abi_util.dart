@@ -271,7 +271,7 @@ class AbiUtil {
   }
 
   Future signAbiHexWithPrivateKey(String abiHex, String privateKey,
-      String coinPoolAddress, int? nonce, int? gasPrice, int? gasLimit) async {
+      String coinPoolAddress, int nonce, int gasPrice, int gasLimit) async {
     var chainId = environment["chains"]["KANBAN"]["chainId"];
     //var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
 
@@ -283,10 +283,10 @@ class AbiUtil {
 
     var transaction = Transaction(
         to: EthereumAddress.fromHex(coinPoolAddress),
-        gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.wei, gasPrice),
+        gasPrice: EtherAmount.fromInt(EtherUnit.wei, gasPrice),
         maxGas: gasLimit,
         nonce: nonce,
-        value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
+        value: EtherAmount.fromInt(EtherUnit.wei, 0),
         data: HEX.decode(abiHex) as Uint8List?);
     final innerSignature = chainId == null
         ? null
@@ -295,8 +295,7 @@ class AbiUtil {
     var transactionList = _encodeToRlp(transaction, innerSignature);
     final encoded = uint8ListFromList(rlp.encode(transactionList));
 
-    final signature =
-        await credentials.signToSignature(encoded, chainId: chainId);
+    final signature = credentials.signToEcSignature(encoded, chainId: chainId);
 
     var encodeList =
         uint8ListFromList(rlp.encode(_encodeToRlp(transaction, signature)));

@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -112,8 +113,9 @@ class WalletFeaturesView extends StatelessWidget {
                             child: Row(
                               children: <Widget>[
                                 Text(model.specialTicker!,
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium),
                                 const Icon(
                                   Icons.arrow_forward,
                                   size: 17,
@@ -247,7 +249,8 @@ class WalletFeaturesView extends StatelessWidget {
                                 padding: const EdgeInsets.only(left: 4.0),
                                 child: Text(
                                   model.features[6].name,
-                                  style: Theme.of(context).textTheme.titleMedium,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
                                 ),
                               )
                             ],
@@ -261,7 +264,23 @@ class WalletFeaturesView extends StatelessWidget {
             ),
           ],
         ),
-        // bottomNavigationBar: BottomNavBar(count: 0),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.smartContractAddress,
+              style: headText5.copyWith(color: primaryColor),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Text(
+                model.smartContractAddress,
+                style: headText6,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

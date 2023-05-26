@@ -275,8 +275,8 @@ class RedepositViewModel extends FutureViewModel {
         txHash, amountInLink, addressInKanban!, signedMess,
         chain: chainType, isSpecialDeposit: isSpecial);
     // abiUtils.getAmountFromDepositAbiHex(abiHex);
-    var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
-    var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
+    int kanbanPrice = int.parse(kanbanGasPriceTextController.text);
+    int kanbanGasLimit = int.parse(kanbanGasLimitTextController.text);
 
     var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,

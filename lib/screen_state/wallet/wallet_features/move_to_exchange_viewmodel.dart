@@ -277,12 +277,15 @@ class MoveToExchangeViewModel extends BaseViewModel {
         environment["chains"]["KANBAN"]["gasLimit"].toString();
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
-    var kanbanTransFeeDouble = (Decimal.parse(kanbanPrice.toString()) *
-        Decimal.parse(kanbanGasLimit.toString()) /
-        Decimal.parse('1e18'));
-    // -----------------------------------burayi ac ----------------------------------------
-    // kanbanTransFee = kanbanTransFeeDouble;
-    kanbanTransFee = Decimal.one;
+    if (kanbanGasLimit != null && kanbanPrice != null) {
+      var kanbanPriceBig = BigInt.from(kanbanPrice);
+      var kanbanGasLimitBig = BigInt.from(kanbanGasLimit);
+      var f = NumberUtil.rawStringToDecimal(
+          (kanbanPriceBig * kanbanGasLimitBig).toString());
+      kanbanTransFee = f;
+      //  kanbanTransFee = kanbanTransFeeDouble;
+      log.w('fee $kanbanPrice $kanbanGasLimit $kanbanTransFee');
+    }
   }
 
 /*---------------------------------------------------
@@ -324,7 +327,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
       return;
     }
     if (gasAmount == Constants.decimalZero ||
-        gasAmount < kanbanTransFee ||
         transFee == Constants.decimalZero) {
       sharedService!.sharedSimpleNotification(
           AppLocalizations.of(context)!.notice,
@@ -668,7 +670,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     if (to == null || amount <= Constants.decimalZero) {
       transFee = Constants.decimalZero;
-      kanbanTransFee = Constants.decimalZero;
+      // kanbanTransFee = Constants.decimalZero;
       setBusy(false);
       return;
     }

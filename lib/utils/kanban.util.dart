@@ -66,7 +66,7 @@ class KanbanUtils {
     return double.parse(fab);
   }
 
-  Future<int?> getNonce(String address) async {
+  Future<int> getNonce(String address) async {
     ConfigService configService = locator<ConfigService>();
     var url = configService.getKanbanBaseUrl()! +
         kanbanApiRoute +
@@ -80,7 +80,7 @@ class KanbanUtils {
     return json["transactionCount"];
   }
 
-  Future<Map<String, dynamic>?> submitDeposit(
+  Future<Map<String, dynamic>> submitDeposit(
       String? rawTransaction, String rawKanbanTransaction) async {
     ConfigService configService = locator<ConfigService>();
     var url = configService.getKanbanBaseUrl()! + submitDepositApiRoute;
@@ -104,7 +104,7 @@ class KanbanUtils {
       var response = await client.post(Uri.parse(url), body: body);
       debugPrint("Kanban_util submitDeposit response body:");
       debugPrint(response.body.toString());
-      Map<String, dynamic>? res = jsonDecode(response.body);
+      Map<String, dynamic> res = jsonDecode(response.body);
       return res;
     } catch (err) {
       debugPrint('Catch submitDeposit in kanban util $err');

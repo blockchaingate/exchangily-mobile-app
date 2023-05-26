@@ -14,6 +14,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aukfa_version_checker/aukfa_version_checker.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
@@ -67,12 +68,12 @@ class WalletDashboardViewModel extends BaseViewModel {
       locator<DecimalConfigDatabaseService>();
   ApiService? apiService = locator<ApiService>();
 
-  TokenInfoDatabaseService? tokenListDatabaseService =
+  TokenInfoDatabaseService tokenListDatabaseService =
       locator<TokenInfoDatabaseService>();
   CoreWalletDatabaseService? coreWalletDatabaseService =
       locator<CoreWalletDatabaseService>();
-  LocalStorageService? storageService = locator<LocalStorageService>();
-  final DialogService? dialogService = locator<DialogService>();
+  LocalStorageService storageService = locator<LocalStorageService>();
+  final DialogService dialogService = locator<DialogService>();
   //final userDatabaseService = locator<UserSettingsDatabaseService>();
   final CoinService? coinService = locator<CoinService>();
 
@@ -147,7 +148,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   List<WalletBalance> ethWalletTokens = [];
   List<WalletBalance> trxWalletTokens = [];
   List<WalletBalance> bnbWalletTokens = [];
-
+  final versionChecker = VersionChecker();
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -157,7 +158,9 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     sharedService.context = context;
     //currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
-
+    if (storageService.tokenListDBUpdateTime.isEmpty) {
+      await walletService.updateTokenListDb();
+    }
     await refreshBalancesV2().then((value) async {
       for (var i = 0; i < value!.length; i++) {
         try {
@@ -180,20 +183,18 @@ class WalletDashboardViewModel extends BaseViewModel {
     await getBalanceForSelectedCustomTokens();
     setBusy(false);
 
-    //   try {
-    //   await versionChecker
-    //       .check(
-    //     _context!,
-    //     //test: true, testVersion: "2.3.103"
-    //   )
-    //       .timeout(const Duration(seconds: 2), onTimeout: () {
-    //     debugPrint('time out version checker after waiting for 2 seconds');
-
-    //     setBusy(false);
-    //   });
-    // } catch (err) {
-    //   debugPrint('version checker catch $err');
-    // }
+    try {
+      await versionChecker
+          .check(
+        context!,
+        // test: true, testVersion: "2.2.103"
+      )
+          .timeout(const Duration(seconds: 2), onTimeout: () {
+        debugPrint('time out version checker after waiting for 2 seconds');
+      });
+    } catch (err) {
+      debugPrint('version checker catch $err');
+    }
     for (var chain in chainList) {
       if (chain == 'FAB') {
         fabWalletTokens = getSortedWalletList(chain);

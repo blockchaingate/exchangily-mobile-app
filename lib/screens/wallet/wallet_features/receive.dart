@@ -15,11 +15,13 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -121,9 +123,11 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                       }),
                 ),
               )),
+          UIHelper.verticalSpaceSmall,
           Container(
             padding: const EdgeInsets.all(10.0),
             child: ElevatedButton(
+              style: generalButtonStyle1,
               child: Text(
                 AppLocalizations.of(context)!.saveAndShareQrCode,
                 style: Theme.of(context)

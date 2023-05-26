@@ -167,9 +167,9 @@ class CoinUtil {
 
     signature = crypto_web3.MsgSignature(signature.r, signature.s, chainIdV);
 
-    final r = _padTo32(crypto_web3.intToBytes(signature.r));
-    final s = _padTo32(crypto_web3.intToBytes(signature.s));
-    var v = crypto_web3.intToBytes(BigInt.from(signature.v));
+    final r = _padTo32(NumberUtil.encodeBigIntV1(signature.r));
+    final s = _padTo32(NumberUtil.encodeBigIntV1(signature.s));
+    var v = NumberUtil.encodeBigIntV1(BigInt.from(signature.v));
 
     var rsv = r + s + v;
     debugPrint('rsv  $rsv');
@@ -201,9 +201,9 @@ class CoinUtil {
     //debugPrint('chainIdVchainIdVchainIdV==' + chainIdV.toString());
     //debugPrint('signature.v====');
     //debugPrint(signature.v);
-    final r = _padTo32(crypto_web3.intToBytes(signature.r));
-    final s = _padTo32(crypto_web3.intToBytes(signature.s));
-    var v = crypto_web3.intToBytes(BigInt.from(signature.v));
+    final r = _padTo32(NumberUtil.encodeBigIntV1(signature.r));
+    final s = _padTo32(NumberUtil.encodeBigIntV1(signature.s));
+    var v = NumberUtil.encodeBigIntV1(BigInt.from(signature.v));
 
     if (signature.v == 0) {
       v = Uint8List.fromList([0].toList());
@@ -253,7 +253,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       Uint8List messageHash, Uint8List privateKey) {
     final digest = SHA256Digest();
     final signer = ECDSASigner(null, HMac(digest, 64));
-    final key = ECPrivateKey(crypto_web3.bytesToInt(privateKey), _params);
+    final key = ECPrivateKey(NumberUtil.decodeBigIntV1(privateKey), _params);
 
     signer.init(true, PrivateKeyParameter(key));
     var sig = signer.generateSignature(messageHash) as ECSignature;
@@ -275,8 +275,8 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       sig = ECSignature(sig.r, canonicalisedS);
     }
 
-    final publicKey =
-        crypto_web3.bytesToInt(crypto_web3.privateKeyBytesToPublic(privateKey));
+    final publicKey = NumberUtil.decodeBigIntV1(
+        crypto_web3.privateKeyBytesToPublic(privateKey));
     debugPrint("publicKey: $publicKey");
 
     //Implementation for calculating v naively taken from there, I don't understand
@@ -315,7 +315,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     final R = _decompressKey(x, (recId & 1) == 1, params.curve)!;
     if (!(R * n)!.isInfinity) return null;
 
-    final e = crypto_web3.bytesToInt(msg);
+    final e = NumberUtil.decodeBigIntV1(msg);
 
     final eInv = (BigInt.zero - e) % n;
     final rInv = sig.r.modInverse(n);
@@ -325,7 +325,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     final q = ((params.G * eInvrInv)! + (R * srInv))!;
 
     final bytes = q.getEncoded(false);
-    return crypto_web3.bytesToInt(bytes.sublist(1));
+    return NumberUtil.decodeBigIntV1(bytes.sublist(1));
   }
 
   Uint8List uint8ListFromList(List<int> data) {
@@ -337,7 +337,7 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
   ECPoint? _decompressKey(BigInt xBN, bool yBit, ECCurve c) {
     List<int> x9IntegerToBytes(BigInt s, int qLength) {
       //https://github.com/bcgit/bc-java/blob/master/core/src/main/java/org/bouncycastle/asn1/x9/X9IntegerConverter.java#L45
-      final bytes = crypto_web3.intToBytes(s);
+      final bytes = NumberUtil.encodeBigIntV1(s);
 
       if (qLength < bytes.length) {
         return bytes.sublist(0, bytes.length - qLength);
@@ -395,9 +395,9 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     //debugPrint('chainIdVchainIdVchainIdV==' + chainIdV.toString());
     //debugPrint('signature.v====');
     //debugPrint(signature.v);
-    final r = _padTo32(crypto_web3.intToBytes(signature.r));
-    final s = _padTo32(crypto_web3.intToBytes(signature.s));
-    var v = crypto_web3.intToBytes(BigInt.from(signature.v));
+    final r = _padTo32(NumberUtil.encodeBigIntV1(signature.r));
+    final s = _padTo32(NumberUtil.encodeBigIntV1(signature.s));
+    var v = NumberUtil.encodeBigIntV1(BigInt.from(signature.v));
 
     if (signature.v == 0) {
       v = Uint8List.fromList([0].toList());
@@ -434,9 +434,9 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     //debugPrint('chainIdVchainIdVchainIdV==' + chainIdV.toString());
     //debugPrint('signature.v====');
     //debugPrint(signature.v);
-    final r = _padTo32(crypto_web3.intToBytes(signature.r));
-    final s = _padTo32(crypto_web3.intToBytes(signature.s));
-    var v = crypto_web3.intToBytes(BigInt.from(signature.v));
+    final r = _padTo32(NumberUtil.encodeBigIntV1(signature.r));
+    final s = _padTo32(NumberUtil.encodeBigIntV1(signature.s));
+    var v = NumberUtil.encodeBigIntV1(BigInt.from(signature.v));
 
     if (signature.v == 0) {
       v = Uint8List.fromList([0].toList());
@@ -475,9 +475,9 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
     debugPrint('chainIdV=$chainIdV');
     signature = crypto_web3.MsgSignature(signature.r, signature.s, chainIdV);
 
-    final r = _padTo32(crypto_web3.intToBytes(signature.r));
-    final s = _padTo32(crypto_web3.intToBytes(signature.s));
-    final v = crypto_web3.intToBytes(BigInt.from(signature.v));
+    final r = _padTo32(NumberUtil.encodeBigIntV1(signature.r));
+    final s = _padTo32(NumberUtil.encodeBigIntV1(signature.s));
+    final v = NumberUtil.encodeBigIntV1(BigInt.from(signature.v));
 
     // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L63
     return uint8ListFromList(r + s + v);

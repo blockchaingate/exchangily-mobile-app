@@ -314,11 +314,11 @@ class WalletService {
     await apiService!
         .getTokenListUpdates()
         .then((newTokenListFromTokenUpdateApi) async {
-      if (newTokenListFromTokenUpdateApi!.isNotEmpty) {
+      if (newTokenListFromTokenUpdateApi.isNotEmpty) {
         if (existingTokensInTokenDatabase.length !=
                 newTokenListFromTokenUpdateApi.length ||
             isMoreThan24HoursSinceLastUpdate(
-                storageService!.tokenListDBUpdateTime,
+                storageService.tokenListDBUpdateTime,
                 DateTime.now().toLocal().toIso8601String())) {
           await tokenListDatabaseService!.deleteDb().whenComplete(() => log.e(
               'token list database cleared before inserting updated token data from api'));
@@ -1367,8 +1367,8 @@ class WalletService {
       required options}) async {
     log.i(
         'depositTron -- amount $amount -- istrxusdt $isTrxUsdt -- isBroadcast $isBroadcast');
-    int? kanbanGasPrice = options['kanbanGasPrice'];
-    int? kanbanGasLimit = options['kanbanGasLimit'];
+    int kanbanGasPrice = options['kanbanGasPrice'];
+    int kanbanGasLimit = options['kanbanGasLimit'];
 
     debugPrint('kanbanGasPrice $kanbanGasPrice');
     debugPrint('kanbanGasLimit $kanbanGasLimit');
@@ -1404,7 +1404,7 @@ class WalletService {
 // code  from depositDo
 
     var coinType =
-        (await coinService!.getCoinTypeByTickerName(walletInfo.tickerName))!;
+        (await coinService.getCoinTypeByTickerName(walletInfo.tickerName))!;
     log.i('coin type $coinType');
 
     var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
@@ -1534,7 +1534,7 @@ class WalletService {
       }
     }
 
-    var coinType = await coinService!.getCoinTypeByTickerName(coinName);
+    var coinType = await coinService.getCoinTypeByTickerName(coinName);
     // if (tokenType == 'POLYGON') {
     //   coinType = await coinService.getCoinTypeByTickerName('MATIC');
     // }
@@ -1570,7 +1570,7 @@ class WalletService {
       if (coinName == specialTokenTicker) isSpecial = true;
     }
     if (isSpecial) {
-      specialCoinType = await coinService!
+      specialCoinType = await coinService
           .getCoinTypeByTickerName(coinName!.substring(0, coinName.length - 1));
     }
 
@@ -1593,7 +1593,7 @@ class WalletService {
         kanbanGasPrice,
         kanbanGasLimit);
 
-    var res = (await kanbanUtils.submitDeposit(txHex, txKanbanHex))!;
+    var res = await kanbanUtils.submitDeposit(txHex, txKanbanHex);
 
     res['txids'] = txids;
     return res;

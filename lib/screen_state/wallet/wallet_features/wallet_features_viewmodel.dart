@@ -41,8 +41,9 @@ class WalletFeaturesViewModel extends BaseViewModel {
   SharedService? sharedService = locator<SharedService>();
   NavigationService? navigationService = locator<NavigationService>();
   DialogService? dialogService = locator<DialogService>();
-  final TokenInfoDatabaseService? tokenListDatabaseService = locator<TokenInfoDatabaseService>();
-
+  final TokenInfoDatabaseService? tokenListDatabaseService =
+      locator<TokenInfoDatabaseService>();
+  final coinService = locator<CoinService>();
   final double elevation = 5;
   double containerWidth = 150;
   double containerHeight = 115;
@@ -55,7 +56,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
   int? decimalLimit = 8;
   double? unconfirmedBalance = 0.0;
   var walletUtil = WalletUtil();
-
+  String smartContractAddress = '';
   init() async {
     getWalletFeatures();
     getErrDeposit();
@@ -65,9 +66,16 @@ class WalletFeaturesViewModel extends BaseViewModel {
     refreshBalance();
     checkIfCoinIsFavorite();
     setBusy(true);
-    await CoinService()
-        .getSingleTokenData(walletInfo!.tickerName)
-        .then((token) => decimalLimit = token!.decimal);
+
+    if (smartContractAddress.isEmpty) {
+      await coinService.getSingleTokenData(walletInfo!.tickerName!).then((res) {
+        decimalLimit = res!.decimal!;
+        smartContractAddress = res.contract!;
+        log.w('decimal limit $decimalLimit');
+        log.w('smart contract address $smartContractAddress');
+      });
+    }
+
     if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     setBusy(false);
   }

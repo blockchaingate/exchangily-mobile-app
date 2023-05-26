@@ -2,7 +2,7 @@ name: exchangilymobileapp
 description: Decentralized Wallet App.
 publish_to: none
 
-version: 2.2.96+277
+version: 2.2.97+278
 environment:
   sdk: ">=2.12.0 <3.0.0"
 
@@ -11,6 +11,12 @@ dependency_overrides:
     path: "../exchangily-packages/pagination_widget"
 
 dependencies:
+
+  aukfa_version_checker:
+    git:
+      url: https://github.com/blockchaingate/exchangily-packages.git
+      path: aukfa_version_checker
+      ref: main
   auto_size_text: ^3.0.0
   bitbox:
     git:
