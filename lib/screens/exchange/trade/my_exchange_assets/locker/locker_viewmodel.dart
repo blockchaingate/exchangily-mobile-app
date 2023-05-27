@@ -102,8 +102,8 @@ class LockerViewModel extends ReactiveViewModel {
       var keyPairKanban = getExgKeyPair(Uint8List.fromList(seed));
       debugPrint('keyPairKanban $keyPairKanban');
 
-      int? kanbanGasPrice = environment["chains"]["KANBAN"]["gasPrice"];
-      int? kanbanGasLimit = environment["chains"]["KANBAN"]["gasLimit"];
+      int kanbanGasPrice = environment["chains"]["KANBAN"]["gasPrice"];
+      int kanbanGasLimit = environment["chains"]["KANBAN"]["gasLimit"];
 
       var nonce = await kanbanUtils.getNonce(exgAddress);
 
@@ -144,8 +144,8 @@ class LockerViewModel extends ReactiveViewModel {
       var keyPairKanban = getExgKeyPair(Uint8List.fromList(seed));
       debugPrint('keyPairKanban $keyPairKanban');
 
-      int? kanbanGasPrice = environment["chains"]["KANBAN"]["gasPrice"];
-      int? kanbanGasLimit = environment["chains"]["KANBAN"]["gasLimit"];
+      int kanbanGasPrice = environment["chains"]["KANBAN"]["gasPrice"];
+      int kanbanGasLimit = environment["chains"]["KANBAN"]["gasLimit"];
 
       var nonce = await kanbanUtils.getNonce(exgAddress);
 

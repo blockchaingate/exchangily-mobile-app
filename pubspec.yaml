@@ -2,13 +2,13 @@ name: exchangilymobileapp
 description: Decentralized Wallet App.
 publish_to: none
 
-version: 2.2.97+278
+version: 2.2.98+279
 environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependency_overrides: 
-  pagination_widget:
-    path: "../exchangily-packages/pagination_widget"
+  # pagination_widget:
+  #   path: "../exchangily-packages/pagination_widget"
 
 dependencies:
 

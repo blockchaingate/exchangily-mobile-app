@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:stacked/stacked.dart';
@@ -69,7 +70,8 @@ class Redeposit extends StatelessWidget {
                                                 .headlineMedium),
                                         UIHelper.horizontalSpaceSmall,
                                         Text(
-                                          bigNum2Double(redepositItem["amount"])
+                                          NumberUtil.rawStringToDecimal(
+                                                  redepositItem["amount"])
                                               .toString(),
                                           style: Theme.of(context)
                                               .textTheme

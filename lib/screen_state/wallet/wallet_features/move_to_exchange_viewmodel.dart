@@ -358,7 +358,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (!isTrx()) {
       finalAmount = await amountAfterFee();
     }
-    if (amount == Constants.decimalZero || amount.isInteger) {
+    if (amount == Constants.decimalZero) {
       log.e(
           'amount $amount --- final amount with fee: $finalAmount -- wallet bal: ${walletInfo!.availableBalance}');
       sharedService!.alertDialog(AppLocalizations.of(context)!.invalidAmount,
