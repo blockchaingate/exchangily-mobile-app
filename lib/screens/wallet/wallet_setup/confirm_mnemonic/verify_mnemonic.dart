@@ -13,7 +13,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 class VerifyMnemonicWalletView extends StatelessWidget {
   final List<TextEditingController> mnemonicTextController;
@@ -37,7 +37,8 @@ class VerifyMnemonicWalletView extends StatelessWidget {
             children: <Widget>[
               Expanded(
                   child: Text(
-                AppLocalizations.of(context)!.warningImportOrConfirmMnemonic,
+                FlutterI18n.translate(
+                    context, "warningImportOrConfirmMnemonic"),
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineMedium,
               )),
@@ -58,12 +59,11 @@ class VerifyMnemonicWalletView extends StatelessWidget {
     );
   }
 
-  List<Container> _buildTextGrid(int count, controller) =>
+  List<Widget> _buildTextGrid(int count, controller) =>
       List.generate(count, (i) {
         var hintMnemonicWordNumber = i + 1;
         controller.add(TextEditingController());
-        return Container(
-            child: TextField(
+        return TextField(
           inputFormatters: <TextInputFormatter>[
             LowerCaseTextFormatter(),
             FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
@@ -84,7 +84,7 @@ class VerifyMnemonicWalletView extends StatelessWidget {
               borderRadius: BorderRadius.circular(30.0),
             ),
           ),
-        ));
+        );
       });
 }
 

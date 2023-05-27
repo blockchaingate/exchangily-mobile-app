@@ -1,5 +1,5 @@
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import '../shared/globals.dart' as globals;
 
 class LoadingGif extends StatelessWidget {
@@ -20,7 +20,7 @@ class LoadingGif extends StatelessWidget {
         ),
         const SizedBox(height: 3),
         Text(
-          AppLocalizations.of(context)!.loading,
+          FlutterI18n.translate(context, "loading"),
           style: TextStyle(color: globals.primaryColor),
         )
       ],

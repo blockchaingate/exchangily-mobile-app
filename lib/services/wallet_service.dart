@@ -114,13 +114,13 @@ class WalletService {
 
     // get the walletbalancebody from the DB
     var walletBalancesBodyFromStorage;
-    if (storageService!.walletBalancesBody.isNotEmpty) {
+    if (storageService.walletBalancesBody.isNotEmpty) {
       walletBalancesBodyFromStorage =
-          jsonDecode(storageService!.walletBalancesBody);
+          jsonDecode(storageService.walletBalancesBody);
     } else {
-      await walletDatabaseService!.initDb();
-      var fabWallet = await walletDatabaseService!.getWalletBytickerName('FAB');
-      var trxWallet = await walletDatabaseService!.getWalletBytickerName('TRX');
+      await walletDatabaseService.initDb();
+      var fabWallet = await walletDatabaseService.getWalletBytickerName('FAB');
+      var trxWallet = await walletDatabaseService.getWalletBytickerName('TRX');
       if (fabWallet != null && trxWallet != null) {
         walletBalancesBodyFromStorage = {
           "fabAddress": fabWallet.address,
@@ -146,12 +146,12 @@ class WalletService {
       fabAddressFromStorage = walletBalancesBodyFromStorage['fabAddress'];
 
       trxAddressFromStorage = walletBalancesBodyFromStorage['trxAddress'];
-    } else if (await coreWalletDatabaseService!.getWalletBalancesBody() !=
+    } else if (await coreWalletDatabaseService.getWalletBalancesBody() !=
         null) {
-      fabAddressFromCoreWalletDb = (await coreWalletDatabaseService!
-          .getWalletAddressByTickerName('FAB'));
-      trxAddressFromCoreWalletDb = (await coreWalletDatabaseService!
-          .getWalletAddressByTickerName('TRX'));
+      fabAddressFromCoreWalletDb =
+          (await coreWalletDatabaseService.getWalletAddressByTickerName('FAB'));
+      trxAddressFromCoreWalletDb =
+          (await coreWalletDatabaseService.getWalletAddressByTickerName('TRX'));
     }
     log.i(
         'fabAddressFromCreate $fabAddressFromCreate -- fabAddressFromStorage $fabAddressFromStorage -- fabAddressFromCoreWalletDb $fabAddressFromCoreWalletDb');
@@ -177,7 +177,7 @@ class WalletService {
               walletDataFromCreateOfflineWalletV1.walletBalancesBody,
         );
         // store in single core database
-        await coreWalletDatabaseService!.update(walletCoreModel);
+        await coreWalletDatabaseService.update(walletCoreModel);
       } else {
         res["trxAddressCheck"] = false;
       }
@@ -191,12 +191,12 @@ class WalletService {
   Future deleteWallet() async {
     log.w('deleting wallet');
     try {
-      await walletDatabaseService!
+      await walletDatabaseService
           .deleteDb()
           .whenComplete(() => log.e('wallet database deleted!!'))
           .catchError((err) => log.e('wallet database CATCH $err'));
 
-      await transactionHistoryDatabaseService!
+      await transactionHistoryDatabaseService
           .deleteDb()
           .whenComplete(() => log.e('trnasaction history database deleted!!'))
           .catchError((err) => log.e('tx history database CATCH $err'));
@@ -206,7 +206,7 @@ class WalletService {
           .whenComplete(() => log.e('encrypted data deleted!!'))
           .catchError((err) => log.e('delete encrypted CATCH $err'));
 
-      await coreWalletDatabaseService!
+      await coreWalletDatabaseService
           .deleteDb()
           .whenComplete(() => log.e('coreWalletDatabaseService data deleted!!'))
           .catchError((err) => log.e('coreWalletDatabaseService  CATCH $err'));
@@ -216,16 +216,16 @@ class WalletService {
           .whenComplete(() => log.e('Token list database deleted!!'))
           .catchError((err) => log.e('token list database CATCH $err'));
 
-      await userSettingsDatabaseService!
+      await userSettingsDatabaseService
           .deleteDb()
           .whenComplete(() => log.e('User settings database deleted!!'))
           .catchError((err) => log.e('user setting database CATCH $err'));
 
-      storageService!.walletBalancesBody = '';
-      storageService!.isShowCaseView = true;
-      storageService!.clearStorage();
+      storageService.walletBalancesBody = '';
+      storageService.isShowCaseView = true;
+      storageService.clearStorage();
       debugPrint(
-          'Checking has verified key value after clearing local storage : ${storageService!.hasWalletVerified.toString()}');
+          'Checking has verified key value after clearing local storage : ${storageService.hasWalletVerified.toString()}');
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       log.e('before wallet removal, local storage has ${prefs.getKeys()}');
@@ -246,7 +246,7 @@ class WalletService {
       String tickerName) async {
     String? address = '';
 
-    address = (await coreWalletDatabaseService!
+    address = (await coreWalletDatabaseService
         .getWalletAddressByTickerName(tickerName));
 
     return address;
@@ -274,16 +274,16 @@ class WalletService {
 
   initializeTokenListDBUpdateTime() {
     // Get the current value from storage
-    String storedValue = storageService!.tokenListDBUpdateTime;
+    String storedValue = storageService.tokenListDBUpdateTime;
 
     // Check if the stored value is empty or invalid
     if (storedValue.isEmpty) {
       // If it's empty or invalid, set the current time as the initial value
       String currentTime = DateTime.now().toLocal().toIso8601String();
-      storageService!.tokenListDBUpdateTime = currentTime;
+      storageService.tokenListDBUpdateTime = currentTime;
     }
     log.i(
-        'initializeTokenListDBUpdateTime storageService.tokenListDBUpdateTime ${storageService!.tokenListDBUpdateTime}');
+        'initializeTokenListDBUpdateTime storageService.tokenListDBUpdateTime ${storageService.tokenListDBUpdateTime}');
   }
 
   bool isMoreThan24HoursSinceLastUpdate(
@@ -328,7 +328,7 @@ class WalletService {
           for (var singleNewToken in newTokenListFromTokenUpdateApi) {
             await tokenListDatabaseService!.insert(singleNewToken);
           }
-          storageService!.tokenListDBUpdateTime =
+          storageService.tokenListDBUpdateTime =
               DateTime.now().toLocal().toIso8601String();
         } else {
           log.i('storeTokenListInDB -- local token db same length as api\'s ');
@@ -344,13 +344,13 @@ class WalletService {
     bool isValidAmount = true;
     String? thirdPartyTicker = '';
     String? fabAddress =
-        await coreWalletDatabaseService!.getWalletAddressByTickerName('FAB');
+        await coreWalletDatabaseService.getWalletAddressByTickerName('FAB');
     if (chainType == 'BNB' || chainType == "MATICM") {
       thirdPartyTicker = 'ETH';
     } else {
       thirdPartyTicker = chainType;
     }
-    String? thirdPartyAddress = await coreWalletDatabaseService!
+    String? thirdPartyAddress = await coreWalletDatabaseService
         .getWalletAddressByTickerName(thirdPartyTicker!);
     log.w('coinAddress $thirdPartyAddress');
     await apiService!
@@ -774,7 +774,7 @@ class WalletService {
 
           // store in single core database
           try {
-            await coreWalletDatabaseService!.insert(walletCoreModel);
+            await coreWalletDatabaseService.insert(walletCoreModel);
           } catch (err) {
             log.e('WALLET data insertion failed in corewalletDB');
           }
@@ -881,7 +881,7 @@ class WalletService {
                 log.i('Blockchain Txid $blockchainTxid -- timer cancel');
                 t.cancel();
 
-                var storedTx = (await transactionHistoryDatabaseService!
+                var storedTx = (await transactionHistoryDatabaseService
                     .getByKanbanTxId(transaction.kanbanTxId!))!;
                 showSimpleNotification(
                     Row(
@@ -906,7 +906,7 @@ class WalletService {
                     tickerChainTxStatus: 'Complete',
                     quantity: storedTx.quantity,
                     tag: storedTx.tag);
-                transactionHistoryDatabaseService!.update(transactionByTxid);
+                transactionHistoryDatabaseService.update(transactionByTxid);
               }
             }
           });
@@ -943,7 +943,7 @@ class WalletService {
 
         String date = DateTime.now().toString();
 
-        transactionByTxId = (await transactionHistoryDatabaseService!
+        transactionByTxId = (await transactionHistoryDatabaseService
             .getByKanbanTxId(transaction.kanbanTxId!))!;
         showSimpleNotification(
             Row(
@@ -1015,8 +1015,8 @@ class WalletService {
           // await transactionHistoryDatabaseService.update(transactionHistory);
         }
       }
-      await transactionHistoryDatabaseService!.update(transactionHistory);
-      await transactionHistoryDatabaseService!
+      await transactionHistoryDatabaseService.update(transactionHistory);
+      await transactionHistoryDatabaseService
           .getByKanbanTxId(transaction.kanbanTxId!);
     });
     return result;
@@ -1034,16 +1034,16 @@ class WalletService {
   void insertTransactionInDatabase(
       TransactionHistory transactionHistory) async {
     log.w('Transaction History ${transactionHistory.toJson()}');
-    await transactionHistoryDatabaseService!
+    await transactionHistoryDatabaseService
         .insert(transactionHistory)
         .then((data) async {
       log.w('Saved in transaction history database $data');
-      await transactionHistoryDatabaseService!.getAll();
+      await transactionHistoryDatabaseService.getAll();
     }).catchError((onError) async {
       log.e('Could not save in database $onError');
-      await transactionHistoryDatabaseService!.deleteDb().then((value) async {
+      await transactionHistoryDatabaseService.deleteDb().then((value) async {
         log.e('transactionHistoryDatabase deleted');
-        await transactionHistoryDatabaseService!
+        await transactionHistoryDatabaseService
             .insert(transactionHistory)
             .then((data) async {
           log.w('Saved in transaction history database $data');
@@ -1080,7 +1080,7 @@ class WalletService {
 
   Future getAllExchangeBalances(String exgAddress) async {
     if (exgAddress.isEmpty) {
-      exgAddress = (await sharedService!.getExgAddressFromWalletDatabase())!;
+      exgAddress = (await sharedService.getExgAddressFromWalletDatabase())!;
     }
     try {
       List<Map<String, dynamic>> bal = [];
@@ -1192,7 +1192,7 @@ class WalletService {
     }
 
     int? coinType;
-    await coinService!
+    await coinService
         .getCoinTypeByTickerName(coinName)
         .then((value) => coinType = value);
     log.i('cointype $coinType');
@@ -1201,19 +1201,19 @@ class WalletService {
     var abiHex;
 
     if (coinName == 'DSCE' || coinName == 'DSC') {
-      sepcialcoinType = await coinService!.getCoinTypeByTickerName('DSC');
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('DSC');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialToken: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'BSTE' || coinName == 'BST') {
-      sepcialcoinType = await coinService!.getCoinTypeByTickerName('BST');
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('BST');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialToken: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'EXGE' || coinName == 'EXG') {
-      sepcialcoinType = await coinService!.getCoinTypeByTickerName('EXG');
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('EXG');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialToken: true, chain: tokenType);
@@ -1222,7 +1222,7 @@ class WalletService {
         (coinName == 'FAB' && tokenType == 'ETH') ||
         (WalletUtil.isSpecialFab(coinName) &&
             (tokenType == 'BNB' || tokenType == 'ETH'))) {
-      sepcialcoinType = await coinService!.getCoinTypeByTickerName('FAB');
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('FAB');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialToken: true, chain: tokenType);
@@ -1233,7 +1233,7 @@ class WalletService {
     // token type, we use coinname as token type is empty
     // because Matic is native coin on polygon
     else if (coinName == 'MATICM') {
-      sepcialcoinType = await coinService!.getCoinTypeByTickerName('MATIC');
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('MATIC');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialToken: true,
@@ -1242,7 +1242,7 @@ class WalletService {
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (tokenType == 'POLYGON' &&
         (WalletUtil.isSpecialUsdt(coinName) || coinName == 'USDT')) {
-      sepcialcoinType = await coinService!.getCoinTypeByTickerName('USDT');
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialToken: true, chain: 'POLYGON');
@@ -1250,7 +1250,7 @@ class WalletService {
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (tokenType == 'BNB' &&
         (WalletUtil.isSpecialUsdt(coinName) || coinName == 'USDT')) {
-      sepcialcoinType = await coinService!.getCoinTypeByTickerName('USDT');
+      sepcialcoinType = await coinService.getCoinTypeByTickerName('USDT');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialToken: true, chain: 'BNB');
@@ -1313,7 +1313,7 @@ class WalletService {
     addressInWallet = btcUtils.btcToBase58Address(addressInWallet);
 
     int? coinType;
-    await coinService!
+    await coinService
         .getCoinTypeByTickerName(coinName)
         .then((value) => coinType = value);
     log.i('cointype $coinType');
@@ -1321,7 +1321,7 @@ class WalletService {
     int? sepcialcoinType;
     var abiHex;
     if (coinName == 'USDTX' || coinName == 'USDCX') {
-      sepcialcoinType = await coinService!
+      sepcialcoinType = await coinService
           .getCoinTypeByTickerName(coinName == 'USDTX' ? 'USDT' : 'USDC');
       abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
@@ -1430,7 +1430,7 @@ class WalletService {
     int? sepcialcoinType;
     var abiHex;
     if (walletInfo.tickerName == 'USDTX' || walletInfo.tickerName == 'USDCX') {
-      sepcialcoinType = await coinService!.getCoinTypeByTickerName(
+      sepcialcoinType = await coinService.getCoinTypeByTickerName(
           walletInfo.tickerName == 'USDTX' ? 'USDT' : 'USDC');
       abiHex = abiUtils.getDepositFuncABI(
           sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,

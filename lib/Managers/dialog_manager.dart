@@ -21,9 +21,9 @@ import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dar
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 
 class DialogManager extends StatefulWidget {
   final Widget? child;
@@ -207,7 +207,8 @@ class _DialogManagerState extends State<DialogManager> {
                   Icons.security,
                   color: primaryColor,
                 ),
-                labelText: AppLocalizations.of(context)!.typeYourWalletPassword,
+                labelText:
+                    FlutterI18n.translate(context, "typeYourWalletPassword"),
               ),
             ),
           ],
@@ -222,7 +223,7 @@ class _DialogManagerState extends State<DialogManager> {
               Navigator.of(context).pop();
             },
             child: Text(
-              AppLocalizations.of(context)!.cancel,
+              FlutterI18n.translate(context, "cancel"),
               style: Theme.of(context)
                   .textTheme
                   .headlineMedium!
@@ -253,10 +254,10 @@ class _DialogManagerState extends State<DialogManager> {
                     // if there is no encrypted mnemonic saved in the new core wallet db
                     // then get the unencrypted mnemonic from the file
 
-                    finalRes =
-                        await _vaultService.decryptData(controller.text);
+                    finalRes = await _vaultService.decryptData(controller.text);
                   } else if (encryptedMnemonic.isNotEmpty) {
-                    await _vaultService.decryptMnemonic(controller.text, encryptedMnemonic)
+                    await _vaultService
+                        .decryptMnemonic(controller.text, encryptedMnemonic)
                         .then((data) {
                       finalRes = data;
                     });

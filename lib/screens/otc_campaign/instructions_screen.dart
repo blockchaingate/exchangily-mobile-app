@@ -1,6 +1,5 @@
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/instructions_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/campaign_single.dart';
@@ -14,6 +13,7 @@ import 'package:exchangilymobileapp/widgets/youtube.dart';
 import 'package:exchangilymobileapp/widgets/youtube_list_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CampaignInstructionScreen extends StatelessWidget {
@@ -60,7 +60,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                               model.sharedService!.launchInBrowser(
                                   Uri.parse(exchangilyAnnouncementUrl));
                             },
-                          text: AppLocalizations.of(context)!.visitWebsite,
+                          text: FlutterI18n.translate(context, "visitWebsite"),
                           style:
                               Theme.of(context).textTheme.bodyLarge!.copyWith(
                                     color: Colors.blue,
@@ -106,13 +106,10 @@ class CampaignInstructionScreen extends StatelessWidget {
                   //     ],
                   //   )
                   : model.hasApiError
-                      ? Container(
-                          child: Center(
-                            child: Text(
-                              "${AppLocalizations.of(context)!
-                                      .serverBusy}...",
-                              style: const TextStyle(color: Colors.white),
-                            ),
+                      ? Center(
+                          child: Text(
+                            "${FlutterI18n.translate(context, "serverBusy")}...",
+                            style: const TextStyle(color: Colors.white),
                           ),
                         )
                       : model.campaignInfoList!.isEmpty
@@ -132,7 +129,8 @@ class CampaignInstructionScreen extends StatelessWidget {
                                       height: 5,
                                     ),
                                     Text(
-                                      AppLocalizations.of(context)!.noEventNote,
+                                      FlutterI18n.translate(
+                                          context, "noEventNote"),
                                       textAlign: TextAlign.center,
                                       style:
                                           const TextStyle(color: Colors.white),
@@ -155,8 +153,8 @@ class CampaignInstructionScreen extends StatelessWidget {
                                           child: Row(
                                             children: [
                                               Text(
-                                                AppLocalizations.of(context)!
-                                                    .announcements,
+                                                FlutterI18n.translate(
+                                                    context, "announcements"),
                                                 style: TextStyle(color: white),
                                               ),
                                               const Padding(
@@ -183,8 +181,8 @@ class CampaignInstructionScreen extends StatelessWidget {
                                               backgroundColor: primaryColor),
                                           child: Row(
                                             children: [
-                                              Text(AppLocalizations.of(context)!
-                                                  .blog),
+                                              Text(FlutterI18n.translate(
+                                                  context, "blog")),
                                               const Padding(
                                                 padding: EdgeInsets.only(
                                                     left: 5.0, bottom: 5.0),

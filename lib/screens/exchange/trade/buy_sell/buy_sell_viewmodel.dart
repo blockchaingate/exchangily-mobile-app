@@ -18,7 +18,6 @@ import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
@@ -43,6 +42,7 @@ import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:keccak/keccak.dart';
 // import 'package:keccak/keccak.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -128,7 +128,7 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
 
   @override
   Stream get stream =>
-      tradeService!.getOrderBookStreamByTickerName(tickerNameFromRoute);
+      tradeService.getOrderBookStreamByTickerName(tickerNameFromRoute);
 
   @override
   transformData(data) {
@@ -155,7 +155,7 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
   @override
   void onCancel() {
     log.e('Orderbook Stream closed');
-    tradeService!
+    tradeService
         .orderbookChannel(tickerName)
         .sink
         .close()
@@ -165,10 +165,10 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
   init() async {
     setBusy(true);
     setDefaultGasPrice();
-    sharedService!.context = context;
+    sharedService.context = context;
     // getOrderbookLoadedStatus();
 
-    exgAddress = await sharedService!.getExgAddressFromWalletDatabase();
+    exgAddress = await sharedService.getExgAddressFromWalletDatabase();
 
     await getDecimalPairConfig();
 
@@ -183,13 +183,13 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
 --------------------------------------------------- */
 
   getGasBalance() async {
-    String address = (await sharedService!.getExgAddressFromWalletDatabase())!;
-    await walletService!.gasBalance(address).then((data) {
+    String address = (await sharedService.getExgAddressFromWalletDatabase())!;
+    await walletService.gasBalance(address).then((data) {
       gasAmount = data;
       if (gasAmount == 0) {
-        sharedService!.alertDialog(
-          AppLocalizations.of(context!)!.notice,
-          AppLocalizations.of(context!)!.insufficientGasAmount,
+        sharedService.alertDialog(
+          FlutterI18n.translate(context!, "notice"),
+          FlutterI18n.translate(context!, "insufficientGasAmount"),
         );
       }
     }).catchError((onError) => log.e(onError));
@@ -200,7 +200,7 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
   Widget refreshBalanceAfterCancellingOrder() {
     getSingleCoinExchangeBalanceFromAll(targetCoinName!, baseCoinName!);
 
-    return sharedService!.loadingIndicator();
+    return sharedService.loadingIndicator();
   }
 
 /*----------------------------------------------------------------------
@@ -211,7 +211,7 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
       log.i('getOrderbookLoadedStatus timer started');
-      _isOrderbookLoaded = tradeService!.isOrderbookLoaded;
+      _isOrderbookLoaded = tradeService.isOrderbookLoaded;
       if (_isOrderbookLoaded) {
         setBusy(true);
         // price = priceFromTradeService;
@@ -247,8 +247,8 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
 
     if (targetCoinExchangeBalance == null || baseCoinExchangeBalance == null) {
       String exgAddress =
-          (await sharedService!.getExgAddressFromWalletDatabase())!;
-      List res = await (walletService!.getAllExchangeBalances(exgAddress));
+          (await sharedService.getExgAddressFromWalletDatabase())!;
+      List res = await (walletService.getAllExchangeBalances(exgAddress));
 
       targetCoinExchangeBalance = ExchangeBalanceModel();
       baseCoinExchangeBalance = ExchangeBalanceModel();
@@ -278,7 +278,7 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
         // }
       }
     }
-    tradeService!.setBalanceRefresh(false);
+    tradeService.setBalanceRefresh(false);
     setBusy(false);
   }
 
@@ -377,9 +377,7 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
 
   getDecimalPairConfig() async {
     String currentCoinName = targetCoinName! + baseCoinName!;
-    await sharedService!
-        .getSinglePairDecimalConfig(currentCoinName)
-        .then((res) {
+    await sharedService.getSinglePairDecimalConfig(currentCoinName).then((res) {
       log.w('Current coin $currentCoinName in get decimal config $res');
       setBusyForObject(singlePairDecimalConfig, true);
       singlePairDecimalConfig = res;
@@ -585,14 +583,14 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
     isReloadMyOrders = false;
     await _dialogService
         .showDialog(
-            title: AppLocalizations.of(context!)!.enterPassword,
-            description: AppLocalizations.of(context!)!
-                .dialogManagerTypeSamePasswordNote,
-            buttonTitle: AppLocalizations.of(context!)!.confirm)
+            title: FlutterI18n.translate(context!, "enterPassword"),
+            description: FlutterI18n.translate(
+                context!, "dialogManagerTypeSamePasswordNote"),
+            buttonTitle: FlutterI18n.translate(context!, "confirm"))
         .then((res) async {
       if (res.confirmed!) {
         String? mnemonic = res.returnedText;
-        Uint8List seed = walletService!.generateSeed(mnemonic);
+        Uint8List seed = walletService.generateSeed(mnemonic);
 
         var txHex = await txHexforPlaceOrder(seed);
         log.e('txhex $txHex');
@@ -603,7 +601,8 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(AppLocalizations.of(context!)!.orderCreatedSuccessfully,
+                Text(
+                    FlutterI18n.translate(context!, "orderCreatedSuccessfully"),
                     style: Theme.of(context!).textTheme.headlineSmall),
                 Text('txid:' + resKanban['transactionHash'],
                     style: Theme.of(context!).textTheme.titleLarge),
@@ -618,7 +617,7 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
           // });
           Timer.periodic(const Duration(seconds: 3), (timer) async {
             var res =
-                await tradeService!.getTxStatus(resKanban["transactionHash"]);
+                await tradeService.getTxStatus(resKanban["transactionHash"]);
             if (res != null) {
               log.i('RES $res');
               String? status = res['status'];
@@ -645,8 +644,8 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
             }
           });
         } else {
-          sharedService!.sharedSimpleNotification(
-              AppLocalizations.of(context!)!.placeOrderTransactionFailed,
+          sharedService.sharedSimpleNotification(
+              FlutterI18n.translate(context!, "placeOrderTransactionFailed"),
               subtitle: resKanban.toString());
         }
       } else if (res.returnedText == 'Closed' && !res.confirmed!) {
@@ -655,7 +654,7 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
       } else {
         log.e('Wrong pass');
         setBusy(false);
-        sharedService!.inCorrectpasswordNotification(context);
+        sharedService.inCorrectpasswordNotification(context);
       }
     });
     setBusy(false);
@@ -675,8 +674,8 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
         price!.isNegative ||
         quantity!.isNegative) {
       setBusy(false);
-      sharedService!.alertDialog(
-          "", AppLocalizations.of(context)!.invalidAmount,
+      sharedService.alertDialog(
+          "", FlutterI18n.translate(context, "invalidAmount"),
           isWarning: false);
       return;
     }
@@ -685,7 +684,7 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
       setBusy(false);
       showSimpleNotification(
         Center(
-          child: Text(AppLocalizations.of(context)!.insufficientGasBalance,
+          child: Text(FlutterI18n.translate(context, "insufficientGasBalance"),
               style: Theme.of(context)
                   .textTheme
                   .headlineMedium!
@@ -701,8 +700,8 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
     if (!bidOrAsk!) {
       log.e('SELL tx amount $quantity -- targetCoinbalance $targetCoinbalance');
       if (quantity! > targetCoinbalance!) {
-        sharedService!.alertDialog(
-            "", AppLocalizations.of(context)!.invalidAmount,
+        sharedService.alertDialog(
+            "", FlutterI18n.translate(context, "invalidAmount"),
             isWarning: false);
         setBusy(false);
         return;
@@ -713,8 +712,8 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
       log.w(
           'BUY tx amount ${caculateTransactionAmount()} -- baseCoinbalance $baseCoinbalance');
       if (caculateTransactionAmount() > baseCoinbalance) {
-        sharedService!.alertDialog(
-            "", AppLocalizations.of(context)!.invalidAmount,
+        sharedService.alertDialog(
+            "", FlutterI18n.translate(context, "invalidAmount"),
             isWarning: false);
         setBusy(false);
         return;

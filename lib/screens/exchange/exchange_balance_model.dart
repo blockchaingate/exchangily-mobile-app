@@ -22,7 +22,7 @@ class ExchangeBalanceModel {
     }
 
     ExchangeBalanceModel exchangeBalanceModel = ExchangeBalanceModel(
-        ticker: tickerName ?? '',
+        ticker: tickerName,
         coinType: json['coinType'],
         unlockedAmount:
             NumberUtil.rawStringToDecimal(json['unlockedAmount'].toString())

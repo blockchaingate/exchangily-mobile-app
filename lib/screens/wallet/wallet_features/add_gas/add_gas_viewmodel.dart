@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -15,6 +14,7 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 
 class AddGasViewModel extends FutureViewModel {
@@ -49,7 +49,8 @@ class AddGasViewModel extends FutureViewModel {
 
   @override
   Future futureToRun() async {
-    String exgAddress = (await sharedService!.getExgAddressFromWalletDatabase())!;
+    String exgAddress =
+        (await sharedService!.getExgAddressFromWalletDatabase())!;
     return walletService!.gasBalance(exgAddress);
   }
 
@@ -134,18 +135,19 @@ class AddGasViewModel extends FutureViewModel {
     setBusy(true);
     if (isAmountInvalid) {
       sharedService!.sharedSimpleNotification(
-        AppLocalizations.of(context)!.notice,
-        subtitle: "FAB ${AppLocalizations.of(context)!.insufficientBalance}",
+        FlutterI18n.translate(context, "notice"),
+        subtitle:
+            "FAB ${FlutterI18n.translate(context, "insufficientBalance")}",
       );
       return;
     }
     var gasPrice = int.tryParse(gasPriceTextController.text);
     var gasLimit = int.tryParse(gasLimitTextController.text);
     var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context)!.enterPassword,
+        title: FlutterI18n.translate(context, "enterPassword"),
         description:
-            AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context)!.confirm);
+            FlutterI18n.translate(context, "dialogManagerTypeSamePasswordNote"),
+        buttonTitle: FlutterI18n.translate(context, "confirm"));
     if (res.confirmed!) {
       String? mnemonic = res.returnedText;
       var options = {
@@ -165,8 +167,8 @@ class AddGasViewModel extends FutureViewModel {
       amountController.text = '';
       sharedService!.alertDialog(
           (ret["errMsg"] == '')
-              ? AppLocalizations.of(context)!.addGasTransactionSuccess
-              : AppLocalizations.of(context)!.addGasTransactionFailed,
+              ? FlutterI18n.translate(context, "addGasTransactionSuccess")
+              : FlutterI18n.translate(context, "addGasTransactionFailed"),
           (ret["errMsg"] == '') ? ret['txHash'] : formattedErrorMsg,
           isWarning: false,
           isCopyTxId: ret["errMsg"] == '' ? true : false,
@@ -260,8 +262,9 @@ class AddGasViewModel extends FutureViewModel {
 
   wrongPasswordNotification(context) {
     sharedService!.sharedSimpleNotification(
-      AppLocalizations.of(context)!.passwordMismatch,
-      subtitle: AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword,
+      FlutterI18n.translate(context, "passwordMismatch"),
+      subtitle:
+          FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword"),
     );
   }
 }

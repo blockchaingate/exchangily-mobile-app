@@ -17,7 +17,6 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/constants/ui_var.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screens/announcement/anncounceList.dart';
@@ -28,6 +27,7 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -113,7 +113,7 @@ class _WalletDashboardViewState extends State<WalletDashboardView>
                       debugPrint('onComplete: $index, $key');
                     },
                     onFinish: () {
-                      model.storageService!.isShowCaseView = false;
+                      model.storageService.isShowCaseView = false;
 
                       model.updateShowCaseViewStatus();
                     },
@@ -210,14 +210,14 @@ class _WalletDashboardViewState extends State<WalletDashboardView>
                                     child: model
                                             .selectedCustomTokens!.isNotEmpty
                                         ? Text(
-                                            ' ${AppLocalizations.of(context)!.editTokenList}',
+                                            ' ${FlutterI18n.translate(context, "editTokenList")}',
                                             style: const TextStyle(
                                                 color: white,
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.bold),
                                           )
                                         : Text(
-                                            ' ${AppLocalizations.of(context)!.addToken}',
+                                            ' ${FlutterI18n.translate(context, "addToken")}',
                                             style: const TextStyle(
                                                 color: white,
                                                 fontSize: 12,
@@ -489,10 +489,10 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
                         !model.isHideSmallAssetsButton
-                            ? AppLocalizations.of(context)!
-                                .hideSmallAmountAssets
-                            : AppLocalizations.of(context)!
-                                .showSmallAmountAssets,
+                            ? FlutterI18n.translate(
+                                context, "hideSmallAmountAssets")
+                            : FlutterI18n.translate(
+                                context, "showSmallAmountAssets"),
                         style: model.isShowFavCoins || model.isHideSearch
                             ? Theme.of(context)
                                 .textTheme
@@ -536,7 +536,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
                                   color: white,
                                 ),
                                 label: Text(
-                                  '${AppLocalizations.of(context)!.getFree} FAB',
+                                  '${FlutterI18n.translate(context, "getFree")} FAB',
                                   style: Theme.of(context).textTheme.titleLarge,
                                 )),
                           )),
@@ -582,7 +582,7 @@ Widget amountAndGas(WalletDashboardViewModel model, BuildContext context) {
       UIHelper.verticalSpaceSmall,
       model.isUpdateWallet
           ? TextButton(
-              child: Text(AppLocalizations.of(context)!.updateWallet),
+              child: Text(FlutterI18n.translate(context, "updateWallet")),
               onPressed: () => model.updateWallet(),
             )
           : Container(),
@@ -696,7 +696,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context,
                           height: 40,
                         ),
                         const SizedBox(height: 5),
-                        Text(AppLocalizations.of(context)!.customTokens,
+                        Text(FlutterI18n.translate(context, "customTokens"),
                             style: const TextStyle(
                                 fontSize: 12, color: Colors.white)),
                       ],
@@ -712,7 +712,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context,
                           child: Row(
                             children: [
                               Text(
-                                AppLocalizations.of(context)!.logo,
+                                FlutterI18n.translate(context, "logo"),
                                 style: const TextStyle(
                                     color: black,
                                     fontSize: 12,
@@ -722,7 +722,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context,
                               Expanded(
                                   flex: 1,
                                   child: Text(
-                                      AppLocalizations.of(context)!.symbol,
+                                      FlutterI18n.translate(context, "symbol"),
                                       style: const TextStyle(
                                           color: black,
                                           fontSize: 12,
@@ -730,7 +730,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context,
                               Expanded(
                                   flex: 2,
                                   child: Text(
-                                    AppLocalizations.of(context)!.balance,
+                                    FlutterI18n.translate(context, "balance"),
                                     style: const TextStyle(
                                         color: black,
                                         fontSize: 12,
@@ -740,7 +740,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context,
                               Expanded(
                                   flex: 1,
                                   child: Text(
-                                      AppLocalizations.of(context)!.action,
+                                      FlutterI18n.translate(context, "action"),
                                       style: const TextStyle(
                                           color: black,
                                           fontSize: 12,
@@ -849,9 +849,9 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context,
                                                     ),
                                                     Expanded(
                                                       child: Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .receive,
+                                                          FlutterI18n.translate(
+                                                              context,
+                                                              "receive"),
                                                           style:
                                                               const TextStyle(
                                                                   fontSize: 10,
@@ -876,9 +876,8 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context,
                                                     ),
                                                     Expanded(
                                                       child: Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .send,
+                                                          FlutterI18n.translate(
+                                                              context, "send"),
                                                           style:
                                                               const TextStyle(
                                                                   fontSize: 10,
@@ -1037,7 +1036,8 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(right: 5.0),
-                          child: Text(AppLocalizations.of(context)!.available,
+                          child: Text(
+                              FlutterI18n.translate(context, "available"),
                               style: Theme.of(context).textTheme.titleLarge),
                         ),
                         model.isBusy
@@ -1053,8 +1053,8 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                             : Expanded(
                                 child: Text(
                                     isBalanceNegative
-                                        ? AppLocalizations.of(context)!
-                                            .unavailable
+                                        ? FlutterI18n.translate(
+                                            context, "unavailable")
                                         : NumberUtil()
                                             .truncateDoubleWithoutRouding(
                                                 wallets[index].balance!,
@@ -1071,7 +1071,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 2.0, right: 5.0, bottom: 2.0),
-                          child: Text(AppLocalizations.of(context)!.locked,
+                          child: Text(FlutterI18n.translate(context, "locked"),
                               style: Theme.of(context)
                                   .textTheme
                                   .titleLarge!
@@ -1091,8 +1091,8 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                             : Expanded(
                                 child: Text(
                                     wallets[index].lockBalance!.isNegative
-                                        ? AppLocalizations.of(context)!
-                                            .unavailable
+                                        ? FlutterI18n.translate(
+                                            context, "unavailable")
                                         : NumberUtil()
                                             .truncateDoubleWithoutRouding(
                                                 wallets[index].lockBalance!,
@@ -1110,7 +1110,8 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(right: 5.0),
-                          child: Text(AppLocalizations.of(context)!.inExchange,
+                          child: Text(
+                              FlutterI18n.translate(context, "inExchange"),
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.titleLarge),
                         ),
@@ -1131,8 +1132,8 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                     wallets[index]
                                             .unlockedExchangeBalance!
                                             .isNegative
-                                        ? AppLocalizations.of(context)!
-                                            .unavailable
+                                        ? FlutterI18n.translate(
+                                            context, "unavailable")
                                         : NumberUtil()
                                             .truncateDoubleWithoutRouding(
                                                 wallets[index]
@@ -1173,7 +1174,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                         Expanded(
                           child: Text(
                             isBalanceNegative
-                                ? AppLocalizations.of(context)!.unavailable
+                                ? FlutterI18n.translate(context, "unavailable")
                                 : NumberUtil()
                                     .truncateDoubleWithoutRouding(
                                         wallets[index].balance! *
@@ -1203,7 +1204,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                               child: Column(
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context)!.withdraw,
+                                    FlutterI18n.translate(context, "withdraw"),
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleSmall!
@@ -1237,9 +1238,10 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Text(
+                                        FlutterI18n.translate(
+                                            context, "unConfirmedBalance"),
                                         //  '${model.specialTicker} '.toUpperCase() +
-                                        AppLocalizations.of(context)!
-                                            .unConfirmedBalance,
+
                                         style:
                                             subText2.copyWith(color: yellow)),
                                     Text(
@@ -1296,7 +1298,7 @@ class FavTab extends StackedView<WalletDashboardViewModel> {
                         height: 40,
                       ),
                       const SizedBox(height: 5),
-                      Text(AppLocalizations.of(context)!.favoriteTokens,
+                      Text(FlutterI18n.translate(context, "favoriteTokens"),
                           style: const TextStyle(
                               fontSize: 12, color: Colors.white)),
                     ],
@@ -1388,8 +1390,8 @@ class FavTab extends StackedView<WalletDashboardViewModel> {
                                             padding: const EdgeInsets.only(
                                                 right: 5.0),
                                             child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .available,
+                                                FlutterI18n.translate(
+                                                    context, "available"),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge),
@@ -1422,8 +1424,8 @@ class FavTab extends StackedView<WalletDashboardViewModel> {
                                                 right: 5.0,
                                                 bottom: 2.0),
                                             child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .locked,
+                                                FlutterI18n.translate(
+                                                    context, "locked"),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge!
@@ -1456,8 +1458,8 @@ class FavTab extends StackedView<WalletDashboardViewModel> {
                                             padding: const EdgeInsets.only(
                                                 right: 5.0),
                                             child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .inExchange,
+                                                FlutterI18n.translate(
+                                                    context, "inExchange"),
                                                 textAlign: TextAlign.center,
                                                 style: Theme.of(context)
                                                     .textTheme
@@ -1516,9 +1518,8 @@ class FavTab extends StackedView<WalletDashboardViewModel> {
                                                   child: Column(
                                                     children: [
                                                       Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .deposit,
+                                                        FlutterI18n.translate(
+                                                            context, "deposit"),
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .titleSmall!
@@ -1544,9 +1545,8 @@ class FavTab extends StackedView<WalletDashboardViewModel> {
                                                 child: Column(
                                                   children: [
                                                     Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .withdraw,
+                                                      FlutterI18n.translate(
+                                                          context, "withdraw"),
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .titleSmall!
@@ -1634,7 +1634,9 @@ class TotalBalanceWidget extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Text(AppLocalizations.of(context)!.totalWalletBalance,
+                          Text(
+                              FlutterI18n.translate(
+                                  context, "totalWalletBalance"),
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineMedium!
@@ -1731,8 +1733,8 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 3.0),
                                   child: Text(
-                                      AppLocalizations.of(context)!
-                                          .totalExchangeBalance,
+                                      FlutterI18n.translate(
+                                          context, "totalExchangeBalance"),
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge!
@@ -1758,8 +1760,8 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 3.0),
                                   child: Text(
-                                      AppLocalizations.of(context)!
-                                          .totalExchangeBalance,
+                                      FlutterI18n.translate(
+                                          context, "totalExchangeBalance"),
                                       style: Theme.of(context)
                                           .textTheme
                                           .headlineMedium!
@@ -1879,8 +1881,8 @@ class DepositWidget extends StatelessWidget {
             ? Showcase(
                 key: model!.globalKeyTwo,
                 descTextStyle: const TextStyle(fontSize: 9, color: black),
-                description:
-                    AppLocalizations.of(context)!.walletDashboardInstruction2,
+                description: FlutterI18n.translate(
+                    context, "walletDashboardInstruction2"),
                 child: buildPaddingDeposit(context),
               )
             : buildPaddingDeposit(context),
@@ -1894,7 +1896,7 @@ class DepositWidget extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              AppLocalizations.of(context)!.deposit,
+              FlutterI18n.translate(context, "deposit"),
               style:
                   Theme.of(context).textTheme.titleSmall!.copyWith(fontSize: 8),
             ),

@@ -1,8 +1,8 @@
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/team_reward_details_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../shared/globals.dart' as globals;
 
@@ -20,7 +20,7 @@ class TeamRewardDetailsView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context)!.teamDetails,
+          title: Text(FlutterI18n.translate(context, "teamDetails"),
               style: Theme.of(context).textTheme.headlineMedium),
         ),
         body: SingleChildScrollView(
@@ -34,34 +34,37 @@ class TeamRewardDetailsView extends StatelessWidget {
                       Expanded(
                           flex: 1,
                           child: Center(
-                              child: Text(AppLocalizations.of(context)!.team,
-                                  style:
-                                      Theme.of(context).textTheme.titleSmall))),
-                      Expanded(
-                          flex: 1,
-                          child: Center(
-                              child: Text(AppLocalizations.of(context)!.members,
-                                  style:
-                                      Theme.of(context).textTheme.titleSmall))),
-                      Expanded(
-                          flex: 2,
-                          child: Center(
                               child: Text(
-                                  AppLocalizations.of(context)!.totalValue,
-                                  style:
-                                      Theme.of(context).textTheme.titleSmall))),
-                      Expanded(
-                          flex: 2,
-                          child: Center(
-                              child: Text(
-                                  AppLocalizations.of(context)!.totalQuantity,
+                                  FlutterI18n.translate(context, "team"),
                                   style:
                                       Theme.of(context).textTheme.titleSmall))),
                       Expanded(
                           flex: 1,
                           child: Center(
                               child: Text(
-                                  AppLocalizations.of(context)!.percentage,
+                                  FlutterI18n.translate(context, "members"),
+                                  style:
+                                      Theme.of(context).textTheme.titleSmall))),
+                      Expanded(
+                          flex: 2,
+                          child: Center(
+                              child: Text(
+                                  FlutterI18n.translate(context, "totalValue"),
+                                  style:
+                                      Theme.of(context).textTheme.titleSmall))),
+                      Expanded(
+                          flex: 2,
+                          child: Center(
+                              child: Text(
+                                  FlutterI18n.translate(
+                                      context, "totalQuantity"),
+                                  style:
+                                      Theme.of(context).textTheme.titleSmall))),
+                      Expanded(
+                          flex: 1,
+                          child: Center(
+                              child: Text(
+                                  FlutterI18n.translate(context, "percentage"),
                                   style:
                                       Theme.of(context).textTheme.titleSmall)))
                     ],
@@ -73,7 +76,7 @@ class TeamRewardDetailsView extends StatelessWidget {
                           baseColor: globals.primaryColor,
                           highlightColor: globals.grey,
                           child: Text(
-                            (AppLocalizations.of(context)!.loading),
+                            (FlutterI18n.translate(context, "loading")),
                             style: Theme.of(context).textTheme.headlineSmall,
                           ))
                       : team != null

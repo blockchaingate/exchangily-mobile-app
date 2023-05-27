@@ -12,13 +12,12 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_viewmodel.dart';
-
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../utils/string_util.dart';
 
@@ -40,7 +39,7 @@ class Redeposit extends StatelessWidget {
           appBar: AppBar(
             centerTitle: true,
             title: Text(
-              '${AppLocalizations.of(context)!.redeposit}  ${walletInfo!.tickerName}  ${AppLocalizations.of(context)!.toExchange}',
+              '${FlutterI18n.translate(context, "redeposit")}  ${walletInfo!.tickerName}  ${FlutterI18n.translate(context, "toExchange")}',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             backgroundColor: const Color(0XFF1f2233),
@@ -62,8 +61,8 @@ class Redeposit extends StatelessWidget {
                                     title: Row(
                                       children: <Widget>[
                                         Text(
-                                            AppLocalizations.of(context)!
-                                                .amount,
+                                            FlutterI18n.translate(
+                                                context, "amount"),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headlineMedium),
@@ -97,7 +96,7 @@ class Redeposit extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Text(
-                          '${AppLocalizations.of(context)!.walletbalance} ${model.walletInfo!.availableBalance}',
+                          '${FlutterI18n.translate(context, "walletbalance")} ${model.walletInfo!.availableBalance}',
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         Padding(
@@ -114,7 +113,7 @@ class Redeposit extends StatelessWidget {
                     UIHelper.verticalSpaceSmall,
                     Row(
                       children: <Widget>[
-                        Text(AppLocalizations.of(context)!.kanbanGasFee,
+                        Text(FlutterI18n.translate(context, "kanbanGasFee"),
                             style: Theme.of(context).textTheme.headlineSmall),
                         UIHelper.horizontalSpaceSmall,
                         Text(
@@ -126,7 +125,7 @@ class Redeposit extends StatelessWidget {
                     // Switch Row
                     Row(
                       children: <Widget>[
-                        Text(AppLocalizations.of(context)!.advance,
+                        Text(FlutterI18n.translate(context, "advance"),
                             style: Theme.of(context).textTheme.headlineSmall),
                         Switch(
                           value: model.transFeeAdvance,
@@ -150,8 +149,8 @@ class Redeposit extends StatelessWidget {
                                 Expanded(
                                   flex: 3,
                                   child: Text(
-                                      AppLocalizations.of(context)!
-                                          .kanbanGasPrice,
+                                      FlutterI18n.translate(
+                                          context, "kanbanGasPrice"),
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge),
@@ -187,8 +186,8 @@ class Redeposit extends StatelessWidget {
                                 Expanded(
                                   flex: 3,
                                   child: Text(
-                                      AppLocalizations.of(context)!
-                                          .kanbanGasLimit,
+                                      FlutterI18n.translate(
+                                          context, "kanbanGasLimit"),
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge),
@@ -243,7 +242,7 @@ class Redeposit extends StatelessWidget {
                   child: model.isBusy && model.isConfirmButtonPressed
                       ? model.sharedService!.loadingIndicator()
                       : Text(
-                          AppLocalizations.of(context)!.confirm,
+                          FlutterI18n.translate(context, "confirm"),
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                 ),

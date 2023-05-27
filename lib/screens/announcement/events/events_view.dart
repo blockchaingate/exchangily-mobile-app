@@ -1,12 +1,12 @@
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/announcement/events/events_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/web_view_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
 
@@ -48,7 +48,7 @@ class EventsView extends StatelessWidget {
                           child: Row(
                             children: [
                               Text(
-                                AppLocalizations.of(context)!.announcements,
+                                FlutterI18n.translate(context, "announcements"),
                                 style: const TextStyle(color: white),
                               ),
                               const Padding(
@@ -75,7 +75,7 @@ class EventsView extends StatelessWidget {
                             ),
                             child: Row(
                               children: [
-                                Text(AppLocalizations.of(context)!.blog),
+                                Text(FlutterI18n.translate(context, "blog")),
                                 const Padding(
                                   padding:
                                       EdgeInsets.only(left: 5.0, bottom: 5.0),
@@ -106,8 +106,8 @@ class EventsView extends StatelessWidget {
                                         model.sharedService!.launchInBrowser(
                                             Uri.parse(model.url));
                                       },
-                                    text: AppLocalizations.of(context)!
-                                        .visitWebsite,
+                                    text: FlutterI18n.translate(
+                                        context, "visitWebsite"),
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge!

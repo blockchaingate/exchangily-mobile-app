@@ -4,7 +4,6 @@ import 'package:exchangilymobileapp/constants/api_routes.dart';
 // import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
@@ -23,6 +22,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:pagination_widget/pagination_widget.dart';
@@ -80,7 +80,7 @@ class LightningRemitViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
 
   init() async {
-    sharedService!.context = context;
+    sharedService.context = context;
     await setFabAddress();
   }
 
@@ -103,7 +103,7 @@ class LightningRemitViewmodel extends FutureViewModel {
       log.w('onData ${element.toJson().toString()}');
       try {
         if (element.ticker!.isEmpty) {
-          await coinService!
+          await coinService
               .getSingleTokenData('', coinType: element.coinType)
               .then((token) {
             //storageService.tokenList.forEach((newToken){
@@ -191,7 +191,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     if (isShowBottomSheet) {
       debugPrint('Bottom Sheet already visible');
 
-      navigationService!.goBack();
+      navigationService.goBack();
     } else {
       showBottomSheet(
         context: context1,
@@ -279,7 +279,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                     onBackButtonPressed
 ----------------------------------------------------------------------*/
   onBackButtonPressed() async {
-    await sharedService!.onBackButtonPressed('/dashboard');
+    await sharedService.onBackButtonPressed('/dashboard');
   }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
                                     Barcode Scan
@@ -289,7 +289,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     try {
       setBusy(true);
       String barcode = '';
-      storageService!.isCameraOpen = true;
+      storageService.isCameraOpen = true;
       barcode =
           "await BarcodeScanner.scan().then((value) => value.rawContent);";
       addressController.text = barcode;
@@ -297,24 +297,24 @@ class LightningRemitViewmodel extends FutureViewModel {
     } on PlatformException catch (e) {
       if (e.code == "PERMISSION_NOT_GRANTED") {
         setBusy(true);
-        sharedService!.alertDialog(
-            '', AppLocalizations.of(context!)!.userAccessDenied,
+        sharedService.alertDialog(
+            '', FlutterI18n.translate(context!, "userAccessDenied"),
             isWarning: false);
         // receiverWalletAddressTextController.text =
         //     AppLocalizations.of(context).userAccessDenied;
       } else {
         // setBusy(true);
-        sharedService!.alertDialog(
-            '', AppLocalizations.of(context!)!.unknownError,
+        sharedService.alertDialog(
+            '', FlutterI18n.translate(context!, "unknownError"),
             isWarning: false);
       }
     } on FormatException {
-      sharedService!.alertDialog(
-          '', AppLocalizations.of(context!)!.scanCancelled,
+      sharedService.alertDialog(
+          '', FlutterI18n.translate(context!, "scanCancelled"),
           isWarning: false);
     } catch (e) {
-      sharedService!.alertDialog(
-          '', AppLocalizations.of(context!)!.unknownError,
+      sharedService.alertDialog(
+          '', FlutterI18n.translate(context!, "unknownError"),
           isWarning: false);
     }
 
@@ -346,7 +346,7 @@ class LightningRemitViewmodel extends FutureViewModel {
     quantity = updatedQuantity;
     debugPrint('IOS tickerName $tickerName --- quantity $quantity');
     setBusy(false);
-    if (isShowBottomSheet) navigationService!.goBack();
+    if (isShowBottomSheet) navigationService.goBack();
     changeBottomSheetStatus();
   }
 
@@ -355,7 +355,7 @@ class LightningRemitViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   refreshBalance() async {
     setBusyForObject(exchangeBalances, true);
-    await apiService!.getSingleCoinExchangeBalance(tickerName!).then((res) {
+    await apiService.getSingleCoinExchangeBalance(tickerName!).then((res) {
       exchangeBalances.firstWhere((element) {
         if (element.ticker == tickerName) {
           element.unlockedAmount = res!.unlockedAmount;
@@ -374,7 +374,7 @@ class LightningRemitViewmodel extends FutureViewModel {
   showBarcode() async {
     setBusy(true);
 
-    String kbAddress = walletService!.toKbPaymentAddress(fabAddress!);
+    String kbAddress = walletService.toKbPaymentAddress(fabAddress);
     debugPrint('KBADDRESS $kbAddress');
     showDialog(
       context: context!,
@@ -382,7 +382,8 @@ class LightningRemitViewmodel extends FutureViewModel {
         return Platform.isIOS
             ? CupertinoAlertDialog(
                 title: Center(
-                    child: Text(AppLocalizations.of(context)!.receiveAddress)),
+                    child:
+                        Text(FlutterI18n.translate(context, "receiveAddress"))),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -404,7 +405,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                               size: 16,
                             ),
                             onPressed: () {
-                              sharedService!.copyAddress(context, kbAddress)();
+                              sharedService.copyAddress(context, kbAddress)();
                             })
                       ],
                     ),
@@ -425,8 +426,8 @@ class LightningRemitViewmodel extends FutureViewModel {
                                 errorStateBuilder: (context, err) {
                                   return Center(
                                     child: Text(
-                                        AppLocalizations.of(context)!
-                                            .somethingWentWrong,
+                                        FlutterI18n.translate(
+                                            context, "somethingWentWrong"),
                                         textAlign: TextAlign.center),
                                   );
                                 }),
@@ -446,7 +447,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                                 const BorderRadius.all(Radius.circular(4)),
                             child: Center(
                                 child: Text(
-                              AppLocalizations.of(context)!.share,
+                              FlutterI18n.translate(context, "share"),
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall!
@@ -461,7 +462,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                                 File file = File(filePath);
                                 Future.delayed(const Duration(milliseconds: 30),
                                     () {
-                                  sharedService!
+                                  sharedService
                                       .capturePng(globalKey: globalKey)
                                       .then((byteData) {
                                     file.writeAsBytes(byteData!).then((onFile) {
@@ -477,7 +478,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                           borderRadius:
                               const BorderRadius.all(Radius.circular(4)),
                           child: Text(
-                            AppLocalizations.of(context)!.close,
+                            FlutterI18n.translate(context, "close"),
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           onPressed: () {
@@ -502,8 +503,8 @@ class LightningRemitViewmodel extends FutureViewModel {
                     padding: const EdgeInsets.all(10.0),
                     color: secondaryColor.withOpacity(0.5),
                     child: Center(
-                        child:
-                            Text(AppLocalizations.of(context)!.receiveAddress)),
+                        child: Text(
+                            FlutterI18n.translate(context, "receiveAddress"))),
                   ),
                   titleTextStyle: Theme.of(context)
                       .textTheme
@@ -532,7 +533,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                                 size: 16,
                               ),
                               onPressed: () {
-                                sharedService!.copyAddress(context, kbAddress);
+                                sharedService.copyAddress(context, kbAddress);
                               })
                         ],
                       ),
@@ -553,8 +554,8 @@ class LightningRemitViewmodel extends FutureViewModel {
                                   errorStateBuilder: (context, err) {
                                     return Center(
                                       child: Text(
-                                          AppLocalizations.of(context)!
-                                              .somethingWentWrong,
+                                          FlutterI18n.translate(
+                                              context, "somethingWentWrong"),
                                           textAlign: TextAlign.center),
                                     );
                                   }),
@@ -568,7 +569,8 @@ class LightningRemitViewmodel extends FutureViewModel {
                               style: outlinedButtonStyles1.copyWith(
                                   backgroundColor:
                                       MaterialStateProperty.all(primaryColor)),
-                              child: Text(AppLocalizations.of(context)!.share,
+                              child: Text(
+                                  FlutterI18n.translate(context, "share"),
                                   style:
                                       Theme.of(context).textTheme.titleLarge),
                               onPressed: () {
@@ -581,7 +583,7 @@ class LightningRemitViewmodel extends FutureViewModel {
 
                                   Future.delayed(
                                       const Duration(milliseconds: 30), () {
-                                    sharedService!
+                                    sharedService
                                         .capturePng(globalKey: globalKey)
                                         .then((byteData) {
                                       file
@@ -600,7 +602,7 @@ class LightningRemitViewmodel extends FutureViewModel {
                             child: OutlinedButton(
                               style: outlinedButtonStyles1,
                               child: Text(
-                                AppLocalizations.of(context)!.close,
+                                FlutterI18n.translate(context, "close"),
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
                               onPressed: () {
@@ -627,11 +629,11 @@ class LightningRemitViewmodel extends FutureViewModel {
 
   transfer() async {
     setBusy(true);
-    if (walletService!.isValidKbAddress(addressController.text)) {
+    if (walletService.isValidKbAddress(addressController.text)) {
       if (amountController.text == '') {
-        sharedService!.alertDialog(
-            AppLocalizations.of(context!)!.validationError,
-            AppLocalizations.of(context!)!.amountMissing);
+        sharedService.alertDialog(
+            FlutterI18n.translate(context!, "validationError"),
+            FlutterI18n.translate(context!, "amountMissing"));
         setBusy(false);
         return;
       }
@@ -643,24 +645,24 @@ class LightningRemitViewmodel extends FutureViewModel {
       double amount = double.parse(amountController.text);
       double selectedCoinBalance = selectedExchangeBal.unlockedAmount!;
       if (selectedCoinBalance <= 0.0 || amount > selectedCoinBalance) {
-        sharedService!.alertDialog(
-            AppLocalizations.of(context!)!.validationError,
-            AppLocalizations.of(context!)!.invalidAmount);
+        sharedService.alertDialog(
+            FlutterI18n.translate(context!, "validationError"),
+            FlutterI18n.translate(context!, "invalidAmount"));
         setBusy(false);
         log.e('No exchange balance ${selectedExchangeBal.unlockedAmount}');
         return;
       }
-      await dialogService!
+      await dialogService
           .showDialog(
-              title: AppLocalizations.of(context!)!.enterPassword,
-              description: AppLocalizations.of(context!)!
-                  .dialogManagerTypeSamePasswordNote,
-              buttonTitle: AppLocalizations.of(context!)!.confirm)
+              title: FlutterI18n.translate(context!, "enterPassword"),
+              description: FlutterI18n.translate(
+                  context!, "dialogManagerTypeSamePasswordNote"),
+              buttonTitle: FlutterI18n.translate(context!, "confirm"))
           .then((res) async {
         if (res.confirmed!) {
           String? mnemonic = res.returnedText;
-          Uint8List seed = walletService!.generateSeed(mnemonic);
-          await walletService!
+          Uint8List seed = walletService.generateSeed(mnemonic);
+          await walletService
               .sendCoin(seed, selectedExchangeBal.coinType!,
                   addressController.text, double.parse(amountController.text))
               .then((res) {
@@ -668,7 +670,8 @@ class LightningRemitViewmodel extends FutureViewModel {
             if (res['transactionHash'] != null ||
                 res['transactionHash'] != '') {
               showSimpleNotification(
-                  Text(AppLocalizations.of(context!)!.sendTransactionComplete),
+                  Text(FlutterI18n.translate(
+                      context!, "sendTransactionComplete")),
                   position: NotificationPosition.bottom,
                   background: primaryColor);
               String date = DateTime.now().toString();
@@ -682,15 +685,15 @@ class LightningRemitViewmodel extends FutureViewModel {
                   tickerChainTxStatus: '',
                   quantity: amount,
                   tag: 'bindpay');
-              walletService!.insertTransactionInDatabase(transactionHistory);
+              walletService.insertTransactionInDatabase(transactionHistory);
               Future.delayed(const Duration(seconds: 3), () async {
                 await refreshBalance();
                 log.i('balance updated');
               });
             } else {
-              sharedService!.alertDialog(
-                  AppLocalizations.of(context!)!.transanctionFailed,
-                  AppLocalizations.of(context!)!.pleaseTryAgainLater);
+              sharedService.alertDialog(
+                  FlutterI18n.translate(context!, "transanctionFailed"),
+                  FlutterI18n.translate(context!, "pleaseTryAgainLater"));
             }
           });
         } else if (res.returnedText == 'Closed') {
@@ -698,10 +701,10 @@ class LightningRemitViewmodel extends FutureViewModel {
           setBusy(false);
         } else {
           log.e('Wrong pass');
-          sharedService!.sharedSimpleNotification(
-            AppLocalizations.of(context!)!.notice,
-            subtitle:
-                AppLocalizations.of(context!)!.pleaseProvideTheCorrectPassword,
+          sharedService.sharedSimpleNotification(
+            FlutterI18n.translate(context!, "notice"),
+            subtitle: FlutterI18n.translate(
+                context!, "pleaseProvideTheCorrectPassword"),
           );
           setBusy(false);
         }
@@ -711,10 +714,11 @@ class LightningRemitViewmodel extends FutureViewModel {
         return false;
       });
     } else {
-      sharedService!.alertDialog(
-          AppLocalizations.of(context!)!.validationError,
-          AppLocalizations.of(context!)!
-              .pleaseCorrectTheFormatOfReceiveAddress);
+      sharedService.alertDialog(
+        FlutterI18n.translate(context!, "validationError"),
+        FlutterI18n.translate(
+            context!, "pleaseCorrectTheFormatOfReceiveAddress"),
+      );
       setBusy(false);
     }
     setBusy(false);
@@ -732,6 +736,6 @@ class LightningRemitViewmodel extends FutureViewModel {
   copyAddress(String? txId, BuildContext context) {
     Clipboard.setData(ClipboardData(text: txId!));
     sharedService.sharedSimpleNotification(
-        AppLocalizations.of(context)!.copiedSuccessfully);
+        FlutterI18n.translate(context, "copiedSuccessfully"));
   }
 }

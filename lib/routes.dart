@@ -12,7 +12,6 @@
 */
 
 import 'package:exchangilymobileapp/constants/route_names.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
@@ -58,6 +57,7 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/smart_contrac
 import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'screens/otc_campaign/token_details_screen.dart';
 
 final log = getLogger('Routes');
@@ -264,12 +264,12 @@ class RouteGenerator {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context!)!.error,
+          title: Text(FlutterI18n.translate(context!, "error"),
               style: const TextStyle(color: Colors.white)),
         ),
         body: Center(
           child: Text(
-              '${AppLocalizations.of(context)!.noRouteDefined} ${settings.name}',
+              '${FlutterI18n.translate(context, "noRouteDefined")} ${settings.name}',
               style: const TextStyle(color: Colors.white)),
         ),
       );

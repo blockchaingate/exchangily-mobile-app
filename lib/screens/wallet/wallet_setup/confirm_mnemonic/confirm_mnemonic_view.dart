@@ -12,9 +12,9 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 
 import 'confirm_mnemonic_viewmodel.dart';
@@ -43,7 +43,7 @@ class ConfirmMnemonicView extends StatelessWidget {
           appBar: AppBar(
               centerTitle: true,
               title: Text(
-                '${AppLocalizations.of(context)!.confirm} ${AppLocalizations.of(context)!.mnemonic}',
+                '${FlutterI18n.translate(context, "confirm")} ${FlutterI18n.translate(context, "mnemonic")}',
                 style: Theme.of(context).textTheme.displaySmall,
               ),
               backgroundColor: secondaryColor),
@@ -217,7 +217,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
-                        AppLocalizations.of(context)!.finishWalletBackup,
+                        FlutterI18n.translate(context, "finishWalletBackup"),
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                     ),

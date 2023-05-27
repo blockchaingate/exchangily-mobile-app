@@ -1,4 +1,3 @@
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/user.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
@@ -10,6 +9,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 class CampaignRegisterAccountScreenState extends BaseState {
   final log = getLogger('RegisterScreenState');
@@ -35,8 +35,8 @@ class CampaignRegisterAccountScreenState extends BaseState {
 
   // Get exg wallet address
   getExgWalletAddr() async {
-    exgWalletAddressTextController.text =
-        (await walletService!.getAddressFromCoreWalletDatabaseByTickerName('EXG'))!;
+    exgWalletAddressTextController.text = (await walletService!
+        .getAddressFromCoreWalletDatabaseByTickerName('EXG'))!;
     log.w('Exg wallet address ${exgWalletAddressTextController.text}');
   }
 
@@ -50,9 +50,9 @@ class CampaignRegisterAccountScreenState extends BaseState {
       String? error = res['message'];
       if (res != null && (error == null || error == '')) {
         sharedService!.alertDialog(
-            AppLocalizations.of(context)!.registrationSuccessful,
-            AppLocalizations.of(context)!
-                .pleaseCheckYourEmailToActivateYourAccount,
+            FlutterI18n.translate(context, "registrationSuccessful"),
+            FlutterI18n.translate(
+                context, "pleaseCheckYourEmailToActivateYourAccount"),
             path: '/campaignLogin');
         // await campaignService.saveCampaignUserDataLocally(loginToken, userData);
         // navigationService.navigateTo('/campaignDashboard', arguments: userData);
@@ -73,16 +73,19 @@ class CampaignRegisterAccountScreenState extends BaseState {
     setBusy(true);
     matchPassword();
     if (emailTextController.text.isEmpty) {
-      setErrorMessage(AppLocalizations.of(context)!.pleaseEnterYourEmailAddress);
+      setErrorMessage(
+          FlutterI18n.translate(context, "pleaseEnterYourEmailAddress"));
     } else if (passwordTextController.text.isEmpty) {
-      setErrorMessage(AppLocalizations.of(context)!.pleaseFillYourPassword);
+      setErrorMessage(FlutterI18n.translate(context, "pleaseFillYourPassword"));
     } else if (confirmPasswordTextController.text.isEmpty) {
-      setErrorMessage(AppLocalizations.of(context)!.confirmPasswordFieldIsEmpty);
+      setErrorMessage(
+          FlutterI18n.translate(context, "confirmPasswordFieldIsEmpty"));
     } else if (exgWalletAddressTextController.text.isEmpty) {
-      setErrorMessage(AppLocalizations.of(context)!.exgWalletAddressIsRequired);
+      setErrorMessage(
+          FlutterI18n.translate(context, "exgWalletAddressIsRequired"));
     } else if (!passwordMatch) {
       setErrorMessage(
-          AppLocalizations.of(context)!.bothPasswordFieldsShouldMatch);
+          FlutterI18n.translate(context, "bothPasswordFieldsShouldMatch"));
     } else {
       setErrorMessage('');
       user = User(

@@ -12,13 +12,13 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/wallet/toggle_password_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
@@ -45,7 +45,7 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
       builder: (context, CreatePasswordViewModel model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context)!.secureYourWallet,
+          title: Text(FlutterI18n.translate(context, "secureYourWallet"),
               style: Theme.of(context).textTheme.headlineMedium),
           backgroundColor: secondaryColor,
         ),
@@ -61,7 +61,7 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     Text(
-                      AppLocalizations.of(context)!.setPasswordConditions,
+                      FlutterI18n.translate(context, "setPasswordConditions"),
                       style: Theme.of(context).textTheme.bodyLarge,
                       textAlign: TextAlign.left,
                     ),
@@ -73,7 +73,8 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
                         ? model.passwordMatch
                             ? Center(
                                 child: Text(
-                                AppLocalizations.of(context)!.passwordMatched,
+                                FlutterI18n.translate(
+                                    context, "passwordMatched"),
                                 style: const TextStyle(color: white),
                               ))
                             : model.password.isEmpty ||
@@ -81,8 +82,8 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                 ? const Text('')
                                 : Center(
                                     child: Text(
-                                        AppLocalizations.of(context)!
-                                            .passwordDoesNotMatched,
+                                        FlutterI18n.translate(
+                                            context, "passwordDoesNotMatched"),
                                         style: const TextStyle(color: grey)))
                         : const Text(''),
                     UIHelper.verticalSpaceSmall,
@@ -101,10 +102,10 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               highlightColor: grey,
                               child: Text(
                                 widget.args['isImport']
-                                    ? AppLocalizations.of(context)!
-                                        .importingWallet
-                                    : AppLocalizations.of(context)!
-                                        .creatingWallet,
+                                    ? FlutterI18n.translate(
+                                        context, "importingWallet")
+                                    : FlutterI18n.translate(
+                                        context, "creatingWallet"),
                                 style: Theme.of(context).textTheme.labelLarge,
                               ),
                             )
@@ -112,7 +113,7 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     ),
                     UIHelper.verticalSpaceLarge,
                     Text(
-                      AppLocalizations.of(context)!.setPasswordNote,
+                      FlutterI18n.translate(context, "setPasswordNote"),
                       textAlign: TextAlign.left,
                       style: Theme.of(context)
                           .textTheme
@@ -177,7 +178,7 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     togglePassword: model.togglePassword)
               ],
             ),
-            labelText: AppLocalizations.of(context)!.enterPassword,
+            labelText: FlutterI18n.translate(context, "enterPassword"),
             prefixIcon: const Icon(Icons.lock_outline, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headlineSmall,
             helperStyle: Theme.of(context).textTheme.headlineSmall));
@@ -235,7 +236,7 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     togglePassword: model.togglePassword)
               ],
             ),
-            labelText: AppLocalizations.of(context)!.confirmPassword,
+            labelText: FlutterI18n.translate(context, "confirmPassword"),
             prefixIcon: const Icon(Icons.lock, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headlineSmall,
             helperStyle: Theme.of(context).textTheme.headlineSmall));
@@ -263,8 +264,8 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
         },
         child: Text(
           widget.args['isImport']
-              ? AppLocalizations.of(context)!.importWallet
-              : AppLocalizations.of(context)!.createWallet,
+              ? FlutterI18n.translate(context, "importWallet")
+              : FlutterI18n.translate(context, "createWallet"),
           style: Theme.of(context)
               .textTheme
               .headlineMedium!

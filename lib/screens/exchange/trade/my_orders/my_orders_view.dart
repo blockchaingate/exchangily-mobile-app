@@ -1,10 +1,10 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
 import 'my_orders_viewmodel.dart';
@@ -20,7 +20,7 @@ class MyOrdersView extends StatelessWidget {
         RefreshController(initialRefresh: false);
     return ViewModelBuilder<MyOrdersViewModel>.reactive(
         createNewViewModelOnInsert: true,
-        fireOnModelReadyOnce: true,
+        fireOnViewModelReadyOnce: true,
         viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
         onViewModelReady: (model) {
           debugPrint('in init MyOrdersView');
@@ -30,7 +30,7 @@ class MyOrdersView extends StatelessWidget {
           model.init();
         },
         onDispose: (viewModel) {
- refreshController.dispose();
+          refreshController.dispose();
           debugPrint('_refreshController disposed in wallet dashboard view');
         },
 
@@ -49,7 +49,7 @@ class MyOrdersView extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              '${AppLocalizations.of(context)!.serverError}: ${model.errorMessage}',
+                              '${FlutterI18n.translate(context, "serverError")}: ${model.errorMessage}',
                               style: const TextStyle(color: Colors.white),
                             ),
                             IconButton(
@@ -101,8 +101,8 @@ class MyOrdersView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                      AppLocalizations.of(context)!
-                                          .showAllPairOrders,
+                                      FlutterI18n.translate(
+                                          context, "showAllPairOrders"),
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge),
@@ -140,26 +140,26 @@ class MyOrdersView extends StatelessWidget {
                                     ),
                                     tabs: [
                                       Text(
-                                          AppLocalizations.of(context)!
-                                              .allOrders,
+                                          FlutterI18n.translate(
+                                              context, "allOrders"),
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleLarge),
                                       Text(
-                                          AppLocalizations.of(context)!
-                                              .openOrders,
+                                          FlutterI18n.translate(
+                                              context, "openOrders"),
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleLarge),
                                       Text(
-                                          AppLocalizations.of(context)!
-                                              .closedOrders,
+                                          FlutterI18n.translate(
+                                              context, "closedOrders"),
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleLarge),
                                       Text(
-                                          AppLocalizations.of(context)!
-                                              .cancelledOrders,
+                                          FlutterI18n.translate(
+                                              context, "cancelledOrders"),
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleLarge),
@@ -183,9 +183,8 @@ class MyOrdersView extends StatelessWidget {
                                           : TabBarView(
                                               children: model.myOrdersTabBarView
                                                   .map((orders) {
-                                                return Container(
-                                                    child: MyOrderDetailsView(
-                                                        orders: orders));
+                                                return MyOrderDetailsView(
+                                                    orders: orders);
                                               }).toList(),
                                             )),
                                 ],
@@ -208,28 +207,28 @@ class MyOrdersView extends StatelessWidget {
         // ),
         Expanded(
           flex: 1,
-          child: Text(AppLocalizations.of(context)!.type,
+          child: Text(FlutterI18n.translate(context, "type"),
               style: Theme.of(context).textTheme.titleSmall),
         ),
         Expanded(
             flex: 2,
-            child: Text(AppLocalizations.of(context)!.pair,
+            child: Text(FlutterI18n.translate(context, "pair"),
                 style: Theme.of(context).textTheme.titleSmall)),
         Expanded(
             flex: 2,
-            child: Text(AppLocalizations.of(context)!.price,
+            child: Text(FlutterI18n.translate(context, "price"),
                 style: Theme.of(context).textTheme.titleSmall)),
         Expanded(
             flex: 2,
-            child: Text(AppLocalizations.of(context)!.quantity,
+            child: Text(FlutterI18n.translate(context, "quantity"),
                 style: Theme.of(context).textTheme.titleSmall)),
         Expanded(
             flex: 2,
-            child: Text(AppLocalizations.of(context)!.filledAmount,
+            child: Text(FlutterI18n.translate(context, "filledAmount"),
                 style: Theme.of(context).textTheme.titleSmall)),
         Expanded(
           flex: 1,
-          child: Text(AppLocalizations.of(context)!.cancel,
+          child: Text(FlutterI18n.translate(context, "cancel"),
               style: Theme.of(context).textTheme.titleSmall),
         ),
       ]),
@@ -260,7 +259,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
           } else if (mode == LoadStatus.failed) {
             body = const Text("Load Failed!Click retry!");
           } else if (mode == LoadStatus.canLoading) {
-            body = Text(AppLocalizations.of(context)!.releaseToLoadMore);
+            body = Text(FlutterI18n.translate(context, "releaseToLoadMore"));
           } else {
             body = const Text("No more Data");
           }
@@ -288,8 +287,8 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                     flex: 1,
                     child: Text(
                         order.bidOrAsk!
-                            ? AppLocalizations.of(context)!.buy
-                            : AppLocalizations.of(context)!.sell,
+                            ? FlutterI18n.translate(context, "buy")
+                            : FlutterI18n.translate(context, "sell"),
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
                               color: Color(
                                   order.bidOrAsk! ? 0xFF0da88b : 0xFFe2103c),

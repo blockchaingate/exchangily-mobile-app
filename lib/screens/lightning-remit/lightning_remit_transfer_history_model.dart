@@ -61,7 +61,7 @@ class LightningRemitHistoryModel {
     return LightningRemitHistoryModel(
       pageNum: json['pageNum'] ?? 0,
       totalCount: json['totalCount'] ?? 0,
-      history: mappedHistory ?? [],
+      history: mappedHistory,
     );
   }
 

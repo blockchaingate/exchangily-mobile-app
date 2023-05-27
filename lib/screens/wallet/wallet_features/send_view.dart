@@ -12,7 +12,6 @@
 */
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -20,6 +19,7 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
 
@@ -49,7 +49,7 @@ class SendWalletView extends StatelessWidget {
               appBar: AppBar(
                 backgroundColor: walletCardColor,
                 title: Text(
-                    '${AppLocalizations.of(context)!.send} ${model.specialTickerName!}',
+                    '${FlutterI18n.translate(context, "send")} ${model.specialTickerName!}',
                     style: Theme.of(context).textTheme.headlineMedium),
                 centerTitle: true,
               ),
@@ -125,13 +125,13 @@ class SendWalletView extends StatelessWidget {
                                             ),
                                           ),
                                           labelText:
-                                              '${AppLocalizations.of(context)!
-                                                      .receiverWalletAddress}, DNS',
+                                              '${FlutterI18n.translate(context, "receiverWalletAddress")}, DNS',
                                           labelStyle: Theme.of(context)
                                               .textTheme
                                               .titleLarge),
-                                      style:
-                                          Theme.of(context).textTheme.titleLarge,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge,
                                     ),
                                   )),
                               model.busy(model.userTypedDomain)
@@ -178,8 +178,8 @@ class SendWalletView extends StatelessWidget {
                                           padding: EdgeInsets.only(right: 5),
                                           child: Icon(Icons.camera_enhance)),
                                       Text(
-                                        AppLocalizations.of(context)!
-                                            .scanBarCode,
+                                        FlutterI18n.translate(
+                                            context, "scanBarCode"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headlineSmall!
@@ -217,8 +217,7 @@ class SendWalletView extends StatelessWidget {
                                           decimal: true), // numnber keyboard
                                   decoration: InputDecoration(
                                       suffix: Text(
-                                          '${AppLocalizations.of(context)!
-                                                  .decimalLimit}: ${model.decimalLimit}',
+                                          '${FlutterI18n.translate(context, "decimalLimit")}: ${model.decimalLimit}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleLarge),
@@ -284,8 +283,9 @@ class SendWalletView extends StatelessWidget {
                                                                           Center(
                                                                         child:
                                                                             Text(
-                                                                          AppLocalizations.of(context)!
-                                                                              .availableBalanceInfoTitle,
+                                                                          FlutterI18n.translate(
+                                                                              context,
+                                                                              "availableBalanceInfoTitle"),
                                                                           // textAlign: TextAlign.center,
                                                                           style: Theme.of(context)
                                                                               .textTheme
@@ -301,8 +301,9 @@ class SendWalletView extends StatelessWidget {
                                                                               20),
                                                                       child:
                                                                           Text(
-                                                                        AppLocalizations.of(context)!
-                                                                            .availableBalanceInfoContent,
+                                                                        FlutterI18n.translate(
+                                                                            context,
+                                                                            "availableBalanceInfoContent"),
                                                                         style: Theme.of(context)
                                                                             .textTheme
                                                                             .displayMedium,
@@ -318,7 +319,7 @@ class SendWalletView extends StatelessWidget {
                                               : Container(),
                                           // UIHelper.horizontalSpaceSmall,
                                           Text(
-                                            '${AppLocalizations.of(context)!.available} ${AppLocalizations.of(context)!.walletbalance}  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.availableBalance, precision: model.decimalLimit!)} ',
+                                            '${FlutterI18n.translate(context, "available")} ${FlutterI18n.translate(context, "walletbalance")}  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.availableBalance, precision: model.decimalLimit!)} ',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .titleLarge!
@@ -410,8 +411,9 @@ class SendWalletView extends StatelessWidget {
                                                                         Center(
                                                                       child:
                                                                           Text(
-                                                                        AppLocalizations.of(context)!
-                                                                            .unConfirmedBalanceInfoTitle,
+                                                                        FlutterI18n.translate(
+                                                                            context,
+                                                                            "unConfirmedBalanceInfoTitle"),
                                                                         // textAlign: TextAlign.center,
                                                                         style: Theme.of(context)
                                                                             .textTheme
@@ -426,9 +428,9 @@ class SendWalletView extends StatelessWidget {
                                                                         horizontal:
                                                                             20),
                                                                     child: Text(
-                                                                      AppLocalizations.of(
-                                                                              context)!
-                                                                          .unConfirmedBalanceInfoContent,
+                                                                      FlutterI18n.translate(
+                                                                          context,
+                                                                          "unConfirmedBalanceInfoContent"),
                                                                       style: Theme.of(
                                                                               context)
                                                                           .textTheme
@@ -442,9 +444,9 @@ class SendWalletView extends StatelessWidget {
                                                                         horizontal:
                                                                             20),
                                                                     child: Text(
-                                                                      AppLocalizations.of(
-                                                                              context)!
-                                                                          .unConfirmedBalanceInfoExample,
+                                                                      FlutterI18n.translate(
+                                                                          context,
+                                                                          "unConfirmedBalanceInfoExample"),
                                                                       style: Theme.of(
                                                                               context)
                                                                           .textTheme
@@ -457,7 +459,7 @@ class SendWalletView extends StatelessWidget {
                                               ),
                                               UIHelper.horizontalSpaceSmall,
                                               Text(
-                                                '${AppLocalizations.of(context)!.unConfirmedBalance}  ${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance!, precision: model.decimalLimit!)} ',
+                                                '${FlutterI18n.translate(context, "unConfirmedBalance")}  ${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance!, precision: model.decimalLimit!)} ',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge!
@@ -488,7 +490,7 @@ class SendWalletView extends StatelessWidget {
                                             Row(
                                               children: <Widget>[
                                                 Text(
-                                                  '${AppLocalizations.of(context)!.totalBalance}  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.availableBalance + model.unconfirmedBalance!, precision: model.decimalLimit!)} ',
+                                                  '${FlutterI18n.translate(context, "totalBalance")}  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.availableBalance + model.unconfirmedBalance!, precision: model.decimalLimit!)} ',
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .titleLarge!
@@ -522,7 +524,7 @@ class SendWalletView extends StatelessWidget {
                                       alignment: Alignment.topLeft,
                                       child: walletInfo!.tickerName == 'TRX'
                                           ? Text(
-                                              '${AppLocalizations.of(context)!.gasFee}: ${model.trxGasValueTextController.text} TRX',
+                                              '${FlutterI18n.translate(context, "gasFee")}: ${model.trxGasValueTextController.text} TRX',
                                               textAlign: TextAlign.left,
                                               style: Theme.of(context)
                                                   .textTheme
@@ -533,14 +535,14 @@ class SendWalletView extends StatelessWidget {
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                    '${AppLocalizations.of(context)!.gasFee}: ${model.trxGasValueTextController.text} TRX',
+                                                    '${FlutterI18n.translate(context, "gasFee")}: ${model.trxGasValueTextController.text} TRX',
                                                     textAlign: TextAlign.left,
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .titleLarge),
                                                 Text(
                                                     'TRX'
-                                                    '${AppLocalizations.of(context)!.balance}: ${model.chainBalance} TRX',
+                                                    '${FlutterI18n.translate(context, "balance")}: ${model.chainBalance} TRX',
                                                     textAlign: TextAlign.left,
                                                     style: Theme.of(context)
                                                         .textTheme
@@ -554,8 +556,8 @@ class SendWalletView extends StatelessWidget {
                                       child: Row(
                                         children: <Widget>[
                                           Text(
-                                            AppLocalizations.of(context)!
-                                                .gasFee,
+                                            FlutterI18n.translate(
+                                                context, "gasFee"),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headlineSmall!
@@ -596,7 +598,7 @@ class SendWalletView extends StatelessWidget {
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    AppLocalizations.of(context)!.advance,
+                                    FlutterI18n.translate(context, "advance"),
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineSmall!
@@ -623,7 +625,7 @@ class SendWalletView extends StatelessWidget {
                                           Expanded(
                                               flex: 3,
                                               child: Text(
-                                                'TRX ${AppLocalizations.of(context)!.gasFee}',
+                                                'TRX ${FlutterI18n.translate(context, "gasFee")}',
                                                 style: headText5.copyWith(
                                                     fontWeight:
                                                         FontWeight.w300),
@@ -680,9 +682,8 @@ class SendWalletView extends StatelessWidget {
                                                 Expanded(
                                                   flex: 3,
                                                   child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .gasPrice,
+                                                      FlutterI18n.translate(
+                                                          context, "gasPrice"),
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .titleLarge!
@@ -744,9 +745,9 @@ class SendWalletView extends StatelessWidget {
                                                   Expanded(
                                                     flex: 3,
                                                     child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .gasLimit,
+                                                        FlutterI18n.translate(
+                                                            context,
+                                                            "gasLimit"),
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .titleLarge!
@@ -814,9 +815,9 @@ class SendWalletView extends StatelessWidget {
                                                   Expanded(
                                                     flex: 3,
                                                     child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .satoshisPerByte,
+                                                        FlutterI18n.translate(
+                                                            context,
+                                                            "satoshisPerByte"),
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .titleLarge),
@@ -893,8 +894,8 @@ class SendWalletView extends StatelessWidget {
                                     children: <Widget>[
                                       RichText(
                                         text: TextSpan(
-                                            text: AppLocalizations.of(context)!
-                                                .taphereToCopyTxId,
+                                            text: FlutterI18n.translate(
+                                                context, "taphereToCopyTxId"),
                                             style: const TextStyle(
                                                 decoration:
                                                     TextDecoration.underline,
@@ -983,7 +984,8 @@ class SendWalletView extends StatelessWidget {
                                     height: 20,
                                     child:
                                         model.sharedService!.loadingIndicator())
-                                : Text(AppLocalizations.of(context)!.confirm,
+                                : Text(
+                                    FlutterI18n.translate(context, "confirm"),
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineMedium!

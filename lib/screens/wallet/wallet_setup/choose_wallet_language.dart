@@ -12,9 +12,9 @@
 */
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/choose_wallet_language_screen_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../shared/globals.dart' as globals;
@@ -65,7 +65,8 @@ class ChooseWalletLanguageView extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: Text(
-                        AppLocalizations.of(context)!.pleaseChooseTheLanguage,
+                        FlutterI18n.translate(
+                            context, "pleaseChooseTheLanguage"),
                         textAlign: TextAlign.start,
                         style: Theme.of(context).textTheme.headlineSmall),
                   )
@@ -79,7 +80,7 @@ class ChooseWalletLanguageView extends StatelessWidget {
                     highlightColor: globals.white,
                     child: Center(
                       child: Text(
-                        '${AppLocalizations.of(context)!.loading}...',
+                        '${FlutterI18n.translate(context, "loading")}...',
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ),
@@ -96,9 +97,11 @@ class ChooseWalletLanguageView extends StatelessWidget {
                               'English',
                               style: Theme.of(context).textTheme.headlineMedium,
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               model.setLangauge('en');
-                              AppLocalizations.load(const Locale('en', 'US'));
+                              await FlutterI18n.refresh(
+                                  context, const Locale('en', 'US'));
+                              (context as Element).markNeedsBuild();
                               Navigator.of(context).pushNamed('/walletSetup');
                             },
                           ),
@@ -113,9 +116,11 @@ class ChooseWalletLanguageView extends StatelessWidget {
                             child: Text('中文',
                                 style:
                                     Theme.of(context).textTheme.headlineMedium),
-                            onPressed: () {
+                            onPressed: () async {
                               model.setLangauge('zh');
-                              AppLocalizations.load(const Locale('zh', 'ZH'));
+                              await FlutterI18n.refresh(
+                                  context, const Locale('zh', 'ZH'));
+                              (context as Element).markNeedsBuild();
                               Navigator.of(context).pushNamed('/walletSetup');
                             },
                           )

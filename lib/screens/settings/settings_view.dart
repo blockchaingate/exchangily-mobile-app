@@ -20,9 +20,9 @@ import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/wallet/kyc_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../localizations.dart';
 import '../../shared/globals.dart' as globals;
 
 class SettingsView extends StatelessWidget {
@@ -46,13 +46,13 @@ class SettingsView extends StatelessWidget {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             centerTitle: true,
-            title: Text(AppLocalizations.of(context)!.settings,
+            title: Text(FlutterI18n.translate(context, "settings"),
                 style: Theme.of(context).textTheme.displaySmall),
             backgroundColor: globals.secondaryColor,
             leading: Container(),
           ),
           body: model.isBusy
-              ? Center(child: model.sharedService!.loadingIndicator())
+              ? Center(child: model.sharedService.loadingIndicator())
               : SettingsContainer(model: model),
           bottomNavigationBar: BottomNavBar(count: 4),
         ),
@@ -140,8 +140,8 @@ class SettingsContainer extends StatelessWidget {
                         Container(
                             margin: const EdgeInsets.all(5.0),
                             child: Text(
-                                AppLocalizations.of(context)!
-                                    .changeWalletLanguage,
+                                FlutterI18n.translate(
+                                    context, "changeWalletLanguage"),
                                 style: Theme.of(context).textTheme.titleSmall)),
                         model!.isBusy
                             ? Container()
@@ -210,8 +210,8 @@ class SettingsContainer extends StatelessWidget {
                             iconEnabledColor: globals.primaryColor,
                             iconSize: 26,
                             hint: Text(
-                              AppLocalizations.of(context)!
-                                  .changeWalletLanguage,
+                              FlutterI18n.translate(
+                                  context, "changeWalletLanguage"),
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headlineSmall,
                             ),
@@ -283,8 +283,8 @@ class SettingsContainer extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                            AppLocalizations.of(context)!
-                                .settingsShowcaseInstructions,
+                            FlutterI18n.translate(
+                                context, "settingsShowcaseInstructions"),
                             style: Theme.of(context).textTheme.headlineSmall,
                             textAlign: TextAlign.left),
                       ),
@@ -321,8 +321,8 @@ class SettingsContainer extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                            AppLocalizations.of(context)!
-                                .enableBiometricAuthentication,
+                            FlutterI18n.translate(
+                                context, "enableBiometricAuthentication"),
                             style: Theme.of(context).textTheme.headlineSmall,
                             textAlign: TextAlign.left),
                       ),
@@ -334,7 +334,7 @@ class SettingsContainer extends StatelessWidget {
                             activeColor: primaryColor,
                             inactiveTrackColor: white,
                             value: model!
-                                .storageService!.hasInAppBiometricAuthEnabled,
+                                .storageService.hasInAppBiometricAuthEnabled,
                             onChanged: (value) {
                               model!.setBiometricAuth();
                             }),
@@ -346,8 +346,8 @@ class SettingsContainer extends StatelessWidget {
             // lock app now
             // only shows when user enabled the auth
             // and biometric or pin/password is activated
-            model!.storageService!.hasInAppBiometricAuthEnabled &&
-                    model!.storageService!.hasPhoneProtectionEnabled
+            model!.storageService.hasInAppBiometricAuthEnabled &&
+                    model!.storageService.hasPhoneProtectionEnabled
                 ? Card(
                     elevation: 5,
                     color: walletCardColor,
@@ -365,7 +365,7 @@ class SettingsContainer extends StatelessWidget {
                           ),
                           Expanded(
                             child: Text(
-                                AppLocalizations.of(context)!.lockAppNow,
+                                FlutterI18n.translate(context, "lockAppNow"),
                                 style:
                                     Theme.of(context).textTheme.headlineSmall,
                                 textAlign: TextAlign.left),
@@ -403,7 +403,8 @@ class SettingsContainer extends StatelessWidget {
                       ),
                       // Add column here and add text box that shows which node is current
                       Expanded(
-                        child: Text(AppLocalizations.of(context)!.useAsiaNode,
+                        child: Text(
+                            FlutterI18n.translate(context, "useAsiaNode"),
                             style: Theme.of(context).textTheme.headlineSmall,
                             textAlign: TextAlign.left),
                       ),
@@ -464,10 +465,10 @@ class SettingsContainer extends StatelessWidget {
                 text: TextSpan(
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      model!.sharedService!
+                      model!.sharedService
                           .launchInBrowser(Uri.parse(exchangilyPrivacyUrl));
                     },
-                  text: AppLocalizations.of(context)!.privacyPolicy,
+                  text: FlutterI18n.translate(context, "privacyPolicy"),
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
@@ -496,8 +497,8 @@ class SettingsContainer extends StatelessWidget {
         ),
         Text(
           !model!.isVisible
-              ? AppLocalizations.of(context)!.displayMnemonic
-              : AppLocalizations.of(context)!.hideMnemonic,
+              ? FlutterI18n.translate(context, "displayMnemonic")
+              : FlutterI18n.translate(context, "hideMnemonic"),
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
@@ -518,9 +519,9 @@ class SettingsContainer extends StatelessWidget {
           ),
         ),
         model!.isDeleting
-            ? Text('${AppLocalizations.of(context)!.deleteWallet}...')
+            ? Text('${FlutterI18n.translate(context, "deleteWallet")}...')
             : Text(
-                AppLocalizations.of(context)!.deleteWallet,
+                FlutterI18n.translate(context, "deleteWallet"),
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),

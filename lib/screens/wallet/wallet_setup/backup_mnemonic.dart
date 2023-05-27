@@ -13,12 +13,12 @@
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../../shared/globals.dart' as globals;
 
@@ -27,11 +27,11 @@ class BackupMnemonicWalletScreen extends StatefulWidget {
   static List<String> randomMnemonicList = [];
 
   @override
-  _BackupMnemonicWalletScreenState createState() =>
-      _BackupMnemonicWalletScreenState();
+  BackupMnemonicWalletScreenState createState() =>
+      BackupMnemonicWalletScreenState();
 }
 
-class _BackupMnemonicWalletScreenState
+class BackupMnemonicWalletScreenState
     extends State<BackupMnemonicWalletScreen> {
   WalletService? walletService = locator<WalletService>();
   final NavigationService? navigationService = locator<NavigationService>();
@@ -55,7 +55,7 @@ class _BackupMnemonicWalletScreenState
         appBar: AppBar(
           centerTitle: true,
           elevation: 0,
-          title: Text(AppLocalizations.of(context)!.backupMnemonic,
+          title: Text(FlutterI18n.translate(context, "backupMnemonic"),
               style: Theme.of(context).textTheme.displaySmall),
           backgroundColor: globals.secondaryColor,
           actions: <Widget>[
@@ -73,21 +73,18 @@ class _BackupMnemonicWalletScreenState
                           padding: const EdgeInsets.symmetric(
                               vertical: 32.0, horizontal: 20),
                           children: [
-                            Container(
-                                child: Text(
-                              AppLocalizations.of(context)!
-                                  .backupMnemonicNoticeTitle,
+                            Text(
+                              FlutterI18n.translate(
+                                  context, "backupMnemonicNoticeTitle"),
                               // textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.displaySmall,
-                            )),
+                            ),
                             const SizedBox(height: 20),
-                            Container(
-                                // padding: EdgeInsets.symmetric(horizontal: 20),
-                                child: Text(
-                              AppLocalizations.of(context)!
-                                  .backupMnemonicNoticeContent,
+                            Text(
+                              FlutterI18n.translate(
+                                  context, "backupMnemonicNoticeContent"),
                               style: Theme.of(context).textTheme.headlineSmall,
-                            ))
+                            )
                           ],
                         );
                       });
@@ -102,7 +99,8 @@ class _BackupMnemonicWalletScreenState
             children: <Widget>[
               UIHelper.verticalSpaceMedium,
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
                 decoration: BoxDecoration(
                     color: globals.primaryColor,
                     borderRadius: BorderRadius.circular(30)
@@ -119,7 +117,7 @@ class _BackupMnemonicWalletScreenState
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      AppLocalizations.of(context)!.important,
+                      FlutterI18n.translate(context, "important"),
                       style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w800,
@@ -136,7 +134,7 @@ class _BackupMnemonicWalletScreenState
                 children: <Widget>[
                   Expanded(
                       child: Text(
-                    AppLocalizations.of(context)!.warningBackupMnemonic,
+                    FlutterI18n.translate(context, "warningBackupMnemonic"),
                     style: Theme.of(context).textTheme.headlineSmall,
                   )),
                 ],
@@ -146,7 +144,8 @@ class _BackupMnemonicWalletScreenState
                 margin: const EdgeInsets.symmetric(
                   vertical: 10,
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
                 child: _buttonGrid(),
               ),
               // UIHelper.verticalSpaceSmall,
@@ -156,7 +155,7 @@ class _BackupMnemonicWalletScreenState
                   child: MaterialButton(
                     color: primaryColor,
                     child: Text(
-                      AppLocalizations.of(context)!.confirm,
+                      FlutterI18n.translate(context, "confirm"),
                       // style: Theme.of(context).textTheme.headline4,
                       style: const TextStyle(
                           fontWeight: FontWeight.w800,
@@ -188,10 +187,9 @@ class _BackupMnemonicWalletScreenState
       childAspectRatio: 2.2,
       children: _buildButtonGrid(12));
 
-  List<Container> _buildButtonGrid(int count) => List.generate(count, (i) {
+  List<Widget> _buildButtonGrid(int count) => List.generate(count, (i) {
         var singleWord = BackupMnemonicWalletScreen.randomMnemonicList[i];
-        return Container(
-            child: TextField(
+        return TextField(
           textAlign: TextAlign.center,
           textAlignVertical: const TextAlignVertical(y: 0.8),
           enableInteractiveSelection: false, // readonly
@@ -204,8 +202,8 @@ class _BackupMnemonicWalletScreenState
             filled: true,
             hintText: singleWord,
             hintMaxLines: 1,
-            hintStyle:
-                const TextStyle(color: globals.white, fontWeight: FontWeight.w600),
+            hintStyle: const TextStyle(
+                color: globals.white, fontWeight: FontWeight.w600),
             focusedBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: globals.white, width: 2),
                 borderRadius: BorderRadius.circular(30.0)),
@@ -213,6 +211,6 @@ class _BackupMnemonicWalletScreenState
               borderRadius: BorderRadius.circular(30.0),
             ),
           ),
-        ));
+        );
       });
 }

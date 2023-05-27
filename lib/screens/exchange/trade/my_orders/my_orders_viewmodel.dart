@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
@@ -17,6 +16,7 @@ import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
@@ -87,7 +87,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
         .getSinglePairDecimalConfig(tickerName!)
         .then((decimalConfig) => decimalConfig = decimalConfig);
 
-    _orderCancelledText = AppLocalizations.of(context)!.orderCancelled;
+    _orderCancelledText = FlutterI18n.translate(context, "orderCancelled");
     orderCancelledTextStyle =
         Theme.of(context).textTheme.bodyLarge!.copyWith(color: colors.white);
     // _orderService.swapSources();
@@ -289,9 +289,9 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
   noticePasswordMismatch(context) {
     return sharedService!.sharedSimpleNotification(
-        AppLocalizations.of(context)!.passwordMismatch,
+        FlutterI18n.translate(context, "passwordMismatch"),
         subtitle:
-            AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword);
+            FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword"));
   }
 
   //   Check Password
@@ -301,10 +301,10 @@ class MyOrdersViewModel extends ReactiveViewModel {
     isCancelling = true;
     onClickOrderHash = orderHash;
     var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context)!.enterPassword,
+        title: FlutterI18n.translate(context, "enterPassword"),
         description:
-            AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context)!.confirm);
+            FlutterI18n.translate(context, "dialogManagerTypeSamePasswordNote"),
+        buttonTitle: FlutterI18n.translate(context, "confirm"));
     if (res.confirmed!) {
       String? mnemonic = res.returnedText;
       Uint8List seed = walletService!.generateSeed(mnemonic);
@@ -352,7 +352,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
       showSimpleNotification(
         Center(
             child: Text(
-                AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword,
+                FlutterI18n.translate(
+                    context, "pleaseProvideTheCorrectPassword"),
                 style: Theme.of(context).textTheme.bodyMedium)),
       );
     } else {

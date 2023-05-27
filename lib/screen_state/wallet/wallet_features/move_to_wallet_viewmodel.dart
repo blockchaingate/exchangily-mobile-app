@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/font_style.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
@@ -23,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/services/db/token_info_database_service.dart';
 import 'dart:convert';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 
 class MoveToWalletViewmodel extends BaseViewModel {
@@ -259,7 +259,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
               padding: const EdgeInsets.all(10.0),
               color: secondaryColor.withOpacity(0.5),
               child: Center(
-                  child: Text(AppLocalizations.of(context)!.withdrawPopupNote)),
+                  child: Text(
+                      FlutterI18n.translate(context, "withdrawPopupNote"))),
             ),
             titleTextStyle: headText5,
             contentTextStyle: const TextStyle(color: grey),
@@ -546,7 +547,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
                                     // borderRadius:
                                     //     BorderRadius.all(Radius.circular(4)),
                                     child: Text(
-                                      AppLocalizations.of(context)!.withdraw,
+                                      FlutterI18n.translate(
+                                          context, "withdraw"),
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium!
@@ -675,7 +677,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                     margin: const EdgeInsets.only(bottom: 5.0),
                     child: Center(
                         child: Text(
-                      AppLocalizations.of(context)!.note,
+                      FlutterI18n.translate(context, "note"),
                       style: headText4.copyWith(
                           color: primaryColor, fontWeight: FontWeight.w500),
                     )),
@@ -684,8 +686,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
                     child: !isTSWalletInfo
                         ? Column(children: [
                             Text(
-                                AppLocalizations.of(context)!
-                                    .specialExchangeBalanceNote,
+                                FlutterI18n.translate(
+                                    context, "specialExchangeBalanceNote"),
                                 style: headText5),
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
@@ -694,20 +696,20 @@ class MoveToWalletViewmodel extends BaseViewModel {
                             ),
                           ])
                         : Column(children: [
-                            Text(AppLocalizations.of(context)!.tsWalletNote,
+                            Text(FlutterI18n.translate(context, "tsWalletNote"),
                                 style: headText5),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 8.0),
                               child: Text(
-                                  AppLocalizations.of(context)!
-                                      .specialWithdrawNote,
+                                  FlutterI18n.translate(
+                                      context, "specialWithdrawNote"),
                                   style: headText5),
                             ),
                             UIHelper.verticalSpaceSmall,
                             Text(
-                                AppLocalizations.of(context)!
-                                    .specialWithdrawFailNote,
+                                FlutterI18n.translate(
+                                    context, "specialWithdrawFailNote"),
                                 style: headText5),
                           ]),
                   ),
@@ -722,7 +724,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(4)),
                             child: Text(
-                              AppLocalizations.of(context)!.close,
+                              FlutterI18n.translate(context, "close"),
                               textAlign: TextAlign.center,
                               style: bodyText2.copyWith(
                                   fontWeight: FontWeight.bold),
@@ -745,8 +747,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
                 title: Container(
                   padding: const EdgeInsets.all(10.0),
                   color: secondaryColor.withOpacity(0.5),
-                  child:
-                      Center(child: Text(AppLocalizations.of(context)!.note)),
+                  child: Center(
+                      child: Text(FlutterI18n.translate(context, "note"))),
                 ),
                 titleTextStyle: headText4.copyWith(fontWeight: FontWeight.bold),
                 contentTextStyle: const TextStyle(color: grey),
@@ -759,8 +761,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                               Text(
-                                  AppLocalizations.of(context)!
-                                      .specialExchangeBalanceNote,
+                                  FlutterI18n.translate(
+                                      context, "specialExchangeBalanceNote"),
                                   style: headText5),
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
@@ -775,7 +777,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                                     updateIsAlert(false);
                                   },
                                   child: Text(
-                                    AppLocalizations.of(context)!.close,
+                                    FlutterI18n.translate(context, "close"),
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(color: red),
                                   ),
@@ -787,20 +789,22 @@ class MoveToWalletViewmodel extends BaseViewModel {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                              Text(AppLocalizations.of(context)!.tsWalletNote,
+                              Text(
+                                  FlutterI18n.translate(
+                                      context, "tsWalletNote"),
                                   style: headText5),
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8.0),
                                 child: Text(
-                                    AppLocalizations.of(context)!
-                                        .specialWithdrawNote,
+                                    FlutterI18n.translate(
+                                        context, "specialWithdrawNote"),
                                     style: headText5),
                               ),
                               UIHelper.verticalSpaceSmall,
                               Text(
-                                  AppLocalizations.of(context)!
-                                      .specialWithdrawFailNote,
+                                  FlutterI18n.translate(
+                                      context, "specialWithdrawFailNote"),
                                   style: headText5),
                               TextButton(
                                 onPressed: () {
@@ -808,7 +812,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
                                   updateIsAlert(false);
                                 },
                                 child: Text(
-                                  AppLocalizations.of(context)!.close,
+                                  FlutterI18n.translate(context, "close"),
                                   style: const TextStyle(color: red),
                                 ),
                               )
@@ -898,8 +902,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
       log.i('gas balance $gasAmount');
       if (gasAmount == 0) {
         sharedService!.alertDialog(
-          AppLocalizations.of(context!)!.notice,
-          AppLocalizations.of(context!)!.insufficientGasAmount,
+          FlutterI18n.translate(context!, "notice"),
+          FlutterI18n.translate(context!, "insufficientGasAmount"),
         );
       }
     }).catchError((onError) => log.e(onError));
@@ -1001,7 +1005,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
     log.e(
         'getFabChainBalance tokenlist db empty, in else now-- getting data from api');
     await apiService!.getTokenListUpdates().then((tokens) {
-      smartContractAddress = tokens!
+      smartContractAddress = tokens
           .firstWhere((element) => element.tickerName == walletInfo!.tickerName)
           .contract;
     });
@@ -1262,16 +1266,17 @@ class MoveToWalletViewmodel extends BaseViewModel {
     try {
       if (amountController.text.isEmpty) {
         sharedService!.sharedSimpleNotification(
-            AppLocalizations.of(context!)!.amountMissing,
-            subtitle: AppLocalizations.of(context!)!.pleaseEnterValidNumber);
+            FlutterI18n.translate(context!, "amountMissing"),
+            subtitle:
+                FlutterI18n.translate(context!, "pleaseEnterValidNumber"));
         setBusy(false);
         return;
       }
       await checkGasBalance();
       if (gasAmount == 0.0 || gasAmount < kanbanTransFee) {
         sharedService!.alertDialog(
-          AppLocalizations.of(context!)!.notice,
-          AppLocalizations.of(context!)!.insufficientGasAmount,
+          FlutterI18n.translate(context!, "notice"),
+          FlutterI18n.translate(context!, "insufficientGasAmount"),
         );
         setBusy(false);
         return;
@@ -1280,9 +1285,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
       var amount = double.tryParse(amountController.text)!;
       if (amount < double.parse(token.minWithdraw!)) {
         sharedService!.sharedSimpleNotification(
-          AppLocalizations.of(context!)!.minimumAmountError,
-          subtitle: AppLocalizations.of(context!)!
-              .yourWithdrawMinimumAmountaIsNotSatisfied,
+          FlutterI18n.translate(context!, "minimumAmountError"),
+          subtitle: FlutterI18n.translate(
+              context!, "yourWithdrawMinimumAmountaIsNotSatisfied"),
         );
         setBusy(false);
         return;
@@ -1290,8 +1295,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
       if (amount > walletInfo!.inExchange! ||
           amount == 0 ||
           amount.isNegative) {
-        sharedService!.alertDialog(AppLocalizations.of(context!)!.invalidAmount,
-            AppLocalizations.of(context!)!.pleaseEnterValidNumber,
+        sharedService!.alertDialog(
+            FlutterI18n.translate(context!, "invalidAmount"),
+            FlutterI18n.translate(context!, "pleaseEnterValidNumber"),
             isWarning: false);
         setBusy(false);
         return;
@@ -1300,10 +1306,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
       //  if (isWithdrawChoice) {
       if (groupValue == 'FAB' && amount > fabChainBalance) {
-        sharedService!.alertDialog(
-            AppLocalizations.of(context!)!.notice,
-            '${AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart} $fabChainBalance. ${AppLocalizations.of(context!)!
-                    .lowTsWalletBalanceErrorSecondPart}',
+        sharedService!.alertDialog(FlutterI18n.translate(context!, "notice"),
+            '${FlutterI18n.translate(context!, "lowTsWalletBalanceErrorFirstPart")} $fabChainBalance. ${FlutterI18n.translate(context!, "lowTsWalletBalanceErrorSecondPart")}',
             isWarning: false);
 
         setBusy(false);
@@ -1314,10 +1318,8 @@ class MoveToWalletViewmodel extends BaseViewModel {
       /// instead of displaying the generic error
 
       if (groupValue == 'ETH' && amount > ethChainBalance) {
-        sharedService!.alertDialog(
-            AppLocalizations.of(context!)!.notice,
-            '${AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart} $ethChainBalance. ${AppLocalizations.of(context!)!
-                    .lowTsWalletBalanceErrorSecondPart}',
+        sharedService!.alertDialog(FlutterI18n.translate(context!, "notice"),
+            '${FlutterI18n.translate(context!, "lowTsWalletBalanceErrorFirstPart")} $ethChainBalance. ${FlutterI18n.translate(context!, "lowTsWalletBalanceErrorSecondPart")}',
             isWarning: false);
 
         setBusy(false);
@@ -1325,30 +1327,24 @@ class MoveToWalletViewmodel extends BaseViewModel {
       }
 
       if (groupValue == 'TRX' && amount > trxTsWalletBalance) {
-        sharedService!.alertDialog(
-            AppLocalizations.of(context!)!.notice,
-            '${AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart} $trxTsWalletBalance. ${AppLocalizations.of(context!)!
-                    .lowTsWalletBalanceErrorSecondPart}',
+        sharedService!.alertDialog(FlutterI18n.translate(context!, "notice"),
+            '${FlutterI18n.translate(context!, "lowTsWalletBalanceErrorFirstPart")} $trxTsWalletBalance. ${FlutterI18n.translate(context!, "lowTsWalletBalanceErrorSecondPart")}',
             isWarning: false);
         setBusy(false);
         return;
       }
 
       if (groupValue == 'BNB' && amount > bnbTsWalletBalance) {
-        sharedService!.alertDialog(
-            AppLocalizations.of(context!)!.notice,
-            '${AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart} $bnbTsWalletBalance. ${AppLocalizations.of(context!)!
-                    .lowTsWalletBalanceErrorSecondPart}',
+        sharedService!.alertDialog(FlutterI18n.translate(context!, "notice"),
+            '${FlutterI18n.translate(context!, "lowTsWalletBalanceErrorFirstPart")} $bnbTsWalletBalance. ${FlutterI18n.translate(context!, "lowTsWalletBalanceErrorSecondPart")}',
             isWarning: false);
         setBusy(false);
         return;
       }
 
       if (groupValue == 'POLYGON' && amount > polygonTsWalletBalance) {
-        sharedService!.alertDialog(
-            AppLocalizations.of(context!)!.notice,
-            '${AppLocalizations.of(context!)!.lowTsWalletBalanceErrorFirstPart} $polygonTsWalletBalance. ${AppLocalizations.of(context!)!
-                    .lowTsWalletBalanceErrorSecondPart}',
+        sharedService!.alertDialog(FlutterI18n.translate(context!, "notice"),
+            '${FlutterI18n.translate(context!, "lowTsWalletBalanceErrorFirstPart")} $polygonTsWalletBalance. ${FlutterI18n.translate(context!, "lowTsWalletBalanceErrorSecondPart")}',
             isWarning: false);
         setBusy(false);
         return;
@@ -1357,10 +1353,10 @@ class MoveToWalletViewmodel extends BaseViewModel {
 
       message = '';
       var res = await _dialogService.showDialog(
-          title: AppLocalizations.of(context!)!.enterPassword,
-          description:
-              AppLocalizations.of(context!)!.dialogManagerTypeSamePasswordNote,
-          buttonTitle: AppLocalizations.of(context!)!.confirm);
+          title: FlutterI18n.translate(context!, "enterPassword"),
+          description: FlutterI18n.translate(
+              context!, "dialogManagerTypeSamePasswordNote"),
+          buttonTitle: FlutterI18n.translate(context!, "confirm"));
       if (res.confirmed!) {
         String? exgAddress =
             await sharedService!.getExgAddressFromWalletDatabase();
@@ -1457,7 +1453,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
             } else {
               serverError = ret['data'].toString();
               if (serverError == null || serverError == '') {
-                var errMsg = AppLocalizations.of(context!)!.serverError;
+                var errMsg = FlutterI18n.translate(context!, "serverError");
                 error(errMsg);
                 isShowErrorDetailsButton = true;
                 isSubmittingTx = false;
@@ -1465,11 +1461,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
             }
             sharedService!.sharedSimpleNotification(
                 success && ret['transactionHash'] != null
-                    ? AppLocalizations.of(context!)!
-                        .withdrawTransactionSuccessful
-                    : AppLocalizations.of(context!)!.withdrawTransactionFailed,
-                subtitle:
-                    success ? "" : AppLocalizations.of(context!)!.networkIssue,
+                    ? FlutterI18n.translate(
+                        context!, "withdrawTransactionSuccessful")
+                    : FlutterI18n.translate(
+                        context!, "withdrawTransactionFailed"),
+                subtitle: success
+                    ? ""
+                    : FlutterI18n.translate(context!, "networkIssue"),
                 isError: success ? false : true);
           }).catchError((err) {
             log.e('Withdraw catch $err');
@@ -1498,7 +1496,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
             } else {
               serverError = ret['data'];
               if (serverError == null || serverError == '') {
-                var errMsg = AppLocalizations.of(context!)!.serverError;
+                var errMsg = FlutterI18n.translate(context!, "serverError");
                 error(errMsg);
                 isShowErrorDetailsButton = true;
                 isSubmittingTx = false;
@@ -1506,9 +1504,10 @@ class MoveToWalletViewmodel extends BaseViewModel {
             }
             sharedService!.sharedSimpleNotification(
                 success && ret['transactionHash'] != null
-                    ? AppLocalizations.of(context!)!
-                        .withdrawTransactionSuccessful
-                    : AppLocalizations.of(context!)!.withdrawTransactionFailed,
+                    ? FlutterI18n.translate(
+                        context!, "withdrawTransactionSuccessful")
+                    : FlutterI18n.translate(
+                        context!, "withdrawTransactionFailed"),
                 subtitle: success ? "" : serverError!,
                 isError: success ? false : true);
           }).catchError((err) {
@@ -1541,8 +1540,9 @@ class MoveToWalletViewmodel extends BaseViewModel {
   showNotification(context) {
     setBusy(true);
     sharedService!.sharedSimpleNotification(
-      AppLocalizations.of(context)!.passwordMismatch,
-      subtitle: AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword,
+      FlutterI18n.translate(context, "passwordMismatch"),
+      subtitle:
+          FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword"),
     );
     setBusy(false);
   }

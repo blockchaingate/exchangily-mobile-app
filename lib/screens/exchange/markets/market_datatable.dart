@@ -1,9 +1,9 @@
 import 'package:exchangilymobileapp/constants/route_names.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 class MarketDataTable extends StatefulWidget {
   final List<Price>? pairList;
@@ -70,7 +70,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 padding: const EdgeInsets.only(left: 6),
                 // width: MediaQuery.of(context).size.width * 3 / 15,
                 child: Text(
-                  AppLocalizations.of(context)!.ticker,
+                  FlutterI18n.translate(context, "ticker"),
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
@@ -95,12 +95,9 @@ class _MarketDataTableState extends State<MarketDataTable> {
               },
             ),
             DataColumn(
-              label: Container(
-                // width: MediaQuery.of(context).size.width * 2 / 11,
-                child: Text(
-                  AppLocalizations.of(context)!.price,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+              label: Text(
+                FlutterI18n.translate(context, "price"),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               onSort: (columnIndex, sortAscending) {
                 // debugPrint("Sort Datatable");
@@ -121,12 +118,9 @@ class _MarketDataTableState extends State<MarketDataTable> {
               },
             ),
             DataColumn(
-              label: Container(
-                //   width: MediaQuery.of(context).size.width * 2 / 11,
-                child: Text(
-                  '24H ${AppLocalizations.of(context)!.volume}',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+              label: Text(
+                '24H ${FlutterI18n.translate(context, "volume")}',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               onSort: (columnIndex, sortAscending) {
                 setState(() {
@@ -169,12 +163,9 @@ class _MarketDataTableState extends State<MarketDataTable> {
             //   },
             // ),
             DataColumn(
-              label: Container(
-                //  width: MediaQuery.of(context).size.width * 2 / 15,
-                child: Text(
-                  '24H ${AppLocalizations.of(context)!.change}',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+              label: Text(
+                '24H ${FlutterI18n.translate(context, "change")}',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               onSort: (columnIndex, sortAscending) {
                 setState(() {
@@ -203,10 +194,12 @@ class _MarketDataTableState extends State<MarketDataTable> {
                           // color: Colors.green,
                           child: Text(
                             itemRow.symbol!.split('/')[0],
-                            style:
-                                Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -215,31 +208,27 @@ class _MarketDataTableState extends State<MarketDataTable> {
                         },
                       ),
                       DataCell(
-                        Container(
-                          child: Text(itemRow.price!.toStringAsFixed(6),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall!
-                                  .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                              textAlign: TextAlign.start),
-                        ),
+                        Text(itemRow.price!.toStringAsFixed(6),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                            textAlign: TextAlign.start),
                         onTap: () {
                           onRowTap(itemRow);
                         },
                       ),
                       DataCell(
-                        Container(
-                          child: Text(itemRow.volume!.toStringAsFixed(2),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall!
-                                  .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                              textAlign: TextAlign.start),
-                        ),
+                        Text(itemRow.volume!.toStringAsFixed(2),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                            textAlign: TextAlign.start),
                         onTap: () {
                           onRowTap(itemRow);
                         },
@@ -269,7 +258,10 @@ class _MarketDataTableState extends State<MarketDataTable> {
                           itemRow.change! >= 0
                               ? "+" + itemRow.change!.toStringAsFixed(2) + '%'
                               : '${itemRow.change!.toStringAsFixed(2)}%',
-                          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(
                                 color: Color(itemRow.change! >= 0
                                     ? 0XFF0da88b
                                     : 0XFFe2103c),
