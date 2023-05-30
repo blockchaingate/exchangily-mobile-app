@@ -14,7 +14,6 @@
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -25,6 +24,7 @@ import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart' as stringUtils;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 class SmartContract extends StatefulWidget {
   const SmartContract({Key? key}) : super(key: key);
@@ -144,7 +144,7 @@ class _SmartContractState extends State<SmartContract> {
             },
           ),
           middle: Text(
-            AppLocalizations.of(context)!.smartContract,
+            FlutterI18n.translate(context, "smartContract"),
             style: const TextStyle(color: Colors.white),
           ),
           backgroundColor: const Color(0XFF1f2233),
@@ -154,7 +154,7 @@ class _SmartContractState extends State<SmartContract> {
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
             child: ListView(
               children: <Widget>[
-                Text(AppLocalizations.of(context)!.smartContractAddress,
+                Text(FlutterI18n.translate(context, "smartContractAddress"),
                     style: const TextStyle(color: Colors.grey, fontSize: 18.0)),
                 const SizedBox(height: 10),
                 TextField(
@@ -162,7 +162,7 @@ class _SmartContractState extends State<SmartContract> {
                     enabledBorder: const OutlineInputBorder(
                         borderSide:
                             BorderSide(color: Color(0XFF871fff), width: 1.0)),
-                    hintText: AppLocalizations.of(context)!.enterAddress,
+                    hintText: FlutterI18n.translate(context, "enterAddress"),
                     hintStyle:
                         const TextStyle(fontSize: 20.0, color: Colors.grey),
                   ),
@@ -173,14 +173,14 @@ class _SmartContractState extends State<SmartContract> {
                   },
                 ),
                 const SizedBox(height: 20),
-                Text(AppLocalizations.of(context)!.smartContractName,
+                Text(FlutterI18n.translate(context, "smartContractName"),
                     style: const TextStyle(color: Colors.grey, fontSize: 18.0)),
                 const SizedBox(height: 10),
                 Text(_smartContractName!,
                     style:
                         const TextStyle(color: Colors.white, fontSize: 18.0)),
                 const SizedBox(height: 20),
-                Text(AppLocalizations.of(context)!.function,
+                Text(FlutterI18n.translate(context, "function"),
                     style: const TextStyle(color: Colors.grey, fontSize: 18.0)),
                 const SizedBox(height: 10),
                 DropdownButton(
@@ -217,7 +217,7 @@ class _SmartContractState extends State<SmartContract> {
                     if (payable)
                       Column(
                         children: <Widget>[
-                          Text(AppLocalizations.of(context)!.payableValue,
+                          Text(FlutterI18n.translate(context, "payableValue"),
                               style: const TextStyle(
                                   color: Colors.grey, fontSize: 18.0)),
                           const SizedBox(height: 10),
@@ -259,7 +259,7 @@ class _SmartContractState extends State<SmartContract> {
                     //   debugPrint(res);
                   },
                   child: Text(
-                    AppLocalizations.of(context)!.confirm,
+                    FlutterI18n.translate(context, "confirm"),
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
                 )
@@ -290,9 +290,9 @@ class _SmartContractState extends State<SmartContract> {
 
   checkPass(abiHex, value, context) async {
     var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context)!.enterPassword,
-        description:
-            AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote);
+        title: FlutterI18n.translate(context, "enterPassword"),
+        description: FlutterI18n.translate(
+            context, "dialogManagerTypeSamePasswordNote"));
     if (res.confirmed!) {
       log.w('Pass matched');
       log.w(res.returnedText);
@@ -329,8 +329,9 @@ class _SmartContractState extends State<SmartContract> {
 
   showNotification(context) {
     sharedService!.sharedSimpleNotification(
-      AppLocalizations.of(context)!.passwordMismatch,
-      subtitle: AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword,
+      FlutterI18n.translate(context, "passwordMismatch"),
+      subtitle:
+          FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword"),
     );
   }
 

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -9,6 +8,7 @@ import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:kyc/kyc.dart';
 
 import '../../logger.dart';
@@ -66,10 +66,10 @@ class LocalKycUtil {
     DialogService dialogService = locator<DialogService>();
     await dialogService
         .showDialog(
-            title: AppLocalizations.of(context)!.enterPassword,
-            description:
-                AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
-            buttonTitle: AppLocalizations.of(context)!.confirm)
+            title: FlutterI18n.translate(context, "enterPassword"),
+            description: FlutterI18n.translate(
+                context, "dialogManagerTypeSamePasswordNote"),
+            buttonTitle: FlutterI18n.translate(context, "confirm"))
         .then((res) async {
       if (res.confirmed!) {
         return seed = walletService.generateSeed(res.returnedText);

@@ -17,9 +17,9 @@ import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../shared/globals.dart' as globals;
-import 'package:exchangilymobileapp/localizations.dart';
 
 class OrderUpdateDialogManager extends StatefulWidget {
   final Widget? child;
@@ -82,7 +82,7 @@ class OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
                   Icons.event_note,
                   color: globals.primaryColor,
                 ),
-                labelText: AppLocalizations.of(context)!.paymentDescription,
+                labelText: FlutterI18n.translate(context, "paymentDescription"),
               ),
             ),
           ],

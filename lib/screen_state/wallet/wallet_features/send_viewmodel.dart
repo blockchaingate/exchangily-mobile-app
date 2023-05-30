@@ -20,7 +20,6 @@ import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
@@ -46,6 +45,7 @@ import 'package:exchangilymobileapp/utils/tron_util/trx_transaction_util.dart'
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 
@@ -187,9 +187,9 @@ class SendViewModel extends BaseViewModel {
         receiverWalletAddressTextController.text = domainAddress;
         userTypedDomain = domainName;
       } else if ((owner != null && owner.isNotEmpty) && domainAddress == null) {
-        userTypedDomain = AppLocalizations.of(context!)!.addressNotSet;
+        userTypedDomain = FlutterI18n.translate(context!, "addressNotSet");
       } else {
-        userTypedDomain = AppLocalizations.of(context!)!.invalidDomain;
+        userTypedDomain = FlutterI18n.translate(context!, "invalidDomain");
       }
       notifyListeners();
     } else {
@@ -375,7 +375,7 @@ class SendViewModel extends BaseViewModel {
           .toString();
     } else {
       sharedService!.sharedSimpleNotification(
-          AppLocalizations.of(context!)!.insufficientGasAmount);
+          FlutterI18n.translate(context!, "insufficientGasAmount"));
     }
     setBusy(false);
   }
@@ -417,10 +417,10 @@ class SendViewModel extends BaseViewModel {
     isShowErrorDetailsButton = false;
     isShowDetailsMessage = false;
     var dialogResponse = await _dialogService.showDialog(
-        title: AppLocalizations.of(context!)!.enterPassword,
-        description:
-            AppLocalizations.of(context!)!.dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context!)!.confirm);
+        title: FlutterI18n.translate(context!, "enterPassword"),
+        description: FlutterI18n.translate(
+            context!, "dialogManagerTypeSamePasswordNote"),
+        buttonTitle: FlutterI18n.translate(context!, "confirm"));
     if (dialogResponse.confirmed!) {
       String? mnemonic = dialogResponse.returnedText;
       Uint8List seed = walletService!.generateSeed(mnemonic);
@@ -512,8 +512,8 @@ class SendViewModel extends BaseViewModel {
                 walletInfo!.tickerName!)['tickerName'];
 
             sharedService!.alertDialog(
-              AppLocalizations.of(context!)!.sendTransactionComplete,
-              '$t ${AppLocalizations.of(context!)!.isOnItsWay}',
+              FlutterI18n.translate(context!, "sendTransactionComplete"),
+              '$t ${FlutterI18n.translate(context!, "isOnItsWay")}',
             );
             // add tx to db
             addSendTransactionToDB(walletInfo!, amount, txHash);
@@ -536,13 +536,16 @@ class SendViewModel extends BaseViewModel {
           setBusy(false);
           isShowErrorDetailsButton = false;
           isShowDetailsMessage = false;
-          sharedService!.alertDialog(AppLocalizations.of(context!)!.notice,
-              AppLocalizations.of(context!)!.serverTimeoutPleaseTryAgainLater,
+          sharedService!.alertDialog(
+              FlutterI18n.translate(context!, "notice"),
+              FlutterI18n.translate(
+                  context!, "serverTimeoutPleaseTryAgainLater"),
               isWarning: false);
         }).catchError((error) {
           log.e('In Catch error - $error');
-          sharedService!.alertDialog(AppLocalizations.of(context!)!.serverError,
-              '$tickerName ${AppLocalizations.of(context!)!.transanctionFailed}',
+          sharedService!.alertDialog(
+              FlutterI18n.translate(context!, "serverError"),
+              '$tickerName ${FlutterI18n.translate(context!, "transanctionFailed")}',
               isWarning: false);
           isShowErrorDetailsButton = true;
           isShowDetailsMessage = true;
@@ -568,8 +571,8 @@ class SendViewModel extends BaseViewModel {
             var t = walletUtil.updateSpecialTokensTickerName(
                 walletInfo!.tickerName!)['tickerName'];
             sharedService!.alertDialog(
-              AppLocalizations.of(context!)!.sendTransactionComplete,
-              '$t ${AppLocalizations.of(context!)!.isOnItsWay}',
+              FlutterI18n.translate(context!, "sendTransactionComplete"),
+              '$t ${FlutterI18n.translate(context!, "isOnItsWay")}',
             );
             //   var allTxids = res["txids"];
             //  walletService.addTxids(allTxids);
@@ -583,7 +586,7 @@ class SendViewModel extends BaseViewModel {
             log.e('Both TxHash and Error Message are empty $errorMessage');
             sharedService!.alertDialog(
               "",
-              '$tickerName ${AppLocalizations.of(context!)!.transanctionFailed}',
+              '$tickerName ${FlutterI18n.translate(context!, "transanctionFailed")}',
             );
             isShowErrorDetailsButton = false;
             isShowDetailsMessage = false;
@@ -592,7 +595,7 @@ class SendViewModel extends BaseViewModel {
             log.e('Error Message $errorMessage');
             sharedService!.alertDialog(
               "",
-              '$tickerName ${AppLocalizations.of(context!)!.transanctionFailed}',
+              '$tickerName ${FlutterI18n.translate(context!, "transanctionFailed")}',
             );
             isShowErrorDetailsButton = true;
             isShowDetailsMessage = true;
@@ -605,13 +608,13 @@ class SendViewModel extends BaseViewModel {
           isShowErrorDetailsButton = false;
           isShowDetailsMessage = false;
           setBusy(false);
-          return errorMessage =
-              AppLocalizations.of(context!)!.serverTimeoutPleaseTryAgainLater;
+          return errorMessage = FlutterI18n.translate(
+              context!, "serverTimeoutPleaseTryAgainLater");
         }).catchError((error) {
           log.e('In Catch error - $error');
           sharedService!.alertDialog(
-              AppLocalizations.of(context!)!.networkIssue,
-              '$tickerName ${AppLocalizations.of(context!)!.transanctionFailed}',
+              FlutterI18n.translate(context!, "networkIssue"),
+              '$tickerName ${FlutterI18n.translate(context!, "transanctionFailed")}',
               isWarning: false);
           isShowErrorDetailsButton = true;
           isShowDetailsMessage = true;
@@ -625,11 +628,11 @@ class SendViewModel extends BaseViewModel {
       log.e('Wallet update required');
       setBusy(false);
       return errorMessage =
-          AppLocalizations.of(context!)!.importantWalletUpdateNotice;
+          FlutterI18n.translate(context!, "importantWalletUpdateNotice");
     } else {
       setBusy(false);
       return errorMessage =
-          AppLocalizations.of(context!)!.pleaseProvideTheCorrectPassword;
+          FlutterI18n.translate(context!, "pleaseProvideTheCorrectPassword");
     }
     transFee = 0.0;
     setBusy(false);
@@ -724,8 +727,9 @@ class SendViewModel extends BaseViewModel {
     errorMessage = '';
     if (amountController.text == '') {
       debugPrint('amount empty');
-      sharedService!.alertDialog(AppLocalizations.of(context)!.amountMissing,
-          AppLocalizations.of(context)!.invalidAmount,
+      sharedService!.alertDialog(
+          FlutterI18n.translate(context, "amountMissing"),
+          FlutterI18n.translate(context, "invalidAmount"),
           isWarning: false);
       return;
     }
@@ -740,22 +744,24 @@ class SendViewModel extends BaseViewModel {
     //await refreshBalance();
     if (toAddress == '') {
       debugPrint('address empty');
-      sharedService!.alertDialog(AppLocalizations.of(context)!.emptyAddress,
-          AppLocalizations.of(context)!.pleaseEnterAnAddress,
+      sharedService!.alertDialog(FlutterI18n.translate(context, "emptyAddress"),
+          FlutterI18n.translate(context, "pleaseEnterAnAddress"),
           isWarning: false);
       return;
     }
     if (walletService!.isValidKbAddress(toAddress!)) {
       debugPrint('invalid address ');
-      sharedService!.alertDialog(AppLocalizations.of(context)!.notice,
-          AppLocalizations.of(context)!.invalidAddress,
+      sharedService!.alertDialog(FlutterI18n.translate(context, "notice"),
+          FlutterI18n.translate(context, "invalidAddress"),
           isWarning: false);
       return;
     }
     if ((isTrx()) && !toAddress!.startsWith('T')) {
       debugPrint('invalid tron address');
-      sharedService!.alertDialog(AppLocalizations.of(context)!.invalidAddress,
-          AppLocalizations.of(context)!.pleaseCorrectTheFormatOfReceiveAddress,
+      sharedService!.alertDialog(
+          FlutterI18n.translate(context, "invalidAddress"),
+          FlutterI18n.translate(
+              context, "pleaseCorrectTheFormatOfReceiveAddress"),
           isWarning: false);
       return;
     }
@@ -780,7 +786,7 @@ class SendViewModel extends BaseViewModel {
           showSimpleNotification(
               Center(
                 child: Text(
-                    '${AppLocalizations.of(context)!.low} $coin ${AppLocalizations.of(context)!.balance}'),
+                    '${FlutterI18n.translate(context, "low")} $coin ${FlutterI18n.translate(context, "balance")}'),
               ),
               position: NotificationPosition.top,
               background: sellPrice);
@@ -797,11 +803,11 @@ class SendViewModel extends BaseViewModel {
       showSimpleNotification(
           Center(
             child: Text(
-                '${AppLocalizations.of(context)!.low} $coin ${AppLocalizations.of(context)!.balance}',
+                '${FlutterI18n.translate(context, "low")} $coin ${FlutterI18n.translate(context, "balance")}',
                 style: Theme.of(context).textTheme.headlineSmall),
           ),
           subtitle: Center(
-            child: Text('${AppLocalizations.of(context)!.gasFee} 0',
+            child: Text('${FlutterI18n.translate(context, "gasFee")} 0',
                 style: Theme.of(context).textTheme.titleLarge),
           ),
           position: NotificationPosition.top,
@@ -882,7 +888,7 @@ class SendViewModel extends BaseViewModel {
             showSimpleNotification(
                 Center(
                   child: Text(
-                      '${AppLocalizations.of(context!)!.low} TRX ${AppLocalizations.of(context!)!.balance}'),
+                      '${FlutterI18n.translate(context!, "low")} TRX ${FlutterI18n.translate(context!, "balance")}'),
                 ),
                 position: NotificationPosition.top,
                 background: sellPrice);
@@ -925,8 +931,8 @@ class SendViewModel extends BaseViewModel {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${AppLocalizations.of(context)!.transactionId} '),
-            Text(AppLocalizations.of(context)!.copiedSuccessfully),
+            Text('${FlutterI18n.translate(context, "transactionId")} '),
+            Text(FlutterI18n.translate(context, "copiedSuccessfully")),
           ],
         ),
         position: NotificationPosition.bottom,
@@ -991,7 +997,7 @@ class SendViewModel extends BaseViewModel {
             showSimpleNotification(
                 Center(
                   child: Text(
-                      '${AppLocalizations.of(context!)!.low} $coin ${AppLocalizations.of(context!)!.balance}'),
+                      '${FlutterI18n.translate(context!, "low")} $coin ${FlutterI18n.translate(context!, "balance")}'),
                 ),
                 position: NotificationPosition.top,
                 background: sellPrice);
@@ -1003,8 +1009,9 @@ class SendViewModel extends BaseViewModel {
       setBusy(false);
 
       log.e(err);
-      sharedService!.alertDialog(AppLocalizations.of(context!)!.genericError,
-          AppLocalizations.of(context!)!.transanctionFailed,
+      sharedService!.alertDialog(
+          FlutterI18n.translate(context!, "genericError"),
+          FlutterI18n.translate(context!, "transanctionFailed"),
           isWarning: false);
     });
     setBusy(false);
@@ -1034,14 +1041,14 @@ class SendViewModel extends BaseViewModel {
       if (e.code == "PERMISSION_NOT_GRANTED") {
         setBusy(false);
         sharedService!.alertDialog(
-            '', AppLocalizations.of(context!)!.userAccessDenied,
+            '', FlutterI18n.translate(context!, "userAccessDenied"),
             isWarning: false);
         // receiverWalletAddressTextController.text =
         //     AppLocalizations.of(context).userAccessDenied;
       } else {
         setBusy(false);
         sharedService!.alertDialog(
-            '', AppLocalizations.of(context!)!.unknownError,
+            '', FlutterI18n.translate(context!, "unknownError"),
             isWarning: false);
         // receiverWalletAddressTextController.text =
         //     '${AppLocalizations.of(context).unknownError}: $e';
@@ -1058,7 +1065,7 @@ class SendViewModel extends BaseViewModel {
       log.i(e.toString());
       setBusy(false);
       sharedService!.alertDialog(
-          '', AppLocalizations.of(context!)!.unknownError,
+          '', FlutterI18n.translate(context!, "unknownError"),
           isWarning: false);
       // receiverWalletAddressTextController.text =
       //     '${AppLocalizations.of(context).unknownError}: $e';

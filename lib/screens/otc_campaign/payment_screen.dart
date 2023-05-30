@@ -1,9 +1,9 @@
 import 'package:exchangilymobileapp/environments/environment_type.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/payment_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../shared/globals.dart' as globals;
@@ -22,7 +22,7 @@ class CampaignPaymentScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
             centerTitle: true,
-            title: Text(AppLocalizations.of(context)!.payment,
+            title: Text(FlutterI18n.translate(context, "payment"),
                 style: Theme.of(context).textTheme.displaySmall)),
         // Scaffold body container
         body: SingleChildScrollView(
@@ -104,7 +104,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                       child: Text(currency),
                                                     ));
                                               }).toList(),
-                                              onChanged: (dynamic newValue) async {
+                                              onChanged:
+                                                  (dynamic newValue) async {
                                                 model.selectedCurrency =
                                                     newValue;
                                                 await model.checkAmount(model
@@ -115,8 +116,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           ),
                                         ),
                                         suffix: Column(children: [
-                                          Text(AppLocalizations.of(context)!
-                                              .tokenQuantity),
+                                          Text(FlutterI18n.translate(
+                                              context, "tokenQuantity")),
                                           model.busy && model.isTokenCalc
                                               ? const SizedBox(
                                                   width: 10,
@@ -125,13 +126,14 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                       CircularProgressIndicator(
                                                     strokeWidth: 0.5,
                                                   ))
-                                              : Text(model.tokenPurchaseQuantity!
+                                              : Text(model
+                                                  .tokenPurchaseQuantity!
                                                   .toStringAsFixed(3))
                                         ]),
                                         filled: true,
                                         fillColor: globals.walletCardColor,
-                                        hintText:
-                                            AppLocalizations.of(context)!.amount,
+                                        hintText: FlutterI18n.translate(
+                                            context, "amount"),
                                         hintStyle: Theme.of(context)
                                             .textTheme
                                             .titleLarge!
@@ -159,8 +161,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       padding:
                                           const EdgeInsets.only(left: 10.0),
                                       child: Text(
-                                        AppLocalizations.of(context)!
-                                            .paymentType,
+                                        FlutterI18n.translate(
+                                            context, "paymentType"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headlineSmall,
@@ -171,54 +173,50 @@ class CampaignPaymentScreen extends StatelessWidget {
                                   // Row that contains both radio buttons
                                   Expanded(
                                     flex: 3,
-                                    child: Container(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: <Widget>[
-                                          UIHelper.horizontalSpaceSmall,
-                                          // USD radio button row
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              Text('USD',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleLarge),
-                                              Radio(
-                                                  activeColor:
-                                                      globals.primaryColor,
-                                                  onChanged: (dynamic value) {
-                                                    model.radioButtonSelection(
-                                                        value);
-                                                  },
-                                                  groupValue: model.groupValue,
-                                                  value: 'USD'),
-                                            ],
-                                          ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: <Widget>[
+                                        UIHelper.horizontalSpaceSmall,
+                                        // USD radio button row
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text('USD',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge),
+                                            Radio(
+                                                activeColor:
+                                                    globals.primaryColor,
+                                                onChanged: (dynamic value) {
+                                                  model.radioButtonSelection(
+                                                      value);
+                                                },
+                                                groupValue: model.groupValue,
+                                                value: 'USD'),
+                                          ],
+                                        ),
 
-                                          // USDT radio button row
-                                          Row(
-                                            children: <Widget>[
-                                              Text('USDT',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleLarge),
-                                              Radio(
-                                                  focusColor: globals.white54,
-                                                  activeColor:
-                                                      globals.primaryColor,
-                                                  onChanged: (dynamic t) {
-                                                    model.radioButtonSelection(
-                                                        t);
-                                                  },
-                                                  groupValue: model.groupValue,
-                                                  value: 'USDT'),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                        // USDT radio button row
+                                        Row(
+                                          children: <Widget>[
+                                            Text('USDT',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge),
+                                            Radio(
+                                                focusColor: globals.white54,
+                                                activeColor:
+                                                    globals.primaryColor,
+                                                onChanged: (dynamic t) {
+                                                  model.radioButtonSelection(t);
+                                                },
+                                                groupValue: model.groupValue,
+                                                value: 'USDT'),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -234,11 +232,10 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text(AppLocalizations.of(context)!
-                                            .gasFee),
+                                        Text(FlutterI18n.translate(
+                                            context, "gasFee")),
                                         UIHelper.horizontalSpaceSmall,
-                                        Text(
-                                            '${model.transportationFee} ETH'),
+                                        Text('${model.transportationFee} ETH'),
                                       ],
                                     )),
 
@@ -260,8 +257,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                             MainAxisAlignment.center,
                                         children: <Widget>[
                                           Text(
-                                            AppLocalizations.of(context)!
-                                                .bankWireDetails,
+                                            FlutterI18n.translate(
+                                                context, "bankWireDetails"),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headlineSmall,
@@ -276,8 +273,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           Expanded(
                                             flex: 2,
                                             child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .bankName,
+                                              FlutterI18n.translate(
+                                                  context, "bankName"),
                                               textAlign: TextAlign.start,
                                             ),
                                           ),
@@ -294,9 +291,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                         children: <Widget>[
                                           Expanded(
                                             flex: 2,
-                                            child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .routingNumber),
+                                            child: Text(FlutterI18n.translate(
+                                                context, "routingNumber")),
                                           ),
                                           const Expanded(
                                             flex: 1,
@@ -311,8 +307,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           Expanded(
                                             flex: 2,
                                             child: Text(
-                                                '${AppLocalizations.of(context)!
-                                                        .bankAccount} #'),
+                                                '${FlutterI18n.translate(context, "bankAccount")} #'),
                                           ),
                                           const Expanded(
                                             flex: 1,
@@ -340,8 +335,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                         MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
                                       Text(
-                                        AppLocalizations.of(context)!
-                                            .receiveAddress,
+                                        FlutterI18n.translate(
+                                            context, "receiveAddress"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headlineSmall,
@@ -357,46 +352,43 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       //Selected Wallet Balance row
                                       model.groupValue != '' &&
                                               model.groupValue != 'USD'
-                                          ? Container(
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Expanded(
-                                                        flex: 6,
-                                                        child: Center(
-                                                          child: Text(
-                                                            AppLocalizations.of(
-                                                                        context)!
-                                                                    .available +
-                                                                model
-                                                                    .walletBalances
-                                                                    .coin! +
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .balance,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyLarge,
-                                                          ),
-                                                        )),
-                                                    Expanded(
-                                                        flex: 5,
-                                                        child: Center(
-                                                          child: Text(
-                                                            '${model.walletBalances.balance}',
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyLarge,
-                                                          ),
-                                                        )),
-                                                  ]),
-                                            )
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                  Expanded(
+                                                      flex: 6,
+                                                      child: Center(
+                                                        child: Text(
+                                                          FlutterI18n.translate(
+                                                                  context, "available") +
+                                                              model
+                                                                  .walletBalances
+                                                                  .coin! +
+                                                              FlutterI18n
+                                                                  .translate(
+                                                                      context,
+                                                                      "balance"),
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyLarge,
+                                                        ),
+                                                      )),
+                                                  Expanded(
+                                                      flex: 5,
+                                                      child: Center(
+                                                        child: Text(
+                                                          '${model.walletBalances.balance}',
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyLarge,
+                                                        ),
+                                                      )),
+                                                ])
                                           : Container(),
                                     ],
                                   ),
@@ -408,8 +400,9 @@ class CampaignPaymentScreen extends StatelessWidget {
                             Visibility(
                                 visible: model.hasErrorMessage,
                                 child: Text(model.errorMessage!,
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium)),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium)),
                             UIHelper.verticalSpaceSmall,
                             // Button row container
                             Row(
@@ -433,7 +426,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           ),
                                         ),
                                         child: Text(
-                                          AppLocalizations.of(context)!.cancel,
+                                          FlutterI18n.translate(
+                                              context, "cancel"),
                                           style: Theme.of(context)
                                               .textTheme
                                               .headlineSmall,
@@ -461,8 +455,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                               ),
                                             ),
                                             child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .confirm,
+                                              FlutterI18n.translate(
+                                                  context, "confirm"),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headlineSmall,
@@ -474,8 +468,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                 padding:
                                                     const EdgeInsets.all(0)),
                                             child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .confirm,
+                                                FlutterI18n.translate(
+                                                    context, "confirm"),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headlineSmall),
@@ -503,36 +497,36 @@ class CampaignPaymentScreen extends StatelessWidget {
                     children: <Widget>[
                       Center(
                           child: Text(
-                              AppLocalizations.of(context)!.orderInformation,
-                              style: Theme.of(context).textTheme.headlineMedium)),
+                              FlutterI18n.translate(
+                                  context, "orderInformation"),
+                              style:
+                                  Theme.of(context).textTheme.headlineMedium)),
                       UIHelper.verticalSpaceSmall,
-                      Container(
-                        //  padding: EdgeInsets.all(5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            UIHelper.horizontalSpaceSmall,
-                            Expanded(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          UIHelper.horizontalSpaceSmall,
+                          Expanded(
+                            flex: 2,
+                            child: Text(FlutterI18n.translate(context, "date"),
+                                textAlign: TextAlign.start,
+                                style: Theme.of(context).textTheme.bodyLarge),
+                          ),
+                          Expanded(
                               flex: 2,
-                              child: Text(AppLocalizations.of(context)!.date,
+                              child: Text(
+                                  FlutterI18n.translate(context, "quantity"),
                                   textAlign: TextAlign.start,
-                                  style: Theme.of(context).textTheme.bodyLarge),
-                            ),
-                            Expanded(
-                                flex: 2,
-                                child: Text(
-                                    AppLocalizations.of(context)!.quantity,
-                                    textAlign: TextAlign.start,
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge)),
-                            Expanded(
-                              flex: 1,
-                              child: Text(AppLocalizations.of(context)!.status,
-                                  textAlign: TextAlign.start,
-                                  style: Theme.of(context).textTheme.bodyLarge),
-                            )
-                          ],
-                        ),
+                                  style:
+                                      Theme.of(context).textTheme.bodyLarge)),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                                FlutterI18n.translate(context, "status"),
+                                textAlign: TextAlign.start,
+                                style: Theme.of(context).textTheme.bodyLarge),
+                          )
+                        ],
                       ),
                       UIHelper.verticalSpaceSmall,
                       model.busy && !model.isTokenCalc
@@ -540,7 +534,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                               baseColor: globals.primaryColor,
                               highlightColor: globals.white,
                               child: Text(
-                                AppLocalizations.of(context)!.loading,
+                                FlutterI18n.translate(context, "loading"),
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ))
                           : model.orderInfoList != null
@@ -614,9 +608,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                     },
                                   ),
                                 )
-                              : Container(
-                                  child: Text(AppLocalizations.of(context)!
-                                      .serverError)),
+                              : Text(FlutterI18n.translate(
+                                  context, "serverError")),
                     ],
                   ),
                 )

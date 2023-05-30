@@ -1,4 +1,3 @@
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -11,6 +10,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/pdf_viewer_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 class CampaignInstructionsScreenState extends BaseState {
   final log = getLogger('CampaignInstructionsScreenState');
@@ -37,7 +37,8 @@ class CampaignInstructionsScreenState extends BaseState {
     setBusy(true);
     log.e(busy);
     sharedService!.context = context;
-    var loginToken = await campaignService!.getSavedLoginTokenFromLocalStorage();
+    var loginToken =
+        await campaignService!.getSavedLoginTokenFromLocalStorage();
     log.w('token $loginToken');
     if (loginToken != '' && loginToken != null) {
       await campaignService!.getMemberProfile(loginToken).then((res) async {
@@ -50,11 +51,11 @@ class CampaignInstructionsScreenState extends BaseState {
           });
         } else if (res == null) {
           navigateTo('/campaignLogin',
-              errorMessage: AppLocalizations.of(context!)!.sessionExpired);
+              errorMessage: FlutterI18n.translate(context!, "sessionExpired"));
         }
       }).catchError((err) {
         log.e('getMemberProfile catch');
-        setErrorMessage(AppLocalizations.of(context!)!.serverError);
+        setErrorMessage(FlutterI18n.translate(context!, "serverError"));
         setBusy(false);
       });
 
@@ -91,8 +92,8 @@ class CampaignInstructionsScreenState extends BaseState {
   }
 
   navigateTo(String route, {String errorMessage = ''}) {
-    navigationService!.navigateUsingpopAndPushedNamed(route,
-        arguments: errorMessage);
+    navigationService!
+        .navigateUsingpopAndPushedNamed(route, arguments: errorMessage);
   }
 
   onBackButtonPressed() async {

@@ -34,12 +34,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../localizations.dart';
 import '../shared/globals.dart' as globals;
 
 class SharedService {
@@ -90,8 +90,9 @@ class SharedService {
 
   inCorrectpasswordNotification(context) {
     sharedSimpleNotification(
-      AppLocalizations.of(context)!.passwordMismatch,
-      subtitle: AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword,
+      FlutterI18n.translate(context, "passwordMismatch"),
+      subtitle:
+          FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword"),
     );
   }
 
@@ -414,14 +415,14 @@ class SharedService {
             contentTextStyle: const TextStyle(color: globals.grey),
             content: Text(
               // add here cupertino widget to check in these small widgets first then the entire app
-              '${AppLocalizations.of(context)!.closeTheApp}?',
+              '${FlutterI18n.translate(context, "closeTheApp")}?',
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 14),
             ),
             actions: <Widget>[
               TextButton(
                 child: Text(
-                  AppLocalizations.of(context)!.no,
+                  FlutterI18n.translate(context, "no"),
                   style: TextStyle(color: white, fontSize: 12),
                 ),
                 onPressed: () {
@@ -429,7 +430,7 @@ class SharedService {
                 },
               ),
               TextButton(
-                child: Text(AppLocalizations.of(context)!.yes,
+                child: Text(FlutterI18n.translate(context, "yes"),
                     style: TextStyle(color: yellow, fontSize: 12)),
                 onPressed: () {
                   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
@@ -512,8 +513,8 @@ class SharedService {
                                     !checkBoxValue!;
                               }),
                           Text(
-                            AppLocalizations.of(context)!
-                                .doNotShowTheseWarnings,
+                            FlutterI18n.translate(
+                                context, "doNotShowTheseWarnings"),
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ],
@@ -537,8 +538,8 @@ class SharedService {
                   Center(
                       child: RichText(
                         text: TextSpan(
-                            text:
-                                AppLocalizations.of(context)!.taphereToCopyTxId,
+                            text: FlutterI18n.translate(
+                                context, "taphereToCopyTxId"),
                             style: TextStyle(
                                 fontSize: 12,
                                 decoration: TextDecoration.underline,
@@ -568,8 +569,8 @@ class SharedService {
                             child: Center(
                               child: Text(
                                 isLater
-                                    ? AppLocalizations.of(context)!.later
-                                    : AppLocalizations.of(context)!.close,
+                                    ? FlutterI18n.translate(context, "later")
+                                    : FlutterI18n.translate(context, "close"),
                                 style: const TextStyle(
                                     color: Colors.white, fontSize: 12),
                               ),
@@ -602,7 +603,7 @@ class SharedService {
                                     Navigator.of(context).pop(false);
                                   },
                                   child: Text(
-                                    AppLocalizations.of(context)!.website,
+                                    FlutterI18n.translate(context, "website"),
                                     style: const TextStyle(
                                         color: Colors.white, fontSize: 12),
                                   ),
@@ -627,7 +628,8 @@ class SharedService {
                                   },
                                   child: Center(
                                     child: Text(
-                                      AppLocalizations.of(context)!.updateNow,
+                                      FlutterI18n.translate(
+                                          context, "updateNow"),
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
@@ -684,7 +686,7 @@ class SharedService {
 
   copyAddress(context, text) {
     Clipboard.setData(ClipboardData(text: text));
-    sharedSimpleNotification(AppLocalizations.of(context)!.addressCopied,
+    sharedSimpleNotification(FlutterI18n.translate(context, "addressCopied"),
         isError: false);
   }
 

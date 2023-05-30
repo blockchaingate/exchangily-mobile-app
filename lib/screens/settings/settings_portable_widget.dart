@@ -1,9 +1,9 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 
 class SettingsPortableView extends StatelessWidget {
@@ -22,7 +22,7 @@ class SettingsPortableView extends StatelessWidget {
         resizeToAvoidBottomInset: false,
 
         body: model.isBusy
-            ? Center(child: model.sharedService!.loadingIndicator())
+            ? Center(child: model.sharedService.loadingIndicator())
             : SettingsPortableContainer(model: model),
       ),
     );
@@ -161,7 +161,7 @@ class SettingsPortableContainer extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: Text(
-                        AppLocalizations.of(context)!.showDialogWarnings,
+                        FlutterI18n.translate(context, "showDialogWarnings"),
                         style: Theme.of(context).textTheme.headlineSmall,
                         textAlign: TextAlign.left),
                   ),
@@ -196,8 +196,8 @@ class SettingsPortableContainer extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: Text(
-                        AppLocalizations.of(context)!
-                            .settingsShowcaseInstructions,
+                        FlutterI18n.translate(
+                            context, "settingsShowcaseInstructions"),
                         style: Theme.of(context).textTheme.headlineSmall,
                         textAlign: TextAlign.left),
                   ),
@@ -212,12 +212,12 @@ class SettingsPortableContainer extends StatelessWidget {
                           inactiveTrackColor: white,
                           value: !model!.isShowCaseOnce,
                           onChanged: (value) {
-                            model!.storageService!.isShowCaseView = !value;
+                            model!.storageService.isShowCaseView = !value;
 
                             model!.setBusy(true);
                             // get new value and assign it to the viewmodel variable
                             model!.isShowCaseOnce =
-                                model!.storageService!.isShowCaseView;
+                                model!.storageService.isShowCaseView;
                             model!.setBusy(false);
                             debugPrint(model!.isShowCaseOnce.toString());
                           }),

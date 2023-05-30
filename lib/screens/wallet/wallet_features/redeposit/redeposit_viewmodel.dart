@@ -4,7 +4,6 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -23,6 +22,7 @@ import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 import 'package:hex/hex.dart';
 
@@ -143,8 +143,8 @@ class RedepositViewModel extends FutureViewModel {
 
     if (errDepositItem == null) {
       sharedService!.sharedSimpleNotification(
-        AppLocalizations.of(context)!.redepositError,
-        subtitle: AppLocalizations.of(context)!.redepositItemNotSelected,
+        FlutterI18n.translate(context, "redepositError"),
+        subtitle: FlutterI18n.translate(context, "redepositItemNotSelected"),
       );
     }
     log.w('errDepositItem $errDepositItem');
@@ -163,10 +163,11 @@ class RedepositViewModel extends FutureViewModel {
     //   }
     // });
     var res = await dialogService!.showDialog(
-        title: AppLocalizations.of(context)!.enterPassword,
-        description:
-            AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context)!.confirm);
+      title: FlutterI18n.translate(context, "enterPassword"),
+      description:
+          FlutterI18n.translate(context, "dialogManagerTypeSamePasswordNote"),
+      buttonTitle: FlutterI18n.translate(context, "confirm"),
+    );
     if (res.confirmed!) {
       String? mnemonic = res.returnedText;
       Uint8List seed = walletService!.generateSeed(mnemonic);
@@ -210,8 +211,8 @@ class RedepositViewModel extends FutureViewModel {
         var newTransactionId = resRedeposit['data']['transactionID'];
 
         sharedService!.alertDialog(
-            AppLocalizations.of(context)!.redepositCompleted,
-            '${AppLocalizations.of(context)!.transactionId}: ' +
+            FlutterI18n.translate(context, "redepositCompleted"),
+            '${FlutterI18n.translate(context, "transactionId")}: ' +
                 newTransactionId,
             path: errDepositList.length == 1 ? WalletFeaturesViewRoute : '',
             arguments: errDepositList.length == 1 ? walletInfo : null);
@@ -226,8 +227,8 @@ class RedepositViewModel extends FutureViewModel {
         errorMessage = resRedeposit['message'];
       } else {
         sharedService!.sharedSimpleNotification(
-          AppLocalizations.of(context)!.redepositFailedError,
-          subtitle: AppLocalizations.of(context)!.networkIssue,
+          FlutterI18n.translate(context, "redepositFailedError"),
+          subtitle: FlutterI18n.translate(context, "networkIssue"),
         );
       }
       //  } // other coins redeposit else ends
@@ -291,8 +292,9 @@ class RedepositViewModel extends FutureViewModel {
 
   showNotification(context) {
     sharedService!.sharedSimpleNotification(
-      AppLocalizations.of(context)!.passwordMismatch,
-      subtitle: AppLocalizations.of(context)!.pleaseProvideTheCorrectPassword,
+      FlutterI18n.translate(context, "passwordMismatch"),
+      subtitle:
+          FlutterI18n.translate(context, "pleaseProvideTheCorrectPassword"),
     );
   }
 

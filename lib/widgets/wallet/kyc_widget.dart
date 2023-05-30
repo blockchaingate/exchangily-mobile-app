@@ -1,7 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -329,17 +328,17 @@ class KycWidget extends ViewModelWidget<SettingsViewModel> {
                       const SizedBox(width: 8.0), // Space between icon and text
                       model.busy(model.kycStarted)
                           ? Text(
-                              AppLocalizations.of(context)!.loading,
+                              FlutterI18n.translate(context, "loading"),
                               style: headText5,
                             )
                           : Text(
                               FlutterI18n.translate(
                                   context,
                                   model.kycStarted
-                                      ? AppLocalizations.of(context)!
-                                          .checkKycStatus
-                                      : AppLocalizations.of(context)!
-                                          .startKycProcess),
+                                      ? FlutterI18n.translate(
+                                          context, "checkKycStatus")
+                                      : FlutterI18n.translate(
+                                          context, "startKycProcess")),
                               style: headText5.copyWith(color: Colors.white),
                             ),
                     ],

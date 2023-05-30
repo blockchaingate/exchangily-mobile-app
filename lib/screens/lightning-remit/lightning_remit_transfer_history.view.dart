@@ -1,9 +1,9 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pagination_widget/pagination_widget.dart';
 import 'package:stacked/stacked.dart';
@@ -26,13 +26,14 @@ class LightningRemitTransferHistoryView
       BuildContext context, LightningRemitViewmodel viewModel, Widget? child) {
     return Scaffold(
         appBar: customAppBarWithTitle(
-            AppLocalizations.of(context)!.transactionHistory),
+          FlutterI18n.translate(context, "transactionHistory"),
+        ),
         body: SingleChildScrollView(
           child: viewModel.isBusy
               ? Center(
                   child: SizedBox(
                       height: 500,
-                      child: viewModel.sharedService?.loadingIndicator()))
+                      child: viewModel.sharedService.loadingIndicator()))
               : Container(
                   padding: const EdgeInsets.all(4.0),
                   child: Column(
@@ -75,68 +76,61 @@ class LightningRemitTransferHistoryView
                                   ),
                                 ),
                                 UIHelper.horizontalSpaceSmall,
-                                Container(
-                                  //  width: 200,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2.5,
-                                            child: RichText(
-                                              overflow: TextOverflow.ellipsis,
-                                              text: TextSpan(
-                                                  text: transaction.txid,
-                                                  style: subText2.copyWith(
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                      color: primaryColor),
-                                                  recognizer:
-                                                      TapGestureRecognizer()
-                                                        ..onTap = () {
-                                                          viewModel.copyAddress(
-                                                              transaction.txid
-                                                                  .toString(),
-                                                              context);
-                                                          viewModel.openExplorer(
-                                                              transaction.txid
-                                                                  .toString());
-                                                        }),
-                                            ),
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.5,
+                                          child: RichText(
+                                            overflow: TextOverflow.ellipsis,
+                                            text: TextSpan(
+                                                text: transaction.txid,
+                                                style: subText2.copyWith(
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                    color: primaryColor),
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = () {
+                                                        viewModel.copyAddress(
+                                                            transaction.txid
+                                                                .toString(),
+                                                            context);
+                                                        viewModel.openExplorer(
+                                                            transaction.txid
+                                                                .toString());
+                                                      }),
                                           ),
-                                          IconButton(
-                                            icon: const Icon(
-                                                Icons.copy_outlined,
-                                                color: black,
-                                                size: 16),
-                                            onPressed: () =>
-                                                viewModel.copyAddress(
-                                                    transaction.txid.toString(),
-                                                    context),
-                                          )
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 5.0),
-                                        child: Text(
-                                          transaction.date!,
-                                          style: headText5.copyWith(
-                                              fontWeight: FontWeight.w400),
                                         ),
+                                        IconButton(
+                                          icon: const Icon(Icons.copy_outlined,
+                                              color: black, size: 16),
+                                          onPressed: () =>
+                                              viewModel.copyAddress(
+                                                  transaction.txid.toString(),
+                                                  context),
+                                        )
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 5.0),
+                                      child: Text(
+                                        transaction.date!,
+                                        style: headText5.copyWith(
+                                            fontWeight: FontWeight.w400),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                                 UIHelper.horizontalSpaceSmall,
                                 UIHelper.horizontalSpaceSmall,
@@ -144,7 +138,9 @@ class LightningRemitTransferHistoryView
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text(AppLocalizations.of(context)!.quantity,
+                                    Text(
+                                        FlutterI18n.translate(
+                                            context, "quantity"),
                                         style: subText2),
                                     Text(
                                       transaction.amount!.toStringAsFixed(

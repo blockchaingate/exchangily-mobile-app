@@ -1,9 +1,9 @@
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
@@ -64,8 +64,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                       Icons.event_note,
                       color: globals.green,
                     ),
-                    title: Text(
-                        AppLocalizations.of(context)!.readCampaignInstructions),
+                    title: Text(FlutterI18n.translate(
+                        context, "readCampaignInstructions")),
                     onTap: () {
                       Navigator.pushNamed(context, '/campaignInstructions');
                     },
@@ -74,7 +74,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                   ListTile(
                     title: model.campaignUserData != null
                         ? Text(
-                            '${AppLocalizations.of(context)!.myReferralCode} ${model.campaignUserData!.referralCode.toString()}',
+                            '${FlutterI18n.translate(context, "myReferralCode")} ${model.campaignUserData!.referralCode.toString()}',
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall!
@@ -95,7 +95,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                       color: globals.red,
                     ),
                     title: Text(
-                      AppLocalizations.of(context)!.logout,
+                      FlutterI18n.translate(context, "logout"),
                     ),
                     onTap: () {
                       model.logout();
@@ -116,46 +116,45 @@ class CampaignDashboardScreen extends StatelessWidget {
 /*-------------------------------------------------------------------------------------
                               Header with email and logout
 -------------------------------------------------------------------------------------*/
-                  Container(
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                            dense: false,
-                            leading: Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: IconButton(
-                                  alignment: Alignment.centerLeft,
-                                  padding: const EdgeInsets.only(right: 10),
-                                  iconSize: 28,
-                                  icon: Icon(
-                                    Icons.menu,
-                                    color: globals.primaryColor,
-                                  ),
-                                  onPressed: () {
-                                    _scaffoldKey.currentState!.openDrawer();
-                                  }),
-                            ),
-                            title: Padding(
-                              padding: const EdgeInsets.only(top: 2.0),
-                              child: model.campaignUserData == null
-                                  ? const Text('')
-                                  : Text(
-                                      '${AppLocalizations.of(context)!.welcome} ${model.campaignUserData!.email}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headlineSmall),
-                            ),
-                            trailing: InkWell(
-                                onTap: () {
-                                  model.logout();
-                                },
-                                child: Text(
-                                  AppLocalizations.of(context)!.logout,
-                                  style: Theme.of(context).textTheme.headlineSmall,
-                                  textAlign: TextAlign.end,
-                                )))
-                      ],
-                    ),
+                  Column(
+                    children: <Widget>[
+                      ListTile(
+                          dense: false,
+                          leading: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: IconButton(
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.only(right: 10),
+                                iconSize: 28,
+                                icon: Icon(
+                                  Icons.menu,
+                                  color: globals.primaryColor,
+                                ),
+                                onPressed: () {
+                                  _scaffoldKey.currentState!.openDrawer();
+                                }),
+                          ),
+                          title: Padding(
+                            padding: const EdgeInsets.only(top: 2.0),
+                            child: model.campaignUserData == null
+                                ? const Text('')
+                                : Text(
+                                    '${FlutterI18n.translate(context, "welcome")} ${model.campaignUserData!.email}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall),
+                          ),
+                          trailing: InkWell(
+                              onTap: () {
+                                model.logout();
+                              },
+                              child: Text(
+                                FlutterI18n.translate(context, "logout"),
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
+                                textAlign: TextAlign.end,
+                              )))
+                    ],
                   ),
                   UIHelper.verticalSpaceSmall,
 
@@ -178,7 +177,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             ),
                           ),
                           title: Text(
-                            AppLocalizations.of(context)!.myTotalAssets,
+                            FlutterI18n.translate(context, "myTotalAssets"),
                             style: const TextStyle(letterSpacing: 1.1),
                           ),
                           subtitle: Column(
@@ -188,7 +187,9 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     const EdgeInsets.symmetric(vertical: 3.0),
                                 child: Row(
                                   children: <Widget>[
-                                    Text(AppLocalizations.of(context)!.quantity,
+                                    Text(
+                                        FlutterI18n.translate(
+                                            context, "quantity"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyLarge),
@@ -220,8 +221,9 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   highlightColor: globals.grey,
                                   child: Text(
                                     ('0.000'),
-                                    style:
-                                        Theme.of(context).textTheme.headlineSmall,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall,
                                   ))
                               : SizedBox(
                                   width: 120,
@@ -256,9 +258,10 @@ class CampaignDashboardScreen extends StatelessWidget {
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    AppLocalizations.of(context)!.level,
-                                    style:
-                                        Theme.of(context).textTheme.headlineSmall,
+                                    FlutterI18n.translate(context, "level"),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall,
                                   ),
                                   UIHelper.horizontalSpaceSmall,
                                   model.busy
@@ -297,10 +300,10 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 5.0),
                                     child: Text(
-                                      '${AppLocalizations.of(context)!
-                                              .referralCount} ',
-                                      style:
-                                          Theme.of(context).textTheme.headlineSmall,
+                                      '${FlutterI18n.translate(context, "referralCount")} ',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall,
                                     ),
                                   ),
                                   model.busy
@@ -328,133 +331,131 @@ class CampaignDashboardScreen extends StatelessWidget {
 /*-------------------------------------------------------------------------------------
                             My investment and tokens container with list tiles
 -------------------------------------------------------------------------------------*/
-                  Container(
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                            onTap: () {
-                              model.getCampaignOrdeList();
-                            },
-                            dense: false,
-                            leading: Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: Icon(
-                                Icons.confirmation_number,
-                                color: globals.exgLogoColor,
-                                size: 22,
+                  Column(
+                    children: <Widget>[
+                      ListTile(
+                          onTap: () {
+                            model.getCampaignOrdeList();
+                          },
+                          dense: false,
+                          leading: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Icon(
+                              Icons.confirmation_number,
+                              color: globals.exgLogoColor,
+                              size: 22,
+                            ),
+                          ),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                  FlutterI18n.translate(
+                                      context, "myInvestment"),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall!
+                                      .copyWith(color: globals.buyPrice)),
+                              Text(
+                                FlutterI18n.translate(context, "myTokens"),
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
                               ),
-                            ),
-                            title: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(AppLocalizations.of(context)!.myInvestment,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall!
-                                        .copyWith(color: globals.buyPrice)),
-                                Text(
-                                  AppLocalizations.of(context)!.myTokens,
-                                  style: Theme.of(context).textTheme.headlineSmall,
-                                ),
-                              ],
-                            ),
-                            subtitle: model.busy
-                                ? Shimmer.fromColors(
-                                    baseColor: globals.primaryColor,
-                                    highlightColor: globals.grey,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(
-                                          ('0.000'),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headlineSmall,
-                                        ),
-                                        Text(
-                                          ('0.000'),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headlineSmall,
-                                        )
-                                      ],
-                                    ))
-                                : Row(
+                            ],
+                          ),
+                          subtitle: model.busy
+                              ? Shimmer.fromColors(
+                                  baseColor: globals.primaryColor,
+                                  highlightColor: globals.grey,
+                                  child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
-                                          '\$${model.myInvestmentValueWithoutRewards}',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headlineSmall),
-                                      model.memberProfile == null
-                                          ? const Text('')
-                                          : Text(
-                                              model
-                                                  .memberProfile!.totalQuantities
-                                                  .toString(),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headlineSmall!
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Color(model
-                                                          .memberLevelTextColor)))
+                                        ('0.000'),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall,
+                                      ),
+                                      Text(
+                                        ('0.000'),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall,
+                                      )
                                     ],
-                                  ),
-                            trailing: Icon(
-                              Icons.navigate_next,
-                              color: globals.white54,
-                            ))
-                      ],
-                    ),
+                                  ))
+                              : Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                        '\$${model.myInvestmentValueWithoutRewards}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall),
+                                    model.memberProfile == null
+                                        ? const Text('')
+                                        : Text(
+                                            model.memberProfile!.totalQuantities
+                                                .toString(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineSmall!
+                                                .copyWith(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(model
+                                                        .memberLevelTextColor)))
+                                  ],
+                                ),
+                          trailing: Icon(
+                            Icons.navigate_next,
+                            color: globals.white54,
+                          ))
+                    ],
                   ),
                   UIHelper.divider,
 
 /*-------------------------------------------------------------------------------------
                                   Total reward container with list tiles
 -------------------------------------------------------------------------------------*/
-                  Container(
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                            onTap: () {
-                              model.navigateByRouteName(
-                                  '/MyRewardDetails', model.campaignRewardList);
-                            },
-                            dense: false,
-                            leading: Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: Icon(
-                                Icons.card_giftcard,
-                                color: globals.fabLogoColor,
-                                size: 22,
-                              ),
+                  Column(
+                    children: <Widget>[
+                      ListTile(
+                          onTap: () {
+                            model.navigateByRouteName(
+                                '/MyRewardDetails', model.campaignRewardList);
+                          },
+                          dense: false,
+                          leading: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Icon(
+                              Icons.card_giftcard,
+                              color: globals.fabLogoColor,
+                              size: 22,
                             ),
-                            title: Text(
-                                AppLocalizations.of(context)!.myReferralReward),
-                            subtitle: model.busy
-                                ? Shimmer.fromColors(
-                                    baseColor: globals.primaryColor,
-                                    highlightColor: globals.grey,
-                                    child: Text(
-                                      model.errorMessage!,
-                                      style:
-                                          Theme.of(context).textTheme.headlineSmall,
-                                    ))
-                                : Text(
-                                    model.myReferralReward.toStringAsFixed(2),
-                                    style:
-                                        Theme.of(context).textTheme.headlineSmall),
-                            trailing: Icon(
-                              Icons.navigate_next,
-                              color: globals.white54,
-                            ))
-                      ],
-                    ),
+                          ),
+                          title: Text(FlutterI18n.translate(
+                              context, "myReferralReward")),
+                          subtitle: model.busy
+                              ? Shimmer.fromColors(
+                                  baseColor: globals.primaryColor,
+                                  highlightColor: globals.grey,
+                                  child: Text(
+                                    model.errorMessage!,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall,
+                                  ))
+                              : Text(model.myReferralReward.toStringAsFixed(2),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall),
+                          trailing: Icon(
+                            Icons.navigate_next,
+                            color: globals.white54,
+                          ))
+                    ],
                   ),
                   UIHelper.divider,
 
@@ -484,11 +485,12 @@ class CampaignDashboardScreen extends StatelessWidget {
                             title: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text(AppLocalizations.of(context)!
-                                    .teamsTotalValue),
+                                Text(FlutterI18n.translate(
+                                    context, "teamsTotalValue")),
                                 Text(
-                                  AppLocalizations.of(context)!.teamReward,
-                                  style: Theme.of(context).textTheme.headlineSmall,
+                                  FlutterI18n.translate(context, "teamReward"),
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
                                 )
                               ],
                             ),
@@ -688,7 +690,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                     Navigator.pushNamed(context, '/campaignPayment');
                   },
                   child: Text(
-                    AppLocalizations.of(context)!.buy,
+                    FlutterI18n.translate(context, "buy"),
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 )),

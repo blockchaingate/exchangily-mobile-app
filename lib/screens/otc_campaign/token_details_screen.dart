@@ -1,6 +1,6 @@
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignTokenDetailsScreen extends StatelessWidget {
@@ -13,7 +13,7 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context)!.tokenDetails,
+          title: Text(FlutterI18n.translate(context, "tokenDetails"),
               // AppLocalizations.of(context).myRewardDetails,
               style: Theme.of(context).textTheme.displaySmall),
         ),
@@ -29,7 +29,9 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      Text(AppLocalizations.of(context)!.myOrders),
+                      Text(
+                        FlutterI18n.translate(context, "myOrders"),
+                      ),
                       const Text('234513')
                     ],
                   ),
@@ -40,7 +42,9 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
                 elevation: 5,
                 child: Column(
                   children: <Widget>[
-                    Text(AppLocalizations.of(context)!.myRewardTokens),
+                    Text(
+                      FlutterI18n.translate(context, "myRewardTokens"),
+                    ),
                     const Text('875444')
                   ],
                 ),

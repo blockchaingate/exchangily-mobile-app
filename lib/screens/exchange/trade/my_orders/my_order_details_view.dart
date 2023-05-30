@@ -1,9 +1,9 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 
 import 'my_orders_viewmodel.dart';
@@ -31,9 +31,12 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                       flex: 1,
                       child: Text(
                           order.bidOrAsk!
-                              ? AppLocalizations.of(context)!.buy
-                              : AppLocalizations.of(context)!.sell,
-                          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              ? FlutterI18n.translate(context, "buy")
+                              : FlutterI18n.translate(context, "sell"),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge!
+                              .copyWith(
                                 color: Color(
                                     order.bidOrAsk! ? 0xFF0da88b : 0xFFe2103c),
                               ))),

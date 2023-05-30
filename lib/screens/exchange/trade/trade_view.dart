@@ -1,5 +1,4 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my_exchange_assets_view.dart';
@@ -11,6 +10,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/trading_chart/trading
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 
 import 'market_trades/market_trades_view.dart';
@@ -26,7 +26,7 @@ class TradeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<TradeViewModel>.reactive(
         disposeViewModel: true,
-        fireOnModelReadyOnce: true,
+        fireOnViewModelReadyOnce: true,
         // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
         // which is required override
         viewModelBuilder: () =>
@@ -121,182 +121,167 @@ class TradeView extends StatelessWidget {
                 //     ])),
 
                 body: model.isStreamDataNull || model.hasError
-                    ? Container(
-                        child: Center(
+                    ? Center(
                         child: Text(
-                          AppLocalizations.of(context)!.serverError,
+                          FlutterI18n.translate(context, "serverError"),
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                      ))
+                      )
                     : model.isBusy && model.isDisposing
-                        ? Container(
-                            child: Center(
+                        ? Center(
                             child: model.sharedService!.loadingIndicator(),
-                          ))
-                        : Container(
-                            child: ListView(shrinkWrap: true, children: [
-                              /// Ticker price stream
-                              Container(
-                                margin: const EdgeInsets.only(top: 5.0),
-                                child: PairPriceView(
-                                  pairPrice: model.hasStreamTickerData
-                                      ? model.currentPairPrice
-                                      : model.pairPriceByRoute,
-                                  isBusy: !model.hasStreamTickerData,
-                                  decimalConfig: model.singlePairDecimalConfig,
-                                  usdValue: model.usdValue,
-                                ),
+                          )
+                        : ListView(shrinkWrap: true, children: [
+                            /// Ticker price stream
+                            Container(
+                              margin: const EdgeInsets.only(top: 5.0),
+                              child: PairPriceView(
+                                pairPrice: model.hasStreamTickerData
+                                    ? model.currentPairPrice
+                                    : model.pairPriceByRoute,
+                                isBusy: !model.hasStreamTickerData,
+                                decimalConfig: model.singlePairDecimalConfig,
+                                usdValue: model.usdValue,
                               ),
+                            ),
 
-                              //  Below container contains trading view chart in the trade tab
-                              //   model.currentPairPrice == null
+                            //  Below container contains trading view chart in the trade tab
+                            //   model.currentPairPrice == null
 
-                              model.currentPairPrice.price == 0.0
-                                  ? Container(
-                                      color: secondaryColor.withAlpha(155),
-                                      padding: const EdgeInsets.all(0),
-                                      margin: const EdgeInsets.all(0),
-                                      height: 280,
-                                      child: const Center(
-                                          child: CupertinoActivityIndicator()))
-                                  : Container(
-                                      child: LoadHTMLFileToWEbView(
-                                        model.updateTickerName(
-                                            pairPriceByRoute!.symbol!),
+                            model.currentPairPrice.price == 0.0
+                                ? Container(
+                                    color: secondaryColor.withAlpha(155),
+                                    padding: const EdgeInsets.all(0),
+                                    margin: const EdgeInsets.all(0),
+                                    height: 280,
+                                    child: const Center(
+                                        child: CupertinoActivityIndicator()))
+                                : LoadHTMLFileToWEbView(
+                                    model.updateTickerName(
+                                        pairPriceByRoute!.symbol!),
+                                  ),
+                            //: CircularProgressIndicator(),
+                            // Text(model.interval),
+                            // Text(model.isTradingChartModelBusy.toString()),
+
+                            // UIHelper.verticalSpaceMedium,
+                            DefaultTabController(
+                              length: 4,
+                              //ordersViewTabBody.length,
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TabBar(
+                                        labelPadding:
+                                            const EdgeInsets.only(bottom: 5),
+                                        onTap: (int tabIndex) {
+                                          //  model.switchStreams(tabIndex);
+                                        },
+                                        indicatorColor: primaryColor,
+                                        indicatorSize: TabBarIndicatorSize.tab,
+                                        // Tab Names
+
+                                        tabs: [
+                                          Text(
+                                              FlutterI18n.translate(
+                                                  context, "orderBook"),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      decorationThickness: 3)),
+                                          Text(
+                                              FlutterI18n.translate(
+                                                  context, "marketTrades"),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      decorationThickness: 3)),
+                                          Text(
+                                              FlutterI18n.translate(
+                                                  context, "myOrders"),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      decorationThickness: 3)),
+                                          Text(
+                                              FlutterI18n.translate(
+                                                  context, "assets"),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      decorationThickness: 3)),
+                                        ]),
+                                    UIHelper.verticalSpaceSmall,
+                                    // Tabs view container
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.60,
+                                      child: TabBarView(
+                                        children: [
+                                          // order book container
+                                          Container(
+                                            child: !model.hasStreamOrderbook
+                                                ? const ShimmerLayout(
+                                                    layoutType: 'orderbook',
+                                                  )
+                                                : OrderBookView(
+                                                    orderbook: model.orderbook,
+                                                    decimalConfig: model
+                                                        .singlePairDecimalConfig,
+                                                    isVerticalOrderbook: false,
+                                                  ),
+                                          ),
+
+                                          // Market trades
+                                          Container(
+                                            child: !model.hasStreamMarketTrades
+                                                ? const ShimmerLayout(
+                                                    layoutType: 'marketTrades',
+                                                  )
+                                                : MarketTradesView(
+                                                    marketTrades:
+                                                        model.marketTradesList,
+                                                    decimalConfig: model
+                                                        .singlePairDecimalConfig),
+                                          ),
+
+                                          MyOrdersView(
+                                              tickerName:
+                                                  pairPriceByRoute!.symbol),
+                                          // My Exchange Asssets
+                                          // model.busy(model.myExchangeAssets)
+                                          //     ? Container(
+                                          //         margin:
+                                          //             EdgeInsets.symmetric(
+                                          //                 horizontal: 5.0,
+                                          //                 vertical: 5),
+                                          //         height: 150,
+                                          //         child: ShimmerLayout(
+                                          //           layoutType:
+                                          //               'marketTrades',
+                                          //         ),
+                                          //       )
+                                          //     :
+                                          const MyExchangeAssetsView()
+                                        ],
                                       ),
                                     ),
-                              //: CircularProgressIndicator(),
-                              // Text(model.interval),
-                              // Text(model.isTradingChartModelBusy.toString()),
-
-                              // UIHelper.verticalSpaceMedium,
-                              DefaultTabController(
-                                length: 4,
-                                //ordersViewTabBody.length,
-                                child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      TabBar(
-                                          labelPadding:
-                                              const EdgeInsets.only(bottom: 5),
-                                          onTap: (int tabIndex) {
-                                            //  model.switchStreams(tabIndex);
-                                          },
-                                          indicatorColor: primaryColor,
-                                          indicatorSize:
-                                              TabBarIndicatorSize.tab,
-                                          // Tab Names
-
-                                          tabs: [
-                                            Text(
-                                                AppLocalizations.of(context)!
-                                                    .orderBook,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        decorationThickness:
-                                                            3)),
-                                            Text(
-                                                AppLocalizations.of(context)!
-                                                    .marketTrades,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        decorationThickness:
-                                                            3)),
-                                            Text(
-                                                AppLocalizations.of(context)!
-                                                    .myOrders,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        decorationThickness:
-                                                            3)),
-                                            Text(
-                                                AppLocalizations.of(context)!
-                                                    .assets,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        decorationThickness:
-                                                            3)),
-                                          ]),
-                                      UIHelper.verticalSpaceSmall,
-                                      // Tabs view container
-                                      SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.60,
-                                        child: TabBarView(
-                                          children: [
-                                            // order book container
-                                            Container(
-                                              child: !model.hasStreamOrderbook
-                                                  ? const ShimmerLayout(
-                                                      layoutType: 'orderbook',
-                                                    )
-                                                  : OrderBookView(
-                                                      orderbook:
-                                                          model.orderbook,
-                                                      decimalConfig: model
-                                                          .singlePairDecimalConfig,
-                                                      isVerticalOrderbook:
-                                                          false,
-                                                    ),
-                                            ),
-
-                                            // Market trades
-                                            Container(
-                                              child: !model
-                                                      .hasStreamMarketTrades
-                                                  ? const ShimmerLayout(
-                                                      layoutType:
-                                                          'marketTrades',
-                                                    )
-                                                  : MarketTradesView(
-                                                      marketTrades: model
-                                                          .marketTradesList,
-                                                      decimalConfig: model
-                                                          .singlePairDecimalConfig),
-                                            ),
-
-                                            MyOrdersView(
-                                                tickerName:
-                                                    pairPriceByRoute!.symbol),
-                                            // My Exchange Asssets
-                                            // model.busy(model.myExchangeAssets)
-                                            //     ? Container(
-                                            //         margin:
-                                            //             EdgeInsets.symmetric(
-                                            //                 horizontal: 5.0,
-                                            //                 vertical: 5),
-                                            //         height: 150,
-                                            //         child: ShimmerLayout(
-                                            //           layoutType:
-                                            //               'marketTrades',
-                                            //         ),
-                                            //       )
-                                            //     :
-                                            const MyExchangeAssetsView()
-                                          ],
-                                        ),
-                                      ),
-                                    ]),
-                              ),
-                            ]),
-                          ),
+                                  ]),
+                            ),
+                          ]),
 
                 // Floatin Button buy/sell
                 // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -362,7 +347,7 @@ class TradeView extends StatelessWidget {
                                   }
                                 },
                                 child: Text(
-                                  AppLocalizations.of(context)!.buy,
+                                  FlutterI18n.translate(context, "buy"),
                                   style: const TextStyle(
                                       fontSize: 13, color: Colors.white),
                                 ),
@@ -398,7 +383,7 @@ class TradeView extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                AppLocalizations.of(context)!.sell,
+                                FlutterI18n.translate(context, "sell"),
                                 style: const TextStyle(
                                   fontSize: 13,
                                   color: Colors.white,

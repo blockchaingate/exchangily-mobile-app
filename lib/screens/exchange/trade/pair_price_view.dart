@@ -1,10 +1,9 @@
-
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PairPriceView extends StatelessWidget {
@@ -13,7 +12,11 @@ class PairPriceView extends StatelessWidget {
   final PairDecimalConfig? decimalConfig;
   final double? usdValue;
   const PairPriceView(
-      {Key? key, this.pairPrice, this.isBusy, this.decimalConfig, this.usdValue})
+      {Key? key,
+      this.pairPrice,
+      this.isBusy,
+      this.decimalConfig,
+      this.usdValue})
       : super(key: key);
 
   @override
@@ -38,7 +41,8 @@ class PairPriceView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Text(
-                    pairPrice!.price!.toStringAsFixed(decimalConfig!.priceDecimal!),
+                    pairPrice!.price!
+                        .toStringAsFixed(decimalConfig!.priceDecimal!),
                     style: TextStyle(fontSize: 30, color: priceColor)),
                 Column(
                   children: [
@@ -76,7 +80,8 @@ class PairPriceView extends StatelessWidget {
           ),
           // Change Price Value Row
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
             color: isBusy! ? Colors.transparent : walletCardColor,
 
             // color: Colors.redAccent,
@@ -90,17 +95,19 @@ class PairPriceView extends StatelessWidget {
                   UIHelper.horizontalSpaceMedium,
                   Expanded(
                     flex: 2,
-                    child: Text(AppLocalizations.of(context)!.volume,
+                    child: Text(FlutterI18n.translate(context, "volume"),
                         style: Theme.of(context).textTheme.titleSmall),
                   ),
                   Expanded(
                     flex: 2,
-                    child: Text(AppLocalizations.of(context)!.low.toString(),
+                    child: Text(
+                        FlutterI18n.translate(context, "low").toString(),
                         style: Theme.of(context).textTheme.titleSmall),
                   ),
                   Expanded(
                     flex: 2,
-                    child: Text(AppLocalizations.of(context)!.high.toString(),
+                    child: Text(
+                        FlutterI18n.translate(context, "high").toString(),
                         style: Theme.of(context).textTheme.titleSmall),
                   ),
                 ],

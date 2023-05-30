@@ -21,7 +21,6 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/constants/ui_var.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/core_wallet_model.dart';
 import 'package:exchangilymobileapp/models/wallet/custom_token_model.dart';
@@ -49,6 +48,7 @@ import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.da
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:json_diff/json_diff.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -240,7 +240,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         tokenType: 'FAB',
         address: exgAddress,
         availableBalance: customTokenModel.balance);
-    storageService!.customTokenData = jsonEncode(customTokenModel.toJson());
+    storageService.customTokenData = jsonEncode(customTokenModel.toJson());
     navigationService!.navigateTo(
         isSend ? SendViewRoute : TransactionHistoryViewRoute,
         arguments: wallet);
@@ -252,7 +252,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusyForObject(selectedCustomTokens, true);
     String? fabAddress = await sharedService.getExgAddressFromWalletDatabase();
     selectedCustomTokens!.clear();
-    String selectedCustomTokensJson = storageService!.customTokens;
+    String selectedCustomTokensJson = storageService.customTokens;
     if (selectedCustomTokensJson != '') {
       List<CustomTokenModel>? customTokensFromStorage =
           CustomTokenModelList.fromJson(jsonDecode(selectedCustomTokensJson))
@@ -369,8 +369,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                                           padding: const EdgeInsets.only(
                                               bottom: 3.0),
                                           child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .totalSupply,
+                                              FlutterI18n.translate(
+                                                  context, "totalSupply"),
                                               style: const TextStyle(
                                                   color: primaryColor,
                                                   fontSize: 14,
@@ -406,12 +406,10 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                 right: 2.0),
                                             child: Text(
                                                 isMatched == null
-                                                    ? AppLocalizations.of(
-                                                            context)!
-                                                        .add
-                                                    : AppLocalizations.of(
-                                                            context)!
-                                                        .remove,
+                                                    ? FlutterI18n.translate(
+                                                        context, "add")
+                                                    : FlutterI18n.translate(
+                                                        context, "remove"),
                                                 textAlign: TextAlign.center,
                                                 style: const TextStyle(
                                                     fontSize: 12, color: white
@@ -467,8 +465,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                                             .map((cToken) =>
                                                 jsonEncode(cToken.toJson()))
                                             .toList();
-                                        storageService!.customTokens = '';
-                                        storageService!.customTokens =
+                                        storageService.customTokens = '';
+                                        storageService.customTokens =
                                             jsonString.toString();
                                       },
                                     ),
@@ -502,17 +500,17 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     log.i('walletDecimalList $walletDecimalList');
     int storedDecimalListLength =
-        storageService!.getStoredListLength(storageService!.walletDecimalList);
+        storageService.getStoredListLength(storageService.walletDecimalList);
 
     if (walletDecimalList.length != storedDecimalListLength) {
       log.w('clearing storedDecimalList');
-      if (storedDecimalListLength != 0) storageService!.walletDecimalList = '';
+      if (storedDecimalListLength != 0) storageService.walletDecimalList = '';
 
       var t = {walletDecimalList.map((e) => jsonEncode(e)).toList()};
       log.w('json encode decimal data before storing $t');
-      storageService!.walletDecimalList = t.toString();
+      storageService.walletDecimalList = t.toString();
     }
-    log.i('latest storedDecimalList ${storageService!.walletDecimalList}');
+    log.i('latest storedDecimalList ${storageService.walletDecimalList}');
   }
 
   _scrollListener() {
@@ -579,7 +577,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     if (tabIndex != 5) {
       isShowFavCoins = false;
     }
-    storageService!.isFavCoinTabSelected = isShowFavCoins ? true : false;
+    storageService.isFavCoinTabSelected = isShowFavCoins ? true : false;
     debugPrint(
         'current tab sel $selectedTabIndex -- isShowFavCoins $isShowFavCoins');
 
@@ -626,7 +624,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusyForObject(favWallets, true);
 
     favWallets.clear();
-    String favCoinsJson = storageService!.favWalletCoins;
+    String favCoinsJson = storageService.favWalletCoins;
     if (favCoinsJson != '') {
       List<String> favWalletCoins =
           (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
@@ -743,7 +741,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                     margin: const EdgeInsets.only(bottom: 5.0),
                     child: Center(
                         child: Text(
-                      AppLocalizations.of(context)!.appUpdateNotice,
+                      FlutterI18n.translate(context, "appUpdateNotice"),
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!
@@ -756,7 +754,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                         Navigator.of(context).pop(true);
                         updateWallet();
                       },
-                      child: Text(AppLocalizations.of(context)!.updateNow)),
+                      child: Text(FlutterI18n.translate(context, "updateNow"))),
                   actions: const <Widget>[],
                 ))
             : AlertDialog(
@@ -768,8 +766,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                   padding: const EdgeInsets.all(10.0),
                   color: secondaryColor.withOpacity(0.5),
                   child: Center(
-                      child:
-                          Text(AppLocalizations.of(context)!.appUpdateNotice)),
+                      child: Text(
+                          FlutterI18n.translate(context, "appUpdateNotice"))),
                 ),
                 titleTextStyle: Theme.of(context)
                     .textTheme
@@ -793,7 +791,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                               if (res) Navigator.of(context).pop();
                             });
                           },
-                          child: Text(AppLocalizations.of(context)!.updateNow,
+                          child: Text(
+                              FlutterI18n.translate(context, "updateNow"),
                               style: Theme.of(context).textTheme.headlineSmall),
                         ),
                       ]),
@@ -808,12 +807,12 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusy(true);
     //  bool isSuccess = false;
     String? mnemonic = '';
-    await dialogService!
+    await dialogService
         .showDialog(
-            title: AppLocalizations.of(context!)!.enterPassword,
-            description: AppLocalizations.of(context!)!
-                .dialogManagerTypeSamePasswordNote,
-            buttonTitle: AppLocalizations.of(context!)!.confirm)
+            title: FlutterI18n.translate(context!, "enterPassword"),
+            description: FlutterI18n.translate(
+                context!, "dialogManagerTypeSamePasswordNote"),
+            buttonTitle: FlutterI18n.translate(context!, "confirm"))
         .then((res) async {
       if (res.confirmed!) {
         mnemonic = res.returnedText;
@@ -849,7 +848,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
     // var lang = await userSettingsDatabaseService.getLanguage();
-    lang = storageService!.language;
+    lang = storageService.language;
     if (lang == '' || lang == null) {
       lang = Platform.localeName.substring(0, 2);
     }
@@ -1017,9 +1016,9 @@ class WalletDashboardViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
   showcaseEvent(BuildContext ctx) async {
     log.e(
-        'Is showvcase: ${storageService!.isShowCaseView} --- gas amount: $gasAmount');
+        'Is showvcase: ${storageService.isShowCaseView} --- gas amount: $gasAmount');
     // if (!isBusy) setBusyForObject(isShowCaseView, true);
-    _isShowCaseView = storageService!.isShowCaseView;
+    _isShowCaseView = storageService.isShowCaseView;
     // if (!isBusy) setBusyForObject(isShowCaseView, false);
     if (isShowCaseView && !isBusy) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -1105,8 +1104,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 
         if (localAppVersion['name']!.compareTo(apiAppVersion) == -1) {
           sharedService.alertDialog(
-              AppLocalizations.of(context!)!.appUpdateNotice,
-              '${AppLocalizations.of(context!)!.pleaseUpdateYourAppFrom} $localAppVersion ${AppLocalizations.of(context!)!.toLatestBuild} $apiAppVersion ${AppLocalizations.of(context!)!.inText} $store ${AppLocalizations.of(context!)!.clickOnWebsiteButton}',
+              FlutterI18n.translate(context!, "appUpdateNotice"),
+              '${FlutterI18n.translate(context!, "pleaseUpdateYourAppFrom")} $localAppVersion ${FlutterI18n.translate(context!, "toLatestBuild")} $apiAppVersion ${FlutterI18n.translate(context!, "inText")} $store ${FlutterI18n.translate(context!, "clickOnWebsiteButton")}',
               isUpdate: true,
               isLater: true,
               isWebsite: true,
@@ -1153,7 +1152,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                             color: primaryColor,
                             padding: const EdgeInsets.all(5),
                             child: Text(
-                              AppLocalizations.of(context)!.question,
+                              FlutterI18n.translate(context, "question"),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -1221,8 +1220,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .cancel,
+                                              FlutterI18n.translate(
+                                                  context, "cancel"),
                                               style: const TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 12),
@@ -1248,8 +1247,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .confirm,
+                                              FlutterI18n.translate(
+                                                  context, "confirm"),
                                               style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 12),
@@ -1284,33 +1283,35 @@ class WalletDashboardViewModel extends BaseViewModel {
 
                                                     sharedService
                                                         .sharedSimpleNotification(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .freeFabUpdate,
-                                                            subtitle: AppLocalizations
-                                                                    .of(context)!
-                                                                .freeFabSuccess,
+                                                            FlutterI18n.translate(
+                                                                context,
+                                                                "freeFabUpdate"),
+                                                            subtitle: FlutterI18n
+                                                                .translate(
+                                                                    context,
+                                                                    "freeFabSuccess"),
                                                             isError: false);
                                                   } else {
                                                     sharedService
                                                         .sharedSimpleNotification(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .freeFabUpdate,
-                                                            subtitle: AppLocalizations
-                                                                    .of(context)!
-                                                                .incorrectAnswer);
+                                                            FlutterI18n.translate(
+                                                                context,
+                                                                "freeFabUpdate"),
+                                                            subtitle: FlutterI18n
+                                                                .translate(
+                                                                    context,
+                                                                    "incorrectAnswer"));
                                                   }
                                                 } else {
                                                   sharedService
                                                       .sharedSimpleNotification(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .notice,
-                                                          subtitle:
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .genericError);
+                                                          FlutterI18n.translate(
+                                                              context,
+                                                              "notice"),
+                                                          subtitle: FlutterI18n
+                                                              .translate(
+                                                                  context,
+                                                                  "genericError"));
                                                 }
                                               },
                                             );
@@ -1337,8 +1338,8 @@ class WalletDashboardViewModel extends BaseViewModel {
           debugPrint(isEligibleForFreeGas.toString());
 
           sharedService.sharedSimpleNotification(
-              AppLocalizations.of(context!)!.notice,
-              subtitle: AppLocalizations.of(context!)!.freeFabUsedAlready);
+              FlutterI18n.translate(context!, "notice"),
+              subtitle: FlutterI18n.translate(context!, "freeFabUsedAlready"));
         }
       }
     });
@@ -1429,7 +1430,7 @@ class WalletDashboardViewModel extends BaseViewModel {
           var coinType = item['coinType'];
           String? tickerNameByCointype = newCoinTypeMap[coinType];
           if (tickerNameByCointype == null) {
-            await tokenListDatabaseService!.getAll().then((tokenList) {
+            await tokenListDatabaseService.getAll().then((tokenList) {
               tickerNameByCointype = tokenList
                   .firstWhere((element) => element.coinType == coinType)
                   .tickerName;
@@ -1452,7 +1453,8 @@ class WalletDashboardViewModel extends BaseViewModel {
         String f = holder.substring(1, holder.length - 1);
         if (pendingDepositCoins.isNotEmpty) {
           showSimpleNotification(
-              Text('${AppLocalizations.of(context!)!.requireRedeposit}: $f'),
+              Text(
+                  '${FlutterI18n.translate(context!, "requireRedeposit")}: $f'),
               position: NotificationPosition.bottom,
               slideDismissDirection: DismissDirection.down,
               background: primaryColor);
@@ -1467,13 +1469,13 @@ class WalletDashboardViewModel extends BaseViewModel {
     log.w('in showDialogWarning isConfirmDeposit $isConfirmDeposit');
     if (gasAmount == 0.0) {
       sharedService.alertDialog(
-          AppLocalizations.of(context!)!.insufficientGasAmount,
-          AppLocalizations.of(context!)!.pleaseAddGasToTrade);
+          FlutterI18n.translate(context!, "insufficientGasAmount"),
+          FlutterI18n.translate(context!, "pleaseAddGasToTrade"));
     }
     if (isConfirmDeposit) {
       sharedService.alertDialog(
-          AppLocalizations.of(context!)!.pendingConfirmDeposit,
-          '${AppLocalizations.of(context!)!.pleaseConfirmYour} ${wallets![0].coin} ${AppLocalizations.of(context!)!.deposit}',
+          FlutterI18n.translate(context!, "pendingConfirmDeposit"),
+          '${FlutterI18n.translate(context!, "pleaseConfirmYour")} ${wallets![0].coin} ${FlutterI18n.translate(context!, "deposit")}',
           path: '/walletFeatures',
           arguments: wallets![0],
           isWarning: true);
@@ -1481,7 +1483,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   }
 
   jsonTransformation() {
-    var walletBalancesBody = jsonDecode(storageService!.walletBalancesBody);
+    var walletBalancesBody = jsonDecode(storageService.walletBalancesBody);
     log.i('Coin address body $walletBalancesBody');
   }
 
@@ -1491,7 +1493,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     // UserSettings userSettings = UserSettings(favWalletCoins: [tickerName]);
     // await userDatabaseService.update(userSettings);
 
-    storageService!.favWalletCoins = json.encode(favWalletCoins);
+    storageService.favWalletCoins = json.encode(favWalletCoins);
   }
 
   buildNewWalletObject(
@@ -1530,7 +1532,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         await coreWalletDatabaseService!.getWalletBalancesBody();
     String? finalWbb = '';
     if (walletBalancesBodyFromDB == null) {
-      finalWbb = storageService!.walletBalancesBody;
+      finalWbb = storageService.walletBalancesBody;
       var walletCoreModel = CoreWalletModel(
         id: 1,
         walletBalancesBody: finalWbb,
@@ -1544,7 +1546,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
 
     if (finalWbb == null || finalWbb.isEmpty) {
-      storageService!.hasWalletVerified = false;
+      storageService.hasWalletVerified = false;
       navigationService!
           .navigateUsingPushNamedAndRemoveUntil(WalletSetupViewRoute);
       return [];
@@ -1577,13 +1579,13 @@ class WalletDashboardViewModel extends BaseViewModel {
       if (gasAmount == 0.0 && fabBalance == 0.0) {
         String? address = await coreWalletDatabaseService!
             .getWalletAddressByTickerName('FAB');
-        if (storageService!.isShowCaseView != null) {
-          if (storageService!.isShowCaseView) {
-            storageService!.isShowCaseView = true;
+        if (storageService.isShowCaseView != null) {
+          if (storageService.isShowCaseView) {
+            storageService.isShowCaseView = true;
             _isShowCaseView = true;
           }
         } else {
-          storageService!.isShowCaseView = true;
+          storageService.isShowCaseView = true;
           _isShowCaseView = true;
         }
         var res = await apiService!.getFreeFab(address);
@@ -1602,8 +1604,8 @@ class WalletDashboardViewModel extends BaseViewModel {
   debugVersionPopup() async {
     // await _showNotification();
 
-    sharedService.alertDialog(AppLocalizations.of(context!)!.notice,
-        AppLocalizations.of(context!)!.testVersion,
+    sharedService.alertDialog(FlutterI18n.translate(context!, "notice"),
+        FlutterI18n.translate(context!, "testVersion"),
         isWarning: false);
   }
 

@@ -1,6 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 class NetworkStausView extends StatelessWidget {
   // final Widget child;
@@ -20,7 +20,7 @@ class NetworkStausView extends StatelessWidget {
         padding: const EdgeInsets.all(50),
         child: Center(
           child: Text(
-            AppLocalizations.of(context)!.noInternetWarning,
+            FlutterI18n.translate(context, "noInternetWarning"),
             style: Theme.of(context).textTheme.displaySmall,
             textAlign: TextAlign.center,
           ),

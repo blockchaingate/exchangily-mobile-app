@@ -135,7 +135,7 @@ class CoinService {
       log.w(
           ' getSingleTokenData -res $res -- coin type $coinType -- ticker $tickerName');
       await apiService!.getTokenListUpdates().then((newTokens) {
-        for (var j = 0; j < newTokens!.length; j++) {
+        for (var j = 0; j < newTokens.length; j++) {
           if (newTokens[j].coinType == coinType) {
             res = newTokens[j];
             log.i('getSingleTokenData new tokens list:  res ${res!.toJson()}');
@@ -225,7 +225,7 @@ class CoinService {
       coinType = hardCodedCoinList.key;
     } else {
       await apiService!.getTokenListUpdates().then((tokens) {
-        for (var token in tokens!) {
+        for (var token in tokens) {
           if (token.tickerName == tickerName) {
             coinType = token.coinType;
             break;
