@@ -147,29 +147,29 @@ class SettingsViewModel extends BaseViewModel {
   setBiometricAuth() async {
     setBusyForObject(isBiometricAuth, true);
 
-    bool hasAuthorized = await authService!.authenticateApp();
+    bool hasAuthorized = await authService.authenticateApp();
 
     if (hasAuthorized) {
-      storageService!.hasInAppBiometricAuthEnabled =
-          !storageService!.hasInAppBiometricAuthEnabled;
-      storageService!.hasPhoneProtectionEnabled = true;
+      storageService.hasInAppBiometricAuthEnabled =
+          !storageService.hasInAppBiometricAuthEnabled;
+      storageService.hasPhoneProtectionEnabled = true;
     } else if (!hasAuthorized) {
-      if (authService!.isLockedOut) {
-        sharedService!.sharedSimpleNotification(
+      if (authService.isLockedOut) {
+        sharedService.sharedSimpleNotification(
             AppLocalizations.of(context)!.lockedOutTemp);
-      } else if (authService!.isLockedOutPerm) {
-        sharedService!.sharedSimpleNotification(
+      } else if (authService.isLockedOutPerm) {
+        sharedService.sharedSimpleNotification(
             AppLocalizations.of(context)!.lockedOutPerm);
       }
     }
 
-    if (!storageService!.hasPhoneProtectionEnabled) {
-      sharedService!.sharedSimpleNotification(
+    if (!storageService.hasPhoneProtectionEnabled) {
+      sharedService.sharedSimpleNotification(
           AppLocalizations.of(context)!.pleaseSetupDeviceSecurity);
-      storageService!.hasCancelledBiometricAuth = false;
-      storageService!.hasInAppBiometricAuthEnabled = false;
+      storageService.hasCancelledBiometricAuth = false;
+      storageService.hasInAppBiometricAuthEnabled = false;
     }
-    _isBiometricAuth = storageService!.hasInAppBiometricAuthEnabled;
+    _isBiometricAuth = storageService.hasInAppBiometricAuthEnabled;
     setBusyForObject(isBiometricAuth, false);
   }
 
@@ -177,7 +177,7 @@ class SettingsViewModel extends BaseViewModel {
 
   setLanguageFromDb() async {
     setBusy(true);
-    await userSettingsDatabaseService!.getById(1).then((res) {
+    await userSettingsDatabaseService.getById(1).then((res) {
       if (res != null) {
         userSettings.language = res.language;
         log.i('user settings db not null');
@@ -231,7 +231,7 @@ class SettingsViewModel extends BaseViewModel {
 // Not in use
   convertDecimalToHex() async {
     int? baseCoin = 0;
-    await coinService!
+    await coinService
         .getCoinTypeByTickerName('USDT')
         .then((value) => baseCoin = value);
     var x = baseCoin!.toRadixString(16);
@@ -246,13 +246,13 @@ class SettingsViewModel extends BaseViewModel {
   changeBaseAppUrl() {
     setBusy(true);
     //  log.i('1');
-    storageService!.isHKServer = !storageService!.isHKServer;
+    storageService.isHKServer = !storageService.isHKServer;
 
-    storageService!.isUSServer = storageService!.isHKServer ? false : true;
+    storageService.isUSServer = storageService.isHKServer ? false : true;
     // Phoenix.rebirth(context);
     //  log.i('2');
-    baseServerUrl = configService!.getKanbanBaseUrl();
-    isHKServer = storageService!.isHKServer;
+    baseServerUrl = configService.getKanbanBaseUrl();
+    isHKServer = storageService.isHKServer;
     log.e('GLobal kanban url $baseServerUrl');
     setBusy(false);
   }
@@ -272,11 +272,11 @@ class SettingsViewModel extends BaseViewModel {
   setIsShowcase(bool v) {
     // set updated value
     log.i('setIsShowcase $v value');
-    storageService!.isShowCaseView = !storageService!.isShowCaseView;
+    storageService.isShowCaseView = !storageService.isShowCaseView;
 
     // get new value and assign it to the viewmodel variable
     setBusy(true);
-    isShowCaseOnce = storageService!.isShowCaseView;
+    isShowCaseOnce = storageService.isShowCaseView;
     setBusy(false);
     log.w('is show case once value $isShowCaseOnce');
   }
@@ -290,7 +290,7 @@ class SettingsViewModel extends BaseViewModel {
         !storageService.isNoticeDialogDisplay;
     setBusy(true);
     //sharedService.setDialogWarningsStatus(value);
-    isDialogDisplay = storageService!.isNoticeDialogDisplay;
+    isDialogDisplay = storageService.isNoticeDialogDisplay;
     setBusy(false);
   }
 
@@ -315,7 +315,7 @@ class SettingsViewModel extends BaseViewModel {
         setBusy(true);
         isDeleting = true;
         log.w('deleting wallet');
-        await walletService!.deleteWallet();
+        await walletService.deleteWallet();
 
         Navigator.pushNamed(context, '/');
       } else if (res.returnedText == 'Closed' && !res.confirmed!) {
@@ -347,7 +347,7 @@ class SettingsViewModel extends BaseViewModel {
     if (isVisible) {
       isVisible = !isVisible;
     } else {
-      await dialogService!
+      await dialogService
           .showDialog(
         title: AppLocalizations.of(context)!.enterPassword,
         description:
@@ -417,13 +417,13 @@ class SettingsViewModel extends BaseViewModel {
 
       //   UserSettings us = UserSettings(id: 1, language: 'zh', theme: '');
       //   await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
-      storageService!.language = 'zh';
+      storageService.language = 'zh';
     } else if (updatedLanguageValue == 'English' ||
         updatedLanguageValue == 'en' ||
         key == 'en') {
       log.e('in en');
       AppLocalizations.load(const Locale('en', 'EN'));
-      storageService!.language = 'en';
+      storageService.language = 'en';
       // UserSettings us = UserSettings(id: 1, language: 'en', theme: '');
       // await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
     }
@@ -440,7 +440,7 @@ class SettingsViewModel extends BaseViewModel {
   getAppVersion() async {
     setBusy(true);
     log.w('in app getappver');
-    versionInfo = await sharedService!.getLocalAppVersion();
+    versionInfo = await sharedService.getLocalAppVersion();
     log.i('getAppVersion $versionInfo');
     versionName = versionInfo['name'];
     buildNumber = versionInfo['buildNumber'];
@@ -453,6 +453,6 @@ class SettingsViewModel extends BaseViewModel {
                     onBackButtonPressed
 ----------------------------------------------------------------------*/
   onBackButtonPressed() async {
-    await sharedService!.onBackButtonPressed('/dashboard');
+    await sharedService.onBackButtonPressed('/dashboard');
   }
 }
