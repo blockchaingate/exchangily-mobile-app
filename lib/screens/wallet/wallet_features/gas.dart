@@ -15,7 +15,7 @@ import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import "package:flutter/material.dart";
-import '../../../localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import '../../../shared/globals.dart' as globals;
 
 class Gas extends StatelessWidget {
@@ -47,7 +47,7 @@ class Gas extends StatelessWidget {
             ),
             UIHelper.horizontalSpaceSmall,
             Text(
-              "${AppLocalizations.of(context)!.gas}: ${NumberUtil().truncateDoubleWithoutRouding(gasAmount!, precision: 6)}",
+              "${FlutterI18n.translate(context, "gas")}: ${NumberUtil().truncateDoubleWithoutRouding(gasAmount!, precision: 6)}",
               style: Theme.of(context).textTheme.headlineSmall,
             ),
           ],
@@ -62,7 +62,7 @@ class Gas extends StatelessWidget {
             Navigator.pushNamed(context, '/addGas');
           },
           child: Text(
-            AppLocalizations.of(context)!.addGas,
+            FlutterI18n.translate(context, "addGas"),
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),

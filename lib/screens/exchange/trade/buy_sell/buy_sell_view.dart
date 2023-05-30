@@ -20,7 +20,7 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
-import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
 
@@ -162,9 +162,10 @@ class BuySellView extends StatelessWidget {
                                                         //   ),
                                                         // ),
                                                         child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .price,
+                                                            FlutterI18n
+                                                                .translate(
+                                                                    context,
+                                                                    "price"),
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
@@ -185,9 +186,10 @@ class BuySellView extends StatelessWidget {
                                                         //   ),
                                                         // ),
                                                         child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .quantity,
+                                                            FlutterI18n
+                                                                .translate(
+                                                                    context,
+                                                                    "quantity"),
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
@@ -265,7 +267,7 @@ class BuySellView extends StatelessWidget {
                       //
                     ]),
                     model.isBusy
-                        ? model.sharedService!.stackFullScreenLoadingIndicator()
+                        ? model.sharedService.stackFullScreenLoadingIndicator()
                         : Container(),
                   ],
                 ),
@@ -294,7 +296,7 @@ class BuySellView extends StatelessWidget {
                   model.selectBuySellTab(true);
                 },
                 child: Text(
-                  AppLocalizations.of(context)!.buy,
+                  FlutterI18n.translate(context, "buy"),
                   style: TextStyle(
                       color: model.bidOrAsk!
                           ? const Color(0XFF871fff)
@@ -315,7 +317,7 @@ class BuySellView extends StatelessWidget {
                   model.selectBuySellTab(false);
                 },
                 child: Text(
-                  AppLocalizations.of(context)!.sell,
+                  FlutterI18n.translate(context, "sell"),
                   style: TextStyle(
                       color: model.bidOrAsk!
                           ? Colors.white
@@ -601,7 +603,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             maxLines: 1,
             controller: model.priceTextController,
             decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.price,
+                labelText: FlutterI18n.translate(context, "price"),
                 labelStyle: Theme.of(context).textTheme.titleLarge),
             style: Theme.of(context).textTheme.headlineSmall,
           ),
@@ -627,7 +629,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             maxLines: 1,
             controller: model.quantityTextController,
             decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.quantity,
+                labelText: FlutterI18n.translate(context, "quantity"),
                 labelStyle: Theme.of(context).textTheme.titleLarge),
             style: Theme.of(context).textTheme.headlineSmall,
           ),
@@ -652,7 +654,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             Padding(
               padding: const EdgeInsets.only(right: 3.0),
               child: Text(
-                AppLocalizations.of(context)!.amount,
+                FlutterI18n.translate(context, "amount"),
                 style: const TextStyle(color: Colors.grey, fontSize: 12.0),
               ),
             ),
@@ -688,7 +690,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context)!.kanbanGasFee,
+              FlutterI18n.translate(context, "kanbanGasFee"),
               style: const TextStyle(color: Colors.grey, fontSize: 12.0),
             ),
             Padding(
@@ -710,7 +712,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context)!.advance,
+              FlutterI18n.translate(context, "advance"),
               style: const TextStyle(color: Colors.grey, fontSize: 12.0),
             ),
             SizedBox(
@@ -741,7 +743,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      AppLocalizations.of(context)!.kanbanGasPrice,
+                      FlutterI18n.translate(context, "kanbanGasPrice"),
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     UIHelper.horizontalSpaceSmall,
@@ -769,7 +771,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                 Row(
                   children: <Widget>[
                     Text(
-                      AppLocalizations.of(context)!.kanbanGasLimit,
+                      FlutterI18n.translate(context, "kanbanGasLimit"),
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     UIHelper.horizontalSpaceSmall,
@@ -815,12 +817,12 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                 model.checkPass(context);
               },
               child: model.isBusy
-                  ? Text(AppLocalizations.of(context)!.loading,
+                  ? Text(FlutterI18n.translate(context, "loading"),
                       style: Theme.of(context).textTheme.headlineMedium)
                   : Text(
                       model.bidOrAsk!
-                          ? AppLocalizations.of(context)!.buy
-                          : AppLocalizations.of(context)!.sell,
+                          ? FlutterI18n.translate(context, "buy")
+                          : FlutterI18n.translate(context, "sell"),
                       style: Theme.of(context).textTheme.headlineMedium)),
         )
       ],
@@ -841,7 +843,8 @@ class BalanceRowWidget extends StatelessWidget {
                     model!.baseCoinExchangeBalance!.unlockedAmount! < 1.0)
             ? Showcase(
                 key: model!.globalKeyOne,
-                description: AppLocalizations.of(context)!.buySellInstruction1,
+                description:
+                    FlutterI18n.translate(context, "buySellInstruction1"),
                 child: buildTransferRow(context, model!))
             : buildTransferRow(context, model!));
   }
@@ -850,7 +853,7 @@ class BalanceRowWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(AppLocalizations.of(context)!.balance,
+        Text(FlutterI18n.translate(context, "balance"),
             style: const TextStyle(color: primaryColor, fontSize: 13.0)),
         // First Check if Object is null
         // model.targetCoinExchangeBalance == null ||

@@ -5,7 +5,6 @@ import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/coin_service.dart';
@@ -19,6 +18,7 @@ import 'package:exchangilymobileapp/utils/coin_utils/erc20_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 import '../../../logger.dart';
@@ -128,61 +128,72 @@ class MoveToExchangeViewModel extends BaseViewModel {
 /*---------------------------------------------------
                   Amount After fee
 --------------------------------------------------- */
+
   Future<Decimal> amountAfterFee({bool isMaxAmount = false}) async {
     setBusy(true);
-
-    if (amountController.text == '.' || amountController.text.isEmpty) {
+    if (amountController.text == '.') {
       setBusy(false);
-      transFee = Constants.decimalZero;
-      kanbanTransFee = Constants.decimalZero;
       return Constants.decimalZero;
     }
-
+    if (amountController.text.isEmpty) {
+      transFee = Constants.decimalZero;
+      kanbanTransFee = Constants.decimalZero;
+      setBusy(false);
+      return Constants.decimalZero;
+    }
+    amount = NumberUtil.decimalLimiter(Decimal.parse(amountController.text),
+        decimalPlaces: decimalLimit);
     log.w('amountAfterFee func: amount $amount');
-    isValidAmount = true;
+
     Decimal finalAmount = Constants.decimalZero;
+    // update if transfee is 0
 
-    // Update transaction fee if it is not a TRX transfer
-    if (!isTrx()) {
+    // if tron coins then assign fee accordingly
+    if (isTrx()) {
+      if (walletInfo!.tickerName == 'USDTX' || walletInfo!.tokenType == 'TRX') {
+        transFee = Decimal.parse(trxGasValueTextController.text);
+        finalAmount = amount;
+        finalAmount <=
+                NumberUtil.parseDoubleToDecimal(walletInfo!.availableBalance)
+            ? isValidAmount = true
+            : isValidAmount = false;
+      }
+
+      if (walletInfo!.tickerName == 'TRX') {
+        transFee = Decimal.parse(trxGasValueTextController.text);
+        finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
+      }
+    } else {
       await updateTransFee();
-    } else {
-      transFee = Decimal.parse(trxGasValueTextController.text);
-    }
+      // in any token transfer, gas fee is paid in native tokens so
+      // in case of non-native tokens, need to check the balance of native tokens
+      // so that there is fee to pay when transffering non-native tokens
+      if (tokenType!.isEmpty) {
+        if (isMaxAmount) {
+          finalAmount = (Decimal.parse(amount.toString()) -
+              Decimal.parse(transFee.toString()));
+        } else {
+          finalAmount = (Decimal.parse(transFee.toString()) +
+              Decimal.parse(amount.toString()));
 
-    // Calculate the final amount based on whether it is a max amount transfer or not
-    finalAmount = isMaxAmount ? amount - transFee : amount;
-    finalAmount =
-        NumberUtil.decimalLimiter(finalAmount, decimalPlaces: decimalLimit);
-
-    // For native tokens
-    if (tokenType!.isEmpty) {
-      // Check if the user has enough balance for the fee and the amount they want to send
-      if (NumberUtil.parseDoubleToDecimal(walletInfo!.availableBalance) <
-          amount + transFee) {
-        log.e(
-            'Insufficient balance for the transaction. Required balance: ${amount + transFee}');
-        isValidAmount = false;
-        return Constants.decimalZero;
-      }
-    } else {
-      // For non-native tokens
-      // Check if the user has enough native token balance to pay for the gas fee
-      if (NumberUtil.parseDoubleToDecimal(walletInfo!.availableBalance) <
-          transFee) {
-        isValidAmount = false;
-        log.e(
-            'Insufficient native token balance for the transaction. Required balance for gas fee: $transFee');
-        return Constants.decimalZero;
+          log.e(
+              'final amount $finalAmount = amount $amount  + transFee $transFee');
+        }
+      } else {
+        finalAmount = amount;
       }
     }
 
+    finalAmount <= NumberUtil.parseDoubleToDecimal(walletInfo!.availableBalance)
+        ? isValidAmount = true
+        : isValidAmount = false;
     log.i(
-        'Func:amountAfterFee --trans fee $transFee -- entered amount $amount = finalAmount $finalAmount -- isValidAmount $isValidAmount');
+        'Func:amountAfterFee --trans fee $transFee  -- entered amount $amount =  finalAmount $finalAmount -- decimal limit final amount $finalAmount-- isValidAmount $isValidAmount');
     setBusy(false);
+    // It happens because floating-point numbers cannot always precisely represent decimal fractions. Instead, they represent them as binary fractions, which can sometimes result in rounding errors.
+    //0.025105000000000002
     return finalAmount;
   }
-
-  //0.025105000000000002
 
 /*---------------------------------------------------
                   Fill Max Amount
@@ -205,7 +216,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
               .toString();
     } else {
       sharedService!.sharedSimpleNotification(
-          AppLocalizations.of(context)!.insufficientGasAmount);
+          FlutterI18n.translate(context, "insufficientGasAmount"));
     }
     setBusy(false);
   }
@@ -298,8 +309,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
       gasAmount = NumberUtil.parseDoubleToDecimal(data);
       if (gasAmount == Constants.decimalZero) {
         sharedService!.alertDialog(
-          AppLocalizations.of(context)!.notice,
-          AppLocalizations.of(context)!.insufficientGasAmount,
+          FlutterI18n.translate(context, "notice"),
+          FlutterI18n.translate(context, "insufficientGasAmount"),
         );
       }
     }).catchError((onError) => log.e(onError));
@@ -320,8 +331,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     if (amountController.text.isEmpty) {
       sharedService!.sharedSimpleNotification(
-          AppLocalizations.of(context)!.amountMissing,
-          subtitle: AppLocalizations.of(context)!.pleaseEnterValidNumber);
+          FlutterI18n.translate(context, "amountMissing"),
+          subtitle: FlutterI18n.translate(context, "pleaseEnterValidNumber"));
 
       setBusy(false);
       return;
@@ -329,8 +340,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (gasAmount == Constants.decimalZero ||
         transFee == Constants.decimalZero) {
       sharedService!.sharedSimpleNotification(
-          AppLocalizations.of(context)!.notice,
-          subtitle: AppLocalizations.of(context)!.insufficientGasAmount);
+          FlutterI18n.translate(context, "notice"),
+          subtitle: FlutterI18n.translate(context, "insufficientGasAmount"));
 
       setBusy(false);
       return;
@@ -344,9 +355,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     }
     if (transFee > feeBalance && !isTrx()) {
       sharedService!.sharedSimpleNotification(
-          AppLocalizations.of(context)!.insufficientBalance,
+          FlutterI18n.translate(context, "insufficientBalance"),
           subtitle:
-              '${AppLocalizations.of(context)!.gasFee} $transFee > ${AppLocalizations.of(context)!.walletbalance} ${walletInfo!.availableBalance}');
+              '${FlutterI18n.translate(context, "gasFee")} $transFee > ${FlutterI18n.translate(context, "walletbalance")} ${walletInfo!.availableBalance}');
 
       setBusy(false);
       return;
@@ -361,8 +372,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (amount == Constants.decimalZero) {
       log.e(
           'amount $amount --- final amount with fee: $finalAmount -- wallet bal: ${walletInfo!.availableBalance}');
-      sharedService!.alertDialog(AppLocalizations.of(context)!.invalidAmount,
-          AppLocalizations.of(context)!.pleaseEnterValidNumber,
+      sharedService!.alertDialog(
+          FlutterI18n.translate(context, "invalidAmount"),
+          FlutterI18n.translate(context, "pleaseEnterValidNumber"),
           isWarning: false);
       setBusy(false);
       return;
@@ -372,8 +384,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
         NumberUtil.parseDoubleToDecimal(walletInfo!.availableBalance)) {
       log.e(
           'amount $amount --- final amount with fee: $finalAmount -- wallet bal: ${walletInfo!.availableBalance}');
-      sharedService!.alertDialog(AppLocalizations.of(context)!.invalidAmount,
-          AppLocalizations.of(context)!.insufficientBalance,
+      sharedService!.alertDialog(
+          FlutterI18n.translate(context, "invalidAmount"),
+          FlutterI18n.translate(context, "insufficientBalance"),
           isWarning: false);
       setBusy(false);
       return;
@@ -388,7 +401,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       if (!hasSufficientChainBalance) {
         log.e('Chain $tokenType -- insufficient balance');
         sharedService!.sharedSimpleNotification(walletInfo!.tokenType!,
-            subtitle: AppLocalizations.of(context)!.insufficientBalance);
+            subtitle: FlutterI18n.translate(context, "insufficientBalance"));
         setBusy(false);
         return;
       }
@@ -405,8 +418,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
       log.w('isCorrectAmount $isCorrectAmount');
       if (!isCorrectAmount) {
         sharedService!.alertDialog(
-            '${AppLocalizations.of(context)!.fee} ${AppLocalizations.of(context)!.notice}',
-            'TRX ${AppLocalizations.of(context)!.insufficientBalance}',
+            '${FlutterI18n.translate(context, "fee")} ${FlutterI18n.translate(context, "notice")}',
+            'TRX ${FlutterI18n.translate(context, "insufficientBalance")}',
             isWarning: false);
         setBusy(false);
         return;
@@ -424,8 +437,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
       }
       if (!isCorrectAmount) {
         sharedService!.alertDialog(
-            '${AppLocalizations.of(context)!.fee} ${AppLocalizations.of(context)!.notice}',
-            'TRX ${AppLocalizations.of(context)!.insufficientBalance}',
+            '${FlutterI18n.translate(context, "fee")} ${FlutterI18n.translate(context, "notice")}',
+            'TRX ${FlutterI18n.translate(context, "insufficientBalance")}',
             isWarning: false);
         setBusy(false);
         return;
@@ -434,10 +447,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     message = '';
     var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context)!.enterPassword,
+        title: FlutterI18n.translate(context, "enterPassword"),
         description:
-            AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context)!.confirm);
+            FlutterI18n.translate(context, "dialogManagerTypeSamePasswordNote"),
+        buttonTitle: FlutterI18n.translate(context, "confirm"));
     if (res.confirmed!) {
       setBusy(true);
       var seed;
@@ -513,9 +526,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
             message = txId.toString();
 
             sharedService!.sharedSimpleNotification(
-                AppLocalizations.of(context)!.depositTransactionSuccess,
+                FlutterI18n.translate(context, "depositTransactionSuccess"),
                 subtitle:
-                    '$specialTicker ${AppLocalizations.of(context)!.isOnItsWay}',
+                    '$specialTicker ${FlutterI18n.translate(context, "isOnItsWay")}',
                 isError: false);
             Future.delayed(const Duration(seconds: 3), () {
               refreshBalance();
@@ -532,13 +545,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
         }).timeout(const Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
           setBusy(false);
-          sharedService!.alertDialog(AppLocalizations.of(context)!.notice,
-              AppLocalizations.of(context)!.serverTimeoutPleaseTryAgainLater,
+          sharedService!.alertDialog(
+              FlutterI18n.translate(context, "notice"),
+              FlutterI18n.translate(
+                  context, "serverTimeoutPleaseTryAgainLater"),
               isWarning: false);
         }).catchError((error) {
           log.e('In Catch error - $error');
-          sharedService!.alertDialog(AppLocalizations.of(context)!.networkIssue,
-              '$tickerName ${AppLocalizations.of(context)!.transanctionFailed}',
+          sharedService!.alertDialog(
+              FlutterI18n.translate(context, "networkIssue"),
+              '$tickerName ${FlutterI18n.translate(context, "transanctionFailed")}',
               isWarning: false);
 
           setBusy(false);
@@ -579,19 +595,20 @@ class MoveToExchangeViewModel extends BaseViewModel {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     success
-                        ? Text(AppLocalizations.of(context)!
-                            .depositTransactionSuccess)
-                        : Text(AppLocalizations.of(context)!
-                            .depositTransactionFailed),
+                        ? Text(FlutterI18n.translate(
+                            context, "depositTransactionSuccess"))
+                        : Text(FlutterI18n.translate(
+                            context, "depositTransactionFailed")),
                     success
                         ? const Text("")
                         : ret["data"] != null
                             ? Text(ret["data"] ==
                                     'incorrect amount for two transactions'
-                                ? AppLocalizations.of(context)!
-                                    .incorrectDepositAmountOfTwoTx
+                                ? FlutterI18n.translate(
+                                    context, "incorrectDepositAmountOfTwoTx")
                                 : ret["data"])
-                            : Text(AppLocalizations.of(context)!.networkIssue),
+                            : Text(
+                                FlutterI18n.translate(context, "networkIssue")),
                   ]),
               position: NotificationPosition.bottom,
               background: primaryColor);
@@ -613,8 +630,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
           log.e('Deposit Catch $onError');
 
           sharedService!.alertDialog(
-              AppLocalizations.of(context)!.depositTransactionFailed,
-              AppLocalizations.of(context)!.networkIssue,
+              FlutterI18n.translate(context, "depositTransactionFailed"),
+              FlutterI18n.translate(context, "networkIssue"),
               isWarning: false);
           serverError = onError.toString();
         });
@@ -627,7 +644,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       log.e('Wallet update required');
       setBusy(false);
       sharedService!.sharedSimpleNotification(
-          AppLocalizations.of(context)!.importantWalletUpdateNotice);
+          FlutterI18n.translate(context, "importantWalletUpdateNotice"));
     } else {
       log.e('Wrong pass');
       setBusy(false);

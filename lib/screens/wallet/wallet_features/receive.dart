@@ -16,7 +16,6 @@ import 'dart:ui';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -26,6 +25,7 @@ import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
@@ -37,10 +37,10 @@ class ReceiveWalletScreen extends StatefulWidget {
   const ReceiveWalletScreen({Key? key, this.walletInfo}) : super(key: key);
 
   @override
-  _ReceiveWalletScreenState createState() => _ReceiveWalletScreenState();
+  ReceiveWalletScreenState createState() => ReceiveWalletScreenState();
 }
 
-class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
+class ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   String convertedToFabAddress = '';
   final fabUtils = FabUtils();
   @override
@@ -64,7 +64,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.receive,
+        title: Text(FlutterI18n.translate(context, "receive"),
             style: Theme.of(context).textTheme.displaySmall),
         centerTitle: true,
       ),
@@ -117,7 +117,8 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                       errorStateBuilder: (context, err) {
                         return Center(
                           child: Text(
-                              AppLocalizations.of(context)!.somethingWentWrong,
+                              FlutterI18n.translate(
+                                  context, "somethingWentWrong"),
                               textAlign: TextAlign.center),
                         );
                       }),
@@ -129,7 +130,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
             child: ElevatedButton(
               style: generalButtonStyle1,
               child: Text(
-                AppLocalizations.of(context)!.saveAndShareQrCode,
+                FlutterI18n.translate(context, "saveAndShareQrCode"),
                 style: Theme.of(context)
                     .textTheme
                     .headlineMedium!
@@ -209,7 +210,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                     ),
                   ),
                   Text(
-                    AppLocalizations.of(context)!.copyAddress,
+                    FlutterI18n.translate(context, "copyAddress"),
                     style: Theme.of(context)
                         .textTheme
                         .headlineSmall!
@@ -241,7 +242,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
     Clipboard.setData(ClipboardData(text: address!));
     SharedService sharedService = locator<SharedService>();
     sharedService.sharedSimpleNotification(
-      AppLocalizations.of(context)!.addressCopied,
+      FlutterI18n.translate(context, "addressCopied"),
       isError: false,
     );
   }

@@ -1,5 +1,4 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_viewmodel.dart';
@@ -7,6 +6,7 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_h
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 
 class TransactionHistoryView extends StatelessWidget {
@@ -44,10 +44,9 @@ class TransactionHistoryView extends StatelessWidget {
                         icon: const Icon(Icons.refresh),
                         onPressed: () => model.reloadTransactions())
                   ],
-                  leading: Container(
-                      child: IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () => Navigator.of(context).pop())),
+                  leading: IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () => Navigator.of(context).pop()),
                   centerTitle: true,
                   // actions: [
                   //  IconButton(
@@ -55,7 +54,8 @@ class TransactionHistoryView extends StatelessWidget {
                   //     onPressed: () => {},
                   //   )
                   // ],
-                  title: Text(AppLocalizations.of(context)!.transactionHistory,
+                  title: Text(
+                      FlutterI18n.translate(context, "transactionHistory"),
                       style: Theme.of(context).textTheme.displaySmall),
                   backgroundColor: secondaryColor,
                 ),
@@ -78,7 +78,9 @@ class TransactionHistoryView extends StatelessWidget {
                                 Row(
                                   children: [
                                     UIHelper.horizontalSpaceSmall,
-                                    Text(AppLocalizations.of(context)!.action,
+                                    Text(
+                                        FlutterI18n.translate(
+                                            context, "action"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall),
@@ -86,7 +88,8 @@ class TransactionHistoryView extends StatelessWidget {
                                     Expanded(
                                       flex: 1,
                                       child: Text(
-                                          AppLocalizations.of(context)!.date,
+                                          FlutterI18n.translate(
+                                              context, "date"),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
@@ -95,8 +98,8 @@ class TransactionHistoryView extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: Text(
-                                          AppLocalizations.of(context)!
-                                              .quantity,
+                                          FlutterI18n.translate(
+                                              context, "quantity"),
                                           textAlign: TextAlign.right,
                                           style: Theme.of(context)
                                               .textTheme
@@ -109,8 +112,8 @@ class TransactionHistoryView extends StatelessWidget {
                                         margin:
                                             const EdgeInsets.only(left: 10.0),
                                         child: Text(
-                                            AppLocalizations.of(context)!
-                                                .status,
+                                            FlutterI18n.translate(
+                                                context, "status"),
                                             textAlign: TextAlign.left,
                                             style: Theme.of(context)
                                                 .textTheme
@@ -120,7 +123,8 @@ class TransactionHistoryView extends StatelessWidget {
                                     Expanded(
                                       flex: 1,
                                       child: Text(
-                                          AppLocalizations.of(context)!.details,
+                                          FlutterI18n.translate(
+                                              context, "details"),
                                           textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme

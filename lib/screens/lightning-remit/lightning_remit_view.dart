@@ -1,16 +1,14 @@
 import 'dart:io';
+
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_transfer_history.view.dart';
 import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
-import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LightningRemitView extends StatelessWidget {
   const LightningRemitView({Key? key}) : super(key: key);
@@ -46,7 +44,7 @@ class LightningRemitView extends StatelessWidget {
               }
             },
             child: model.busy(model.exchangeBalances) || model.isBusy
-                ? model.sharedService!.loadingIndicator()
+                ? model.sharedService.loadingIndicator()
                 : Container(
                     color: secondaryColor,
                     margin: const EdgeInsets.only(top: 40),
@@ -101,22 +99,22 @@ class LightningRemitView extends StatelessWidget {
                                                     size: 18,
                                                   ),
                                                   title: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .noCoinBalance,
+                                                      FlutterI18n.translate(
+                                                          context,
+                                                          "noCoinBalance"),
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .bodyMedium),
                                                   subtitle: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .transferFundsToExchangeUsingDepositButton,
+                                                      FlutterI18n.translate(
+                                                          context,
+                                                          "transferFundsToExchangeUsingDepositButton"),
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .titleSmall))
                                               : Text(
-                                                  AppLocalizations.of(context)!
-                                                      .selectCoin,
+                                                  FlutterI18n.translate(
+                                                      context, "selectCoin"),
                                                   textAlign: TextAlign.start,
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -181,8 +179,8 @@ class LightningRemitView extends StatelessWidget {
                                         padding:
                                             const EdgeInsets.only(left: 10),
                                         alignment: Alignment.centerLeft,
-                                        tooltip: AppLocalizations.of(context)!
-                                            .scanBarCode,
+                                        tooltip: FlutterI18n.translate(
+                                            context, "scanBarCode"),
                                         icon: Icon(
                                           Icons.camera_alt,
                                           color: white,
@@ -205,8 +203,8 @@ class LightningRemitView extends StatelessWidget {
                                         borderSide: BorderSide(
                                             color: Color(0XFF871fff),
                                             width: 0.5)),
-                                    hintText: AppLocalizations.of(context)!
-                                        .receiverWalletAddress,
+                                    hintText: FlutterI18n.translate(
+                                        context, "receiverWalletAddress"),
                                     hintStyle: Theme.of(context)
                                         .textTheme
                                         .headlineSmall),
@@ -230,8 +228,8 @@ class LightningRemitView extends StatelessWidget {
                                         borderSide: BorderSide(
                                             color: Color(0XFF871fff),
                                             width: 0.5)),
-                                    hintText: AppLocalizations.of(context)!
-                                        .enterAmount,
+                                    hintText: FlutterI18n.translate(
+                                        context, "enterAmount"),
                                     hintStyle: Theme.of(context)
                                         .textTheme
                                         .headlineSmall),
@@ -249,7 +247,7 @@ class LightningRemitView extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: Container(
-                                    decoration: model.sharedService!
+                                    decoration: model.sharedService
                                         .gradientBoxDecoration(),
                                     child: TextButton(
                                       style: TextButton.styleFrom(
@@ -263,7 +261,7 @@ class LightningRemitView extends StatelessWidget {
                                             : model.transfer();
                                       },
                                       child: Text(
-                                        AppLocalizations.of(context)!.send,
+                                        FlutterI18n.translate(context, "send"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headlineMedium,
@@ -286,7 +284,8 @@ class LightningRemitView extends StatelessWidget {
                                           : model.showBarcode();
                                     },
                                     child: Text(
-                                        AppLocalizations.of(context)!.receive,
+                                        FlutterI18n.translate(
+                                            context, "receive"),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headlineMedium),
@@ -323,7 +322,7 @@ class LightningRemitView extends StatelessWidget {
                       model.isBusy
                           ? Align(
                               alignment: Alignment.center,
-                              child: model.sharedService!
+                              child: model.sharedService
                                   .stackFullScreenLoadingIndicator())
                           : Container()
                     ]),
@@ -361,7 +360,7 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 5.0),
                 child: model!.exchangeBalances.isEmpty
-                    ? Text(AppLocalizations.of(context)!.noCoinBalance)
+                    ? Text(FlutterI18n.translate(context, "noCoinBalance"))
                     : Text(
                         //model.tickerName == ''
                         // ? AppLocalizations.of(context).selectCoin

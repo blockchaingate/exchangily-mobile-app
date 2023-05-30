@@ -1,12 +1,11 @@
-
 import 'package:exchangilymobileapp/constants/api_routes.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:launch_review/launch_review.dart';
 import 'dart:io' show Platform;
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
@@ -164,7 +163,7 @@ class VersionService {
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 5.0),
                         child: Text(
-                          AppLocalizations.of(context)!.appUpdateNotice,
+                          FlutterI18n.translate(context, "appUpdateNotice"),
                           style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
@@ -175,10 +174,12 @@ class VersionService {
                     const SizedBox(
                       height: 20,
                     ),
-                    Text("${AppLocalizations.of(context)!.currentVersion}:  $userVersion"),
+                    Text(
+                      "${FlutterI18n.translate(context, "currentVersion")}:  $userVersion",
+                    ),
                     UIHelper.verticalSpaceSmall,
                     Text(
-                      "${AppLocalizations.of(context)!.latestVersion}:  $latestVersion",
+                      "${FlutterI18n.translate(context, "latestVersion")}:  $latestVersion",
                       style: TextStyle(color: Colors.greenAccent[100]),
                     ),
                     // Text("Force Update: " + latestVersion['forceUpdate'].toString()),
@@ -224,8 +225,8 @@ class VersionService {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        AppLocalizations.of(context)!
-                                            .downloadLatestApkFromServer,
+                                        FlutterI18n.translate(context,
+                                            "downloadLatestApkFromServer"),
                                         style: const TextStyle(
                                             color: Colors.white),
                                       ),

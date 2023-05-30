@@ -12,7 +12,6 @@
 */
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -22,6 +21,7 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 class ChooseWalletLanguageScreenState extends BaseState {
   final log = getLogger('ChooseWalletLanguageScreenState');
@@ -70,7 +70,8 @@ class ChooseWalletLanguageScreenState extends BaseState {
     }).catchError((err) => log.e('user settings db empty $err'));
     //await walletService.updateUserSettingsDb(userSettings, isUserSettingsEmpty);
     storageService!.language = languageCode;
-    AppLocalizations.load(Locale(languageCode, languageCode.toUpperCase()));
+    FlutterI18n.refresh(
+        context!, Locale(languageCode, languageCode.toUpperCase()));
     setState(ViewState.Idle);
   }
 }

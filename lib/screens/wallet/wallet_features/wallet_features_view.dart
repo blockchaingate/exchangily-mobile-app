@@ -14,7 +14,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_viewmodel.dart';
@@ -23,6 +22,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 
 class WalletFeaturesView extends StatelessWidget {
@@ -269,7 +269,7 @@ class WalletFeaturesView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              AppLocalizations.of(context)!.smartContractAddress,
+              FlutterI18n.translate(context, "smartContractAddress"),
               style: headText5.copyWith(color: primaryColor),
             ),
             Padding(
@@ -289,7 +289,8 @@ class WalletFeaturesView extends StatelessWidget {
 
   Widget _buildTotalBalanceCard(
       context, WalletFeaturesViewModel model, walletInfo) {
-    String message = AppLocalizations.of(context)!.sameBalanceNote;
+    String message = FlutterI18n.translate(context, "sameBalanceNote");
+
     String nativeTicker = model.specialTicker!.split('(')[0];
     return Card(
         elevation: model.elevation,
@@ -308,8 +309,7 @@ class WalletFeaturesView extends StatelessWidget {
                     Expanded(
                       flex: 4,
                       child: Text(
-                        //  '${model.specialTicker} ' +
-                        AppLocalizations.of(context)!.totalBalance,
+                        FlutterI18n.translate(context, "totalBalance"),
                         style: Theme.of(context)
                             .textTheme
                             .titleMedium!
@@ -358,7 +358,7 @@ class WalletFeaturesView extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(AppLocalizations.of(context)!.walletbalance,
+                    Text(FlutterI18n.translate(context, "walletbalance"),
                         style: Theme.of(context).textTheme.titleMedium),
                     Text(
                         '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.availableBalance, precision: model.decimalLimit!).toString()} ${model.specialTicker}',
@@ -374,7 +374,9 @@ class WalletFeaturesView extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(AppLocalizations.of(context)!.unConfirmedBalance,
+                          Text(
+                              FlutterI18n.translate(
+                                  context, "unConfirmedBalance"),
                               style: Theme.of(context).textTheme.bodyLarge),
                           Text(
                               '${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance!, precision: model.decimalLimit!).toString()} ${model.specialTicker}',
@@ -393,7 +395,7 @@ class WalletFeaturesView extends StatelessWidget {
                     Expanded(
                       flex: 4,
                       child: Text(
-                          '${AppLocalizations.of(context)!.inExchange} ${model.specialTicker!.contains('(') && model.walletInfo!.tickerName != 'USDT' && model.walletInfo!.tickerName != 'MATICM' ? '\n$message $nativeTicker' : ''}',
+                          '${FlutterI18n.translate(context, "inExchange")} ${model.specialTicker!.contains('(') && model.walletInfo!.tickerName != 'USDT' && model.walletInfo!.tickerName != 'MATICM' ? '\n$message $nativeTicker' : ''}',
                           style: Theme.of(context).textTheme.titleMedium),
                     ),
                     Expanded(
@@ -416,7 +418,7 @@ class WalletFeaturesView extends StatelessWidget {
                           Expanded(
                             flex: 4,
                             child: Text(
-                                '${AppLocalizations.of(context)!.totalLockedBalance} ${model.specialTicker!.contains('(') && model.walletInfo!.tickerName != 'USDT' ? '\n$message $nativeTicker' : ''}',
+                                '${FlutterI18n.translate(context, "totalLockedBalance")} ${model.specialTicker!.contains('(') && model.walletInfo!.tickerName != 'USDT' ? '\n$message $nativeTicker' : ''}',
                                 style: Theme.of(context).textTheme.titleMedium),
                           ),
                           Expanded(

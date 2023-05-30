@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -9,6 +8,7 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TxHisotryCardWidget extends StatelessWidget {
@@ -65,7 +65,8 @@ class TxHisotryCardWidget extends StatelessWidget {
                                   ],
                                 )
                               : Text(transaction.tickerName!.toUpperCase(),
-                                  style: Theme.of(context).textTheme.titleSmall),
+                                  style:
+                                      Theme.of(context).textTheme.titleSmall),
                         ),
                       ),
 
@@ -104,7 +105,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 3.0),
                           child: Text(
-                            AppLocalizations.of(context)!.withdraw,
+                            FlutterI18n.translate(context, "withdraw"),
                             style: Theme.of(context).textTheme.titleSmall,
                             textAlign: TextAlign.center,
                           ),
@@ -114,7 +115,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 5.0),
                           child: Text(
-                            AppLocalizations.of(context)!.send,
+                            FlutterI18n.translate(context, "send"),
                             style: Theme.of(context).textTheme.titleSmall,
                             textAlign: TextAlign.center,
                           ),
@@ -126,7 +127,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                               ? const EdgeInsets.only(left: 7.0)
                               : const EdgeInsets.only(left: 3.0),
                           child: Text(
-                            AppLocalizations.of(context)!.deposit,
+                            FlutterI18n.translate(context, "deposit"),
                             style: Theme.of(context).textTheme.titleSmall,
                             textAlign: TextAlign.center,
                           ),
@@ -194,11 +195,10 @@ class TxHisotryCardWidget extends StatelessWidget {
               transaction.tag != model.send
                   ? Expanded(
                       flex: 1,
-                      child: Container(
-                          child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
                             // If deposit is success in both Ticker chain and kanabn chain then show completed
                             if (transaction.tag!.toUpperCase() ==
                                     model.deposit.toUpperCase() &&
@@ -208,7 +208,8 @@ class TxHisotryCardWidget extends StatelessWidget {
                               Expanded(
                                 child: AutoSizeText(
                                   firstCharToUppercase(
-                                      AppLocalizations.of(context)!.completed),
+                                    FlutterI18n.translate(context, "completed"),
+                                  ),
                                   style: TextStyle(
                                       fontSize: customFontSize,
                                       color: buyPrice),
@@ -226,7 +227,8 @@ class TxHisotryCardWidget extends StatelessWidget {
                                 transaction.kanbanTxStatus == model.success)
                               Text(
                                   firstCharToUppercase(
-                                      AppLocalizations.of(context)!.sent),
+                                    FlutterI18n.translate(context, "sent"),
+                                  ),
                                   style: TextStyle(
                                       fontSize: customFontSize,
                                       color: buyPrice))
@@ -237,7 +239,8 @@ class TxHisotryCardWidget extends StatelessWidget {
                                     model.pending)
                               Text(
                                   firstCharToUppercase(
-                                      AppLocalizations.of(context)!.pending),
+                                    FlutterI18n.translate(context, "pending"),
+                                  ),
                                   style: TextStyle(
                                       fontSize: customFontSize, color: yellow))
                             // depsoit pending if ticker chain staus is pending
@@ -246,14 +249,15 @@ class TxHisotryCardWidget extends StatelessWidget {
                                 transaction.kanbanTxStatus == model.pending)
                               Text(
                                   firstCharToUppercase(
-                                      AppLocalizations.of(context)!.pending),
+                                    FlutterI18n.translate(context, "pending"),
+                                  ),
                                   style: TextStyle(
                                       fontSize: customFontSize, color: yellow))
                             else if (transaction.tag!.toUpperCase() ==
                                     model.deposit.toUpperCase() &&
                                 transaction.tickerChainTxStatus == model.failed)
                               Text(
-                                AppLocalizations.of(context)!.failed,
+                                FlutterI18n.translate(context, "failed"),
                                 style:
                                     const TextStyle(fontSize: 12, color: red),
                               )
@@ -264,8 +268,8 @@ class TxHisotryCardWidget extends StatelessWidget {
                                 transaction.kanbanTxStatus == model.rejected)
                               RichText(
                                 text: TextSpan(
-                                    text:
-                                        AppLocalizations.of(context)!.redeposit,
+                                    text: FlutterI18n.translate(
+                                        context, "redeposit"),
                                     style: const TextStyle(
                                         fontSize: 12,
                                         decoration: TextDecoration.underline,
@@ -283,7 +287,8 @@ class TxHisotryCardWidget extends StatelessWidget {
                                 transaction.tickerChainTxId == '')
                               Text(
                                   firstCharToUppercase(
-                                      AppLocalizations.of(context)!.sent),
+                                    FlutterI18n.translate(context, "sent"),
+                                  ),
                                   style: TextStyle(
                                       fontSize: customFontSize,
                                       color:
@@ -296,7 +301,8 @@ class TxHisotryCardWidget extends StatelessWidget {
                               Expanded(
                                 child: AutoSizeText(
                                   firstCharToUppercase(
-                                      AppLocalizations.of(context)!.completed),
+                                    FlutterI18n.translate(context, "completed"),
+                                  ),
                                   style: TextStyle(
                                       fontSize: customFontSize,
                                       color: buyPrice),
@@ -305,17 +311,16 @@ class TxHisotryCardWidget extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               )
-                          ])))
+                          ]))
                   : Expanded(
                       flex: 1,
-                      child: Container(
-                          child: Text(
-                              firstCharToUppercase(
-                                AppLocalizations.of(context)!.sent,
-                              ),
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                  fontSize: customFontSize, color: buyPrice))),
+                      child: Text(
+                          firstCharToUppercase(
+                            FlutterI18n.translate(context, "sent"),
+                          ),
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontSize: customFontSize, color: buyPrice)),
                     ),
               Expanded(
                 flex: 1,

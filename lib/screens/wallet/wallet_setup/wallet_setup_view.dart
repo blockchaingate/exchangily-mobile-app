@@ -13,10 +13,10 @@
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 import '../../../shared/globals.dart' as globals;
@@ -57,7 +57,7 @@ class WalletSetupView extends StatelessWidget {
                   Container(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        AppLocalizations.of(context)!.welcomeText,
+                        FlutterI18n.translate(context, "welcomeText"),
                         style: Theme.of(context)
                             .textTheme
                             .headlineSmall!
@@ -75,7 +75,7 @@ class WalletSetupView extends StatelessWidget {
 
               model.isDeleting
                   ? Text(
-                      AppLocalizations.of(context)!.deletingWallet,
+                      FlutterI18n.translate(context, "deletingWallet"),
                       style: Theme.of(context).textTheme.bodyLarge,
                     )
                   : Container(),
@@ -99,13 +99,13 @@ class WalletSetupView extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              '${AppLocalizations.of(context)!.checkingExistingWallet}...',
+                              '${FlutterI18n.translate(context, "checkingExistingWallet")}...',
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
                             model.isVerifying
                                 ? Text(
-                                    AppLocalizations.of(context)!
-                                        .verifyingWallet,
+                                    FlutterI18n.translate(
+                                        context, "verifyingWallet"),
                                     style:
                                         Theme.of(context).textTheme.bodyLarge,
                                   )
@@ -120,7 +120,7 @@ class WalletSetupView extends StatelessWidget {
                           highlightColor: globals.white,
                           child: Center(
                             child: Text(
-                              '${AppLocalizations.of(context)!.restoringWallet}...',
+                              '${FlutterI18n.translate(context, "restoringWallet")}...',
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
                           ),
@@ -157,8 +157,8 @@ class WalletSetupView extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                            AppLocalizations.of(context)!
-                                                .unlock,
+                                            FlutterI18n.translate(
+                                                context, "unlock"),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headlineMedium),
@@ -196,8 +196,8 @@ class WalletSetupView extends StatelessWidget {
                                                 ),
                                               ),
                                               child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .createWallet,
+                                                  FlutterI18n.translate(
+                                                      context, "createWallet"),
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .headlineSmall!
@@ -229,8 +229,8 @@ class WalletSetupView extends StatelessWidget {
                                                     MaterialStateProperty.all(
                                                         primaryColor)),
                                             child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .importWallet,
+                                              FlutterI18n.translate(
+                                                  context, "importWallet"),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headlineSmall!
@@ -254,7 +254,7 @@ class WalletSetupView extends StatelessWidget {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            '${AppLocalizations.of(context)!.askPrivacyConsent}. ${AppLocalizations.of(context)!.userDataUsage}',
+                                            '${FlutterI18n.translate(context, "askPrivacyConsent")}. ${FlutterI18n.translate(context, "userDataUsage")}',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headlineSmall,
@@ -277,8 +277,8 @@ class WalletSetupView extends StatelessWidget {
                                                       MaterialStateProperty.all(
                                                           primaryColor)),
                                               child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .privacyPolicy,
+                                                FlutterI18n.translate(
+                                                    context, "privacyPolicy"),
                                                 style: headText5.copyWith(
                                                     color: white),
                                               ),

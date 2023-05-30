@@ -1,8 +1,8 @@
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/login_screen_state.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
@@ -25,7 +25,7 @@ class CampaignLoginScreen extends StatelessWidget {
         } as Future<bool> Function()?,
         child: Scaffold(
           appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.login,
+            title: Text(FlutterI18n.translate(context, "login"),
                 style: Theme.of(context).textTheme.displaySmall),
             centerTitle: true,
           ),
@@ -48,8 +48,9 @@ class CampaignLoginScreen extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 7.0),
                               child: Text(
-                                AppLocalizations.of(context)!.email,
-                                style: Theme.of(context).textTheme.headlineSmall,
+                                FlutterI18n.translate(context, "email"),
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
                                 //  textAlign: TextAlign.center,
                               ),
                             )),
@@ -79,8 +80,9 @@ class CampaignLoginScreen extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 7.0),
                               child: Text(
-                                AppLocalizations.of(context)!.password,
-                                style: Theme.of(context).textTheme.headlineSmall,
+                                FlutterI18n.translate(context, "password"),
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
                               ),
                             )),
                         model.isPasswordTextVisible == true
@@ -93,8 +95,8 @@ class CampaignLoginScreen extends StatelessWidget {
                                       isDense: true,
                                       suffixIcon: IconButton(
                                           iconSize: 18,
-                                          tooltip: AppLocalizations.of(context)!
-                                              .clickToSeeThePassword,
+                                          tooltip: FlutterI18n.translate(
+                                              context, "clickToSeeThePassword"),
                                           onPressed: () {
                                             model.setBusy(true);
                                             model.isPasswordTextVisible = false;
@@ -114,8 +116,8 @@ class CampaignLoginScreen extends StatelessWidget {
                                   decoration: InputDecoration(
                                       suffixIcon: IconButton(
                                           iconSize: 18,
-                                          tooltip: AppLocalizations.of(context)!
-                                              .clickToSeeThePassword,
+                                          tooltip: FlutterI18n.translate(
+                                              context, "clickToSeeThePassword"),
                                           onPressed: () {
                                             model.setBusy(true);
                                             model.isPasswordTextVisible = true;
@@ -134,7 +136,7 @@ class CampaignLoginScreen extends StatelessWidget {
                     UIHelper.verticalSpaceMedium,
                     InkWell(
                       child: Text(
-                        '${AppLocalizations.of(context)!.forgotPassword}?',
+                        '${FlutterI18n.translate(context, "forgotPassword")}?',
                         style: const TextStyle(
                             decoration: TextDecoration.underline,
                             color: globals.white),
@@ -196,7 +198,7 @@ class CampaignLoginScreen extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                AppLocalizations.of(context)!.register,
+                                FlutterI18n.translate(context, "register"),
                                 style:
                                     Theme.of(context).textTheme.headlineMedium,
                               ),
@@ -222,13 +224,13 @@ class CampaignLoginScreen extends StatelessWidget {
                                     baseColor: globals.primaryColor,
                                     highlightColor: globals.grey,
                                     child: Text(
-                                      (AppLocalizations.of(context)!.login),
+                                      (FlutterI18n.translate(context, "login")),
                                       style: Theme.of(context)
                                           .textTheme
                                           .headlineMedium,
                                     ))
                                 : Text(
-                                    (AppLocalizations.of(context)!.login),
+                                    (FlutterI18n.translate(context, "login")),
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineMedium,

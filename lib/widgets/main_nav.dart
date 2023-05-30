@@ -4,7 +4,7 @@ import 'package:exchangilymobileapp/screens/otc_campaign/instructions_screen.dar
 import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard_view.dart';
 import 'package:flutter/material.dart';
-import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -15,10 +15,10 @@ class MainNav extends StatefulWidget {
   final int currentPage;
 
   @override
-  _MainNavState createState() => _MainNavState();
+  MainNavState createState() => MainNavState();
 }
 
-class _MainNavState extends State<MainNav> {
+class MainNavState extends State<MainNav> {
   PageController? _pageController;
   int _page = 0;
   final double paddingValue = 4; // change space between icon and title text
@@ -62,8 +62,9 @@ class _MainNavState extends State<MainNav> {
           showUnselectedLabels: true,
           items: [
             BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.wallet, size: iconSize),
-                label: AppLocalizations.of(context)!.wallet),
+              icon: Icon(FontAwesomeIcons.wallet, size: iconSize),
+              label: FlutterI18n.translate(context, "wallet"),
+            ),
 
             // BottomNavigationBarItem(
             //     icon: Icon(FontAwesomeIcons.chartBar, size: iconSize),
@@ -71,20 +72,23 @@ class _MainNavState extends State<MainNav> {
             //         padding: EdgeInsets.only(top: paddingValue),
             //         child: Text(AppLocalizations.of(context).market))),
             BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.coins, size: iconSize),
-                label: AppLocalizations.of(context)!.trade),
+              icon: Icon(FontAwesomeIcons.coins, size: iconSize),
+              label: FlutterI18n.translate(context, "trade"),
+            ),
             // BottomNavigationBarItem(
             //     icon: Icon(Icons.branding_watermark, size: iconSize),
             //     title: Padding(
             //         padding: EdgeInsets.only(top: paddingValue),
             //         child: Text('OTC'))),
             BottomNavigationBarItem(
-                icon: Icon(Icons.event, size: iconSize),
-                label: AppLocalizations.of(context)!.event),
+              icon: Icon(Icons.event, size: iconSize),
+              label: FlutterI18n.translate(context, "event"),
+            ),
 
             BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.cog, size: iconSize),
-                label: AppLocalizations.of(context)!.settings),
+              icon: Icon(FontAwesomeIcons.cog, size: iconSize),
+              label: FlutterI18n.translate(context, "settings"),
+            ),
           ],
           onTap: navigateToPage,
           currentIndex: _page,

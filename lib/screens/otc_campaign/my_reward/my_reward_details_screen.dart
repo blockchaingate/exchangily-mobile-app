@@ -1,7 +1,7 @@
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import '../../../shared/globals.dart' as globals;
 
 class MyRewardDetailsScreen extends StatelessWidget {
@@ -14,11 +14,10 @@ class MyRewardDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(AppLocalizations.of(context)!.myRewardDetails,
+        title: Text(FlutterI18n.translate(context, "myRewardDetails"),
             style: Theme.of(context).textTheme.headlineMedium),
       ),
-      body: Container(
-          child: Column(
+      body: Column(
         children: <Widget>[
           // Static lables row
           Container(
@@ -28,28 +27,30 @@ class MyRewardDetailsScreen extends StatelessWidget {
                 Expanded(
                     flex: 1,
                     child: Center(
-                        child: Text(AppLocalizations.of(context)!.level,
+                        child: Text(FlutterI18n.translate(context, "level"),
                             style: Theme.of(context).textTheme.titleSmall))),
                 Expanded(
                     flex: 1,
                     child: Center(
-                        child: Text(AppLocalizations.of(context)!.referrals,
+                        child: Text(FlutterI18n.translate(context, "referrals"),
                             style: Theme.of(context).textTheme.titleSmall))),
                 Expanded(
                     flex: 3,
                     child: Center(
                         child: Text(
-                            AppLocalizations.of(context)!.totalTokenAmount,
+                            FlutterI18n.translate(context, "totalTokenAmount"),
                             style: Theme.of(context).textTheme.titleSmall))),
                 Expanded(
                     flex: 2,
                     child: Center(
-                        child: Text(AppLocalizations.of(context)!.rewardsToken,
+                        child: Text(
+                            FlutterI18n.translate(context, "rewardsToken"),
                             style: Theme.of(context).textTheme.titleSmall))),
                 Expanded(
                     flex: 2,
                     child: Center(
-                        child: Text(AppLocalizations.of(context)!.totalValue,
+                        child: Text(
+                            FlutterI18n.translate(context, "totalValue"),
                             style: Theme.of(context).textTheme.titleSmall)))
               ],
             ),
@@ -133,7 +134,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
                     );
                   }))
         ],
-      )),
+      ),
     );
   }
 }

@@ -66,7 +66,7 @@ Future generateTrxTransactionContract(
           //   debugPrint('token from token database ${token.toJson()}');
         } else if (token!.tickerName == 'USDTX') {
           await apiService.getTokenListUpdates().then((tokenList) {
-            for (var token in tokenList!) {
+            for (var token in tokenList) {
               if (token.tickerName == 'USDTX') {
                 contractAddress = token.contract;
                 decimal = token.decimal;
@@ -76,7 +76,7 @@ Future generateTrxTransactionContract(
           });
         } else if (token.tickerName == 'USDCX') {
           await apiService.getTokenListUpdates().then((tokenList) {
-            for (var token in tokenList!) {
+            for (var token in tokenList) {
               if (token.tickerName == 'USDCX') {
                 contractAddress = token.contract;
                 decimal = token.decimal;

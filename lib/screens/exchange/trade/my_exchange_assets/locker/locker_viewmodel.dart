@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -15,6 +14,7 @@ import 'package:exchangilymobileapp/utils/abi_util.dart';
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 import 'package:hex/hex.dart';
 import '../exchange_balance_service.dart';
@@ -88,10 +88,10 @@ class LockerViewModel extends ReactiveViewModel {
     var kanbanUtils = KanbanUtils();
 
     var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context)!.enterPassword,
+        title: FlutterI18n.translate(context, "enterPassword"),
         description:
-            AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context)!.confirm);
+            FlutterI18n.translate(context, "dialogManagerTypeSamePasswordNote"),
+        buttonTitle: FlutterI18n.translate(context, "confirm"));
 
     if (res.confirmed!) {
       String exgAddress =
@@ -116,8 +116,8 @@ class LockerViewModel extends ReactiveViewModel {
             HEX.encode(keyPairKanban["privateKey"]),
             selectedLocker.address!,
             nonce,
-            kanbanGasPrice,
-            kanbanGasLimit);
+            kanbanGasPrice!,
+            kanbanGasLimit!);
       } catch (err) {
         setBusy(false);
         log.e('err $err');
@@ -130,10 +130,10 @@ class LockerViewModel extends ReactiveViewModel {
 
   lockCoins(LockerModel selectedLocker) async {
     var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context)!.enterPassword,
+        title: FlutterI18n.translate(context, "enterPassword"),
         description:
-            AppLocalizations.of(context)!.dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context)!.confirm);
+            FlutterI18n.translate(context, "dialogManagerTypeSamePasswordNote"),
+        buttonTitle: FlutterI18n.translate(context, "confirm"));
 
     if (res.confirmed!) {
       String exgAddress =
@@ -158,8 +158,8 @@ class LockerViewModel extends ReactiveViewModel {
             HEX.encode(keyPairKanban["privateKey"]),
             selectedLocker.address!,
             nonce,
-            kanbanGasPrice,
-            kanbanGasLimit);
+            kanbanGasPrice!,
+            kanbanGasLimit!);
       } catch (err) {
         setBusy(false);
         log.e('err $err');

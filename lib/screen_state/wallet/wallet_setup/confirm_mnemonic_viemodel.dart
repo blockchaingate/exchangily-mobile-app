@@ -13,11 +13,11 @@
 
 // -----------------------------------burayi ac ----------------------------------------
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:bip39/bip39.dart' as bip39;
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 import '../../../logger.dart';
@@ -60,15 +60,15 @@ class ConfirmMnemonicViewmodel extends BaseViewModel {
           importWallet(listToStringMnemonic, context);
         } else {
           sharedService!.sharedSimpleNotification(
-              AppLocalizations.of(context)!.invalidMnemonic,
-              subtitle: AppLocalizations.of(context)!
-                  .pleaseFillAllTheTextFieldsCorrectly);
+              FlutterI18n.translate(context, "invalidMnemonic"),
+              subtitle: FlutterI18n.translate(
+                  context, "pleaseFillAllTheTextFieldsCorrectly"));
         }
       } else {
         sharedService!.sharedSimpleNotification(
-            AppLocalizations.of(context)!.invalidMnemonic,
-            subtitle: AppLocalizations.of(context)!
-                .pleaseFillAllTheTextFieldsCorrectly);
+            FlutterI18n.translate(context, "invalidMnemonic"),
+            subtitle: FlutterI18n.translate(
+                context, "pleaseFillAllTheTextFieldsCorrectly"));
       }
     } else {
       createWallet(context);
@@ -92,25 +92,25 @@ class ConfirmMnemonicViewmodel extends BaseViewModel {
         Navigator.of(context).pushNamed('/createPassword', arguments: args);
       } else {
         showSimpleNotification(
-            Text(AppLocalizations.of(context)!.invalidMnemonic,
+            Text(FlutterI18n.translate(context, "invalidMnemonic"),
                 style: Theme.of(context)
                     .textTheme
                     .headlineMedium!
                     .copyWith(color: red)),
             position: NotificationPosition.bottom,
-            subtitle: Text(AppLocalizations.of(context)!
-                .pleaseFillAllTheTextFieldsCorrectly));
+            subtitle: Text(FlutterI18n.translate(
+                context, "pleaseFillAllTheTextFieldsCorrectly")));
       }
     } else {
       showSimpleNotification(
-          Text(AppLocalizations.of(context)!.invalidMnemonic,
+          Text(FlutterI18n.translate(context, "invalidMnemonic"),
               style: Theme.of(context)
                   .textTheme
                   .headlineMedium!
                   .copyWith(color: red)),
           position: NotificationPosition.bottom,
-          subtitle: Text(AppLocalizations.of(context)!
-              .pleaseFillAllTheTextFieldsCorrectly));
+          subtitle: Text(FlutterI18n.translate(
+              context, "pleaseFillAllTheTextFieldsCorrectly")));
     }
   }
 }

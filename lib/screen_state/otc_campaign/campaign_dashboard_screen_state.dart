@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/member_profile.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
@@ -16,6 +15,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CampaignDashboardScreenState extends BaseState {
@@ -134,7 +134,8 @@ class CampaignDashboardScreenState extends BaseState {
 
   logout() async {
     if (campaignUserData != null) {
-      await campaignUserDatabaseService!.deleteUserData(campaignUserData!.email);
+      await campaignUserDatabaseService!
+          .deleteUserData(campaignUserData!.email);
       log.w('User data deleted successfully.');
     } else {
       log.e('Email not found, deleting user from database failed!!!');
@@ -157,13 +158,13 @@ class CampaignDashboardScreenState extends BaseState {
         String? level = member.membership;
         if (level == 'gold') {
           memberLevelTextColor = 0xffE6BE8A;
-          memberLevel = AppLocalizations.of(context!)!.gold;
+          memberLevel = FlutterI18n.translate(context!, "gold");
         } else if (level == 'diamond') {
           memberLevelTextColor = 0xffffffff;
-          memberLevel = AppLocalizations.of(context!)!.diamond;
+          memberLevel = FlutterI18n.translate(context!, "diamond");
         } else {
           memberLevelTextColor = 0xff696969;
-          memberLevel = AppLocalizations.of(context!)!.silver;
+          memberLevel = FlutterI18n.translate(context!, "silver");
         }
         //assignColorAccordingToMemberLevel(level);
 
@@ -190,13 +191,13 @@ class CampaignDashboardScreenState extends BaseState {
     log.w('Entry assignColorAccordingToMemberLevel $memberLevel');
     if (memberLevel == 'gold') {
       memberLevelTextColor = 0xffE6BE8A;
-      memberLevel = AppLocalizations.of(context!)!.gold;
+      memberLevel = FlutterI18n.translate(context!, "gold");
     } else if (memberLevel == 'diamond') {
       memberLevelTextColor = 0xffffffff;
-      memberLevel = AppLocalizations.of(context!)!.diamond;
+      memberLevel = FlutterI18n.translate(context!, "diamond");
     } else {
       memberLevelTextColor = 0xff696969;
-      memberLevel = AppLocalizations.of(context!)!.silver;
+      memberLevel = FlutterI18n.translate(context!, "silver");
     }
     log.e('Exit assignColorAccordingToMemberLevel $memberLevel');
   }
@@ -211,7 +212,9 @@ class CampaignDashboardScreenState extends BaseState {
         .getUserDataFromDatabase()
         .then((res) => campaignUserData = res);
     if (campaignUserData == null) return false;
-    await campaignService!.getOrdersById(campaignUserData!.id!).then((orderList) {
+    await campaignService!
+        .getOrdersById(campaignUserData!.id!)
+        .then((orderList) {
       if (orderList != null) {
         orderInfoList = [];
         orderListFromApi = [];
@@ -221,11 +224,11 @@ class CampaignDashboardScreenState extends BaseState {
         log.w(orderListFromApi.length);
         orderStatusList = [
           "",
-          AppLocalizations.of(context!)!.waiting,
-          AppLocalizations.of(context!)!.paid,
-          AppLocalizations.of(context!)!.paymentReceived,
-          AppLocalizations.of(context!)!.failed,
-          AppLocalizations.of(context!)!.orderCancelled,
+          FlutterI18n.translate(context!, "waiting"),
+          FlutterI18n.translate(context!, "paid"),
+          FlutterI18n.translate(context!, "paymentReceived"),
+          FlutterI18n.translate(context!, "failed"),
+          FlutterI18n.translate(context!, "orderCancelled"),
         ];
 
         for (int i = 0; i < orderListFromApi.length; i++) {
@@ -242,7 +245,7 @@ class CampaignDashboardScreenState extends BaseState {
         navigateByRouteName('/campaignOrderDetails', orderInfoList);
       } else {
         log.e('Api result null');
-        setErrorMessage(AppLocalizations.of(context!)!.loadOrdersFailed);
+        setErrorMessage(FlutterI18n.translate(context!, "loadOrdersFailed"));
         setBusy(false);
       }
     }).catchError((err) {
@@ -321,7 +324,8 @@ class CampaignDashboardScreenState extends BaseState {
   myRewardsByToken() async {
     setBusy(true);
     setErrorMessage('fetching your rewards');
-    String token = (await campaignService!.getSavedLoginTokenFromLocalStorage())!;
+    String token =
+        (await campaignService!.getSavedLoginTokenFromLocalStorage())!;
     await campaignService!.getMemberRewardByToken(token).then((res) async {
       if (res != null) {
         campaignRewardList = res;
@@ -350,8 +354,9 @@ class CampaignDashboardScreenState extends BaseState {
           // calculating total reward
           myReferralReward = myReferralReward + totalRewardQuantityByLevel;
         }
-        myTotalAssetQuantity =
-            myTotalAssetQuantity + myTokensWithoutRewards + myTeamsTotalRewards!;
+        myTotalAssetQuantity = myTotalAssetQuantity +
+            myTokensWithoutRewards +
+            myTeamsTotalRewards!;
         await calcMyTotalAsssetValue();
       } else {
         log.e('Campaign reward result in else block $res');
