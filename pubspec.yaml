@@ -42,7 +42,7 @@ dependencies:
   qr: ^2.1.0
   qr_flutter: ^4.0.0
   random_string: ^2.3.1
-  rflutter_alert: ^2.0.5
+  rflutter_alert: ^2.0.7
   share_plus: ^6.3.4
   shared_preferences: ^2.1.1
   shimmer: ^2.0.0

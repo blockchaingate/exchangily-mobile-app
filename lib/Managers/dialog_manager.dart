@@ -30,10 +30,10 @@ class DialogManager extends StatefulWidget {
   const DialogManager({Key? key, this.child}) : super(key: key);
 
   @override
-  _DialogManagerState createState() => _DialogManagerState();
+  DialogManagerState createState() => DialogManagerState();
 }
 
-class _DialogManagerState extends State<DialogManager> {
+class DialogManagerState extends State<DialogManager> {
   final log = getLogger('DialogManager');
   final DialogService _dialogService = locator<DialogService>();
   final VaultService _vaultService = locator<VaultService>();
@@ -70,6 +70,7 @@ class _DialogManagerState extends State<DialogManager> {
             animationType: AnimationType.grow,
             isOverlayTapDismiss: false,
             backgroundColor: walletCardColor,
+            alertAlignment: Alignment.center,
             descStyle: Theme.of(context).textTheme.bodyLarge!,
             titleStyle: Theme.of(context)
                 .textTheme
@@ -126,6 +127,7 @@ class _DialogManagerState extends State<DialogManager> {
         style: AlertStyle(
             animationType: AnimationType.grow,
             isOverlayTapDismiss: false,
+            alertAlignment: Alignment.center,
             backgroundColor: walletCardColor,
             descStyle: Theme.of(context).textTheme.bodyLarge!,
             titleStyle: Theme.of(context)
@@ -172,6 +174,7 @@ class _DialogManagerState extends State<DialogManager> {
         style: AlertStyle(
             animationType: AnimationType.grow,
             isOverlayTapDismiss: false,
+            alertAlignment: Alignment.center,
             backgroundColor: walletCardColor,
             descStyle: Theme.of(context).textTheme.bodyLarge!,
             titleStyle: Theme.of(context)

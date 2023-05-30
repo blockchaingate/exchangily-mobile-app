@@ -305,10 +305,10 @@ class SettingsViewModel extends BaseViewModel {
     errorMessage = '';
     // log.i('model busy $busy');
     await dialogService
-        .showVerifyDialog(
+        .showDialog(
       title: FlutterI18n.translate(context, "deleteWalletConfirmationPopup"),
       buttonTitle: FlutterI18n.translate(context, "confirm"),
-      secondaryButton: FlutterI18n.translate(context, "cancel"),
+      // secondaryButton: FlutterI18n.translate(context, "cancel"),
     )
         .then((res) async {
       if (res.confirmed!) {
