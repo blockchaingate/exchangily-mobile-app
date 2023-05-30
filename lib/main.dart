@@ -120,7 +120,8 @@ class MyApp extends StatelessWidget {
                     ))
               ],
             ),
-            localizationsDelegates: const [
+            localizationsDelegates: [
+              flutterI18nDelegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate
@@ -129,7 +130,7 @@ class MyApp extends StatelessWidget {
             supportedLocales: const [
               Locale("en", ""), // English
               Locale("zh", ""), // Chinese
-              Locale("hi", ""), // Hindi India
+              // Locale("hi", ""), // Hindi India
             ],
             onGenerateTitle: (BuildContext context) =>
                 FlutterI18n.translate(context, "title"),

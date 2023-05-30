@@ -112,6 +112,7 @@ flutter:
     - assets/images/icons/
     - assets/images/lightning-remit/
     - assets/cert/
+    - assets/i18n/
 flutter_icons:
   image_path: "assets/images/launcher/mobile-icon-ios.png"
 
