@@ -128,61 +128,72 @@ class MoveToExchangeViewModel extends BaseViewModel {
 /*---------------------------------------------------
                   Amount After fee
 --------------------------------------------------- */
+
   Future<Decimal> amountAfterFee({bool isMaxAmount = false}) async {
     setBusy(true);
-
-    if (amountController.text == '.' || amountController.text.isEmpty) {
+    if (amountController.text == '.') {
       setBusy(false);
-      transFee = Constants.decimalZero;
-      kanbanTransFee = Constants.decimalZero;
       return Constants.decimalZero;
     }
-
+    if (amountController.text.isEmpty) {
+      transFee = Constants.decimalZero;
+      kanbanTransFee = Constants.decimalZero;
+      setBusy(false);
+      return Constants.decimalZero;
+    }
+    amount = NumberUtil.decimalLimiter(Decimal.parse(amountController.text),
+        decimalPlaces: decimalLimit);
     log.w('amountAfterFee func: amount $amount');
-    isValidAmount = true;
+
     Decimal finalAmount = Constants.decimalZero;
+    // update if transfee is 0
 
-    // Update transaction fee if it is not a TRX transfer
-    if (!isTrx()) {
+    // if tron coins then assign fee accordingly
+    if (isTrx()) {
+      if (walletInfo!.tickerName == 'USDTX' || walletInfo!.tokenType == 'TRX') {
+        transFee = Decimal.parse(trxGasValueTextController.text);
+        finalAmount = amount;
+        finalAmount <=
+                NumberUtil.parseDoubleToDecimal(walletInfo!.availableBalance)
+            ? isValidAmount = true
+            : isValidAmount = false;
+      }
+
+      if (walletInfo!.tickerName == 'TRX') {
+        transFee = Decimal.parse(trxGasValueTextController.text);
+        finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
+      }
+    } else {
       await updateTransFee();
-    } else {
-      transFee = Decimal.parse(trxGasValueTextController.text);
-    }
+      // in any token transfer, gas fee is paid in native tokens so
+      // in case of non-native tokens, need to check the balance of native tokens
+      // so that there is fee to pay when transffering non-native tokens
+      if (tokenType!.isEmpty) {
+        if (isMaxAmount) {
+          finalAmount = (Decimal.parse(amount.toString()) -
+              Decimal.parse(transFee.toString()));
+        } else {
+          finalAmount = (Decimal.parse(transFee.toString()) +
+              Decimal.parse(amount.toString()));
 
-    // Calculate the final amount based on whether it is a max amount transfer or not
-    finalAmount = isMaxAmount ? amount - transFee : amount;
-    finalAmount =
-        NumberUtil.decimalLimiter(finalAmount, decimalPlaces: decimalLimit);
-
-    // For native tokens
-    if (tokenType!.isEmpty) {
-      // Check if the user has enough balance for the fee and the amount they want to send
-      if (NumberUtil.parseDoubleToDecimal(walletInfo!.availableBalance) <
-          amount + transFee) {
-        log.e(
-            'Insufficient balance for the transaction. Required balance: ${amount + transFee}');
-        isValidAmount = false;
-        return Constants.decimalZero;
-      }
-    } else {
-      // For non-native tokens
-      // Check if the user has enough native token balance to pay for the gas fee
-      if (NumberUtil.parseDoubleToDecimal(walletInfo!.availableBalance) <
-          transFee) {
-        isValidAmount = false;
-        log.e(
-            'Insufficient native token balance for the transaction. Required balance for gas fee: $transFee');
-        return Constants.decimalZero;
+          log.e(
+              'final amount $finalAmount = amount $amount  + transFee $transFee');
+        }
+      } else {
+        finalAmount = amount;
       }
     }
 
+    finalAmount <= NumberUtil.parseDoubleToDecimal(walletInfo!.availableBalance)
+        ? isValidAmount = true
+        : isValidAmount = false;
     log.i(
-        'Func:amountAfterFee --trans fee $transFee -- entered amount $amount = finalAmount $finalAmount -- isValidAmount $isValidAmount');
+        'Func:amountAfterFee --trans fee $transFee  -- entered amount $amount =  finalAmount $finalAmount -- decimal limit final amount $finalAmount-- isValidAmount $isValidAmount');
     setBusy(false);
+    // It happens because floating-point numbers cannot always precisely represent decimal fractions. Instead, they represent them as binary fractions, which can sometimes result in rounding errors.
+    //0.025105000000000002
     return finalAmount;
   }
-
-  //0.025105000000000002
 
 /*---------------------------------------------------
                   Fill Max Amount

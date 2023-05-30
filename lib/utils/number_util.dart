@@ -88,8 +88,9 @@ class NumberUtil {
 
   static Decimal parseDoubleToDecimal(double value) {
     // add error handling for double that if it is null or not a number or not a double or empty
-    if (value.isNaN || value.isInfinite || value.toString().isEmpty)
+    if (value.isNaN || value.isInfinite || value.toString().isEmpty) {
       return Constants.decimalZero;
+    }
     return Decimal.parse(value.toString());
   }
 
