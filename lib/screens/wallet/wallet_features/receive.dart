@@ -144,7 +144,7 @@ class ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                   Future.delayed(const Duration(milliseconds: 30), () {
                     _capturePng().then((byteData) {
                       file.writeAsBytes(byteData!).then((onFile) {
-                        Share.share(onFile.path,
+                        Share.shareXFiles([XFile(onFile.path)],
                             subject: convertedToFabAddress == ''
                                 ? widget.walletInfo!.address
                                 : convertedToFabAddress);
