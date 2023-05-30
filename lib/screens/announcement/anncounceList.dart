@@ -1,4 +1,3 @@
-
 import 'package:exchangilymobileapp/screen_state/announcement/announcement_list_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/globalLang.dart';
@@ -58,7 +57,7 @@ class AnnouncementList extends StatelessWidget {
                               //   debugPrint("value: " +v.toString());
                               // });
                               return Card(
-                                  color: globals.walletCardColor,
+                                  color: Theme.of(context).cardColor,
                                   child: InkWell(
                                     onTap: () async {
                                       //push to new page

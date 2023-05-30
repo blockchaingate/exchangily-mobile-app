@@ -144,7 +144,7 @@ class VersionService {
                 padding: const EdgeInsets.fromLTRB(10, 20, 10, 15),
                 margin: const EdgeInsets.only(top: 12.0, right: 6.0),
                 decoration: BoxDecoration(
-                    color: secondaryColor,
+                    color: Theme.of(context).canvasColor,
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(16.0),
                     boxShadow: const <BoxShadow>[

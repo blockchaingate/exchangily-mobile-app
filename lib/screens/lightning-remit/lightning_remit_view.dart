@@ -46,7 +46,7 @@ class LightningRemitView extends StatelessWidget {
             child: model.busy(model.exchangeBalances) || model.isBusy
                 ? model.sharedService.loadingIndicator()
                 : Container(
-                    color: secondaryColor,
+                    color: Theme.of(context).canvasColor,
                     margin: const EdgeInsets.only(top: 40),
                     child: Stack(children: [
                       Container(
@@ -80,7 +80,7 @@ class LightningRemitView extends StatelessWidget {
                                         iconEnabledColor: primaryColor,
                                         iconDisabledColor:
                                             model.exchangeBalances.isEmpty
-                                                ? secondaryColor
+                                                ? Theme.of(context).canvasColor
                                                 : grey,
                                         iconSize: 30,
                                         hint: Padding(
@@ -305,7 +305,10 @@ class LightningRemitView extends StatelessWidget {
                                                 LightningRemitTransferHistoryView()));
                                   },
                                   icon: Icon(Icons.history,
-                                      color: white, size: 24),
+                                      color: model.storageService.isDarkMode
+                                          ? white
+                                          : black,
+                                      size: 24),
                                   // child: Text('History',
                                   //     style: Theme.of(context).textTheme.headline4),
                                 ),
@@ -346,7 +349,7 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
       // padding: EdgeInsets.all(10.0),
       width: double.infinity,
       child: FloatingActionButton(
-          backgroundColor: secondaryColor,
+          backgroundColor: Theme.of(context).canvasColor,
           child: Container(
             decoration: BoxDecoration(
               color: primaryColor,
@@ -355,7 +358,7 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
             ),
             // width: 400,
             height: 220,
-            //  color: secondaryColor,
+            //  color: Theme.of(context).canvasColor,
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Padding(
                 padding: const EdgeInsets.only(right: 5.0),

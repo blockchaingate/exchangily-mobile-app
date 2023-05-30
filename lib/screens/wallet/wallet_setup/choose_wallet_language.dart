@@ -34,7 +34,7 @@ class ChooseWalletLanguageView extends StatelessWidget {
         padding: orientation == Orientation.portrait
             ? const EdgeInsets.all(40)
             : const EdgeInsets.all(80),
-        color: globals.walletCardColor,
+        color: Theme.of(context).cardColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
@@ -111,7 +111,7 @@ class ChooseWalletLanguageView extends StatelessWidget {
                               shape: const StadiumBorder(
                                   side: BorderSide(
                                       color: globals.primaryColor, width: 2)),
-                              backgroundColor: globals.secondaryColor,
+                              backgroundColor: Theme.of(context).canvasColor,
                             ),
                             child: Text('中文',
                                 style:

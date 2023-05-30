@@ -41,7 +41,7 @@ class Gas extends StatelessWidget {
                   child: Icon(
                     Icons.local_gas_station,
                     color: isProduction
-                        ? globals.secondaryColor
+                        ? Theme.of(context).canvasColor
                         : globals.red.withAlpha(200),
                   )),
             ),

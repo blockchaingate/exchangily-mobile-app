@@ -69,7 +69,7 @@ class MyRewardDetailsScreen extends StatelessWidget {
                       },
                       child: Card(
                         elevation: 5,
-                        color: globals.walletCardColor,
+                        color: Theme.of(context).cardColor,
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                               vertical: 15.0, horizontal: 2),

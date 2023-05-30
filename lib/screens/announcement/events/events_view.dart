@@ -28,7 +28,7 @@ class EventsView extends StatelessWidget {
                 // constraints: const BoxConstraints(minWidth: 250),
                 margin: const EdgeInsets.symmetric(vertical: 60),
                 height: 100,
-                color: secondaryColor,
+                color: Theme.of(context).canvasColor,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -40,7 +40,7 @@ class EventsView extends StatelessWidget {
                           style: OutlinedButton.styleFrom(
                               backgroundColor: model.isAnnouncement
                                   ? primaryColor
-                                  : secondaryColor,
+                                  : Theme.of(context).canvasColor,
                               textStyle: const TextStyle(
                                   color: white, fontWeight: FontWeight.w400),
                               side: const BorderSide(
@@ -71,17 +71,23 @@ class EventsView extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: !model.isAnnouncement
                                   ? primaryColor
-                                  : secondaryColor,
+                                  : Theme.of(context).canvasColor,
                             ),
                             child: Row(
                               children: [
-                                Text(FlutterI18n.translate(context, "blog")),
-                                const Padding(
+                                Text(FlutterI18n.translate(context, "blog"),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall),
+                                Padding(
                                   padding:
                                       EdgeInsets.only(left: 5.0, bottom: 5.0),
                                   child: Icon(
                                     FontAwesomeIcons.blog,
                                     size: 16,
+                                    color: model.storageService!.isDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 )
                               ],

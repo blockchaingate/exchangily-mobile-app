@@ -44,7 +44,7 @@ class LightningRemitTransferHistoryView
                           child: Container(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 8.0, horizontal: 4.0),
-                            color: secondaryColor,
+                            color: Theme.of(context).canvasColor,
                             child: Row(
                               children: <Widget>[
                                 SizedBox(
@@ -58,7 +58,9 @@ class LightningRemitTransferHistoryView
                                         padding:
                                             const EdgeInsets.only(bottom: 3.0),
                                         child: Text(transaction.coin.toString(),
-                                            style: subText2),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium),
                                       ),
                                       // icon
                                       transaction.type == 'send'
@@ -95,10 +97,14 @@ class LightningRemitTransferHistoryView
                                             overflow: TextOverflow.ellipsis,
                                             text: TextSpan(
                                                 text: transaction.txid,
-                                                style: subText2.copyWith(
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                    color: primaryColor),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .copyWith(
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                        color: primaryColor),
                                                 recognizer:
                                                     TapGestureRecognizer()
                                                       ..onTap = () {
@@ -126,8 +132,9 @@ class LightningRemitTransferHistoryView
                                       padding: const EdgeInsets.only(top: 5.0),
                                       child: Text(
                                         transaction.date!,
-                                        style: headText5.copyWith(
-                                            fontWeight: FontWeight.w400),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall,
                                       ),
                                     ),
                                   ],
@@ -141,16 +148,17 @@ class LightningRemitTransferHistoryView
                                     Text(
                                         FlutterI18n.translate(
                                             context, "quantity"),
-                                        style: subText2),
-                                    Text(
-                                      transaction.amount!.toStringAsFixed(
-                                          // model
-                                          //   .decimalConfig
-                                          //   .quantityDecimal
-                                          2),
-                                      style: headText5.copyWith(
-                                          fontWeight: FontWeight.w400),
-                                    )
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium),
+                                    Text(transaction.amount!.toStringAsFixed(
+                                            // model
+                                            //   .decimalConfig
+                                            //   .quantityDecimal
+                                            2),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall)
                                   ],
                                 ),
                               ],

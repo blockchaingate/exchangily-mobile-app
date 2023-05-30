@@ -82,7 +82,7 @@ class PairPriceView extends StatelessWidget {
           Container(
             padding:
                 const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
-            color: isBusy! ? Colors.transparent : walletCardColor,
+            color: isBusy! ? Colors.transparent : Theme.of(context).cardColor,
 
             // color: Colors.redAccent,
 

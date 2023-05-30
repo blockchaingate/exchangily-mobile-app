@@ -17,7 +17,7 @@ class OtcScreen extends StatelessWidget {
         appBar: AppBar(
             centerTitle: true,
             title: const Text('OTC'),
-            backgroundColor: globals.secondaryColor),
+            backgroundColor: Theme.of(context).canvasColor),
         body: Container(
             padding: const EdgeInsets.all(5.0),
             // Main column
@@ -30,7 +30,7 @@ class OtcScreen extends StatelessWidget {
                     child: Card(
                       elevation: 4,
                       child: Container(
-                        color: globals.walletCardColor,
+                        color: Theme.of(context).cardColor,
                         height: 110,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,

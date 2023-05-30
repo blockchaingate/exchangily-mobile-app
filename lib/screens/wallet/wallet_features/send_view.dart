@@ -47,7 +47,7 @@ class SendWalletView extends StatelessWidget {
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
-                backgroundColor: walletCardColor,
+                backgroundColor: Theme.of(context).cardColor,
                 title: Text(
                     '${FlutterI18n.translate(context, "send")} ${model.specialTickerName!}',
                     style: Theme.of(context).textTheme.headlineMedium),
@@ -68,7 +68,7 @@ class SendWalletView extends StatelessWidget {
 
                         Container(
                           margin: const EdgeInsets.only(bottom: 10),
-                          color: walletCardColor,
+                          color: Theme.of(context).cardColor,
                           padding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 10),
                           child: Column(
@@ -192,7 +192,7 @@ class SendWalletView extends StatelessWidget {
                           ),
                         ),
                         Container(
-                            color: walletCardColor,
+                            color: Theme.of(context).cardColor,
                             padding: const EdgeInsets.all(10),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -71,8 +71,8 @@ class WebViewWidgetState extends State<WebViewWidget>
             child: Center(
                 child: CircularProgressIndicator(
               color: primaryColor,
-              valueColor: animationController
-                  .drive(ColorTween(begin: secondaryColor, end: primaryColor)),
+              valueColor: animationController.drive(ColorTween(
+                  begin: Theme.of(context).canvasColor, end: primaryColor)),
               //  value: double.parse(loadingProgress.toString()) / 100,
               semanticsValue: loadingProgress.toString(),
             )),

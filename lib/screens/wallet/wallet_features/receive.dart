@@ -92,7 +92,7 @@ class ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
     return Container(
       width: double.infinity,
       height: 350,
-      color: globals.walletCardColor,
+      color: Theme.of(context).cardColor,
       padding: const EdgeInsets.all(10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -171,7 +171,7 @@ class ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
     return Container(
       width: double.infinity,
       height: 150,
-      color: globals.walletCardColor,
+      color: Theme.of(context).cardColor,
       padding: const EdgeInsets.all(10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -149,7 +149,8 @@ class LocalStorageService {
                   Languages getter/setter
 ----------------------------------------------------------------------*/
   String? get language => _getFromDisk(appLanguagesKey);
-  set language(String? appLanguage) => _saveToDisk(appLanguagesKey, appLanguage);
+  set language(String? appLanguage) =>
+      _saveToDisk(appLanguagesKey, appLanguage);
 
 /*----------------------------------------------------------------------
                 Dark mode getter/setter
@@ -229,7 +230,8 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                     Token List
 ----------------------------------------------------------------------  */
-  List<String> get tokenList => _getFromDisk(tokenListKey) ?? false as List<String>;
+  List<String> get tokenList =>
+      _getFromDisk(tokenListKey) ?? false as List<String>;
 
   set tokenList(List<String> value) => _saveToDisk(tokenListKey, value);
 

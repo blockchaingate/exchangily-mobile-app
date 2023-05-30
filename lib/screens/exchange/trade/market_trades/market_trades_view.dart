@@ -19,7 +19,7 @@ class MarketTradesView extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              color: secondaryColor,
+              color: Theme.of(context).canvasColor,
               child: SizedBox(
                 height: 20,
                 child: Row(

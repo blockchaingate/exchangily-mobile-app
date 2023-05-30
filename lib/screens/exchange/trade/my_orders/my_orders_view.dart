@@ -128,8 +128,6 @@ class MyOrdersView extends StatelessWidget {
                                   TabBar(
                                     labelPadding: const EdgeInsets.all(3),
                                     onTap: (int i) {},
-                                    indicatorSize: TabBarIndicatorSize
-                                        .tab, // model.showOrdersInTabView(i);
                                     indicator: BoxDecoration(
                                       color: Colors.redAccent,
                                       gradient: const LinearGradient(colors: [
@@ -198,7 +196,7 @@ class MyOrdersView extends StatelessWidget {
 // Price fields headers row
   Container priceFieldsHeadersRow(BuildContext context) {
     return Container(
-      color: walletCardColor,
+      color: Theme.of(context).cardColor,
       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
       child: Row(children: <Widget>[
         // Expanded(

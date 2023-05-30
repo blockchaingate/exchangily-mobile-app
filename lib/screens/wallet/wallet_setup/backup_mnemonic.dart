@@ -57,7 +57,7 @@ class BackupMnemonicWalletScreenState
           elevation: 0,
           title: Text(FlutterI18n.translate(context, "backupMnemonic"),
               style: Theme.of(context).textTheme.displaySmall),
-          backgroundColor: globals.secondaryColor,
+          backgroundColor: Theme.of(context).canvasColor,
           actions: <Widget>[
             // action button
             IconButton(

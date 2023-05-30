@@ -26,7 +26,9 @@ class TotalBalanceCardWidget
             left: 30,
             child: Card(
               elevation: model.elevation,
-              color: isProduction ? secondaryColor : red.withAlpha(200),
+              color: isProduction
+                  ? Theme.of(context).canvasColor
+                  : red.withAlpha(200),
               child: Container(
                 //duration: Duration(milliseconds: 250),
                 width: 350,

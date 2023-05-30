@@ -391,8 +391,9 @@ class CampaignInstructionScreen extends StatelessWidget {
                                           //   }
                                           // },
                                           child: Container(
-                                            decoration: const BoxDecoration(
-                                              color: walletCardColor,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Theme.of(context).cardColor,
                                             ),
                                             child: Column(
                                               children: <Widget>[

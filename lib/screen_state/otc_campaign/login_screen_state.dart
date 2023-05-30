@@ -80,7 +80,7 @@ class CampaignLoginScreenState extends BaseState {
         style: AlertStyle(
             animationType: AnimationType.grow,
             isOverlayTapDismiss: true,
-            backgroundColor: globals.walletCardColor,
+            backgroundColor: Theme.of(context).cardColor,
             descStyle: Theme.of(context).textTheme.bodyLarge!,
             titleStyle: Theme.of(context).textTheme.headlineSmall!),
         context: context,

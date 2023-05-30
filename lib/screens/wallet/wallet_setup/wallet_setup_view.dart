@@ -40,7 +40,7 @@ class WalletSetupView extends StatelessWidget {
         },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 40),
-          color: walletCardColor,
+          color: Theme.of(context).cardColor,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

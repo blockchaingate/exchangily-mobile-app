@@ -408,10 +408,11 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                   titlePadding: EdgeInsets.zero,
                   contentPadding: const EdgeInsets.all(5.0),
                   elevation: 5,
-                  backgroundColor: walletCardColor.withOpacity(0.85),
+                  backgroundColor:
+                      Theme.of(context).cardColor.withOpacity(0.85),
                   title: Container(
                     padding: const EdgeInsets.all(10.0),
-                    color: secondaryColor.withOpacity(0.5),
+                    color: Theme.of(context).canvasColor.withOpacity(0.5),
                     child: Center(
                         child: Text(FlutterI18n.translate(
                             context, "transactionDetails"))),

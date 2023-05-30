@@ -10,6 +10,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:kyc/kyc.dart';
 
 import 'package:stacked/stacked.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 
 class KycWidget extends ViewModelWidget<SettingsViewModel> {
   const KycWidget({Key? key}) : super(key: key);
@@ -29,7 +30,11 @@ class KycWidget extends ViewModelWidget<SettingsViewModel> {
               borderRadius: BorderRadius.circular(30.0),
               elevation: 5,
               child: InkWell(
-                onTap: () {
+                onTap: () async {
+                  bool wasDarkMode = model.themeService.isDarkMode;
+                  if (wasDarkMode) {
+                    model.themeService.toggleDarkLightTheme();
+                  }
                   model.kycStarted
                       ? showDialog(
                           context: context,
@@ -268,7 +273,7 @@ class KycWidget extends ViewModelWidget<SettingsViewModel> {
                               ),
                             );
                           })
-                      : Navigator.push(
+                      : await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => KycView(
@@ -305,6 +310,9 @@ class KycWidget extends ViewModelWidget<SettingsViewModel> {
                             ),
                           ),
                         );
+                  if (model.storageService.isDarkMode) {
+                    model.themeService.setThemeMode(ThemeManagerMode.dark);
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8),

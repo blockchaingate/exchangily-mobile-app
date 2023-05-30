@@ -31,7 +31,7 @@ class TxHisotryCardWidget extends StatelessWidget {
         elevation: 4,
         child: Container(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
-            color: walletCardColor,
+            color: Theme.of(context).cardColor,
             child: Row(children: <Widget>[
               Expanded(
                 child: Column(

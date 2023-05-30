@@ -34,7 +34,7 @@ class ImportWalletView extends StatelessWidget {
               FlutterI18n.translate(context, "importWallet"),
               style: const TextStyle(fontSize: 14),
             ),
-            backgroundColor: globals.secondaryColor),
+            backgroundColor: Theme.of(context).canvasColor),
         body: Container(
           alignment: Alignment.center,
           padding: const EdgeInsets.all(10),

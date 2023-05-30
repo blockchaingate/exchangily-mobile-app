@@ -16,7 +16,7 @@ class MarketPairPriceDetailView extends StatelessWidget {
     // if (false)
     return ListView(children: [
       Container(
-        color: globals.walletCardColor,
+        color: Theme.of(context).cardColor,
         child: FittedBox(
             // dataTable for trade page
             child: MarketDataTable(pairList)),

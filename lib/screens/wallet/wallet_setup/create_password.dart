@@ -47,7 +47,7 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
           centerTitle: true,
           title: Text(FlutterI18n.translate(context, "secureYourWallet"),
               style: Theme.of(context).textTheme.headlineMedium),
-          backgroundColor: secondaryColor,
+          backgroundColor: Theme.of(context).canvasColor,
         ),
         body: Container(
             padding: const EdgeInsets.all(15),

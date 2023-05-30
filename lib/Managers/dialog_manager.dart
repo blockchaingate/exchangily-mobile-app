@@ -69,7 +69,7 @@ class DialogManagerState extends State<DialogManager> {
         style: AlertStyle(
             animationType: AnimationType.grow,
             isOverlayTapDismiss: false,
-            backgroundColor: walletCardColor,
+            backgroundColor: Theme.of(context).cardColor,
             alertAlignment: Alignment.center,
             descStyle: Theme.of(context).textTheme.bodyLarge!,
             titleStyle: Theme.of(context)
@@ -128,7 +128,7 @@ class DialogManagerState extends State<DialogManager> {
             animationType: AnimationType.grow,
             isOverlayTapDismiss: false,
             alertAlignment: Alignment.center,
-            backgroundColor: walletCardColor,
+            backgroundColor: Theme.of(context).cardColor,
             descStyle: Theme.of(context).textTheme.bodyLarge!,
             titleStyle: Theme.of(context)
                 .textTheme
@@ -175,7 +175,7 @@ class DialogManagerState extends State<DialogManager> {
             animationType: AnimationType.grow,
             isOverlayTapDismiss: false,
             alertAlignment: Alignment.center,
-            backgroundColor: walletCardColor,
+            backgroundColor: Theme.of(context).cardColor,
             descStyle: Theme.of(context).textTheme.bodyLarge!,
             titleStyle: Theme.of(context)
                 .textTheme
@@ -198,7 +198,7 @@ class DialogManagerState extends State<DialogManager> {
           children: <Widget>[
             TextField(
               autofocus: true,
-              style: const TextStyle(color: white),
+              style: Theme.of(context).textTheme.bodyMedium,
               controller: controller,
               obscureText: true,
               decoration: InputDecoration(

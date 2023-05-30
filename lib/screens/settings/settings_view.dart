@@ -22,7 +22,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 
+import '../../service_locator.dart';
+import '../../services/local_storage_service.dart';
 import '../../shared/globals.dart' as globals;
 
 class SettingsView extends StatelessWidget {
@@ -30,7 +33,13 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final LocalStorageService storageService = locator<LocalStorageService>();
+    var themeService = locator<ThemeService>();
+    if (storageService.isDarkMode) {
+      themeService.setThemeMode(ThemeManagerMode.dark);
+    }
     return ViewModelBuilder<SettingsViewModel>.reactive(
+      disposeViewModel: true,
       onViewModelReady: (model) async {
         model.context = context;
         await model.init();
@@ -48,7 +57,7 @@ class SettingsView extends StatelessWidget {
             centerTitle: true,
             title: Text(FlutterI18n.translate(context, "settings"),
                 style: Theme.of(context).textTheme.displaySmall),
-            backgroundColor: globals.secondaryColor,
+            //   backgroundColor: Theme.of(context).canvasColor,
             leading: Container(),
           ),
           body: model.isBusy
@@ -100,7 +109,7 @@ class SettingsContainer extends StatelessWidget {
                 elevation: 4,
                 child: Container(
                   alignment: Alignment.centerLeft,
-                  color: globals.walletCardColor,
+                  color: Theme.of(context).cardColor,
                   padding: const EdgeInsets.all(20),
                   child: deleteWalletRow(context),
                 ),
@@ -133,7 +142,7 @@ class SettingsContainer extends StatelessWidget {
 
             Card(
               elevation: 5,
-              color: globals.walletCardColor,
+              color: Theme.of(context).cardColor,
               child: Theme.of(context).platform == TargetPlatform.iOS
                   ? Column(
                       children: [
@@ -269,7 +278,7 @@ class SettingsContainer extends StatelessWidget {
             // Showcase ON/OFF
             Card(
                 elevation: 5,
-                color: globals.walletCardColor,
+                color: Theme.of(context).cardColor,
                 child: Container(
                   padding: const EdgeInsets.all(10),
                   child: Row(
@@ -307,7 +316,7 @@ class SettingsContainer extends StatelessWidget {
             // Biometric authentication toggle
             Card(
                 elevation: 5,
-                color: walletCardColor,
+                color: Theme.of(context).cardColor,
                 child: Container(
                   padding: const EdgeInsets.all(10),
                   child: Row(
@@ -350,7 +359,7 @@ class SettingsContainer extends StatelessWidget {
                     model!.storageService.hasPhoneProtectionEnabled
                 ? Card(
                     elevation: 5,
-                    color: walletCardColor,
+                    color: Theme.of(context).cardColor,
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       child: Row(
@@ -387,10 +396,41 @@ class SettingsContainer extends StatelessWidget {
                       ),
                     ))
                 : Container(),
-            // KycWidget(),
             Card(
                 elevation: 5,
-                color: globals.walletCardColor,
+                color: Theme.of(context).cardColor,
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    //  crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5.0, right: 8.0),
+                        child: Icon(Icons.dark_mode, color: white, size: 18),
+                      ),
+                      Expanded(
+                        child: Text(FlutterI18n.translate(context, "darkMode"),
+                            style: Theme.of(context).textTheme.headlineSmall,
+                            textAlign: TextAlign.left),
+                      ),
+                      SizedBox(
+                        height: 20,
+                        child: Switch(
+                            inactiveThumbColor: grey,
+                            value: model!.storageService.isDarkMode,
+                            onChanged: (value) {
+                              model!.toggleTheme();
+                            }),
+                      ),
+                      // ),
+                    ],
+                  ),
+                )),
+
+            Card(
+                elevation: 5,
+                color: Theme.of(context).cardColor,
                 child: Container(
                   padding: const EdgeInsets.all(10),
                   child: Row(
@@ -412,9 +452,6 @@ class SettingsContainer extends StatelessWidget {
                         height: 20,
                         child: Switch(
                             inactiveThumbColor: grey,
-                            activeTrackColor: white,
-                            activeColor: primaryColor,
-                            inactiveTrackColor: white,
                             value: model!.storageService.isHKServer,
                             onChanged: (value) {
                               model!.changeBaseAppUrl();
@@ -425,29 +462,8 @@ class SettingsContainer extends StatelessWidget {
                   ),
                 )),
 
-            //Card(child: Container(child: Text(model.test))),
-            // Version Code
-            Card(
-              elevation: 5,
-              child: Container(
-                color: globals.primaryColor,
-                width: 200,
-                height: 40,
-                child: Center(
-                    child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'v ${model!.versionName}.${model!.buildNumber}',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    if (!isProduction)
-                      const Text(' Debug',
-                          style: TextStyle(color: Colors.white))
-                  ],
-                )),
-              ),
-            ),
+            KycWidget(),
+            UIHelper.verticalSpaceLarge,
             Container(
               padding: const EdgeInsets.all(5),
               child: Center(
@@ -459,6 +475,21 @@ class SettingsContainer extends StatelessWidget {
                         .copyWith(color: Colors.red)),
               ),
             ),
+            // Version Code
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'v ${model!.versionName}.${model!.buildNumber}',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  if (!isProduction)
+                    const Text(' Debug', style: TextStyle(color: Colors.white))
+                ],
+              ),
+            ),
+
             UIHelper.verticalSpaceLarge,
             Center(
               child: RichText(
@@ -482,7 +513,7 @@ class SettingsContainer extends StatelessWidget {
 
   Container showMnemonicContainer(BuildContext context) {
     return Container(
-      color: globals.walletCardColor,
+      color: Theme.of(context).cardColor,
       padding: const EdgeInsets.all(20),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Padding(

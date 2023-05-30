@@ -15,7 +15,7 @@ class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: secondaryColor,
+      color: Theme.of(context).canvasColor,
       child: _tabBar,
     );
   }

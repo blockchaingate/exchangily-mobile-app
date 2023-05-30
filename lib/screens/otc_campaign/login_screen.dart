@@ -36,7 +36,7 @@ class CampaignLoginScreen extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
                 margin: const EdgeInsets.all(10.0),
-                color: globals.walletCardColor,
+                color: Theme.of(context).cardColor,
                 child: Column(
                   children: <Widget>[
                     // Email row
@@ -187,7 +187,7 @@ class CampaignLoginScreen extends StatelessWidget {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 padding: const EdgeInsets.all(2.0),
-                                backgroundColor: globals.secondaryColor,
+                                backgroundColor: Theme.of(context).canvasColor,
                                 elevation: 5,
 // focusElevation: 5,
                                 shape: const StadiumBorder(
@@ -213,7 +213,7 @@ class CampaignLoginScreen extends StatelessWidget {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.all(2.0),
-                              backgroundColor: globals.secondaryColor,
+                              backgroundColor: Theme.of(context).canvasColor,
                               elevation: 5,
                               shape: const StadiumBorder(
                                   side: BorderSide(

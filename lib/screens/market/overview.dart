@@ -61,7 +61,7 @@ class MarketOverviewState extends State<MarketOverview> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: globals.walletCardColor,
+      color: Theme.of(context).cardColor,
       child: Container(
         padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.symmetric(horizontal: 30),

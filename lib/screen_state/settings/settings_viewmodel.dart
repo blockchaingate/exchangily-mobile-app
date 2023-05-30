@@ -38,6 +38,7 @@ import 'package:kyc/kyc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 
 import '../../logger.dart';
 import '../../service_locator.dart';
@@ -55,9 +56,9 @@ class SettingsViewModel extends BaseViewModel {
       locator<TransactionHistoryDatabaseService>();
   TokenInfoDatabaseService tokenListDatabaseService =
       locator<TokenInfoDatabaseService>();
-
   SharedService sharedService = locator<SharedService>();
   final LocalStorageService storageService = locator<LocalStorageService>();
+  var themeService = locator<ThemeService>();
   final NavigationService navigationService = locator<NavigationService>();
 
   final WalletDatabaseService walletDatabaseService =
@@ -104,7 +105,9 @@ class SettingsViewModel extends BaseViewModel {
   var kycCheckResult = UserDataContent();
   init() async {
     setBusy(true);
-
+    if (storageService.isDarkMode) {
+      themeService.setThemeMode(ThemeManagerMode.dark);
+    }
     isShowCaseOnce = storageService.isShowCaseView;
 
     getAppVersion();
@@ -237,6 +240,14 @@ class SettingsViewModel extends BaseViewModel {
     var x = baseCoin!.toRadixString(16);
     var t = HEX.encode([baseCoin!]);
     log.e('basecoin $baseCoin --  Hex == $t');
+  }
+
+  toggleTheme() {
+    setBusy(true);
+    storageService.isDarkMode = !storageService.isDarkMode;
+
+    getThemeManager(context).toggleDarkLightTheme();
+    setBusy(false);
   }
 
 /*-------------------------------------------------------------------------------------

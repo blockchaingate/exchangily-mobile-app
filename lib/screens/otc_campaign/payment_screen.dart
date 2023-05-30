@@ -131,7 +131,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                   .toStringAsFixed(3))
                                         ]),
                                         filled: true,
-                                        fillColor: globals.walletCardColor,
+                                        fillColor: Theme.of(context).cardColor,
                                         hintText: FlutterI18n.translate(
                                             context, "amount"),
                                         hintStyle: Theme.of(context)
@@ -242,7 +242,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                             // On USD radio button select show Bank details container
                             Container(
                               // cannot give padding here as it shows empty container when no radio button selected
-                              color: globals.walletCardColor.withAlpha(100),
+                              color: Theme.of(context).cardColor.withAlpha(100),
 
                               child: Visibility(
                                 visible: model.groupValue == 'USD',
@@ -324,7 +324,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                             // On USDT radio button select show usdt address container
                             Container(
                               // cannot give padding here as it shows empty container when no radio button selected
-                              color: globals.walletCardColor.withAlpha(100),
+                              color: Theme.of(context).cardColor.withAlpha(100),
 
                               child: Visibility(
                                 visible: model.groupValue == 'USDT',
@@ -418,7 +418,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                         style: ElevatedButton.styleFrom(
                                           padding: const EdgeInsets.all(0),
                                           backgroundColor:
-                                              globals.secondaryColor,
+                                              Theme.of(context).canvasColor,
                                           shape: const StadiumBorder(
                                             side: BorderSide(
                                                 color: globals.primaryColor,
@@ -447,7 +447,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                             style: ElevatedButton.styleFrom(
                                               padding: const EdgeInsets.all(0),
                                               backgroundColor:
-                                                  globals.secondaryColor,
+                                                  Theme.of(context).canvasColor,
                                               shape: const StadiumBorder(
                                                 side: BorderSide(
                                                     color: globals.primaryColor,
@@ -488,8 +488,8 @@ class CampaignPaymentScreen extends StatelessWidget {
 
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                  decoration: const BoxDecoration(
-                      color: globals.walletCardColor,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.all(Radius.circular(5.0))),
                   padding: const EdgeInsets.all(10.0),
                   child: Column(

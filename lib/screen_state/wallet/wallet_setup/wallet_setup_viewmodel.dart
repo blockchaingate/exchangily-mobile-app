@@ -134,7 +134,7 @@ class WalletSetupViewmodel extends BaseViewModel {
                     children: [
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: walletCardColor),
+                              backgroundColor: Theme.of(context).cardColor),
                           onPressed: (() => navigationService!.goBack()),
                           child: Text(
                             FlutterI18n.translate(context, "decline"),

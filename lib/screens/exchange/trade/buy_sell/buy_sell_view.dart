@@ -59,15 +59,16 @@ class BuySellView extends StatelessWidget {
             key: _scaffoldKey,
             // endDrawerEnableOpenDragGesture: true,
             // endDrawer: Drawer(child: Container(child: SettingsPortableView())),
-            appBar: buildCupertinoNavigationBar(context),
-            backgroundColor: const Color(0xFF1F2233),
+            appBar: buildCupertinoNavigationBar(context,
+                isDark: model.storageService.isDarkMode),
+            backgroundColor: Theme.of(context).canvasColor,
             body: ShowCaseWidget(
               onStart: (index, key) {
                 debugPrint('onStart: $index, $key');
               },
               onComplete: (index, key) {
                 debugPrint('onComplete: $index, $key');
-                model.storageService!.isShowCaseView = false;
+                model.storageService.isShowCaseView = false;
               },
               builder: Builder(
                 builder: (context) => Stack(
@@ -82,8 +83,8 @@ class BuySellView extends StatelessWidget {
                       // Price and quantity text
                       Container(
                         margin: const EdgeInsets.all(3),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF2c2c4c),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).canvasColor,
                           border: Border(
                               top:
                                   BorderSide(width: 1.0, color: Colors.white10),
@@ -332,7 +333,8 @@ class BuySellView extends StatelessWidget {
                       Cupertino navigation bar
 ----------------------------------------------------------------------*/
 
-  CupertinoNavigationBar buildCupertinoNavigationBar(BuildContext context) {
+  CupertinoNavigationBar buildCupertinoNavigationBar(BuildContext context,
+      {bool isDark = false}) {
     return CupertinoNavigationBar(
       // trailing: IconButton(
       //   icon: Icon(
@@ -346,9 +348,9 @@ class BuySellView extends StatelessWidget {
       padding: const EdgeInsetsDirectional.only(start: 0),
       leading: CupertinoButton(
         padding: const EdgeInsets.all(0),
-        child: const Icon(
+        child: Icon(
           Icons.arrow_back,
-          color: Colors.white,
+          color: isDark ? Colors.white : black,
         ),
         onPressed: () {
           Navigator.pop(context);
@@ -358,7 +360,7 @@ class BuySellView extends StatelessWidget {
         pairSymbolWithSlash ?? '',
         style: Theme.of(context).textTheme.displaySmall,
       ),
-      backgroundColor: const Color(0XFF1f2233),
+      backgroundColor: Theme.of(context).canvasColor,
     );
   }
 }
@@ -838,7 +840,7 @@ class BalanceRowWidget extends StatelessWidget {
     model!.showcaseEvent(context);
     return Container(
         child: model!.isBusy &&
-                model!.storageService!.isShowCaseView &&
+                model!.storageService.isShowCaseView &&
                 (model!.targetCoinExchangeBalance!.unlockedAmount == 0.0 ||
                     model!.baseCoinExchangeBalance!.unlockedAmount! < 1.0)
             ? Showcase(

@@ -14,7 +14,7 @@ class CampaignOrderDetailsScreen extends StatelessWidget {
     Color containerListColor;
     Color evenOrOddColor(int index) {
       index.isOdd
-          ? containerListColor = globals.walletCardColor
+          ? containerListColor = Theme.of(context).cardColor
           : containerListColor = globals.grey.withAlpha(20);
       return containerListColor;
     }

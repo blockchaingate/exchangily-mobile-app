@@ -324,7 +324,7 @@ Widget topWidget(WalletDashboardViewModel model, BuildContext context) {
             //     child: Icon(
             //       // Icons.local_gas_station,
             //       MdiIcons.finance,
-            //       color: isProduction ? secondaryColor : red.withAlpha(200),
+            //       color: isProduction ? Theme.of(context).canvasColor : red.withAlpha(200),
             //     ));
             // titleWidget = AppLocalizations.of(context).totalExchangeBalance;
             return TotalBalanceWidget2(model: model, index: index);
@@ -619,12 +619,8 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context,
                 },
                 controller: tabController,
                 labelPadding: EdgeInsets.zero,
-                labelColor: white,
-                unselectedLabelColor: primaryColor,
-                indicatorColor: primaryColor,
-                indicatorSize: TabBarIndicatorSize.tab,
                 isScrollable: false,
-                tabs: [
+                tabs: const [
                   Tab(
                     text: "All",
                   ),
@@ -645,16 +641,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context,
                   ),
                   // custom tokens
                   Tab(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          Constants.customTokenLogoLocalUrl,
-                          width: 16,
-                          color: primaryColor,
-                        )
-                      ],
-                    ),
+                    icon: Icon(Icons.dashboard_customize_outlined, size: 18),
                   ),
                 ],
               ),
@@ -764,7 +751,7 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context,
                                     margin: const EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 1),
                                     decoration: BoxDecoration(
-                                        color: walletCardColor,
+                                        color: Theme.of(context).cardColor,
                                         borderRadius: BorderRadius.circular(9)),
                                     padding: const EdgeInsets.all(3),
                                     child: Row(
@@ -979,7 +966,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
     return Container();
   } else {
     return Card(
-      color: walletCardColor,
+      color: Theme.of(context).cardColor,
       elevation: elevation,
       child: InkWell(
         splashColor: Colors.blue.withAlpha(30),
@@ -999,7 +986,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
               Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                      color: walletCardColor,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(50),
                       boxShadow: const [
                         BoxShadow(
@@ -1325,7 +1312,7 @@ class FavTab extends StackedView<WalletDashboardViewModel> {
                       tickerName = specialTokenData['tickerName'];
                       logoTicker = specialTokenData['logoTicker'];
                       return Card(
-                        color: walletCardColor,
+                        color: Theme.of(context).cardColor,
                         elevation: model.elevation,
                         child: InkWell(
                           splashColor: Colors.blue.withAlpha(30),
@@ -1345,7 +1332,7 @@ class FavTab extends StackedView<WalletDashboardViewModel> {
                                 Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                        color: walletCardColor,
+                                        color: Theme.of(context).cardColor,
                                         borderRadius: BorderRadius.circular(50),
                                         boxShadow: const [
                                           BoxShadow(
@@ -1603,7 +1590,9 @@ class TotalBalanceWidget extends StatelessWidget {
             left: 30,
             child: Card(
               elevation: model!.elevation,
-              color: isProduction ? secondaryColor : red.withAlpha(200),
+              color: isProduction
+                  ? Theme.of(context).canvasColor
+                  : red.withAlpha(200),
               child: Container(
                 //duration: Duration(milliseconds: 250),
                 width: 350,
@@ -1691,7 +1680,9 @@ class TotalBalanceWidget2 extends StatelessWidget {
             left: 30,
             child: Card(
               elevation: model!.elevation,
-              color: isProduction ? secondaryColor : red.withAlpha(200),
+              color: isProduction
+                  ? Theme.of(context).canvasColor
+                  : red.withAlpha(200),
               child: Container(
                 //duration: Duration(milliseconds: 250),
                 width: 350,
@@ -1720,7 +1711,7 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                   // Icons.local_gas_station,
                                   MdiIcons.finance,
                                   color: isProduction
-                                      ? secondaryColor
+                                      ? Theme.of(context).canvasColor
                                       : red.withAlpha(200),
                                 ))),
                     Expanded(
@@ -1807,7 +1798,9 @@ class TotalBalanceWidget3 extends StatelessWidget {
             left: 30,
             child: Card(
               elevation: model!.elevation,
-              color: isProduction ? secondaryColor : red.withAlpha(200),
+              color: isProduction
+                  ? Theme.of(context).canvasColor
+                  : red.withAlpha(200),
               child: Container(
                 //duration: Duration(milliseconds: 250),
                 width: 350,
@@ -1920,7 +1913,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: secondaryColor,
+      color: Theme.of(context).canvasColor,
       child: _tabBar,
     );
   }

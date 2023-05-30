@@ -38,7 +38,7 @@ class BottomNavBar extends StatelessWidget {
       selectedFontSize: 14,
       elevation: 10,
       unselectedItemColor: globals.grey,
-      backgroundColor: globals.walletCardColor,
+      backgroundColor: Theme.of(context).cardColor,
       selectedItemColor: globals.primaryColor,
       showUnselectedLabels: true,
       items: [

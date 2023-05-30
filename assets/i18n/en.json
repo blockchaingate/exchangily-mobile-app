@@ -601,5 +601,6 @@
     "updatedAmountTranslation": "Updated amount", 
     "visitWebsite": "Visit Website", 
     "checkKycStatus": "Check Kyc Status", 
-    "startKycProcess": "Start Kyc Process" 
+    "startKycProcess": "Start Kyc Process",
+    "darkMode": "Dark Mode"
 }

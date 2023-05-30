@@ -26,7 +26,7 @@ class LockerBalanceWidget extends ViewModelBuilderWidget<LockerViewModel> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            color: walletCardColor,
+            color: Theme.of(context).cardColor,
             padding: const EdgeInsets.all(10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

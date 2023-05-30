@@ -22,7 +22,7 @@
 //             },
 //             child: Container(
 //               decoration: BoxDecoration(
-//                 color: walletCardColor,
+//                 color: Theme.of(context).cardColor,
 //               ),
 //               child: Column(
 //                 children: <Widget>[

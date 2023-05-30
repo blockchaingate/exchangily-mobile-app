@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_layout.dart';
 import 'package:stacked/stacked.dart';
 
-
 class MyExchangeAssetsView extends StatelessWidget {
   const MyExchangeAssetsView({Key? key}) : super(key: key);
 
@@ -71,7 +70,7 @@ class MyExchangeAssetsView extends StatelessWidget {
                   //       children: [
                   //         UIHelper.verticalSpaceSmall,
                   //         Container(
-                  //           color: walletCardColor,
+                  //           color: Theme.of(context).cardColor,
                   //           padding: const EdgeInsets.all(10.0),
                   //           child: Row(children: <Widget>[
                   //             UIHelper.horizontalSpaceSmall,
@@ -140,7 +139,8 @@ class MyExchangeAssetsView extends StatelessWidget {
                                       child:
                                           // Image.asset(
                                           // 'assets/images/wallet-page/${tickerName.toLowerCase()}.png') ??
-                                          Image.network('${model.logoUrl}${tickerName.toLowerCase()}.png')),
+                                          Image.network(
+                                              '${model.logoUrl}${tickerName.toLowerCase()}.png')),
                                 ),
                                 UIHelper.horizontalSpaceSmall,
                                 UIHelper.horizontalSpaceSmall,

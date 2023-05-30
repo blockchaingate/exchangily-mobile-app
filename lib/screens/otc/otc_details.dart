@@ -18,7 +18,7 @@ class OtcDetailsScreen extends StatelessWidget {
         appBar: AppBar(
             centerTitle: true,
             title: Text('OTC ${FlutterI18n.translate(context, "details")}'),
-            backgroundColor: globals.secondaryColor),
+            backgroundColor: Theme.of(context).canvasColor),
         body: Container(
             padding: const EdgeInsets.all(5.0),
             // Main column
@@ -30,7 +30,7 @@ class OtcDetailsScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                         vertical: 8.0, horizontal: 5.0),
-                    color: globals.walletCardColor,
+                    color: Theme.of(context).cardColor,
                     // height: 110,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -127,7 +127,7 @@ class OtcDetailsScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                         vertical: 8.0, horizontal: 5.0),
-                    color: globals.walletCardColor,
+                    color: Theme.of(context).cardColor,
                     // height: 110,
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -226,7 +226,7 @@ class OtcDetailsScreen extends StatelessWidget {
                 UIHelper.horizontalSpaceSmall,
                 // Last input quantity amount and confirm button container
                 Card(
-                  color: globals.walletCardColor,
+                  color: Theme.of(context).cardColor,
                   elevation: 4,
                   child: Container(
                     padding: const EdgeInsets.symmetric(

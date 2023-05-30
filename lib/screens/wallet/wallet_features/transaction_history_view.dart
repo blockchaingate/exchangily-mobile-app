@@ -57,7 +57,7 @@ class TransactionHistoryView extends StatelessWidget {
                   title: Text(
                       FlutterI18n.translate(context, "transactionHistory"),
                       style: Theme.of(context).textTheme.displaySmall),
-                  backgroundColor: secondaryColor,
+                  backgroundColor: Theme.of(context).canvasColor,
                 ),
                 body: !model.dataReady || model.isBusy
                     ? SizedBox(

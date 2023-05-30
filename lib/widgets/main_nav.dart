@@ -57,7 +57,7 @@ class MainNavState extends State<MainNav> {
           selectedFontSize: 14,
           elevation: 20,
           unselectedItemColor: globals.grey,
-          backgroundColor: globals.walletCardColor,
+          backgroundColor: Theme.of(context).cardColor,
           selectedItemColor: globals.primaryColor,
           showUnselectedLabels: true,
           items: [

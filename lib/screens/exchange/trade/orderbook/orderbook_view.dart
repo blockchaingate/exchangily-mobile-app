@@ -76,7 +76,7 @@ class OrderBookView extends StatelessWidget {
             ],
           )
         : Container(
-            color: secondaryColor.withAlpha(250),
+            color: Theme.of(context).canvasColor.withAlpha(250),
             padding: const EdgeInsets.all(5.0),
             child: ListView(
               //   mainAxisAlignment: MainAxisAlignment.start,

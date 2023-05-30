@@ -46,7 +46,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                 '${FlutterI18n.translate(context, "confirm")} ${FlutterI18n.translate(context, "mnemonic")}',
                 style: Theme.of(context).textTheme.displaySmall,
               ),
-              backgroundColor: secondaryColor),
+              backgroundColor: Theme.of(context).canvasColor),
           body: Container(
             padding: const EdgeInsets.all(10),
             child: ListView(
@@ -87,7 +87,9 @@ class ConfirmMnemonicView extends StatelessWidget {
                         // backgroundColor: MaterialStateProperty.all(primaryColor),
                         elevation: MaterialStateProperty.all(5),
                         shape: MaterialStateProperty.all(StadiumBorder(
-                            side: BorderSide(color: secondaryColor, width: 2))),
+                            side: BorderSide(
+                                color: Theme.of(context).canvasColor,
+                                width: 2))),
                       ),
                       child: Text('Verify Mnemonic by typing mnemonic words',
                           style: Theme.of(context)

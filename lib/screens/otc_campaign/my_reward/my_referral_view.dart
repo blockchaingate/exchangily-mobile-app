@@ -39,7 +39,7 @@ class MyReferralView extends StatelessWidget {
                     int i = index + 1;
                     return Card(
                       elevation: 2,
-                      color: globals.walletCardColor,
+                      color: Theme.of(context).cardColor,
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
                         child: Row(

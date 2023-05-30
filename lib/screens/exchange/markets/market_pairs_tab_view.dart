@@ -5,7 +5,6 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/widgets/carousel.dart';
 import 'package:exchangilymobileapp/widgets/loading_animation.dart';
 import 'package:flutter/material.dart';
-import '../../../shared/globals.dart' as globals;
 import 'market_pairs_detail_view.dart';
 
 class MarketPairsTabView extends StatelessWidget {
@@ -98,34 +97,36 @@ class MarketPairsTabView extends StatelessWidget {
                       SliverPersistentHeader(
                         delegate: _SliverAppBarDelegate(
                           TabBar(
-                              isScrollable: true,
                               unselectedLabelColor: const Color(0xffaaaaaa),
                               unselectedLabelStyle:
                                   const TextStyle(fontSize: 10),
-                              indicatorSize: TabBarIndicatorSize.tab,
-                              indicator: const BoxDecoration(
-                                  gradient: LinearGradient(
-                                      colors: [
-                                        globals.walletCardColor,
-                                        globals.walletCardColor,
-                                      ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter),
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(5),
-                                      topRight: Radius.circular(3)),
-                                  color: Colors.redAccent),
+                              isScrollable: true,
+                              indicator: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: [
+                                      Theme.of(context).canvasColor,
+                                      Theme.of(context).primaryColor,
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter),
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(5),
+                                    topRight: Radius.circular(3)),
+                                // color: Colors.redAccent
+                              ),
                               tabs: [
                                 for (var tab in tabNames)
                                   Tab(
                                       child: Align(
                                     alignment: Alignment.center,
-                                    child: Text(tab,
-                                        style: const TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500,
-                                        )),
+                                    child: Text(
+                                      tab,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(color: Colors.white),
+                                    ),
                                   ))
                               ]),
                         ),

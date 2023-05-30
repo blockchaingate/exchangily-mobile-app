@@ -310,7 +310,7 @@ class SharedService {
                   backgroundColor: primaryColor,
                   semanticsLabel: 'Loading',
                   strokeWidth: 1.5,
-                  //  valueColor: AlwaysStoppedAnimation<Color>(secondaryColor)
+                  //  valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).canvasColor)
                 ),
               ));
   }
@@ -360,7 +360,7 @@ class SharedService {
   //       builder: (context) {
   //         return AlertDialog(
   //           elevation: 10,
-  //           backgroundColor: globals.walletCardColor.withOpacity(0.85),
+  //           backgroundColor: Theme.of(context).cardColor.withOpacity(0.85),
   //           titleTextStyle: Theme.of(context)
   //               .textTheme
   //               .headline5
@@ -407,7 +407,7 @@ class SharedService {
         builder: (context) {
           return AlertDialog(
             elevation: 10,
-            backgroundColor: globals.walletCardColor.withOpacity(0.85),
+            backgroundColor: Theme.of(context).cardColor.withOpacity(0.85),
             titleTextStyle: Theme.of(context)
                 .textTheme
                 .headlineSmall!
@@ -463,7 +463,7 @@ class SharedService {
             titlePadding: const EdgeInsets.all(0),
             actionsPadding: const EdgeInsets.all(0),
             elevation: 5,
-            backgroundColor: globals.walletCardColor.withOpacity(0.95),
+            backgroundColor: Theme.of(context).cardColor.withOpacity(0.95),
             title: title == ""
                 ? Container()
                 : Container(

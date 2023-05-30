@@ -107,7 +107,7 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
   //Price passedPair;
   late GlobalKey globalKeyOne;
   late GlobalKey globalKeyTwo;
-  LocalStorageService? storageService = locator<LocalStorageService>();
+  LocalStorageService storageService = locator<LocalStorageService>();
   double? unlockedAmount;
   double? lockedAmount;
   ExchangeBalanceModel? targetCoinExchangeBalance;

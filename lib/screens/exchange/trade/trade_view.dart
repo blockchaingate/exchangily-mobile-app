@@ -150,7 +150,9 @@ class TradeView extends StatelessWidget {
 
                             model.currentPairPrice.price == 0.0
                                 ? Container(
-                                    color: secondaryColor.withAlpha(155),
+                                    color: Theme.of(context)
+                                        .canvasColor
+                                        .withAlpha(155),
                                     padding: const EdgeInsets.all(0),
                                     margin: const EdgeInsets.all(0),
                                     height: 280,

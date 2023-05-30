@@ -62,18 +62,26 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_vie
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_exchange_viewmodel.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmodel.dart';
 import 'package:exchangilymobileapp/widget_state/carousel_state.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_details_screen_state.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/team_reward_details_screen_state.dart';
+import 'package:kyc/kyc.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 
+import 'environments/environment_type.dart';
 import 'screens/exchange/trade/my_exchange_assets/exchange_balance_service.dart';
 
 GetIt locator = GetIt.instance;
 
 Future serviceLocator() async {
   // Singleton returns the old instance
-
+  locator.registerSingleton(ThemeService.getInstance());
+  locator.registerLazySingleton(() => KycBaseService(
+      isProd: isProduction, xAccessToken: ValueNotifier<String?>(null)));
+  locator.registerLazySingleton<KycNavigationService>(
+      () => KycNavigationService());
   // Wallet
   locator.registerLazySingleton(() => WalletService());
   locator.registerLazySingleton(() => CoreWalletDatabaseService());

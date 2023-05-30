@@ -213,7 +213,7 @@ class WalletFeaturesView extends StatelessWidget {
                       horizontal: 20.0,
                     ),
                     child: Card(
-                      color: walletCardColor,
+                      color: Theme.of(context).cardColor,
                       elevation: model.elevation,
                       child: InkWell(
                         splashColor: primaryColor.withAlpha(30),
@@ -230,7 +230,7 @@ class WalletFeaturesView extends StatelessWidget {
                             children: <Widget>[
                               Container(
                                   decoration: BoxDecoration(
-                                      color: walletCardColor,
+                                      color: Theme.of(context).cardColor,
                                       borderRadius: BorderRadius.circular(50),
                                       boxShadow: [
                                         BoxShadow(
@@ -265,22 +265,24 @@ class WalletFeaturesView extends StatelessWidget {
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              FlutterI18n.translate(context, "smartContractAddress"),
-              style: headText5.copyWith(color: primaryColor),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Text(
-                model.smartContractAddress,
-                style: headText6,
-              ),
-            ),
-          ],
-        ),
+        floatingActionButton: model.smartContractAddress.isNotEmpty
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    FlutterI18n.translate(context, "smartContractAddress"),
+                    style: headText5.copyWith(color: primaryColor),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      model.smartContractAddress,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ],
+              )
+            : Container(),
       ),
     );
   }
@@ -294,7 +296,7 @@ class WalletFeaturesView extends StatelessWidget {
     String nativeTicker = model.specialTicker!.split('(')[0];
     return Card(
         elevation: model.elevation,
-        color: walletCardColor,
+        color: Theme.of(context).cardColor,
         child: Container(
           padding: const EdgeInsets.all(5),
           child: Column(
@@ -440,7 +442,7 @@ class WalletFeaturesView extends StatelessWidget {
   // Features Card
 
   Widget _featuresCard(context, index, WalletFeaturesViewModel model) => Card(
-        color: walletCardColor,
+        color: Theme.of(context).cardColor,
         elevation: model.elevation,
         child: InkWell(
           splashColor: primaryColor.withAlpha(30),
@@ -459,7 +461,7 @@ class WalletFeaturesView extends StatelessWidget {
               children: <Widget>[
                 Container(
                     decoration: BoxDecoration(
-                        color: walletCardColor,
+                        // color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(50),
                         boxShadow: [
                           BoxShadow(

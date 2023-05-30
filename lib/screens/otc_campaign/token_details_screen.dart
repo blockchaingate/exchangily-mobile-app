@@ -22,7 +22,7 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Card(
-                color: globals.walletCardColor,
+                color: Theme.of(context).cardColor,
                 elevation: 5,
                 child: Container(
                   padding: const EdgeInsets.all(10),
@@ -38,7 +38,7 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
                 ),
               ),
               Card(
-                color: globals.walletCardColor,
+                color: Theme.of(context).cardColor,
                 elevation: 5,
                 child: Column(
                   children: <Widget>[

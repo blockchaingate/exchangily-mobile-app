@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
@@ -385,7 +386,7 @@ class CampaignPaymentScreenState extends BaseState {
         style: AlertStyle(
             animationType: AnimationType.grow,
             isOverlayTapDismiss: true,
-            backgroundColor: globals.walletCardColor,
+            backgroundColor: walletCardColor,
             descStyle: Theme.of(context!).textTheme.bodyLarge!,
             titleStyle: Theme.of(context!)
                 .textTheme
@@ -590,7 +591,7 @@ class CampaignPaymentScreenState extends BaseState {
   // Order list container color according to even/odd index input from the UI list builder
   Color? evenOrOddColor(int index) {
     index.isOdd
-        ? containerListColor = globals.walletCardColor
+        ? containerListColor = walletCardColor
         : containerListColor = globals.grey.withAlpha(20);
     return containerListColor;
   }

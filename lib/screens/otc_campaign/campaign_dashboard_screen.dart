@@ -162,7 +162,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   My total Asset container with list tiles
 -------------------------------------------------------------------------------------*/
                   Container(
-                    color: globals.walletCardColor,
+                    color: Theme.of(context).cardColor,
                     padding: const EdgeInsets.only(top: 5.0),
                     child: Column(
                       children: <Widget>[
@@ -678,7 +678,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(0),
-                    backgroundColor: globals.secondaryColor,
+                    backgroundColor: Theme.of(context).canvasColor,
                     shape: const StadiumBorder(
                       side: BorderSide(
                         color: globals.primaryColor,
