@@ -56,9 +56,9 @@ class MoveToWalletScreen extends StatelessWidget {
               padding: const EdgeInsetsDirectional.only(start: 0),
               leading: CupertinoButton(
                 padding: const EdgeInsets.all(0),
-                child: const Icon(
+                child: Icon(
                   Icons.arrow_back,
-                  color: Colors.white,
+                  color: Theme.of(context).hintColor,
                 ),
                 onPressed: () {
                   if (Navigator.canPop(context)) {
@@ -69,9 +69,9 @@ class MoveToWalletScreen extends StatelessWidget {
               middle: Text(
                   '${FlutterI18n.translate(context, "move")}  ${model.specialTicker}  ${FlutterI18n.translate(context, "toWallet")}',
                   style: Theme.of(context).textTheme.headlineSmall),
-              backgroundColor: const Color(0XFF1f2233),
+              backgroundColor: Theme.of(context).canvasColor,
             ),
-            backgroundColor: const Color(0xFF1F2233),
+            backgroundColor: Theme.of(context).cardColor,
             body: SingleChildScrollView(
               child: Container(
                   padding: const EdgeInsets.all(10),

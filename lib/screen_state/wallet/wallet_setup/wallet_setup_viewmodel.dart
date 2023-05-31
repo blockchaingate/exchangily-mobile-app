@@ -35,6 +35,7 @@ import 'package:exchangilymobileapp/widgets/web_view_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 import '../../../service_locator.dart';
 import '../../../shared/ui_helpers.dart';
 
@@ -73,12 +74,16 @@ class WalletSetupViewmodel extends BaseViewModel {
   bool isHideIcon = true;
   var walletUtil = WalletUtil();
   bool hasData = false;
+  var themeService = locator<ThemeService>();
   // init
   init() async {
     sharedService!.context = context;
 
     checkLanguageFromStorage();
-
+    print(storageService!.isDarkMode);
+    if (storageService!.isDarkMode) {
+      themeService.setThemeMode(ThemeManagerMode.dark);
+    }
     if (storageService!.hasPrivacyConsent) {
       await checkExistingWallet();
     } else {
@@ -138,7 +143,7 @@ class WalletSetupViewmodel extends BaseViewModel {
                           onPressed: (() => navigationService!.goBack()),
                           child: Text(
                             FlutterI18n.translate(context, "decline"),
-                            style: headText5,
+                            style: Theme.of(context).textTheme.headlineSmall,
                           )),
                       UIHelper.horizontalSpaceMedium,
                       ElevatedButton(

@@ -243,7 +243,7 @@ class WalletFeaturesView extends StatelessWidget {
                                   child: Icon(
                                     model.features[6].icon,
                                     size: 18,
-                                    color: white,
+                                    color: Theme.of(context).hintColor,
                                   )),
                               Padding(
                                 padding: const EdgeInsets.only(left: 4.0),

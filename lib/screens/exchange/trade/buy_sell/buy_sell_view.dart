@@ -301,7 +301,7 @@ class BuySellView extends StatelessWidget {
                   style: TextStyle(
                       color: model.bidOrAsk!
                           ? const Color(0XFF871fff)
-                          : Colors.white,
+                          : Theme.of(context).hintColor,
                       fontSize: 14.0),
                 ))),
         Container(
@@ -321,7 +321,7 @@ class BuySellView extends StatelessWidget {
                   FlutterI18n.translate(context, "sell"),
                   style: TextStyle(
                       color: model.bidOrAsk!
-                          ? Colors.white
+                          ? Theme.of(context).hintColor
                           : const Color(0XFF871fff),
                       fontSize: 14.0),
                 )))

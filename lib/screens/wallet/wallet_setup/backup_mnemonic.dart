@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -58,12 +59,23 @@ class BackupMnemonicWalletScreenState
           title: Text(FlutterI18n.translate(context, "backupMnemonic"),
               style: Theme.of(context).textTheme.displaySmall),
           backgroundColor: Theme.of(context).canvasColor,
+          leading: IconButton(
+            icon: const Icon(
+              MdiIcons.arrowLeft,
+              size: 28,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              navigationService!.navigateTo(WalletSetupViewRoute);
+            },
+          ),
           actions: <Widget>[
             // action button
             IconButton(
-                icon: const Icon(
+                icon: Icon(
                   MdiIcons.helpCircleOutline,
-                  size: 18,
+                  size: 20,
+                  color: Theme.of(context).primaryColor,
                 ),
                 onPressed: () {
                   showModalBottomSheet<void>(
@@ -100,7 +112,7 @@ class BackupMnemonicWalletScreenState
               UIHelper.verticalSpaceMedium,
               Container(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 decoration: BoxDecoration(
                     color: globals.primaryColor,
                     borderRadius: BorderRadius.circular(30)
@@ -110,10 +122,10 @@ class BackupMnemonicWalletScreenState
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       MdiIcons.information,
-                      color: globals.white,
-                      size: 25,
+                      color: Theme.of(context).canvasColor,
+                      size: 20,
                     ),
                     const SizedBox(width: 5),
                     Text(
@@ -198,12 +210,14 @@ class BackupMnemonicWalletScreenState
           autocorrect: false,
           decoration: InputDecoration(
             // alignLabelWithHint: true,
-            fillColor: globals.primaryColor,
+            fillColor: primaryColor,
             filled: true,
             hintText: singleWord,
             hintMaxLines: 1,
-            hintStyle: const TextStyle(
-                color: globals.white, fontWeight: FontWeight.w600),
+            hintStyle: Theme.of(context)
+                .textTheme
+                .headlineSmall!
+                .copyWith(color: getTextColor(primaryColor)),
             focusedBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: globals.white, width: 2),
                 borderRadius: BorderRadius.circular(30.0)),

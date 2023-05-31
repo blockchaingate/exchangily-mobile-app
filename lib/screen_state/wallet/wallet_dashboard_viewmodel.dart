@@ -157,7 +157,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusy(true);
 
     sharedService.context = context;
-    //currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
     if (storageService.tokenListDBUpdateTime.isEmpty) {
       await walletService.updateTokenListDb();
     }

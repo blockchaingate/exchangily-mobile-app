@@ -10,6 +10,7 @@
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -53,13 +54,14 @@ class VerifyMnemonicWalletView extends StatelessWidget {
                   crossAxisSpacing: 10,
                   shrinkWrap: true,
                   childAspectRatio: 2,
-                  children: _buildTextGrid(count!, mnemonicTextController))),
+                  children: _buildTextGrid(count!, mnemonicTextController,
+                      context: context))),
         ],
       ),
     );
   }
 
-  List<Widget> _buildTextGrid(int count, controller) =>
+  List<Widget> _buildTextGrid(int count, controller, {BuildContext? context}) =>
       List.generate(count, (i) {
         var hintMnemonicWordNumber = i + 1;
         controller.add(TextEditingController());
@@ -69,14 +71,21 @@ class VerifyMnemonicWalletView extends StatelessWidget {
             FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
             // FilteringTextInputFormatter.allow(RegExp(r'([a-z]{0,})$'))
           ],
-          style: TextStyle(color: white, fontWeight: FontWeight.w400),
+          style: Theme.of(context!)
+              .textTheme
+              .headlineMedium!
+              .copyWith(color: getTextColor(primaryColor)),
           controller: controller[i],
           autocorrect: true,
+          cursorColor: white,
           decoration: InputDecoration(
             fillColor: primaryColor,
             filled: true,
             hintText: '$hintMnemonicWordNumber',
-            hintStyle: TextStyle(color: white),
+            hintStyle: Theme.of(context)
+                .textTheme
+                .headlineMedium!
+                .copyWith(color: getTextColor(primaryColor)),
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: white, width: 2),
                 borderRadius: BorderRadius.circular(30.0)),

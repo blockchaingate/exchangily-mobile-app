@@ -206,6 +206,7 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
                       .textTheme
                       .headlineMedium
                       ?.copyWith(color: red, fontWeight: FontWeight.bold)),
+              background: Theme.of(context).canvasColor,
               position: NotificationPosition.bottom,
               subtitle: Text(FlutterI18n.translate(
                   context, 'pleaseFillAllTheTextFieldsCorrectly')));
@@ -217,6 +218,7 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
                     .textTheme
                     .headlineMedium!
                     .copyWith(color: red, fontWeight: FontWeight.bold)),
+            background: Theme.of(context).canvasColor,
             position: NotificationPosition.bottom,
             subtitle: Text(
               FlutterI18n.translate(
@@ -250,6 +252,7 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
                     .textTheme
                     .headlineMedium!
                     .copyWith(color: red)),
+            background: Theme.of(context).canvasColor,
             position: NotificationPosition.bottom,
             subtitle: Text(FlutterI18n.translate(
                 context, "pleaseFillAllTheTextFieldsCorrectly")));
@@ -261,6 +264,7 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
                   .textTheme
                   .headlineMedium!
                   .copyWith(color: red)),
+          background: Theme.of(context).canvasColor,
           position: NotificationPosition.bottom,
           subtitle: Text(
             FlutterI18n.translate(

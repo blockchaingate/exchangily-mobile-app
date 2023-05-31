@@ -46,9 +46,9 @@ class MoveToExchangeScreen extends StatelessWidget {
           padding: const EdgeInsetsDirectional.only(start: 0),
           leading: CupertinoButton(
             padding: const EdgeInsets.all(0),
-            child: const Icon(
+            child: Icon(
               Icons.arrow_back,
-              color: Colors.white,
+              color: Theme.of(context).hintColor,
             ),
             onPressed: () {
               if (Navigator.canPop(context)) {
@@ -58,16 +58,14 @@ class MoveToExchangeScreen extends StatelessWidget {
           ),
           middle: Text(
             '${FlutterI18n.translate(context, "move")}  ${model.specialTicker}  ${FlutterI18n.translate(context, "toExchange")}',
-            style: Theme.of(context).textTheme.headlineSmall,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
-          backgroundColor: const Color(0XFF1f2233),
+          backgroundColor: Theme.of(context).canvasColor,
         ),
-        backgroundColor: const Color(0xFF1F2233),
+        backgroundColor: Theme.of(context).cardColor,
         body: Container(
           padding: const EdgeInsets.all(10),
           child: ListView(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               TextField(
                 keyboardType:
@@ -97,7 +95,9 @@ class MoveToExchangeScreen extends StatelessWidget {
                 controller: model.amountController,
                 style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: model.isValidAmount ? white : red),
+                    color: model.isValidAmount
+                        ? Theme.of(context).hintColor
+                        : red),
               ),
               UIHelper.verticalSpaceSmall,
               // Wallet Balance
@@ -115,7 +115,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                   .copyWith(color: yellow))
                           : Text(
                               '${FlutterI18n.translate(context, "walletbalance")}  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.availableBalance, precision: model.decimalLimit!).toString()}',
-                              style: headText6),
+                              style: Theme.of(context).textTheme.bodyLarge),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 3,

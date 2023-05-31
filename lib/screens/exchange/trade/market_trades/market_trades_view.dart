@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_trade_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -74,8 +75,11 @@ class MarketTradesView extends StatelessWidget {
                                           precision: decimalConfig!.qtyDecimal!)
                                       .toString(),
                                   textAlign: TextAlign.right,
-                                  style:
-                                      Theme.of(context).textTheme.titleLarge)),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: getTextColor(buyOrders)))),
                           UIHelper.horizontalSpaceSmall,
                           Expanded(
                               flex: 2,
@@ -86,8 +90,11 @@ class MarketTradesView extends StatelessWidget {
                                           precision: decimalConfig!.qtyDecimal!)
                                       .toString(),
                                   textAlign: TextAlign.right,
-                                  style:
-                                      Theme.of(context).textTheme.titleLarge)),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: getTextColor(buyOrders)))),
                           UIHelper.horizontalSpaceSmall,
                           Expanded(
                               flex: 2,
@@ -96,8 +103,11 @@ class MarketTradesView extends StatelessWidget {
                                       .timeFormatted(marketTrades![index].time)
                                       .toString(),
                                   textAlign: TextAlign.right,
-                                  style:
-                                      Theme.of(context).textTheme.titleLarge)),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: getTextColor(buyOrders)))),
                           //  UIHelper.horizontalSpaceSmall,
                         ],
                       ),

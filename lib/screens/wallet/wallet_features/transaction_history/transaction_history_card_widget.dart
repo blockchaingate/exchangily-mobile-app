@@ -328,7 +328,8 @@ class TxHisotryCardWidget extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: IconButton(
                       padding: EdgeInsets.zero,
-                      icon: const Icon(Icons.more, color: white, size: 14),
+                      icon: Icon(Icons.more,
+                          color: Theme.of(context).hintColor, size: 14),
                       onPressed: () {
                         debugPrint('tx histoy ${transaction.toJson()}');
                         model.showTxDetailDialog(transaction);

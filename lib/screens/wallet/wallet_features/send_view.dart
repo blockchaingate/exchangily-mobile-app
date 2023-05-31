@@ -47,7 +47,7 @@ class SendWalletView extends StatelessWidget {
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
-                backgroundColor: Theme.of(context).cardColor,
+                backgroundColor: Theme.of(context).cardColor.withOpacity(0.15),
                 title: Text(
                     '${FlutterI18n.translate(context, "send")} ${model.specialTickerName!}',
                     style: Theme.of(context).textTheme.headlineMedium),

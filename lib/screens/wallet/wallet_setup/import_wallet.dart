@@ -14,6 +14,8 @@
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/confirm_mnemonic_viemodel.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/confirm_mnemonic/verify_mnemonic.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
@@ -21,19 +23,22 @@ import 'package:stacked/stacked.dart';
 class ImportWalletView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var storageService = locator<LocalStorageService>();
+    print('is Dark: ${storageService.isDarkMode}}');
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => ConfirmMnemonicViewmodel(),
       onViewModelReady: (dynamic model) {
         model.route = 'import';
       },
       builder: (context, ConfirmMnemonicViewmodel model, child) => Scaffold(
+        backgroundColor: Theme.of(context).canvasColor,
         appBar: AppBar(
             centerTitle: true,
             title: Text(
               FlutterI18n.translate(context, "importWallet"),
-              style: const TextStyle(fontSize: 14),
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
-            backgroundColor: Theme.of(context).canvasColor),
+            backgroundColor: Theme.of(context).canvasColor.withOpacity(0.2)),
         body: Container(
           alignment: Alignment.center,
           padding: const EdgeInsets.all(10),

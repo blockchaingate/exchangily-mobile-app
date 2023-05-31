@@ -33,12 +33,13 @@ class AddGas extends StatelessWidget {
         viewModelBuilder: () => AddGasViewModel(),
         builder: (context, AddGasViewModel model, _) => Scaffold(
             appBar: CupertinoNavigationBar(
+              backgroundColor: Theme.of(context).canvasColor,
               padding: const EdgeInsetsDirectional.only(start: 0),
               leading: CupertinoButton(
                 padding: const EdgeInsets.all(0),
-                child: const Icon(
+                child: Icon(
                   Icons.arrow_back,
-                  color: Colors.white,
+                  color: Theme.of(context).hintColor,
                 ),
                 onPressed: () {
                   if (Navigator.canPop(context)) {
@@ -48,16 +49,13 @@ class AddGas extends StatelessWidget {
               ),
               middle: Text(
                 FlutterI18n.translate(context, "addGas"),
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Theme.of(context).hintColor),
               ),
-              backgroundColor: const Color(0XFF1f2233),
             ),
-            backgroundColor: const Color(0xFF1F2233),
+            backgroundColor: Theme.of(context).canvasColor,
             body: Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                 child: ListView(
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
                         padding: const EdgeInsets.all(30),
@@ -85,7 +83,9 @@ class AddGas extends StatelessWidget {
                       controller: model.amountController,
                       style: TextStyle(
                           fontSize: 16.0,
-                          color: model.isAmountInvalid ? red : Colors.white),
+                          color: model.isAmountInvalid
+                              ? red
+                              : Theme.of(context).hintColor),
                     ),
                     UIHelper.verticalSpaceSmall,
                     // Balance
@@ -95,12 +95,14 @@ class AddGas extends StatelessWidget {
                             left: 2.0, right: 4.0, top: 2.0),
                         child: Text(
                             '${FlutterI18n.translate(context, "gas")} ${FlutterI18n.translate(context, "balance")}',
-                            style: const TextStyle(
-                                fontSize: 12.0, color: Colors.white)),
+                            style: TextStyle(
+                                fontSize: 12.0,
+                                color: Theme.of(context).hintColor)),
                       ),
                       Text(model.gasBalance.toString(),
-                          style: const TextStyle(
-                              fontSize: 12.0, color: Colors.white))
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              color: Theme.of(context).hintColor))
                     ]),
                     UIHelper.verticalSpaceSmall,
                     Row(children: [
@@ -109,12 +111,14 @@ class AddGas extends StatelessWidget {
                             left: 2.0, right: 4.0, top: 2.0),
                         child: Text(
                             'FAB ${FlutterI18n.translate(context, "balance")}',
-                            style: const TextStyle(
-                                fontSize: 12.0, color: Colors.white)),
+                            style: TextStyle(
+                                fontSize: 12.0,
+                                color: Theme.of(context).hintColor)),
                       ),
                       Text(model.fabBalance.toString(),
-                          style: const TextStyle(
-                              fontSize: 12.0, color: Colors.white))
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              color: Theme.of(context).hintColor))
                     ]),
                     UIHelper.verticalSpaceSmall,
                     // Gas Fee
@@ -123,12 +127,14 @@ class AddGas extends StatelessWidget {
                         padding: const EdgeInsets.only(
                             left: 2.0, right: 4.0, top: 2.0),
                         child: Text(FlutterI18n.translate(context, "gasFee"),
-                            style: const TextStyle(
-                                fontSize: 12.0, color: Colors.white)),
+                            style: TextStyle(
+                                fontSize: 12.0,
+                                color: Theme.of(context).hintColor)),
                       ),
                       Text('${model.transFee} FAB',
-                          style: const TextStyle(
-                              fontSize: 13.0, color: Colors.white))
+                          style: TextStyle(
+                              fontSize: 13.0,
+                              color: Theme.of(context).hintColor))
                     ]),
                     // Slider
                     Slider(
@@ -292,7 +298,10 @@ class AddGas extends StatelessWidget {
                             },
                             child: Text(
                               FlutterI18n.translate(context, "confirm"),
-                              style: Theme.of(context).textTheme.labelLarge,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge!
+                                  .copyWith(color: Theme.of(context).hintColor),
                             ),
                           ),
                         ),

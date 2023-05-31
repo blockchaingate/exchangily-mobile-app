@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -66,7 +67,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                             side: BorderSide(color: primaryColor, width: 2))),
                       ),
                       child: Text(
-                          'Verify Mnemonic by tap on words in the correct order',
+                          FlutterI18n.translate(context, "verifyMnemonicByTap"),
                           style: Theme.of(context)
                               .textTheme
                               .headlineSmall!
@@ -91,7 +92,9 @@ class ConfirmMnemonicView extends StatelessWidget {
                                 color: Theme.of(context).canvasColor,
                                 width: 2))),
                       ),
-                      child: Text('Verify Mnemonic by typing mnemonic words',
+                      child: Text(
+                          FlutterI18n.translate(
+                              context, "verifyMnemonicByWrite"),
                           style: Theme.of(context)
                               .textTheme
                               .headlineSmall!
@@ -122,18 +125,19 @@ class ConfirmMnemonicView extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(right: 2.0),
+                                    padding: const EdgeInsets.only(right: 4.0),
                                     child: Icon(
                                       Icons.restore_sharp,
-                                      color: yellow,
+                                      color: Theme.of(context).primaryColor,
                                       size: 20,
                                     ),
                                   ),
-                                  Text('Reset Selection',
+                                  Text(
+                                      FlutterI18n.translate(
+                                          context, "resetSelection"),
                                       style: Theme.of(context)
                                           .textTheme
-                                          .displaySmall!
-                                          .copyWith(color: yellow)),
+                                          .displaySmall!),
                                 ],
                               )),
                           UIHelper.verticalSpaceSmall,
@@ -175,22 +179,20 @@ class ConfirmMnemonicView extends StatelessWidget {
                                     autocorrect: false,
                                     decoration: InputDecoration(
                                       // alignLabelWithHint: true,
-                                      fillColor:
-
-                                          //  model.tappedMnemonicList
-                                          //         .contains(singleWord)
-                                          //         &&
-                                          //     !model.isSameIndex
-                                          model.tapTextControllerList[i].text
-                                                  .contains(')')
-                                              ? green
-                                              : primaryColor,
+                                      fillColor: model
+                                              .tapTextControllerList[i].text
+                                              .contains(')')
+                                          ? green
+                                          : primaryColor,
                                       filled: true,
                                       hintText: singleWord,
                                       hintMaxLines: 1,
-                                      hintStyle: TextStyle(
-                                          color: white,
-                                          fontWeight: FontWeight.w400),
+                                      hintStyle: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium!
+                                          .copyWith(
+                                              color:
+                                                  getTextColor(primaryColor)),
                                       focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
                                               color: white, width: 2),
@@ -220,11 +222,14 @@ class ConfirmMnemonicView extends StatelessWidget {
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
                         FlutterI18n.translate(context, "finishWalletBackup"),
-                        style: Theme.of(context).textTheme.labelLarge,
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelLarge!
+                            .copyWith(color: getTextColor(primaryColor)),
                       ),
                     ),
                     onPressed: () {
-                      // if (model.isTap) model.clearTappedList();
+                      // if (model.isTap) model.clearTappedList();s
                       model.verifyMnemonic(
                           model.isTap
                               ? model.tappedMnemonicList

@@ -47,9 +47,10 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
           centerTitle: true,
           title: Text(FlutterI18n.translate(context, "secureYourWallet"),
               style: Theme.of(context).textTheme.headlineMedium),
-          backgroundColor: Theme.of(context).canvasColor,
+          backgroundColor: primaryColor.withOpacity(0.85),
         ),
         body: Container(
+            color: Theme.of(context).cardColor,
             padding: const EdgeInsets.all(15),
             child: ListView(
               scrollDirection: Axis.vertical,
@@ -179,7 +180,7 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
               ],
             ),
             labelText: FlutterI18n.translate(context, "enterPassword"),
-            prefixIcon: const Icon(Icons.lock_outline, color: Colors.white),
+            prefixIcon: const Icon(Icons.lock_outline, color: grey),
             labelStyle: Theme.of(context).textTheme.headlineSmall,
             helperStyle: Theme.of(context).textTheme.headlineSmall));
   }
@@ -208,6 +209,7 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
           model.validatePassword();
         },
         maxLength: 32,
+        cursorColor: Theme.of(context).hintColor,
         style: model.checkConfirmPasswordConditions
             ? const TextStyle(color: primaryColor, fontSize: 16)
             : const TextStyle(color: grey, fontSize: 16),
@@ -237,7 +239,7 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
               ],
             ),
             labelText: FlutterI18n.translate(context, "confirmPassword"),
-            prefixIcon: const Icon(Icons.lock, color: Colors.white),
+            prefixIcon: const Icon(Icons.lock, color: grey),
             labelStyle: Theme.of(context).textTheme.headlineSmall,
             helperStyle: Theme.of(context).textTheme.headlineSmall));
   }

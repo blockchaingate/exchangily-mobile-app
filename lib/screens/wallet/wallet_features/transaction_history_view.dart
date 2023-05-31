@@ -41,11 +41,17 @@ class TransactionHistoryView extends StatelessWidget {
                 appBar: AppBar(
                   actions: [
                     IconButton(
-                        icon: const Icon(Icons.refresh),
+                        icon: Icon(
+                          Icons.refresh,
+                          color: Theme.of(context).hintColor,
+                        ),
                         onPressed: () => model.reloadTransactions())
                   ],
                   leading: IconButton(
-                      icon: const Icon(Icons.arrow_back),
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Theme.of(context).hintColor,
+                      ),
                       onPressed: () => Navigator.of(context).pop()),
                   centerTitle: true,
                   // actions: [
@@ -57,7 +63,8 @@ class TransactionHistoryView extends StatelessWidget {
                   title: Text(
                       FlutterI18n.translate(context, "transactionHistory"),
                       style: Theme.of(context).textTheme.displaySmall),
-                  backgroundColor: Theme.of(context).canvasColor,
+                  backgroundColor:
+                      Theme.of(context).canvasColor.withOpacity(0.5),
                 ),
                 body: !model.dataReady || model.isBusy
                     ? SizedBox(
@@ -75,62 +82,65 @@ class TransactionHistoryView extends StatelessWidget {
                             child: Column(
                               children: <Widget>[
                                 //  IconButton(icon:Icon(Icons.ac_unit,color:colors.white),onPressed: ()=> model.test(),),
-                                Row(
-                                  children: [
-                                    UIHelper.horizontalSpaceSmall,
-                                    Text(
-                                        FlutterI18n.translate(
-                                            context, "action"),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall),
-                                    UIHelper.horizontalSpaceSmall,
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      UIHelper.horizontalSpaceSmall,
+                                      Text(
                                           FlutterI18n.translate(
-                                              context, "date"),
-                                          textAlign: TextAlign.center,
+                                              context, "action"),
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleSmall),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                          FlutterI18n.translate(
-                                              context, "quantity"),
-                                          textAlign: TextAlign.right,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall),
-                                    ),
-                                    UIHelper.horizontalSpaceSmall,
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        margin:
-                                            const EdgeInsets.only(left: 10.0),
+                                      UIHelper.horizontalSpaceSmall,
+                                      Expanded(
+                                        flex: 1,
                                         child: Text(
                                             FlutterI18n.translate(
-                                                context, "status"),
-                                            textAlign: TextAlign.left,
+                                                context, "date"),
+                                            textAlign: TextAlign.center,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .titleSmall),
                                       ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                          FlutterI18n.translate(
-                                              context, "details"),
-                                          textAlign: TextAlign.center,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall),
-                                    ),
-                                  ],
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                            FlutterI18n.translate(
+                                                context, "quantity"),
+                                            textAlign: TextAlign.right,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall),
+                                      ),
+                                      UIHelper.horizontalSpaceSmall,
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(left: 10.0),
+                                          child: Text(
+                                              FlutterI18n.translate(
+                                                  context, "status"),
+                                              textAlign: TextAlign.left,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                            FlutterI18n.translate(
+                                                context, "details"),
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 model.isBusy
                                     ? const CircularProgressIndicator()

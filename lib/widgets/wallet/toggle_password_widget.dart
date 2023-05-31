@@ -25,7 +25,7 @@ class TogglePasswordWidget extends StatelessWidget {
               )
             : const Icon(
                 FontAwesomeIcons.eyeSlash,
-                color: white,
+                color: grey,
                 size: 18,
               ));
   }

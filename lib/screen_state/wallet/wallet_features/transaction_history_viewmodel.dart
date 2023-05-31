@@ -255,154 +255,146 @@ class TransactionHistoryViewmodel extends FutureViewModel {
         context: context,
         builder: (BuildContext context) {
           return Platform.isIOS
-              ? Theme(
-                  data: ThemeData.dark(),
-                  child: CupertinoAlertDialog(
-                    title: Center(
-                        child: Text(
-                      '${FlutterI18n.translate(context, "transactionDetails")}....',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineMedium!
-                          .copyWith(
-                              color: primaryColor, fontWeight: FontWeight.w500),
-                    )),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        UIHelper.verticalSpaceSmall,
-                        transactionHistory.tag != send
-                            ? Text(
-                                '${FlutterI18n.translate(context, "kanban")} Txid',
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              )
-                            : Container(),
-                        transactionHistory.tag != send
-                            ? Row(
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: RichText(
-                                        text: TextSpan(
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              launchUrl(
-                                                  transactionHistory.kanbanTxId,
-                                                  transactionHistory.chainName,
-                                                  true);
-                                            },
-                                          text: transactionHistory
-                                                  .kanbanTxId!.isEmpty
-                                              ? transactionHistory
-                                                      .kanbanTxStatus!.isEmpty
-                                                  ? FlutterI18n.translate(
-                                                      context, "inProgress")
-                                                  : firstCharToUppercase(
-                                                      transactionHistory
-                                                          .kanbanTxStatus!)
-                                              : transactionHistory.kanbanTxId
-                                                  .toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .copyWith(color: Colors.blue),
-                                        ),
+              ? CupertinoAlertDialog(
+                  title: Center(
+                      child: Text(
+                    '${FlutterI18n.translate(context, "transactionDetails")}....',
+                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                        color: primaryColor, fontWeight: FontWeight.w500),
+                  )),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      UIHelper.verticalSpaceSmall,
+                      transactionHistory.tag != send
+                          ? Text(
+                              '${FlutterI18n.translate(context, "kanban")} Txid',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            )
+                          : Container(),
+                      transactionHistory.tag != send
+                          ? Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: RichText(
+                                      text: TextSpan(
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            launchUrl(
+                                                transactionHistory.kanbanTxId,
+                                                transactionHistory.chainName,
+                                                true);
+                                          },
+                                        text: transactionHistory
+                                                .kanbanTxId!.isEmpty
+                                            ? transactionHistory
+                                                    .kanbanTxStatus!.isEmpty
+                                                ? FlutterI18n.translate(
+                                                    context, "inProgress")
+                                                : firstCharToUppercase(
+                                                    transactionHistory
+                                                        .kanbanTxStatus!)
+                                            : transactionHistory.kanbanTxId
+                                                .toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(color: Colors.blue),
                                       ),
                                     ),
                                   ),
-                                  transactionHistory.kanbanTxId!.isEmpty
-                                      ? Container()
-                                      : CupertinoButton(
-                                          child: const Icon(
-                                              FontAwesomeIcons.copy,
-                                              color: white,
-                                              size: 16),
-                                          onPressed: () => copyAddress(
-                                              transactionHistory.kanbanTxId),
-                                        )
-                                ],
-                              )
-                            : Container(),
-                        UIHelper.verticalSpaceMedium,
-                        Text(
-                          //AppLocalizations.of(context).quantity,
-                          '${transactionHistory.chainName} ${FlutterI18n.translate(context, "chain")} Txid',
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: RichText(
-                                  text: TextSpan(
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        launchUrl(
-                                            transactionHistory.tickerChainTxId,
-                                            transactionHistory.chainName,
-                                            false);
-                                      },
-                                    text: transactionHistory
-                                            .tickerChainTxId!.isEmpty
-                                        ? transactionHistory
-                                                .tickerChainTxStatus!.isEmpty
-                                            ? FlutterI18n.translate(
-                                                context, "inProgress")
-                                            : transactionHistory
-                                                .tickerChainTxStatus
-                                        : transactionHistory.tickerChainTxId
-                                            .toString(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .copyWith(color: Colors.blue),
-                                  ),
+                                ),
+                                transactionHistory.kanbanTxId!.isEmpty
+                                    ? Container()
+                                    : CupertinoButton(
+                                        child: const Icon(FontAwesomeIcons.copy,
+                                            color: white, size: 16),
+                                        onPressed: () => copyAddress(
+                                            transactionHistory.kanbanTxId),
+                                      )
+                              ],
+                            )
+                          : Container(),
+                      UIHelper.verticalSpaceMedium,
+                      Text(
+                        //AppLocalizations.of(context).quantity,
+                        '${transactionHistory.chainName} ${FlutterI18n.translate(context, "chain")} Txid',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: RichText(
+                                text: TextSpan(
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      launchUrl(
+                                          transactionHistory.tickerChainTxId,
+                                          transactionHistory.chainName,
+                                          false);
+                                    },
+                                  text: transactionHistory
+                                          .tickerChainTxId!.isEmpty
+                                      ? transactionHistory
+                                              .tickerChainTxStatus!.isEmpty
+                                          ? FlutterI18n.translate(
+                                              context, "inProgress")
+                                          : transactionHistory
+                                              .tickerChainTxStatus
+                                      : transactionHistory.tickerChainTxId
+                                          .toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(color: Colors.blue),
                                 ),
                               ),
                             ),
-                            transactionHistory.tickerChainTxId!.isEmpty
-                                ? Container()
-                                : CupertinoButton(
-                                    child: const Icon(FontAwesomeIcons.copy,
-                                        color: white, size: 16),
-                                    onPressed: () => copyAddress(
-                                        transactionHistory.tickerChainTxId),
-                                  )
-                          ],
-                        ),
-                      ],
-                    ),
-                    actions: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            CupertinoButton(
-                              padding: const EdgeInsets.only(left: 5),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(4)),
-                              child: Text(
-                                FlutterI18n.translate(context, "close"),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: primaryColor),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pop(true);
-                              },
-                            ),
-                          ],
-                        ),
+                          ),
+                          transactionHistory.tickerChainTxId!.isEmpty
+                              ? Container()
+                              : CupertinoButton(
+                                  child: const Icon(FontAwesomeIcons.copy,
+                                      color: white, size: 16),
+                                  onPressed: () => copyAddress(
+                                      transactionHistory.tickerChainTxId),
+                                )
+                        ],
                       ),
                     ],
                   ),
+                  actions: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.all(5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          CupertinoButton(
+                            padding: const EdgeInsets.only(left: 5),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(4)),
+                            child: Text(
+                              FlutterI18n.translate(context, "close"),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: primaryColor),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 )
               : AlertDialog(
                   titlePadding: EdgeInsets.zero,

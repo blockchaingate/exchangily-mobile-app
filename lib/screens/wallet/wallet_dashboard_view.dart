@@ -100,6 +100,7 @@ class _WalletDashboardViewState extends State<WalletDashboardView>
             },
             child: Scaffold(
                 key: key,
+                backgroundColor: Theme.of(context).cardColor,
                 endDrawerEnableOpenDragGesture: true,
                 body: GestureDetector(
                   onTap: () {
@@ -119,49 +120,53 @@ class _WalletDashboardViewState extends State<WalletDashboardView>
                     },
                     builder: Builder(
                       builder: (context) {
-                        return Column(
-                          children: <Widget>[
-                            LayoutBuilder(builder:
-                                (BuildContext ctx, BoxConstraints constraints) {
-                              if (constraints.maxWidth < largeSize) {
-                                return Container(
-                                  height: MediaQuery.of(context).padding.top,
-                                );
-                              } else {
-                                return Column(
-                                  children: <Widget>[
-                                    topWidget(model, context),
-                                    amountAndGas(model, context),
-                                  ],
-                                );
-                              }
-                            }),
-                            Expanded(
-                              child: LayoutBuilder(builder: (BuildContext ctx,
+                        return Container(
+                          color: Theme.of(context).cardColor,
+                          child: Column(
+                            children: <Widget>[
+                              LayoutBuilder(builder: (BuildContext ctx,
                                   BoxConstraints constraints) {
                                 if (constraints.maxWidth < largeSize) {
-                                  return coinList(model, ctx, _tabController!);
+                                  return Container(
+                                    height: MediaQuery.of(context).padding.top,
+                                  );
                                 } else {
-                                  return Row(
-                                    children: [
-                                      SizedBox(
-                                          width: 400,
-                                          height: double.infinity,
-                                          child: coinList(
-                                              model, ctx, _tabController!)),
-                                      Expanded(
-                                        child: model.wallets == null
-                                            ? Container()
-                                            : WalletFeaturesView(
-                                                walletInfo:
-                                                    model.rightWalletInfo),
-                                      )
+                                  return Column(
+                                    children: <Widget>[
+                                      topWidget(model, context),
+                                      amountAndGas(model, context),
                                     ],
                                   );
                                 }
                               }),
-                            ),
-                          ],
+                              Expanded(
+                                child: LayoutBuilder(builder: (BuildContext ctx,
+                                    BoxConstraints constraints) {
+                                  if (constraints.maxWidth < largeSize) {
+                                    return coinList(
+                                        model, ctx, _tabController!);
+                                  } else {
+                                    return Row(
+                                      children: [
+                                        SizedBox(
+                                            width: 400,
+                                            height: double.infinity,
+                                            child: coinList(
+                                                model, ctx, _tabController!)),
+                                        Expanded(
+                                          child: model.wallets == null
+                                              ? Container()
+                                              : WalletFeaturesView(
+                                                  walletInfo:
+                                                      model.rightWalletInfo),
+                                        )
+                                      ],
+                                    );
+                                  }
+                                }),
+                              ),
+                            ],
+                          ),
                         );
                       },
                     ),
@@ -617,6 +622,9 @@ Widget coinList(WalletDashboardViewModel model, BuildContext context,
                 onTap: (int tabIndex) {
                   model.updateTabSelection(tabIndex);
                 },
+                indicator: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                ),
                 controller: tabController,
                 labelPadding: EdgeInsets.zero,
                 isScrollable: false,
@@ -1591,7 +1599,7 @@ class TotalBalanceWidget extends StatelessWidget {
             child: Card(
               elevation: model!.elevation,
               color: isProduction
-                  ? Theme.of(context).canvasColor
+                  ? Theme.of(context).cardColor
                   : red.withAlpha(200),
               child: Container(
                 //duration: Duration(milliseconds: 250),
@@ -1681,7 +1689,7 @@ class TotalBalanceWidget2 extends StatelessWidget {
             child: Card(
               elevation: model!.elevation,
               color: isProduction
-                  ? Theme.of(context).canvasColor
+                  ? Theme.of(context).cardColor
                   : red.withAlpha(200),
               child: Container(
                 //duration: Duration(milliseconds: 250),

@@ -78,13 +78,12 @@ class LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
                             padding: const EdgeInsets.symmetric(horizontal: 0)),
                         onPressed: () =>
                             model.updateChartInterval(model.intervalMap[key]),
-                        child: Text(
-                          key,
-                          style: model.intervalMap[key] ==
-                                  model.tradingChartInterval
-                              ? model.fontTheme.copyWith(color: primaryColor)
-                              : model.fontTheme.copyWith(color: white),
-                        ),
+                        child: Text(key,
+                            style: model.intervalMap[key] ==
+                                    model.tradingChartInterval
+                                ? model.fontTheme.copyWith(color: primaryColor)
+                                : model.fontTheme.copyWith(
+                                    color: Theme.of(context).hintColor)),
                       );
                     }),
               )),

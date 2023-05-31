@@ -40,7 +40,9 @@ class WalletSetupView extends StatelessWidget {
         },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 40),
-          color: Theme.of(context).cardColor,
+          color: !model.storageService!.isDarkMode
+              ? Theme.of(context).cardColor.withOpacity(0.85)
+              : Theme.of(context).cardColor,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -52,7 +54,12 @@ class WalletSetupView extends StatelessWidget {
                 children: [
                   SizedBox(
                     height: 50,
-                    child: Image.asset('assets/images/start-page/logo.png'),
+                    child: Container(
+                        color: model.storageService!.isDarkMode
+                            ? Colors.transparent
+                            : secondaryColor.withOpacity(0.25),
+                        child:
+                            Image.asset('assets/images/start-page/logo.png')),
                   ),
                   Container(
                       padding: const EdgeInsets.all(8.0),
