@@ -20,7 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
-import '../../../../utils/string_util.dart';
 
 // {"success":true,"data":{"transactionID":"7f9d1b3fad00afa85076d28d46fd3457f66300989086b95c73ed84e9b3906de8"}}
 class Redeposit extends StatelessWidget {

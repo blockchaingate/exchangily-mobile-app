@@ -1,7 +1,6 @@
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import '../../shared/globals.dart' as globals;
 
 class CampaignTokenDetailsScreen extends StatelessWidget {
   final List<CampaignReward>? campaignRewardList;

@@ -1,4 +1,3 @@
-import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {

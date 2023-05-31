@@ -34,7 +34,6 @@ import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked_themes/stacked_themes.dart';
 
-import './shared/globals.dart' as globals;
 
 Future<void> main() async {
   final String defaultLocale = Platform.localeName;
@@ -62,7 +61,7 @@ Future<void> main() async {
 
   try {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    Logger.level = Level.nothing;
+    Logger.level = Level.info;
     SystemChannels.textInput
         .invokeMethod('TextInput.hide'); // Hides keyboard initially
     // Force user to use only portrait mode until the development of other screen size design

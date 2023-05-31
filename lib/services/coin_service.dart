@@ -53,8 +53,7 @@ class CoinService {
     await apiService!
         .getTokenListUpdates()
         .then((newTokenListFromTokenUpdateApi) async {
-      if (newTokenListFromTokenUpdateApi != null &&
-          newTokenListFromTokenUpdateApi.isNotEmpty) {
+      if (newTokenListFromTokenUpdateApi.isNotEmpty) {
         existingTokensInTokenDatabase;
         if (existingTokensInTokenDatabase.length !=
             newTokenListFromTokenUpdateApi.length) {

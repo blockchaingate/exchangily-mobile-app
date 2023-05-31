@@ -286,7 +286,7 @@ class BuySellViewModel extends StreamViewModel with ListenableServiceMixin {
                         Showcase Feature
 ----------------------------------------------------------------------*/
   showcaseEvent(BuildContext test) async {
-    if (!storageService!.isShowCaseView) {
+    if (!storageService.isShowCaseView) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ShowCaseWidget.of(test).startShowCase([globalKeyOne, globalKeyTwo]);
       });

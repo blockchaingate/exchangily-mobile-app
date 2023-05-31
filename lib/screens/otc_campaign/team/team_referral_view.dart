@@ -4,7 +4,6 @@ import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import '../../../shared/globals.dart' as globals;
 
 class CampaignTeamReferralView extends StatelessWidget {
   final rewardDetails;

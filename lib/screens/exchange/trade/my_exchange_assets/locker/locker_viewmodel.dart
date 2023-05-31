@@ -116,8 +116,8 @@ class LockerViewModel extends ReactiveViewModel {
             HEX.encode(keyPairKanban["privateKey"]),
             selectedLocker.address!,
             nonce,
-            kanbanGasPrice!,
-            kanbanGasLimit!);
+            kanbanGasPrice,
+            kanbanGasLimit);
       } catch (err) {
         setBusy(false);
         log.e('err $err');
@@ -158,8 +158,8 @@ class LockerViewModel extends ReactiveViewModel {
             HEX.encode(keyPairKanban["privateKey"]),
             selectedLocker.address!,
             nonce,
-            kanbanGasPrice!,
-            kanbanGasLimit!);
+            kanbanGasPrice,
+            kanbanGasLimit);
       } catch (err) {
         setBusy(false);
         log.e('err $err');

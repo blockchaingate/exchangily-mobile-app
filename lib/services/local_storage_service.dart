@@ -155,7 +155,7 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                 Dark mode getter/setter
 ----------------------------------------------------------------------*/
-  bool get isDarkMode => _getFromDisk(darkModeKey) ?? false;
+  bool get isDarkMode => _getFromDisk(darkModeKey) ?? true;
   set isDarkMode(bool value) => _saveToDisk(darkModeKey, value);
 
 /*----------------------------------------------------------------------

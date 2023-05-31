@@ -5,7 +5,6 @@ import 'package:exchangilymobileapp/widgets/html_page.dart';
 import 'package:exchangilymobileapp/widgets/loading_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../shared/globals.dart' as globals;
 
 class AnnouncementList extends StatelessWidget {
   const AnnouncementList();

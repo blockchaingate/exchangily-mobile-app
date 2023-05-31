@@ -48,7 +48,6 @@ import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
 import 'package:flutter/material.dart';
 import 'package:hex/hex.dart';
-import 'package:kyc/kyc.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web3dart/crypto.dart' as CryptoWeb3;
@@ -378,11 +377,9 @@ class WalletService {
   Future<List<TokenModel>> getTokenListUpdates() async {
     List<TokenModel> newTokens = [];
     await apiService!.getTokenListUpdates().then((tokenList) {
-      if (tokenList != null) {
-        log.w(
-            'getTokenListUpdates token list from api length ${tokenList.length}');
-        newTokens = tokenList;
-      }
+      log.w(
+          'getTokenListUpdates token list from api length ${tokenList.length}');
+      newTokens = tokenList;
     }).catchError((err) {
       log.e('getTokenListUpdates Catch $err');
       return null;

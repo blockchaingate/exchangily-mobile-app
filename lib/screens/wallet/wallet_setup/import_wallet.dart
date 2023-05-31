@@ -17,7 +17,6 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_setup/confirm_mnemonic
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
-import '../../../shared/globals.dart' as globals;
 
 class ImportWalletView extends StatelessWidget {
   @override

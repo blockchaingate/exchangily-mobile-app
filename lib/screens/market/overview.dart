@@ -2,7 +2,6 @@ import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import "package:flutter/material.dart";
 
-import '../../shared/globals.dart' as globals;
 import 'overview_block.dart';
 
 class MarketOverview extends StatefulWidget {
