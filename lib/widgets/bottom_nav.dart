@@ -29,7 +29,7 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final double paddingValue = 4; // change space between icon and title text
-    const double iconSize = 25; // change icon size
+    // const double iconSize = 25; // change icon size
     int selectedIndex = count!;
 
     return BottomNavigationBar(
