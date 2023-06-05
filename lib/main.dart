@@ -29,11 +29,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked_themes/stacked_themes.dart';
-
 
 Future<void> main() async {
   final String defaultLocale = Platform.localeName;
@@ -91,67 +89,68 @@ class MyApp extends StatelessWidget {
           ConnectivityService().connectionStatusController.stream,
       initialData: ConnectivityStatus.Cellular,
       child: LifeCycleManager(
-        child: OverlaySupport(
-          child: ThemeBuilder(
-              // statusBarColorBuilder: (theme) => theme.colorScheme.,
-              defaultThemeMode: ThemeMode.light,
-              darkTheme: kThemeData(isDark: true),
-              lightTheme: kThemeData(isDark: false),
-              builder: (context, regularTheme, darkTheme, themeMode) {
-                return MaterialApp(
-                  theme: regularTheme,
-                  darkTheme: darkTheme,
-                  themeMode: themeMode,
-                  debugShowCheckedModeBanner: false,
-                  navigatorKey: locator<NavigationService>().navigatorKey,
-                  builder: (context, widget) => Stack(
-                    children: [
-                      Navigator(
-                          key: locator<DialogService>().navigatorKey,
-                          onGenerateRoute: (settings) => MaterialPageRoute(
-                              builder: (context) => DialogManager(
-                                    child: widget,
-                                  ))),
-                      Positioned(
-                          bottom: 120,
-                          right: 0,
-                          child: Material(
-                            color: Colors.transparent,
-                            child: RotatedBox(
-                              quarterTurns: 1,
-                              child: Text(
-                                // 'v ',
-                                'v ${packageInfo.version}.${packageInfo.buildNumber}',
-                                style: const TextStyle(
-                                    fontSize: 10, color: Color(0x44ffffff)),
-                              ),
+        child: ThemeBuilder(
+            // statusBarColorBuilder: (theme) => theme.colorScheme.,
+            defaultThemeMode: ThemeMode.light,
+            darkTheme: kThemeData(isDark: true),
+            lightTheme: kThemeData(isDark: false),
+            statusBarColorBuilder: (p0) {
+              return Colors.transparent;
+            },
+            builder: (context, regularTheme, darkTheme, themeMode) {
+              return MaterialApp(
+                theme: regularTheme,
+                darkTheme: darkTheme,
+                themeMode: themeMode,
+                debugShowCheckedModeBanner: false,
+                navigatorKey: locator<NavigationService>().navigatorKey,
+                builder: (context, widget) => Stack(
+                  children: [
+                    Navigator(
+                        key: locator<DialogService>().navigatorKey,
+                        onGenerateRoute: (settings) => MaterialPageRoute(
+                            builder: (context) => DialogManager(
+                                  child: widget,
+                                ))),
+                    Positioned(
+                        bottom: 120,
+                        right: 0,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: RotatedBox(
+                            quarterTurns: 1,
+                            child: Text(
+                              // 'v ',
+                              'v ${packageInfo.version}.${packageInfo.buildNumber}',
+                              style: const TextStyle(
+                                  fontSize: 10, color: Color(0x44ffffff)),
                             ),
-                          ))
-                    ],
-                  ),
-                  localizationsDelegates: [
-                    flutterI18nDelegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate
+                          ),
+                        ))
                   ],
+                ),
+                localizationsDelegates: [
+                  flutterI18nDelegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate
+                ],
 
-                  supportedLocales: const [
-                    Locale("en", ""), // English
-                    Locale("zh", ""), // Chinese
-                    // Locale("hi", ""), // Hindi India
-                  ],
-                  onGenerateTitle: (BuildContext context) =>
-                      FlutterI18n.translate(context, "title"),
+                supportedLocales: const [
+                  Locale("en", ""), // English
+                  Locale("zh", ""), // Chinese
+                  // Locale("hi", ""), // Hindi India
+                ],
+                onGenerateTitle: (BuildContext context) =>
+                    FlutterI18n.translate(context, "title"),
 
-                  onGenerateRoute: RouteGenerator.generateRoute,
-                  title: 'Exchangily Wallet',
+                onGenerateRoute: RouteGenerator.generateRoute,
+                title: 'Exchangily Wallet',
 
-                  // Removed the home and scaffold because initial route has set
-                  initialRoute: '/',
-                );
-              }),
-        ),
+                // Removed the home and scaffold because initial route has set
+                initialRoute: '/',
+              );
+            }),
       ),
     );
   }

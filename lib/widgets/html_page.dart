@@ -34,11 +34,11 @@ class HtmlPage extends StatelessWidget {
               border: const Border(bottom: BorderSide(color: Colors.grey)),
             ),
             "th": Style(
-              padding: const EdgeInsets.all(6),
+              padding: HtmlPaddings.all(6),
               backgroundColor: Colors.grey,
             ),
             "td": Style(
-              padding: const EdgeInsets.all(6),
+              padding: HtmlPaddings.all(6),
             ),
             "var": Style(fontFamily: 'serif'),
           },

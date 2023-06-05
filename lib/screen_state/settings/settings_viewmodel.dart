@@ -245,8 +245,9 @@ class SettingsViewModel extends BaseViewModel {
   toggleTheme() {
     setBusy(true);
     storageService.isDarkMode = !storageService.isDarkMode;
-
+    notifyListeners();
     getThemeManager(context).toggleDarkLightTheme();
+
     setBusy(false);
   }
 
@@ -343,6 +344,7 @@ class SettingsViewModel extends BaseViewModel {
       log.e(error);
       isDeleting = false;
       setBusy(false);
+      return error.toString();
     });
     isDeleting = false;
     setBusy(false);
@@ -391,6 +393,7 @@ class SettingsViewModel extends BaseViewModel {
       }).catchError((error) {
         log.e(error);
         setBusy(false);
+        return error.toString();
       });
     }
     setBusy(false);

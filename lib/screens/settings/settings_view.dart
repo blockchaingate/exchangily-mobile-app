@@ -20,6 +20,7 @@ import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/wallet/kyc_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_themes/stacked_themes.dart';
@@ -36,7 +37,9 @@ class SettingsView extends StatelessWidget {
     final LocalStorageService storageService = locator<LocalStorageService>();
     var themeService = locator<ThemeService>();
     if (storageService.isDarkMode) {
-      themeService.setThemeMode(ThemeManagerMode.dark);
+      themeService.setThemeMode(
+        ThemeManagerMode.dark,
+      );
     }
     return ViewModelBuilder<SettingsViewModel>.reactive(
       disposeViewModel: true,
@@ -50,20 +53,25 @@ class SettingsView extends StatelessWidget {
           model.onBackButtonPressed();
           return Future(() => false);
         },
-        child: Scaffold(
-          // When the keyboard appears, the Flutter widgets resize to avoid that we use resizeToAvoidBottomInset: false
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(FlutterI18n.translate(context, "settings"),
-                style: Theme.of(context).textTheme.displaySmall),
-            //   backgroundColor: Theme.of(context).canvasColor,
-            leading: Container(),
+        child: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: storageService.isDarkMode
+              ? SystemUiOverlayStyle.light
+              : SystemUiOverlayStyle.dark,
+          child: Scaffold(
+            // When the keyboard appears, the Flutter widgets resize to avoid that we use resizeToAvoidBottomInset: false
+            // resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              centerTitle: true,
+              title: Text(FlutterI18n.translate(context, "settings"),
+                  style: Theme.of(context).textTheme.displaySmall),
+              //   backgroundColor: Theme.of(context).canvasColor,
+              leading: Container(),
+            ),
+            body: model.isBusy
+                ? Center(child: model.sharedService.loadingIndicator())
+                : SettingsContainer(model: model),
+            bottomNavigationBar: BottomNavBar(count: 4),
           ),
-          body: model.isBusy
-              ? Center(child: model.sharedService.loadingIndicator())
-              : SettingsContainer(model: model),
-          bottomNavigationBar: BottomNavBar(count: 4),
         ),
       ),
     );

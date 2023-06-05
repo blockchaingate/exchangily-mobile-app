@@ -1171,13 +1171,12 @@ class WalletDashboardViewModel extends BaseViewModel {
                               UIHelper.verticalSpaceSmall,
                               TextField(
                                 minLines: 1,
-                                style: const TextStyle(color: white),
+                                // style: const TextStyle(color: white),
                                 controller: freeFabAnswerTextController,
                                 obscureText: false,
                                 decoration: const InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: white, width: 1)),
+                                      borderSide: BorderSide(width: 1)),
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                           color: primaryColor, width: 1)),
@@ -1185,10 +1184,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                                   isDense: true,
                                   icon: Icon(
                                     Icons.question_answer,
-                                    color: white,
                                   ),
                                 ),
-                                cursorColor: white,
                               ),
                               UIHelper.verticalSpaceSmall,
                               postFreeFabResult != ''
