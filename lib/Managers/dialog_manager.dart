@@ -198,14 +198,11 @@ class DialogManagerState extends State<DialogManager> {
           children: <Widget>[
             TextField(
               autofocus: true,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyLarge,
               controller: controller,
               obscureText: true,
               decoration: InputDecoration(
-                labelStyle: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(color: white),
+                labelStyle: Theme.of(context).textTheme.labelMedium,
                 icon: const Icon(
                   Icons.security,
                   color: primaryColor,

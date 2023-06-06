@@ -177,9 +177,13 @@ class WalletDashboardViewModel extends BaseViewModel {
     getConfirmDepositStatus();
 
     checkAnnouncement();
-
-    customTokens = await apiService!.getCustomTokens();
-    await getBalanceForSelectedCustomTokens();
+    try {
+      customTokens = await apiService!.getCustomTokens();
+      await getBalanceForSelectedCustomTokens();
+    } catch (err) {
+      log.e('custom tokens CATCH $err');
+      setBusy(false);
+    }
     setBusy(false);
 
     try {

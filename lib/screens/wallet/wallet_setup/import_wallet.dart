@@ -12,18 +12,23 @@
 */
 
 import 'package:exchangilymobileapp/constants/custom_styles.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/confirm_mnemonic_viemodel.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/confirm_mnemonic/verify_mnemonic.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
 
 class ImportWalletView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var storageService = locator<LocalStorageService>();
+
+    final navigationService = locator<NavigationService>();
     print('is Dark: ${storageService.isDarkMode}}');
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => ConfirmMnemonicViewmodel(),
@@ -34,11 +39,18 @@ class ImportWalletView extends StatelessWidget {
         backgroundColor: Theme.of(context).canvasColor,
         appBar: AppBar(
             centerTitle: true,
+            leading: IconButton(
+              icon: Icon(MdiIcons.arrowLeft,
+                  size: 28, color: Theme.of(context).hintColor),
+              onPressed: () {
+                navigationService.navigateTo(WalletSetupViewRoute);
+              },
+            ),
             title: Text(
               FlutterI18n.translate(context, "importWallet"),
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            backgroundColor: Theme.of(context).canvasColor.withOpacity(0.2)),
+            backgroundColor: Theme.of(context).canvasColor),
         body: Container(
           alignment: Alignment.center,
           padding: const EdgeInsets.all(10),

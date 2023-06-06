@@ -113,9 +113,8 @@ class WalletFeaturesView extends StatelessWidget {
                             child: Row(
                               children: <Widget>[
                                 Text(model.specialTicker!,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium),
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge),
                                 const Icon(
                                   Icons.arrow_forward,
                                   size: 17,
@@ -123,7 +122,7 @@ class WalletFeaturesView extends StatelessWidget {
                                 ),
                                 Text(walletInfo!.name ?? '',
                                     style:
-                                        Theme.of(context).textTheme.titleMedium)
+                                        Theme.of(context).textTheme.titleLarge)
                               ],
                             ),
                           ),
@@ -249,8 +248,7 @@ class WalletFeaturesView extends StatelessWidget {
                                 padding: const EdgeInsets.only(left: 4.0),
                                 child: Text(
                                   model.features[6].name,
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
+                                  style: Theme.of(context).textTheme.titleLarge,
                                 ),
                               )
                             ],
@@ -314,7 +312,7 @@ class WalletFeaturesView extends StatelessWidget {
                         FlutterI18n.translate(context, "totalBalance"),
                         style: Theme.of(context)
                             .textTheme
-                            .titleMedium!
+                            .titleLarge!
                             .copyWith(color: buyPrice),
                       ),
                     ),
@@ -344,7 +342,7 @@ class WalletFeaturesView extends StatelessWidget {
                         textAlign: TextAlign.right,
                         style: Theme.of(context)
                             .textTheme
-                            .titleMedium!
+                            .titleLarge!
                             .copyWith(color: buyPrice),
                       ),
                     )
@@ -361,7 +359,7 @@ class WalletFeaturesView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(FlutterI18n.translate(context, "walletbalance"),
-                        style: Theme.of(context).textTheme.titleMedium),
+                        style: Theme.of(context).textTheme.titleLarge),
                     Text(
                         '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.availableBalance, precision: model.decimalLimit!).toString()} ${model.specialTicker}',
                         style: Theme.of(context).textTheme.bodyLarge),
@@ -398,14 +396,14 @@ class WalletFeaturesView extends StatelessWidget {
                       flex: 4,
                       child: Text(
                           '${FlutterI18n.translate(context, "inExchange")} ${model.specialTicker!.contains('(') && model.walletInfo!.tickerName != 'USDT' && model.walletInfo!.tickerName != 'MATICM' ? '\n$message $nativeTicker' : ''}',
-                          style: Theme.of(context).textTheme.titleMedium),
+                          style: Theme.of(context).textTheme.titleLarge),
                     ),
                     Expanded(
                         flex: 4,
                         child: Text(
                             '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.inExchange!, precision: model.decimalLimit!).toString()} ${model.specialTicker}',
                             textAlign: TextAlign.right,
-                            style: Theme.of(context).textTheme.titleMedium)),
+                            style: Theme.of(context).textTheme.titleLarge)),
                   ],
                 ),
               ),
@@ -421,7 +419,7 @@ class WalletFeaturesView extends StatelessWidget {
                             flex: 4,
                             child: Text(
                                 '${FlutterI18n.translate(context, "totalLockedBalance")} ${model.specialTicker!.contains('(') && model.walletInfo!.tickerName != 'USDT' ? '\n$message $nativeTicker' : ''}',
-                                style: Theme.of(context).textTheme.titleMedium),
+                                style: Theme.of(context).textTheme.titleLarge),
                           ),
                           Expanded(
                               flex: 4,
@@ -429,7 +427,7 @@ class WalletFeaturesView extends StatelessWidget {
                                   '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo!.lockedBalance!, precision: model.decimalLimit!).toString()} ${model.specialTicker}',
                                   textAlign: TextAlign.right,
                                   style:
-                                      Theme.of(context).textTheme.titleMedium)),
+                                      Theme.of(context).textTheme.titleLarge)),
                         ],
                       ),
                     )
@@ -479,7 +477,7 @@ class WalletFeaturesView extends StatelessWidget {
                 Text(
                   model.features[index].name,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleLarge,
                 )
               ],
             ),

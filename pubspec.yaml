@@ -2,7 +2,7 @@ name: exchangilymobileapp
 description: Decentralized Wallet App.
 publish_to: none
 
-version: 2.2.101+283
+version: 2.2.102+284
 environment:
   sdk: ">=2.12.0 <3.0.0"
 
@@ -17,7 +17,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.0.2
-  flutter_html: ^3.0.0-alpha.6
+  flutter_html: 3.0.0-beta.2
   flutter_localizations:
     sdk: flutter
   #flutter_svg: ^0.23.0+1
@@ -114,6 +114,7 @@ flutter:
     - assets/images/lightning-remit/
     - assets/cert/
     - assets/i18n/
+    - envs/
 flutter_icons:
   image_path: "assets/images/launcher/mobile-icon-ios.png"
 

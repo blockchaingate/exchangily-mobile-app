@@ -30,7 +30,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   final DialogService _dialogService = locator<DialogService>();
   WalletService? walletService = locator<WalletService>();
   ApiService? apiService = locator<ApiService>();
-  SharedService? sharedService = locator<SharedService>();
+  SharedService sharedService = locator<SharedService>();
   TokenInfoDatabaseService? tokenListDatabaseService =
       locator<TokenInfoDatabaseService>();
   CoreWalletDatabaseService? coreWalletDatabaseService =
@@ -330,7 +330,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     setBusy(true);
 
     if (amountController.text.isEmpty) {
-      sharedService!.sharedSimpleNotification(
+      sharedService.sharedSimpleNotification(
           FlutterI18n.translate(context, "amountMissing"),
           subtitle: FlutterI18n.translate(context, "pleaseEnterValidNumber"));
 
@@ -339,22 +339,22 @@ class MoveToExchangeViewModel extends BaseViewModel {
     }
     if (gasAmount == Constants.decimalZero ||
         transFee == Constants.decimalZero) {
-      sharedService!.sharedSimpleNotification(
+      sharedService.sharedSimpleNotification(
           FlutterI18n.translate(context, "notice"),
           subtitle: FlutterI18n.translate(context, "insufficientGasAmount"));
 
       setBusy(false);
       return;
     }
-    Decimal feeBalance = Constants.decimalZero;
+    Decimal checkTransFeeAgainst = Constants.decimalZero;
     if (tokenType!.isEmpty) {
-      feeBalance =
+      checkTransFeeAgainst =
           NumberUtil.parseDoubleToDecimal(walletInfo!.availableBalance);
     } else {
-      feeBalance = chainBalance;
+      checkTransFeeAgainst = chainBalance;
     }
-    if (transFee > feeBalance && !isTrx()) {
-      sharedService!.sharedSimpleNotification(
+    if (transFee > checkTransFeeAgainst && !isTrx()) {
+      sharedService.sharedSimpleNotification(
           FlutterI18n.translate(context, "insufficientBalance"),
           subtitle:
               '${FlutterI18n.translate(context, "gasFee")} $transFee > ${FlutterI18n.translate(context, "walletbalance")} ${walletInfo!.availableBalance}');
@@ -436,7 +436,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
         isCorrectAmount = false;
       }
       if (!isCorrectAmount) {
-        sharedService!.alertDialog(
+        sharedService.alertDialog(
             '${FlutterI18n.translate(context, "fee")} ${FlutterI18n.translate(context, "notice")}',
             'TRX ${FlutterI18n.translate(context, "insufficientBalance")}',
             isWarning: false);
@@ -643,7 +643,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     } else if (res.isRequiredUpdate!) {
       log.e('Wallet update required');
       setBusy(false);
-      sharedService!.sharedSimpleNotification(
+      sharedService.sharedSimpleNotification(
           FlutterI18n.translate(context, "importantWalletUpdateNotice"));
     } else {
       log.e('Wrong pass');

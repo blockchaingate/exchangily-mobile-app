@@ -18,10 +18,7 @@ ThemeData kThemeData(
   Color blackOrWhite = isDark ? white : black;
   return ThemeData(
     brightness: isDark ? Brightness.dark : Brightness.light,
-    appBarTheme: AppBarTheme(
-      systemOverlayStyle:
-          isDark ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light,
-    ),
+
     // added unselectedWidgetColor to update inactive radio button's color
     unselectedWidgetColor: blackOrWhite,
     disabledColor: grey.withAlpha(100),
@@ -75,8 +72,8 @@ ThemeData kThemeData(
         labelLarge: TextStyle(
             fontSize: 14,
             color: isDark ? white : getTextColor(backgroundColor)),
-        labelMedium: TextStyle(fontSize: 12, color: isDark ? white : black),
-        labelSmall: TextStyle(fontSize: 10, color: isDark ? white : black),
+        labelMedium: TextStyle(fontSize: 12, color: blackOrWhite),
+        labelSmall: TextStyle(fontSize: 10, color: blackOrWhite),
         displayLarge: TextStyle(
             fontSize: 22,
             color: blackOrWhite,

@@ -11,6 +11,10 @@ import 'package:intl/intl.dart';
 class NumberUtil {
   int? maxDecimalDigits;
   final log = getLogger('NumberUtil');
+
+  static BigInt doubleToBigInt(double value, {int decimal = 18}) =>
+      decimalToBigInt(parseDoubleToDecimal(value), decimalPrecision: decimal);
+
   static checkRegexAmount(double amount) =>
       RegexValidator(Constants.regexPattern.toString())
           .isValid(amount.toString());

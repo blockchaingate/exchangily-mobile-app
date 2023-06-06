@@ -31,6 +31,7 @@ class ConfirmMnemonicView extends StatelessWidget {
     return ViewModelBuilder<ConfirmMnemonicViewModel>.reactive(
       viewModelBuilder: () => ConfirmMnemonicViewModel(),
       onViewModelReady: (model) {
+        model.context = context;
         model.init();
         model.randomMnemonicList.addAll(randomMnemonicListFromRoute!);
         randomMnemonicListFromRoute!.shuffle();
@@ -43,6 +44,13 @@ class ConfirmMnemonicView extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
               centerTitle: true,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back,
+                    size: 28, color: Theme.of(context).hintColor),
+                onPressed: () {
+                  model.navigationService.goBack();
+                },
+              ),
               title: Text(
                 '${FlutterI18n.translate(context, "confirm")} ${FlutterI18n.translate(context, "mnemonic")}',
                 style: Theme.of(context).textTheme.displaySmall,
@@ -76,7 +84,6 @@ class ConfirmMnemonicView extends StatelessWidget {
                                       ? FontWeight.bold
                                       : FontWeight.normal)),
                       onPressed: () {
-                        //    model.shuffleStringList();
                         model.selectConfirmMethod('tap');
                       },
                     ),
@@ -119,7 +126,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                         children: [
                           TextButton(
                               onPressed: () {
-                                model.clearTappedList();
+                                model.resetList();
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -170,8 +177,7 @@ class ConfirmMnemonicView extends StatelessWidget {
                                     },
                                     controller: model.tapTextControllerList[i],
                                     textAlign: TextAlign.center,
-                                    textAlignVertical:
-                                        const TextAlignVertical(y: 0.7),
+
                                     enableInteractiveSelection:
                                         false, // readonly
                                     // enabled: false, // if false use cant see the selection border around

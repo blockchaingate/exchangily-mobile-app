@@ -64,7 +64,7 @@ class MoveToExchangeScreen extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).cardColor,
         body: Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(20),
           child: ListView(
             children: <Widget>[
               TextField(

@@ -2705,8 +2705,7 @@ class WalletService {
               string_utils
                   .trimHexPrefix(convertedDecimalAmount.toRadixString(16)),
               64);
-      var apiUrl =
-          environment["chains"]["ETH"]["infura"]; //Replace with your API
+      var apiUrl = environment["chains"]["ETH"]["infura"];
       // client.Client httpClient;
       var ethClient = Web3Client(apiUrl, httpClient);
       debugPrint(
@@ -2730,7 +2729,7 @@ class WalletService {
         txHash = res['txHash'];
         errMsg = res['errMsg'];
       } else {
-        // txHash = ethUtils.getTransactionHash(signed);
+        txHash = ethUtils.getTransactionHash(signed);
       }
     } else if (tokenType == 'BNB' ||
         tokenType == 'MATIC' ||

@@ -41,13 +41,13 @@ import '../../../shared/ui_helpers.dart';
 
 class WalletSetupViewmodel extends BaseViewModel {
   final log = getLogger('WalletSetupViewmodel');
-  SharedService? sharedService = locator<SharedService>();
+  SharedService sharedService = locator<SharedService>();
   final WalletDatabaseService? walletDatabaseService =
       locator<WalletDatabaseService>();
   WalletService? walletService = locator<WalletService>();
   final NavigationService? navigationService = locator<NavigationService>();
   final LocalAuthService? authService = locator<LocalAuthService>();
-  final LocalStorageService? storageService = locator<LocalStorageService>();
+  final LocalStorageService storageService = locator<LocalStorageService>();
   final CoreWalletDatabaseService? coreWalletDatabaseService =
       locator<CoreWalletDatabaseService>();
   TransactionHistoryDatabaseService? transactionHistoryDatabaseService =
@@ -153,7 +153,8 @@ class WalletSetupViewmodel extends BaseViewModel {
                           child: Text(
                             FlutterI18n.translate(context, "accept"),
                             style: headText5.copyWith(
-                                color: black, fontWeight: FontWeight.w400),
+                                color: getTextColor(primaryColor),
+                                fontWeight: FontWeight.w400),
                           )),
                     ],
                   ),

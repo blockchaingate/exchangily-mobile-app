@@ -196,7 +196,7 @@ class LightningRemitView extends StatelessWidget {
                                               context, "scanBarCode"),
                                           icon: Icon(
                                             Icons.camera_alt,
-                                            color: white,
+                                            color: Theme.of(context).hintColor,
                                             size: 18,
                                           ),
                                           onPressed: () {

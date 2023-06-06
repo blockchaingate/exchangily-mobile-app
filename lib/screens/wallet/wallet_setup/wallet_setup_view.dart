@@ -19,7 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
-import '../../../shared/globals.dart' as globals;
 
 class WalletSetupView extends StatelessWidget {
   const WalletSetupView({Key? key}) : super(key: key);
@@ -30,7 +29,6 @@ class WalletSetupView extends StatelessWidget {
       viewModelBuilder: () => WalletSetupViewmodel(),
       onViewModelReady: (WalletSetupViewmodel model) async {
         model.context = context;
-
         model.init();
       },
       builder: (context, WalletSetupViewmodel model, child) => WillPopScope(
@@ -40,26 +38,35 @@ class WalletSetupView extends StatelessWidget {
         },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 40),
-          color: !model.storageService!.isDarkMode
-              ? Theme.of(context).cardColor.withOpacity(0.85)
+          color: !model.storageService.isDarkMode
+              ? Theme.of(context).cardColor.withOpacity(0.95)
               : Theme.of(context).cardColor,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
+              UIHelper.verticalSpaceSmall,
+              Card(
+                child: IconButton(
+                    onPressed: () => model.sharedService.toggleTheme(),
+                    icon: Icon(model.storageService.isDarkMode
+                        ? Icons.dark_mode
+                        : Icons.light_mode)),
+              ),
               // Logo Container
-              UIHelper.verticalSpaceLarge,
-              // UIHelper.verticalSpaceLarge,
+
               Column(
                 children: [
                   SizedBox(
                     height: 50,
                     child: Container(
-                        color: model.storageService!.isDarkMode
-                            ? Colors.transparent
-                            : secondaryColor.withOpacity(0.25),
-                        child:
-                            Image.asset('assets/images/start-page/logo.png')),
+                        // color: model.storageService!.isDarkMode
+                        //     ? Colors.transparent
+                        //     : secondaryColor.withOpacity(0.25),
+                        child: Image.asset(
+                      'assets/images/start-page/logo.png',
+                      //  color: primaryColor,
+                    )),
                   ),
                   Container(
                       padding: const EdgeInsets.all(8.0),
@@ -100,8 +107,8 @@ class WalletSetupView extends StatelessWidget {
               // Button Container
               model.isBusy
                   ? Shimmer.fromColors(
-                      baseColor: globals.primaryColor,
-                      highlightColor: globals.white,
+                      baseColor: primaryColor,
+                      highlightColor: white,
                       child: Center(
                         child: Column(
                           children: [
@@ -123,8 +130,8 @@ class WalletSetupView extends StatelessWidget {
                     )
                   : model.isWallet
                       ? Shimmer.fromColors(
-                          baseColor: globals.primaryColor,
-                          highlightColor: globals.white,
+                          baseColor: primaryColor,
+                          highlightColor: white,
                           child: Center(
                             child: Text(
                               '${FlutterI18n.translate(context, "restoringWallet")}...',

@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -46,7 +47,10 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(FlutterI18n.translate(context, "secureYourWallet"),
-              style: Theme.of(context).textTheme.headlineMedium),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium!
+                  .copyWith(color: getTextColor(primaryColor))),
           backgroundColor: primaryColor.withOpacity(0.85),
         ),
         body: Container(
@@ -268,10 +272,8 @@ class CreatePasswordScreenState extends State<CreatePasswordScreen> {
           widget.args['isImport']
               ? FlutterI18n.translate(context, "importWallet")
               : FlutterI18n.translate(context, "createWallet"),
-          style: Theme.of(context)
-              .textTheme
-              .headlineMedium!
-              .copyWith(fontWeight: FontWeight.w400),
+          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+              fontWeight: FontWeight.w400, color: getTextColor(primaryColor)),
         ),
       ),
     );

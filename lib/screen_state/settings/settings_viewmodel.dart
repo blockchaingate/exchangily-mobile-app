@@ -243,12 +243,9 @@ class SettingsViewModel extends BaseViewModel {
   }
 
   toggleTheme() {
-    setBusy(true);
     storageService.isDarkMode = !storageService.isDarkMode;
     notifyListeners();
     getThemeManager(context).toggleDarkLightTheme();
-
-    setBusy(false);
   }
 
 /*-------------------------------------------------------------------------------------

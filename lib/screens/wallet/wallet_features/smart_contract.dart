@@ -35,11 +35,11 @@ class SmartContract extends StatefulWidget {
 
 class _SmartContractState extends State<SmartContract> {
   final log = getLogger('SmartContract');
-  String? _currentFunction;
-  String? _smartContractName;
+  String? _currentFunction = '';
+  String? _smartContractName = '';
   var abis;
   var functionHex;
-  late var abi;
+  var abi;
 
   final DialogService _dialogService = locator<DialogService>();
   WalletService? walletService = locator<WalletService>();
@@ -176,7 +176,7 @@ class _SmartContractState extends State<SmartContract> {
                 Text(FlutterI18n.translate(context, "smartContractName"),
                     style: const TextStyle(color: Colors.grey, fontSize: 18.0)),
                 const SizedBox(height: 10),
-                Text(_smartContractName!,
+                Text(_smartContractName ?? '',
                     style:
                         const TextStyle(color: Colors.white, fontSize: 18.0)),
                 const SizedBox(height: 20),

@@ -23,17 +23,15 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../../shared/globals.dart' as globals;
 
-class BackupMnemonicWalletScreen extends StatefulWidget {
-  const BackupMnemonicWalletScreen({Key? key}) : super(key: key);
+class BackupMnemonicView extends StatefulWidget {
+  const BackupMnemonicView({Key? key}) : super(key: key);
   static List<String> randomMnemonicList = [];
 
   @override
-  BackupMnemonicWalletScreenState createState() =>
-      BackupMnemonicWalletScreenState();
+  BackupMnemonicViewState createState() => BackupMnemonicViewState();
 }
 
-class BackupMnemonicWalletScreenState
-    extends State<BackupMnemonicWalletScreen> {
+class BackupMnemonicViewState extends State<BackupMnemonicView> {
   WalletService? walletService = locator<WalletService>();
   final NavigationService? navigationService = locator<NavigationService>();
   @override
@@ -41,7 +39,7 @@ class BackupMnemonicWalletScreenState
     super.initState();
     final randomMnemonicString = walletService!.getRandomMnemonic();
     // convert string to list to iterate and display single word in a textbox
-    BackupMnemonicWalletScreen.randomMnemonicList =
+    BackupMnemonicView.randomMnemonicList =
         randomMnemonicString.split(" ").toList();
   }
 
@@ -53,18 +51,16 @@ class BackupMnemonicWalletScreenState
         return Future(() => false);
       },
       child: Scaffold(
+        // backgroundColor: ,
         appBar: AppBar(
           centerTitle: true,
           elevation: 0,
           title: Text(FlutterI18n.translate(context, "backupMnemonic"),
               style: Theme.of(context).textTheme.displaySmall),
-          backgroundColor: Theme.of(context).canvasColor,
+          backgroundColor: Theme.of(context).canvasColor.withOpacity(0.5),
           leading: IconButton(
-            icon: const Icon(
-              MdiIcons.arrowLeft,
-              size: 28,
-              color: Colors.black,
-            ),
+            icon: Icon(MdiIcons.arrowLeft,
+                size: 28, color: Theme.of(context).hintColor),
             onPressed: () {
               navigationService!.navigateTo(WalletSetupViewRoute);
             },
@@ -176,8 +172,7 @@ class BackupMnemonicWalletScreenState
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamed('/confirmMnemonic',
-                          arguments:
-                              BackupMnemonicWalletScreen.randomMnemonicList);
+                          arguments: BackupMnemonicView.randomMnemonicList);
                     },
                   ),
                 ),
@@ -200,10 +195,10 @@ class BackupMnemonicWalletScreenState
       children: _buildButtonGrid(12));
 
   List<Widget> _buildButtonGrid(int count) => List.generate(count, (i) {
-        var singleWord = BackupMnemonicWalletScreen.randomMnemonicList[i];
+        var singleWord = BackupMnemonicView.randomMnemonicList[i];
         return TextField(
           textAlign: TextAlign.center,
-          textAlignVertical: const TextAlignVertical(y: 0.8),
+          // textAlignVertical: const TextAlignVertical(y: 0.5),
           enableInteractiveSelection: false, // readonly
           // enabled: false, // if false use cant see the selection border around
           readOnly: true,

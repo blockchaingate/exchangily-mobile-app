@@ -38,6 +38,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:package_info/package_info.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../shared/globals.dart' as globals;
@@ -45,7 +46,7 @@ import '../shared/globals.dart' as globals;
 class SharedService {
   BuildContext? context;
   final log = getLogger('SharedService');
-  final LocalStorageService? storageService = locator<LocalStorageService>();
+  final LocalStorageService storageService = locator<LocalStorageService>();
   NavigationService? navigationService = locator<NavigationService>();
   final TokenInfoDatabaseService? tokenListDatabaseService =
       locator<TokenInfoDatabaseService>();
@@ -56,10 +57,16 @@ class SharedService {
 
   Future<ClipboardData?> pasteClipBoardData() async {
     ClipboardData? data;
-    if (data != null) {
-      data = (await Clipboard.getData(Clipboard.kTextPlain))!;
-    }
+
+    data = (await Clipboard.getData(Clipboard.kTextPlain))!;
+
     return data;
+  }
+
+  toggleTheme() {
+    storageService.isDarkMode = !storageService.isDarkMode;
+
+    getThemeManager(context!).toggleDarkLightTheme();
   }
 
 /*--------------------------------------------------------------------------

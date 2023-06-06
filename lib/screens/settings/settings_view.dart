@@ -64,7 +64,7 @@ class SettingsView extends StatelessWidget {
               centerTitle: true,
               title: Text(FlutterI18n.translate(context, "settings"),
                   style: Theme.of(context).textTheme.displaySmall),
-              //   backgroundColor: Theme.of(context).canvasColor,
+              backgroundColor: Theme.of(context).canvasColor,
               leading: Container(),
             ),
             body: model.isBusy

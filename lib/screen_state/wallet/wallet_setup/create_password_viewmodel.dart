@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/route_names.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/core_wallet_database_service.dart';
@@ -20,6 +21,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:stacked/stacked.dart';
 
@@ -121,7 +123,19 @@ class CreatePasswordViewModel extends BaseViewModel {
           FlutterI18n.translate(context, "emptyPassword"),
           subtitle:
               FlutterI18n.translate(context, "pleaseFillBothPasswordFields"));
-
+      if (!isProduction) {
+        String? localEnv;
+        try {
+          localEnv = dotenv.env['PASSWORD'];
+        } catch (err) {
+          localEnv = null;
+          log.e('dot env can not find local env password');
+        }
+        passTextController.text = localEnv ?? '';
+        if (passTextController.text.isNotEmpty) {
+          createOfflineWallets();
+        }
+      }
       setBusy(false);
       return;
     } else {

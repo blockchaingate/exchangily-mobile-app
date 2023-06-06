@@ -12,6 +12,8 @@
 */
 
 // -----------------------------------burayi ac ----------------------------------------
+
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -21,6 +23,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:path/path.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../../logger.dart';
@@ -42,12 +45,15 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
   bool isTap = true;
   List<String> tappedMnemonicList = [];
   List<String> shuffledList = [];
-  final NavigationService? navigationService = locator<NavigationService>();
+  final NavigationService navigationService = locator<NavigationService>();
+  final sharedService = locator<SharedService>();
   List<int> lastIndexList = [];
+  BuildContext? context;
 /*----------------------------------------------------------------------
                     init
 ----------------------------------------------------------------------*/
   init() {
+    sharedService.context = context;
     fillTapControllerList();
   }
 
@@ -55,14 +61,13 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
                     onBackButtonPressed
 ----------------------------------------------------------------------*/
   onBackButtonPressed() async {
-    await navigationService!.navigateTo(BackupMnemonicViewRoute);
+    await navigationService.navigateTo(BackupMnemonicViewRoute);
   }
 
 /*----------------------------------------------------------------------
                     Clear tapped list
 ----------------------------------------------------------------------*/
-  clearTappedList() {
-    setBusy(true);
+  resetList() {
     tappedMnemonicList.clear();
 
     lastIndexList = [];
@@ -73,7 +78,7 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
       }
     }
 
-    setBusy(false);
+    notifyListeners();
   }
 
   selectWordsInOrder(int i, String singleWord) {
@@ -171,9 +176,12 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
                     Verify mnemonic
 ----------------------------------------------------------------------*/
 
-  verifyMnemonic(controller, context, count, routeName) {
+  verifyMnemonic(List controller, context, count, routeName) {
     userTypedMnemonicList.clear();
-
+    if (controller.isEmpty || controller.length != 12) {
+      log.e('Didn\'t confirm mnemonic');
+      return;
+    }
     debugPrint(routeName.toString());
     debugPrint(isTap.toString());
     if (routeName == 'import') isTap = false;
@@ -200,16 +208,12 @@ class ConfirmMnemonicViewModel extends BaseViewModel {
         if (isValid) {
           importWallet(listToStringMnemonic, context);
         } else {
-          showSimpleNotification(
-              Text(FlutterI18n.translate(context, 'invalidMnemonic'),
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium
-                      ?.copyWith(color: red, fontWeight: FontWeight.bold)),
-              background: Theme.of(context).canvasColor,
+          sharedService.sharedSimpleNotification(
+              FlutterI18n.translate(context, 'invalidMnemonic'),
+              isError: true,
               position: NotificationPosition.bottom,
-              subtitle: Text(FlutterI18n.translate(
-                  context, 'pleaseFillAllTheTextFieldsCorrectly')));
+              subtitle: FlutterI18n.translate(
+                  context, 'pleaseFillAllTheTextFieldsCorrectly'));
         }
       } else {
         showSimpleNotification(
