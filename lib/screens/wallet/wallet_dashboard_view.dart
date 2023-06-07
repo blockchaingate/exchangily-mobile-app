@@ -1023,7 +1023,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                           style: const TextStyle(fontSize: 8, color: white));
                     },
                   )),
-              UIHelper.horizontalSpaceSmall,
+              UIHelper.horizontalSpaceMedium,
               // Tickername available locked and inexchange column
               Expanded(
                 flex: 3,
@@ -1146,8 +1146,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                             .toString(),
                                     style: Theme.of(context)
                                         .textTheme
-                                        .titleLarge!
-                                        .copyWith(color: white)),
+                                        .titleLarge!),
                               ),
                       ],
                     ),
@@ -1174,7 +1173,13 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                 : UIHelper.horizontalSpaceSmall,
                         isBalanceNegative
                             ? Container()
-                            : Text('\$', style: TextStyle(color: green)),
+                            : Text(
+                                '\$',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall!
+                                    .copyWith(color: green),
+                              ),
                         Expanded(
                           child: Text(
                             isBalanceNegative
@@ -1187,47 +1192,50 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                     .toString(),
                             style: isBalanceNegative
                                 ? const TextStyle(color: grey, fontSize: 13)
-                                : TextStyle(color: green),
+                                : Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall!
+                                    .copyWith(color: green),
                           ),
                         )
                       ],
                     ),
 
                     // Deposit and Withdraw Container Row
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        DepositWidget(
-                            model: model, index: index, tickerName: tickerName),
-                        const Divider(
-                          endIndent: 5,
-                        ),
-                        InkWell(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    FlutterI18n.translate(context, "withdraw"),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall!
-                                        .copyWith(fontSize: 8),
-                                  ),
-                                  const Icon(
-                                    Icons.arrow_upward,
-                                    color: red,
-                                    size: 16,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            onTap: () {
-                              model.routeWithWalletInfoArgs(
-                                  wallets[index], WithdrawViewRoute);
-                            }),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   children: <Widget>[
+                    //     DepositWidget(
+                    //         model: model, index: index, tickerName: tickerName),
+                    //     const Divider(
+                    //       endIndent: 5,
+                    //     ),
+                    //     InkWell(
+                    //         child: Padding(
+                    //           padding: const EdgeInsets.only(top: 8.0),
+                    //           child: Column(
+                    //             children: [
+                    //               Text(
+                    //                 FlutterI18n.translate(context, "withdraw"),
+                    //                 style: Theme.of(context)
+                    //                     .textTheme
+                    //                     .titleSmall!
+                    //                     .copyWith(fontSize: 8),
+                    //               ),
+                    //               const Icon(
+                    //                 Icons.arrow_upward,
+                    //                 color: red,
+                    //                 size: 16,
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //         onTap: () {
+                    //           model.routeWithWalletInfoArgs(
+                    //               wallets[index], WithdrawViewRoute);
+                    //         }),
+                    //   ],
+                    // ),
                     wallets[index].coin == 'FAB' &&
                             wallets[index].unconfirmedBalance != 0
                         ? Row(

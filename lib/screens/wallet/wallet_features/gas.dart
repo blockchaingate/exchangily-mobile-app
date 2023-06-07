@@ -11,11 +11,13 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_i18n/flutter_i18n.dart';
+import '../../../constants/colors.dart';
 import '../../../shared/globals.dart' as globals;
 
 class Gas extends StatelessWidget {
@@ -63,7 +65,10 @@ class Gas extends StatelessWidget {
           },
           child: Text(
             FlutterI18n.translate(context, "addGas"),
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(color: getTextColor(primaryColor)),
           ),
         ),
       ],

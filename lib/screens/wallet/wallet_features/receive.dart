@@ -131,10 +131,9 @@ class ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
               style: generalButtonStyle1,
               child: Text(
                 FlutterI18n.translate(context, "saveAndShareQrCode"),
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium!
-                    .copyWith(fontWeight: FontWeight.w400),
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: getTextColor(primaryColor)),
               ),
               onPressed: () {
                 String receiveFileName = 'qr-code.png';

@@ -105,8 +105,8 @@ class MyApp extends StatelessWidget {
       child: LifeCycleManager(
         child: ThemeBuilder(
             defaultThemeMode: ThemeMode.light,
-            darkTheme: kThemeData(isDark: true),
-            lightTheme: kThemeData(isDark: false),
+            darkTheme: CustomStyles.kThemeData(isDark: true),
+            lightTheme: CustomStyles.kThemeData(isDark: false),
             statusBarColorBuilder: (p0) {
               return Colors.transparent;
             },

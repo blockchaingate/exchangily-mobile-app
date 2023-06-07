@@ -47,24 +47,9 @@ class TransactionHistoryView extends StatelessWidget {
                         ),
                         onPressed: () => model.reloadTransactions())
                   ],
-                  leading: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Theme.of(context).hintColor,
-                      ),
-                      onPressed: () => Navigator.of(context).pop()),
-                  centerTitle: true,
-                  // actions: [
-                  //  IconButton(
-                  //     icon: Icon(Icons.refresh),
-                  //     onPressed: () => {},
-                  //   )
-                  // ],
                   title: Text(
                       FlutterI18n.translate(context, "transactionHistory"),
                       style: Theme.of(context).textTheme.displaySmall),
-                  backgroundColor:
-                      Theme.of(context).canvasColor.withOpacity(0.5),
                 ),
                 body: !model.dataReady || model.isBusy
                     ? SizedBox(

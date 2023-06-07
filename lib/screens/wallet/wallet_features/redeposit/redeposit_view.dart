@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/custom_styles.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -37,14 +38,10 @@ class Redeposit extends StatelessWidget {
       viewModelBuilder: () => RedepositViewModel(),
       builder: (BuildContext context, model, child) => Scaffold(
           appBar: AppBar(
-            centerTitle: true,
             title: Text(
               '${FlutterI18n.translate(context, "redeposit")}  ${walletInfo!.tickerName}  ${FlutterI18n.translate(context, "toExchange")}',
-              style: Theme.of(context).textTheme.headlineMedium,
             ),
-            backgroundColor: const Color(0XFF1f2233),
           ),
-          backgroundColor: const Color(0xFF1F2233),
           body: Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(20.0),
