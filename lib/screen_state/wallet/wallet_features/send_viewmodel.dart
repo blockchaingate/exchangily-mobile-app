@@ -42,6 +42,7 @@ import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.da
     as tron_address_util;
 import 'package:exchangilymobileapp/utils/tron_util/trx_transaction_util.dart'
     as tron_transaction_util;
+import 'package:exchangilymobileapp/utils/wallet/barcode_util.dart';
 import 'package:exchangilymobileapp/utils/wallet/wallet_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1027,13 +1028,13 @@ class SendViewModel extends BaseViewModel {
 
     try {
       log.i("Barcode: try");
-      String barcode = '';
+      String? barcode = '';
       storageService!.isCameraOpen = true;
-      var result = "await BarcodeScanner.scan();";
-      barcode = "result.rawContent";
-      log.i("Barcode Res: $result ");
+      barcode = await BarcodeUtils.majaScan();
 
-      receiverWalletAddressTextController.text = barcode;
+      log.i("Barcode Res: $barcode ");
+
+      receiverWalletAddressTextController.text = barcode.toString();
       setBusy(false);
     } on PlatformException catch (e) {
       log.i("Barcode PlatformException : ");

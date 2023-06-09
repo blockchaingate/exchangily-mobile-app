@@ -32,284 +32,283 @@ class KycWidget extends ViewModelWidget<SettingsViewModel> {
               child: InkWell(
                 onTap: () async {
                   bool wasDarkMode = model.themeService.isDarkMode;
-                  if (wasDarkMode) {
-                    model.themeService.toggleDarkLightTheme();
-                  }
-                  model.kycStarted
-                      ? showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Center(
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                height: 230,
-                                decoration: roundedBoxDecoration(color: white),
-                                child: Stack(
-                                  children: [
-                                    SingleChildScrollView(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          UIHelper.verticalSpaceLarge,
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                FlutterI18n.translate(
-                                                    context, "status"),
-                                                style: headText3,
-                                              ),
-                                              UIHelper.horizontalSpaceMedium,
-                                              Text(
-                                                model.kycCheckResult.kyc!.status
-                                                            .toString() ==
-                                                        '0'
-                                                    ? FlutterI18n.translate(
-                                                        context, "kycStarted")
-                                                    : FlutterI18n.translate(
-                                                        context, "kycApproved"),
-                                                style: headText4,
-                                              )
-                                            ],
-                                          ),
-                                          UIHelper.verticalSpaceMedium,
-                                          UIHelper.divider,
-                                          UIHelper.verticalSpaceMedium,
-                                          Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    FlutterI18n.translate(
-                                                        context, "step"),
+
+                  if (model.kycStarted) {
+                    await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Center(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              height: 230,
+                              decoration: roundedBoxDecoration(
+                                  color: wasDarkMode ? secondaryColor : grey),
+                              child: Stack(
+                                children: [
+                                  SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        UIHelper.verticalSpaceLarge,
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              FlutterI18n.translate(
+                                                  context, "status"),
+                                              style: headText3,
+                                            ),
+                                            UIHelper.horizontalSpaceMedium,
+                                            Text(
+                                              model.kycCheckResult.kyc!.status
+                                                          .toString() ==
+                                                      '0'
+                                                  ? FlutterI18n.translate(
+                                                      context, "kycStarted")
+                                                  : FlutterI18n.translate(
+                                                      context, "kycApproved"),
+                                              style: headText4,
+                                            )
+                                          ],
+                                        ),
+                                        UIHelper.verticalSpaceMedium,
+                                        UIHelper.divider,
+                                        UIHelper.verticalSpaceMedium,
+                                        Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  FlutterI18n.translate(
+                                                      context, "step"),
+                                                  style: headText3,
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 4.0),
+                                                  child: Text(
+                                                    model.kycCheckResult.kyc!
+                                                                .step ==
+                                                            -1
+                                                        ? '0'
+                                                        : model.kycCheckResult
+                                                            .kyc!.step
+                                                            .toString(),
                                                     style: headText3,
                                                   ),
-                                                  Padding(
+                                                ),
+                                                UIHelper.horizontalSpaceMedium,
+                                                Text(
+                                                  FlutterI18n.translate(context,
+                                                      'kycStep${model.kycCheckResult.kyc!.step.toString()}'),
+                                                  style: headText4,
+                                                ),
+                                              ],
+                                            ),
+                                            UIHelper.verticalSpaceSmall,
+                                            model.kycCheckResult.kyc!.step == 7
+                                                ? Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            8.0),
                                                     padding:
-                                                        const EdgeInsets.only(
-                                                            left: 4.0),
-                                                    child: Text(
-                                                      model.kycCheckResult.kyc!
-                                                                  .step ==
-                                                              -1
-                                                          ? '0'
-                                                          : model.kycCheckResult
-                                                              .kyc!.step
-                                                              .toString(),
-                                                      style: headText3,
-                                                    ),
-                                                  ),
-                                                  UIHelper
-                                                      .horizontalSpaceMedium,
-                                                  Text(
-                                                    FlutterI18n.translate(
-                                                        context,
-                                                        'kycStep${model.kycCheckResult.kyc!.step.toString()}'),
-                                                    style: headText4,
-                                                  ),
-                                                ],
-                                              ),
-                                              UIHelper.verticalSpaceSmall,
-                                              model.kycCheckResult.kyc!.step ==
-                                                      7
-                                                  ? Container(
-                                                      margin:
-                                                          const EdgeInsets.all(
-                                                              8.0),
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    decoration:
+                                                        roundedBoxDecoration(
+                                                            color:
+                                                                primaryColor),
+                                                    child: Padding(
                                                       padding:
                                                           const EdgeInsets.all(
                                                               8.0),
-                                                      decoration:
-                                                          roundedBoxDecoration(
-                                                              color:
-                                                                  primaryColor),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Text(
-                                                          FlutterI18n.translate(
-                                                              context,
-                                                              "waitingForApproval"),
-                                                          style: headText5
-                                                              .copyWith(
-                                                                  color: white),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
+                                                      child: Text(
+                                                        FlutterI18n.translate(
+                                                            context,
+                                                            "waitingForApproval"),
+                                                        style:
+                                                            headText5.copyWith(
+                                                                color: white),
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
-                                                    )
-                                                  : TextButton(
-                                                      onPressed: () async {
-                                                        model.setBusy(true);
-                                                        try {
-                                                          final kycService =
-                                                              locator<
-                                                                  KycBaseService>();
-                                                          final kycNavigationService =
-                                                              locator<
-                                                                  KycNavigationService>();
+                                                    ),
+                                                  )
+                                                : TextButton(
+                                                    onPressed: () async {
+                                                      if (wasDarkMode) {
+                                                        model.themeService
+                                                            .toggleDarkLightTheme();
+                                                      }
+                                                      model.setBusy(true);
 
-                                                          var data =
-                                                              'action=login';
+                                                      try {
+                                                        final kycService =
+                                                            locator<
+                                                                KycBaseService>();
+                                                        final kycNavigationService =
+                                                            locator<
+                                                                KycNavigationService>();
 
-                                                          var sig =
-                                                              await LocalKycUtil
-                                                                  .signKycData(
-                                                                      data,
-                                                                      context);
+                                                        var data =
+                                                            'action=login';
 
-                                                          String url = isProduction
-                                                              ? KycConstants
-                                                                  .prodBaseUrl
-                                                              : KycConstants
-                                                                  .testBaseUrl;
+                                                        var sig =
+                                                            await LocalKycUtil
+                                                                .signKycData(
+                                                                    data,
+                                                                    context);
 
-                                                          Map<String, dynamic>
-                                                              res = {};
-                                                          if (sig.isNotEmpty) {
-                                                            res =
-                                                                await kycService
-                                                                    .login(url,
-                                                                        sig);
-                                                            debugPrint(
-                                                                'login res $res');
-                                                            model
-                                                                .setBusy(false);
-                                                            if (res[
-                                                                'success']) {
-                                                              var token = res[
-                                                                          'data']
-                                                                      ['data']
-                                                                  ['token'];
+                                                        String url = isProduction
+                                                            ? KycConstants
+                                                                .prodBaseUrl
+                                                            : KycConstants
+                                                                .testBaseUrl;
 
-                                                              kycService
-                                                                  .updateXAccessToken(
-                                                                      token);
+                                                        Map<String, dynamic>
+                                                            res = {};
+                                                        if (sig.isNotEmpty) {
+                                                          res = await kycService
+                                                              .login(url, sig);
+                                                          debugPrint(
+                                                              'login res $res');
+                                                          model.setBusy(false);
+                                                          if (res['success']) {
+                                                            var token =
+                                                                res['data']
+                                                                        ['data']
+                                                                    ['token'];
 
-                                                              kycNavigationService
-                                                                  .navigateToStep(
-                                                                      context,
-                                                                      model
-                                                                          .kycCheckResult
-                                                                          .kyc!
-                                                                          .step);
-                                                            } else {
-                                                              model.setBusy(
-                                                                  false);
-                                                              model
-                                                                  .sharedService
-                                                                  .sharedSimpleNotification(
-                                                                      FlutterI18n.translate(
-                                                                          context,
-                                                                          'loginFailed'),
-                                                                      isError:
-                                                                          true);
-                                                            }
+                                                            kycService
+                                                                .updateXAccessToken(
+                                                                    token);
+
+                                                            kycNavigationService
+                                                                .navigateToStep(
+                                                                    context,
+                                                                    model
+                                                                        .kycCheckResult
+                                                                        .kyc!
+                                                                        .step);
                                                           } else {
                                                             model
                                                                 .setBusy(false);
-                                                            res = {
-                                                              'success': false,
-                                                              'error':
-                                                                  'Failed to sign data'
-                                                            };
+                                                            model.sharedService
+                                                                .sharedSimpleNotification(
+                                                                    FlutterI18n.translate(
+                                                                        context,
+                                                                        'loginFailed'),
+                                                                    isError:
+                                                                        true);
                                                           }
-                                                        } catch (e) {
-                                                          debugPrint(
-                                                              'CATCH error $e');
+                                                        } else {
                                                           model.setBusy(false);
+                                                          res = {
+                                                            'success': false,
+                                                            'error':
+                                                                'Failed to sign data'
+                                                          };
                                                         }
-                                                      },
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          Text(
-                                                            FlutterI18n
-                                                                .translate(
-                                                                    context,
-                                                                    "continue"),
-                                                            style:
-                                                                const TextStyle(
-                                                                    letterSpacing:
-                                                                        1.1),
-                                                          ),
-                                                          UIHelper
-                                                              .horizontalSpaceSmall,
-                                                          const Icon(
-                                                            Icons
-                                                                .double_arrow_rounded,
-                                                            size: 18,
-                                                          ),
-                                                        ],
-                                                      )),
-                                            ],
-                                          )
-                                        ],
-                                      ),
+                                                      } catch (e) {
+                                                        debugPrint(
+                                                            'CATCH error $e');
+                                                        model.setBusy(false);
+                                                      }
+                                                    },
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Text(
+                                                          FlutterI18n.translate(
+                                                              context,
+                                                              "continue"),
+                                                          style:
+                                                              const TextStyle(
+                                                                  letterSpacing:
+                                                                      1.1),
+                                                        ),
+                                                        UIHelper
+                                                            .horizontalSpaceSmall,
+                                                        const Icon(
+                                                          Icons
+                                                              .double_arrow_rounded,
+                                                          size: 18,
+                                                        ),
+                                                      ],
+                                                    )),
+                                          ],
+                                        )
+                                      ],
                                     ),
-                                    if (model.isBusy)
-                                      Center(
-                                        child: Container(
-                                          decoration: roundedBoxDecoration(
-                                              color: black.withOpacity(0.5)),
-                                          child: const Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
+                                  ),
+                                  if (model.isBusy)
+                                    Center(
+                                      child: Container(
+                                        decoration: roundedBoxDecoration(
+                                            color: black.withOpacity(0.5)),
+                                        child: const Center(
+                                          child: CircularProgressIndicator(),
                                         ),
                                       ),
-                                  ],
-                                ),
+                                    ),
+                                ],
                               ),
-                            );
-                          })
-                      : await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => KycView(
-                              kycPrimaryColor: primaryColor,
-                              onFormSubmit: (KycModel kycModel) async {
-                                try {
-                                  final kycService = locator<KycBaseService>();
-                                  var data =
-                                      'email=${kycModel.email}&first_name=${kycModel.firstName}&last_name=${kycModel.lastName}';
-
-                                  var sig = await LocalKycUtil.signKycData(
-                                      data, context);
-
-                                  String url = isProduction
-                                      ? KycConstants.prodBaseUrl
-                                      : KycConstants.testBaseUrl;
-                                  final Map<String, dynamic> res;
-
-                                  if (sig.isNotEmpty) {
-                                    res = await kycService.submitKycData(
-                                        url, kycModel.setSignature(sig));
-                                  } else {
-                                    res = {
-                                      'success': false,
-                                      'error': 'Failed to sign data'
-                                    };
-                                  }
-                                  return res;
-                                } catch (e) {
-                                  debugPrint('CATCH error $e');
-                                }
-                              },
-                              // ),
                             ),
-                          ),
-                        );
+                          );
+                        });
+                  } else {
+                    if (wasDarkMode) {
+                      model.themeService.toggleDarkLightTheme();
+                    }
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => KycView(
+                          kycPrimaryColor: primaryColor,
+                          onFormSubmit: (KycModel kycModel) async {
+                            try {
+                              final kycService = locator<KycBaseService>();
+                              var data =
+                                  'email=${kycModel.email}&first_name=${kycModel.firstName}&last_name=${kycModel.lastName}';
+
+                              var sig =
+                                  await LocalKycUtil.signKycData(data, context);
+
+                              String url = isProduction
+                                  ? KycConstants.prodBaseUrl
+                                  : KycConstants.testBaseUrl;
+                              final Map<String, dynamic> res;
+
+                              if (sig.isNotEmpty) {
+                                res = await kycService.submitKycData(
+                                    url, kycModel.setSignature(sig));
+                              } else {
+                                res = {
+                                  'success': false,
+                                  'error': 'Failed to sign data'
+                                };
+                              }
+                              return res;
+                            } catch (e) {
+                              debugPrint('CATCH error $e');
+                            }
+                          },
+                          // ),
+                        ),
+                      ),
+                    );
+                  }
                   if (model.storageService.isDarkMode) {
                     model.themeService.setThemeMode(ThemeManagerMode.dark);
                   }

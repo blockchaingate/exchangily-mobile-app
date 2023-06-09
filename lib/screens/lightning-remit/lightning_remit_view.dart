@@ -320,9 +320,7 @@ class LightningRemitView extends StatelessWidget {
                                                   LightningRemitTransferHistoryView()));
                                     },
                                     icon: Icon(Icons.history,
-                                        color: model.storageService.isDarkMode
-                                            ? white
-                                            : black,
+                                        color: Theme.of(context).hintColor,
                                         size: 24),
                                     // child: Text('History',
                                     //     style: Theme.of(context).textTheme.headline4),

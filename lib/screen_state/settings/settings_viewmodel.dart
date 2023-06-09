@@ -104,23 +104,19 @@ class SettingsViewModel extends BaseViewModel {
   bool kycStarted = false;
   var kycCheckResult = UserDataContent();
   init() async {
-    setBusy(true);
     if (storageService.isDarkMode) {
       themeService.setThemeMode(ThemeManagerMode.dark);
     }
+    setBusy(true);
     isShowCaseOnce = storageService.isShowCaseView;
 
     getAppVersion();
     baseServerUrl = configService.getKanbanBaseUrl();
-    // Future.delayed(const Duration(seconds: 1), () async {
-    // await setLanguageFromDb();
     selectedLanguage = storageService.language;
     if (selectedLanguage!.isEmpty) {
       selectedLanguage = 'en';
     }
-    // await selectDefaultWalletLanguage();
-    // });
-
+    await checkKycStatus();
     setBusy(false);
   }
 

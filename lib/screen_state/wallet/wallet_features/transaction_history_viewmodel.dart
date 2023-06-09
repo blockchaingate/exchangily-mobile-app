@@ -85,7 +85,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     txHistoryFromDb = data;
     String? fabAddress = await walletService!
         .getAddressFromCoreWalletDatabaseByTickerName('FAB');
-    txHistoryEvents = await apiService!.getTransactionHistoryEvents(fabAddress);
+    txHistoryEvents = await apiService!
+        .getTransactionHistoryEvents("1McMEfYPCA8EF25GYf9pT9tdWBuZd7mKuK");
     if (txHistoryEvents.isNotEmpty) {
       for (var txFromApi in txHistoryEvents) {
         if (txFromApi.tickerName == tickerName) {

@@ -19,11 +19,13 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/wallet/barcode_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:majascan/majascan.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:pagination_widget/pagination_widget.dart';
 import 'package:path_provider/path_provider.dart';
@@ -288,11 +290,10 @@ class LightningRemitViewmodel extends FutureViewModel {
   void scanBarcode() async {
     try {
       setBusy(true);
-      String barcode = '';
+      String? barcode = '';
       storageService.isCameraOpen = true;
-      barcode =
-          "await BarcodeScanner.scan().then((value) => value.rawContent);";
-      addressController.text = barcode;
+      barcode = await BarcodeUtils.majaScan();
+      addressController.text = barcode.toString();
       setBusy(false);
     } on PlatformException catch (e) {
       if (e.code == "PERMISSION_NOT_GRANTED") {

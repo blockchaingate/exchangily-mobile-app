@@ -1669,7 +1669,7 @@ class TotalBalanceWidget extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .titleMedium!
+                                      .titleLarge!
                                       .copyWith(fontWeight: FontWeight.w400)),
                         ],
                       ),
@@ -1787,7 +1787,7 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                 Text('${model!.totalExchangeBalance} USD',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .titleMedium!
+                                        .titleLarge!
                                         .copyWith(fontWeight: FontWeight.w400)),
                               ],
                             ),

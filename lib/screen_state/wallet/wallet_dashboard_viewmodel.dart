@@ -1453,12 +1453,11 @@ class WalletDashboardViewModel extends BaseViewModel {
         String holder = listCoinsToString.toString();
         String f = holder.substring(1, holder.length - 1);
         if (pendingDepositCoins.isNotEmpty) {
-          showSimpleNotification(
-              Text(
-                  '${FlutterI18n.translate(context!, "requireRedeposit")}: $f'),
+          sharedService.sharedSimpleNotification(
+              '${FlutterI18n.translate(context!, "requireRedeposit")}: $f',
               position: NotificationPosition.bottom,
-              slideDismissDirection: DismissDirection.down,
-              background: primaryColor);
+              backgroundColor:
+                  storageService.isDarkMode ? secondaryColor : white);
         }
       }
     }).catchError((err) {

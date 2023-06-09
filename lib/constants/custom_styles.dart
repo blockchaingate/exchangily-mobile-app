@@ -17,6 +17,7 @@ class CustomStyles {
   static ThemeData kThemeData(
       {required bool isDark, Color backgroundColor = primaryColor}) {
     Color blackOrWhite = isDark ? white : black;
+    Color primaryOrWhite = isDark ? white : primaryColor;
     Color sc = isDark ? secondaryColor : white;
     return ThemeData(
       appBarTheme: AppBarTheme(
@@ -28,12 +29,14 @@ class CustomStyles {
           backgroundColor: sc),
 
       brightness: isDark ? Brightness.dark : Brightness.light,
-
+      primaryColorLight: primaryOrWhite,
+      primaryColorDark: sc,
       // added unselectedWidgetColor to update inactive radio button's color
       unselectedWidgetColor: blackOrWhite,
       disabledColor: grey.withAlpha(100),
       primaryColor: primaryColor,
       hintColor: blackOrWhite,
+      iconTheme: IconThemeData(color: primaryOrWhite),
       inputDecorationTheme: InputDecorationTheme(
           labelStyle: TextStyle(color: blackOrWhite),
           hintStyle: TextStyle(color: blackOrWhite),

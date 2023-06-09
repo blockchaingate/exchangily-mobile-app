@@ -76,16 +76,18 @@ class SharedService {
       {String subtitle = '',
       bool isError = true,
       int durationInSeconds = 3,
-      position = NotificationPosition.top}) {
+      position = NotificationPosition.top,
+      dismissDirection = DismissDirection.down,
+      backgroundColor = white}) {
     return showSimpleNotification(
         Text(firstCharToUppercase(content),
             textAlign: subtitle.isEmpty ? TextAlign.center : TextAlign.start,
             style: headText4.copyWith(
                 color: isError ? red : green, fontWeight: FontWeight.w500)),
         position: position,
-        background: white,
+        background: backgroundColor,
         duration: Duration(seconds: durationInSeconds),
-        slideDismissDirection: DismissDirection.startToEnd,
+        slideDismissDirection: dismissDirection,
         subtitle: Text(subtitle,
             style: headText5.copyWith(
                 color: isError ? red : green, fontWeight: FontWeight.w400)));
