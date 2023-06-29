@@ -23,7 +23,7 @@ class MarketPairsTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> tabNames = [
       // 'FAV.',
-      'DUSD', 'USDT', 'BTC', 'ETH', 'EXG', 'USDC', 'OTHERS'
+      'DUSD', 'USDT', 'BTC', 'ETH', 'FAB', 'EXG', 'USDC', 'OTHERS'
     ];
 
     return BaseScreen<MarketPairsTabViewState>(

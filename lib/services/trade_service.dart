@@ -351,6 +351,7 @@ class TradeService extends StoppableService with ListenableServiceMixin {
     List<Price> dusdPairsList = [];
     List<Price> btcPairsList = [];
     List<Price> ethPairsList = [];
+    List<Price> fabPairsList = [];
     List<Price> exgPairsList = [];
     List<Price> usdcPairsList = [];
     List<Price> bnbPairsList = [];
@@ -371,6 +372,9 @@ class TradeService extends StoppableService with ListenableServiceMixin {
       } else if (pair.symbol.endsWith("ETH")) {
         pair.symbol = seperateBasePair(pair.symbol);
         ethPairsList.add(pair);
+      } else if (pair.symbol.endsWith("FAB")) {
+        pair.symbol = seperateBasePair(pair.symbol);
+        fabPairsList.add(pair);
       } else if (pair.symbol.endsWith("EXG")) {
         pair.symbol = seperateBasePair(pair.symbol);
         exgPairsList.add(pair);
@@ -386,6 +390,7 @@ class TradeService extends StoppableService with ListenableServiceMixin {
     marketPairsGroupList.add(usdtPairsList);
     marketPairsGroupList.add(btcPairsList);
     marketPairsGroupList.add(ethPairsList);
+    marketPairsGroupList.add(fabPairsList);
     marketPairsGroupList.add(exgPairsList);
     marketPairsGroupList.add(usdcPairsList);
     marketPairsGroupList.add(bnbPairsList);
@@ -409,6 +414,8 @@ class TradeService extends StoppableService with ListenableServiceMixin {
       updateTickerName = tickerName.replaceAll('BTC', '/BTC');
     } else if (tickerName.endsWith("ETH")) {
       updateTickerName = tickerName.replaceAll('ETH', '/ETH');
+    } else if (tickerName.endsWith("FAB")) {
+      updateTickerName = tickerName.replaceAll('FAB', '/FAB');
     } else if (tickerName.endsWith("EXG")) {
       updateTickerName = tickerName.replaceAll('EXG', '/EXG');
     } else if (tickerName.endsWith("USDC")) {

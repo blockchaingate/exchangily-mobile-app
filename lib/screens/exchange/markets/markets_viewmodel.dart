@@ -42,7 +42,6 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
 
   final NavigationService? navigationService = locator<NavigationService>();
   late BuildContext context;
-  List<String> tabNames = ['USDT', 'DUSD', 'BTC', 'ETH', 'EXG', 'OTHERS'];
 
   @override
   void start() async {
