@@ -31,6 +31,12 @@ class KycWidget extends ViewModelWidget<SettingsViewModel> {
               elevation: 5,
               child: InkWell(
                 onTap: () async {
+                  if (model.kycErrorMessage.isNotEmpty) {
+                    model.sharedService.sharedSimpleNotification(
+                        FlutterI18n.translate(context, "pleaseTryAgainLater"),
+                        isError: true);
+                    return;
+                  }
                   bool wasDarkMode = model.themeService.isDarkMode;
 
                   if (model.kycStarted) {
@@ -42,7 +48,9 @@ class KycWidget extends ViewModelWidget<SettingsViewModel> {
                               width: MediaQuery.of(context).size.width * 0.8,
                               height: 230,
                               decoration: roundedBoxDecoration(
-                                  color: wasDarkMode ? secondaryColor : grey),
+                                  color: wasDarkMode
+                                      ? secondaryColor
+                                      : Color.fromARGB(255, 201, 199, 199)),
                               child: Stack(
                                 children: [
                                   SingleChildScrollView(

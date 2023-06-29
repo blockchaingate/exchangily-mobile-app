@@ -103,6 +103,8 @@ class SettingsViewModel extends BaseViewModel {
   var walletUtil = WalletUtil();
   bool kycStarted = false;
   var kycCheckResult = UserDataContent();
+  String kycErrorMessage = '';
+
   init() async {
     if (storageService.isDarkMode) {
       themeService.setThemeMode(ThemeManagerMode.dark);
@@ -122,6 +124,7 @@ class SettingsViewModel extends BaseViewModel {
 
   checkKycStatus() async {
     setBusyForObject(kycStarted, true);
+    kycErrorMessage = '';
     var result = await LocalKycUtil.checkKycStatus();
     kycStarted = result['success'];
     if (kycStarted) {
@@ -130,6 +133,9 @@ class SettingsViewModel extends BaseViewModel {
       kycCheckResult = UserDataContent.fromJson(res['data']);
       // kycCheckResult.kyc!.step = 6;
       log.w('checkkycstatus kycCheckResult ${kycCheckResult.toJson()}');
+    } else {
+      kycErrorMessage = result['error']['message'].toString();
+      log.e(kycErrorMessage);
     }
     setBusyForObject(kycStarted, false);
   }

@@ -51,7 +51,8 @@ class LocalKycUtil {
           return {"success": false, "data": null};
         }
       } else {
-        return {"success": true, "error": jsonEncode(response.body)};
+        var resBody = jsonDecode(response.body);
+        return {"success": false, "error": resBody};
       }
     } catch (err) {
       log.e('checkKycStatus CATCH $err');
