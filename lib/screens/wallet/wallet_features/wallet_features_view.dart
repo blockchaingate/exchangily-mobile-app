@@ -326,10 +326,10 @@ class WalletFeaturesView extends StatelessWidget {
                             ? SizedBox(
                                 height: 20,
                                 child: model.sharedService!.loadingIndicator())
-                            : const Center(
+                            : Center(
                                 child: Icon(
                                   Icons.refresh,
-                                  color: white,
+                                  color: Theme.of(context).hintColor,
                                   size: 18,
                                 ),
                               ),

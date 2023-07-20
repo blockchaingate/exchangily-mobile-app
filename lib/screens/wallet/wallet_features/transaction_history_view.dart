@@ -28,12 +28,10 @@ class TransactionHistoryView extends StatelessWidget {
               onWillPop: () async {
                 debugPrint('isDialogUp ${model.isDialogUp}');
                 if (model.isDialogUp) {
-                  Navigator.of(context, rootNavigator: true).pop();
                   model.isDialogUp = false;
                   debugPrint('isDialogUp in if ${model.isDialogUp}');
-                } else {
-                  Navigator.of(context).pop();
                 }
+                Navigator.of(context).pop();
 
                 return Future.value(false);
               },

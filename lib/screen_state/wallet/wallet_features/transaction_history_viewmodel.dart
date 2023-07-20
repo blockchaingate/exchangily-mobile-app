@@ -85,8 +85,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     txHistoryFromDb = data;
     String? fabAddress = await walletService!
         .getAddressFromCoreWalletDatabaseByTickerName('FAB');
-    txHistoryEvents = await apiService!
-        .getTransactionHistoryEvents("1McMEfYPCA8EF25GYf9pT9tdWBuZd7mKuK");
+    txHistoryEvents = await apiService!.getTransactionHistoryEvents(fabAddress);
     if (txHistoryEvents.isNotEmpty) {
       for (var txFromApi in txHistoryEvents) {
         if (txFromApi.tickerName == tickerName) {
@@ -386,7 +385,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                                   .titleLarge!
                                   .copyWith(
                                       fontWeight: FontWeight.bold,
-                                      color: primaryColor),
+                                      color: Theme.of(context).hintColor),
                             ),
                             onPressed: () {
                               Navigator.of(context).pop(true);
@@ -529,7 +528,10 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                         },
                         child: Text(
                           FlutterI18n.translate(context, "close"),
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge!
+                              .copyWith(color: Theme.of(context).hintColor),
                         ),
                       )
                     ],

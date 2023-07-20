@@ -1001,7 +1001,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
               UIHelper.horizontalSpaceSmall,
               // Card logo container
               Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(50),
@@ -1177,7 +1177,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                 '\$',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headlineSmall!
+                                    .headlineMedium!
                                     .copyWith(color: green),
                               ),
                         Expanded(
@@ -1194,7 +1194,7 @@ Widget _coinDetailsCard(String tickerName, index, List<WalletBalance> wallets,
                                 ? const TextStyle(color: grey, fontSize: 13)
                                 : Theme.of(context)
                                     .textTheme
-                                    .headlineSmall!
+                                    .headlineMedium!
                                     .copyWith(color: green),
                           ),
                         )
@@ -1669,7 +1669,7 @@ class TotalBalanceWidget extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .titleLarge!
+                                      .headlineMedium!
                                       .copyWith(fontWeight: FontWeight.w400)),
                         ],
                       ),
@@ -1787,7 +1787,7 @@ class TotalBalanceWidget2 extends StatelessWidget {
                                 Text('${model!.totalExchangeBalance} USD',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .titleLarge!
+                                        .headlineMedium!
                                         .copyWith(fontWeight: FontWeight.w400)),
                               ],
                             ),

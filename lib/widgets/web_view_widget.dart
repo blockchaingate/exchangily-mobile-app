@@ -15,7 +15,6 @@ class WebViewWidget extends StatefulWidget {
   State<WebViewWidget> createState() => WebViewWidgetState(url);
 }
 
-// -----------------------------------burayi ac ----------------------------------------
 class WebViewWidgetState extends State<WebViewWidget>
     with TickerProviderStateMixin {
   bool isLoading = true;

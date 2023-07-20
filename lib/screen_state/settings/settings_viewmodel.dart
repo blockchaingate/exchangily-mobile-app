@@ -134,7 +134,9 @@ class SettingsViewModel extends BaseViewModel {
       // kycCheckResult.kyc!.step = 6;
       log.w('checkkycstatus kycCheckResult ${kycCheckResult.toJson()}');
     } else {
-      kycErrorMessage = result['error']['message'].toString();
+      if (result['error'] != null) {
+        kycErrorMessage = result['error']['message'].toString();
+      }
       log.e(kycErrorMessage);
     }
     setBusyForObject(kycStarted, false);
