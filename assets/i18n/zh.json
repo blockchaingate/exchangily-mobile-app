@@ -624,5 +624,6 @@
 "kycStep-1": "已发送电子邮件代码",
 "incorrectPhoneNumber": "电话号码错误",
 "kycStarted": "kyc已启动",
-"kycApproved": "kyc已批准"
+"kycApproved": "kyc已批准",
+"darkMode": "夜间模式"
 }
