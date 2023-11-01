@@ -302,23 +302,24 @@ class SharedService {
 /* ---------------------------------------------------
         Loading indicator platform specific
 --------------------------------------------------- */
-  Widget loadingIndicator() {
+  Widget loadingIndicator(
+      {double? width = 30, double? height = 30, double strokeWidth = 1.5}) {
     return Center(
         child: Platform.isIOS
             ? Container(
                 decoration: BoxDecoration(
                     color: white.withAlpha(175),
                     borderRadius: const BorderRadius.all(Radius.circular(5))),
-                width: 25,
-                height: 25,
+                width: width,
+                height: height,
                 child: const CupertinoActivityIndicator())
-            : const SizedBox(
-                width: 20,
-                height: 20,
+            : SizedBox(
+                width: width,
+                height: height,
                 child: CircularProgressIndicator(
                   backgroundColor: primaryColor,
                   semanticsLabel: 'Loading',
-                  strokeWidth: 1.5,
+                  strokeWidth: strokeWidth,
                   //  valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).canvasColor)
                 ),
               ));
